@@ -1,9 +1,18 @@
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.5.11"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
+    id("com.github.node-gradle.node") version "7.1.0"
+    id("org.sonarqube") version "5.1.0.4882"
+}
+
+node {
+    download = true
+    version = "20.11.0"
+    nodeProjectDir = file("src/main/resources/frontend")
 }
 
 group = "com.jankowski.rafal"
@@ -50,4 +59,27 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwind") {
+    group = "build"
+    description = "Builds the Tailwind task"
+    dependsOn(tasks.named("npmInstall"))
+    command.set("tailwindcss")
+    args.set(listOf(
+        "-i", "./input.css",
+        "-o", "../static/css/output.css",
+        "--minify"
+    ))
+}
+
+tasks.named("processResources") {
+    dependsOn(tasks.named("buildTailwind"))
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "dancebook")
+        property("sonar.projectName", "DanceBook")
+    }
 }

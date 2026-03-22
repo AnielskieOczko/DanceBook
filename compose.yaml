@@ -10,5 +10,21 @@ services:
       POSTGRES_PASSWORD: dancebook
     volumes:
       - dancebook-data:/var/lib/postgresql/data
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: dancebook-sonar
+    ports:
+      - "9000:9000"
+    environment:
+      # This is important for running SonarQube locally without tweaking OS settings
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonar-data:/opt/sonarqube/data
+      - sonar-logs:/opt/sonarqube/logs
+      - sonar-extensions:/opt/sonarqube/extensions
 volumes:
   dancebook-data:
+  sonar-data:
+  sonar-logs:
+  sonar-extensions:

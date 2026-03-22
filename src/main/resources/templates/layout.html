@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DanceBook</title>
+
+    <!-- Tailwind CSS (compiled by our Gradle task) -->
+    <link th:href="@{/css/output.css}" rel="stylesheet">
+
+    <!-- HTMX (loaded via CDN) -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans p-8">
+
+<!-- This is where other templates will insert their content -->
+<div th:replace="${content}"></div>
+
+</body>
+</html>
