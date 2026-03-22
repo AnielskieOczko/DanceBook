@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.Version
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -30,6 +31,9 @@ class Material {
     var videoLink: String? = null
     var sourceLink: String? = null
     var driveFileId: String? = null
+
+    @Version
+    var version: Long = 0
 
     @Column(updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
