@@ -469,15 +469,15 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ## Implementation Phases
 
-### Phase 1 — Project Setup & CI/CD
-- [ ] Neon DB connection configured via environment variables
-- [ ] Tailwind CSS + HTMX wired up via node-gradle plugin
-- [ ] Flyway configured, first two migrations applied
-- [ ] SonarQube local container added to compose.yaml
-- [ ] GitHub Actions CI pipeline — build goes green
-- [ ] GitHub Actions deploy pipeline to Cloud Run
-- [ ] GCP prerequisites: Artifact Registry, service account, WIF
-- [ ] Smoke test: app boots, connects to DB, renders one page
+### Phase 1 — Project Setup & CI/CD ✅
+- [x] Neon DB connection configured via environment variables
+- [x] Tailwind CSS + HTMX wired up via node-gradle plugin
+- [x] Flyway configured, first two migrations applied
+- [x] SonarQube local container added to compose.yaml
+- [x] GitHub Actions CI pipeline — build goes green
+- [x] GitHub Actions deploy pipeline to Cloud Run
+- [x] GCP prerequisites: Artifact Registry, service account, WIF
+- [x] Smoke test: app boots, connects to DB, renders one page
 
 ### Phase 2 — Core CRUD for Materials
 - [ ] `Material`, `DanceType`, `DanceCategory` JPA entities (Kotlin data classes)
