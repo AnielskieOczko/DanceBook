@@ -1,0 +1,1 @@
+ALTER TABLE material ADD COLUMN updated_at TIMESTAMP;
