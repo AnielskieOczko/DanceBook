@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::main})}">
+
+<main class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-indigo-600">Materials 💃🕺</h1>
+    <a href="/materials/new" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition shadow-sm">
+      + New Material
+    </a>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+      <tr class="bg-gray-100 border-b border-gray-200 text-gray-700">
+        <th class="p-3 font-semibold rounded-tl-lg">Name</th>
+        <th class="p-3 font-semibold">Dance Type</th>
+        <th class="p-3 font-semibold">Category</th>
+        <th class="p-3 font-semibold">Rating</th>
+        <th class="p-3 font-semibold text-right rounded-tr-lg">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Loop over our model variable ${materials} -->
+      <tr th:each="material : ${materials}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+        <td class="p-3 font-medium text-gray-900" th:text="${material.name}">Name</td>
+        
+        <td class="p-3">
+          <span th:if="${material.danceType != null}" th:text="${material.danceType.name}" class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"></span>
+          <span th:if="${material.danceType == null}" class="text-gray-400 text-sm">-</span>
+        </td>
+        
+        <td class="p-3">
+          <span th:if="${material.danceCategory != null}" th:text="${material.danceCategory.name}" class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"></span>
+          <span th:if="${material.danceCategory == null}" class="text-gray-400 text-sm">-</span>
+        </td>
+        
+        <td class="p-3">
+          <span th:text="${material.rating ?: '-'}" class="font-medium text-gray-700"></span>
+          <span th:if="${material.rating != null}" class="text-yellow-400">★</span>
+        </td>
+        
+        <td class="p-3 text-right">
+          <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition">Edit</a>
+          <!-- Delete button mapping -->
+          <form th:action="@{/materials/{id}/delete(id=${material.id})}" method="post" class="inline">
+            <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition cursor-pointer" onclick="return confirm('Are you sure you want to delete this material?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      
+      <!-- Empty state handling -->
+      <tr th:if="${#lists.isEmpty(materials)}">
+        <td colspan="5" class="p-8 text-center text-gray-500 bg-gray-50 italic">
+          No materials found. Time to add your first dance move!
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</html>

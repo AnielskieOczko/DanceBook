@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/materials")
+@RequestMapping("/api/materials")
 class MaterialController(
     private val materialService: MaterialService
 ) {
