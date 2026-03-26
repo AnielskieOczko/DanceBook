@@ -1,0 +1,100 @@
+package com.jankowski.rafal.dancebook.controller.web
+
+import com.jankowski.rafal.dancebook.dto.MaterialRequest
+import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.service.MaterialService
+import jakarta.validation.Valid
+import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import java.util.UUID
+
+@Controller
+@RequestMapping("/materials")
+class MaterialWebController(
+    private val materialService: MaterialService,
+    private val danceTypeService: DanceTypeService,
+    private val danceCategoryService: DanceCategoryService
+) {
+
+    @GetMapping
+    fun listMaterials(model: Model, pageable: Pageable): String {
+        val materialsPage = materialService.findAll(typeId = null, categoryId = null, rating = null, pageable = pageable)
+        model.addAttribute("materials", materialsPage.content)
+        return "materials/list"
+    }
+
+    @GetMapping("/new")
+    fun showCreateForm(model: Model): String {
+        model.addAttribute("material", MaterialRequest(name = "", version = 0))
+        populateDropdowns(model)
+        return "materials/form"
+    }
+
+    @PostMapping
+    fun createMaterial(
+        @Valid @ModelAttribute("material") request: MaterialRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            populateDropdowns(model)
+            return "materials/form"
+        }
+        materialService.create(request)
+        return "redirect:/materials"
+    }
+
+    @GetMapping("/{id}/edit")
+    fun showEditForm(@PathVariable id: UUID, model: Model): String {
+        val material = materialService.findById(id)
+        val request = MaterialRequest(
+            name = material.name,
+            description = material.description,
+            danceTypeId = material.danceType?.id,
+            danceCategoryId = material.danceCategory?.id,
+            rating = material.rating,
+            videoLink = material.videoLink,
+            sourceLink = material.sourceLink,
+            version = material.version
+        )
+        model.addAttribute("material", request)
+        model.addAttribute("materialId", id)
+        populateDropdowns(model)
+        return "materials/form"
+    }
+
+    @PostMapping("/{id}")
+    fun updateMaterial(
+        @PathVariable id: UUID,
+        @Valid @ModelAttribute("material") request: MaterialRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            populateDropdowns(model)
+            model.addAttribute("materialId", id)
+            return "materials/form"
+        }
+        materialService.update(id, request)
+        return "redirect:/materials"
+    }
+
+    @PostMapping("/{id}/delete")
+    fun deleteMaterial(@PathVariable id: UUID): String {
+        materialService.delete(id)
+        return "redirect:/materials"
+    }
+
+    private fun populateDropdowns(model: Model) {
+        model.addAttribute("danceTypes", danceTypeService.findAll())
+        model.addAttribute("danceCategories", danceCategoryService.findAll())
+    }
+}

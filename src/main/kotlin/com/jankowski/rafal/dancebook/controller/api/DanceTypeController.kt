@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/danceTypes")
+@RequestMapping("/api/dance-types")
 class DanceTypeController(
     private val danceTypeService: DanceTypeService
 ) {
