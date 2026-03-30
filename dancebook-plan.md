@@ -480,13 +480,13 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Smoke test: app boots, connects to DB, renders one page
 
 ### Phase 2 — Core CRUD for Materials
-- [ ] `Material`, `DanceType`, `DanceCategory` JPA entities (Kotlin data classes)
-- [ ] Repository + Service layer for all three
-- [ ] REST controllers (`/api/materials`, `/api/dance-types`, `/api/dance-categories`)
-- [ ] Web controllers + Thymeleaf pages (list, create, edit, delete)
+- [x] `Material`, `DanceType`, `DanceCategory` JPA entities (Kotlin data classes)
+- [x] Repository + Service layer for all three
+- [x] REST controllers (`/api/materials`, `/api/dance-types`, `/api/dance-categories`)
+- [x] Web controllers + Thymeleaf pages (list, create, edit, delete)
 - [ ] Filtering by dance type, category, rating
 - [ ] HTMX partial updates for filters
-- [ ] Manage screen for dance types and categories
+- [x] Manage screen for dance types and categories
 
 ### Phase 3 — Video Timestamp Slicing
 - [ ] `Figure` JPA entity + Flyway migration
