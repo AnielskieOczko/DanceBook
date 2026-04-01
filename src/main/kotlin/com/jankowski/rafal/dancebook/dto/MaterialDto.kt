@@ -28,6 +28,9 @@ data class MaterialRequest(
     @field:URL
     val sourceLink: String? = null,
     
+    @field:Size(max = 255)
+    val driveFileId: String? = null,
+    
     val version: Long
 )
 
