@@ -1,7 +1,10 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
+import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.repository.MaterialSpecification
 import jakarta.persistence.EntityNotFoundException
@@ -17,6 +20,7 @@ import java.util.UUID
 @Service
 class MaterialServiceImpl(
     private val materialRepository: MaterialRepository,
+    private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService
 ) : MaterialService {
@@ -98,5 +102,33 @@ class MaterialServiceImpl(
         log.debug("Retrieving all materials with filters: typeId={}, categoryId={}, rating={}", typeId, categoryId, rating)
         val spec = MaterialSpecification.withFilters(typeId, categoryId, rating)
         return materialRepository.findAll(spec, pageable)
+    }
+
+    @Transactional
+    override fun addFigure(materialId: UUID, request: FigureRequest): Figure {
+        log.debug("Adding figure '{}' to material {}", request.name, materialId)
+        val material = findById(materialId)
+        val figure = Figure().apply {
+            name = request.name
+            startTime = request.startTime
+            endTime = request.endTime
+            this.material = material
+        }
+        material.figures.add(figure)
+        materialRepository.save(material)
+        return figure
+    }
+
+    @Transactional
+    override fun removeFigure(materialId: UUID, figureId: UUID) {
+        log.debug("Removing figure {} from material {}", figureId, materialId)
+        val material = findById(materialId)
+        material.figures.removeIf { it.id == figureId }
+        materialRepository.save(material)
+    }
+
+    override fun findFiguresByMaterial(materialId: UUID): List<Figure> {
+        log.debug("Retrieving figures for material {}", materialId)
+        return figureRepository.findAllByMaterialIdOrderByStartTimeAsc(materialId)
     }
 }

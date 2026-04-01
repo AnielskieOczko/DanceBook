@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
@@ -58,8 +59,38 @@ class MaterialWebController(
     @GetMapping("/{id}")
     fun viewMaterial(@PathVariable id: UUID, model: Model): String {
         val material = materialService.findById(id)
+        val figures = materialService.findFiguresByMaterial(id)
         model.addAttribute("material", material)
+        model.addAttribute("figures", figures)
+        model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
+    }
+
+    @PostMapping("/{id}/figures")
+    fun addFigure(
+        @PathVariable id: UUID,
+        @Valid @ModelAttribute("figureRequest") request: FigureRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            val material = materialService.findById(id)
+            val figures = materialService.findFiguresByMaterial(id)
+            model.addAttribute("material", material)
+            model.addAttribute("figures", figures)
+            return "materials/view"
+        }
+        materialService.addFigure(id, request)
+        return "redirect:/materials/$id"
+    }
+
+    @PostMapping("/{materialId}/figures/{figureId}/delete")
+    fun deleteFigure(
+        @PathVariable materialId: UUID,
+        @PathVariable figureId: UUID
+    ): String {
+        materialService.removeFigure(materialId, figureId)
+        return "redirect:/materials/$materialId"
     }
 
     @GetMapping("/new")
