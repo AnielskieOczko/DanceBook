@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.model
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.Version
 import java.time.LocalDateTime
@@ -31,6 +33,9 @@ class Material {
     var videoLink: String? = null
     var sourceLink: String? = null
     var driveFileId: String? = null
+
+    @OneToMany(mappedBy = "material", cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    var figures: MutableList<Figure> = mutableListOf()
 
     @Version
     var version: Long = 0
