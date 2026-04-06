@@ -55,12 +55,19 @@
         </h3>
         
         <!-- Google Drive iframe embed (when driveFileId is present) -->
-        <div th:if="${material.driveFileId != null && !material.driveFileId.isEmpty()}">
+        <div th:if="${material.driveFileId != null &amp;&amp; !material.driveFileId.isEmpty()}">
             <iframe th:src="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview'"
                     class="w-full aspect-video rounded-2xl border-4 border-gray-100 shadow-inner"
                     allow="autoplay; encrypted-media"
                     allowfullscreen>
             </iframe>
+            <div class="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                    <p class="text-sm text-amber-800 font-medium">Recently uploaded?</p>
+                    <p class="text-xs text-amber-600 mt-0.5">Google Drive needs a few minutes to process new videos before playback is available. If you see a processing message, just wait and refresh the page.</p>
+                </div>
+            </div>
         </div>
 
         <!-- No video state -->
