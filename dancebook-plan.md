@@ -46,27 +46,28 @@ No logic duplication. Services are unaware of who calls them.
 ### Google Drive Video Upload & Playback
 
 ```
-Upload:   Browser ──OAuth token──► Google Drive API (direct, no backend proxy)
+Upload:   Backend (Refresh Token) ──mints──► Access Token delivered to Browser
+          Browser ──Access Token──► Google Drive API (direct, for CORS-enabled resumable upload)
 Playback: Browser <iframe src="drive.google.com/file/d/.../preview"> ──► Google Drive
                 ↑
-      No backend involved = zero egress cost
+      No backend involved for video streaming = zero egress cost
 ```
 
 **Upload flow:**
-1. Frontend fetches OAuth Client ID + folder ID from backend (`/api/materials/upload-config`)
-2. User signs in via Google Identity Services popup (one-time consent)
-3. Browser uploads directly to Google Drive via resumable upload API
-4. File permission auto-set to "anyone with the link" for iframe preview
-5. Drive file ID saved to Material entity
+1. Frontend fetches short-lived Access Token + folder ID from backend (`/api/materials/upload-config`)
+2. Backend generates this token silently using a stored `REFRESH_TOKEN` (UserCredentials)
+3. Browser initiates Resumable Upload session directly with Google Drive API (to ensure CORS is allowed)
+4. Browser uploads file data directly to Google Drive via `PUT`
+5. Frontend calls backend `/api/materials/finalize-upload` to set "anyone with the link" permission
+6. Drive file ID saved to Material entity
 
 **Playback:** `<iframe>` embed with `drive.google.com/file/d/{id}/preview`.
 Direct `<video>` tag doesn't work due to Google Drive CORS restrictions.
 
 **Security:**
 - OAuth scope: `drive.file` — can only access files created through the app
-- COOP header: `same-origin-allow-popups` for Google popup compatibility
-- Client ID is public (scoped by authorized origins)
-- No service account needed — uses user's own Drive quota
+- Security trade-off: The `upload-config` endpoint vends a real Google Drive API token to the frontend. This needs to be protected via Spring Security.
+- No Google login popup needed. Complete silent authentication.
 
 ---
 
@@ -127,18 +128,17 @@ DanceCategory
 - Works for both Google Drive direct links and external video URLs
 
 ### Google Drive Integration
-- Upload flow: browser uses OAuth + Google Drive API → direct upload to shared folder
-- Backend serves OAuth Client ID + folder ID via `/api/materials/upload-config`
-- Upload uses resumable upload protocol with progress tracking
-- Auto-sets "anyone with link = viewer" permission for iframe playback
-- Backend stores returned `driveFileId` on the Material
+- Upload flow: Backend authenticates via stored Refresh Token -> Hands Access Token to browser -> Browser uploads directly.
+- Backend serves Access Token + folder ID via `/api/materials/upload-config`
+- Upload uses resumable upload protocol with progress tracking (Frontend-initiated for CORS support)
+- Backend endpoint `/api/materials/finalize-upload` sets "anyone with link = viewer" permission for iframe playback
 - Video playback: `<iframe>` embed with `drive.google.com/file/d/{id}/preview`
 - Videos shared as "Anyone with the link" — acceptable for personal app
 - Processing info banner shown for recently uploaded videos
 
 ### Authentication
-- None for now (2-person personal app)
-- Can be added later via Spring Security
+- Currently unprotected, meaning any visitor can upload files to the developer's Google Drive.
+- Planned: Phase 5 will implement Spring Security to password-protect the application.
 
 ---
 
@@ -506,21 +506,23 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Figure list with clickable timestamps (opens Drive preview at timestamp)
 - [ ] HTMX for smooth figure interactions (deferred — low priority)
 
-### Phase 4 — Google Drive Integration ✅
+### Phase 4 — Google Drive Integration (Server-Side Auth) ✅
 - [x] **Spike**: Tested `<video>` tag — CORS blocks direct playback → using `<iframe>` embed
-- [x] GCP setup: OAuth 2.0 Client ID (Web application type)
-- [x] OAuth consent screen configured with test users
-- [x] Google Drive API enabled
-- [x] Browser-side OAuth via Google Identity Services (`initTokenClient`)
+- [x] GCP setup: OAuth 2.0 Web Application to obtain long-lived Refresh Token
+- [x] ~~Browser-side OAuth via Google Identity Services~~ (Replaced with Server-Side Auth)
 - [x] Direct browser-to-Drive resumable upload with progress bar (`drive-upload.js`)
-- [x] Auto-set "anyone with link" file permission for iframe preview
-- [x] Backend endpoint `/api/materials/upload-config` (serves Client ID + folder ID)
-- [x] `GoogleDriveProperties` + `GoogleDriveService` + `DriveUploadController`
-- [x] `CoopHeaderFilter` — `same-origin-allow-popups` for OAuth popup
-- [x] Video preview iframe in Material detail page
-- [x] Processing info banner for recently uploaded videos
+- [x] `GoogleDriveProperties` + `GoogleDriveService` using `UserCredentials`
+- [x] Backend endpoint `/api/materials/upload-config` (serves auto-refreshed Access Token)
+- [x] Frontend initiates Resumable Session directly to satisfy Google CORS policy
+- [x] Backend endpoint `/api/materials/finalize-upload` to set file permissions
+- [x] Video preview iframe in Material detail page + Processing banner
 - [x] Upload error handling in UI
-- [x] Service account key cleanup (deleted, gitignored)
+
+### Phase 5 — Spring Security Authentication (Upcoming) ⏳
+- [ ] Implement Spring Security configuration
+- [ ] Add simple login page with user/password
+- [ ] Secure all `/api/` and Web endpoints
+- [ ] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
 
 ---
 
