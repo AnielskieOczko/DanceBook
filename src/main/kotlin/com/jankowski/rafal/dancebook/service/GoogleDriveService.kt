@@ -27,6 +27,18 @@ class GoogleDriveService(
         val clientSecret = driveProperties.clientSecret.trim()
         val refreshToken = driveProperties.refreshToken.trim()
 
+        if (clientId.isBlank() || clientSecret.isBlank() || refreshToken.isBlank()) {
+            val missing = mutableListOf<String>()
+            if (clientId.isBlank()) missing.add("GOOGLE_CLIENT_ID")
+            if (clientSecret.isBlank()) missing.add("GOOGLE_CLIENT_SECRET")
+            if (refreshToken.isBlank()) missing.add("GOOGLE_REFRESH_TOKEN")
+            
+            val errorMsg = "CRITICAL: Missing required Google Drive properties: ${missing.joinToString()}. " +
+                           "Check your Environment Variables / GitHub Secrets!"
+            logger.error(errorMsg)
+            throw IllegalStateException(errorMsg)
+        }
+
         UserCredentials.newBuilder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)
