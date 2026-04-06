@@ -22,7 +22,8 @@ class MaterialServiceImpl(
     private val materialRepository: MaterialRepository,
     private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val googleDriveService: GoogleDriveService
 ) : MaterialService {
 
     companion object {
@@ -75,7 +76,16 @@ class MaterialServiceImpl(
         existing.rating = request.rating
         existing.videoLink = request.videoLink
         existing.sourceLink = request.sourceLink
-        existing.driveFileId = request.driveFileId
+
+        val oldDriveFileId = existing.driveFileId
+        val newDriveFileId = if (request.driveFileId.isNullOrBlank()) null else request.driveFileId
+        existing.driveFileId = newDriveFileId
+
+        if (oldDriveFileId != null && oldDriveFileId != newDriveFileId) {
+            log.info("Drive file ID changed from $oldDriveFileId to $newDriveFileId. Deleting old file from Google Drive.")
+            googleDriveService.deleteFile(oldDriveFileId)
+        }
+
         existing.updatedAt = LocalDateTime.now()
 
         if (existing.danceType?.id != request.danceTypeId) {
@@ -92,7 +102,14 @@ class MaterialServiceImpl(
     override fun delete(id: UUID) {
         log.debug("Deleting material for id {}", id)
         val existing = findById(id)
+        val driveFileId = existing.driveFileId
+
         materialRepository.delete(existing)
+
+        if (driveFileId != null) {
+            log.info("Material {} deleted. Physically deleting associated file {} from Google Drive.", id, driveFileId)
+            googleDriveService.deleteFile(driveFileId)
+        }
     }
 
     override fun findAll(
