@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -51,11 +52,15 @@ class DriveUploadController(
      * Returns a pre-authenticated URL the browser can PUT file data to directly.
      */
     @PostMapping("/upload-session")
-    fun createUploadSession(@RequestBody request: UploadSessionRequest): ResponseEntity<UploadSessionResponse> {
+    fun createUploadSession(
+        @RequestBody request: UploadSessionRequest,
+        @RequestHeader("Origin", required = false) origin: String?
+    ): ResponseEntity<UploadSessionResponse> {
         val uploadUrl = googleDriveService.createResumableSession(
             fileName = request.fileName,
             mimeType = request.mimeType,
-            fileSize = request.fileSize
+            fileSize = request.fileSize,
+            origin = origin
         )
         return ResponseEntity.ok(UploadSessionResponse(uploadUrl = uploadUrl))
     }

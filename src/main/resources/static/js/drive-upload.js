@@ -24,26 +24,45 @@ const DriveUpload = {
         try {
             onProgress(0);
 
-            // 1. Create a resumable upload session via backend
-            //    (backend authenticates with Google using stored refresh token)
-            const sessionRes = await fetch('/api/materials/upload-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fileName: file.name,
-                    mimeType: file.type || 'video/mp4',
-                    fileSize: file.size
-                })
+            // 1. Get access token from the backend
+            const configRes = await fetch('/api/materials/upload-config');
+            if (!configRes.ok) {
+                throw new Error('Failed to get upload config from backend');
+            }
+            const config = await configRes.json();
+
+            // 2. Create a resumable upload session DIRECTLY with Google
+            // This ensures Google registers the browser's Origin for CORS
+            const metadata = JSON.stringify({
+                name: file.name,
+                parents: [config.folderId]
             });
+
+            const sessionRes = await fetch(
+                'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + config.accessToken,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'X-Upload-Content-Type': file.type || 'video/mp4',
+                        'X-Upload-Content-Length': file.size
+                    },
+                    body: metadata
+                }
+            );
 
             if (!sessionRes.ok) {
                 const errText = await sessionRes.text();
-                throw new Error('Failed to create upload session: ' + errText);
+                throw new Error('Failed to create upload session with Google: ' + errText);
             }
 
-            const { uploadUrl } = await sessionRes.json();
+            const uploadUrl = sessionRes.headers.get('Location');
+            if (!uploadUrl) {
+                throw new Error('No upload URL returned by Google Drive');
+            }
 
-            // 2. Upload the file directly to Google Drive using the pre-auth URL
+            // 3. Upload the file directly to Google Drive using the pre-auth URL
             const xhr = new XMLHttpRequest();
 
             xhr.upload.addEventListener('progress', (e) => {
@@ -58,7 +77,7 @@ const DriveUpload = {
                     const response = JSON.parse(xhr.responseText);
                     const fileId = response.id;
 
-                    // 3. Finalize: set public permission via backend
+                    // 4. Finalize: set public permission via backend
                     try {
                         await fetch('/api/materials/finalize-upload', {
                             method: 'POST',

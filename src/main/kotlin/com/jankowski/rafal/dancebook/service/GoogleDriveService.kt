@@ -17,10 +17,20 @@ class GoogleDriveService(
     private val logger = LoggerFactory.getLogger(GoogleDriveService::class.java)
 
     private val credentials by lazy {
+        logger.info("Initializing Google Drive Credentials...")
+        logger.info("Client ID ends with: ${driveProperties.clientId.takeLast(4)}")
+        logger.info("Client Secret length: ${driveProperties.clientSecret.length}")
+        logger.info("Refresh Token length: ${driveProperties.refreshToken.length}")
+        logger.info("Folder ID length: ${driveProperties.folderId.length}")
+
+        val clientId = driveProperties.clientId.trim()
+        val clientSecret = driveProperties.clientSecret.trim()
+        val refreshToken = driveProperties.refreshToken.trim()
+
         UserCredentials.newBuilder()
-            .setClientId(driveProperties.clientId)
-            .setClientSecret(driveProperties.clientSecret)
-            .setRefreshToken(driveProperties.refreshToken)
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setRefreshToken(refreshToken)
             .build()
     }
 
@@ -48,7 +58,7 @@ class GoogleDriveService(
      * Creates a resumable upload session on Google Drive.
      * Returns the pre-authenticated upload URL that the frontend can PUT to directly.
      */
-    fun createResumableSession(fileName: String, mimeType: String, fileSize: Long?): String {
+    fun createResumableSession(fileName: String, mimeType: String, fileSize: Long?, origin: String?): String {
         val requestFactory = drive.requestFactory
 
         val metaData = mapOf("name" to fileName, "parents" to listOf(driveProperties.folderId))
@@ -60,6 +70,7 @@ class GoogleDriveService(
         val request = requestFactory.buildPostRequest(url, content).apply {
             headers.set("X-Upload-Content-Type", mimeType)
             fileSize?.let { headers.set("X-Upload-Content-Length", it.toString()) }
+            origin?.let { headers.set("Origin", it) }
         }
 
         val response = request.execute()
