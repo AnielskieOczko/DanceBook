@@ -524,6 +524,11 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [ ] Secure all `/api/` and Web endpoints
 - [ ] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
 
+### Phase 6 — Storage Maintenance (Cleanup Job) ⏳
+- [ ] Schedule a weekly `@Scheduled` task to cross-reference Google Drive files with the database
+- [ ] Automatically delete any "orphan" files (in Drive but not in DB) to save storage quota
+- [ ] Add a manual "Trigger Cleanup" button in an admin dashboard
+
 ---
 
 ## Key Principles

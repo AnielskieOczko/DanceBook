@@ -81,9 +81,14 @@
         <input type="hidden" th:field="*{driveFileId}" id="driveFileId"/>
 
         <!-- Current video indicator -->
-        <div id="currentVideo" class="hidden mb-3 bg-white rounded-lg border border-green-200 p-3 flex items-center gap-3">
-          <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span class="text-sm text-gray-700">Video linked: <strong id="currentVideoId" class="text-indigo-600 font-mono text-xs"></strong></span>
+        <div id="currentVideo" class="hidden mb-3 bg-white rounded-lg border border-green-200 p-3 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-sm text-gray-700">Video linked: <strong id="currentVideoId" class="text-indigo-600 font-mono text-xs"></strong></span>
+          </div>
+          <button type="button" onclick="removeVideo()" class="text-xs text-red-600 hover:text-red-800 font-medium px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-md transition shadow-sm border border-red-200">
+            Remove Video
+          </button>
         </div>
 
         <!-- File input + upload button -->
@@ -211,6 +216,34 @@
           progressContainer.classList.add('hidden');
         }
       );
+    }
+
+    function removeVideo() {
+      if (confirm("Are you sure you want to unlink this video?\n\n⚠️ WARNING: Once you click 'Save Material', this video file will be PERMANENTLY deleted from your Google Drive storage!")) {
+        // Clear the form value immediately
+        document.getElementById('driveFileId').value = '';
+        
+        // Hide the video linked indicator
+        document.getElementById('currentVideo').classList.add('hidden');
+        
+        // Hide any success/error status
+        document.getElementById('uploadStatus').classList.add('hidden');
+        
+        // Reset the file picker
+        document.getElementById('fileLabel').innerHTML = '📎 Click to select a video file...';
+        document.getElementById('fileLabel').classList.remove('border-indigo-500', 'bg-white', 'text-gray-800', 'font-medium');
+        document.getElementById('videoFile').value = ''; 
+        
+        // Disable upload button until a new file is picked
+        document.getElementById('uploadBtn').disabled = true;
+        document.getElementById('uploadBtn').textContent = 'Upload';
+        
+        // Reset progress bar
+        document.getElementById('progressContainer').classList.add('hidden');
+        document.getElementById('progressBar').style.width = '0%';
+        document.getElementById('progressBar').classList.add('bg-indigo-600');
+        document.getElementById('progressBar').classList.remove('bg-green-500');
+      }
     }
   </script>
 </main>
