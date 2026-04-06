@@ -15,7 +15,7 @@ Mobile-first experience via responsive web app.
 | Backend | Spring Boot 3.5.x (Kotlin, Java 21) |
 | Database | Neon DB (PostgreSQL) — free tier (prod), Docker Postgres (local) |
 | Frontend | Thymeleaf + Tailwind CSS v3.4 + HTMX (CDN) |
-| Video Storage | Google Drive API v3 (server-side proxy for streaming) |
+| Video Storage | Google Drive API v3 (direct browser upload via OAuth, iframe preview) |
 | Hosting | Google Cloud Run — free tier |
 | CI/CD | GitHub Actions (build + deploy) |
 | Code Quality | SonarQube Community Edition (local Docker container) |
@@ -43,21 +43,30 @@ Web Controller      (@Controller      /...)
 Both REST and Web controllers share the **same service layer**.
 No logic duplication. Services are unaware of who calls them.
 
-### Google Drive Video Playback (Direct Link)
+### Google Drive Video Upload & Playback
 
 ```
-Browser <video src="drive.google.com/uc?id=..."> ──► Google Drive (direct)
-              ↑
-    No backend involved = zero egress cost
+Upload:   Browser ──OAuth token──► Google Drive API (direct, no backend proxy)
+Playback: Browser <iframe src="drive.google.com/file/d/.../preview"> ──► Google Drive
+                ↑
+      No backend involved = zero egress cost
 ```
 
-Videos are shared as **"Anyone with the link can view"** on Google Drive.
-The browser fetches the video **directly from Drive** — the backend only stores the `driveFileId`.
-This keeps Cloud Run egress at **zero** for video playback.
+**Upload flow:**
+1. Frontend fetches OAuth Client ID + folder ID from backend (`/api/materials/upload-config`)
+2. User signs in via Google Identity Services popup (one-time consent)
+3. Browser uploads directly to Google Drive via resumable upload API
+4. File permission auto-set to "anyone with the link" for iframe preview
+5. Drive file ID saved to Material entity
 
-**CORS fallback**: If Drive blocks direct `<video>` playback, use `<iframe>` embed:
-`https://drive.google.com/file/d/{fileId}/preview`
-(loses `#t=` seeking — only use as last resort)
+**Playback:** `<iframe>` embed with `drive.google.com/file/d/{id}/preview`.
+Direct `<video>` tag doesn't work due to Google Drive CORS restrictions.
+
+**Security:**
+- OAuth scope: `drive.file` — can only access files created through the app
+- COOP header: `same-origin-allow-popups` for Google popup compatibility
+- Client ID is public (scoped by authorized origins)
+- No service account needed — uses user's own Drive quota
 
 ---
 
@@ -118,12 +127,14 @@ DanceCategory
 - Works for both Google Drive direct links and external video URLs
 
 ### Google Drive Integration
-- Upload flow: browser uses Google Picker API → uploads to a shared Drive folder
+- Upload flow: browser uses OAuth + Google Drive API → direct upload to shared folder
+- Backend serves OAuth Client ID + folder ID via `/api/materials/upload-config`
+- Upload uses resumable upload protocol with progress tracking
+- Auto-sets "anyone with link = viewer" permission for iframe playback
 - Backend stores returned `driveFileId` on the Material
-- Video playback: direct Drive URL in `<video>` tag (no backend proxy, zero egress cost)
+- Video playback: `<iframe>` embed with `drive.google.com/file/d/{id}/preview`
 - Videos shared as "Anyone with the link" — acceptable for personal app
-- `#t=start,end` works on direct URLs via native `<video>` element
-- Fallback: `<iframe>` embed if CORS blocks direct playback
+- Processing info banner shown for recently uploaded videos
 
 ### Authentication
 - None for now (2-person personal app)
@@ -488,25 +499,28 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] HTMX partial updates for filters
 - [x] Manage screen for dance types and categories
 
-### Phase 3 — Video Timestamp Slicing
+### Phase 3 — Video Timestamp Slicing ✅
 - [x] `Figure` JPA entity + Flyway migration
 - [x] Add/edit/delete figures linked to a material
-- [x] Material detail page with embedded video player
-- [ ] Figure list — clicking seeks player to timestamp
-- [ ] HTML5 `#t=start,end` fragment support
-- [ ] HTMX for smooth figure interactions
+- [x] Material detail page with embedded video player (`<iframe>` Google Drive preview)
+- [x] Figure list with clickable timestamps (opens Drive preview at timestamp)
+- [ ] HTMX for smooth figure interactions (deferred — low priority)
 
-### Phase 4 — Google Drive Integration
-- [ ] **Spike**: Test if Google Drive direct URL works in `<video>` tag (CORS check)
-  - Upload a test video to Drive, share as "Anyone with the link"
-  - Try `<video src="https://drive.google.com/uc?id=FILE_ID&export=download">` in a local HTML file
-  - If blocked → fall back to `<iframe>` embed approach
-- [ ] Google Cloud Console: create OAuth 2.0 Client ID for Picker API
-- [ ] Google Picker API integration (browser-to-Drive upload)
-- [ ] Backend endpoint to store `driveFileId` on Material
-- [ ] Build Drive video URL from `driveFileId` in Thymeleaf template
-- [ ] Verify `#t=start,end` seeking works with Drive direct links
-- [ ] Handle upload errors gracefully in the UI
+### Phase 4 — Google Drive Integration ✅
+- [x] **Spike**: Tested `<video>` tag — CORS blocks direct playback → using `<iframe>` embed
+- [x] GCP setup: OAuth 2.0 Client ID (Web application type)
+- [x] OAuth consent screen configured with test users
+- [x] Google Drive API enabled
+- [x] Browser-side OAuth via Google Identity Services (`initTokenClient`)
+- [x] Direct browser-to-Drive resumable upload with progress bar (`drive-upload.js`)
+- [x] Auto-set "anyone with link" file permission for iframe preview
+- [x] Backend endpoint `/api/materials/upload-config` (serves Client ID + folder ID)
+- [x] `GoogleDriveProperties` + `GoogleDriveService` + `DriveUploadController`
+- [x] `CoopHeaderFilter` — `same-origin-allow-popups` for OAuth popup
+- [x] Video preview iframe in Material detail page
+- [x] Processing info banner for recently uploaded videos
+- [x] Upload error handling in UI
+- [x] Service account key cleanup (deleted, gitignored)
 
 ---
 

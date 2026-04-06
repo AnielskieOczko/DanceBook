@@ -44,6 +44,7 @@ class MaterialServiceImpl(
         material.rating = request.rating
         material.videoLink = request.videoLink
         material.sourceLink = request.sourceLink
+        material.driveFileId = request.driveFileId
         material.updatedAt = LocalDateTime.now()
 
         if (material.danceType?.id != request.danceTypeId) {
@@ -74,6 +75,7 @@ class MaterialServiceImpl(
         existing.rating = request.rating
         existing.videoLink = request.videoLink
         existing.sourceLink = request.sourceLink
+        existing.driveFileId = request.driveFileId
         existing.updatedAt = LocalDateTime.now()
 
         if (existing.danceType?.id != request.danceTypeId) {

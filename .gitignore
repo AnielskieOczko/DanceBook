@@ -36,3 +36,6 @@ src/main/resources/static/css/output.css
 
 ### VS CODE ###
 .vscode
+
+### Google Service Account Keys ###
+*-service-account*.json

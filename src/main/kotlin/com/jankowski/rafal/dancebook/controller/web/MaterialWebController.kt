@@ -125,6 +125,7 @@ class MaterialWebController(
             rating = material.rating,
             videoLink = material.videoLink,
             sourceLink = material.sourceLink,
+            driveFileId = material.driveFileId,
             version = material.version
         )
         model.addAttribute("material", request)

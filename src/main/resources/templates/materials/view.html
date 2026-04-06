@@ -47,21 +47,38 @@
     <!-- Details Grid -->
     <div class="p-8 grid grid-cols-1 lg:grid-cols-2 gap-10">
       
-      <!-- Video Player Placeholder (Phase 3) -->
+      <!-- Video Player -->
       <div class="flex flex-col">
         <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             Video Player
         </h3>
         
-        <div class="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center border-4 border-gray-100 shadow-inner group relative overflow-hidden">
+        <!-- Google Drive iframe embed (when driveFileId is present) -->
+        <div th:if="${material.driveFileId != null &amp;&amp; !material.driveFileId.isEmpty()}">
+            <iframe th:src="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview'"
+                    class="w-full aspect-video rounded-2xl border-4 border-gray-100 shadow-inner"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen>
+            </iframe>
+            <div class="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                    <p class="text-sm text-amber-800 font-medium">Recently uploaded?</p>
+                    <p class="text-xs text-amber-600 mt-0.5">Google Drive needs a few minutes to process new videos before playback is available. If you see a processing message, just wait and refresh the page.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- No video state -->
+        <div th:if="${material.driveFileId == null || material.driveFileId.isEmpty()}" class="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center border-4 border-gray-100 shadow-inner group relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent pointer-events-none"></div>
             <div class="text-center z-10 p-6">
                 <div class="w-16 h-16 mx-auto bg-gray-800 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition transform duration-300 shadow-lg border border-gray-700">
                     <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h4 class="text-white font-medium text-lg">Embedded Player Blank Space</h4>
-                <p class="text-gray-400 mt-2 text-sm leading-relaxed max-w-sm mx-auto">This space is fully reserved for Phase 3, where we will embed the Google Drive video player natively.</p>
+                <h4 class="text-white font-medium text-lg">No Video Linked</h4>
+                <p class="text-gray-400 mt-2 text-sm leading-relaxed max-w-sm mx-auto">Edit this material to add a Google Drive File ID for embedded playback.</p>
             </div>
         </div>
         
@@ -103,7 +120,16 @@
 
           <!-- Figure Cards -->
           <div th:each="figure : ${figures}" class="bg-white rounded-xl border border-gray-200 p-4 flex items-center justify-between gap-4 shadow-sm hover:shadow-md transition group">
-            <div class="flex items-center gap-4 flex-1 min-w-0">
+            <!-- Clickable area: opens Drive preview at timestamp in new tab -->
+            <a th:if="${material.driveFileId != null && !material.driveFileId.isEmpty()}"
+               th:href="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview#t=' + ${figure.startTime}"
+               target="_blank"
+               class="flex items-center gap-4 flex-1 min-w-0 cursor-pointer group/link"
+               title="Open video at this timestamp">
+                <!-- Play icon -->
+                <div class="bg-green-50 text-green-600 rounded-lg p-2 border border-green-100 group-hover/link:bg-green-100 transition flex-shrink-0">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8.118v3.764a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664l-3.197-2.75z" clip-rule="evenodd"></path></svg>
+                </div>
                 <!-- Timestamp Badge -->
                 <div class="bg-indigo-50 text-indigo-700 rounded-lg px-3 py-2 text-center min-w-20 border border-indigo-100">
                     <div class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Start</div>
@@ -115,6 +141,19 @@
                     <div class="text-lg font-bold" th:text="${figure.endTime + 's'}">0s</div>
                 </div>
                 <!-- Figure Name -->
+                <span class="text-gray-800 font-medium truncate group-hover/link:text-indigo-600 transition" th:text="${figure.name}">Figure Name</span>
+            </a>
+            <!-- Non-clickable version (no driveFileId) -->
+            <div th:if="${material.driveFileId == null || material.driveFileId.isEmpty()}" class="flex items-center gap-4 flex-1 min-w-0">
+                <div class="bg-indigo-50 text-indigo-700 rounded-lg px-3 py-2 text-center min-w-20 border border-indigo-100">
+                    <div class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Start</div>
+                    <div class="text-lg font-bold" th:text="${figure.startTime + 's'}">0s</div>
+                </div>
+                <svg class="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <div class="bg-purple-50 text-purple-700 rounded-lg px-3 py-2 text-center min-w-20 border border-purple-100">
+                    <div class="text-xs font-semibold uppercase tracking-wider text-purple-400">End</div>
+                    <div class="text-lg font-bold" th:text="${figure.endTime + 's'}">0s</div>
+                </div>
                 <span class="text-gray-800 font-medium truncate" th:text="${figure.name}">Figure Name</span>
             </div>
             <!-- Delete Button -->

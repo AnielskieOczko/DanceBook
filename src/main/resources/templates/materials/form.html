@@ -69,16 +69,150 @@
                th:classappend="${#fields.hasErrors('sourceLink')} ? 'border-red-500' : 'border-gray-300'"/>
         <p th:if="${#fields.hasErrors('sourceLink')}" th:errors="*{sourceLink}" class="mt-1 text-sm text-red-600"></p>
       </div>
+      
+      <!-- Video Upload Section -->
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200 p-5">
+        <label class="block text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+          Upload Video to Google Drive
+        </label>
+
+        <!-- Hidden driveFileId field (auto-filled by JS) -->
+        <input type="hidden" th:field="*{driveFileId}" id="driveFileId"/>
+
+        <!-- Current video indicator -->
+        <div id="currentVideo" class="hidden mb-3 bg-white rounded-lg border border-green-200 p-3 flex items-center gap-3">
+          <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="text-sm text-gray-700">Video linked: <strong id="currentVideoId" class="text-indigo-600 font-mono text-xs"></strong></span>
+        </div>
+
+        <!-- File input + upload button -->
+        <div class="flex items-center gap-3">
+          <label for="videoFile" class="flex-1 cursor-pointer">
+            <div id="fileLabel" class="w-full px-4 py-3 border-2 border-dashed border-indigo-300 rounded-lg text-center text-sm text-gray-500 hover:border-indigo-500 hover:bg-white transition">
+              📎 Click to select a video file...
+            </div>
+            <input type="file" id="videoFile" accept="video/*" class="hidden"/>
+          </label>
+          <button type="button" id="uploadBtn" onclick="startUpload()" disabled
+                  class="px-5 py-3 bg-indigo-600 text-white rounded-lg font-medium transition shadow-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-indigo-700">
+            Upload
+          </button>
+        </div>
+
+        <!-- Progress bar -->
+        <div id="progressContainer" class="hidden mt-3">
+          <div class="flex justify-between text-xs text-gray-500 mb-1">
+            <span id="progressLabel">Uploading...</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Status message -->
+        <div id="uploadStatus" class="hidden mt-3 text-sm rounded-lg p-3"></div>
+
+        <!-- Manual ID fallback (collapsible) -->
+        <details class="mt-3">
+          <summary class="text-xs text-gray-400 cursor-pointer hover:text-gray-600">Or enter Drive File ID manually</summary>
+          <input type="text" id="manualDriveId" placeholder="e.g. 1FhnSuC88na_OrlBbgIzCyK8r4U1Jg_pb"
+                 class="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                 oninput="document.getElementById('driveFileId').value = this.value"/>
+        </details>
+      </div>
     </div>
 
     <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
       <a href="/materials" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition">
         Cancel
       </a>
-      <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium transition shadow-sm">
+      <button type="submit" id="saveBtn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium transition shadow-sm">
         Save Material
       </button>
     </div>
   </form>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="/js/drive-upload.js"></script>
+  <script>
+    // Show current video if driveFileId is already set
+    const existingId = document.getElementById('driveFileId').value;
+    if (existingId) {
+      document.getElementById('currentVideo').classList.remove('hidden');
+      document.getElementById('currentVideoId').textContent = existingId;
+    }
+
+    // File selection handler
+    document.getElementById('videoFile').addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        document.getElementById('fileLabel').innerHTML = '🎬 ' + file.name + ' (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)';
+        document.getElementById('fileLabel').classList.add('border-indigo-500', 'bg-white', 'text-gray-800', 'font-medium');
+        document.getElementById('uploadBtn').disabled = false;
+      }
+    });
+
+    function startUpload() {
+      const file = document.getElementById('videoFile').files[0];
+      if (!file) return;
+
+      const uploadBtn = document.getElementById('uploadBtn');
+      const saveBtn = document.getElementById('saveBtn');
+      const progressContainer = document.getElementById('progressContainer');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercent = document.getElementById('progressPercent');
+      const progressLabel = document.getElementById('progressLabel');
+      const uploadStatus = document.getElementById('uploadStatus');
+
+      // Disable buttons during upload
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = 'Uploading...';
+      saveBtn.disabled = true;
+      progressContainer.classList.remove('hidden');
+      uploadStatus.classList.add('hidden');
+
+      DriveUpload.upload(file,
+        // onProgress
+        function(percent) {
+          progressBar.style.width = percent + '%';
+          progressPercent.textContent = percent + '%';
+          if (percent >= 100) {
+            progressLabel.textContent = 'Processing...';
+          }
+        },
+        // onSuccess
+        function(fileId) {
+          document.getElementById('driveFileId').value = fileId;
+          progressBar.style.width = '100%';
+          progressLabel.textContent = 'Complete!';
+          progressBar.classList.remove('bg-indigo-600');
+          progressBar.classList.add('bg-green-500');
+
+          uploadStatus.className = 'mt-3 text-sm rounded-lg p-3 bg-green-50 text-green-700 border border-green-200';
+          uploadStatus.innerHTML = '✅ Video uploaded successfully! File ID: <code class="font-mono text-xs">' + fileId + '</code>';
+          uploadStatus.classList.remove('hidden');
+
+          document.getElementById('currentVideo').classList.remove('hidden');
+          document.getElementById('currentVideoId').textContent = fileId;
+
+          uploadBtn.textContent = 'Upload';
+          saveBtn.disabled = false;
+        },
+        // onError
+        function(error) {
+          uploadStatus.className = 'mt-3 text-sm rounded-lg p-3 bg-red-50 text-red-700 border border-red-200';
+          uploadStatus.textContent = '❌ Upload failed: ' + error;
+          uploadStatus.classList.remove('hidden');
+
+          uploadBtn.disabled = false;
+          uploadBtn.textContent = 'Retry';
+          saveBtn.disabled = false;
+          progressContainer.classList.add('hidden');
+        }
+      );
+    }
+  </script>
 </main>
 </html>
