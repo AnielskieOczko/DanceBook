@@ -1,90 +1,17 @@
 /**
- * Google Drive Direct Upload Module (OAuth version)
+ * Google Drive Direct Upload Module (Server-side auth version)
  * 
  * Flow:
- * 1. Get clientId + folderId from our backend (/api/materials/upload-config)
- * 2. User signs in via Google Identity Services (one-time popup)
- * 3. Browser uploads file directly to Google Drive API using user's OAuth token
- * 4. Returns the Drive file ID
+ * 1. Get access token + folderId from backend (backend uses stored refresh token)
+ * 2. Create resumable upload session (via backend or directly with token)
+ * 3. Browser uploads file directly to Google Drive using the pre-auth URL
+ * 4. Finalize: set public permission via backend
+ * 5. Return the Drive file ID
+ * 
+ * NO Google popup, NO user sign-in required.
  */
 
 const DriveUpload = {
-    _tokenClient: null,
-    _accessToken: null,
-    _config: null,
-
-    /**
-     * Initialize by fetching config from backend and setting up the token client.
-     */
-    async init() {
-        if (this._config) return; // already initialized
-
-        // Get clientId + folderId from backend
-        const res = await fetch('/api/materials/upload-config');
-        if (!res.ok) throw new Error('Failed to get upload config');
-        this._config = await res.json();
-
-        // Wait for Google Identity Services library to load
-        await this._waitForGis();
-
-        // Initialize the OAuth2 token client
-        this._tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: this._config.clientId,
-            scope: 'https://www.googleapis.com/auth/drive.file',
-            callback: () => {} // will be overridden per-request
-        });
-    },
-
-    /**
-     * Wait for the Google Identity Services library to be available.
-     */
-    _waitForGis() {
-        return new Promise((resolve, reject) => {
-            if (typeof google !== 'undefined' && google.accounts) {
-                resolve();
-                return;
-            }
-            // Poll for availability (library loads async)
-            let attempts = 0;
-            const interval = setInterval(() => {
-                attempts++;
-                if (typeof google !== 'undefined' && google.accounts) {
-                    clearInterval(interval);
-                    resolve();
-                } else if (attempts > 50) { // 5 seconds
-                    clearInterval(interval);
-                    reject(new Error('Google Identity Services library failed to load'));
-                }
-            }, 100);
-        });
-    },
-
-    /**
-     * Get an OAuth access token (prompts user to sign in if needed).
-     */
-    _getToken() {
-        return new Promise((resolve, reject) => {
-            this._tokenClient.callback = (response) => {
-                if (response.error) {
-                    reject(new Error(response.error));
-                    return;
-                }
-                this._accessToken = response.access_token;
-                resolve(response.access_token);
-            };
-            this._tokenClient.error_callback = (error) => {
-                reject(new Error(error.message || 'OAuth authorization failed'));
-            };
-
-            if (this._accessToken) {
-                // Try to use existing token, request new one silently
-                this._tokenClient.requestAccessToken({ prompt: '' });
-            } else {
-                // First time: show consent popup
-                this._tokenClient.requestAccessToken({ prompt: 'consent' });
-            }
-        });
-    },
 
     /**
      * Upload a file to Google Drive.
@@ -97,43 +24,26 @@ const DriveUpload = {
         try {
             onProgress(0);
 
-            // 1. Initialize (fetch config, set up token client)
-            await this.init();
-
-            // 2. Get user OAuth token (may show sign-in popup)
-            const token = await this._getToken();
-
-            // 3. Create a resumable upload session
-            const metadata = JSON.stringify({
-                name: file.name,
-                parents: [this._config.folderId]
+            // 1. Create a resumable upload session via backend
+            //    (backend authenticates with Google using stored refresh token)
+            const sessionRes = await fetch('/api/materials/upload-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fileName: file.name,
+                    mimeType: file.type || 'video/mp4',
+                    fileSize: file.size
+                })
             });
 
-            const sessionRes = await fetch(
-                'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        'X-Upload-Content-Type': file.type,
-                        'X-Upload-Content-Length': file.size
-                    },
-                    body: metadata
-                }
-            );
-
             if (!sessionRes.ok) {
-                const errBody = await sessionRes.text();
-                throw new Error('Failed to create upload session: ' + errBody);
+                const errText = await sessionRes.text();
+                throw new Error('Failed to create upload session: ' + errText);
             }
 
-            const uploadUrl = sessionRes.headers.get('Location');
-            if (!uploadUrl) {
-                throw new Error('No upload URL returned by Google Drive');
-            }
+            const { uploadUrl } = await sessionRes.json();
 
-            // 4. Upload the file using XMLHttpRequest (for progress tracking)
+            // 2. Upload the file directly to Google Drive using the pre-auth URL
             const xhr = new XMLHttpRequest();
 
             xhr.upload.addEventListener('progress', (e) => {
@@ -146,26 +56,20 @@ const DriveUpload = {
             xhr.addEventListener('load', async () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     const response = JSON.parse(xhr.responseText);
-                    // 5. Make the file viewable by anyone with the link (needed for iframe preview)
+                    const fileId = response.id;
+
+                    // 3. Finalize: set public permission via backend
                     try {
-                        await fetch(
-                            'https://www.googleapis.com/drive/v3/files/' + response.id + '/permissions',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': 'Bearer ' + token,
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    role: 'reader',
-                                    type: 'anyone'
-                                })
-                            }
-                        );
+                        await fetch('/api/materials/finalize-upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ fileId: fileId })
+                        });
                     } catch (permErr) {
                         console.warn('Could not set public permission:', permErr);
                     }
-                    onSuccess(response.id);
+
+                    onSuccess(fileId);
                 } else {
                     onError('Upload failed with status: ' + xhr.status);
                 }
@@ -176,7 +80,7 @@ const DriveUpload = {
             });
 
             xhr.open('PUT', uploadUrl);
-            xhr.setRequestHeader('Content-Type', file.type);
+            xhr.setRequestHeader('Content-Type', file.type || 'video/mp4');
             xhr.send(file);
 
         } catch (err) {

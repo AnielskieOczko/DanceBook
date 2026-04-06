@@ -38,6 +38,12 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Google Drive API (server-side upload via stored refresh token)
+    implementation("com.google.api-client:google-api-client:2.7.2")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20250220-2.0.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.34.0")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
