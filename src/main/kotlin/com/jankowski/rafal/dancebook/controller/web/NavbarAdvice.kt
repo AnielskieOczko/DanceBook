@@ -20,4 +20,7 @@ class NavbarAdvice(
 
     @ModelAttribute("currentUser")
     fun currentUser() = appUserService.getCurrentUser()
+
+    @ModelAttribute("allUsers")
+    fun allUsers() = appUserService.findAll()
 }

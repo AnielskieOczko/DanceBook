@@ -35,7 +35,14 @@ class AppUserServiceImpl(
     }
 
     override fun getCurrentUser(): AppUser {
-        return findByUsername(DEFAULT_USERNAME)
-            ?: throw EntityNotFoundException("Default user '$DEFAULT_USERNAME' not found. Run seed migration V6.")
+        val requestAttributes = org.springframework.web.context.request.RequestContextHolder.getRequestAttributes() 
+            as? org.springframework.web.context.request.ServletRequestAttributes
+        val request = requestAttributes?.request
+        
+        val usernameCookie = request?.cookies?.find { it.name == "CURRENT_USER" }?.value
+        val username = usernameCookie ?: DEFAULT_USERNAME
+
+        return findByUsername(username)
+            ?: throw EntityNotFoundException("User '$username' not found. Run seed migration V6.")
     }
 }
