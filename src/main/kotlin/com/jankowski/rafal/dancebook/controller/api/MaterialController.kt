@@ -28,15 +28,17 @@ class MaterialController(
 
     @GetMapping
     fun getMaterials(
-        @RequestParam(required = false) danceTypeId: UUID?,
-        @RequestParam(required = false) danceCategoryId: UUID?,
-        @RequestParam(required = false) rating: Short?,
+        @RequestParam(required = false) danceTypeIds: List<UUID>?,
+        @RequestParam(required = false) danceCategoryIds: List<UUID>?,
+        @RequestParam(required = false) minRating: Short?,
+        @RequestParam(required = false) nameSearch: String?,
         pageable: Pageable
     ): Page<MaterialResponse> {
         return materialService.findAll(
-            typeId = danceTypeId,
-            categoryId = danceCategoryId,
-            rating = rating,
+            typeIds = danceTypeIds,
+            categoryIds = danceCategoryIds,
+            minRating = minRating,
+            nameSearch = nameSearch,
             pageable = pageable
         ).map { it.toResponse() }
     }
