@@ -29,14 +29,21 @@ class MaterialWebController(
 
     @GetMapping
     fun listMaterials(
-        @RequestParam(required = false) typeId: UUID?,
-        @RequestParam(required = false) categoryId: UUID?,
-        @RequestParam(required = false) rating: Short?,
+        @RequestParam(required = false) typeIds: List<UUID>?,
+        @RequestParam(required = false) categoryIds: List<UUID>?,
+        @RequestParam(required = false) minRating: Short?,
+        @RequestParam(required = false) nameSearch: String?,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
         pageable: Pageable
     ): String {
-        val materialsPage = materialService.findAll(typeId = typeId, categoryId = categoryId, rating = rating, pageable = pageable)
+        val materialsPage = materialService.findAll(
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            minRating = minRating,
+            nameSearch = nameSearch,
+            pageable = pageable
+        )
         model.addAttribute("materials", materialsPage.content)
         // Optimisation: We only need to fetch dropdown choices if we are rendering the full page.
         // HTMX requests only swap the table fragment, which doesn't contain the dropdowns!
@@ -45,9 +52,10 @@ class MaterialWebController(
             model.addAttribute("danceCategories", danceCategoryService.findAll())
         }
         
-        model.addAttribute("selectedTypeId", typeId)
-        model.addAttribute("selectedCategoryId", categoryId)
-        model.addAttribute("selectedRating", rating)
+        model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
+        model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
+        model.addAttribute("selectedMinRating", minRating)
+        model.addAttribute("selectedNameSearch", nameSearch)
 
         return if (isHtmxRequest == true) {
             "materials/list :: materialsTable"

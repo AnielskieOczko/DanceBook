@@ -113,13 +113,14 @@ class MaterialServiceImpl(
     }
 
     override fun findAll(
-        typeId: UUID?,
-        categoryId: UUID?,
-        rating: Short?,
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        nameSearch: String?,
         pageable: Pageable
     ): Page<Material> {
-        log.debug("Retrieving all materials with filters: typeId={}, categoryId={}, rating={}", typeId, categoryId, rating)
-        val spec = MaterialSpecification.withFilters(typeId, categoryId, rating)
+        log.debug("Retrieving all materials with filters: typeIds={}, categoryIds={}, minRating={}, nameSearch={}", typeIds, categoryIds, minRating, nameSearch)
+        val spec = MaterialSpecification.withFilters(typeIds, categoryIds, minRating, nameSearch)
         return materialRepository.findAll(spec, pageable)
     }
 

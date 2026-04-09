@@ -11,31 +11,56 @@
   </div>
 
   <!-- HTMX Filter Form -->
-  <form id="filterForm" hx-get="/materials" hx-target="#materialsTable" hx-trigger="change" class="mb-6 bg-gray-50 p-4 rounded-lg flex flex-col sm:flex-row gap-4 sm:items-end border border-gray-100 shadow-sm">
-    <div class="flex-1">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Dance Type</label>
-      <select name="typeId" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm cursor-pointer transition">
-        <option value="">All Types</option>
-        <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}" th:selected="${type.id == selectedTypeId}"></option>
-      </select>
+  <form id="filterForm" hx-get="/materials" hx-target="#materialsTable" hx-trigger="change, input delay:300ms from:#nameSearch"
+        class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm space-y-4">
+
+    <!-- Name search -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
+      <input type="text" id="nameSearch" name="nameSearch" th:value="${selectedNameSearch}"
+             placeholder="e.g. waltz, natural turn..."
+             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"/>
     </div>
-    <div class="flex-1">
-          <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <select name="categoryId" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm cursor-pointer transition">
-            <option value="">All Categories</option>
-            <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${cat.id == selectedCategoryId}"></option>
-          </select>
-    </div>
-    <div class="sm:w-1/4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-        <select name="rating" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm cursor-pointer transition">
-          <option value="">All Ratings</option>
-          <option value="5" th:selected="${selectedRating == 5}">5 Stars</option>
-          <option value="4" th:selected="${selectedRating == 4}">4 Stars</option>
-          <option value="3" th:selected="${selectedRating == 3}">3 Stars</option>
-          <option value="2" th:selected="${selectedRating == 2}">2 Stars</option>
-          <option value="1" th:selected="${selectedRating == 1}">1 Star</option>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Dance Types (multi-select checkboxes) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Dance Types</label>
+        <div class="max-h-40 overflow-y-auto space-y-1 bg-white rounded-md border border-gray-200 p-2">
+          <label th:each="type : ${danceTypes}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 px-1 py-0.5 rounded cursor-pointer">
+            <input type="checkbox" name="typeIds" th:value="${type.id}"
+                   th:checked="${#lists.contains(selectedTypeIds, type.id)}"
+                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+            <span th:text="${type.name}">Type</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Categories (multi-select checkboxes) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+        <div class="max-h-40 overflow-y-auto space-y-1 bg-white rounded-md border border-gray-200 p-2">
+          <label th:each="cat : ${danceCategories}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 px-1 py-0.5 rounded cursor-pointer">
+            <input type="checkbox" name="categoryIds" th:value="${cat.id}"
+                   th:checked="${#lists.contains(selectedCategoryIds, cat.id)}"
+                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+            <span th:text="${cat.name}">Category</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Min Rating -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Min Rating</label>
+        <select name="minRating" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm cursor-pointer transition">
+          <option value="">Any Rating</option>
+          <option value="5" th:selected="${selectedMinRating == 5}">5 Stars</option>
+          <option value="4" th:selected="${selectedMinRating == 4}">4+ Stars</option>
+          <option value="3" th:selected="${selectedMinRating == 3}">3+ Stars</option>
+          <option value="2" th:selected="${selectedMinRating == 2}">2+ Stars</option>
+          <option value="1" th:selected="${selectedMinRating == 1}">1+ Star</option>
         </select>
+      </div>
     </div>
   </form>
 

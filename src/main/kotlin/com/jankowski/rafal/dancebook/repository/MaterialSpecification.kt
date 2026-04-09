@@ -10,23 +10,28 @@ import java.util.UUID
 object MaterialSpecification {
 
     fun withFilters(
-        typeId: UUID?,
-        categoryId: UUID?,
-        rating: Short?
+        typeIds: List<UUID>? = null,
+        categoryIds: List<UUID>? = null,
+        minRating: Short? = null,
+        nameSearch: String? = null
     ): Specification<Material> {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>()
 
-            typeId?.let {
-                predicates.add(cb.equal(root.get<DanceType>("danceType").get<UUID>("id"), it))
+            if (!typeIds.isNullOrEmpty()) {
+                predicates.add(root.get<DanceType>("danceType").get<UUID>("id").`in`(typeIds))
             }
 
-            categoryId?.let {
-                predicates.add(cb.equal(root.get<DanceCategory>("danceCategory").get<UUID>("id"), it))
+            if (!categoryIds.isNullOrEmpty()) {
+                predicates.add(root.get<DanceCategory>("danceCategory").get<UUID>("id").`in`(categoryIds))
             }
 
-            rating?.let {
-                predicates.add(cb.equal(root.get<Short>("rating"), it))
+            minRating?.let {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("rating"), it))
+            }
+
+            if (!nameSearch.isNullOrBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("name")), "%${nameSearch.lowercase()}%"))
             }
 
             cb.and(*predicates.toTypedArray())
