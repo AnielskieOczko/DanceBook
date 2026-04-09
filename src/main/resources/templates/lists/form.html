@@ -35,7 +35,7 @@
         <div class="max-h-48 overflow-y-auto space-y-1 bg-gray-50 rounded-md border border-gray-200 p-3">
           <label th:each="type : ${danceTypes}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-white px-2 py-1.5 rounded cursor-pointer transition">
             <input type="checkbox" name="danceTypeIds" th:value="${type.id}"
-                   th:checked="${listRequest.danceTypeIds.contains(type.id)}"
+                   th:checked="${#lists.contains(listRequest.danceTypeIds, type.id)}"
                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
             <span th:text="${type.name}">Type</span>
           </label>
@@ -50,7 +50,7 @@
         <div class="max-h-48 overflow-y-auto space-y-1 bg-gray-50 rounded-md border border-gray-200 p-3">
           <label th:each="cat : ${danceCategories}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-white px-2 py-1.5 rounded cursor-pointer transition">
             <input type="checkbox" name="danceCategoryIds" th:value="${cat.id}"
-                   th:checked="${listRequest.danceCategoryIds.contains(cat.id)}"
+                   th:checked="${#lists.contains(listRequest.danceCategoryIds, cat.id)}"
                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
             <span th:text="${cat.name}">Category</span>
           </label>
