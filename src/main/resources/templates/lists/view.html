@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::main})}">
+
+<main class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-8">
+
+  <!-- Header with list info -->
+  <div class="flex justify-between items-start mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-indigo-600" th:text="${customList.name}">List Name</h1>
+      <div class="flex items-center gap-3 mt-2 text-sm text-gray-500">
+        <span th:if="${customList.isPublic}" class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-medium">🌍 Public</span>
+        <span th:unless="${customList.isPublic}" class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-medium">🔒 Private</span>
+        <span>by <strong th:text="${customList.owner.displayName}">Owner</strong></span>
+      </div>
+
+      <!-- Active filters summary -->
+      <div class="flex flex-wrap gap-2 mt-3">
+        <span th:if="${customList.nameFilter != null}" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+          🔍 "<span th:text="${customList.nameFilter}">search</span>"
+        </span>
+        <span th:each="type : ${customList.danceTypes}" class="bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded" th:text="${type.name}">Type</span>
+        <span th:each="cat : ${customList.danceCategories}" class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded" th:text="${cat.name}">Category</span>
+        <span th:if="${customList.minRating != null}" class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded">
+          ≥ <span th:text="${customList.minRating}">3</span>★
+        </span>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <a th:href="@{/lists/{id}/edit(id=${customList.id})}" class="px-3 py-2 text-sm bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 font-medium transition">
+        ✏️ Edit
+      </a>
+      <form th:action="@{/lists/{id}/delete(id=${customList.id})}" method="post" class="inline">
+        <button type="submit" class="px-3 py-2 text-sm bg-red-50 text-red-600 rounded-md hover:bg-red-100 font-medium transition cursor-pointer"
+                onclick="return confirm('Are you sure you want to delete this list?')">
+          🗑️ Delete
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Materials table (reused from materials/list.html) -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+      <tr class="bg-gray-100 border-b border-gray-200 text-gray-700">
+        <th class="p-3 font-semibold rounded-tl-lg">Name</th>
+        <th class="p-3 font-semibold">Dance Type</th>
+        <th class="p-3 font-semibold">Category</th>
+        <th class="p-3 font-semibold">Rating</th>
+        <th class="p-3 font-semibold text-right rounded-tr-lg">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="material : ${materials}" class="border-b border-gray-100 hover:bg-gray-50 transition">
+        <td class="p-3 font-medium text-gray-900">
+          <a th:href="@{/materials/{id}(id=${material.id})}" th:text="${material.name}" class="text-indigo-600 hover:text-indigo-800 hover:underline">Name</a>
+        </td>
+        <td class="p-3">
+          <span th:if="${material.danceType != null}" th:text="${material.danceType.name}" class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"></span>
+          <span th:if="${material.danceType == null}" class="text-gray-400 text-sm">-</span>
+        </td>
+        <td class="p-3">
+          <span th:if="${material.danceCategory != null}" th:text="${material.danceCategory.name}" class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"></span>
+          <span th:if="${material.danceCategory == null}" class="text-gray-400 text-sm">-</span>
+        </td>
+        <td class="p-3">
+          <span th:text="${material.rating ?: '-'}" class="font-medium text-gray-700"></span>
+          <span th:if="${material.rating != null}" class="text-yellow-400">★</span>
+        </td>
+        <td class="p-3 text-right">
+          <a th:href="@{/materials/{id}(id=${material.id})}" class="text-indigo-600 hover:text-indigo-800 font-medium transition">View</a>
+        </td>
+      </tr>
+      
+      <tr th:if="${#lists.isEmpty(materials)}">
+        <td colspan="5" class="p-8 text-center text-gray-500 bg-gray-50 italic">
+          No materials match this list's filters yet.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</html>
