@@ -518,11 +518,11 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Video preview iframe in Material detail page + Processing banner
 - [x] Upload error handling in UI
 
-### Phase 5 — Spring Security Authentication (Upcoming) ⏳
-- [ ] Implement Spring Security configuration
-- [ ] Add simple login page with user/password
-- [ ] Secure all `/api/` and Web endpoints
-- [ ] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
+### Phase 5 — Spring Security Authentication ✅
+- [x] Implement Spring Security configuration
+- [x] Add simple login page with user/password
+- [x] Secure all `/api/` and Web endpoints
+- [x] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
 
 ### Phase 6 — Storage Maintenance (Cleanup Job) ⏳
 - [ ] Schedule a weekly `@Scheduled` task to cross-reference Google Drive files with the database

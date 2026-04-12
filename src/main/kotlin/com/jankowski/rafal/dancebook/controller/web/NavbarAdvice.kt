@@ -16,11 +16,16 @@ class NavbarAdvice(
 ) {
 
     @ModelAttribute("navLists")
-    fun navLists() = customListService.findVisibleByCurrentUser()
+    fun navLists(): List<Any> {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return emptyList()
+        return customListService.findVisibleByCurrentUser()
+    }
 
     @ModelAttribute("currentUser")
-    fun currentUser() = appUserService.getCurrentUser()
-
-    @ModelAttribute("allUsers")
-    fun allUsers() = appUserService.findAll()
+    fun currentUser(): Any? {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return null
+        return appUserService.getCurrentUser()
+    }
 }

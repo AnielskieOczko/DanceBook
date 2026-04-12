@@ -21,6 +21,8 @@ class AppUser {
 
     var username: String = ""
 
+    var email: String? = null
+
     var displayName: String = ""
 
     var password: String? = null

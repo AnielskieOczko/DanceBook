@@ -44,12 +44,17 @@ dependencies {
     implementation("com.google.apis:google-api-services-drive:v3-rev20250220-2.0.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.34.0")
 
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 kotlin {

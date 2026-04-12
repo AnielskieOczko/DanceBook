@@ -35,14 +35,18 @@ class AppUserServiceImpl(
     }
 
     override fun getCurrentUser(): AppUser {
-        val requestAttributes = org.springframework.web.context.request.RequestContextHolder.getRequestAttributes() 
-            as? org.springframework.web.context.request.ServletRequestAttributes
-        val request = requestAttributes?.request
-        
-        val usernameCookie = request?.cookies?.find { it.name == "CURRENT_USER" }?.value
-        val username = usernameCookie ?: DEFAULT_USERNAME
+        val authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (authentication == null || !authentication.isAuthenticated || authentication.principal == "anonymousUser") {
+            throw EntityNotFoundException("No user is currently logged in")
+        }
 
-        return findByUsername(username)
-            ?: throw EntityNotFoundException("User '$username' not found. Run seed migration V6.")
+        val principal = authentication.principal
+        return if (principal is org.springframework.security.oauth2.core.user.OAuth2User) {
+            val email = principal.getAttribute<String>("email") ?: throw EntityNotFoundException("OAuth2 user has no email")
+            appUserRepository.findByEmail(email)
+        } else {
+            val username = authentication.name
+            appUserRepository.findByUsername(username)
+        } ?: throw EntityNotFoundException("User not found in underlying database")
     }
 }
