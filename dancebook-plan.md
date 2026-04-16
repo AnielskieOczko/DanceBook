@@ -524,10 +524,16 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Secure all `/api/` and Web endpoints
 - [x] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
 
-### Phase 6 — Storage Maintenance (Cleanup Job) ⏳
-- [ ] Schedule a weekly `@Scheduled` task to cross-reference Google Drive files with the database
-- [ ] Automatically delete any "orphan" files (in Drive but not in DB) to save storage quota
-- [ ] Add a manual "Trigger Cleanup" button in an admin dashboard
+### Phase 6 — Storage Maintenance & Admin Panel ✅
+- [x] `@Scheduled` task to cross-reference Google Drive with DB (bi-monthly)
+- [x] Automated Storage Cleanup logic (Orphaned file detection)
+- [x] Admin Dashboard (`/admin`) with secure access control
+- [x] Manual "Trigger / Simulate Cleanup" HTMX buttons
+- [x] **Observability Expansion**:
+    - [x] Detailed Audit Logging (JSON snapshots of deleted/simulated file metadata)
+    - [x] Real-time Storage metrics (MB usage for Total, Linked, and Orphaned space)
+    - [x] User Management list with join dates and roles
+    - [x] Lazy-loading Drive statistics to maintain UI performance
 
 ---
 
