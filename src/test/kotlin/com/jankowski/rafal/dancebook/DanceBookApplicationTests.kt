@@ -1,18 +1,13 @@
 package com.jankowski.rafal.dancebook
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
-@SpringBootTest
 class DanceBookApplicationTests {
 
     @Test
-    fun contextLoads() {
-    }
-
-    @Test
     fun generatePasswordHash() {
-        val encoder = org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+        val encoder = BCryptPasswordEncoder()
         val rawPassword = "password123"
         val encodedPassword = encoder.encode(rawPassword)
         println("\n\n========================================================")
@@ -22,3 +17,4 @@ class DanceBookApplicationTests {
     }
 
 }
+
