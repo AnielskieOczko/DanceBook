@@ -2,6 +2,8 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.config.GoogleDriveProperties
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.http.GenericUrl
+import com.google.api.client.http.json.JsonHttpContent
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.Permission
@@ -9,6 +11,7 @@ import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.UserCredentials
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class GoogleDriveService(
@@ -75,10 +78,10 @@ class GoogleDriveService(
 
         val metaData = mapOf("name" to fileName, "parents" to listOf(driveProperties.folderId))
 
-        val url = com.google.api.client.http.GenericUrl(
+        val url = GenericUrl(
             "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable"
         )
-        val content = com.google.api.client.http.json.JsonHttpContent(drive.jsonFactory, metaData)
+        val content = JsonHttpContent(drive.jsonFactory, metaData)
         val request = requestFactory.buildPostRequest(url, content).apply {
             headers.set("X-Upload-Content-Type", mimeType)
             fileSize?.let { headers.set("X-Upload-Content-Length", it.toString()) }
@@ -122,4 +125,39 @@ class GoogleDriveService(
             logger.error("Failed to delete {}: {}", fileId, e.message)
         }
     }
+
+    fun listFilesInFolder(): List<DriveFileInfo> {
+        val results = mutableListOf<DriveFileInfo>()
+        var pageToken: String? = null
+
+        do {
+            val query = "('${driveProperties.folderId}' in parents) and trashed = false"
+
+            val result = drive.files().list()
+                .setQ(query)
+                .setFields("nextPageToken, files(id, name, size, createdTime)")
+                .setPageToken(pageToken)
+                .execute()
+
+            for (file in result.files) {
+                results.add(DriveFileInfo(
+                    id = file.id,
+                    name = file.name,
+                    size = file.getSize(), // getSize() returns Long
+                    createdTime = file.createdTime.value
+                ))
+            }
+            pageToken = result.nextPageToken
+        } while (pageToken != null)
+        return results
+    }
+
+    data class DriveFileInfo(
+        val id: String, 
+        val name: String, 
+        val size: Long?, 
+        val createdTime: Long
+    )
+
+
 }
