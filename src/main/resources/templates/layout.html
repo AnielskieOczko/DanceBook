@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>DanceBook</title>
 
     <!-- Tailwind CSS (compiled by our Gradle task) -->
@@ -10,6 +12,14 @@
 
     <!-- HTMX (loaded via CDN) -->
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script>
+      // Tell HTMX to include the CSRF token on every request
+      document.addEventListener('htmx:configRequest', function(event) {
+        var token = document.querySelector('meta[name="_csrf"]').content;
+        var header = document.querySelector('meta[name="_csrf_header"]').content;
+        event.detail.headers[header] = token;
+      });
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
@@ -53,29 +63,38 @@
         </div>
       </div>
 
-      <!-- Current user display / Switcher -->
+      <!-- Current user display / Auth -->
       <div class="hidden sm:flex sm:items-center ml-4">
-        <div class="relative group">
+        
+        <!-- Logged In View -->
+        <div sec:authorize="isAuthenticated()" class="relative group">
           <button type="button" class="text-indigo-200 hover:text-white inline-flex items-center gap-1 text-sm transition focus:outline-none py-2">
-            👤 <span th:text="${currentUser?.displayName ?: 'Guest'}" class="font-medium text-white">User</span>
+            👤 <span sec:authentication="name" class="font-medium text-white">User</span>
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
           
           <div class="absolute right-0 mt-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
             <div class="py-1">
-              <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">Switch User</div>
-              <th:block th:each="user : ${allUsers}">
-                <form action="/switch-user" method="post" class="m-0">
-                  <input type="hidden" name="username" th:value="${user.username}" />
-                  <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition flex items-center justify-between cursor-pointer">
-                    <span th:text="${user.displayName}">Name</span>
-                    <span th:if="${user.id == currentUser.id}" class="text-indigo-600 font-bold">✓</span>
-                  </button>
-                </form>
-              </th:block>
+              <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">Account</div>
+              <a sec:authorize="hasRole('ADMIN')" href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition font-medium">
+                ⚙️ Admin Panel
+              </a>
+              <form th:action="@{/logout}" method="post" class="m-0 mt-1">
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition flex items-center justify-between cursor-pointer font-medium">
+                  Logout 🚪
+                </button>
+              </form>
             </div>
           </div>
         </div>
+
+        <!-- Logged Out View -->
+        <div sec:authorize="isAnonymous()">
+          <a th:href="@{/login}" class="text-indigo-100 hover:text-white inline-flex items-center gap-1 px-3 py-2 text-sm font-medium transition bg-indigo-700 hover:bg-indigo-800 rounded-md shadow-sm border border-indigo-500">
+            Sign In
+          </a>
+        </div>
+        
       </div>
     </div>
   </div>

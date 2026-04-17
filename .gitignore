@@ -39,3 +39,6 @@ src/main/resources/static/css/output.css
 
 ### Google Service Account Keys ###
 *-service-account*.json
+
+### AI Agents ###
+.agents/

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::main})}">
+
+<main class="max-w-4xl mx-auto mt-8">
+
+  <!-- Header -->
+  <div class="bg-gray-800 text-white p-8 rounded-xl shadow-lg mb-8">
+    <h1 class="text-3xl font-extrabold tracking-tight">⚙️ Admin Dashboard</h1>
+    <p class="text-gray-300 mt-2">System overview and storage maintenance.</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 text-2xl">👥</div>
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Users</h2>
+      <p class="text-4xl font-extrabold text-indigo-600" th:text="${totalUsers}">0</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-4 text-2xl">🎬</div>
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Materials</h2>
+      <p class="text-4xl font-extrabold text-emerald-600" th:text="${totalMaterials}">0</p>
+    </div>
+  </div>
+
+  <!-- Storage Maintenance Card -->
+  <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+    <h2 class="text-xl font-bold text-gray-900 mb-2">🗄️ Google Drive Maintenance</h2>
+    <p class="text-sm text-gray-500 mb-6">
+      Finds Google Drive videos uploaded over 24 hours ago that were never saved to a material (orphaned files).
+    </p>
+
+    <div class="flex flex-wrap gap-4 mb-4">
+      <button hx-post="/admin/storage/simulate"
+              hx-target="#results"
+              hx-swap="innerHTML"
+              class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition">
+        🔍 Simulate Cleanup (Dry Run)
+      </button>
+
+      <button hx-post="/admin/storage/execute"
+              hx-target="#results"
+              hx-swap="innerHTML"
+              hx-confirm="Are you sure you want to permanently delete orphaned files from Google Drive?"
+              class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-sm hover:bg-red-700 transition">
+        🗑️ Run Deletion
+      </button>
+    </div>
+
+    <!-- HTMX injects fragments here -->
+    <div id="results"></div>
+  </div>
+
+  <!-- Google Drive Files List (Lazy Loaded) -->
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+      <h2 class="text-xl font-bold text-gray-900">☁️ Google Drive Files</h2>
+    </div>
+    <div class="p-6">
+      <div hx-get="/admin/storage/files" hx-trigger="load">
+        <div class="flex items-center space-x-2 text-gray-500">
+           <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+           <span>Fetching storage data from Google...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users List -->
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-xl font-bold text-gray-900">👥 Registered Users</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr th:each="u : ${users}">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${u.username}">Username</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${u.email}">Email</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800" th:text="${u.role}">ROLE</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(u.createdAt, 'yyyy-MM-dd')}">Date</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Execution Logs -->
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <h2 class="text-xl font-bold text-gray-900">📜 Cleanup Job History</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Executed At</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Files Deleted</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details (IDs)</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr th:each="log : ${cleanupLogs}">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${#temporals.format(log.executedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span th:if="${log.isDryRun}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Simulate</span>
+              <span th:if="${!log.isDryRun}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Delete</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${log.filesDeletedCount}">0</td>
+            <td class="px-6 py-4 text-sm text-gray-500">
+               <details th:if="${!log.deletedFiles.isEmpty()}" class="cursor-pointer group">
+                  <summary class="font-semibold text-indigo-600 hover:text-indigo-800 outline-none">View Files</summary>
+                  <div class="mt-2 text-xs border rounded-lg p-2 bg-gray-50 max-h-48 overflow-y-auto">
+                    <table class="w-full text-left">
+                       <tr th:each="file : ${log.deletedFiles}" class="border-b last:border-0 border-gray-200">
+                         <td class="py-1 pr-4 truncate max-w-[200px]" th:text="${file.name}">Name</td>
+                         <td class="py-1 whitespace-nowrap text-right font-mono" th:text="${file.size != null ? T(java.lang.String).format('%.2f MB', file.size / 1048576.0) : 'Unknown'}">Size</td>
+                       </tr>
+                    </table>
+                  </div>
+               </details>
+               <span th:if="${log.deletedFiles.isEmpty()}">None</span>
+            </td>
+          </tr>
+          <tr th:if="${cleanupLogs.isEmpty()}">
+            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No cleanup history found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Hidden Thymeleaf fragments returned by HTMX POST endpoints -->
+  <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-2">
+    <h3 class="font-bold text-yellow-700 mb-2">🔍 Simulation Complete</h3>
+    <p class="text-gray-700">Found <strong th:text="${orphanedFiles.size()}">0</strong> orphaned file(s).</p>
+    <ul th:if="${!orphanedFiles.isEmpty()}" class="list-disc pl-5 mt-2 text-sm text-gray-600">
+      <li th:each="fileId : ${orphanedFiles}" th:text="${fileId}">file-id</li>
+    </ul>
+    <p th:if="${orphanedFiles.isEmpty()}" class="text-sm text-green-600 mt-1">✅ No orphaned files found. Storage is clean!</p>
+  </div>
+
+  <div th:fragment="cleanupSuccess" th:if="${deletedCount != null}" class="bg-green-50 border border-green-200 rounded-lg p-4 mt-2">
+    <h3 class="font-bold text-green-700 mb-2">✅ Cleanup Successful</h3>
+    <p class="text-gray-700">Permanently deleted <strong th:text="${deletedCount}">0</strong> orphaned file(s) from Google Drive.</p>
+  </div>
+
+  <div th:fragment="driveSection" th:if="${driveFiles != null}" class="space-y-6">
+    <!-- Storage Size Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 shadow-sm mb-4">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-blue-900 mb-1">Total Cloud Space</h2>
+        <div class="flex items-baseline space-x-2">
+            <p class="text-2xl font-extrabold text-blue-700" th:text="${T(java.lang.String).format('%.2f MB', totalSize / 1048576.0)}">0 MB</p>
+            <span class="text-sm font-medium text-blue-600" th:text="'(' + ${totalCount} + ' files)'">(0 files)</span>
+        </div>
+      </div>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-green-900 mb-1">Linked Materials Space</h2>
+        <div class="flex items-baseline space-x-2">
+            <p class="text-2xl font-extrabold text-green-700" th:text="${T(java.lang.String).format('%.2f MB', linkedSize / 1048576.0)}">0 MB</p>
+            <span class="text-sm font-medium text-green-600" th:text="'(' + ${linkedCount} + ' files)'">(0 files)</span>
+        </div>
+      </div>
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-red-900 mb-1">Orphaned Space Waste</h2>
+        <div class="flex items-baseline space-x-2">
+            <p class="text-2xl font-extrabold text-red-700" th:text="${T(java.lang.String).format('%.2f MB', orphanedSize / 1048576.0)}">0 MB</p>
+            <span class="text-sm font-medium text-red-600" th:text="'(' + ${orphanedCount} + ' files)'">(0 files)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto border border-gray-200 rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr th:each="f : ${driveFiles}" th:classappend="${f.isOrphaned} ? 'bg-red-50' : ''">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${f.name}">Name</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : 'Unknown'}">Size</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span th:if="${f.isOrphaned}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Orphaned</span>
+              <span th:if="${!f.isOrphaned}" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Linked</span>
+            </td>
+          </tr>
+          <tr th:if="${driveFiles.isEmpty()}">
+            <td colspan="3" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No files found on Google Drive.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</html>
