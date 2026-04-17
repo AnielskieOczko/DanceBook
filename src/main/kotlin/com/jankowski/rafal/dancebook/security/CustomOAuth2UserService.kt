@@ -22,7 +22,7 @@ class CustomOAuth2UserService(
         val email = oauth2User.attributes["email"] as String? ?: throw OAuth2AuthenticationException(
             OAuth2Error("missing_email"), "No email found from OAuth provider")
 
-        val appUser = appUserRepository.findByEmail(email)
+        val appUser = appUserRepository.findByEmailIgnoreCase(email)
             ?: throw OAuth2AuthenticationException(OAuth2Error("unauthorized_user"), "User email not registered in system: $email")
 
         val authority = SimpleGrantedAuthority("ROLE_${appUser.role.name}")
