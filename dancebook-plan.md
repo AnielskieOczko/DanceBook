@@ -523,6 +523,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Add simple login page with user/password
 - [x] Secure all `/api/` and Web endpoints
 - [x] Protect the `/api/materials/upload-config` endpoint to prevent unauthorized uploads
+- [x] Hardened OAuth2 flow (strict CSP headers + `email_verified` Google claim check)
 
 ### Phase 6 — Storage Maintenance & Admin Panel ✅
 - [x] `@Scheduled` task to cross-reference Google Drive with DB (bi-monthly)
