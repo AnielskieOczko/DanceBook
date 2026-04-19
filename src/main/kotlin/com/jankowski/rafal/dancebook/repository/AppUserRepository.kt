@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Role
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -9,4 +10,5 @@ import java.util.UUID
 interface AppUserRepository : JpaRepository<AppUser, UUID> {
     fun findByUsername(username: String): AppUser?
     fun findByEmailIgnoreCase(email: String): AppUser?
+    fun countByRole(role: Role): Long
 }
