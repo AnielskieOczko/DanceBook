@@ -6,20 +6,48 @@ import jakarta.persistence.EntityNotFoundException
 import com.jankowski.rafal.dancebook.dto.UserCreateRequest
 import com.jankowski.rafal.dancebook.dto.PasswordChangeRequest
 import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
+import com.jankowski.rafal.dancebook.model.Role
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.CommandLineRunner
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
+import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class AppUserServiceImpl(
     private val appUserRepository: AppUserRepository,
-    private val passwordEncoder: PasswordEncoder
-) : AppUserService {
+    private val passwordEncoder: PasswordEncoder,
+    @Value("\${dancebook.security.root-admin}")
+    private val rootAdminUsername: String,
+    @Value("\${dancebook.security.root-password}")
+    private val rootAdminPassword: String
+) : AppUserService, CommandLineRunner {
 
     companion object {
-        private const val DEFAULT_USERNAME = "rafal"
         private val log = LoggerFactory.getLogger(AppUserServiceImpl::class.java)
+    }
+
+    override fun run(vararg args: String?) {
+        bootstrapRootUser()
+    }
+
+    private fun bootstrapRootUser() {
+        if (appUserRepository.findByUsername(rootAdminUsername) == null) {
+            log.info("Root administrator '{}' not found. Bootstrapping initial account...", rootAdminUsername)
+            val rootUser = AppUser().apply {
+                this.username = rootAdminUsername
+                this.displayName = "System Administrator"
+                this.email = "admin@dancebook.local"
+                this.password = passwordEncoder.encode(rootAdminPassword)
+                this.role = Role.ADMIN
+            }
+            appUserRepository.save(rootUser)
+            log.info("Root administrator account '{}' created successfully.", rootAdminUsername)
+        }
     }
 
     override fun findAll(): List<AppUser> {
@@ -40,13 +68,13 @@ class AppUserServiceImpl(
     }
 
     override fun getCurrentUser(): AppUser {
-        val authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        val authentication = SecurityContextHolder.getContext().authentication
         if (authentication == null || !authentication.isAuthenticated || authentication.principal == "anonymousUser") {
             throw EntityNotFoundException("No user is currently logged in")
         }
 
         val principal = authentication.principal
-        return if (principal is org.springframework.security.oauth2.core.user.OAuth2User) {
+        return if (principal is OAuth2User) {
             val email = principal.getAttribute<String>("email") ?: throw EntityNotFoundException("OAuth2 user has no email")
             appUserRepository.findByEmailIgnoreCase(email)
         } else {
@@ -109,10 +137,24 @@ class AppUserServiceImpl(
             throw IllegalArgumentException("Username ${request.username} is already taken")
         }
 
+        val oldRole = user.role
+        val oldUsername = user.username
+
         user.apply {
             this.username = request.username
             this.email = request.email
             this.displayName = request.displayName
+            
+            // Security Check: Prevent removing the last admin or demoting the root user
+            if (oldRole == Role.ADMIN && request.role == Role.USER) {
+                if (oldUsername == rootAdminUsername) {
+                    throw IllegalArgumentException("The root administrator account cannot be demoted.")
+                }
+                if (appUserRepository.countByRole(Role.ADMIN) <= 1) {
+                    throw IllegalArgumentException("Cannot demote the last remaining administrator.")
+                }
+            }
+            
             this.role = request.role
         }
 
