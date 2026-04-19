@@ -538,8 +538,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ### Phase 7 — Advanced User Management (In Progress) ⏳
 - [x] Admin Dashboard user creation (HTMX)
-- [ ] Admin HTMX inline user editing (username, email, role)
-- [ ] Admin force-password reset override capability
+- [x] Admin HTMX inline user editing (username, email, role)
+- [x] Admin force-password reset override capability
 - [ ] (Future) Proper "Forgot Password" flow with token + SMTP email sending
 
 ---
