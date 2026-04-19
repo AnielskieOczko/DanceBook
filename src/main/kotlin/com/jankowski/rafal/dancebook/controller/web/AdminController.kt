@@ -2,18 +2,23 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.jankowski.rafal.dancebook.dto.UserCreateRequest
+import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import com.jankowski.rafal.dancebook.service.StorageCleanupJob
+import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class AdminDriveFileDto(
     val id: String,
@@ -133,15 +138,59 @@ class AdminController(
         return "admin/dashboard :: cleanupSuccess"
     }
 
+    @GetMapping("/users/form")
+    fun showCreateUserForm(model: Model): String {
+        return "admin/dashboard :: createUserForm"
+    }
+
+    @GetMapping("/users/form/cancel")
+    fun cancelCreateUserForm(): String {
+        return "admin/dashboard :: empty"
+    }
+
     @PostMapping("/users")
-    fun createUser(@jakarta.validation.Valid request: com.jankowski.rafal.dancebook.dto.UserCreateRequest, model: Model): String {
+    fun createUser(@Valid request: UserCreateRequest, model: Model): String {
         try {
             appUserService.createUser(request)
             model.addAttribute("createUserSuccess", "Account created successfully!")
         } catch (e: Exception) {
             model.addAttribute("createUserError", e.message)
+            model.addAttribute("showCreateForm", true)
         }
         model.addAttribute("users", appUserRepository.findAll())
         return "admin/dashboard :: usersSection"
+    }
+
+    @GetMapping("/users/{id}/edit")
+    fun getDataForEditUser(@PathVariable id: String, model: Model): String {
+        val user = appUserService.findById(UUID.fromString(id))
+        model.addAttribute("editUser", user)
+        return "admin/dashboard :: editUserRow"
+    }
+
+    @GetMapping("/users/{id}")
+    fun cancelEditUser(@PathVariable id: String, model: Model): String {
+        val user = appUserService.findById(UUID.fromString(id))
+        model.addAttribute("user", user)
+        return "admin/dashboard :: userRow"
+    }
+
+    @PostMapping("/users/{id}/edit")
+    fun editUser(@PathVariable id: String, @Valid request: UserUpdateRequest, model: Model): String {
+        try {
+            val updatedUser = appUserService.updateUser(UUID.fromString(id), request)
+            model.addAttribute("user", updatedUser)
+            return "admin/dashboard :: userRow"
+        } catch (e: Exception) {
+            model.addAttribute("updateUserError", e.message)
+            // Retrieve current user and overlay request values to maintain form state
+            val user = appUserService.findById(UUID.fromString(id))
+            user.username = request.username
+            user.email = request.email
+            user.displayName = request.displayName
+            user.role = request.role
+            model.addAttribute("editUser", user)
+            return "admin/dashboard :: editUserRow"
+        }
     }
 }

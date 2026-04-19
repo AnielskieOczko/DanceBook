@@ -12,14 +12,7 @@
 
     <!-- HTMX (loaded via CDN) -->
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    <script>
-      // Tell HTMX to include the CSRF token on every request
-      document.addEventListener('htmx:configRequest', function(event) {
-        var token = document.querySelector('meta[name="_csrf"]').content;
-        var header = document.querySelector('meta[name="_csrf_header"]').content;
-        event.detail.headers[header] = token;
-      });
-    </script>
+    <script th:src="@{/js/main.js}"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 

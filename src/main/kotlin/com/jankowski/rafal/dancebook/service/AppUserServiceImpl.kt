@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import jakarta.persistence.EntityNotFoundException
 import com.jankowski.rafal.dancebook.dto.UserCreateRequest
 import com.jankowski.rafal.dancebook.dto.PasswordChangeRequest
+import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -89,5 +90,36 @@ class AppUserServiceImpl(
 
         user.password = passwordEncoder.encode(request.newPassword)
         appUserRepository.save(user)
+    }
+
+    override fun updateUser(
+        id: UUID,
+        request: UserUpdateRequest
+    ): AppUser {
+        log.debug("Updating user with id {}", id)
+        var user = findById(id)
+
+        val existingEmailUser = appUserRepository.findByEmailIgnoreCase(request.email)
+        if (existingEmailUser != null && existingEmailUser.id != id) {
+            throw IllegalArgumentException("Email ${request.email} is already in use")
+        }
+
+        val existingUsernameUser = appUserRepository.findByUsername(request.username)
+        if (existingUsernameUser != null && existingUsernameUser.id != id) {
+            throw IllegalArgumentException("Username ${request.username} is already taken")
+        }
+
+        user.apply {
+            this.username = request.username
+            this.email = request.email
+            this.displayName = request.displayName
+            this.role = request.role
+        }
+
+        if (!request.newPassword.isNullOrBlank()) {
+            user.password = passwordEncoder.encode(request.newPassword)
+        }
+
+        return appUserRepository.save(user)
     }
 }

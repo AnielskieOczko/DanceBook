@@ -62,7 +62,7 @@ class SecurityConfig(
             }
             headers {
                 contentSecurityPolicy {
-                    policyDirectives = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"
+                    policyDirectives = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://unpkg.com"
                 }
             }
         }
