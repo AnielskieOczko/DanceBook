@@ -44,7 +44,6 @@ class SecurityConfig(
                 authorize("/js/**", permitAll)
                 authorize("/images/**", permitAll)
                 authorize("/login", permitAll)
-                authorize("/debug/headers", permitAll)
                 authorize(anyRequest, authenticated)
             }
             formLogin {

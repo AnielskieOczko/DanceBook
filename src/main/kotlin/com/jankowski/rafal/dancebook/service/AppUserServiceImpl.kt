@@ -43,7 +43,7 @@ class AppUserServiceImpl(
         val principal = authentication.principal
         return if (principal is org.springframework.security.oauth2.core.user.OAuth2User) {
             val email = principal.getAttribute<String>("email") ?: throw EntityNotFoundException("OAuth2 user has no email")
-            appUserRepository.findByEmail(email)
+            appUserRepository.findByEmailIgnoreCase(email)
         } else {
             val username = authentication.name
             appUserRepository.findByUsername(username)
