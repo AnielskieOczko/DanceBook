@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.config
 
 import com.jankowski.rafal.dancebook.security.CustomOAuth2UserService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +24,12 @@ class SecurityConfig(
     private val clientRegistrationRepository: ClientRegistrationRepository,
     @Value("\${APP_BASE_URL:}") private val appBaseUrl: String
 ) {
+    private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
+
+    init {
+        log.info("SecurityConfig initialized with APP_BASE_URL='{}', isBlank={}", appBaseUrl, appBaseUrl.isBlank())
+    }
+
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
@@ -73,7 +80,9 @@ class SecurityConfig(
             clientRegistrationRepository, "/oauth2/authorization"
         )
         defaultResolver.setAuthorizationRequestCustomizer { builder ->
-            builder.redirectUri("$appBaseUrl/login/oauth2/code/google")
+            val redirectUri = "$appBaseUrl/login/oauth2/code/google"
+            log.info("OAuth2 customizer invoked. Setting redirectUri to: {}", redirectUri)
+            builder.redirectUri(redirectUri)
         }
         return defaultResolver
     }
