@@ -35,6 +35,7 @@ data class LogPresentation(
 @PreAuthorize("hasRole('ADMIN')") // Only you can enter
 class AdminController(
     private val appUserRepository: AppUserRepository,
+    private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService,
     private val materialRepository: MaterialRepository,
     private val storageCleanupLogRepository: StorageCleanupLogRepository,
     private val storageCleanupJob: StorageCleanupJob,
@@ -130,5 +131,17 @@ class AdminController(
         val deleted = storageCleanupJob.runCleanup(dryRun = false)
         model.addAttribute("deletedCount", deleted.size)
         return "admin/dashboard :: cleanupSuccess"
+    }
+
+    @PostMapping("/users")
+    fun createUser(@jakarta.validation.Valid request: com.jankowski.rafal.dancebook.dto.UserCreateRequest, model: Model): String {
+        try {
+            appUserService.createUser(request)
+            model.addAttribute("createUserSuccess", "Account created successfully!")
+        } catch (e: Exception) {
+            model.addAttribute("createUserError", e.message)
+        }
+        model.addAttribute("users", appUserRepository.findAll())
+        return "admin/dashboard :: usersSection"
     }
 }

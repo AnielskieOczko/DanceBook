@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::main})}">
+
+<main class="max-w-3xl mx-auto mt-8">
+  <div class="bg-gray-800 text-white p-8 rounded-xl shadow-lg mb-8">
+    <h1 class="text-3xl font-extrabold tracking-tight">👤 My Profile</h1>
+    <p class="text-gray-300 mt-2">Manage your account settings</p>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-gray-900 font-bold text-lg">
+      Account Information
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <span class="block text-sm font-medium text-gray-500 mb-1">Username</span>
+        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.username}"></span>
+      </div>
+      <div>
+        <span class="block text-sm font-medium text-gray-500 mb-1">Display Name</span>
+        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.displayName}"></span>
+      </div>
+      <div>
+        <span class="block text-sm font-medium text-gray-500 mb-1">Email Address</span>
+        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.email}"></span>
+      </div>
+      <div>
+        <span class="block text-sm font-medium text-gray-500 mb-1">Role</span>
+        <span class="inline-flex px-3 py-1 text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800" th:text="${appUser.role}"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" th:fragment="passwordSection" id="passwordSection">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-gray-900 font-bold text-lg">
+      Change Password
+    </div>
+    <div class="p-6">
+      <div th:if="${passwordSuccessMsg != null}" class="p-4 mb-6 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg font-medium shadow-sm" th:text="${passwordSuccessMsg}">Success</div>
+      <div th:if="${passwordErrorMsg != null}" class="p-4 mb-6 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg font-medium shadow-sm" th:text="${passwordErrorMsg}">Error</div>
+      
+      <form hx-post="/profile/password" hx-target="#passwordSection" hx-swap="outerHTML" class="space-y-4 max-w-md">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+          <input type="password" name="currentPassword" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">New Password (min 8 characters)</label>
+          <input type="password" name="newPassword" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+          <input type="password" name="confirmNewPassword" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+</html>
