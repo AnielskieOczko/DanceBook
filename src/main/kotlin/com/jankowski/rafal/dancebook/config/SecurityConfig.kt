@@ -60,6 +60,14 @@ class SecurityConfig(
             logout {
                 logoutSuccessUrl = "/login?logout"
             }
+            headers {
+                contentSecurityPolicy {
+                    policyDirectives = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"
+                }
+                frameOptions {
+                    deny()
+                }
+            }
         }
 
         return http.build()

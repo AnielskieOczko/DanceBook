@@ -22,6 +22,12 @@ class CustomOAuth2UserService(
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
         val oauth2User = super.loadUser(userRequest)
 
+        val emailVerified = oauth2User.attributes["email_verified"] as Boolean? ?: false
+        if (!emailVerified) {
+            log.warn("OAuth login denied: email is not verified by provider")
+            throw OAuth2AuthenticationException(OAuth2Error("unverified_email"), "Email is not verified")
+        }
+
         val email = oauth2User.attributes["email"] as String? ?: throw OAuth2AuthenticationException(
             OAuth2Error("missing_email"), "No email found from OAuth provider")
 
