@@ -79,7 +79,7 @@ class SecurityConfig(
                 if (uri.startsWith("http://") && !uri.contains("localhost")) {
                     return OAuth2AuthorizationRequest.from(this)
                         .redirectUri(uri.replaceFirst("http://", "https://"))
-                        .authorizationRequestUri(null)
+                        .authorizationRequestUri(null as String?)
                         .build()
                 }
                 return this
