@@ -542,6 +542,25 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Admin force-password reset override capability
 - [ ] (Future) Proper "Forgot Password" flow with token + SMTP email sending
 
+### Phase 8 — Social Interactions (Comments) 📅
+- [ ] PostgreSQL / Hibernate configuration for full UTF-8 (Emoji support)
+- [ ] `Comment` JPA entity and repository
+- [ ] Comment count metrics on Material Cards (e.g. `💬 5`) and detail headers
+- [ ] HTMX-powered comment list and submission form on Detail page
+- [ ] User ability to delete their own comments
+
+### Phase 9 — Notification System 📅
+- [ ] `Notification` entity for in-app tracking
+- [ ] Subscription logic for "New Material" and "New Comments"
+- [ ] In-app Notification Center (Navigation bar bell icon + real-time counter)
+- [ ] User Profile settings to toggle notification preferences
+
+### Phase 10 — Premium UI Overhaul (Mobile-First) 🎨
+- [ ] Define modern Design System (Typography: Inter/Outfit, Sleek Color Palette)
+- [ ] Mobile-first responsive refactor of core layout and navigation
+- [ ] State-of-the-art component redesign (Glassmorphism, polished cards, native feel)
+- [ ] UX polish and smooth transitions powered by **Stitch**
+
 ---
 
 ## Key Principles
