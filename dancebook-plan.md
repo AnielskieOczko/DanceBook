@@ -540,7 +540,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Admin Dashboard user creation (HTMX)
 - [x] Admin HTMX inline user editing (username, email, role)
 - [x] Admin force-password reset override capability
-- [ ] (Future) Proper "Forgot Password" flow with token + SMTP email sending
+- [ ] (Future) Proper "Forgot Password" flow with token + **Gmail API (OAuth2)** sending
 
 ### Phase 8 — Social Interactions (Comments) 📅
 - [ ] PostgreSQL / Hibernate configuration for full UTF-8 (Emoji support)
@@ -553,6 +553,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [ ] `Notification` entity for in-app tracking
 - [ ] Subscription logic for "New Material" and "New Comments"
 - [ ] In-app Notification Center (Navigation bar bell icon + real-time counter)
+- [ ] External notifications integration via **Gmail API (OAuth2)**
 - [ ] User Profile settings to toggle notification preferences
 
 ### Phase 10 — Premium UI Overhaul (Mobile-First) 🎨
