@@ -562,6 +562,14 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [ ] State-of-the-art component redesign (Glassmorphism, polished cards, native feel)
 - [ ] UX polish and smooth transitions powered by **Stitch**
 
+### Phase 11 — AI-Powered Dance Intelligence 🤖
+- [ ] Integration of **Spring AI** with Neon's `pgvector` extension
+- [ ] **Semantic Search (RAG):** Natural language discovery (e.g. "Suggest a romantic slow dance")
+- [ ] **Automated Tagging:** AI-driven categorization and difficulty assessment of new uploads
+- [ ] **Multimodal Figure Extraction:** Using Gemini 1.5 Vision to identify figures and timestamps from videos
+- [ ] **AI Choreography Assistant:** Generating logical figure sequences based on skill level
+- [ ] **Dance Coach Chatbot:** Grounded RAG-based Q&A for posture and technique tips
+
 ---
 
 ## Key Principles
