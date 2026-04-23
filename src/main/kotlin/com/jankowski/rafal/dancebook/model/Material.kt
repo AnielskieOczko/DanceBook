@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.model
 
+import org.hibernate.annotations.Formula
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -36,6 +37,9 @@ class Material {
 
     @OneToMany(mappedBy = "material", cascade = [(CascadeType.ALL)], orphanRemoval = true)
     var figures: MutableList<Figure> = mutableListOf()
+
+    @Formula("(SELECT count(c.id) FROM comment c WHERE c.material_id = id)")
+    var commentCount: Int = 0
 
     @Version
     var version: Long = 0
