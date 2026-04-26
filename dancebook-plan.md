@@ -542,12 +542,13 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Admin force-password reset override capability
 - [ ] (Future) Proper "Forgot Password" flow with token + **Gmail API (OAuth2)** sending
 
-### Phase 8 — Social Interactions (Comments) 📅
-- [ ] PostgreSQL / Hibernate configuration for full UTF-8 (Emoji support)
-- [ ] `Comment` JPA entity and repository
-- [ ] Comment count metrics on Material Cards (e.g. `💬 5`) and detail headers
-- [ ] HTMX-powered comment list and submission form on Detail page
-- [ ] User ability to delete their own comments
+### Phase 8 — Social Interactions (Comments) ✅
+- [x] PostgreSQL / Hibernate configuration for full UTF-8 (Emoji support)
+- [x] `Comment` JPA entity and repository
+- [x] HTMX-powered comment list and submission form on Detail page
+- [x] User ability to edit and delete their own comments
+- [ ] Comment count metrics on Material Cards (e.g. `💬 5`)
+
 
 ### Phase 9 — Notification System 📅
 - [ ] `Notification` entity for in-app tracking

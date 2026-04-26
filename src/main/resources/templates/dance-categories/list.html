@@ -29,8 +29,8 @@
         <td class="p-3 text-right">
           <div th:if="${!category.predefined}">
             <a th:href="@{/dance-categories/{id}/edit(id=${category.id})}" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition">Edit</a>
-            <form th:action="@{/dance-categories/{id}/delete(id=${category.id})}" method="post" class="inline">
-              <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition cursor-pointer" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
+            <form th:action="@{/dance-categories/{id}/delete(id=${category.id})}" method="post" class="inline" data-confirm="Are you sure you want to delete this category?">
+              <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition cursor-pointer">Delete</button>
             </form>
           </div>
           <div th:if="${category.predefined}" class="text-gray-400 italic text-sm">System Default</div>
