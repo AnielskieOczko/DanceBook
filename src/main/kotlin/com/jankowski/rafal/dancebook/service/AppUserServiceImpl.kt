@@ -62,9 +62,10 @@ class AppUserServiceImpl(
         }
     }
 
-    override fun findByUsername(username: String): AppUser? {
+    override fun findByUsername(username: String): AppUser {
         log.debug("Retrieving user by username {}", username)
-        return appUserRepository.findByUsername(username)
+        val user = appUserRepository.findByUsername(username) ?: throw EntityNotFoundException("Could not find user with username: $username")
+        return user
     }
 
     override fun getCurrentUser(): AppUser {

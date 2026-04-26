@@ -9,7 +9,7 @@ import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
 interface AppUserService {
     fun findAll(): List<AppUser>
     fun findById(id: UUID): AppUser
-    fun findByUsername(username: String): AppUser?
+    fun findByUsername(username: String): AppUser
     fun getCurrentUser(): AppUser
     fun createUser(request: UserCreateRequest): AppUser
     fun changePassword(userId: UUID, request: PasswordChangeRequest)

@@ -62,7 +62,7 @@ class SecurityConfig(
             }
             headers {
                 contentSecurityPolicy {
-                    policyDirectives = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://unpkg.com"
+                    policyDirectives = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://unpkg.com; connect-src 'self' https://www.googleapis.com; frame-src 'self' https://drive.google.com"
                 }
             }
         }

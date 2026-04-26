@@ -1,0 +1,71 @@
+<div th:fragment="comment-list" id="comment-section" class="mt-8 space-y-6">
+    <h3 class="text-lg font-bold border-b pb-2">Comments (<span th:text="${#lists.size(comments)}">0</span>)</h3>
+
+    <!-- Comment Form -->
+    <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
+          hx-target="#comment-section"
+          hx-swap="outerHTML"
+          class="bg-white p-4 rounded-lg shadow-sm border">
+        <textarea name="content" required placeholder="Add a comment..."
+                  class="w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+            Post Comment
+        </button>
+    </form>
+
+    <!-- List -->
+    <div class="space-y-4">
+        <th:block th:each="c : ${comments}">
+            <div th:replace="~{materials/fragments/comments :: comment-item}"></div>
+        </th:block>
+    </div>
+</div>
+
+<div th:fragment="comment-item" class="flex space-x-3 p-3 bg-gray-50 rounded-lg group">
+    <div class="flex-1">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="font-semibold text-indigo-700" th:text="${c.author.displayName}">Author</span>
+                <span th:if="${c.updatedAt != null}" class="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded uppercase font-bold">Edited</span>
+            </div>
+            <span class="text-xs text-gray-500"
+                  th:text="${c.updatedAt != null ? #temporals.format(c.updatedAt, 'dd MMM HH:mm') : #temporals.format(c.createdAt, 'dd MMM HH:mm')}">Date</span>
+        </div>
+        <p class="text-gray-700 mt-1 whitespace-pre-wrap" th:text="${c.content}">Content</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+        <button th:if="${#authentication.name == c.author.username}"
+                th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
+                hx-target="closest .group"
+                hx-swap="outerHTML"
+                class="text-gray-400 hover:text-indigo-600">
+            ✏️
+        </button>
+        <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
+                th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
+                hx-target="closest .group"
+                hx-swap="outerHTML"
+                hx-confirm="Are you sure?"
+                class="text-red-400 hover:text-red-600">
+            🗑️
+        </button>
+    </div>
+</div>
+
+<div th:fragment="comment-edit-form" class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+    <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
+          hx-target="closest div"
+          hx-swap="outerHTML">
+        <textarea name="content" required class="w-full border-indigo-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" th:text="${comment.content}"></textarea>
+        <div class="flex gap-2 mt-2">
+            <button type="submit" class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-700 transition">Save</button>
+            <button type="button"
+                    th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
+                    hx-target="closest div"
+                    hx-swap="outerHTML"
+                    class="text-gray-500 text-sm hover:underline">Cancel</button>
+        </div>
+    </form>
+</div>

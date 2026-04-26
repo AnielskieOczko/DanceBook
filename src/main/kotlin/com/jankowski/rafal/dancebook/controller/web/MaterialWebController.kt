@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.MaterialRequest
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import com.jankowski.rafal.dancebook.service.CommentService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
@@ -24,7 +25,8 @@ import java.util.UUID
 class MaterialWebController(
     private val materialService: MaterialService,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val commentService: CommentService
 ) {
 
     @GetMapping
@@ -68,8 +70,10 @@ class MaterialWebController(
     fun viewMaterial(@PathVariable id: UUID, model: Model): String {
         val material = materialService.findById(id)
         val figures = materialService.findFiguresByMaterial(id)
+        val comments = commentService.getCommentsForMaterial(id)
         model.addAttribute("material", material)
         model.addAttribute("figures", figures)
+        model.addAttribute("comments", comments)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
     }
