@@ -63,7 +63,7 @@
                 <h3 class="font-heading font-semibold text-text-primary group-hover:text-primary transition-colors truncate" th:text="${m.name}">Material</h3>
                 <div class="flex flex-wrap items-center gap-1.5 mt-2">
                     <span th:if="${m.danceType != null}" class="badge-primary text-[10px]" th:text="${m.danceType.name}">Type</span>
-                    <span th:if="${m.danceCategory != null}" class="badge-secondary text-[10px]" th:text="${m.danceCategory.name}">Cat</span>
+                    <span th:if="${m.danceType != null && m.danceType.category != null}" class="badge-secondary text-[10px]" th:text="${m.danceType.category.name}">Cat</span>
                 </div>
             </div>
         </a>

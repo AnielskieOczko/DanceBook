@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.dto
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.validator.constraints.URL
 import java.time.LocalDateTime
@@ -16,8 +17,8 @@ data class MaterialRequest(
     @field:Size(max = 2000)
     val description: String? = null,
     
-    val danceTypeId: UUID? = null,
     val danceCategoryId: UUID? = null,
+    val danceTypeId: UUID? = null,
     
     @field:Min(1) @field:Max(5) 
     val rating: Short? = null,
@@ -39,7 +40,6 @@ data class MaterialResponse(
     val name: String,
     val description: String?,
     val danceType: DanceTypeResponse?,
-    val danceCategory: DanceCategoryResponse?,
     val rating: Short?,
     val videoLink: String?,
     val sourceLink: String?,
@@ -51,7 +51,9 @@ data class MaterialResponse(
 data class DanceTypeResponse(
     val id: UUID,
     val name: String,
-    val predefined: Boolean
+    val predefined: Boolean,
+    val categoryId: UUID?,
+    val categoryName: String?
 )
 
 data class DanceCategoryResponse(
@@ -62,6 +64,7 @@ data class DanceCategoryResponse(
 
 data class DanceTypeRequest(
     @field:NotBlank val name: String,
+    @field:NotNull val categoryId: UUID? = null,
 )
 
 data class DanceCategoryRequest(

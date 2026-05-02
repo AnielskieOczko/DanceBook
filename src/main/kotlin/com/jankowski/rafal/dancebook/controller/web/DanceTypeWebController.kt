@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.DanceTypeRequest
+import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import jakarta.validation.Valid
 import org.springframework.stereotype.Controller
@@ -16,7 +17,8 @@ import java.util.UUID
 @Controller
 @RequestMapping("/dance-types")
 class DanceTypeWebController(
-    private val danceTypeService: DanceTypeService
+    private val danceTypeService: DanceTypeService,
+    private val danceCategoryService: DanceCategoryService
 ) {
 
     @GetMapping
@@ -28,15 +30,18 @@ class DanceTypeWebController(
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         model.addAttribute("danceType", DanceTypeRequest(name = ""))
+        model.addAttribute("danceCategories", danceCategoryService.findAll())
         return "dance-types/form"
     }
 
     @PostMapping
     fun createDanceType(
         @Valid @ModelAttribute("danceType") request: DanceTypeRequest,
-        bindingResult: BindingResult
+        bindingResult: BindingResult,
+        model: Model
     ): String {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("danceCategories", danceCategoryService.findAll())
             return "dance-types/form"
         }
         danceTypeService.create(request)
@@ -46,8 +51,9 @@ class DanceTypeWebController(
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val danceType = danceTypeService.findById(id)
-        model.addAttribute("danceType", DanceTypeRequest(name = danceType.name))
+        model.addAttribute("danceType", DanceTypeRequest(name = danceType.name, categoryId = danceType.category?.id))
         model.addAttribute("danceTypeId", id)
+        model.addAttribute("danceCategories", danceCategoryService.findAll())
         return "dance-types/form"
     }
 
@@ -60,6 +66,7 @@ class DanceTypeWebController(
     ): String {
         if (bindingResult.hasErrors()) {
             model.addAttribute("danceTypeId", id)
+            model.addAttribute("danceCategories", danceCategoryService.findAll())
             return "dance-types/form"
         }
         danceTypeService.update(id, request)

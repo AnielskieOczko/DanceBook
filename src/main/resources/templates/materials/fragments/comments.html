@@ -27,7 +27,7 @@
 </div>
 
 <div th:fragment="comment-item" class="flex gap-3 p-3 bg-surface-warm rounded-button group">
-    <div class="avatar avatar-sm flex-shrink-0 mt-0.5" th:text="${c.author.displayName != null ? c.author.displayName.substring(0,1) : '?'}">U</div>
+    <div class="avatar avatar-sm flex-shrink-0 mt-0.5" th:text="${c.author.displayName != null && c.author.displayName.length() > 0 ? c.author.displayName.substring(0,1) : '?'}">U</div>
     <div class="flex-1 min-w-0">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-2">

@@ -7,7 +7,9 @@ import com.jankowski.rafal.dancebook.model.Material
 fun DanceType.toResponse() = DanceTypeResponse(
     id = id!!,
     name = name,
-    predefined
+    predefined = predefined,
+    categoryId = category?.id,
+    categoryName = category?.name
 )
 
 fun DanceTypeRequest.toEntity() = DanceType().apply {
@@ -29,7 +31,6 @@ fun Material.toResponse() = MaterialResponse(
     name = name,
     description = description,
     danceType = danceType?.toResponse(),
-    danceCategory = danceCategory?.toResponse(),
     rating = rating,
     videoLink = videoLink,
     sourceLink = sourceLink,
@@ -43,6 +44,6 @@ fun MaterialRequest.toEntity(existingMaterial: Material = Material()) = existing
     description = this@toEntity.description
     rating = this@toEntity.rating
     videoLink = this@toEntity.videoLink
-    sourceLink = this@toEntity.videoLink
+    sourceLink = this@toEntity.sourceLink
     version = this@toEntity.version
 }

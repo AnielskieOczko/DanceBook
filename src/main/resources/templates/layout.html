@@ -94,7 +94,7 @@
     <div class="sidebar-footer">
         <div class="flex items-center gap-3">
             <div class="avatar" th:if="${currentUser != null}">
-                <span th:text="${currentUser.displayName != null ? currentUser.displayName.substring(0,1) : '?'}">U</span>
+                <span th:text="${currentUser.displayName != null && currentUser.displayName.length() > 0 ? currentUser.displayName.substring(0,1) : '?'}">U</span>
             </div>
             <div class="flex-1 min-w-0" th:if="${currentUser != null}">
                 <p class="text-sm font-medium text-text-primary truncate" th:text="${currentUser.displayName}">User</p>
@@ -130,7 +130,7 @@
         <span class="font-heading font-bold text-lg text-text-primary" th:text="${pageTitle ?: 'DanceBook'}">DanceBook</span>
     </div>
     <a href="/profile" class="avatar avatar-sm" th:if="${currentUser != null}">
-        <span th:text="${currentUser.displayName != null ? currentUser.displayName.substring(0,1) : '?'}">U</span>
+        <span th:text="${currentUser.displayName != null && currentUser.displayName.length() > 0 ? currentUser.displayName.substring(0,1) : '?'}">U</span>
     </a>
 </header>
 

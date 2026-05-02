@@ -11,7 +11,6 @@ import java.util.UUID
 interface MaterialRepository : JpaRepository<Material, UUID>, JpaSpecificationExecutor<Material> {
 
     fun findByDanceTypeId(danceTypeId: UUID): List<Material>
-    fun findByDanceCategoryId(danceCategoryId: UUID): List<Material>
     fun findByRating(ratting: Short): List<Material>
 
     @Query("SELECT m.driveFileId FROM Material m WHERE m.driveFileId IS NOT NULL")

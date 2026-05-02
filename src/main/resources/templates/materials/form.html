@@ -33,20 +33,25 @@
                       placeholder="Brief notes about this material..."></textarea>
         </div>
 
-        <!-- Dance Type & Category (two columns) -->
+        <!-- Dance Category & Type (two columns, Category first) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-                <label for="danceTypeId" class="form-label">Dance Style</label>
-                <select id="danceTypeId" th:field="*{danceTypeId}" class="form-select">
-                    <option value="">-- Select Style --</option>
-                    <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                <label for="danceCategoryId" class="form-label">Category</label>
+                <select id="danceCategoryId" th:field="*{danceCategoryId}" class="form-select"
+                        hx-get="/materials/dance-types-options"
+                        hx-target="#danceTypeId"
+                        hx-trigger="change">
+                    <option value="">-- Select Category --</option>
+                    <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                 </select>
             </div>
             <div>
-                <label for="danceCategoryId" class="form-label">Category</label>
-                <select id="danceCategoryId" th:field="*{danceCategoryId}" class="form-select">
-                    <option value="">-- Select Category --</option>
-                    <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                <label for="danceTypeId" class="form-label">Dance Style</label>
+                <select id="danceTypeId" th:field="*{danceTypeId}" class="form-select">
+                    <th:block th:fragment="danceTypeOptions">
+                        <option value="">-- Select Style --</option>
+                        <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                    </th:block>
                 </select>
             </div>
         </div>

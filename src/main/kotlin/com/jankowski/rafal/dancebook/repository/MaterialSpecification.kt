@@ -23,7 +23,7 @@ object MaterialSpecification {
             }
 
             if (!categoryIds.isNullOrEmpty()) {
-                predicates.add(root.get<DanceCategory>("danceCategory").get<UUID>("id").`in`(categoryIds))
+                predicates.add(root.get<DanceType>("danceType").get<DanceCategory>("category").get<UUID>("id").`in`(categoryIds))
             }
 
             minRating?.let {

@@ -132,9 +132,9 @@
                 </div>
 
                 <!-- Category -->
-                <div th:if="${material.danceCategory != null}">
+                <div th:if="${material.danceType != null && material.danceType.category != null}">
                     <p class="text-xs text-text-secondary mb-1">Category</p>
-                    <span class="badge-secondary" th:text="${material.danceCategory.name}">Category</span>
+                    <span class="badge-secondary" th:text="${material.danceType.category.name}">Category</span>
                 </div>
 
                 <!-- Rating -->

@@ -11,6 +11,7 @@ import java.util.UUID
 @Service
 class DanceTypeServiceImpl(
     private val danceTypeRepository: DanceTypeRepository,
+    private val danceCategoryService: DanceCategoryService,
 ): DanceTypeService {
 
     companion object {
@@ -28,11 +29,17 @@ class DanceTypeServiceImpl(
         return danceType
     }
 
+    override fun findByCategoryId(categoryId: UUID): List<DanceType> {
+        log.info("Retrieving DanceTypes for category $categoryId")
+        return danceTypeRepository.findByCategoryId(categoryId)
+    }
+
     override fun create(request: DanceTypeRequest): DanceType {
         log.info("Creating new DanceType")
 
         val newDanceType = DanceType()
         newDanceType.name = request.name
+        newDanceType.category = request.categoryId?.let { danceCategoryService.findById(it) }
 
         return danceTypeRepository.save(newDanceType)
     }
@@ -41,6 +48,7 @@ class DanceTypeServiceImpl(
         log.info("Updating new DanceType with name ${request.name}")
         val existing = findById(id)
         existing.name = request.name
+        existing.category = request.categoryId?.let { danceCategoryService.findById(it) }
         return danceTypeRepository.save(existing)
     }
 

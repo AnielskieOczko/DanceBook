@@ -82,7 +82,7 @@
                     <h3 class="font-heading font-semibold text-text-primary mb-2 truncate group-hover:text-primary transition-colors" th:text="${m.name}">Material</h3>
                     <div class="flex flex-wrap items-center gap-2 mb-3">
                         <span th:if="${m.danceType != null}" class="badge-primary" th:text="${m.danceType.name}">Type</span>
-                        <span th:if="${m.danceCategory != null}" class="badge-secondary" th:text="${m.danceCategory.name}">Category</span>
+                        <span th:if="${m.danceType != null && m.danceType.category != null}" class="badge-secondary" th:text="${m.danceType.category.name}">Category</span>
                     </div>
                     <!-- Rating Stars -->
                     <div class="flex items-center gap-0.5" th:if="${m.rating != null && m.rating > 0}">

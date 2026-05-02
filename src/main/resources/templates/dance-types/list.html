@@ -31,7 +31,10 @@
                 <div class="w-9 h-9 rounded-button bg-primary-soft flex items-center justify-center flex-shrink-0">
                     <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                 </div>
-                <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                    <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
+                    <span th:if="${dt.category != null}" class="badge-secondary text-[10px] py-0.5" th:text="${dt.category.name}">Category</span>
+                </div>
             </div>
             <div class="flex items-center gap-2">
                 <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="btn-icon p-1.5" title="Edit">

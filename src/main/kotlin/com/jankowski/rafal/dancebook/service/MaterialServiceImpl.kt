@@ -22,7 +22,6 @@ class MaterialServiceImpl(
     private val materialRepository: MaterialRepository,
     private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService,
     private val googleDriveService: GoogleDriveService
 ) : MaterialService {
 
@@ -50,10 +49,6 @@ class MaterialServiceImpl(
 
         if (material.danceType?.id != request.danceTypeId) {
             material.danceType = request.danceTypeId?.let { danceTypeService.findById(it) }
-        }
-
-        if (material.danceCategory?.id != request.danceCategoryId) {
-            material.danceCategory = request.danceCategoryId?.let { danceCategoryService.findById(it) }
         }
 
         return materialRepository.save(material)
@@ -90,10 +85,6 @@ class MaterialServiceImpl(
 
         if (existing.danceType?.id != request.danceTypeId) {
             existing.danceType = request.danceTypeId?.let { danceTypeService.findById(it) }
-        }
-
-        if (existing.danceCategory?.id != request.danceCategoryId) {
-            existing.danceCategory = request.danceCategoryId?.let { danceCategoryService.findById(it) }
         }
 
         return materialRepository.save(existing)

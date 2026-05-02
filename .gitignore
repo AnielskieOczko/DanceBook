@@ -42,3 +42,4 @@ src/main/resources/static/css/output.css
 
 ### AI Agents ###
 .agents/
+.gradle-home/
