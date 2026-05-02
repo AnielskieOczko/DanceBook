@@ -1,62 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: html(content=~{::main})}">
+      th:replace="~{layout :: html(content=~{::section})}">
 
-<main class="max-w-4xl mx-auto mt-8">
-  
-  <div class="bg-indigo-600 text-white p-10 rounded-xl shadow-lg mb-8 text-center relative overflow-hidden">
-    <div class="relative z-10">
-      <h1 class="text-4xl font-extrabold mb-4 tracking-tight">Welcome to DanceBook 💃🕺</h1>
-      <p class="text-xl text-indigo-100 font-light max-w-2xl mx-auto">
-        Your personal library for mastering ballroom dance steps, managing materials, and tracking your progress.
-      </p>
+<section>
+
+    <!-- Welcome Header -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="page-title text-2xl md:text-3xl" th:if="${displayName != null}" th:text="'Good afternoon, ' + ${displayName}">Good afternoon, Rafal</h1>
+            <h1 class="page-title text-2xl md:text-3xl" th:if="${displayName == null}">Dashboard</h1>
+            <p class="page-subtitle">Here's what's happening in your dance library</p>
+        </div>
+        <div class="avatar avatar-lg hidden md:flex" th:if="${currentUser != null}">
+            <span th:text="${currentUser.displayName != null ? currentUser.displayName.substring(0,1) : '?'}">R</span>
+        </div>
     </div>
-  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    
-    <!-- Materials Card -->
-    <a href="/materials" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-indigo-600 group-hover:text-white transition">
-        🎬
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">Materials</h2>
-      <p class="text-gray-600 mb-4">
-        Browse your collection of dance videos, figures, and study materials.
-      </p>
-      <span class="text-indigo-600 font-semibold flex items-center">
-        View Library <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <!-- Materials -->
+        <div class="stat-card">
+            <div class="stat-card-icon bg-primary-soft text-primary">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <div class="stat-card-value" th:text="${materialCount}">42</div>
+            <div class="stat-card-label">Materials</div>
+        </div>
+        <!-- Figures -->
+        <div class="stat-card">
+            <div class="stat-card-icon bg-blue-100 text-blue-600">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-card-value" th:text="${figureCount}">156</div>
+            <div class="stat-card-label">Figures</div>
+        </div>
+        <!-- Styles -->
+        <div class="stat-card">
+            <div class="stat-card-icon bg-purple-100 text-purple-600">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+            <div class="stat-card-value" th:text="${danceTypeCount}">8</div>
+            <div class="stat-card-label">Styles</div>
+        </div>
+        <!-- Comments -->
+        <div class="stat-card">
+            <div class="stat-card-icon bg-emerald-100 text-emerald-600">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="stat-card-value" th:text="${commentCount}">23</div>
+            <div class="stat-card-label">Comments</div>
+        </div>
+    </div>
 
-    <!-- Dance Types Card -->
-    <a href="/dance-types" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-blue-600 group-hover:text-white transition">
-        🩰
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">Styles</h2>
-      <p class="text-gray-600 mb-4">
-        Manage standard and latin dance styles like Waltz, Tango, Cha Cha.
-      </p>
-      <span class="text-blue-600 font-semibold flex items-center">
-        Manage Styles <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
+    <!-- Quick Actions -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-8">
+        <a href="/materials/new" class="btn-primary flex-1 justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Add Material
+        </a>
+        <a href="/materials" class="btn-outline flex-1 justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Browse Library
+        </a>
+        <a href="/lists/new" class="btn-outline flex-1 justify-center">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Create List
+        </a>
+    </div>
 
-    <!-- Categories Card -->
-    <a href="/dance-categories" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-emerald-600 group-hover:text-white transition">
-        📑
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition">Categories</h2>
-      <p class="text-gray-600 mb-4">
-        Organize items by levels, techniques, routines, and custom tags.
-      </p>
-      <span class="text-emerald-600 font-semibold flex items-center">
-        Manage Categories <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
+    <!-- Welcome Card -->
+    <div class="card p-6 bg-gradient-to-r from-primary-soft/30 to-surface">
+        <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-button bg-primary-soft flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <div>
+                <h3 class="font-heading font-semibold text-text-primary mb-1">Welcome to DanceBook</h3>
+                <p class="text-sm text-text-secondary">Your personal library for mastering ballroom dance steps, managing materials, and tracking your progress. Use the navigation to explore your materials, manage dance styles, or create custom lists.</p>
+            </div>
+        </div>
+    </div>
 
-  </div>
-</main>
+</section>
 </html>

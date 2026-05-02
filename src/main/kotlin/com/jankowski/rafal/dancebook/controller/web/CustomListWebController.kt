@@ -24,6 +24,12 @@ class CustomListWebController(
     private val danceCategoryService: DanceCategoryService
 ) {
 
+    @GetMapping
+    fun listAll(model: Model): String {
+        model.addAttribute("lists", customListService.findVisibleByCurrentUser())
+        return "lists/index"
+    }
+
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         model.addAttribute("listRequest", CustomListRequest(name = ""))

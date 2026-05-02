@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
 
@@ -27,5 +28,20 @@ class NavbarAdvice(
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
         if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return null
         return appUserService.getCurrentUser()
+    }
+
+    @ModelAttribute("activeNav")
+    fun activeNav(request: HttpServletRequest): String {
+        val path = request.requestURI
+        return when {
+            path == "/" -> "home"
+            path.startsWith("/materials") -> "materials"
+            path.startsWith("/lists") -> "lists"
+            path.startsWith("/dance-types") -> "dance-types"
+            path.startsWith("/dance-categories") -> "dance-categories"
+            path.startsWith("/admin") -> "admin"
+            path.startsWith("/profile") -> "profile"
+            else -> ""
+        }
     }
 }

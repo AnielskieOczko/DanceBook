@@ -1,3 +1,318 @@
+/* ================================================================
+ * DanceBook — "Warm Studio" Design System
+ * ================================================================
+ * All color values come from tailwind.config.js tokens.
+ * To re-theme: change only the config, not these component classes.
+ * ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ────────────────────────────────────────────────
+ * BASE LAYER
+ * ──────────────────────────────────────────────── */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-background font-body text-text-primary antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+}
+
+/* ────────────────────────────────────────────────
+ * COMPONENT LAYER
+ * ──────────────────────────────────────────────── */
+@layer components {
+
+  /* ── Buttons ─────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-body font-medium
+           transition-all duration-200 ease-in-out cursor-pointer
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm rounded-button;
+  }
+  .btn-md {
+    @apply px-5 py-2.5 text-sm rounded-button;
+  }
+  .btn-lg {
+    @apply px-6 py-3 text-base rounded-button;
+  }
+  .btn-primary {
+    @apply btn btn-md bg-primary text-white shadow-warm-sm
+           hover:bg-primary-hover focus:ring-primary active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn btn-md bg-secondary text-white shadow-warm-sm
+           hover:bg-secondary-hover focus:ring-secondary active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply btn btn-md bg-transparent border border-border text-text-primary
+           hover:bg-surface-warm focus:ring-primary active:scale-[0.98];
+  }
+  .btn-danger {
+    @apply btn btn-md bg-danger text-white shadow-warm-sm
+           hover:bg-red-700 focus:ring-danger active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply btn btn-md bg-transparent text-text-secondary
+           hover:bg-surface-warm hover:text-text-primary focus:ring-primary;
+  }
+  .btn-icon {
+    @apply btn p-2 rounded-button text-text-secondary
+           hover:bg-surface-warm hover:text-text-primary;
+  }
+
+  /* ── Cards ───────────────────────────────────── */
+  .card {
+    @apply bg-surface rounded-card border border-border shadow-warm-sm
+           transition-all duration-200;
+  }
+  .card-hover {
+    @apply card hover:shadow-warm-md hover:-translate-y-0.5
+           hover:border-l-4 hover:border-l-primary;
+  }
+  .card-interactive {
+    @apply card-hover cursor-pointer;
+  }
+
+  /* ── Badges ──────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-pill
+           text-xs font-medium whitespace-nowrap;
+  }
+  .badge-primary {
+    @apply badge bg-primary-soft text-primary;
+  }
+  .badge-secondary {
+    @apply badge bg-emerald-100 text-secondary;
+  }
+  .badge-accent {
+    @apply badge bg-amber-100 text-accent;
+  }
+  .badge-neutral {
+    @apply badge bg-surface-warm text-text-secondary;
+  }
+  .badge-danger {
+    @apply badge bg-danger-soft text-danger;
+  }
+  .badge-success {
+    @apply badge bg-success-soft text-success;
+  }
+
+  /* ── Stat Card ───────────────────────────────── */
+  .stat-card {
+    @apply card p-4 flex flex-col gap-2;
+  }
+  .stat-card-icon {
+    @apply w-10 h-10 rounded-button flex items-center justify-center;
+  }
+  .stat-card-value {
+    @apply text-2xl font-heading font-bold text-text-primary;
+  }
+  .stat-card-label {
+    @apply text-sm text-text-secondary font-medium;
+  }
+
+  /* ── Form Elements ───────────────────────────── */
+  .form-input {
+    @apply w-full px-4 py-2.5 bg-surface border border-border rounded-button
+           text-text-primary placeholder-text-secondary text-sm
+           focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+           transition-colors duration-200;
+  }
+  .form-select {
+    @apply form-input appearance-none bg-no-repeat bg-right pr-10 cursor-pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2378716C' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-size: 1.25rem;
+    background-position: right 0.75rem center;
+  }
+  .form-textarea {
+    @apply form-input resize-y min-h-[80px];
+  }
+  .form-label {
+    @apply block text-sm font-medium text-text-primary mb-1.5;
+  }
+  .form-error {
+    @apply mt-1 text-sm text-danger;
+  }
+  .form-hint {
+    @apply mt-1 text-xs text-text-secondary;
+  }
+
+  /* ── Chips ────────────────────────────────────── */
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill
+           text-sm font-medium cursor-pointer border border-border
+           bg-surface text-text-secondary
+           hover:bg-primary-soft hover:text-primary hover:border-primary
+           transition-all duration-200;
+  }
+  .chip-active {
+    @apply bg-primary text-white border-primary
+           hover:bg-primary-hover hover:text-white;
+  }
+  .chip-group {
+    @apply flex flex-wrap gap-2;
+  }
+
+  /* ── Avatar ──────────────────────────────────── */
+  .avatar {
+    @apply w-9 h-9 rounded-full flex items-center justify-center
+           bg-primary text-white text-sm font-heading font-bold uppercase
+           flex-shrink-0;
+  }
+  .avatar-sm {
+    @apply w-7 h-7 text-xs;
+  }
+  .avatar-lg {
+    @apply w-12 h-12 text-lg;
+  }
+
+  /* ── Navigation ──────────────────────────────── */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-button
+           text-sm font-medium text-text-secondary
+           hover:bg-primary-soft hover:text-primary
+           transition-all duration-200;
+  }
+  .nav-item-active {
+    @apply bg-primary-soft text-primary font-semibold;
+  }
+  .nav-icon {
+    @apply w-5 h-5 flex-shrink-0;
+  }
+
+  /* ── Page Header ─────────────────────────────── */
+  .page-header {
+    @apply mb-6;
+  }
+  .page-title {
+    @apply text-2xl font-heading font-bold text-text-primary;
+  }
+  .page-subtitle {
+    @apply text-sm text-text-secondary mt-1;
+  }
+
+  /* ── Empty State ─────────────────────────────── */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 px-6 text-center;
+  }
+  .empty-state-icon {
+    @apply w-16 h-16 rounded-full bg-surface-warm flex items-center justify-center mb-4;
+  }
+  .empty-state-title {
+    @apply text-lg font-heading font-semibold text-text-primary mb-2;
+  }
+  .empty-state-text {
+    @apply text-sm text-text-secondary max-w-sm mb-6;
+  }
+
+  /* ── Table ───────────────────────────────────── */
+  .table-header {
+    @apply bg-surface-warm text-text-secondary text-xs font-semibold uppercase tracking-wider;
+  }
+  .table-cell {
+    @apply px-4 py-3 text-sm;
+  }
+  .table-row {
+    @apply border-b border-border hover:bg-surface-warm/50 transition-colors;
+  }
+
+  /* ── Toast (global notification) ─────────────── */
+  .toast {
+    @apply fixed top-4 right-4 z-50 px-5 py-3 rounded-card shadow-warm-lg
+           text-sm font-medium flex items-center gap-3
+           transform transition-all duration-300
+           translate-y-0 opacity-100;
+  }
+  .toast-success {
+    @apply toast bg-success text-white;
+  }
+  .toast-error {
+    @apply toast bg-danger text-white;
+  }
+
+  /* ── Star Rating ─────────────────────────────── */
+  .star {
+    @apply w-4 h-4 text-border;
+  }
+  .star-filled {
+    @apply w-4 h-4 text-accent;
+  }
+
+  /* ── Divider ─────────────────────────────────── */
+  .divider {
+    @apply border-t border-border my-4;
+  }
+
+  /* ── Sidebar ─────────────────────────────────── */
+  .sidebar {
+    @apply fixed left-0 top-0 h-screen w-64 bg-surface-warm border-r border-border
+           flex flex-col z-40 overflow-y-auto;
+  }
+  .sidebar-logo {
+    @apply px-5 py-6 flex items-center gap-3;
+  }
+  .sidebar-nav {
+    @apply flex-1 px-3 py-4 space-y-1;
+  }
+  .sidebar-footer {
+    @apply px-3 py-4 border-t border-border;
+  }
+
+  /* ── Bottom Nav (Mobile) ─────────────────────── */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-border
+           flex items-center justify-around z-40 px-2;
+  }
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-0.5 py-1 px-2
+           text-text-secondary text-[10px] font-medium
+           transition-colors duration-200;
+  }
+  .bottom-nav-item-active {
+    @apply text-primary;
+  }
+  .bottom-nav-icon {
+    @apply w-6 h-6;
+  }
+  .bottom-nav-add {
+    @apply -mt-4 w-12 h-12 rounded-full bg-primary text-white
+           flex items-center justify-center shadow-warm-md
+           hover:bg-primary-hover transition-all duration-200
+           active:scale-95;
+  }
+
+  /* ── Confirm Modal ───────────────────────────── */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/40 z-50 flex items-center justify-center;
+  }
+  .modal-content {
+    @apply bg-surface rounded-card shadow-warm-xl p-6 max-w-md w-full mx-4;
+  }
+}
+
+/* ────────────────────────────────────────────────
+ * UTILITY LAYER
+ * ──────────────────────────────────────────────── */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
