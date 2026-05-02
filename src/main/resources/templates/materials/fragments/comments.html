@@ -60,16 +60,16 @@
     </div>
 </div>
 
-<div th:fragment="comment-edit-form" class="p-3 bg-primary-soft/30 rounded-button border border-primary/20">
+<div th:fragment="comment-edit-form" class="group p-3 bg-primary-soft/30 rounded-button border border-primary/20">
     <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
-          hx-target="closest div"
+          hx-target="closest .group"
           hx-swap="outerHTML">
         <textarea name="content" required class="form-textarea text-sm" rows="2" th:text="${comment.content}"></textarea>
         <div class="flex gap-2 mt-2">
             <button type="submit" class="btn-primary btn-sm">Save</button>
             <button type="button"
                     th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
-                    hx-target="closest div"
+                    hx-target="closest .group"
                     hx-swap="outerHTML"
                     class="btn-ghost btn-sm text-xs">Cancel</button>
         </div>
