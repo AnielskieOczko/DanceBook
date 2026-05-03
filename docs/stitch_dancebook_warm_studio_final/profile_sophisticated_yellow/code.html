@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Choreo - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container-highest": "#e4e2e1",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c3c5dc",
+                        "tertiary": "#5a5d71",
+                        "surface-container": "#f0eded",
+                        "outline": "#7d766b",
+                        "primary": "#6b5c41",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e4e2e1",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed": "#dfe1f9",
+                        "on-surface-variant": "#4c463c",
+                        "surface": "#fcf9f8",
+                        "on-primary-fixed-variant": "#52452b",
+                        "on-tertiary-fixed": "#171b2b",
+                        "secondary": "#605e5a",
+                        "background": "#fcf9f8",
+                        "surface-dim": "#dcd9d9",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#cfc5b9",
+                        "on-secondary-fixed-variant": "#484743",
+                        "primary-fixed-dim": "#d8c4a2",
+                        "surface-container-low": "#f6f3f2",
+                        "on-background": "#1b1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#1c1c18",
+                        "inverse-primary": "#d8c4a2",
+                        "secondary-container": "#e6e2dc",
+                        "surface-container-high": "#eae7e7",
+                        "secondary-fixed": "#e6e2dc",
+                        "on-tertiary-container": "#4f5265",
+                        "primary-fixed": "#f5e0bd",
+                        "primary-container": "#d9c5a3",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#434658",
+                        "on-secondary-container": "#666460",
+                        "surface-tint": "#6b5c41",
+                        "tertiary-container": "#c4c6dd",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#241a05",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#c9c6c0",
+                        "inverse-surface": "#303030",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#605136"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "xl": "80px",
+                        "sm": "12px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "margin": "32px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "label-sm": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md font-body-md min-h-screen flex flex-col pb-[72px] md:pb-0">
+<!-- TopAppBar (Web) / Hidden on Mobile -->
+<header class="hidden md:flex bg-white/80 dark:bg-stone-950/80 backdrop-blur-md text-stone-900 dark:text-stone-100 font-manrope font-light tracking-tight full-width top-0 z-50 border-b border-stone-100 dark:border-stone-800 flat no shadows flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto sticky">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-stone-900 dark:text-stone-100" data-icon="menu">menu</span>
+<span class="text-lg font-semibold tracking-[0.2em] text-stone-900 dark:text-stone-100">CHOREO</span>
+</div>
+<nav class="flex gap-lg">
+<a class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors" href="#">Dashboard</a>
+<a class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors" href="#">Library</a>
+<a class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors" href="#">Collections</a>
+<a class="text-stone-900 dark:text-stone-100 font-medium hover:text-stone-600 dark:hover:text-stone-300 transition-colors" href="#">Profile</a>
+</nav>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close up portrait of a young dancer looking directly at the camera with a calm, focused expression. The lighting is soft and studio-like, highlighting natural features against a clean, minimalist off-white background. The overall aesthetic is professional, modern, and aligned with a sleek dance application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrQ04Fo1LfbuNdL6Kqhtb5S3rM_4gT9ZICOrDgIOUh0hJ5v-k_9gUfk2RWLMcJYiAfutDSE6YFtc92mbXwLVewICa4jXRTABquZO1v3pFCkvc2trpjxcphnBqmRPy3SHrUAWLrV1VJkqWlhvrGbPHMhIB8QYNMYF18DEgYt2v2uDWeYCDgQ_BoT1Zege3IJAvy1Esvqmxmuf4W_GbC6towiM0xZuQj7REVtLgubhxItE4Ybel-PSOlUQJSkgQtq-4aIlrXAXFJkqw"/>
+</div>
+</header>
+<!-- Mobile Top Header (Fallback for when nav is at bottom) -->
+<header class="md:hidden flex justify-between items-center px-4 py-4 bg-background sticky top-0 z-40 border-b border-surface-container">
+<span class="text-lg font-semibold tracking-[0.2em] text-on-background">CHOREO</span>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close up portrait of a young dancer looking directly at the camera with a calm, focused expression. The lighting is soft and studio-like, highlighting natural features against a clean, minimalist off-white background. The overall aesthetic is professional, modern, and aligned with a sleek dance application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASgytaJ9JzZ2TONP9x99AKFoLSpVYT2uhBurNezTooV58GVU2aKeXmyxVzoHBcHbGvR4mGbONoCMulKd_25K7kt9EKSTKDH5BfW8j7ZxMKudfShS9MGNgx0nj97612iXsO6ReBsmEaA9v4xDt0zZx4TILCba11J-L1pXLZHTWowoLO3zcxvE7JNDjuWdQKp5f2JHx4S20R_7jyLR3Bcp1sNAUzCJ0ZUwKIniw8am9CG6sbIl0AKao6rBa7jav_-eMFIIA2SQTGCVc"/>
+</div>
+</header>
+<main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-6 py-lg md:py-xl grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Profile Header / Stats -->
+<section class="md:col-span-4 flex flex-col items-center md:items-start space-y-md">
+<div class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-surface-container-highest border-4 border-surface shadow-[0_4px_20px_rgba(45,45,45,0.05)] relative">
+<img alt="Elena Rodriguez" class="w-full h-full object-cover" data-alt="A close up portrait of a young dancer looking directly at the camera with a calm, focused expression. The lighting is soft and studio-like, highlighting natural features against a clean, minimalist off-white background. The overall aesthetic is professional, modern, and aligned with a sleek dance application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpEOjN5SrHs8Cjn_puNelvlzavyfopF77A9QJg_WrQoauvzG9W7FM6Z8wnSEiZnGZ_Fhuzq2_ulFGsfsmvJozusToN3tAFVUh9Btn1w7SiDoWyEvqhWYN86jOMvxrg8twHXXHebl9dhkD--oUwRhvHd4Tpo7N3u8gthVBPTlgz0KKs5WWeG7fYfYN6IKGZo4enLyCkK49RIz2Vnp9Fe4Vl_-XAJZcAcOJIGz68QCLCoGKQPXmCWwKz-89Rt4vknZA5gYMJNKbngg8"/>
+<button class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full p-2 shadow-[0_4px_20px_rgba(45,45,45,0.05)] hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left">
+<h1 class="font-headline-lg text-headline-lg text-on-background mb-xs">Elena Rodriguez</h1>
+<p class="font-body-md text-body-md text-secondary">Contemporary &amp; Modern Focus</p>
+</div>
+<div class="w-full grid grid-cols-2 gap-sm pt-sm border-t border-surface-container-highest">
+<div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-xs">Practice Time</span>
+<span class="font-headline-md text-headline-md text-on-background">124<span class="font-body-sm text-body-sm text-secondary ml-1">hrs</span></span>
+</div>
+<div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-xs">Mastered Styles</span>
+<span class="font-headline-md text-headline-md text-on-background">12</span>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest py-[12px] px-[24px] rounded hover:bg-primary-fixed transition-colors mt-margin">
+                Edit Profile
+            </button>
+</section>
+<!-- Main Content Area -->
+<section class="md:col-span-8 space-y-xl mt-xl md:mt-0">
+<!-- Personal Collections -->
+<div>
+<div class="flex justify-between items-center mb-md border-b border-surface-container-highest pb-xs">
+<h2 class="font-headline-md text-headline-md text-on-background">My Collections</h2>
+<button class="text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+<!-- Collection Card 1 -->
+<div class="group border border-[#EAEAEA] rounded-lg overflow-hidden bg-surface hover:shadow-[0_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex">
+<div class="w-1/3 bg-surface-container-highest">
+<img alt="Contemporary Routines" class="w-full h-full object-cover" data-alt="A dynamic shot of a contemporary dancer mid-leap against a stark, minimalist studio background. The lighting is dramatic, emphasizing the lines and form of the dancer's movement. The overall aesthetic is artistic, focused, and utilizes a sophisticated palette of warm grays and muted tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUgnM0bplnRlTIR9LPh6osgI3dWZHEgEZOtFvrIn_ZIt_dB12MCj7aNe8310TyIKEssD_qhZcYd12E9t9LCH_lbwpw2bPtgEemNRZJNycbuHfOL7xtly1er7YTD9Qyxciu13NOoyxduW9eHof6Lj6zTCSnBHYvvjc_jsPHWxWHGuSzNjJKi8rJfznMNui5LUqqv_XvoZmxLO1y5A3rIYgsXGca0nad-0-ZjLIgmzYcphJcOp72DezhRtR2DzyRWyNVB4gkN8fIg7I"/>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-center">
+<h3 class="font-body-lg text-body-lg text-on-background mb-xs">Contemporary Flow</h3>
+<p class="font-body-sm text-body-sm text-secondary">14 Videos</p>
+</div>
+</div>
+<!-- Collection Card 2 -->
+<div class="group border border-[#EAEAEA] rounded-lg overflow-hidden bg-surface hover:shadow-[0_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex">
+<div class="w-1/3 bg-surface-container-highest">
+<img alt="Ballet Fundamentals" class="w-full h-full object-cover" data-alt="A close up of ballet slippers in pointe position on a wooden studio floor. The lighting is soft and airy, highlighting the texture of the satin and the grain of the wood. The scene conveys discipline, elegance, and practice within a clean, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVab5MRUfMShlZ5X7rQgdEsW-zSbfiAODanab4Zyajm-rdSONSH_Re8GOIBJIWqc9_sjmYJYu9r1KyO1Z4scJtCBxK3CbhibK-sfDemZVERp9CmV6jP0rvkDYiuCu-OAgJPEJtH9mRZGv_kD9XRtcPOrD5fet4niL1OBFc5nhseopnmZZyalsLgR2aVy6bcb0V4zVlauciVDlYPdnx8B6sGyHi8EnEWEFA95HMxT91PPyLOUSBaZHPt4zrHYatTSYAR1VYaYGNo94"/>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-center">
+<h3 class="font-body-lg text-body-lg text-on-background mb-xs">Ballet Core</h3>
+<p class="font-body-sm text-body-sm text-secondary">8 Videos</p>
+</div>
+</div>
+<!-- Collection Card 3 -->
+<div class="group border border-[#EAEAEA] rounded-lg overflow-hidden bg-surface hover:shadow-[0_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex">
+<div class="w-1/3 bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[32px]" data-icon="bookmark">bookmark</span>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-center">
+<h3 class="font-body-lg text-body-lg text-on-background mb-xs">Saved for Later</h3>
+<p class="font-body-sm text-body-sm text-secondary">22 Videos</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Settings & Management -->
+<div>
+<div class="mb-md border-b border-surface-container-highest pb-xs">
+<h2 class="font-headline-md text-headline-md text-on-background">Account Settings</h2>
+</div>
+<ul class="flex flex-col">
+<li class="border-b border-[#F5F5F5] last:border-0">
+<a class="flex justify-between items-center py-md group" href="#">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="person_outline" data-weight="200">person_outline</span>
+<span class="font-body-md text-body-md text-on-background group-hover:text-primary transition-colors">Personal Information</span>
+</div>
+<span class="material-symbols-outlined text-surface-dim group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+</li>
+<li class="border-b border-[#F5F5F5] last:border-0">
+<a class="flex justify-between items-center py-md group" href="#">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="notifications_none" data-weight="200">notifications_none</span>
+<span class="font-body-md text-body-md text-on-background group-hover:text-primary transition-colors">Notifications</span>
+</div>
+<span class="material-symbols-outlined text-surface-dim group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+</li>
+<li class="border-b border-[#F5F5F5] last:border-0">
+<a class="flex justify-between items-center py-md group" href="#">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors" data-icon="subscriptions" data-weight="200">subscriptions</span>
+<span class="font-body-md text-body-md text-on-background group-hover:text-primary transition-colors">Subscription &amp; Billing</span>
+</div>
+<span class="material-symbols-outlined text-surface-dim group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</a>
+</li>
+<li class="border-b border-[#F5F5F5] last:border-0 mt-md">
+<a class="flex items-center gap-sm py-sm text-error hover:text-on-error-container transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout" data-weight="200">logout</span>
+<span class="font-body-md text-body-md font-medium">Log Out</span>
+</a>
+</li>
+</ul>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden bg-white dark:bg-stone-950 font-manrope text-[11px] font-medium uppercase tracking-wider docked full-width bottom-0 z-50 rounded-t-xl border-t border-stone-100 dark:border-stone-800 shadow-[0_-4px_20px_rgba(45,45,45,0.05)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-amber-500 dark:hover:text-amber-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="grid_view">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-amber-500 dark:hover:text-amber-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="subscriptions">subscriptions</span>
+<span>Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-600 hover:text-amber-500 dark:hover:text-amber-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="layers">layers</span>
+<span>Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-900 dark:text-amber-200 relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-amber-400 after:rounded-full Active: scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</body></html>
