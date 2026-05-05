@@ -2,83 +2,102 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section>
+<section th:with="activeNav='home'" class="space-y-xl">
 
-    <!-- Welcome Header -->
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="page-title text-2xl md:text-3xl" th:if="${displayName != null}" th:text="'Good afternoon, ' + ${displayName}">Good afternoon, Rafal</h1>
-            <h1 class="page-title text-2xl md:text-3xl" th:if="${displayName == null}">Dashboard</h1>
-            <p class="page-subtitle">Here's what's happening in your dance library</p>
-        </div>
-        <div class="avatar avatar-lg hidden md:flex" th:if="${currentUser != null}">
-            <span th:text="${currentUser.displayName != null ? currentUser.displayName.substring(0,1) : '?'}">R</span>
-        </div>
-    </div>
+    <!-- Welcome Section -->
+    <section class="flex flex-col gap-sm">
+        <h2 class="font-display-lg text-display-lg text-on-surface"
+            th:text="${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}">Good morning, Elara.</h2>
+        <p class="font-body-lg text-body-lg text-outline max-w-2xl">Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.</p>
+    </section>
 
-    <!-- Quick Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <!-- Materials -->
-        <div class="stat-card">
-            <div class="stat-card-icon bg-primary-soft text-primary">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-            </div>
-            <div class="stat-card-value" th:text="${materialCount}">42</div>
-            <div class="stat-card-label">Materials</div>
-        </div>
-        <!-- Figures -->
-        <div class="stat-card">
-            <div class="stat-card-icon bg-blue-100 text-blue-600">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div class="stat-card-value" th:text="${figureCount}">156</div>
-            <div class="stat-card-label">Figures</div>
-        </div>
-        <!-- Styles -->
-        <div class="stat-card">
-            <div class="stat-card-icon bg-purple-100 text-purple-600">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-            </div>
-            <div class="stat-card-value" th:text="${danceTypeCount}">8</div>
-            <div class="stat-card-label">Styles</div>
-        </div>
-        <!-- Comments -->
-        <div class="stat-card">
-            <div class="stat-card-icon bg-emerald-100 text-emerald-600">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-            <div class="stat-card-value" th:text="${commentCount}">23</div>
-            <div class="stat-card-label">Comments</div>
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="flex flex-col sm:flex-row gap-3 mb-8">
-        <a href="/materials/new" class="btn-primary flex-1 justify-center">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            Add Material
-        </a>
-        <a href="/materials" class="btn-outline flex-1 justify-center">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            Browse Library
-        </a>
-        <a href="/lists/new" class="btn-outline flex-1 justify-center">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Create List
-        </a>
-    </div>
-
-    <!-- Welcome Card -->
-    <div class="card p-6 bg-gradient-to-r from-primary-soft/30 to-surface">
-        <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-button bg-primary-soft flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <!-- Stats Grid (Bento Style) -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+        <!-- Card 1: Materials -->
+        <a href="/materials" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">movie</span>
             </div>
             <div>
-                <h3 class="font-heading font-semibold text-text-primary mb-1">Welcome to DanceBook</h3>
-                <p class="text-sm text-text-secondary">Your personal library for mastering ballroom dance steps, managing materials, and tracking your progress. Use the navigation to explore your materials, manage dance styles, or create custom lists.</p>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Materials</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${materialCount}">124 <span class="font-body-md text-body-md text-outline font-normal">Videos</span></p>
+            </div>
+        </a>
+        <!-- Card 2: Figures -->
+        <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">accessibility_new</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Figures</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${figureCount}">42 <span class="font-body-md text-body-md text-outline font-normal">Techniques</span></p>
             </div>
         </div>
+        <!-- Card 3: Styles -->
+        <a href="/dance-types" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">category</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Styles</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${danceTypeCount}">8 <span class="font-body-md text-body-md text-outline font-normal">Genres</span></p>
+            </div>
+        </a>
+        <!-- Card 4: Comments -->
+        <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Feedback</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${commentCount}">23 <span class="font-body-md text-body-md text-outline font-normal">Notes</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions & Timeline Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Timeline -->
+        <section class="lg:col-span-8 space-y-md">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+                <button class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</button>
+            </div>
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
+                <div class="relative border-l border-surface-variant ml-4 space-y-10">
+                    <!-- Placeholder Items -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary-container border-2 border-surface-container-lowest"></div>
+                        <div class="flex flex-col gap-1">
+                            <p class="font-body-md text-body-md text-on-surface font-medium">Platform Ready</p>
+                            <p class="font-body-md text-body-md text-outline text-sm">Design System Update • Just now</p>
+                        </div>
+                    </div>
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-variant border-2 border-surface-container-lowest"></div>
+                        <div class="flex flex-col gap-1">
+                            <p class="font-body-md text-body-md text-on-surface font-medium">Library Sync Complete</p>
+                            <p class="font-body-md text-body-md text-outline text-sm">Storage Management • 1 hour ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workspace Quick Actions -->
+        <section class="lg:col-span-4 space-y-md">
+            <h3 class="font-headline-md text-headline-md text-on-surface">Workspace</h3>
+            <div class="bg-surface-container-low rounded-xl p-md space-y-4">
+                <a href="/materials/new" class="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-body-md font-medium py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+                    <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0; font-size: 20px;">add</span>
+                    New Material
+                </a>
+                <a href="/lists/new" class="w-full flex items-center justify-center gap-2 bg-transparent border border-primary-container text-on-surface font-body-md font-medium py-3 px-6 rounded-lg hover:bg-surface-container-highest transition-colors">
+                    <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0; font-size: 20px;">layers</span>
+                    Create Collection
+                </a>
+            </div>
+        </section>
     </div>
 
 </section>

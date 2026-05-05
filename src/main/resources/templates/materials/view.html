@@ -3,174 +3,91 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'">
+<section th:with="activeNav='materials'" class="space-y-lg -mt-4 md:-mt-8">
 
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-text-secondary mb-6">
-        <a href="/materials" class="hover:text-primary transition-colors">Library</a>
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        <span class="text-text-primary font-medium truncate" th:text="${material.name}">Material Name</span>
-    </nav>
+    <!-- Contextual Sub-Header -->
+    <header class="flex items-center justify-between py-4 border-b border-surface-variant mb-6">
+        <a href="/materials" class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors group">
+            <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="px-6 py-sm rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                Edit Notes
+            </a>
+        </div>
+    </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Main Content Column -->
-        <div class="lg:col-span-2 space-y-6">
-
-            <!-- Video Player -->
-            <div th:if="${material.driveFileId != null}" class="card overflow-hidden">
-                <div class="aspect-video bg-black">
-                    <iframe th:src="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview'"
-                            class="w-full h-full" allowfullscreen allow="autoplay"></iframe>
-                </div>
+    <!-- Cinematic Video Player -->
+    <section class="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-ambient relative group">
+        <th:block th:if="${material.driveFileId != null}">
+            <iframe th:src="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview'"
+                    class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
+        </th:block>
+        <th:block th:if="${material.driveFileId == null && material.videoLink != null}">
+            <div class="w-full h-full flex flex-col items-center justify-center bg-surface-container-highest">
+                <a th:href="${material.videoLink}" target="_blank" rel="noopener" class="flex flex-col items-center gap-4 text-primary hover:text-primary-hover transition-colors">
+                    <span class="material-symbols-outlined text-6xl">play_circle</span>
+                    <span class="text-body-lg font-medium">Watch External Video</span>
+                </a>
             </div>
-            <div th:if="${material.driveFileId == null && material.videoLink != null}" class="card overflow-hidden">
-                <div class="aspect-video bg-surface-warm flex items-center justify-center">
-                    <a th:href="${material.videoLink}" target="_blank" rel="noopener" class="flex flex-col items-center gap-2 text-primary hover:text-primary-hover transition-colors">
-                        <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
-                        <span class="text-sm font-medium">Watch External Video</span>
-                    </a>
-                </div>
-            </div>
+        </th:block>
+    </section>
 
-            <!-- Material Title & Actions -->
-            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                <div>
-                    <h1 class="page-title text-2xl" th:text="${material.name}">Material Name</h1>
-                    <p th:if="${material.description}" class="text-text-secondary text-sm mt-2 leading-relaxed" th:text="${material.description}">Description</p>
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mt-lg">
+        <!-- Left Column: Details & Figures -->
+        <div class="lg:col-span-8 space-y-lg">
+            <!-- Title & Meta -->
+            <div class="space-y-4">
+                <div class="flex flex-wrap gap-2">
+                    <span th:if="${material.danceType != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.name}">Style</span>
+                    <span th:if="${material.danceType != null && material.danceType.category != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.category.name}">Category</span>
                 </div>
-                <div class="flex gap-2 flex-shrink-0">
-                    <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-outline btn-sm">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Edit
-                    </a>
-                    <form th:action="@{/materials/{id}/delete(id=${material.id})}" method="post"
-                          onsubmit="return confirm('Are you sure you want to delete this material?')">
-                        <button type="submit" class="btn-danger btn-sm">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                            Delete
-                        </button>
-                    </form>
-                </div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface" th:text="${material.name}">Material Name</h1>
+                <p class="font-body-md text-on-surface leading-relaxed max-w-3xl" th:text="${material.description}">Description</p>
             </div>
 
-            <!-- Figures Section -->
-            <div class="card p-5">
-                <h2 class="font-heading font-semibold text-lg text-text-primary mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Figures
-                    <span class="badge-neutral" th:text="${#lists.size(figures)}">0</span>
+            <!-- Figures List (Bento Grid Style) -->
+            <div class="space-y-6">
+                <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">format_list_bulleted</span>
+                    Key Figures & Movements
                 </h2>
+                
+                <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-outline">
+                    No figures tracked for this sequence yet.
+                </div>
 
-                <!-- Figure List -->
-                <div th:if="${!#lists.isEmpty(figures)}" class="space-y-2 mb-4">
-                    <div th:each="f : ${figures}" class="flex items-center justify-between p-3 bg-surface-warm rounded-button group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-primary-soft flex items-center justify-center text-xs font-semibold text-primary">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div th:each="f : ${figures}" class="p-4 border border-surface-variant rounded-lg bg-surface flex gap-4 items-center hover:shadow-ambient hover:-translate-y-[2px] transition-all cursor-pointer group">
+                        <div class="w-16 h-16 rounded bg-surface-container overflow-hidden shrink-0 relative flex items-center justify-center">
+                            <span class="material-symbols-outlined text-outline/30 group-hover:text-primary/50 transition-colors">accessibility_new</span>
+                            <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-white text-sm">play_arrow</span>
                             </div>
-                            <div>
-                                <span class="text-sm font-medium text-text-primary" th:text="${f.name}">Figure</span>
-                                <span class="text-xs text-text-secondary ml-2"
-                                      th:text="${f.startTime + ' – ' + f.endTime}">0:00 – 0:30</span>
-                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider block mb-1" th:text="${f.startTime + ' – ' + f.endTime}">0:00</span>
+                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.name}">Figure Name</h3>
                         </div>
                         <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
                               method="post" class="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button type="submit" class="btn-icon p-1 text-text-secondary hover:text-danger"
-                                    title="Remove figure" onclick="return confirm('Delete this figure?')">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            <button type="submit" class="text-outline-variant hover:text-error transition-colors"
+                                    onclick="return confirm('Delete this figure?')">
+                                <span class="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </form>
                     </div>
                 </div>
-                <div th:if="${#lists.isEmpty(figures)}" class="text-center py-4 text-sm text-text-secondary">
-                    No figures added yet
-                </div>
-
-                <!-- Add Figure Form -->
-                <details class="mt-4">
-                    <summary class="cursor-pointer text-sm font-medium text-primary hover:text-primary-hover transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Add a figure
-                    </summary>
-                    <form th:action="@{/materials/{id}/figures(id=${material.id})}" method="post"
-                          th:object="${figureRequest}" class="mt-3 p-4 bg-surface-warm rounded-button space-y-3">
-                        <div>
-                            <label for="figureName" class="form-label">Name</label>
-                            <input id="figureName" type="text" th:field="*{name}" required class="form-input" placeholder="e.g. Natural Turn">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label for="startTime" class="form-label">Start Time</label>
-                                <input id="startTime" type="text" th:field="*{startTime}" required class="form-input" placeholder="0:00">
-                            </div>
-                            <div>
-                                <label for="endTime" class="form-label">End Time</label>
-                                <input id="endTime" type="text" th:field="*{endTime}" required class="form-input" placeholder="0:30">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary btn-sm">Add Figure</button>
-                    </form>
-                </details>
             </div>
-
-            <!-- Comments Section -->
-            <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
         </div>
 
-        <!-- Sidebar Metadata -->
-        <div class="space-y-4">
-            <!-- Metadata Card -->
-            <div class="card p-5 space-y-4">
-                <h3 class="font-heading font-semibold text-sm uppercase tracking-wider text-text-secondary">Details</h3>
-
-                <!-- Dance Style -->
-                <div th:if="${material.danceType != null}">
-                    <p class="text-xs text-text-secondary mb-1">Style</p>
-                    <span class="badge-primary" th:text="${material.danceType.name}">Style</span>
-                </div>
-
-                <!-- Category -->
-                <div th:if="${material.danceType != null && material.danceType.category != null}">
-                    <p class="text-xs text-text-secondary mb-1">Category</p>
-                    <span class="badge-secondary" th:text="${material.danceType.category.name}">Category</span>
-                </div>
-
-                <!-- Rating -->
-                <div th:if="${material.rating != null && material.rating > 0}">
-                    <p class="text-xs text-text-secondary mb-1">Rating</p>
-                    <div class="flex items-center gap-0.5">
-                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                            <svg th:classappend="${i <= material.rating ? 'star-filled' : 'star'}" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        </th:block>
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <!-- Source Link -->
-                <div th:if="${material.sourceLink != null}">
-                    <p class="text-xs text-text-secondary mb-1">Source</p>
-                    <a th:href="${material.sourceLink}" target="_blank" rel="noopener"
-                       class="text-sm text-primary hover:text-primary-hover transition-colors flex items-center gap-1">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                        Open source
-                    </a>
-                </div>
-
-                <!-- Dates -->
-                <div class="divider"></div>
-                <div class="space-y-2 text-xs text-text-secondary">
-                    <div th:if="${material.createdAt != null}" class="flex justify-between">
-                        <span>Created</span>
-                        <span th:text="${#temporals.format(material.createdAt, 'dd MMM yyyy')}">01 Jan 2025</span>
-                    </div>
-                    <div th:if="${material.updatedAt != null}" class="flex justify-between">
-                        <span>Updated</span>
-                        <span th:text="${#temporals.format(material.updatedAt, 'dd MMM yyyy')}">01 Jan 2025</span>
-                    </div>
-                </div>
+        <!-- Right Column: Director's Notes -->
+        <div class="lg:col-span-4 pl-0 lg:pl-6 lg:border-l border-surface-variant">
+            <div class="sticky top-28 space-y-8">
+                <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
             </div>
         </div>
     </div>

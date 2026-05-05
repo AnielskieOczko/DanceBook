@@ -2,71 +2,113 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='profile'">
+<section th:with="activeNav='profile'" class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
-    <div class="page-header">
-        <h1 class="page-title">Profile</h1>
-        <p class="page-subtitle">Your account settings</p>
-    </div>
+    <!-- Profile Header / Stats -->
+    <section class="md:col-span-4 flex flex-col items-center md:items-start space-y-md">
+        <div class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-surface-container-highest border-4 border-surface shadow-ambient relative group">
+            <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-4xl">
+                <span th:text="${appUser.displayName != null ? appUser.displayName.substring(0,1) : 'U'}">U</span>
+            </div>
+            <button class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full p-2 shadow-ambient hover:bg-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+        </div>
+        <div class="text-center md:text-left">
+            <h1 class="font-headline-lg text-headline-lg text-on-background mb-xs" th:text="${appUser.displayName}">Elena Rodriguez</h1>
+            <p class="font-body-md text-text-secondary" th:text="${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}">Focus</p>
+        </div>
+        <div class="w-full grid grid-cols-2 gap-sm pt-sm border-t border-surface-container-highest">
+            <div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+                <span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-widest mb-xs">Library</span>
+                <span class="font-headline-md text-headline-md text-on-background">124</span>
+            </div>
+            <div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+                <span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-widest mb-xs">Styles</span>
+                <span class="font-headline-md text-headline-md text-on-background">12</span>
+            </div>
+        </div>
+        <button class="w-full bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest py-[12px] px-[24px] rounded hover:bg-primary-fixed transition-colors mt-margin">
+            Edit Profile
+        </button>
+    </section>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        <!-- Profile Card -->
-        <div class="lg:col-span-1">
-            <div class="card p-6 text-center">
-                <div class="avatar avatar-lg mx-auto mb-4" th:text="${appUser.displayName != null ? appUser.displayName.substring(0,1) : '?'}">R</div>
-                <h2 class="font-heading font-bold text-lg text-text-primary" th:text="${appUser.displayName}">Name</h2>
-                <p class="text-sm text-text-secondary" th:text="${appUser.email}">email@example.com</p>
-                <div class="mt-3">
-                    <span class="badge-primary" th:text="${appUser.role}">USER</span>
+    <!-- Main Content Area -->
+    <section class="md:col-span-8 space-y-xl mt-xl md:mt-0">
+        <!-- Personal Collections (Dynamic Lists) -->
+        <div>
+            <div class="flex justify-between items-center mb-md border-b border-surface-container-highest pb-xs">
+                <h2 class="font-headline-md text-headline-md text-on-background">My Collections</h2>
+                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors">
+                    <span class="material-symbols-outlined">add_circle</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+                <!-- If no lists -->
+                <div th:if="${#lists.isEmpty(navLists)}" class="col-span-full py-8 text-center text-outline italic text-sm">
+                    No custom collections created yet.
                 </div>
-                <div class="divider"></div>
-                <div class="text-xs text-text-secondary space-y-1">
-                    <p>Username: <span class="font-medium text-text-primary" th:text="${appUser.username}">username</span></p>
-                </div>
+                
+                <!-- Collection Card -->
+                <a th:each="list : ${navLists}" th:href="@{/lists/{id}(id=${list.id})}"
+                   class="group border border-border rounded-lg overflow-hidden bg-surface hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex h-24">
+                    <div class="w-1/3 bg-surface-container-highest flex items-center justify-center">
+                        <span class="material-symbols-outlined text-outline" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
+                    </div>
+                    <div class="w-2/3 p-md flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg text-on-background mb-xs truncate" th:text="${list.name}">Collection Name</h3>
+                        <p class="font-body-sm text-body-sm text-text-secondary">Filtered Collection</p>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <!-- Password Change -->
-        <div class="lg:col-span-2">
-            <div th:fragment="passwordSection" id="password-section" class="card p-6">
-                <h2 class="font-heading font-semibold text-lg text-text-primary mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    Change Password
-                </h2>
+        <!-- Account Settings / Password -->
+        <div>
+            <div class="mb-md border-b border-surface-container-highest pb-xs">
+                <h2 class="font-headline-md text-headline-md text-on-background">Account Settings</h2>
+            </div>
+            
+            <div th:fragment="passwordSection" id="password-section" class="space-y-6">
+                <h3 class="font-body-lg font-medium text-on-surface">Update Password</h3>
+                
+                <!-- Messages -->
+                <div th:if="${passwordSuccessMsg}" class="p-3 rounded-lg bg-success-soft text-success text-sm" th:text="${passwordSuccessMsg}"></div>
+                <div th:if="${passwordErrorMsg}" class="p-3 rounded-lg bg-danger-soft text-danger text-sm" th:text="${passwordErrorMsg}"></div>
 
-                <!-- Success/Error messages -->
-                <div th:if="${passwordSuccessMsg}" class="mb-4 p-3 rounded-button bg-success-soft text-success text-sm font-medium flex items-center gap-2">
-                    <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    <span th:text="${passwordSuccessMsg}">Success</span>
-                </div>
-                <div th:if="${passwordErrorMsg}" class="mb-4 p-3 rounded-button bg-danger-soft text-danger text-sm font-medium flex items-center gap-2">
-                    <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                    <span th:text="${passwordErrorMsg}">Error</span>
-                </div>
-
-                <form th:hx-post="@{/profile/password}" hx-target="#password-section" hx-swap="outerHTML" class="space-y-4">
-                    <div>
-                        <label for="currentPassword" class="form-label">Current Password</label>
+                <form th:hx-post="@{/profile/password}" hx-target="#password-section" hx-swap="outerHTML" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="sm:col-span-2">
+                        <label for="currentPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">Current Password</label>
                         <input id="currentPassword" type="password" name="currentPassword" required class="form-input">
                     </div>
                     <div>
-                        <label for="newPassword" class="form-label">New Password</label>
-                        <input id="newPassword" type="password" name="newPassword" required class="form-input"
-                               minlength="8" placeholder="Min 8 characters">
+                        <label for="newPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">New Password</label>
+                        <input id="newPassword" type="password" name="newPassword" required class="form-input" minlength="8">
                     </div>
                     <div>
-                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                        <label for="confirmPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">Confirm New</label>
                         <input id="confirmPassword" type="password" name="confirmPassword" required class="form-input">
                     </div>
-                    <button type="submit" class="btn-primary">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        Update Password
-                    </button>
+                    <div class="sm:col-span-2 flex justify-end">
+                        <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-widest border border-primary-container px-6 py-2 rounded hover:bg-surface-container-highest transition-colors">
+                            Update Security
+                        </button>
+                    </div>
                 </form>
             </div>
+            
+            <ul class="flex flex-col mt-8">
+                <li class="border-t border-surface-container-highest">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full flex items-center gap-sm py-4 text-error hover:opacity-70 transition-colors">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span class="font-body-md text-body-md font-medium">Log Out</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </div>
-    </div>
+    </section>
 
 </section>
 </html>

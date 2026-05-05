@@ -2,96 +2,90 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'">
+<section th:with="activeNav='materials'" class="space-y-lg">
 
-    <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div class="page-header mb-0">
-            <h1 class="page-title">Material Library</h1>
-            <p class="page-subtitle" th:text="${#lists.size(materials)} + ' materials'">0 materials</p>
-        </div>
-        <a href="/materials/new" class="btn-primary">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Material
-        </a>
-    </div>
-
-    <!-- Search & Filters -->
-    <div class="card p-4 mb-6 space-y-4">
-        <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:select" hx-push-url="false">
-            <!-- Search Bar -->
-            <div class="relative mb-4">
-                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </div>
-                <input type="text" name="nameSearch" th:value="${selectedNameSearch}" placeholder="Search materials..."
-                       class="form-input pl-11" hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+    <!-- Search & Filter Section -->
+    <section>
+        <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
+            <div class="relative max-w-3xl mb-md group">
+                <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">search</span>
+                <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
+                       class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary pb-sm pl-[36px] text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                       placeholder="Search choreography, styles, or keywords..."
+                       hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
             </div>
 
-            <!-- Filter Row -->
-            <div class="flex flex-wrap gap-3">
-                <select name="typeIds" multiple class="form-select text-sm max-w-[200px]">
-                    <option value="" disabled>Dance Style</option>
-                    <option th:each="t : ${danceTypes}" th:value="${t.id}" th:text="${t.name}"
-                            th:selected="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}">Style</option>
-                </select>
-                <select name="categoryIds" multiple class="form-select text-sm max-w-[200px]">
-                    <option value="" disabled>Category</option>
-                    <option th:each="c : ${danceCategories}" th:value="${c.id}" th:text="${c.name}"
-                            th:selected="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}">Category</option>
-                </select>
-                <select name="minRating" class="form-select text-sm max-w-[150px]">
-                    <option value="">Min Rating</option>
-                    <option th:each="r : ${#numbers.sequence(1,5)}" th:value="${r}" th:text="${r} + '+ stars'"
-                            th:selected="${selectedMinRating != null && selectedMinRating == r}">Rating</option>
-                </select>
-                <button type="submit" class="btn-secondary btn-sm">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-                    Filter
-                </button>
-                <a href="/materials" class="btn-ghost btn-sm text-xs">Clear</a>
+            <div class="flex overflow-x-auto gap-sm scrollbar-hide py-2">
+                <!-- All Materials Pill -->
+                <label class="cursor-pointer">
+                    <input type="radio" name="categoryIds" value="" class="hidden peer"
+                           th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
+                        All Materials
+                    </span>
+                </label>
+
+                <!-- Category Pills -->
+                <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                    <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
+                           th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
+                          th:text="${c.name}">Category</span>
+                </label>
             </div>
         </form>
-    </div>
+    </section>
 
     <!-- Materials Grid (HTMX swappable) -->
-    <div th:fragment="materialsTable" id="materials-grid">
+    <div th:fragment="materialsTable" id="materials-grid" class="space-y-gutter">
         <div th:if="${#lists.isEmpty(materials)}" class="empty-state">
             <div class="empty-state-icon">
-                <svg class="w-8 h-8 text-text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
             </div>
-            <h3 class="empty-state-title">No materials found</h3>
-            <p class="empty-state-text">Try adjusting your filters or add a new material to get started.</p>
-            <a href="/materials/new" class="btn-primary">Add your first material</a>
+            <h3 class="empty-state-title">No movements found</h3>
+            <p class="empty-state-text">Your library is quiet. Adjust your filters or add a new material to begin.</p>
+            <a href="/materials/new" class="btn-primary">Import first material</a>
         </div>
 
-        <div th:if="${!#lists.isEmpty(materials)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a th:each="m : ${materials}" th:href="@{/materials/{id}(id=${m.id})}"
-               class="card-interactive group p-0 overflow-hidden">
-                <!-- Video Thumbnail Area -->
-                <div class="h-32 bg-surface-warm flex items-center justify-center relative">
-                    <th:block th:if="${m.driveFileId != null}">
-                        <svg class="w-10 h-10 text-primary/40 group-hover:text-primary transition-colors" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    </th:block>
-                    <th:block th:if="${m.driveFileId == null}">
-                        <svg class="w-8 h-8 text-text-secondary/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                    </th:block>
-                </div>
-                <!-- Card Body -->
-                <div class="p-4">
-                    <h3 class="font-heading font-semibold text-text-primary mb-2 truncate group-hover:text-primary transition-colors" th:text="${m.name}">Material</h3>
-                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                        <span th:if="${m.danceType != null}" class="badge-primary" th:text="${m.danceType.name}">Type</span>
-                        <span th:if="${m.danceType != null && m.danceType.category != null}" class="badge-secondary" th:text="${m.danceType.category.name}">Category</span>
+        <div th:if="${!#lists.isEmpty(materials)}" class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+            <!-- Featured Card (First item, if not filtered by search) -->
+            <article th:if="${selectedNameSearch == null || selectedNameSearch == ''}"
+                     th:with="m=${materials[0]}"
+                     class="md:col-span-8 group relative rounded-xl overflow-hidden bg-surface border border-outline-variant hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 h-[400px] cursor-pointer">
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 block">
+                    <div class="absolute inset-0 bg-surface-container-highest flex items-center justify-center">
+                        <span class="material-symbols-outlined text-6xl text-outline/20">movie</span>
                     </div>
-                    <!-- Rating Stars -->
-                    <div class="flex items-center gap-0.5" th:if="${m.rating != null && m.rating > 0}">
-                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                            <svg th:classappend="${i <= m.rating ? 'star-filled' : 'star'}" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        </th:block>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-margin w-full text-white">
+                        <span th:if="${m.danceType != null}" class="text-label-sm font-label-sm tracking-wider uppercase mb-xs block text-primary-fixed" th:text="${m.danceType.name}">Style</span>
+                        <h2 class="text-headline-lg font-headline-lg text-white mb-sm" th:text="${m.name}">Material Name</h2>
+                        <p th:if="${m.description}" class="text-body-md font-body-md text-white/80 line-clamp-2 max-w-xl" th:text="${m.description}">Description</p>
                     </div>
-                </div>
-            </a>
+                </a>
+            </article>
+
+            <!-- Standard Cards -->
+            <article th:each="m, iter : ${materials}"
+                     th:if="${(selectedNameSearch != null && selectedNameSearch != '') || iter.index > 0}"
+                     class="md:col-span-4 group relative rounded-xl overflow-hidden bg-surface border border-outline-variant hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 h-[320px] cursor-pointer">
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 block">
+                    <div class="absolute inset-0 bg-surface-container-highest flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-outline/20">movie</span>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full text-white">
+                        <span th:if="${m.danceType != null}" class="text-label-sm font-label-sm tracking-wider uppercase mb-xs block text-white/70" th:text="${m.danceType.name}">Style</span>
+                        <h2 class="text-headline-md font-headline-md text-white mb-xs" th:text="${m.name}">Material Name</h2>
+                        <div class="flex items-center gap-2 mt-sm text-white/80" th:if="${m.rating != null && m.rating > 0}">
+                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                            <span class="text-label-sm font-label-sm" th:text="${m.rating}">5</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
         </div>
     </div>
 

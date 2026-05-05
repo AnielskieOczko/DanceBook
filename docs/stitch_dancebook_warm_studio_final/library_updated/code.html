@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Material Library - Compact Grid</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#5a5d71",
+                      "on-primary-fixed-variant": "#52452b",
+                      "inverse-on-surface": "#f3f0f0",
+                      "background": "#fcf9f8",
+                      "surface-container-high": "#eae7e7",
+                      "primary-fixed": "#f5e0bd",
+                      "on-primary-fixed": "#241a05",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "on-secondary-container": "#666460",
+                      "secondary-fixed-dim": "#c9c6c0",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#303030",
+                      "tertiary-fixed": "#dfe1f9",
+                      "on-surface-variant": "#4c463c",
+                      "secondary": "#605e5a",
+                      "on-surface": "#1b1c1c",
+                      "error-container": "#ffdad6",
+                      "outline": "#7d766b",
+                      "on-tertiary-fixed": "#171b2b",
+                      "on-primary-container": "#605136",
+                      "surface-tint": "#6b5c41",
+                      "surface-container-low": "#f6f3f2",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#c3c5dc",
+                      "on-secondary-fixed": "#1c1c18",
+                      "surface-bright": "#fcf9f8",
+                      "on-tertiary-container": "#4f5265",
+                      "surface": "#fcf9f8",
+                      "surface-dim": "#dcd9d9",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#e6e2dc",
+                      "on-tertiary-fixed-variant": "#434658",
+                      "on-background": "#1b1c1c",
+                      "on-secondary-fixed-variant": "#484743",
+                      "surface-container-highest": "#e4e2e1",
+                      "inverse-primary": "#d8c4a2",
+                      "secondary-container": "#e6e2dc",
+                      "tertiary-container": "#c4c6dd",
+                      "surface-variant": "#e4e2e1",
+                      "primary-fixed-dim": "#d8c4a2",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#cfc5b9",
+                      "primary-container": "#d9c5a3",
+                      "surface-container": "#f0eded",
+                      "primary": "#6b5c41"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "48px",
+                      "xl": "80px",
+                      "sm": "12px",
+                      "xs": "4px",
+                      "margin": "32px",
+                      "base": "8px",
+                      "gutter": "24px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Manrope"
+                      ],
+                      "headline-lg": [
+                              "Manrope"
+                      ],
+                      "headline-md": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ],
+                      "display-lg": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "300"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hairline-divider {
+            border-color: #F5F5F5;
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md font-manrope antialiased">
+<!-- TopAppBar -->
+<header class="w-full border-b border-neutral-100 shadow-[0px_4px_20px_rgba(45,45,45,0.05)] bg-white sticky top-0 z-40">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-4 cursor-pointer active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-amber-600 text-2xl" data-icon="menu">menu</span>
+<h1 class="text-2xl font-bold tracking-tighter text-neutral-900 font-headline-md">Material Library</h1>
+</div>
+<div class="flex items-center gap-6 hidden md:flex">
+<nav class="flex gap-6">
+<a class="text-amber-600 font-semibold font-body-md hover:text-amber-700 transition-colors duration-200" href="#">Library</a>
+<a class="text-neutral-500 font-body-md hover:text-amber-700 transition-colors duration-200" href="#">Collections</a>
+<a class="text-neutral-500 font-body-md hover:text-amber-700 transition-colors duration-200" href="#">Search</a>
+<a class="text-neutral-500 font-body-md hover:text-amber-700 transition-colors duration-200" href="#">Saved</a>
+</nav>
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden cursor-pointer active:scale-95 transition-transform duration-200">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A minimalist, professional headshot of a dancer, softly lit against a clean, light-mode background. The color palette features neutral tones with subtle warmth, aligning with the sophisticated, editorial aesthetic of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW1CBwEyzMHHoKXGJpGNGttgkJl0Yy8qVOI0rN1B42Nk5wPlX7vQ02S95ZNkqH34SGTohN9OjUrHMc4yWjuYDcHfbisJPYn2qBxRPq4VZAeqkyr0jyLUilvayIy-GwfenjP3GjhNTMfNo5aYRxSODHJ7RZOIoABLj0LyfykkEFtBpWvBkny2ah0iiSfxwlZBDafG9wrzrYp7f8cGHr0hFOp5BeebmSTvF8OQmwCDyynYzg-ETKA6iKlxKTezlISywzU-lNCoZRaGk"/>
+</div>
+</div>
+<div class="md:hidden w-8 h-8 rounded-full bg-surface-variant overflow-hidden cursor-pointer">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A minimalist, professional headshot of a dancer, softly lit against a clean, light-mode background. The color palette features neutral tones with subtle warmth, aligning with the sophisticated, editorial aesthetic of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkx5ZCp87b6YnbRi_y8bg4EKPr0XLtkbZtihAkWYlBolYJMoMjMJjObgMEHmE54oyrNKT-q8IVb8hPOqbhziRcqXWwSrQXnONSB4GMOhmcNmScRgV_zfrmMKUTeCY1aGQn5qhFu-j-d-sPlpFxSSCijKLdou3TMdrRG8cfivlBWq922g091ufCBO34sDF-ojvyKZfuHa4PUxuZDY_FqGI9CG5BPxU-DEvM39kUJXSdVpxXp44tfHjrBWdGouTD-ljPOmtzc84odBE"/>
+</div>
+</div>
+</header>
+<div class="flex max-w-7xl mx-auto w-full min-h-screen">
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex flex-col h-full w-80 rounded-r-none border-r border-neutral-100 shadow-2xl bg-white py-8 gap-2 sticky top-20">
+<div class="px-6 pb-6 border-b border-neutral-100 hairline-divider">
+<h2 class="text-xl font-bold text-neutral-900 font-headline-md tracking-tight">Dance Library</h2>
+</div>
+<nav class="flex flex-col gap-1 px-4 mt-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-neutral-50 text-amber-600 border-r-2 border-amber-500 font-label-sm hover:bg-neutral-50 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="category">category</span>
+<span>All Materials</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-neutral-600 font-label-sm hover:bg-neutral-50 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="history_edu">history_edu</span>
+<span>Ballet Archives</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-neutral-600 font-label-sm hover:bg-neutral-50 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="directions_run">directions_run</span>
+<span>Contemporary</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-neutral-600 font-label-sm hover:bg-neutral-50 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="school">school</span>
+<span>Masterclasses</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-neutral-600 font-label-sm hover:bg-neutral-50 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="play_circle">play_circle</span>
+<span>Tutorials</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 w-full px-6 py-12 md:px-12 md:py-16 bg-surface">
+<div class="flex justify-between items-end mb-12 border-b border-neutral-100 pb-6 hairline-divider">
+<div>
+<h2 class="text-3xl font-headline-lg text-on-surface mb-2">Compact Overview</h2>
+<p class="text-on-surface-variant font-body-md max-w-2xl">A distilled view of the movement library, optimized for quick scanning and immediate access to video references.</p>
+</div>
+<div class="hidden sm:flex gap-2">
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="view_list">view_list</span>
+</button>
+<button class="w-10 h-10 rounded bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+</div><div class="mb-10" id="search-filter-section">
+<div class="flex items-center justify-between gap-4 mb-6">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-xl">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md" placeholder="Search materials..." type="text"/>
+</div>
+<button aria-label="Toggle filters" class="p-3 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors flex items-center justify-center" onclick="document.getElementById('collapsible-filters').classList.toggle('hidden')">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<div class="transition-all duration-300" id="collapsible-filters">
+<!-- Filter Chips -->
+<div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-label-sm whitespace-nowrap shadow-sm">All</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm font-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors border border-outline-variant/30">Ballet</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm font-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors border border-outline-variant/30">Contemporary</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm font-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors border border-outline-variant/30">Jazz</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm font-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors border border-outline-variant/30">Theory</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface-variant text-sm font-label-sm whitespace-nowrap hover:bg-surface-container-high transition-colors border border-outline-variant/30">Masterclass</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid - Compact Variant -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+<!-- Card 1 -->
+<article class="group border border-[#EAEAEA] bg-white rounded-lg overflow-hidden flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5">
+<div class="w-1/3 aspect-square relative overflow-hidden bg-surface-container-high">
+<img alt="Ballet Form" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" data-alt="A close-up, minimalist black and white photograph of a ballet dancer's foot en pointe. The lighting is soft and studio-quality, emphasizing the lines and tension of the movement against a pristine white background. The aesthetic is clean, elegant, and highly focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUIsrqgAUzsapLlMm0WupKr0kF7Lw7BVeddXZlWpQMs_wNdyeJHyC-4fAVRVPO3FtdcRXGJTqt7gxkDNMec9gsyF7bcjQSovHGVOj6VsCVsOmCEsSV5ThTv0J5073HUdKUuRtM1pKk7DclZht4aS1I5rqi_sNCL3e4lN7enrw29SW8yAmVTRR_gZ8eSgGrIq1Hr_UF2yUV1McOHoSxoozFch73hiEl62psk-Cn1k5960MLaRoL_z7AtfZQo_g8b_R4fBekscioIBU"/>
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-white text-3xl font-light" data-icon="play_arrow">play_arrow</span>
+</div>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Ballet</span>
+<span class="text-outline text-[10px] font-body-md">02:45</span>
+</div>
+<h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal">Port de Bras Foundations</h3>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2">Essential arm movements and carriage for classical variations.</p>
+</div>
+<button class="mt-4 self-start flex items-center gap-2 text-sm font-label-sm text-on-primary-container bg-primary-container/20 hover:bg-primary-container/40 px-3 py-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="smart_display">smart_display</span>
+                            Watch
+                        </button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="group border border-[#EAEAEA] bg-white rounded-lg overflow-hidden flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5">
+<div class="w-1/3 aspect-square relative overflow-hidden bg-surface-container-high">
+<img alt="Contemporary Flow" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" data-alt="A dynamic, blurred photograph capturing the fluid motion of a contemporary dancer. The image uses a slow shutter speed to create streaks of motion against a stark, minimalist white background. The color palette is muted, focusing on shape and energy rather than detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpNXFgvn8erxRfc1Yrx3ukj0ney_QmHOQgl0Tfg4bn1bZUZmuLuIO4kYgXIdQX_efYxVXxSIktStU6s2h8cNxxP-_k3cda4wzIl4bVqhYRmGqsO1ZI2TttgmPHHO19u63gvTi4Ai2obER0dz-v_sEuRA46cAFyhMYYtrYeUbR76cvi4xMykikWHD0QrymASzPdxsUGAdP4dg1vkm-AWrGNzY4G3zWo0upA66J5EqSZT_U4YM1A_9VcGNHLIbnzHeT7Rze8fd-ubio"/>
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-white text-3xl font-light" data-icon="play_arrow">play_arrow</span>
+</div>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Contemporary</span>
+<span class="text-outline text-[10px] font-body-md">14:20</span>
+</div>
+<h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal">Floorwork Transitions</h3>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2">Seamless movement pathways shifting weight into and out of the floor.</p>
+</div>
+<button class="mt-4 self-start flex items-center gap-2 text-sm font-label-sm text-on-primary-container bg-primary-container/20 hover:bg-primary-container/40 px-3 py-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="smart_display">smart_display</span>
+                            Watch
+                        </button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="group border border-[#EAEAEA] bg-white rounded-lg overflow-hidden flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5">
+<div class="w-1/3 aspect-square relative overflow-hidden bg-surface-container-high">
+<img alt="Jazz Isolation" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" data-alt="A sharp, high-contrast black and white image of a dancer demonstrating an isolated shoulder movement. The lighting casts dramatic, architectural shadows across the form, highlighting the muscular tension. The setting is an abstract, minimalist space, adhering to the clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgwW9RunviFwdZMkBy9euq6DCioeOZTO566l94ehGqFCsKzYFmntEtKq6ku_1VseSpPvDdtz0exZQC3fKcMmQKY-Vf4OT5OZdJ3d6yjGgLolKNlYSyKm8VStZE4XcnUFf-4Glr_77Ah_ATm4o8pdhIC64ZDSi1K0MtwHftIBV6ZRZtgAfxE4kDJ-GM1AEdtwRuX3HNrybgFaSHLkWlocOjCzm3Ghvx55d-SMkuOP4pGWIBhjMwd8ZrJKa2h4CFY6ulKQ3K3yFQWb0"/>
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-white text-3xl font-light" data-icon="play_arrow">play_arrow</span>
+</div>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Jazz</span>
+<span class="text-outline text-[10px] font-body-md">08:15</span>
+</div>
+<h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal">Advanced Isolations</h3>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2">Techniques for isolating core and peripheral movements.</p>
+</div>
+<button class="mt-4 self-start flex items-center gap-2 text-sm font-label-sm text-on-primary-container bg-primary-container/20 hover:bg-primary-container/40 px-3 py-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="smart_display">smart_display</span>
+                            Watch
+                        </button>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="group border border-[#EAEAEA] bg-white rounded-lg overflow-hidden flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5">
+<div class="w-1/3 aspect-square relative overflow-hidden bg-surface-container-high">
+<img alt="Improvisation" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" data-alt="An expansive, wide-angle shot of a lone dancer in a vast, empty white studio. The dancer is caught mid-leap, creating a sense of weightlessness and freedom. The composition uses generous negative space, emphasizing the 'Art of Stillness' aesthetic. Soft, natural light fills the room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvQMy0v43pmGKV0JeCvZEn69_98LIek1zZsatjSivzmOczYs2nf4yl5bsobsfXRoytMq4Ign87MBsb3lnQ_r5OPXBjiCLNGLGcRk6RvCG21MAF8yjNOhMxAWGMjIab7p8uyz2pUXPxCBi8oUR9pU5DFgiFv8pJi3wJvvg0OVDE1uuIQpXZHX9U3ye3cUUvnym3cHgOtGx6QnlHbtq37uCR5T1Nmk82PbovuZeVxSb_ZrTadre1-cxmI2FfSmUycfUQ1mac8yokQrI"/>
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-white text-3xl font-light" data-icon="play_arrow">play_arrow</span>
+</div>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Masterclass</span>
+<span class="text-outline text-[10px] font-body-md">45:00</span>
+</div>
+<h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal">Improvisational Frameworks</h3>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-2">A guided session on generating movement through spatial constraints.</p>
+</div>
+<button class="mt-4 self-start flex items-center gap-2 text-sm font-label-sm text-on-primary-container bg-primary-container/20 hover:bg-primary-container/40 px-3 py-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="smart_display">smart_display</span>
+                            Watch
+                        </button>
+</div>
+</article>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="border border-[#D9C5A3] text-[#1b1c1c] px-6 py-3 rounded text-sm font-label-sm hover:bg-[#f6f3f2] transition-colors">Load More Materials</button>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 border-t border-neutral-100 bg-white/80 backdrop-blur-md shadow-lg flex justify-around items-center h-16 px-4 pb-safe">
+<a class="flex flex-col items-center justify-center text-amber-600 hover:bg-neutral-50 transition-all tap-highlight-transparent active:scale-90 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="grid_view" data-weight="fill">grid_view</span>
+<span class="font-manrope text-[11px] font-medium uppercase tracking-widest mt-1">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 transition-all tap-highlight-transparent active:scale-90 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="auto_stories">auto_stories</span>
+<span class="font-manrope text-[11px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 transition-all tap-highlight-transparent active:scale-90 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="search">search</span>
+<span class="font-manrope text-[11px] font-medium uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-400 hover:bg-neutral-50 transition-all tap-highlight-transparent active:scale-90 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="bookmark">bookmark</span>
+<span class="font-manrope text-[11px] font-medium uppercase tracking-widest mt-1">Saved</span>
+</a>
+</nav>
+</body></html>
