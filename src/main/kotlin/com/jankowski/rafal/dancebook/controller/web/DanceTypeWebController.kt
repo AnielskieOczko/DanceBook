@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
 @Controller
@@ -28,8 +29,8 @@ class DanceTypeWebController(
     }
 
     @GetMapping("/new")
-    fun showCreateForm(model: Model): String {
-        model.addAttribute("danceType", DanceTypeRequest(name = ""))
+    fun showCreateForm(@RequestParam(required = false) categoryId: UUID?, model: Model): String {
+        model.addAttribute("danceType", DanceTypeRequest(name = "", categoryId = categoryId))
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         return "dance-types/form"
     }
@@ -45,7 +46,7 @@ class DanceTypeWebController(
             return "dance-types/form"
         }
         danceTypeService.create(request)
-        return "redirect:/dance-types"
+        return "redirect:/dance-categories"
     }
 
     @GetMapping("/{id}/edit")
@@ -70,12 +71,12 @@ class DanceTypeWebController(
             return "dance-types/form"
         }
         danceTypeService.update(id, request)
-        return "redirect:/dance-types"
+        return "redirect:/dance-categories"
     }
 
     @PostMapping("/{id}/delete")
     fun deleteDanceType(@PathVariable id: UUID): String {
         danceTypeService.delete(id)
-        return "redirect:/dance-types"
+        return "redirect:/dance-categories"
     }
 }

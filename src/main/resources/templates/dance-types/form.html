@@ -2,35 +2,41 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='dance-types'">
+<section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div class="page-header">
-        <h1 class="page-title" th:text="${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}">Form Title</h1>
+    <div class="mb-8 pb-6 border-b border-neutral-100">
+        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}">Form Title</h1>
+        <p class="text-on-surface-variant font-body-md">Define a specific dance style and assign it to a category.</p>
     </div>
 
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
-          th:object="${danceType}" method="post" class="card p-6 md:p-8 space-y-6 max-w-lg">
+          th:object="${danceType}" method="post" class="bg-white rounded-xl border border-[#EAEAEA] p-8 shadow-ambient">
 
-        <div>
-            <label for="typeName" class="form-label">Name *</label>
-            <input id="typeName" type="text" th:field="*{name}" required class="form-input"
-                   th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
-                   placeholder="e.g. Waltz, Tango, Foxtrot...">
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
+        <div class="space-y-6">
+            <div>
+                <label for="typeName" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Style Name <span class="text-danger">*</span></label>
+                <input id="typeName" type="text" th:field="*{name}" required 
+                       class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                       th:classappend="${#fields.hasErrors('name')} ? 'border-danger focus:border-danger focus:ring-danger' : ''"
+                       placeholder="e.g. Waltz, Tango, Foxtrot...">
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="mt-2 text-sm font-body-md text-danger"></p>
+            </div>
+
+            <div>
+                <label for="categoryId" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Category <span class="text-danger">*</span></label>
+                <select id="categoryId" th:field="*{categoryId}" required 
+                        class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                        th:classappend="${#fields.hasErrors('categoryId')} ? 'border-danger focus:border-danger focus:ring-danger' : ''">
+                    <option value="">-- Select Category --</option>
+                    <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="mt-2 text-sm font-body-md text-danger"></p>
+            </div>
         </div>
 
-        <div>
-            <label for="categoryId" class="form-label">Category *</label>
-            <select id="categoryId" th:field="*{categoryId}" class="form-select" required>
-                <option value="">-- Select Category --</option>
-                <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-            </select>
-            <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="form-error"></p>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-4 border-t border-border">
-            <a href="/dance-types" class="btn-outline">Cancel</a>
-            <button type="submit" class="btn-primary">Save Style</button>
+        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-neutral-100">
+            <a href="/dance-categories" class="px-6 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-body-md hover:bg-surface-container-high transition-colors">Cancel</a>
+            <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary text-on-primary text-body-md hover:bg-primary-hover transition-colors shadow-sm">Save Style</button>
         </div>
     </form>
 
