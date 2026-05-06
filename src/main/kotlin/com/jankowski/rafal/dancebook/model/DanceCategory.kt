@@ -17,6 +17,7 @@ class DanceCategory {
     var id: UUID? = null
     var name: String = ""
     var predefined: Boolean = false
+    var imageFilename: String? = null
 
     @OneToMany(mappedBy = "category")
     var danceTypes: MutableList<DanceType> = mutableListOf()

@@ -5,11 +5,12 @@ import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.Material
 
 fun DanceType.toResponse() = DanceTypeResponse(
-    id = id!!,
+    id = id ?: throw IllegalStateException("DanceType must have an id"),
     name = name,
     predefined = predefined,
     categoryId = category?.id,
-    categoryName = category?.name
+    categoryName = category?.name,
+    categoryImageFilename = category?.imageFilename
 )
 
 fun DanceTypeRequest.toEntity() = DanceType().apply {
@@ -17,9 +18,10 @@ fun DanceTypeRequest.toEntity() = DanceType().apply {
 }
 
 fun DanceCategory.toResponse() = DanceCategoryResponse(
-    id = id!!,
+    id = id ?: throw IllegalStateException("DanceCategory must have an id"),
     name = name,
     predefined = predefined,
+    imageFilename = imageFilename
 )
 
 fun DanceCategoryRequest.toEntity() = DanceCategory().apply {

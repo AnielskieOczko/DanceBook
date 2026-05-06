@@ -53,13 +53,15 @@ data class DanceTypeResponse(
     val name: String,
     val predefined: Boolean,
     val categoryId: UUID?,
-    val categoryName: String?
+    val categoryName: String?,
+    val categoryImageFilename: String? = null
 )
 
 data class DanceCategoryResponse(
     val id: UUID,
     val name: String,
-    val predefined: Boolean
+    val predefined: Boolean,
+    val imageFilename: String? = null
 )
 
 data class DanceTypeRequest(
@@ -69,5 +71,6 @@ data class DanceTypeRequest(
 
 data class DanceCategoryRequest(
     @field:NotBlank val name: String,
+    val image: org.springframework.web.multipart.MultipartFile? = null
 )
 

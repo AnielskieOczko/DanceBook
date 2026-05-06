@@ -52,10 +52,8 @@
         <div th:if="${!#lists.isEmpty(materials)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             <article th:each="m : ${materials}"
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
-                              imgSrc=${catName == 'Ballet' ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuBUIsrqgAUzsapLlMm0WupKr0kF7Lw7BVeddXZlWpQMs_wNdyeJHyC-4fAVRVPO3FtdcRXGJTqt7gxkDNMec9gsyF7bcjQSovHGVOj6VsCVsOmCEsSV5ThTv0J5073HUdKUuRtM1pKk7DclZht4aS1I5rqi_sNCL3e4lN7enrw29SW8yAmVTRR_gZ8eSgGrIq1Hr_UF2yUV1McOHoSxoozFch73hiEl62psk-Cn1k5960MLaRoL_z7AtfZQo_g8b_R4fBekscioIBU' :
-                                      (catName == 'Contemporary' ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpNXFgvn8erxRfc1Yrx3ukj0ney_QmHOQgl0Tfg4bn1bZUZmuLuIO4kYgXIdQX_efYxVXxSIktStU6s2h8cNxxP-_k3cda4wzIl4bVqhYRmGqsO1ZI2TttgmPHHO19u63gvTi4Ai2obER0dz-v_sEuRA46cAFyhMYYtrYeUbR76cvi4xMykikWHD0QrymASzPdxsUGAdP4dg1vkm-AWrGNzY4G3zWo0upA66J5EqSZT_U4YM1A_9VcGNHLIbnzHeT7Rze8fd-ubio' :
-                                      (catName == 'Jazz' ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuDgwW9RunviFwdZMkBy9euq6DCioeOZTO566l94ehGqFCsKzYFmntEtKq6ku_1VseSpPvDdtz0exZQC3fKcMmQKY-Vf4OT5OZdJ3d6yjGgLolKNlYSyKm8VStZE4XcnUFf-4Glr_77Ah_ATm4o8pdhIC64ZDSi1K0MtwHftIBV6ZRZtgAfxE4kDJ-GM1AEdtwRuX3HNrybgFaSHLkWlocOjCzm3Ghvx55d-SMkuOP4pGWIBhjMwd8ZrJKa2h4CFY6ulKQ3K3yFQWb0' :
-                                      'https://lh3.googleusercontent.com/aida-public/AB6AXuAvQMy0v43pmGKV0JeCvZEn69_98LIek1zZsatjSivzmOczYs2nf4yl5bsobsfXRoytMq4Ign87MBsb3lnQ_r5OPXBjiCLNGLGcRk6RvCG21MAF8yjNOhMxAWGMjIab7p8uyz2pUXPxCBi8oUR9pU5DFgiFv8pJi3wJvvg0OVDE1uuIQpXZHX9U3ye3cUUvnym3cHgOtGx6QnlHbtq37uCR5T1Nmk82PbovuZeVxSb_ZrTadre1-cxmI2FfSmUycfUQ1mac8yokQrI'))}"
+                              catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
+                              imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/images/categories/placeholder.png'}"
                      class="relative group border border-[#EAEAEA] bg-white rounded-lg flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-10 focus-within:z-10">
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
