@@ -54,42 +54,62 @@
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                               catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
                               imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/images/categories/placeholder.png'}"
-                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-10 focus-within:z-10">
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-10 focus-within:z-10">
                 
-                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
                 
-                <div class="w-1/3 aspect-square relative overflow-hidden rounded-l-lg bg-surface-container-high block z-0">
-                    <img th:src="${imgSrc}" th:alt="${catName}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
-                    <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="material-symbols-outlined text-white text-3xl font-light" style="font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;">play_arrow</span>
+                <div class="flex flex-row w-full relative z-0 pointer-events-none">
+                    <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg bg-surface-container-high block z-0">
+                        <img th:src="${imgSrc}" th:alt="${catName}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
+                        <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="material-symbols-outlined text-white text-3xl font-light" style="font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;">play_arrow</span>
+                        </div>
                     </div>
-                </div>
-                <div class="w-2/3 p-4 flex flex-col justify-between pointer-events-none">
-                    <div class="pointer-events-auto">
-                        <div class="flex items-start justify-between mb-2">
-                            <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Style</span>
-                            <div class="relative z-10 group/menu -mt-1 -mr-2" tabindex="0">
-                                <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
-                                </button>
-                                <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
-                                    <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
-                                    </a>
-                                    <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">edit</span> Edit
-                                    </a>
-                                    <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
-                                       th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
-                                       class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
-                                    </a>
+                    <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
+                        <div>
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2 relative z-20 pointer-events-auto">
+                                    <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Style</span>
+                                    <span class="text-[11px] text-on-surface-variant font-body-sm flex items-center gap-1 opacity-70"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                                </div>
+                                <div class="relative z-20 group/menu -mt-1 -mr-2 pointer-events-auto" tabindex="0">
+                                    <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                                    </button>
+                                    <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
+                                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                                        </a>
+                                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                                        </a>
+                                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                            <h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-4" th:text="${m.name}">Material Name</h3>
+                            
+                            <div class="flex items-center gap-3 mt-3 text-xs text-on-surface-variant font-body-sm">
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">format_list_numbered</span> <span th:text="${#lists.size(m.figures)} + ' Figures'">0 Figures</span></span>
+                            </div>
                         </div>
-                        <h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-4" th:text="${m.name}">Material Name</h3>
-                        <p th:if="${m.description}" class="font-body-md text-sm text-on-surface-variant line-clamp-2" th:text="${m.description}">Description</p>
+                        <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
+                             <button type="button" class="js-expand-btn text-primary flex items-center gap-1 text-sm font-label-md transition-colors hover:text-primary-container focus:outline-none">
+                                 <span class="btn-text pointer-events-none">View description</span>
+                                 <span class="material-symbols-outlined transition-transform duration-300 icon-expand pointer-events-none">expand_more</span>
+                             </button>
+                        </div>
                     </div>
+                </div>
+                
+                <div th:if="${m.description}" class="expandable-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out w-full relative z-20 pointer-events-none rounded-b-lg">
+                     <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-white">
+                         <p class="font-body-md text-sm text-on-surface-variant mt-3 whitespace-pre-wrap leading-relaxed relative z-20" th:text="${m.description}">Description</p>
+                     </div>
                 </div>
             </article>
         </div>
