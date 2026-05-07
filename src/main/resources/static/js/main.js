@@ -20,32 +20,54 @@ document.addEventListener('submit', function(event) {
 });
 
 /**
- * Expandable card handler.
- * Uses event delegation to support elements loaded dynamically via HTMX.
+ * Global click handler for delegated events.
  */
 document.addEventListener('click', function(event) {
-    const btn = event.target.closest('.js-expand-btn');
-    if (!btn) return;
-    
-    event.preventDefault();
-    event.stopPropagation();
-    
-    const article = btn.closest('article');
-    if (!article) return;
-    
-    const content = article.querySelector('.expandable-content');
-    if (!content) return;
-    
-    const icon = btn.querySelector('.icon-expand');
-    const isExpanded = content.classList.contains('max-h-[1000px]');
-    
-    if (isExpanded) {
-        content.classList.remove('max-h-[1000px]');
-        content.classList.add('max-h-0');
-        if (icon) icon.classList.remove('rotate-180');
-    } else {
-        content.classList.remove('max-h-0');
-        content.classList.add('max-h-[1000px]');
-        if (icon) icon.classList.add('rotate-180');
+    // 1. Expandable card handler
+    const expandBtn = event.target.closest('.js-expand-btn');
+    if (expandBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const article = expandBtn.closest('article');
+        if (!article) return;
+        
+        const content = article.querySelector('.expandable-content');
+        if (!content) return;
+        
+        const icon = expandBtn.querySelector('.icon-expand');
+        const isExpanded = content.classList.contains('max-h-[1000px]');
+        
+        if (isExpanded) {
+            content.classList.remove('max-h-[1000px]');
+            content.classList.add('max-h-0');
+            if (icon) icon.classList.remove('rotate-180');
+        } else {
+            content.classList.remove('max-h-0');
+            content.classList.add('max-h-[1000px]');
+            if (icon) icon.classList.add('rotate-180');
+        }
+        return;
+    }
+
+    // 2. Filter toggle handler
+    const filterBtn = event.target.closest('.js-filter-toggle');
+    if (filterBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const container = document.getElementById('categoryFiltersContainer');
+        if (!container) return;
+        
+        const isHidden = container.classList.contains('max-h-0');
+        
+        if (isHidden) {
+            container.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'mt-0');
+            container.classList.add('max-h-[500px]', 'opacity-100', 'mt-4');
+        } else {
+            container.classList.add('max-h-0', 'opacity-0', 'pointer-events-none', 'mt-0');
+            container.classList.remove('max-h-[500px]', 'opacity-100', 'mt-4');
+        }
+        return;
     }
 });

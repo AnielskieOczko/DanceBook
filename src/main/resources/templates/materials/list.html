@@ -2,62 +2,68 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'" class="space-y-lg">
+<section th:with="activeNav='materials'" class="space-y-lg relative">
 
-    <!-- Search & Filter Section -->
-    <section>
+    <!-- Sticky Search & Filter Section -->
+    <section class="sticky top-[72px] bg-background/95 backdrop-blur-md z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
         <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
-            <div class="relative max-w-3xl mb-md group">
-                <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">search</span>
-                <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                       class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary pb-sm pl-[36px] text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
-                       placeholder="Search choreography, styles, or keywords..."
-                       hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-            </div>
-
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-y-4 gap-x-6 py-4">
-                <div class="flex overflow-x-auto gap-sm scrollbar-hide py-2 -my-2">
-                    <!-- All Materials Pill -->
-                    <label class="cursor-pointer">
-                        <input type="radio" name="categoryIds" value="" class="hidden peer"
-                               th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
-                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
-                            All Materials
-                        </span>
-                    </label>
-
-                    <!-- Category Pills -->
-                    <label th:each="c : ${danceCategories}" class="cursor-pointer">
-                        <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
-                               th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
-                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
-                              th:text="${c.name}">Category</span>
-                    </label>
+            <!-- Top Row: Search + Filter Toggle + View Toggle -->
+            <div class="flex items-center gap-3">
+                <div class="relative flex-1 group">
+                    <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">search</span>
+                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
+                           class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary pb-1 pl-[36px] text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           placeholder="Search..."
+                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                 </div>
 
+                <!-- Filter Toggle -->
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
+                    <span class="material-symbols-outlined text-[20px] pointer-events-none">tune</span>
+                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none">Filters</span>
+                </button>
+
                 <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 self-start sm:self-center">
+                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-3 py-1.5 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">grid_view</span>
-                            <span class="hidden sm:inline">Grid</span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                th:checked="${currentView == 'list'}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-3 py-1.5 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">view_list</span>
-                            <span class="hidden sm:inline">List</span>
                         </div>
                     </label>
                 </div>
+            </div>
+
+            <!-- Bottom Row: Collapsible Categories -->
+            <div id="categoryFiltersContainer" class="flex overflow-x-auto gap-sm scrollbar-hide py-2 -my-2 transition-all duration-300 max-h-[500px] opacity-100 mt-4">
+                <!-- All Materials Pill -->
+                <label class="cursor-pointer">
+                    <input type="radio" name="categoryIds" value="" class="hidden peer"
+                           th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
+                        All Materials
+                    </span>
+                </label>
+
+                <!-- Category Pills -->
+                <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                    <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
+                           th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
+                          th:text="${c.name}">Category</span>
+                </label>
             </div>
         </form>
     </section>
