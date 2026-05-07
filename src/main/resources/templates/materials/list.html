@@ -15,25 +15,49 @@
                        hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
             </div>
 
-            <div class="flex overflow-x-auto gap-sm scrollbar-hide py-2">
-                <!-- All Materials Pill -->
-                <label class="cursor-pointer">
-                    <input type="radio" name="categoryIds" value="" class="hidden peer"
-                           th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
-                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
-                        All Materials
-                    </span>
-                </label>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-y-4 gap-x-6 py-4">
+                <div class="flex overflow-x-auto gap-sm scrollbar-hide py-2 -my-2">
+                    <!-- All Materials Pill -->
+                    <label class="cursor-pointer">
+                        <input type="radio" name="categoryIds" value="" class="hidden peer"
+                               th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
+                            All Materials
+                        </span>
+                    </label>
 
-                <!-- Category Pills -->
-                <label th:each="c : ${danceCategories}" class="cursor-pointer">
-                    <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
-                           th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
-                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
-                          th:text="${c.name}">Category</span>
-                </label>
+                    <!-- Category Pills -->
+                    <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                        <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
+                               th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
+                              th:text="${c.name}">Category</span>
+                    </label>
+                </div>
+
+                <!-- View Toggle -->
+                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 self-start sm:self-center">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="grid" class="hidden peer"
+                               th:checked="${currentView == 'grid'}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-3 py-1.5 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                            <span class="hidden sm:inline">Grid</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="list" class="hidden peer"
+                               th:checked="${currentView == 'list'}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-3 py-1.5 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                            <span class="hidden sm:inline">List</span>
+                        </div>
+                    </label>
+                </div>
             </div>
         </form>
     </section>
@@ -49,7 +73,8 @@
             <a href="/materials/new" class="btn-primary">Import first material</a>
         </div>
 
-        <div th:if="${!#lists.isEmpty(materials)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+        <!-- 1. Grid View -->
+        <div th:if="${!#lists.isEmpty(materials) && (currentView == 'grid' || currentView == null)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             <article th:each="m : ${materials}"
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                               catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
@@ -68,9 +93,9 @@
                     <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
                         <div>
                             <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-2 relative z-20 pointer-events-auto">
-                                    <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Style</span>
-                                    <span class="text-[11px] text-on-surface-variant font-body-sm flex items-center gap-1 opacity-70"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                                <div class="flex items-center gap-2 relative z-20 pointer-events-auto flex-wrap sm:flex-nowrap">
+                                    <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0">Style</span>
+                                    <span class="text-[11px] text-on-surface-variant font-body-sm flex items-center gap-1 opacity-70 whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
                                 </div>
                                 <div class="relative z-20 group/menu -mt-1 -mr-2 pointer-events-auto" tabindex="0">
                                     <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
@@ -110,6 +135,45 @@
                      <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-white">
                          <p class="font-body-md text-sm text-on-surface-variant mt-3 whitespace-pre-wrap leading-relaxed relative z-20" th:text="${m.description}">Description</p>
                      </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 2. Compact List View -->
+        <div th:if="${!#lists.isEmpty(materials) && currentView == 'list'}" class="flex flex-col gap-3">
+            <article th:each="m : ${materials}"
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
+                
+                <div class="flex flex-col gap-1 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-headline-md text-on-surface text-[15px] leading-tight flex-1" th:text="${m.name}">Material Name</h3>
+                        <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0">Style</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-[11px] text-on-surface-variant font-body-sm opacity-70">
+                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">format_list_numbered</span> <span th:text="${#lists.size(m.figures)} + ' Figures'">0 Figures</span></span>
+                    </div>
+                </div>
+
+                <div class="relative z-20 group/menu pointer-events-auto">
+                    <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    </button>
+                    <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
+                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                        </a>
+                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                        </a>
+                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                        </a>
+                    </div>
                 </div>
             </article>
         </div>

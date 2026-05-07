@@ -36,6 +36,7 @@ class MaterialWebController(
         @RequestParam(required = false) categoryIds: List<UUID>?,
         @RequestParam(required = false) minRating: Short?,
         @RequestParam(required = false) nameSearch: String?,
+        @RequestParam(required = false, defaultValue = "grid") view: String,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
         pageable: Pageable
@@ -59,6 +60,7 @@ class MaterialWebController(
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
         model.addAttribute("selectedMinRating", minRating)
         model.addAttribute("selectedNameSearch", nameSearch)
+        model.addAttribute("currentView", view)
 
         return if (isHtmxRequest == true) {
             "materials/list :: materialsTable"
