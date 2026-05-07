@@ -99,11 +99,8 @@
                     <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
                         <div>
                             <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-2 relative z-20 pointer-events-auto flex-wrap sm:flex-nowrap">
-                                    <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0">Style</span>
-                                    <span class="text-[11px] text-on-surface-variant font-body-sm flex items-center gap-1 opacity-70 whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
-                                </div>
-                                <div class="relative z-20 group/menu -mt-1 -mr-2 pointer-events-auto" tabindex="0">
+                                <h3 class="font-headline-md leading-tight text-on-surface group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-4 flex-1" th:text="${m.name}">Material Name</h3>
+                                <div class="relative z-20 group/menu -mr-2 -mt-1 pointer-events-auto" tabindex="0">
                                     <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
                                         <span class="material-symbols-outlined text-[20px]">more_vert</span>
                                     </button>
@@ -122,10 +119,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <h3 class="font-headline-md leading-tight text-on-surface mb-1 group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-4" th:text="${m.name}">Material Name</h3>
                             
-                            <div class="flex items-center gap-3 mt-3 text-xs text-on-surface-variant font-body-sm">
-                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">format_list_numbered</span> <span th:text="${#lists.size(m.figures)} + ' Figures'">0 Figures</span></span>
+                            <div class="flex items-center gap-3 relative z-20 pointer-events-auto">
+                                <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[9px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0">Style</span>
+                                <span class="flex items-center gap-1 text-[10px] text-on-surface-variant font-body-sm opacity-60 whitespace-nowrap shrink-0 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                                <span class="flex items-center gap-1 text-[11px] text-on-surface-variant font-body-sm opacity-80"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
                             </div>
                         </div>
                         <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
@@ -152,33 +150,35 @@
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
                 
-                <div class="flex flex-col gap-1 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
+                <div class="flex flex-col gap-1.5 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
                     <div class="flex items-center gap-2">
                         <h3 class="font-headline-md text-on-surface text-[15px] leading-tight flex-1" th:text="${m.name}">Material Name</h3>
-                        <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0">Style</span>
                     </div>
-                    <div class="flex items-center gap-3 text-[11px] text-on-surface-variant font-body-sm opacity-70">
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
-                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">format_list_numbered</span> <span th:text="${#lists.size(m.figures)} + ' Figures'">0 Figures</span></span>
+                    <div class="flex items-center gap-3 text-on-surface-variant font-body-sm">
+                        <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[9px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 pointer-events-auto">Style</span>
+                        <span class="flex items-center gap-1 text-[11px] opacity-80"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
                     </div>
                 </div>
 
-                <div class="relative z-20 group/menu pointer-events-auto">
-                    <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
-                    </button>
-                    <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
-                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
-                        </a>
-                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
-                        </a>
-                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
-                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
-                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
-                        </a>
+                <div class="flex flex-col items-end gap-1 relative z-20 pointer-events-auto">
+                    <span class="text-[10px] text-on-surface-variant font-body-sm opacity-60 whitespace-nowrap shrink-0 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                    <div class="group/menu" tabindex="0">
+                        <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                        </button>
+                        <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
+                            <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                            </a>
+                            <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                            </a>
+                            <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                               th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                               class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                            </a>
+                        </div>
                     </div>
                 </div>
             </article>
