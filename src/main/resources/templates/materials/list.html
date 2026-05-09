@@ -85,10 +85,30 @@
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                               catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
                               imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/images/categories/placeholder.png'}"
-                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-10 focus-within:z-10">
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
                 
+                <!-- Absolute Action Menu (Fixed Stacking) -->
+                <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
+                    <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                        <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                    </button>
+                    <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
+                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                        </a>
+                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                        </a>
+                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                        </a>
+                    </div>
+                </div>
+
                 <div class="flex flex-row w-full relative z-0 pointer-events-none">
                     <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg bg-surface-container-high block z-0">
                         <img th:src="${imgSrc}" th:alt="${catName}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
@@ -99,25 +119,7 @@
                     <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
                         <div>
                             <div class="flex items-start justify-between mb-2">
-                                <h3 class="font-headline-md leading-tight text-on-surface group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-4 flex-1" th:text="${m.name}">Material Name</h3>
-                                <div class="relative z-20 group/menu -mr-2 -mt-1 pointer-events-auto" tabindex="0">
-                                    <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
-                                    </button>
-                                    <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
-                                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
-                                        </a>
-                                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
-                                        </a>
-                                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
-                                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
-                                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
-                                        </a>
-                                    </div>
-                                </div>
+                                <h3 class="font-headline-md leading-tight text-on-surface group-hover:text-primary transition-colors text-[15px] leading-[1.3] whitespace-normal pr-8 flex-1" th:text="${m.name}">Material Name</h3>
                             </div>
                             
                             <div class="flex items-center gap-3 relative z-20 pointer-events-auto">
@@ -162,11 +164,11 @@
 
                 <div class="flex flex-col items-end gap-1 relative z-20 pointer-events-auto">
                     <span class="text-[10px] text-on-surface-variant font-body-sm opacity-60 whitespace-nowrap shrink-0 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
-                    <div class="group/menu" tabindex="0">
-                        <button type="button" class="w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    <div class="group/menu">
+                        <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
                         </button>
-                        <div class="absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden group-focus-within/menu:block group-hover/menu:block z-50">
+                        <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                             <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
                             </a>

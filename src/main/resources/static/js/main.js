@@ -70,4 +70,36 @@ document.addEventListener('click', function(event) {
         }
         return;
     }
+
+    // 3. 3-dot menu toggle handler
+    const menuBtn = event.target.closest('.js-menu-btn');
+    if (menuBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const dropdown = menuBtn.nextElementSibling;
+        if (!dropdown) return;
+        
+        const isHidden = dropdown.classList.contains('hidden');
+        
+        // Close all other menus first
+        document.querySelectorAll('.js-menu-dropdown').forEach(d => {
+            if (d !== dropdown) d.classList.add('hidden');
+        });
+        
+        // Toggle current menu
+        if (isHidden) {
+            dropdown.classList.remove('hidden');
+        } else {
+            dropdown.classList.add('hidden');
+        }
+        return;
+    }
+
+    // 4. Close menus when clicking outside
+    if (!event.target.closest('.js-menu-dropdown')) {
+        document.querySelectorAll('.js-menu-dropdown').forEach(d => {
+            d.classList.add('hidden');
+        });
+    }
 });
