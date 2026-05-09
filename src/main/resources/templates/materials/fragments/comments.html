@@ -13,7 +13,7 @@
             <div class="flex-1">
                 <textarea name="content" required placeholder="Add a note or timestamp..."
                           class="w-full bg-transparent border-0 border-b border-surface-variant focus:border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors resize-none"
-                          rows="1"></textarea>
+                          rows="3"></textarea>
                 <div class="flex justify-end mt-2">
                     <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-wider hover:opacity-70 transition-colors">Post Note</button>
                 </div>
@@ -45,21 +45,21 @@
             <span class="font-label-sm text-label-sm text-on-surface-variant opacity-50"
                   th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>
         </div>
-        <p class="font-body-md text-on-surface-variant leading-relaxed whitespace-pre-wrap" th:text="${c.content}">Note content</p>
+        <p class="font-body-md text-on-surface leading-relaxed whitespace-pre-wrap mt-1" th:text="${c.content}">Note content</p>
         
         <!-- Actions -->
-        <div class="flex gap-4 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div class="flex gap-4 mt-3">
             <button th:if="${#authentication.name == c.author.username}"
                     th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
-                    class="font-label-sm text-[10px] text-outline uppercase tracking-widest hover:text-primary transition-colors">Edit</button>
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span class="material-symbols-outlined text-[14px]">edit</span> Edit</button>
             <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
                     hx-confirm="Remove this note?"
-                    class="font-label-sm text-[10px] text-outline uppercase tracking-widest hover:text-error transition-colors">Delete</button>
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-error transition-colors"><span class="material-symbols-outlined text-[14px]">delete</span> Delete</button>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@
               hx-target="closest .group"
               hx-swap="outerHTML">
             <textarea name="content" required class="w-full bg-transparent border-0 border-b border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface"
-                      rows="2" th:text="${comment.content}"></textarea>
+                      rows="3" th:text="${comment.content}"></textarea>
             <div class="flex gap-4 mt-2 justify-end">
                 <button type="button"
                         th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"

@@ -122,7 +122,7 @@
                                 <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-normal pr-8 flex-1" th:text="${m.name}">Material Name</h3>
                             </div>
                             
-                            <div class="flex items-center gap-3 relative z-20 pointer-events-auto">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 relative z-20 pointer-events-auto">
                                 <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
                                 <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
                                 <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
