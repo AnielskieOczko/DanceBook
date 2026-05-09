@@ -100,11 +100,12 @@ module.exports = {
         "body": ["Manrope", "sans-serif"]
       },
       fontSize: {
-        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "300" }],
-        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
-        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
-        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
-        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }],
+        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
         "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
       },
       boxShadow: {
