@@ -10,9 +10,9 @@
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 group">
-                    <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">search</span>
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
                     <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                           class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary pb-1 pl-[36px] text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
                            placeholder="Search..."
                            hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                 </div>
