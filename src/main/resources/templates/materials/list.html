@@ -5,7 +5,7 @@
 <section th:with="activeNav='materials'" class="space-y-lg relative">
 
     <!-- Sticky Search & Filter Section -->
-    <section class="sticky top-[72px] bg-background/95 backdrop-blur-md z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
+    <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
         <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
