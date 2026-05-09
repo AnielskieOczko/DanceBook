@@ -24,76 +24,73 @@
         <a href="/dance-categories/new" class="btn-primary">Add First Category</a>
     </div>
 
-    <!-- Categories & Styles Table -->
-    <div th:if="${!#lists.isEmpty(danceCategories)}" class="bg-white rounded-xl border border-[#EAEAEA] overflow-hidden shadow-ambient">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-surface-container-low border-b border-[#EAEAEA]">
-                    <th class="px-6 py-4 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/2">Name</th>
-                    <th class="px-6 py-4 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/4">Type</th>
-                    <th class="px-6 py-4 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant text-right w-1/4">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-[#EAEAEA]">
-                <th:block th:each="dc : ${danceCategories}">
-                    <!-- Category Header Row -->
-                    <tr class="bg-surface-bright">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-on-surface-variant">
-                                    <span class="material-symbols-outlined text-[18px]">category</span>
-                                </div>
-                                <span class="font-headline-md text-on-surface text-base" th:text="${dc.name}">Category Name</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="bg-[#F2F2F2] text-on-surface-variant px-2 py-0.5 rounded-sm text-[10px] font-label-sm uppercase tracking-wider">Category</span>
-                        </td>
-                        <td class="px-6 py-4 flex items-center justify-end gap-4">
-                            <a th:href="@{/dance-types/new(categoryId=${dc.id})}" class="text-primary hover:text-primary-hover transition-colors text-sm font-label-sm flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[16px]">add</span> Add Style
-                            </a>
-                            <div class="w-px h-4 bg-outline-variant/50"></div>
-                            <a th:href="@{/dance-categories/{id}/edit(id=${dc.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-sm font-label-sm" title="Edit Category">
-                                <span class="material-symbols-outlined text-[16px]">edit</span>
-                            </a>
-                            <form th:action="@{/dance-categories/{id}/delete(id=${dc.id})}" method="post" class="contents" onsubmit="return confirm('Delete this category and all its styles?')">
-                                <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1 text-sm font-label-sm" title="Delete Category">
-                                    <span class="material-symbols-outlined text-[16px]">delete</span>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    
-                    <!-- Empty State for Category -->
-                    <tr th:if="${#lists.isEmpty(dc.danceTypes)}" class="bg-white">
-                        <td colspan="3" class="px-6 py-4 pl-[4.5rem] text-sm font-body-md text-outline italic">
-                            No styles added to this category yet.
-                        </td>
-                    </tr>
+    <!-- Categories & Styles List -->
+    <div th:if="${!#lists.isEmpty(danceCategories)}" class="flex flex-col gap-6 sm:gap-8">
+        
+        <!-- Desktop Header (Standalone) -->
+        <div class="hidden sm:flex bg-surface-container-low border border-[#EAEAEA] rounded-lg shadow-sm">
+            <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/2">Name</div>
+            <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/4">Type</div>
+            <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant text-right w-1/4">Actions</div>
+        </div>
 
-                    <!-- Style Rows -->
-                    <tr th:each="dt : ${dc.danceTypes}" class="bg-white hover:bg-surface-container-low/50 transition-colors">
-                        <td class="px-6 py-4 pl-[4.5rem]">
-                            <span class="font-body-md text-on-surface text-sm" th:text="${dt.name}">Style Name</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="text-xs font-label-sm text-outline uppercase tracking-wider">Style</span>
-                        </td>
-                        <td class="px-6 py-4 flex items-center justify-end gap-6">
-                            <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 text-sm font-label-sm">
-                                <span class="material-symbols-outlined text-[16px]">edit</span> Edit
-                            </a>
-                            <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post" class="contents" onsubmit="return confirm('Delete this style?')">
-                                <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1.5 text-sm font-label-sm">
-                                    <span class="material-symbols-outlined text-[16px]">close</span> Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                </th:block>
-            </tbody>
-        </table>
+        <!-- Individual Category Cards -->
+        <div th:each="dc : ${danceCategories}" class="bg-white rounded-xl border border-[#EAEAEA] overflow-hidden shadow-ambient divide-y divide-[#EAEAEA]">
+            
+            <!-- Category Row (Header of the card) -->
+            <div class="bg-surface-bright flex flex-col sm:flex-row sm:items-center p-4 sm:p-0 relative">
+                <div class="sm:w-1/2 sm:px-6 sm:py-4 flex items-center gap-3 mb-2 sm:mb-0">
+                    <div class="w-8 h-8 rounded bg-surface-container flex items-center justify-center text-on-surface-variant shrink-0">
+                        <span class="material-symbols-outlined text-[18px]">category</span>
+                    </div>
+                    <span class="font-headline-md text-on-surface text-base" th:text="${dc.name}">Category Name</span>
+                </div>
+                <div class="sm:w-1/4 sm:px-6 sm:py-4 mb-3 sm:mb-0">
+                    <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider inline-block border border-primary-container/30">Category</span>
+                </div>
+                <div class="sm:w-1/4 sm:px-6 sm:py-4 flex flex-wrap items-center justify-start sm:justify-end gap-3 sm:gap-4">
+                    <a th:href="@{/dance-types/new(categoryId=${dc.id})}" class="text-primary hover:text-primary-hover transition-colors text-sm font-label-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">add</span> Add Style
+                    </a>
+                    <div class="hidden sm:block w-px h-4 bg-outline-variant/50"></div>
+                    <a th:href="@{/dance-categories/{id}/edit(id=${dc.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-sm font-label-sm" title="Edit Category">
+                        <span class="material-symbols-outlined text-[16px]">edit</span><span class="sm:hidden">Edit</span>
+                    </a>
+                    <form th:action="@{/dance-categories/{id}/delete(id=${dc.id})}" method="post" class="contents" onsubmit="return confirm('Delete this category and all its styles?')">
+                        <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1 text-sm font-label-sm" title="Delete Category">
+                            <span class="material-symbols-outlined text-[16px]">delete</span><span class="sm:hidden">Delete</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Empty State for Category -->
+            <div th:if="${#lists.isEmpty(dc.danceTypes)}" class="bg-white p-4 sm:px-6 sm:py-4 pl-12 sm:pl-[4.5rem]">
+                <span class="text-sm font-body-md text-outline italic">
+                    No styles added to this category yet.
+                </span>
+            </div>
+
+            <!-- Style Rows -->
+            <div th:each="dt : ${dc.danceTypes}" class="bg-white hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center p-4 pl-12 sm:p-0 sm:pl-[4.5rem]">
+                <div class="sm:w-1/2 sm:py-4 mb-1 sm:mb-0">
+                    <span class="font-body-md text-on-surface text-sm font-medium" th:text="${dt.name}">Style Name</span>
+                </div>
+                <div class="sm:w-1/4 sm:px-6 sm:py-4 mb-2 sm:mb-0">
+                    <span class="text-xs font-label-sm text-outline uppercase tracking-wider">Style</span>
+                </div>
+                <div class="sm:w-1/4 sm:px-6 sm:py-4 flex flex-wrap items-center justify-start sm:justify-end gap-4 sm:gap-6">
+                    <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 text-sm font-label-sm">
+                        <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+                    </a>
+                    <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post" class="contents" onsubmit="return confirm('Delete this style?')">
+                        <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1.5 text-sm font-label-sm">
+                            <span class="material-symbols-outlined text-[16px]">close</span> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 </section>
