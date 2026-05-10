@@ -1,62 +1,104 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: html(content=~{::main})}">
+      th:replace="~{layout :: html(content=~{::section})}">
 
-<main class="max-w-4xl mx-auto mt-8">
-  
-  <div class="bg-indigo-600 text-white p-10 rounded-xl shadow-lg mb-8 text-center relative overflow-hidden">
-    <div class="relative z-10">
-      <h1 class="text-4xl font-extrabold mb-4 tracking-tight">Welcome to DanceBook 💃🕺</h1>
-      <p class="text-xl text-indigo-100 font-light max-w-2xl mx-auto">
-        Your personal library for mastering ballroom dance steps, managing materials, and tracking your progress.
-      </p>
+<section th:with="activeNav='home'" class="space-y-xl">
+
+    <!-- Welcome Section -->
+    <section class="flex flex-col gap-sm">
+        <h2 class="font-display-lg text-display-lg text-on-surface"
+            th:text="${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}">Good morning, Elara.</h2>
+        <p class="font-body-lg text-body-lg text-outline max-w-2xl">Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.</p>
+    </section>
+
+    <!-- Stats Grid (Bento Style) -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+        <!-- Card 1: Materials -->
+        <a href="/materials" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">movie</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Materials</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${materialCount}">124 <span class="font-body-md text-body-md text-outline font-normal">Videos</span></p>
+            </div>
+        </a>
+        <!-- Card 2: Figures -->
+        <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">accessibility_new</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Figures</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${figureCount}">42 <span class="font-body-md text-body-md text-outline font-normal">Techniques</span></p>
+            </div>
+        </div>
+        <!-- Card 3: Styles -->
+        <a href="/dance-categories" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">category</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Styles</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${danceTypeCount}">8 <span class="font-body-md text-body-md text-outline font-normal">Genres</span></p>
+            </div>
+        </a>
+        <!-- Card 4: Comments -->
+        <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Feedback</p>
+                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${commentCount}">23 <span class="font-body-md text-body-md text-outline font-normal">Notes</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions & Timeline Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Timeline -->
+        <section class="lg:col-span-8 space-y-md">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+                <button class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</button>
+            </div>
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
+                <div class="relative border-l border-surface-variant ml-4 space-y-10">
+                    <!-- Placeholder Items -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary-container border-2 border-surface-container-lowest"></div>
+                        <div class="flex flex-col gap-1">
+                            <p class="font-body-md text-body-md text-on-surface font-medium">Platform Ready</p>
+                            <p class="font-body-md text-body-md text-outline text-sm">Design System Update • Just now</p>
+                        </div>
+                    </div>
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-variant border-2 border-surface-container-lowest"></div>
+                        <div class="flex flex-col gap-1">
+                            <p class="font-body-md text-body-md text-on-surface font-medium">Library Sync Complete</p>
+                            <p class="font-body-md text-body-md text-outline text-sm">Storage Management • 1 hour ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workspace Quick Actions -->
+        <section class="lg:col-span-4 space-y-md">
+            <h3 class="font-headline-md text-headline-md text-on-surface">Workspace</h3>
+            <div class="bg-surface-container-low rounded-xl p-md space-y-4">
+                <a href="/materials/new" class="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-body-md font-medium py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">
+                    <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0; font-size: 20px;">add</span>
+                    New Material
+                </a>
+                <a href="/lists/new" class="w-full flex items-center justify-center gap-2 bg-transparent border border-primary-container text-on-surface font-body-md font-medium py-3 px-6 rounded-lg hover:bg-surface-container-highest transition-colors">
+                    <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0; font-size: 20px;">layers</span>
+                    Create Collection
+                </a>
+            </div>
+        </section>
     </div>
-  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    
-    <!-- Materials Card -->
-    <a href="/materials" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-indigo-600 group-hover:text-white transition">
-        🎬
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">Materials</h2>
-      <p class="text-gray-600 mb-4">
-        Browse your collection of dance videos, figures, and study materials.
-      </p>
-      <span class="text-indigo-600 font-semibold flex items-center">
-        View Library <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
-
-    <!-- Dance Types Card -->
-    <a href="/dance-types" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-blue-600 group-hover:text-white transition">
-        🩰
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">Styles</h2>
-      <p class="text-gray-600 mb-4">
-        Manage standard and latin dance styles like Waltz, Tango, Cha Cha.
-      </p>
-      <span class="text-blue-600 font-semibold flex items-center">
-        Manage Styles <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
-
-    <!-- Categories Card -->
-    <a href="/dance-categories" class="block group bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
-      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mb-4 text-2xl group-hover:bg-emerald-600 group-hover:text-white transition">
-        📑
-      </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition">Categories</h2>
-      <p class="text-gray-600 mb-4">
-        Organize items by levels, techniques, routines, and custom tags.
-      </p>
-      <span class="text-emerald-600 font-semibold flex items-center">
-        Manage Categories <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-      </span>
-    </a>
-
-  </div>
-</main>
+</section>
 </html>

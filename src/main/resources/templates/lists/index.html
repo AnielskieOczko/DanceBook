@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='lists'" class="space-y-lg">
+
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">My Collections</h1>
+            <p class="page-subtitle">Curated perspectives on your dance library</p>
+        </div>
+        <a href="/lists/new" class="btn-primary">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            New Collection
+        </a>
+    </div>
+
+    <!-- Lists Grid -->
+    <div th:if="${#lists.isEmpty(lists)}" class="empty-state">
+        <div class="empty-state-icon">
+            <span class="material-symbols-outlined text-4xl text-outline">layers_clear</span>
+        </div>
+        <h3 class="empty-state-title">No collections yet</h3>
+        <p class="empty-state-text">Group your materials by style, category, or rating to build focused practice sessions.</p>
+        <a href="/lists/new" class="btn-primary mt-4">Create your first collection</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(lists)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        <a th:each="list : ${lists}" th:href="@{/lists/{id}(id=${list.id})}"
+           class="group border border-border rounded-xl overflow-hidden bg-surface hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex flex-col h-full">
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-start justify-between mb-6">
+                    <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+                        <span class="material-symbols-outlined" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
+                    </div>
+                    <span th:if="${list.isPublic}" class="badge-secondary">Public</span>
+                    <span th:unless="${list.isPublic}" class="badge-neutral">Private</span>
+                </div>
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors" th:text="${list.name}">Collection Name</h3>
+                <div class="flex flex-wrap gap-2 mt-auto">
+                    <span th:each="t : ${list.danceTypes}" class="badge-primary" th:text="${t.name}">Type</span>
+                    <span th:each="c : ${list.danceCategories}" class="badge-secondary" th:text="${c.name}">Cat</span>
+                    <span th:if="${list.minRating != null}" class="badge-accent" th:text="${list.minRating} + '+ stars'">3+ stars</span>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-surface-container-low border-t border-border flex items-center justify-between text-on-surface-variant group-hover:bg-surface-container transition-colors">
+                <span class="font-label-sm text-[11px] uppercase tracking-widest">View Collection</span>
+                <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </div>
+        </a>
+    </div>
+
+</section>
+</html>

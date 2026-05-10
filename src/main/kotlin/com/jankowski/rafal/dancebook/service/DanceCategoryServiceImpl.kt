@@ -10,11 +10,13 @@ import java.util.UUID
 
 @Service
 class DanceCategoryServiceImpl(
-    private val danceCategoryRepository: DanceCategoryRepository
+    private val danceCategoryRepository: DanceCategoryRepository,
+    private val fileStorageService: FileStorageService
 ): DanceCategoryService {
 
     companion object {
         private val log = LoggerFactory.getLogger(DanceCategoryServiceImpl::class.java)
+        private const val IMAGE_SUBDIR = "categories"
     }
 
     override fun findAll(): List<DanceCategory> {
@@ -27,6 +29,13 @@ class DanceCategoryServiceImpl(
         log.info("Creating new DanceCategory")
         val newDanceCategory = DanceCategory()
         newDanceCategory.name = request.name
+        
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                newDanceCategory.imageFilename = fileStorageService.storeFile(file, IMAGE_SUBDIR)
+            }
+        }
+        
         return danceCategoryRepository.save(newDanceCategory)
     }
 
@@ -36,12 +45,28 @@ class DanceCategoryServiceImpl(
     ): DanceCategory {
         val existing = findById(id)
         existing.name = request.name
+        
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                // Delete old image if it exists
+                existing.imageFilename?.let { oldFile ->
+                    fileStorageService.deleteFile(oldFile, IMAGE_SUBDIR)
+                }
+                existing.imageFilename = fileStorageService.storeFile(file, IMAGE_SUBDIR)
+            }
+        }
+        
         return danceCategoryRepository.save(existing)
     }
 
     override fun delete(id: UUID) {
         log.info("Deleting DanceCategory")
         val existing = findById(id)
+        
+        existing.imageFilename?.let {
+            fileStorageService.deleteFile(it, IMAGE_SUBDIR)
+        }
+        
         danceCategoryRepository.delete(existing)
     }
 

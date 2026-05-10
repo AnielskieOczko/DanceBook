@@ -1,105 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="html(content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>DanceBook</title>
+    <title th:text="${pageTitle != null ? pageTitle + ' · CHOREO' : 'CHOREO'}">CHOREO</title>
 
-    <!-- Tailwind CSS (compiled by our Gradle task) -->
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <link th:href="@{/css/output.css}" rel="stylesheet">
 
-    <!-- HTMX (loaded via CDN) -->
+    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script th:src="@{/js/main.js}"></script>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0">
 
-<nav class="bg-indigo-600 border-b border-indigo-700 shadow-sm relative z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16">
-      <div class="flex">
-        <div class="flex-shrink-0 flex items-center">
-          <a href="/" class="text-white font-extrabold text-xl tracking-wide hover:text-indigo-100 transition">DanceBook 💃</a>
-        </div>
-        <div class="hidden sm:ml-8 sm:flex sm:space-x-6 sm:items-center">
-          <a href="/materials" class="border-transparent text-indigo-100 hover:border-indigo-200 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition">Materials</a>
-          <a href="/dance-types" class="border-transparent text-indigo-100 hover:border-indigo-200 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition">Styles</a>
-          <a href="/dance-categories" class="border-transparent text-indigo-100 hover:border-indigo-200 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition">Categories</a>
+<!-- ═══════════════════════════════════════════════
+     TOP APP BAR (Sticky)
+     ═══════════════════════════════════════════════ -->
+<header class="bg-surface sticky top-0 z-50 transition-all duration-300 shadow-ambient" sec:authorize="isAuthenticated()">
+    <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+        <!-- Brand -->
+        <a href="/" class="flex items-center">
+            <h1 class="text-on-surface font-display-lg text-[20px] tracking-[0.2em] font-semibold uppercase">CHOREO</h1>
+        </a>
 
-          <!-- Lists Dropdown -->
-          <div class="relative group">
-            <button type="button" class="text-indigo-100 hover:text-white inline-flex items-center gap-1 px-1 pt-1 border-b-2 border-transparent text-sm font-medium transition">
-              📋 Lists
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div class="absolute left-0 mt-1 w-52 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-              <div class="py-1">
-                <th:block th:each="list : ${navLists}">
-                  <a th:href="@{/lists/{id}(id=${list.id})}" 
-                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition">
-                    <span th:if="${list.isPublic}" class="mr-1">🌍</span>
-                    <span th:unless="${list.isPublic}" class="mr-1">🔒</span>
-                    <span th:text="${list.name}">List Name</span>
-                  </a>
-                </th:block>
-                <div th:if="${#lists.isEmpty(navLists)}" class="px-4 py-2 text-xs text-gray-400 italic">No lists yet</div>
-                <div class="border-t border-gray-100 mt-1 pt-1">
-                  <a href="/lists/new" class="block px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-medium transition">
-                    + New List
-                  </a>
-                </div>
-              </div>
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+            <a href="/" class="font-body-md font-medium transition-all duration-200"
+               th:classappend="${activeNav == 'home' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Dashboard</a>
+            <a href="/materials" class="font-body-md font-medium transition-all duration-200"
+               th:classappend="${activeNav == 'materials' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Library</a>
+            <a href="/lists" class="font-body-md font-medium transition-all duration-200"
+               th:classappend="${activeNav == 'lists' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Collections</a>
+            <a href="/profile" class="font-body-md font-medium transition-all duration-200"
+               th:classappend="${activeNav == 'profile' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Profile</a>
+        </nav>
+
+        <!-- Trailing Avatar/Profile -->
+        <div class="flex items-center gap-4">
+            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden md:flex items-center text-outline hover:text-on-surface transition-colors" title="Admin Dashboard">
+                <span class="material-symbols-outlined">settings</span>
+            </a>
+            <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:shadow-ambient transition-shadow">
+                <a href="/profile">
+                    <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">
+                        <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
+                    </div>
+                </a>
             </div>
-          </div>
         </div>
-      </div>
-
-      <!-- Current user display / Auth -->
-      <div class="hidden sm:flex sm:items-center ml-4">
-        
-        <!-- Logged In View -->
-        <div sec:authorize="isAuthenticated()" class="relative group">
-          <button type="button" class="text-indigo-200 hover:text-white inline-flex items-center gap-1 text-sm transition focus:outline-none py-2">
-            👤 <span sec:authentication="name" class="font-medium text-white">User</span>
-            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-          
-          <div class="absolute right-0 mt-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-            <div class="py-1">
-              <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50 border-b border-gray-100">Account</div>
-              <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition font-medium">
-                👤 My Profile
-              </a>
-              <a sec:authorize="hasRole('ADMIN')" href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition font-medium">
-                ⚙️ Admin Panel
-              </a>
-              <form th:action="@{/logout}" method="post" class="m-0 mt-1">
-                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition flex items-center justify-between cursor-pointer font-medium">
-                  Logout 🚪
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Logged Out View -->
-        <div sec:authorize="isAnonymous()">
-          <a th:href="@{/login}" class="text-indigo-100 hover:text-white inline-flex items-center gap-1 px-3 py-2 text-sm font-medium transition bg-indigo-700 hover:bg-indigo-800 rounded-md shadow-sm border border-indigo-500">
-            Sign In
-          </a>
-        </div>
-        
-      </div>
     </div>
-  </div>
-</nav>
+</header>
 
-<div class="p-8">
-  <!-- This is where other templates will insert their content -->
-  <div th:replace="${content}"></div>
-</div>
+<!-- ═══════════════════════════════════════════════
+     MAIN CONTENT AREA
+     ═══════════════════════════════════════════════ -->
+<main class="max-w-7xl mx-auto px-6 py-lg md:py-xl">
+    <!-- Page content injected here -->
+    <div th:replace="${content}"></div>
+</main>
+
+<!-- ═══════════════════════════════════════════════
+     BOTTOM NAV BAR (Mobile Only)
+     ═══════════════════════════════════════════════ -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
+    <!-- Dashboard -->
+    <a href="/" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:style="${activeNav == 'home' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">grid_view</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Dashboard</span>
+    </a>
+    <!-- Library -->
+    <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'materials' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:classappend="${activeNav == 'materials' ? 'icon-filled' : ''}">subscriptions</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Library</span>
+    </a>
+    <!-- Collections -->
+    <a href="/lists" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'lists' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:style="${activeNav == 'lists' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">layers</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Collections</span>
+    </a>
+    <!-- Profile -->
+    <a href="/profile" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'profile' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:classappend="${activeNav == 'profile' ? 'icon-filled' : ''}">person</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Profile</span>
+    </a>
+</nav>
 
 </body>
 </html>

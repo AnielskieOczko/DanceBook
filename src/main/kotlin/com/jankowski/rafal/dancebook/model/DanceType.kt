@@ -4,6 +4,8 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.util.UUID
 
@@ -16,4 +18,8 @@ class DanceType {
     var id: UUID? = null
     var name: String = ""
     var predefined: Boolean = false
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    var category: DanceCategory? = null
 }

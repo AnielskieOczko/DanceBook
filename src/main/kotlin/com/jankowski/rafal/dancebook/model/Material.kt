@@ -26,9 +26,6 @@ class Material {
     @ManyToOne
     @JoinColumn(name = "dance_type_id")
     var danceType: DanceType? = null
-    @ManyToOne
-    @JoinColumn(name = "dance_category_id")
-    var danceCategory: DanceCategory? = null
     var rating: Short? = null
     var videoLink: String? = null
     var sourceLink: String? = null

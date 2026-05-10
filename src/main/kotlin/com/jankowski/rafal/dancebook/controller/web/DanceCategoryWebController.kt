@@ -48,6 +48,7 @@ class DanceCategoryWebController(
         val category = danceCategoryService.findById(id)
         model.addAttribute("danceCategory", DanceCategoryRequest(name = category.name))
         model.addAttribute("danceCategoryId", id)
+        model.addAttribute("currentImage", category.imageFilename)
         return "dance-categories/form"
     }
 

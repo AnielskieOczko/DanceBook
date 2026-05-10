@@ -4,6 +4,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.util.UUID
 
@@ -16,4 +17,8 @@ class DanceCategory {
     var id: UUID? = null
     var name: String = ""
     var predefined: Boolean = false
+    var imageFilename: String? = null
+
+    @OneToMany(mappedBy = "category")
+    var danceTypes: MutableList<DanceType> = mutableListOf()
 }

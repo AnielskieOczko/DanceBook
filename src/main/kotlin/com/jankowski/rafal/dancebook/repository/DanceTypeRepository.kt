@@ -7,4 +7,5 @@ import java.util.UUID
 
 @Repository
 interface DanceTypeRepository: JpaRepository<DanceType, UUID> {
+    fun findByCategoryId(categoryId: UUID): List<DanceType>
 }

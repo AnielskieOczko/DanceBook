@@ -7,6 +7,7 @@ import java.util.UUID
 interface DanceTypeService {
     fun findAll(): List<DanceType>
     fun findById(id: UUID): DanceType
+    fun findByCategoryId(categoryId: UUID): List<DanceType>
     fun create(request: DanceTypeRequest): DanceType
     fun update(id: UUID, request: DanceTypeRequest): DanceType
     fun delete(danceTypeId: UUID)

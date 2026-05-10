@@ -1,63 +1,114 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: html(content=~{::main})}">
+      th:replace="~{layout :: html(content=~{::section})}">
 
-<main class="max-w-3xl mx-auto mt-8">
-  <div class="bg-gray-800 text-white p-8 rounded-xl shadow-lg mb-8">
-    <h1 class="text-3xl font-extrabold tracking-tight">👤 My Profile</h1>
-    <p class="text-gray-300 mt-2">Manage your account settings</p>
-  </div>
+<section th:with="activeNav='profile'" class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
 
-  <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-8 overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-gray-900 font-bold text-lg">
-      Account Information
-    </div>
-    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <span class="block text-sm font-medium text-gray-500 mb-1">Username</span>
-        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.username}"></span>
-      </div>
-      <div>
-        <span class="block text-sm font-medium text-gray-500 mb-1">Display Name</span>
-        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.displayName}"></span>
-      </div>
-      <div>
-        <span class="block text-sm font-medium text-gray-500 mb-1">Email Address</span>
-        <span class="block text-lg text-gray-900 font-semibold" th:text="${appUser.email}"></span>
-      </div>
-      <div>
-        <span class="block text-sm font-medium text-gray-500 mb-1">Role</span>
-        <span class="inline-flex px-3 py-1 text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800" th:text="${appUser.role}"></span>
-      </div>
-    </div>
-  </div>
+    <!-- Profile Header / Stats -->
+    <section class="md:col-span-4 flex flex-col items-center md:items-start space-y-md">
+        <div class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-surface-container-highest border-4 border-surface shadow-ambient relative group">
+            <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-4xl">
+                <span th:text="${appUser.displayName != null ? appUser.displayName.substring(0,1) : 'U'}">U</span>
+            </div>
+            <button class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full p-2 shadow-ambient hover:bg-primary-fixed transition-colors">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+        </div>
+        <div class="text-center md:text-left">
+            <h1 class="font-headline-lg text-headline-lg text-on-background mb-xs" th:text="${appUser.displayName}">Elena Rodriguez</h1>
+            <p class="font-body-md text-text-secondary" th:text="${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}">Focus</p>
+        </div>
+        <div class="w-full grid grid-cols-2 gap-sm pt-sm border-t border-surface-container-highest">
+            <div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+                <span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-widest mb-xs">Library</span>
+                <span class="font-headline-md text-headline-md text-on-background">124</span>
+            </div>
+            <div class="bg-surface p-sm rounded-lg flex flex-col items-center md:items-start">
+                <span class="font-label-sm text-label-sm text-text-secondary uppercase tracking-widest mb-xs">Styles</span>
+                <span class="font-headline-md text-headline-md text-on-background">12</span>
+            </div>
+        </div>
+        <button class="w-full bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest py-[12px] px-[24px] rounded hover:bg-primary-fixed transition-colors mt-margin">
+            Edit Profile
+        </button>
+    </section>
 
-  <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" th:fragment="passwordSection" id="passwordSection">
-    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-gray-900 font-bold text-lg">
-      Change Password
-    </div>
-    <div class="p-6">
-      <div th:if="${passwordSuccessMsg != null}" class="p-4 mb-6 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg font-medium shadow-sm" th:text="${passwordSuccessMsg}">Success</div>
-      <div th:if="${passwordErrorMsg != null}" class="p-4 mb-6 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg font-medium shadow-sm" th:text="${passwordErrorMsg}">Error</div>
-      
-      <form hx-post="/profile/password" hx-target="#passwordSection" hx-swap="outerHTML" class="space-y-4 max-w-md">
+    <!-- Main Content Area -->
+    <section class="md:col-span-8 space-y-xl mt-xl md:mt-0">
+        <!-- Personal Collections (Dynamic Lists) -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-          <input type="password" name="currentPassword" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <div class="flex justify-between items-center mb-md border-b border-surface-container-highest pb-xs">
+                <h2 class="font-headline-md text-headline-md text-on-background">My Collections</h2>
+                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors">
+                    <span class="material-symbols-outlined">add_circle</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
+                <!-- If no lists -->
+                <div th:if="${#lists.isEmpty(navLists)}" class="col-span-full py-8 text-center text-outline italic text-sm">
+                    No custom collections created yet.
+                </div>
+                
+                <!-- Collection Card -->
+                <a th:each="list : ${navLists}" th:href="@{/lists/{id}(id=${list.id})}"
+                   class="group border border-border rounded-lg overflow-hidden bg-surface hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex h-24">
+                    <div class="w-1/3 bg-surface-container-highest flex items-center justify-center">
+                        <span class="material-symbols-outlined text-outline" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
+                    </div>
+                    <div class="w-2/3 p-md flex flex-col justify-center">
+                        <h3 class="font-body-lg text-body-lg text-on-background mb-xs truncate" th:text="${list.name}">Collection Name</h3>
+                        <p class="font-body-sm text-body-sm text-text-secondary">Filtered Collection</p>
+                    </div>
+                </a>
+            </div>
         </div>
+
+        <!-- Account Settings / Password -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">New Password (min 8 characters)</label>
-          <input type="password" name="newPassword" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <div class="mb-md border-b border-surface-container-highest pb-xs">
+                <h2 class="font-headline-md text-headline-md text-on-background">Account Settings</h2>
+            </div>
+            
+            <div th:fragment="passwordSection" id="password-section" class="space-y-6">
+                <h3 class="font-body-lg font-medium text-on-surface">Update Password</h3>
+                
+                <!-- Messages -->
+                <div th:if="${passwordSuccessMsg}" class="p-3 rounded-lg bg-success-soft text-success text-sm" th:text="${passwordSuccessMsg}"></div>
+                <div th:if="${passwordErrorMsg}" class="p-3 rounded-lg bg-danger-soft text-danger text-sm" th:text="${passwordErrorMsg}"></div>
+
+                <form th:hx-post="@{/profile/password}" hx-target="#password-section" hx-swap="outerHTML" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="sm:col-span-2">
+                        <label for="currentPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">Current Password</label>
+                        <input id="currentPassword" type="password" name="currentPassword" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="newPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">New Password</label>
+                        <input id="newPassword" type="password" name="newPassword" required class="form-input" minlength="8">
+                    </div>
+                    <div>
+                        <label for="confirmPassword" class="font-label-sm text-label-sm text-text-secondary uppercase">Confirm New</label>
+                        <input id="confirmPassword" type="password" name="confirmPassword" required class="form-input">
+                    </div>
+                    <div class="sm:col-span-2 flex justify-end">
+                        <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-widest border border-primary-container px-6 py-2 rounded hover:bg-surface-container-highest transition-colors">
+                            Update Security
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <ul class="flex flex-col mt-8">
+                <li class="border-t border-surface-container-highest">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full flex items-center gap-sm py-4 text-error hover:opacity-70 transition-colors">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span class="font-body-md text-body-md font-medium">Log Out</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-          <input type="password" name="confirmNewPassword" required minlength="8" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-        </div>
-        <div class="pt-2">
-          <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 transition">Update Password</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</main>
+    </section>
+
+</section>
 </html>

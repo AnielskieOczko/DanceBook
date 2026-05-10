@@ -1,71 +1,87 @@
-<div th:fragment="comment-list" id="comment-section" class="mt-8 space-y-6">
-    <h3 class="text-lg font-bold border-b pb-2">Comments (<span th:text="${#lists.size(comments)}">0</span>)</h3>
+<div th:fragment="comment-list" id="comment-section" class="space-y-8">
+    <h2 class="font-headline-md text-headline-md text-on-surface">Director's Notes</h2>
 
-    <!-- Comment Form -->
-    <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
-          hx-target="#comment-section"
-          hx-swap="outerHTML"
-          class="bg-white p-4 rounded-lg shadow-sm border">
-        <textarea name="content" required placeholder="Add a comment..."
-                  class="w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-        <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-            Post Comment
-        </button>
-    </form>
+    <!-- Input Area -->
+    <div class="mb-8">
+        <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
+              hx-target="#comment-section"
+              hx-swap="outerHTML"
+              class="flex gap-4 items-start">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+                <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
+            </div>
+            <div class="flex-1">
+                <textarea name="content" required placeholder="Add a note or timestamp..."
+                          class="w-full bg-transparent border-0 border-b border-surface-variant focus:border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors resize-none"
+                          rows="3"></textarea>
+                <div class="flex justify-end mt-2">
+                    <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-wider hover:opacity-70 transition-colors">Post Note</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <!-- List -->
-    <div class="space-y-4">
+    <!-- Comments List -->
+    <div class="space-y-6">
         <th:block th:each="c : ${comments}">
             <div th:replace="~{materials/fragments/comments :: comment-item}"></div>
         </th:block>
+        <div th:if="${#lists.isEmpty(comments)}" class="text-sm text-outline italic">
+            No notes shared for this sequence yet.
+        </div>
     </div>
 </div>
 
-<div th:fragment="comment-item" class="flex space-x-3 p-3 bg-gray-50 rounded-lg group">
-    <div class="flex-1">
-        <div class="flex justify-between items-center">
+<div th:fragment="comment-item" class="flex gap-4 group">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+        <span th:text="${c.author.displayName != null && c.author.displayName.length() > 0 ? c.author.displayName.substring(0,1) : '?'}">U</span>
+    </div>
+    <div class="flex-1 min-w-0">
+        <div class="flex justify-between items-baseline mb-1">
             <div class="flex items-center gap-2">
-                <span class="font-semibold text-indigo-700" th:text="${c.author.displayName}">Author</span>
-                <span th:if="${c.updatedAt != null}" class="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded uppercase font-bold">Edited</span>
+                <span class="font-label-sm text-label-sm text-on-surface font-semibold" th:text="${c.author.displayName}">Marcus T.</span>
+                <span th:if="${c.updatedAt != null}" class="text-[10px] text-outline uppercase">Edited</span>
             </div>
-            <span class="text-xs text-gray-500"
-                  th:text="${c.updatedAt != null ? #temporals.format(c.updatedAt, 'dd MMM HH:mm') : #temporals.format(c.createdAt, 'dd MMM HH:mm')}">Date</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant opacity-50"
+                  th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>
         </div>
-        <p class="text-gray-700 mt-1 whitespace-pre-wrap" th:text="${c.content}">Content</p>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex items-center gap-2">
-        <button th:if="${#authentication.name == c.author.username}"
-                th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
-                hx-target="closest .group"
-                hx-swap="outerHTML"
-                class="text-gray-400 hover:text-indigo-600">
-            ✏️
-        </button>
-        <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
-                th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
-                hx-target="closest .group"
-                hx-swap="outerHTML"
-                hx-confirm="Are you sure?"
-                class="text-red-400 hover:text-red-600">
-            🗑️
-        </button>
+        <p class="font-body-md text-on-surface leading-relaxed whitespace-pre-wrap mt-1" th:text="${c.content}">Note content</p>
+        
+        <!-- Actions -->
+        <div class="flex gap-4 mt-3">
+            <button th:if="${#authentication.name == c.author.username}"
+                    th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
+                    hx-target="closest .group"
+                    hx-swap="outerHTML"
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span class="material-symbols-outlined text-[14px]">edit</span> Edit</button>
+            <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
+                    th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
+                    hx-target="closest .group"
+                    hx-swap="outerHTML"
+                    hx-confirm="Remove this note?"
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-error transition-colors"><span class="material-symbols-outlined text-[14px]">delete</span> Delete</button>
+        </div>
     </div>
 </div>
 
-<div th:fragment="comment-edit-form" class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-    <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
-          hx-target="closest div"
-          hx-swap="outerHTML">
-        <textarea name="content" required class="w-full border-indigo-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" th:text="${comment.content}"></textarea>
-        <div class="flex gap-2 mt-2">
-            <button type="submit" class="bg-indigo-600 text-white px-3 py-1 text-sm rounded-md hover:bg-indigo-700 transition">Save</button>
-            <button type="button"
-                    th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
-                    hx-target="closest div"
-                    hx-swap="outerHTML"
-                    class="text-gray-500 text-sm hover:underline">Cancel</button>
-        </div>
-    </form>
+<div th:fragment="comment-edit-form" class="group flex gap-4">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+        <span th:text="${c != null && c.author.displayName != null ? c.author.displayName.substring(0,1) : 'U'}">U</span>
+    </div>
+    <div class="flex-1">
+        <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
+              hx-target="closest .group"
+              hx-swap="outerHTML">
+            <textarea name="content" required class="w-full bg-transparent border-0 border-b border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface"
+                      rows="3" th:text="${comment.content}"></textarea>
+            <div class="flex gap-4 mt-2 justify-end">
+                <button type="button"
+                        th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
+                        hx-target="closest .group"
+                        hx-swap="outerHTML"
+                        class="font-label-sm text-[10px] text-outline uppercase tracking-widest">Cancel</button>
+                <button type="submit" class="font-label-sm text-[10px] text-primary uppercase tracking-widest">Save</button>
+            </div>
+        </form>
+    </div>
 </div>

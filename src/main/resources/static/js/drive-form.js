@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('videoFile').addEventListener('change', function() {
       const file = this.files[0];
       if (file) {
-        document.getElementById('fileLabel').innerHTML = '🎬 ' + file.name + ' (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)';
-        document.getElementById('fileLabel').classList.add('border-indigo-500', 'bg-white', 'text-gray-800', 'font-medium');
+        document.getElementById('fileLabel').innerHTML = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)';
+        document.getElementById('fileLabel').classList.add('border-primary', 'bg-surface', 'text-text-primary', 'font-medium');
         document.getElementById('uploadBtn').disabled = false;
       }
     });
@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('driveFileId').value = fileId;
           progressBar.style.width = '100%';
           progressLabel.textContent = 'Complete!';
-          progressBar.classList.remove('bg-indigo-600');
-          progressBar.classList.add('bg-green-500');
+          progressBar.classList.remove('bg-primary');
+          progressBar.classList.add('bg-success');
 
-          uploadStatus.className = 'mt-3 text-sm rounded-lg p-3 bg-green-50 text-green-700 border border-green-200';
+          uploadStatus.className = 'mt-3 text-sm rounded-button p-3 bg-success-soft text-success border border-success/30';
           uploadStatus.innerHTML = '✅ Video uploaded successfully! File ID: <code class="font-mono text-xs">' + fileId + '</code>';
           uploadStatus.classList.remove('hidden');
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         // onError
         function(error) {
-          uploadStatus.className = 'mt-3 text-sm rounded-lg p-3 bg-red-50 text-red-700 border border-red-200';
+          uploadStatus.className = 'mt-3 text-sm rounded-button p-3 bg-danger-soft text-danger border border-danger/30';
           uploadStatus.textContent = '❌ Upload failed: ' + error;
           uploadStatus.classList.remove('hidden');
 
@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('uploadStatus').classList.add('hidden');
 
         // Reset the file picker
-        document.getElementById('fileLabel').innerHTML = '📎 Click to select a video file...';
-        document.getElementById('fileLabel').classList.remove('border-indigo-500', 'bg-white', 'text-gray-800', 'font-medium');
+        document.getElementById('fileLabel').innerHTML = 'Click to select a video file...';
+        document.getElementById('fileLabel').classList.remove('border-primary', 'bg-surface', 'text-text-primary', 'font-medium');
         document.getElementById('videoFile').value = '';
 
         // Disable upload button until a new file is picked
@@ -106,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset progress bar
         document.getElementById('progressContainer').classList.add('hidden');
         document.getElementById('progressBar').style.width = '0%';
-        document.getElementById('progressBar').classList.add('bg-indigo-600');
-        document.getElementById('progressBar').classList.remove('bg-green-500');
+        document.getElementById('progressBar').classList.add('bg-primary');
+        document.getElementById('progressBar').classList.remove('bg-success');
       }
     });
 

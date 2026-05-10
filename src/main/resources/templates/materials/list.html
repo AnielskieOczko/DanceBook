@@ -1,120 +1,191 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: html(content=~{::main})}">
+      th:replace="~{layout :: html(content=~{::section})}">
 
-<main class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-8">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-indigo-600">Materials 💃🕺</h1>
-    <a href="/materials/new" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition shadow-sm">
-      + New Material
-    </a>
-  </div>
+<section th:with="activeNav='materials'" class="space-y-lg relative">
 
-  <!-- HTMX Filter Form -->
-  <form id="filterForm" hx-get="/materials" hx-target="#materialsTable" hx-trigger="change, input delay:300ms from:#nameSearch"
-        class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm space-y-4">
+    <!-- Sticky Search & Filter Section -->
+    <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
+        <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
+            <!-- Top Row: Search + Filter Toggle + View Toggle -->
+            <div class="flex items-center gap-3">
+                <div class="relative flex-1 group">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
+                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           placeholder="Search..."
+                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                </div>
 
-    <!-- Name search -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
-      <input type="text" id="nameSearch" name="nameSearch" th:value="${selectedNameSearch}"
-             placeholder="e.g. waltz, natural turn..."
-             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"/>
+                <!-- Filter Toggle -->
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
+                    <span class="material-symbols-outlined text-[20px] pointer-events-none">tune</span>
+                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none">Filters</span>
+                </button>
+
+                <!-- View Toggle -->
+                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="grid" class="hidden peer"
+                               th:checked="${currentView == 'grid'}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="list" class="hidden peer"
+                               th:checked="${currentView == 'list'}"
+                               th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Collapsible Categories -->
+            <div id="categoryFiltersContainer" class="flex overflow-x-auto gap-sm scrollbar-hide py-2 -my-2 transition-all duration-300 max-h-[500px] opacity-100 mt-4">
+                <!-- All Materials Pill -->
+                <label class="cursor-pointer">
+                    <input type="radio" name="categoryIds" value="" class="hidden peer"
+                           th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
+                        All Materials
+                    </span>
+                </label>
+
+                <!-- Category Pills -->
+                <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                    <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
+                           th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
+                          th:text="${c.name}">Category</span>
+                </label>
+            </div>
+        </form>
+    </section>
+
+    <!-- Materials Grid (HTMX swappable) -->
+    <div th:fragment="materialsTable" id="materials-grid" class="space-y-gutter">
+        <div th:if="${#lists.isEmpty(materials)}" class="empty-state">
+            <div class="empty-state-icon">
+                <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
+            </div>
+            <h3 class="empty-state-title">No movements found</h3>
+            <p class="empty-state-text">Your library is quiet. Adjust your filters or add a new material to begin.</p>
+            <a href="/materials/new" class="btn-primary">Import first material</a>
+        </div>
+
+        <!-- 1. Grid View -->
+        <div th:if="${!#lists.isEmpty(materials) && (currentView == 'grid' || currentView == null)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+            <article th:each="m : ${materials}"
+                     th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
+                              catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
+                              imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/images/categories/placeholder.png'}"
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
+                
+                <!-- Absolute Action Menu (Fixed Stacking) -->
+                <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
+                    <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                        <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                    </button>
+                    <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
+                        <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                        </a>
+                        <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                        </a>
+                        <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                           th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                           class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex flex-row w-full relative z-0 pointer-events-none">
+                    <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg bg-surface-container-high block z-0">
+                        <img th:src="${imgSrc}" th:alt="${catName}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
+                        <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="material-symbols-outlined text-white text-3xl font-light" style="font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;">play_arrow</span>
+                        </div>
+                    </div>
+                    <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
+                        <div>
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-normal pr-8 flex-1" th:text="${m.name}">Material Name</h3>
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 relative z-20 pointer-events-auto">
+                                <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
+                                <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                                <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
+                            </div>
+                        </div>
+                        <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
+                             <button type="button" class="js-expand-btn text-primary flex items-center gap-1 text-sm font-label-md transition-colors hover:text-primary-container focus:outline-none">
+                                 <span class="btn-text pointer-events-none">View description</span>
+                                 <span class="material-symbols-outlined transition-transform duration-300 icon-expand pointer-events-none">expand_more</span>
+                             </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${m.description}" class="expandable-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out w-full relative z-20 pointer-events-none rounded-b-lg">
+                     <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-white">
+                         <p class="font-body-md text-sm text-on-surface-variant mt-3 whitespace-pre-wrap leading-relaxed relative z-20" th:text="${m.description}">Description</p>
+                     </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 2. Compact List View -->
+        <div th:if="${!#lists.isEmpty(materials) && currentView == 'list'}" class="flex flex-col gap-3">
+            <article th:each="m : ${materials}"
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                
+                <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
+                
+                <div class="flex flex-col gap-1.5 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-body-md font-semibold text-on-surface flex-1" th:text="${m.name}">Material Name</h3>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 pointer-events-auto border border-primary-container/30">Style</span>
+                        <span class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-end gap-1 relative z-20 pointer-events-auto">
+                    <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
+                    <div class="group/menu">
+                        <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                        </button>
+                        <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
+                            <a th:href="@{/materials/{id}(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                            </a>
+                            <a th:href="@{/materials/{id}/edit(id=${m.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                            </a>
+                            <a th:href="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? ${m.sourceLink} : @{/materials/{id}(id=${m.id})}" 
+                               th:target="${m.sourceLink != null && !m.sourceLink.isEmpty()} ? '_blank' : '_self'" 
+                               class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">smart_display</span> Watch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <!-- Dance Types (multi-select checkboxes) -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Dance Types</label>
-        <div class="max-h-40 overflow-y-auto space-y-1 bg-white rounded-md border border-gray-200 p-2">
-          <label th:each="type : ${danceTypes}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 px-1 py-0.5 rounded cursor-pointer">
-            <input type="checkbox" name="typeIds" th:value="${type.id}"
-                   th:checked="${#lists.contains(selectedTypeIds, type.id)}"
-                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-            <span th:text="${type.name}">Type</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Categories (multi-select checkboxes) -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
-        <div class="max-h-40 overflow-y-auto space-y-1 bg-white rounded-md border border-gray-200 p-2">
-          <label th:each="cat : ${danceCategories}" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 px-1 py-0.5 rounded cursor-pointer">
-            <input type="checkbox" name="categoryIds" th:value="${cat.id}"
-                   th:checked="${#lists.contains(selectedCategoryIds, cat.id)}"
-                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-            <span th:text="${cat.name}">Category</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Min Rating -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Min Rating</label>
-        <select name="minRating" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm cursor-pointer transition">
-          <option value="">Any Rating</option>
-          <option value="5" th:selected="${selectedMinRating == 5}">5 Stars</option>
-          <option value="4" th:selected="${selectedMinRating == 4}">4+ Stars</option>
-          <option value="3" th:selected="${selectedMinRating == 3}">3+ Stars</option>
-          <option value="2" th:selected="${selectedMinRating == 2}">2+ Stars</option>
-          <option value="1" th:selected="${selectedMinRating == 1}">1+ Star</option>
-        </select>
-      </div>
-    </div>
-  </form>
-
-  <!-- Wrapping the table inside an HTMX target fragment -->
-  <div id="materialsTable" th:fragment="materialsTable" class="overflow-x-auto">
-    <table class="w-full text-left border-collapse">
-      <thead>
-      <tr class="bg-gray-100 border-b border-gray-200 text-gray-700">
-        <th class="p-3 font-semibold rounded-tl-lg">Name</th>
-        <th class="p-3 font-semibold">Dance Type</th>
-        <th class="p-3 font-semibold">Category</th>
-        <th class="p-3 font-semibold">Rating</th>
-        <th class="p-3 font-semibold text-right rounded-tr-lg">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- Loop over our model variable ${materials} -->
-      <tr th:each="material : ${materials}" class="border-b border-gray-100 hover:bg-gray-50 transition">
-        <td class="p-3 font-medium text-gray-900">
-          <a th:href="@{/materials/{id}(id=${material.id})}" th:text="${material.name}" class="text-indigo-600 hover:text-indigo-800 hover:underline">Name</a>
-        </td>
-        
-        <td class="p-3">
-          <span th:if="${material.danceType != null}" th:text="${material.danceType.name}" class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"></span>
-          <span th:if="${material.danceType == null}" class="text-gray-400 text-sm">-</span>
-        </td>
-        
-        <td class="p-3">
-          <span th:if="${material.danceCategory != null}" th:text="${material.danceCategory.name}" class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"></span>
-          <span th:if="${material.danceCategory == null}" class="text-gray-400 text-sm">-</span>
-        </td>
-        
-        <td class="p-3">
-          <span th:text="${material.rating ?: '-'}" class="font-medium text-gray-700"></span>
-          <span th:if="${material.rating != null}" class="text-yellow-400">★</span>
-        </td>
-        
-        <td class="p-3 text-right">
-          <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition">Edit</a>
-          <!-- Delete button mapping -->
-          <form th:action="@{/materials/{id}/delete(id=${material.id})}" method="post" class="inline" data-confirm="Are you sure you want to delete this material?">
-            <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition cursor-pointer">Delete</button>
-          </form>
-        </td>
-      </tr>
-      
-      <!-- Empty state handling -->
-      <tr th:if="${#lists.isEmpty(materials)}">
-        <td colspan="5" class="p-8 text-center text-gray-500 bg-gray-50 italic">
-          No materials found. Time to add your first dance move!
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</main>
+</section>
 </html>

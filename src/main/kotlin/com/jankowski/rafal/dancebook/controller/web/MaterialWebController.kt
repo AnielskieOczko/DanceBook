@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
+import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
@@ -35,6 +36,7 @@ class MaterialWebController(
         @RequestParam(required = false) categoryIds: List<UUID>?,
         @RequestParam(required = false) minRating: Short?,
         @RequestParam(required = false) nameSearch: String?,
+        @RequestParam(required = false, defaultValue = "grid") view: String,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
         pageable: Pageable
@@ -58,6 +60,7 @@ class MaterialWebController(
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
         model.addAttribute("selectedMinRating", minRating)
         model.addAttribute("selectedNameSearch", nameSearch)
+        model.addAttribute("currentView", view)
 
         return if (isHtmxRequest == true) {
             "materials/list :: materialsTable"
@@ -108,6 +111,7 @@ class MaterialWebController(
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         model.addAttribute("material", MaterialRequest(name = "", version = 0))
+        model.addAttribute("danceTypes", emptyList<DanceType>())
         populateDropdowns(model)
         return "materials/form"
     }
@@ -120,6 +124,8 @@ class MaterialWebController(
     ): String {
         if (bindingResult.hasErrors()) {
             populateDropdowns(model)
+            val types = request.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
+            model.addAttribute("danceTypes", types)
             return "materials/form"
         }
         materialService.create(request)
@@ -132,8 +138,8 @@ class MaterialWebController(
         val request = MaterialRequest(
             name = material.name,
             description = material.description,
+            danceCategoryId = material.danceType?.category?.id,
             danceTypeId = material.danceType?.id,
-            danceCategoryId = material.danceCategory?.id,
             rating = material.rating,
             videoLink = material.videoLink,
             sourceLink = material.sourceLink,
@@ -143,6 +149,8 @@ class MaterialWebController(
         model.addAttribute("material", request)
         model.addAttribute("materialId", id)
         populateDropdowns(model)
+        val types = request.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
+        model.addAttribute("danceTypes", types)
         return "materials/form"
     }
 
@@ -156,6 +164,8 @@ class MaterialWebController(
         if (bindingResult.hasErrors()) {
             populateDropdowns(model)
             model.addAttribute("materialId", id)
+            val types = request.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
+            model.addAttribute("danceTypes", types)
             return "materials/form"
         }
         materialService.update(id, request)
@@ -168,8 +178,14 @@ class MaterialWebController(
         return "redirect:/materials"
     }
 
+    @GetMapping("/dance-types-options")
+    fun getDanceTypesOptions(@RequestParam(required = false) danceCategoryId: UUID?, model: Model): String {
+        val types = danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList()
+        model.addAttribute("danceTypes", types)
+        return "materials/form :: danceTypeOptions"
+    }
+
     private fun populateDropdowns(model: Model) {
-        model.addAttribute("danceTypes", danceTypeService.findAll())
         model.addAttribute("danceCategories", danceCategoryService.findAll())
     }
 }

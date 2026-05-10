@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
@@ -24,8 +25,13 @@ class DanceTypeController(
 ) {
 
     @GetMapping
-    fun getDanceTypes(): List<DanceTypeResponse> {
-        return danceTypeService.findAll().map { it.toResponse() }
+    fun getDanceTypes(@RequestParam(required = false) categoryId: UUID?): List<DanceTypeResponse> {
+        val types = if (categoryId != null) {
+            danceTypeService.findByCategoryId(categoryId)
+        } else {
+            danceTypeService.findAll()
+        }
+        return types.map { it.toResponse() }
     }
 
     @GetMapping("/{danceTypeId}")
