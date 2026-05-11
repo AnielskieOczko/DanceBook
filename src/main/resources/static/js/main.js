@@ -96,6 +96,24 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // 5. Delete list modal open
+    const openDeleteModalBtn = event.target.closest('.js-open-delete-modal');
+    if (openDeleteModalBtn) {
+        event.preventDefault();
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) modal.style.display = 'flex';
+        return;
+    }
+
+    // 6. Delete list modal close
+    const closeDeleteModalBtn = event.target.closest('.js-close-delete-modal');
+    if (closeDeleteModalBtn) {
+        event.preventDefault();
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) modal.style.display = 'none';
+        return;
+    }
+
     // 4. Close menus when clicking outside
     if (!event.target.closest('.js-menu-dropdown')) {
         document.querySelectorAll('.js-menu-dropdown').forEach(d => {

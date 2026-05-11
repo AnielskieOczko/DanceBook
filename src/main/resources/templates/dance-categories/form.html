@@ -9,7 +9,7 @@
         <p class="text-on-surface-variant font-body-md">Define a new high-level grouping for your dance styles.</p>
     </div>
 
-    <form th:action="${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}"
+    <form th:action="@{${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}(_csrf=${_csrf.token})}"
           th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="bg-white rounded-xl border border-[#EAEAEA] p-8 shadow-ambient">
 
         <div class="space-y-6">

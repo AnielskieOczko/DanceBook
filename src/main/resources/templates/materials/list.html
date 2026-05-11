@@ -84,7 +84,7 @@
             <article th:each="m : ${materials}"
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                               catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
-                              imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/images/categories/placeholder.png'}"
+                              imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
                      class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
@@ -184,6 +184,11 @@
                     </div>
                 </div>
             </article>
+        </div>
+    </div>
+
+</section>
+</html>e>
         </div>
     </div>
 

@@ -31,6 +31,55 @@
         </div>
     </div>
 
+    <!-- Flash Messages for Settings -->
+    <div th:if="${settingsSuccess != null}" class="mb-8 p-4 rounded-button bg-success-soft border border-success/30">
+        <p class="text-sm font-medium text-success" th:text="${settingsSuccess}">Success</p>
+    </div>
+    <div th:if="${settingsError != null}" class="mb-8 p-4 rounded-button bg-danger-soft border border-danger/30">
+        <p class="text-sm font-medium text-danger" th:text="${settingsError}">Error</p>
+    </div>
+
+    <!-- System Settings -->
+    <div class="card p-6 mb-8">
+        <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            System Settings & Defaults
+        </h2>
+        <p class="text-sm text-text-secondary mb-6">
+            Configure global default images used throughout the application when specific images are not provided.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Default Collection Image -->
+            <div class="border border-border rounded-button p-4 bg-surface-warm">
+                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Collection Image</h3>
+                <div class="flex items-start gap-4">
+                    <div class="w-24 h-24 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
+                        <img th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default List" class="w-full h-full object-cover">
+                    </div>
+                    <form th:action="@{/admin/settings/default-list-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
+                        <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
+                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Default Category Image -->
+            <div class="border border-border rounded-button p-4 bg-surface-warm">
+                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Category Image</h3>
+                <div class="flex items-start gap-4">
+                    <div class="w-24 h-16 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
+                        <img th:src="@{/uploads/defaults/category-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Category" class="w-full h-full object-cover">
+                    </div>
+                    <form th:action="@{/admin/settings/default-category-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
+                        <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
+                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Storage Maintenance -->
     <div class="card p-6 mb-8">
         <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">

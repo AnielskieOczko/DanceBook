@@ -34,6 +34,9 @@ class CustomList {
     @Column(name = "is_public")
     var isPublic: Boolean = false
 
+    @Column(name = "image_filename")
+    var imageFilename: String? = null
+
     @ManyToMany
     @JoinTable(
         name = "custom_list_dance_type",

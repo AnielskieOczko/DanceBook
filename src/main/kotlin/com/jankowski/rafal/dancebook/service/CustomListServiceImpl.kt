@@ -15,7 +15,8 @@ class CustomListServiceImpl(
     private val customListRepository: CustomListRepository,
     private val appUserService: AppUserService,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val fileStorageService: FileStorageService
 ) : CustomListService {
 
     companion object {
@@ -46,6 +47,12 @@ class CustomListServiceImpl(
             isPublic = request.isPublic
         }
 
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                list.imageFilename = fileStorageService.storeFile(file, "lists")
+            }
+        }
+
         applyRelations(list, request)
         return customListRepository.save(list)
     }
@@ -63,6 +70,15 @@ class CustomListServiceImpl(
         list.minRating = request.minRating
         list.isPublic = request.isPublic
 
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                list.imageFilename?.let { oldFilename ->
+                    fileStorageService.deleteFile(oldFilename, "lists")
+                }
+                list.imageFilename = fileStorageService.storeFile(file, "lists")
+            }
+        }
+
         applyRelations(list, request)
         return customListRepository.save(list)
     }
@@ -75,6 +91,9 @@ class CustomListServiceImpl(
         checkOwnership(list, currentUser)
 
         log.debug("User '{}' deleting list '{}'", currentUser.username, list.name)
+        list.imageFilename?.let { filename ->
+            fileStorageService.deleteFile(filename, "lists")
+        }
         customListRepository.delete(list)
     }
 

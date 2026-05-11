@@ -44,7 +44,13 @@ class CustomListWebController(
     }
 
     @GetMapping("/{id}")
-    fun viewList(@PathVariable id: UUID, model: Model, pageable: Pageable): String {
+    fun viewList(
+        @PathVariable id: UUID, 
+        @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "grid") view: String,
+        @org.springframework.web.bind.annotation.RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
+        model: Model, 
+        pageable: Pageable
+    ): String {
         val list = customListService.findById(id)
 
         val typeIds = list.danceTypes.mapNotNull { it.id }
@@ -60,7 +66,13 @@ class CustomListWebController(
 
         model.addAttribute("customList", list)
         model.addAttribute("materials", materials.content)
-        return "lists/view"
+        model.addAttribute("currentView", view)
+
+        return if (isHtmxRequest == true) {
+            "materials/list :: materialsTable"
+        } else {
+            "lists/view"
+        }
     }
 
     @GetMapping("/{id}/edit")
@@ -76,6 +88,7 @@ class CustomListWebController(
         )
         model.addAttribute("listRequest", request)
         model.addAttribute("listId", id)
+        model.addAttribute("currentImage", list.imageFilename)
         populateDropdowns(model)
         return "lists/form"
     }

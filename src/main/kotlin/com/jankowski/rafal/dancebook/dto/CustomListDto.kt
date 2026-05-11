@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 data class CustomListRequest(
@@ -8,7 +9,8 @@ data class CustomListRequest(
     val danceTypeIds: List<UUID> = emptyList(),
     val danceCategoryIds: List<UUID> = emptyList(),
     val minRating: Short? = null,
-    val isPublic: Boolean = false
+    val isPublic: Boolean = false,
+    val image: MultipartFile? = null
 )
 
 data class CustomListResponse(
@@ -19,5 +21,6 @@ data class CustomListResponse(
     val danceCategoryIds: List<UUID>,
     val minRating: Short?,
     val isPublic: Boolean,
+    val imageFilename: String?,
     val ownerUsername: String
 )

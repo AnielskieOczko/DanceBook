@@ -29,6 +29,10 @@
     <div th:if="${!#lists.isEmpty(lists)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
         <a th:each="list : ${lists}" th:href="@{/lists/{id}(id=${list.id})}"
            class="group border border-border rounded-xl overflow-hidden bg-surface hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex flex-col h-full">
+            <div class="h-32 bg-surface-container overflow-hidden shrink-0">
+                <img th:if="${list.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${list.imageFilename})}" alt="Collection Cover" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <img th:unless="${list.imageFilename != null}" th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Cover" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 mix-blend-multiply">
+            </div>
             <div class="p-6 flex-1 flex flex-col">
                 <div class="flex items-start justify-between mb-6">
                     <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">

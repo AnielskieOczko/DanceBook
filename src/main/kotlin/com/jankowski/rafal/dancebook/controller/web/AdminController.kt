@@ -45,7 +45,8 @@ class AdminController(
     private val storageCleanupLogRepository: StorageCleanupLogRepository,
     private val storageCleanupJob: StorageCleanupJob,
     private val googleDriveService: GoogleDriveService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
@@ -78,6 +79,38 @@ class AdminController(
         model.addAttribute("cleanupLogs", presentationLogs)
 
         return "admin/dashboard"
+    }
+
+    @PostMapping("/settings/default-list-image")
+    fun uploadDefaultListImage(
+        @org.springframework.web.bind.annotation.RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
+        redirectAttributes: org.springframework.web.servlet.mvc.support.RedirectAttributes
+    ): String {
+        try {
+            if (!file.isEmpty) {
+                fileStorageService.storeFileWithFilename(file, "defaults", "list-placeholder.png")
+                redirectAttributes.addFlashAttribute("settingsSuccess", "Default List image updated successfully!")
+            }
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("settingsError", "Failed to upload image: ${e.message}")
+        }
+        return "redirect:/admin"
+    }
+
+    @PostMapping("/settings/default-category-image")
+    fun uploadDefaultCategoryImage(
+        @org.springframework.web.bind.annotation.RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
+        redirectAttributes: org.springframework.web.servlet.mvc.support.RedirectAttributes
+    ): String {
+        try {
+            if (!file.isEmpty) {
+                fileStorageService.storeFileWithFilename(file, "defaults", "category-placeholder.png")
+                redirectAttributes.addFlashAttribute("settingsSuccess", "Default Category image updated successfully!")
+            }
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("settingsError", "Failed to upload image: ${e.message}")
+        }
+        return "redirect:/admin"
     }
 
     // HTMX Endpoint for Lazy Loading Heavy Google Drive Files

@@ -2,77 +2,127 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='lists'">
+<section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <h1 class="page-title" th:text="${listId == null ? 'New List' : 'Edit List'}">Form Title</h1>
-        <p class="page-subtitle">Create a filtered collection of your dance materials</p>
+    <div class="mb-8 pb-6 border-b border-neutral-100">
+        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${listId == null ? 'New Collection' : 'Edit Collection'}">Form Title</h1>
+        <p class="text-on-surface-variant font-body-md">Create a filtered collection of your dance materials with a beautiful cover image.</p>
     </div>
 
-    <form th:action="${listId == null ? '/lists' : '/lists/' + listId}"
-          th:object="${listRequest}" method="post" class="card p-6 md:p-8 space-y-6">
+    <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
+          th:object="${listRequest}" method="post" enctype="multipart/form-data" class="bg-white rounded-xl border border-[#EAEAEA] p-8 shadow-ambient space-y-8">
 
-        <!-- Name -->
-        <div>
-            <label for="listName" class="form-label">List Name *</label>
-            <input id="listName" type="text" th:field="*{name}" required class="form-input"
-                   placeholder="e.g. My Waltz Collection">
-        </div>
-
-        <!-- Name Filter -->
-        <div>
-            <label for="nameFilter" class="form-label">Name Filter</label>
-            <input id="nameFilter" type="text" th:field="*{nameFilter}" class="form-input"
-                   placeholder="Filter materials by name...">
-            <p class="form-hint">Only materials matching this text will appear</p>
-        </div>
-
-        <!-- Dance Types (multi-select) -->
-        <div>
-            <label for="danceTypeIds" class="form-label">Dance Styles</label>
-            <select id="danceTypeIds" th:field="*{danceTypeIds}" multiple class="form-select min-h-[80px]">
-                <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
-            </select>
-            <p class="form-hint">Hold Ctrl/Cmd to select multiple</p>
-        </div>
-
-        <!-- Dance Categories (multi-select) -->
-        <div>
-            <label for="danceCategoryIds" class="form-label">Categories</label>
-            <select id="danceCategoryIds" th:field="*{danceCategoryIds}" multiple class="form-select min-h-[80px]">
-                <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-            </select>
-            <p class="form-hint">Hold Ctrl/Cmd to select multiple</p>
-        </div>
-
-        <!-- Min Rating -->
-        <div class="max-w-[200px]">
-            <label for="minRating" class="form-label">Minimum Rating</label>
-            <input id="minRating" type="number" th:field="*{minRating}" min="1" max="5" class="form-input" placeholder="1-5">
-        </div>
-
-        <!-- Public Toggle -->
-        <div class="flex items-center gap-3">
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" th:field="*{isPublic}" class="sr-only peer">
-                <div class="w-11 h-6 bg-border rounded-pill peer-checked:bg-primary peer-focus:ring-2 peer-focus:ring-primary/30 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-            </label>
+        <!-- Basic Info Section -->
+        <div class="space-y-6">
             <div>
-                <span class="text-sm font-medium text-text-primary">Public List</span>
-                <p class="text-xs text-text-secondary">Visible to all users</p>
+                <label for="listName" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Collection Name <span class="text-danger">*</span></label>
+                <input id="listName" type="text" th:field="*{name}" required 
+                       class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                       placeholder="e.g. My Waltz Collection">
+            </div>
+
+            <!-- Image Upload Section -->
+            <div>
+                <label class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Collection Cover Image</label>
+                
+                <div th:if="${listId != null and currentImage != null}" class="mb-4">
+                    <p class="text-xs text-on-surface-variant mb-2">Current Image:</p>
+                    <div class="relative w-48 h-32 rounded-lg overflow-hidden border border-outline-variant">
+                        <img th:src="@{/uploads/lists/{filename}(filename=${currentImage})}" alt="Current Cover Image" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <label id="uploadBox" for="imageUpload" class="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-outline-variant border-dashed rounded-lg hover:border-primary transition-all bg-surface-container-low cursor-pointer relative overflow-hidden h-40">
+                    <div id="uploadContent" class="space-y-1 text-center">
+                        <span class="material-symbols-outlined text-4xl text-on-surface-variant mx-auto block">image</span>
+                        <div class="text-sm text-on-surface-variant justify-center mt-2">
+                            <span class="font-medium text-primary hover:text-primary-hover">Upload a file</span>
+                            <span>or click here to select</span>
+                            <input id="imageUpload" name="image" type="file" accept="image/*" class="sr-only">
+                        </div>
+                        <p class="text-xs text-outline mt-1">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+
+                    <div id="previewContainer" class="hidden absolute inset-0 w-full h-full bg-surface-container-low z-10">
+                        <img id="imagePreview" class="w-full h-full object-contain" src="#" alt="Image preview">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-white text-3xl mb-1">edit</span>
+                            <span id="previewFilename" class="text-white text-sm font-medium px-4 text-center truncate w-full">Change image</span>
+                        </div>
+                    </div>
+                </label>
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="flex justify-end gap-3 pt-6 border-t border-border">
-            <a href="/lists" class="btn-outline">Cancel</a>
-            <button type="submit" class="btn-primary">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Save List
+        <hr class="border-outline-variant/30">
+
+        <!-- Filters Grid Section -->
+        <div>
+            <h3 class="font-headline-md text-on-surface mb-4">Collection Filters</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Name Filter -->
+                <div>
+                    <label for="nameFilter" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Name Contains</label>
+                    <input id="nameFilter" type="text" th:field="*{nameFilter}" 
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                           placeholder="Filter materials by name...">
+                </div>
+
+                <!-- Min Rating -->
+                <div>
+                    <label for="minRating" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Minimum Rating</label>
+                    <input id="minRating" type="number" th:field="*{minRating}" min="1" max="5" 
+                           class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" 
+                           placeholder="1-5">
+                </div>
+
+                <!-- Dance Types -->
+                <div>
+                    <label for="danceTypeIds" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Dance Styles</label>
+                    <select id="danceTypeIds" th:field="*{danceTypeIds}" multiple 
+                            class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[100px]">
+                        <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                    </select>
+                    <p class="text-xs text-on-surface-variant mt-1">Hold Ctrl/Cmd to select multiple</p>
+                </div>
+
+                <!-- Dance Categories -->
+                <div>
+                    <label for="danceCategoryIds" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Categories</label>
+                    <select id="danceCategoryIds" th:field="*{danceCategoryIds}" multiple 
+                            class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all min-h-[100px]">
+                        <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                    <p class="text-xs text-on-surface-variant mt-1">Hold Ctrl/Cmd to select multiple</p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-outline-variant/30">
+
+        <!-- Settings Section -->
+        <div>
+            <div class="flex items-center gap-3">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" th:field="*{isPublic}" class="sr-only peer">
+                    <div class="w-11 h-6 bg-outline-variant/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+                <div>
+                    <span class="text-sm font-medium text-on-surface">Public Collection</span>
+                    <p class="text-xs text-on-surface-variant">Visible to all users on the platform</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-neutral-100">
+            <a href="/lists" class="px-6 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-body-md hover:bg-surface-container-high transition-colors">Cancel</a>
+            <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary text-on-primary text-body-md hover:bg-primary-hover transition-colors shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">save</span>
+                Save Collection
             </button>
         </div>
     </form>
-
+    
+    <script th:src="@{/js/image-upload-preview.js}"></script>
 </section>
 </html>
