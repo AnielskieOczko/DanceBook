@@ -139,3 +139,83 @@ document.addEventListener('click', function(event) {
         });
     }
 });
+
+/**
+ * AppManager: Handles background tasks like polling and auto-logout.
+ */
+const AppManager = (function() {
+    let lastActivityTime = Date.now();
+    let lastPollTime = Date.now();
+    
+    // Constants
+    const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+    const INACTIVITY_LOGOUT_MS = 10 * 60 * 1000; // 10 minutes
+    const CHECK_INTERVAL_MS = 60 * 1000; // 1 minute
+    
+    // Update activity timer
+    function updateActivity() {
+        lastActivityTime = Date.now();
+    }
+    
+    function performChecks() {
+        const now = Date.now();
+        
+        // 1. Auto-Logout Check
+        if (now - lastActivityTime > INACTIVITY_LOGOUT_MS) {
+            console.log("Inactivity limit reached. Logging out...");
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/logout';
+            
+            // Add CSRF token
+            const tokenMeta = document.querySelector('meta[name="_csrf"]');
+            if (tokenMeta) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_csrf';
+                input.value = tokenMeta.content;
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            return; // Stop checking
+        }
+        
+        // 2. Notification Polling Check
+        if (now - lastPollTime >= POLL_INTERVAL_MS) {
+            if (!document.hidden) {
+                lastPollTime = now;
+                document.body.dispatchEvent(new Event('poll-notifications'));
+            }
+        }
+    }
+    
+    function init() {
+        // Listen for activity
+        ['mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+            document.addEventListener(evt, updateActivity, { passive: true });
+        });
+        
+        // Listen for tab visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // If tab becomes visible, check if we missed a poll
+                if (Date.now() - lastPollTime >= POLL_INTERVAL_MS) {
+                    lastPollTime = Date.now();
+                    document.body.dispatchEvent(new Event('poll-notifications'));
+                }
+            }
+        });
+        
+        // Start background checks
+        setInterval(performChecks, CHECK_INTERVAL_MS);
+    }
+    
+    return { init };
+})();
+
+// Initialize AppManager
+document.addEventListener('DOMContentLoaded', () => {
+    AppManager.init();
+});
