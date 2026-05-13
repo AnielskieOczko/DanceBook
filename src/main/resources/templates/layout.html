@@ -23,7 +23,9 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script th:src="@{/js/main.js}"></script>
 </head>
-<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0">
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0"
+      th:data-poll-interval="${pollInterval != null ? pollInterval : 5}"
+      th:data-logout-interval="${autoLogout != null ? autoLogout : 10}">
 
 <!-- ═══════════════════════════════════════════════
      TOP APP BAR (Sticky)

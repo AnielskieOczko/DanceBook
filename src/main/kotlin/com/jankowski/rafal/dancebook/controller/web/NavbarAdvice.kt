@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
+import com.jankowski.rafal.dancebook.service.SystemSettingService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute
 class NavbarAdvice(
     private val customListService: CustomListService,
     private val appUserService: AppUserService,
-    private val activityEventService: ActivityEventService
+    private val activityEventService: ActivityEventService,
+    private val systemSettingService: SystemSettingService
 ) {
 
     @ModelAttribute("navLists")
@@ -38,6 +40,16 @@ class NavbarAdvice(
         if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return 0
         val user = appUserService.getCurrentUser()
         return activityEventService.getUnreadCount(user.id!!)
+    }
+
+    @ModelAttribute("pollInterval")
+    fun pollInterval(): Int {
+        return systemSettingService.getIntSetting("polling_interval_minutes", 5)
+    }
+
+    @ModelAttribute("autoLogout")
+    fun autoLogout(): Int {
+        return systemSettingService.getIntSetting("auto_logout_minutes", 10)
     }
 
     @ModelAttribute("activeNav")

@@ -9,6 +9,7 @@ import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import com.jankowski.rafal.dancebook.service.StorageCleanupJob
+import com.jankowski.rafal.dancebook.service.SystemSettingService
 import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
@@ -46,13 +47,18 @@ class AdminController(
     private val storageCleanupJob: StorageCleanupJob,
     private val googleDriveService: GoogleDriveService,
     private val objectMapper: ObjectMapper,
-    private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService
+    private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService,
+    private val systemSettingService: SystemSettingService
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
         // Provide basic stats to the template
         model.addAttribute("totalUsers", appUserRepository.count())
         model.addAttribute("totalMaterials", materialRepository.count())
+        
+        // System Settings
+        model.addAttribute("pollInterval", systemSettingService.getIntSetting("polling_interval_minutes", 5))
+        model.addAttribute("autoLogout", systemSettingService.getIntSetting("auto_logout_minutes", 10))
         
         // Provide fast lists
         model.addAttribute("users", appUserRepository.findAll())
@@ -111,6 +117,24 @@ class AdminController(
             redirectAttributes.addFlashAttribute("settingsError", "Failed to upload image: ${e.message}")
         }
         return "redirect:/admin"
+    }
+
+    @PostMapping("/settings/system")
+    fun updateSystemSettings(
+        @org.springframework.web.bind.annotation.RequestParam("pollInterval") pollInterval: Int,
+        @org.springframework.web.bind.annotation.RequestParam("autoLogout") autoLogout: Int,
+        model: Model
+    ): String {
+        try {
+            systemSettingService.updateSetting("polling_interval_minutes", pollInterval.toString())
+            systemSettingService.updateSetting("auto_logout_minutes", autoLogout.toString())
+            model.addAttribute("systemSettingsSuccess", "System settings updated successfully!")
+        } catch (e: Exception) {
+            model.addAttribute("systemSettingsError", "Failed to update settings: ${e.message}")
+        }
+        model.addAttribute("pollInterval", pollInterval)
+        model.addAttribute("autoLogout", autoLogout)
+        return "admin/dashboard :: systemSettingsSection"
     }
 
     // HTMX Endpoint for Lazy Loading Heavy Google Drive Files

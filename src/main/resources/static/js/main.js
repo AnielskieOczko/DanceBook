@@ -147,10 +147,19 @@ const AppManager = (function() {
     let lastActivityTime = Date.now();
     let lastPollTime = Date.now();
     
-    // Constants
-    const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
-    const INACTIVITY_LOGOUT_MS = 10 * 60 * 1000; // 10 minutes
+    // Constants (read from body data attributes, with fallbacks)
+    let pollIntervalMs = 5 * 60 * 1000;
+    let inactivityLogoutMs = 10 * 60 * 1000;
     const CHECK_INTERVAL_MS = 60 * 1000; // 1 minute
+    
+    function loadConfig() {
+        if (document.body.dataset.pollInterval) {
+            pollIntervalMs = parseInt(document.body.dataset.pollInterval) * 60 * 1000;
+        }
+        if (document.body.dataset.logoutInterval) {
+            inactivityLogoutMs = parseInt(document.body.dataset.logoutInterval) * 60 * 1000;
+        }
+    }
     
     // Update activity timer
     function updateActivity() {
@@ -161,7 +170,7 @@ const AppManager = (function() {
         const now = Date.now();
         
         // 1. Auto-Logout Check
-        if (now - lastActivityTime > INACTIVITY_LOGOUT_MS) {
+        if (now - lastActivityTime > inactivityLogoutMs) {
             console.log("Inactivity limit reached. Logging out...");
             const form = document.createElement('form');
             form.method = 'POST';
@@ -183,7 +192,7 @@ const AppManager = (function() {
         }
         
         // 2. Notification Polling Check
-        if (now - lastPollTime >= POLL_INTERVAL_MS) {
+        if (now - lastPollTime >= pollIntervalMs) {
             if (!document.hidden) {
                 lastPollTime = now;
                 document.body.dispatchEvent(new Event('poll-notifications'));
@@ -192,6 +201,7 @@ const AppManager = (function() {
     }
     
     function init() {
+        loadConfig();
         // Listen for activity
         ['mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
             document.addEventListener(evt, updateActivity, { passive: true });
@@ -201,7 +211,7 @@ const AppManager = (function() {
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 // If tab becomes visible, check if we missed a poll
-                if (Date.now() - lastPollTime >= POLL_INTERVAL_MS) {
+                if (Date.now() - lastPollTime >= pollIntervalMs) {
                     lastPollTime = Date.now();
                     document.body.dispatchEvent(new Event('poll-notifications'));
                 }
