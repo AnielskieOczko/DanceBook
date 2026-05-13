@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav=''" class="space-y-xl">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-sm">
+            <h2 class="font-display-lg text-display-lg text-on-surface">Activity History</h2>
+            <p class="font-body-lg text-body-lg text-outline">A complete timeline of all actions across your workspace.</p>
+        </div>
+        <a href="/" class="flex items-center gap-2 text-outline hover:text-on-surface transition-colors font-body-md">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+            Dashboard
+        </a>
+    </div>
+
+    <!-- Timeline -->
+    <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
+        <div th:if="${events != null && !events.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
+            <div th:each="event : ${events}" class="relative pl-8">
+                <!-- Timeline Dot -->
+                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
+                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container' :
+                                      event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error' :
+                                      event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' : 'bg-surface-variant'}"></div>
+
+                <!-- Event Content -->
+                <div class="flex items-start gap-3">
+                    <!-- Icon -->
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                         th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container text-on-primary-container' :
+                                          event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error-container text-on-error-container' :
+                                          event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-variant text-on-surface-variant'}">
+                        <span class="material-symbols-outlined text-[18px]"
+                              th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
+                                        event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
+                                        event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
+                                        event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
+                                        event.eventType.name() == 'LIST_CREATED' ? 'layers' : 'public'}">add_circle</span>
+                    </div>
+
+                    <!-- Text -->
+                    <div class="flex-1">
+                        <p class="font-body-md text-body-md text-on-surface">
+                            <span class="font-medium" th:text="${event.actor.displayName}">User</span>
+                            <span th:switch="${event.eventType.name()}">
+                                <span th:case="'MATERIAL_CREATED'"> created material </span>
+                                <span th:case="'MATERIAL_UPDATED'"> updated material </span>
+                                <span th:case="'MATERIAL_DELETED'"> deleted material </span>
+                                <span th:case="'COMMENT_ADDED'"> commented on </span>
+                                <span th:case="'LIST_CREATED'"> created collection </span>
+                                <span th:case="'LIST_MADE_PUBLIC'"> shared collection </span>
+                            </span>
+                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED'}"
+                               th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
+                               class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Waltz Basics</a>
+                            <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
+                                  class="font-semibold" th:text="${event.targetName}">Waltz Basics</span>
+                        </p>
+                        <p class="font-label-sm text-label-sm text-outline mt-1"
+                           th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${events == null || events.isEmpty()}" class="text-center py-16">
+            <span class="material-symbols-outlined text-outline text-[48px] mb-4 block">history</span>
+            <p class="font-headline-md text-headline-md text-on-surface mb-2">No activity yet</p>
+            <p class="font-body-md text-body-md text-outline">Events will appear here as you create materials, add comments, and manage collections.</p>
+        </div>
+    </div>
+
+</section>
+</html>

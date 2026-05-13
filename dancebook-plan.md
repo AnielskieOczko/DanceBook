@@ -103,6 +103,24 @@ DanceCategory
 ├── id                UUID (PK)
 ├── name              VARCHAR(100)
 └── predefined        BOOLEAN
+
+AppUser
+├── id                UUID (PK)
+├── username          VARCHAR
+├── email             VARCHAR
+├── password          VARCHAR
+└── role              VARCHAR
+
+CustomList (Smart Collection)
+├── id                UUID (PK)
+├── name              VARCHAR(255)
+├── owner             ManyToOne → AppUser
+├── isPublic          BOOLEAN
+├── imageFilename     VARCHAR(255)
+├── nameFilter        VARCHAR
+├── minRating         SMALLINT
+├── danceTypes        ManyToMany → DanceType
+└── danceCategories   ManyToMany → DanceCategory
 ```
 
 ---
@@ -119,6 +137,12 @@ DanceCategory
 - Predefined seed data (Waltz, Tango, Cha Cha, etc.)
 - Editable — users can add/edit/delete types and categories
 - `predefined` flag distinguishes seeded vs user-created entries
+
+### Custom Collections (Smart Lists)
+- Users can create dynamic, rule-based collections (e.g. "My Favorite Waltzes")
+- Filters by `nameFilter`, `minRating`, `danceTypes`, and `danceCategories`
+- Collections can be marked as `isPublic`
+- Custom image support with a fallback to global system defaults
 
 ### Video Timestamp Slicing
 - Each material can have multiple `Figure` entries
@@ -557,13 +581,20 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [ ] External notifications integration via **Gmail API (OAuth2)**
 - [ ] User Profile settings to toggle notification preferences
 
-### Phase 10 — Premium UI Overhaul (Mobile-First) 🎨
-- [ ] Define modern Design System (Typography: Inter/Outfit, Sleek Color Palette)
-- [ ] Mobile-first responsive refactor of core layout and navigation
-- [ ] State-of-the-art component redesign (Glassmorphism, polished cards, native feel)
+### Phase 10 — Premium UI Overhaul (Mobile-First) 🎨 (In Progress) ⏳
+- [x] Define modern Design System (Typography: Inter/Outfit, Sleek Color Palette)
+- [x] Mobile-first responsive refactor of core layout and navigation
+- [x] State-of-the-art component redesign (Glassmorphism, polished cards, native feel)
 - [ ] UX polish and smooth transitions powered by **Stitch**
 
-### Phase 11 — AI-Powered Dance Intelligence 🤖
+### Phase 11 — Custom Collections & System Settings ✅
+- [x] `CustomList` entity for rule-based dynamic collections (Smart Lists)
+- [x] Image support for Custom Lists (upload or fallback to defaults)
+- [x] Admin System Settings to manage default images for Collections and Categories
+- [x] CSRF security hardening for administrative and category forms
+- [x] UI integration for viewing and managing custom collections
+
+### Phase 12 — AI-Powered Dance Intelligence 🤖
 - [ ] Integration of **Spring AI** with Neon's `pgvector` extension
 - [ ] **Semantic Search (RAG):** Natural language discovery (e.g. "Suggest a romantic slow dance")
 - [ ] **Automated Tagging:** AI-driven categorization and difficulty assessment of new uploads

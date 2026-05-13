@@ -114,6 +114,24 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // 7. Notification bell toggle
+    const bellBtn = event.target.closest('#notification-bell');
+    if (bellBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const dropdown = document.getElementById('notification-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+        return;
+    }
+
+    // Close notification dropdown when clicking outside
+    if (!event.target.closest('#notification-bell-wrapper')) {
+        const notifDropdown = document.getElementById('notification-dropdown');
+        if (notifDropdown) notifDropdown.classList.add('hidden');
+    }
+
     // 4. Close menus when clicking outside
     if (!event.target.closest('.js-menu-dropdown')) {
         document.querySelectorAll('.js-menu-dropdown').forEach(d => {

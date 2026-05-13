@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.repository.MaterialSpecification
 import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -17,12 +18,18 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
+
 @Service
 class MaterialServiceImpl(
     private val materialRepository: MaterialRepository,
     private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
-    private val googleDriveService: GoogleDriveService
+    private val googleDriveService: GoogleDriveService,
+    private val eventPublisher: ApplicationEventPublisher,
+    private val appUserService: AppUserService
 ) : MaterialService {
 
     companion object {
@@ -36,6 +43,7 @@ class MaterialServiceImpl(
         }
     }
 
+    @Transactional
     override fun create(request: MaterialRequest): Material {
         log.debug("Creating material {}", request)
         val material = Material()
@@ -51,7 +59,9 @@ class MaterialServiceImpl(
             material.danceType = request.danceTypeId?.let { danceTypeService.findById(it) }
         }
 
-        return materialRepository.save(material)
+        return materialRepository.save(material).also {
+            eventPublisher.publishEvent(MaterialCreatedEvent(it, appUserService.getCurrentUser()))
+        }
     }
 
     @Transactional
@@ -87,13 +97,18 @@ class MaterialServiceImpl(
             existing.danceType = request.danceTypeId?.let { danceTypeService.findById(it) }
         }
 
-        return materialRepository.save(existing)
+        return materialRepository.save(existing).also {
+            eventPublisher.publishEvent(MaterialUpdatedEvent(it, appUserService.getCurrentUser()))
+        }
     }
 
+    @Transactional
     override fun delete(id: UUID) {
         log.debug("Deleting material for id {}", id)
         val existing = findById(id)
         val driveFileId = existing.driveFileId
+        val materialName = existing.name
+        val currentUser = appUserService.getCurrentUser()
 
         materialRepository.delete(existing)
 
@@ -101,6 +116,8 @@ class MaterialServiceImpl(
             log.info("Material {} deleted. Physically deleting associated file {} from Google Drive.", id, driveFileId)
             googleDriveService.deleteFile(driveFileId)
         }
+
+        eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, currentUser))
     }
 
     override fun findAll(

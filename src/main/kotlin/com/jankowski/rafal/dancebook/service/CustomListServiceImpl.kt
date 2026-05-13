@@ -6,9 +6,12 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.CustomListRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import com.jankowski.rafal.dancebook.model.ListCreatedEvent
+import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
 
 @Service
 class CustomListServiceImpl(
@@ -16,7 +19,8 @@ class CustomListServiceImpl(
     private val appUserService: AppUserService,
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
-    private val fileStorageService: FileStorageService
+    private val fileStorageService: FileStorageService,
+    private val eventPublisher: ApplicationEventPublisher
 ) : CustomListService {
 
     companion object {
@@ -54,7 +58,9 @@ class CustomListServiceImpl(
         }
 
         applyRelations(list, request)
-        return customListRepository.save(list)
+        return customListRepository.save(list).also {
+            eventPublisher.publishEvent(ListCreatedEvent(it, currentUser))
+        }
     }
 
     @Transactional
@@ -65,6 +71,7 @@ class CustomListServiceImpl(
         checkOwnership(list, currentUser)
 
         log.debug("User '{}' updating list '{}'", currentUser.username, list.name)
+        val wasPublicBefore = list.isPublic
         list.name = request.name
         list.nameFilter = request.nameFilter?.takeIf { it.isNotBlank() }
         list.minRating = request.minRating
@@ -80,7 +87,11 @@ class CustomListServiceImpl(
         }
 
         applyRelations(list, request)
-        return customListRepository.save(list)
+        return customListRepository.save(list).also {
+            if (!wasPublicBefore && it.isPublic) {
+                eventPublisher.publishEvent(ListMadePublicEvent(it, currentUser))
+            }
+        }
     }
 
     @Transactional

@@ -2,17 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='home'" class="space-y-xl">
+<section th:with="activeNav='home'" class="flex flex-col gap-xl">
 
     <!-- Welcome Section -->
-    <section class="flex flex-col gap-sm">
+    <section class="flex flex-col gap-sm order-1">
         <h2 class="font-display-lg text-display-lg text-on-surface"
             th:text="${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}">Good morning, Elara.</h2>
         <p class="font-body-lg text-body-lg text-outline max-w-2xl">Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.</p>
     </section>
 
     <!-- Stats Grid (Bento Style) -->
-    <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter order-3 lg:order-2">
         <!-- Card 1: Materials -->
         <a href="/materials" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
@@ -56,36 +56,60 @@
     </section>
 
     <!-- Quick Actions & Timeline Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter order-2 lg:order-3">
         <!-- Timeline -->
-        <section class="lg:col-span-8 space-y-md">
+        <section class="order-2 lg:order-1 lg:col-span-8 space-y-md">
             <div class="flex items-center justify-between">
                 <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
-                <button class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</button>
+                <a href="/activity-history" class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</a>
             </div>
             <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
-                <div class="relative border-l border-surface-variant ml-4 space-y-10">
-                    <!-- Placeholder Items -->
-                    <div class="relative pl-8">
-                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary-container border-2 border-surface-container-lowest"></div>
+                <div th:if="${recentEvents != null && !recentEvents.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-10">
+                    <div th:each="event : ${recentEvents}" class="relative pl-8">
+                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
+                             th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container' :
+                                              event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error' :
+                                              event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' : 'bg-surface-variant'}"></div>
                         <div class="flex flex-col gap-1">
-                            <p class="font-body-md text-body-md text-on-surface font-medium">Platform Ready</p>
-                            <p class="font-body-md text-body-md text-outline text-sm">Design System Update • Just now</p>
+                            <p class="font-body-md text-body-md text-on-surface font-medium">
+                                <span th:text="${event.actor.displayName}">User</span>
+                                <span th:switch="${event.eventType.name()}">
+                                    <span th:case="'MATERIAL_CREATED'"> created </span>
+                                    <span th:case="'MATERIAL_UPDATED'"> updated </span>
+                                    <span th:case="'MATERIAL_DELETED'"> deleted </span>
+                                    <span th:case="'COMMENT_ADDED'"> commented on </span>
+                                    <span th:case="'LIST_CREATED'"> created collection </span>
+                                    <span th:case="'LIST_MADE_PUBLIC'"> shared </span>
+                                </span>
+                                <a th:if="${event.eventType.name() != 'MATERIAL_DELETED'}"
+                                   th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
+                                   class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Entity Name</a>
+                                <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
+                                      class="font-semibold" th:text="${event.targetName}">Entity Name</span>
+                            </p>
+                            <p class="font-body-md text-body-md text-outline text-sm">
+                                <span th:switch="${event.eventType.name()}">
+                                    <span th:case="'MATERIAL_CREATED'">📹 New Material</span>
+                                    <span th:case="'MATERIAL_UPDATED'">✏️ Material Edit</span>
+                                    <span th:case="'MATERIAL_DELETED'">🗑️ Material Removed</span>
+                                    <span th:case="'COMMENT_ADDED'">💬 Comment</span>
+                                    <span th:case="'LIST_CREATED'">📂 New Collection</span>
+                                    <span th:case="'LIST_MADE_PUBLIC'">🌐 Shared Publicly</span>
+                                </span>
+                                <span> • </span>
+                                <span th:text="${#temporals.format(event.createdAt, 'MMM d, HH:mm')}">May 13, 14:30</span>
+                            </p>
                         </div>
                     </div>
-                    <div class="relative pl-8">
-                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-surface-variant border-2 border-surface-container-lowest"></div>
-                        <div class="flex flex-col gap-1">
-                            <p class="font-body-md text-body-md text-on-surface font-medium">Library Sync Complete</p>
-                            <p class="font-body-md text-body-md text-outline text-sm">Storage Management • 1 hour ago</p>
-                        </div>
-                    </div>
+                </div>
+                <div th:if="${recentEvents == null || recentEvents.isEmpty()}" class="text-center py-8">
+                    <p class="font-body-md text-body-md text-outline">No activity yet. Start by creating your first material!</p>
                 </div>
             </div>
         </section>
 
         <!-- Workspace Quick Actions -->
-        <section class="lg:col-span-4 space-y-md">
+        <section class="order-1 lg:order-2 lg:col-span-4 space-y-md">
             <h3 class="font-headline-md text-headline-md text-on-surface">Workspace</h3>
             <div class="bg-surface-container-low rounded-xl p-md space-y-4">
                 <a href="/materials/new" class="w-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-body-md font-medium py-3 px-6 rounded-lg hover:opacity-90 transition-opacity">

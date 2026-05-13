@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import jakarta.servlet.http.HttpServletRequest
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute
 @ControllerAdvice
 class NavbarAdvice(
     private val customListService: CustomListService,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val activityEventService: ActivityEventService
 ) {
 
     @ModelAttribute("navLists")
@@ -28,6 +30,14 @@ class NavbarAdvice(
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
         if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return null
         return appUserService.getCurrentUser()
+    }
+
+    @ModelAttribute("unreadNotificationCount")
+    fun unreadNotificationCount(): Long {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return 0
+        val user = appUserService.getCurrentUser()
+        return activityEventService.getUnreadCount(user.id!!)
     }
 
     @ModelAttribute("activeNav")
@@ -45,3 +55,4 @@ class NavbarAdvice(
         }
     }
 }
+
