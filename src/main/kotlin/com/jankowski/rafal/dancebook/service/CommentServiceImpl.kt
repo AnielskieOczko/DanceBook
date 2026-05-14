@@ -8,16 +8,19 @@ import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.security.access.AccessDeniedException
+import com.jankowski.rafal.dancebook.model.CommentAddedEvent
 
 @Service
 @Transactional
 class CommentServiceImpl(
     private val commentRepository: CommentRepository,
     private val materialRepository: MaterialRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ): CommentService {
 
     companion object {
@@ -38,7 +41,9 @@ class CommentServiceImpl(
             this.author = author
             this.material = material
         }
-        return commentRepository.save(comment)
+        return commentRepository.save(comment).also {
+            eventPublisher.publishEvent(CommentAddedEvent(it, material, author))
+        }
     }
 
     @Transactional

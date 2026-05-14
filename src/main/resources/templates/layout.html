@@ -23,7 +23,9 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script th:src="@{/js/main.js}"></script>
 </head>
-<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0">
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0"
+      th:data-poll-interval="${pollInterval != null ? pollInterval : 5}"
+      th:data-logout-interval="${autoLogout != null ? autoLogout : 10}">
 
 <!-- ═══════════════════════════════════════════════
      TOP APP BAR (Sticky)
@@ -47,11 +49,35 @@
                th:classappend="${activeNav == 'profile' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Profile</a>
         </nav>
 
-        <!-- Trailing Avatar/Profile -->
+        <!-- Trailing Icons -->
         <div class="flex items-center gap-4">
             <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden md:flex items-center text-outline hover:text-on-surface transition-colors" title="Admin Dashboard">
                 <span class="material-symbols-outlined">settings</span>
             </a>
+
+            <!-- Notification Bell -->
+            <div class="relative" id="notification-bell-wrapper">
+                <button id="notification-bell"
+                        class="relative flex items-center text-outline hover:text-on-surface transition-colors"
+                        hx-get="/notifications"
+                        hx-target="#notification-dropdown"
+                        hx-swap="innerHTML"
+                        title="Notifications">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <!-- Badge (HTMX polling) -->
+                    <span id="notification-badge"
+                          hx-get="/notifications/count"
+                          hx-trigger="load, poll-notifications from:body"
+                          hx-swap="innerHTML">
+                        <span th:if="${unreadNotificationCount != null && unreadNotificationCount > 0}"
+                              class="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-error text-on-error text-[10px] font-bold rounded-full px-1"
+                              th:text="${unreadNotificationCount}">3</span>
+                    </span>
+                </button>
+                <!-- Dropdown Panel (filled by HTMX) -->
+                <div id="notification-dropdown" class="hidden absolute right-0 top-full mt-2 w-80 md:w-96 z-50"></div>
+            </div>
+
             <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:shadow-ambient transition-shadow">
                 <a href="/profile">
                     <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">

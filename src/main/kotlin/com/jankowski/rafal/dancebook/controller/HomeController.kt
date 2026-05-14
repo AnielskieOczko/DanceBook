@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller
 import com.jankowski.rafal.dancebook.repository.CommentRepository
 import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
+import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import org.springframework.security.core.context.SecurityContextHolder
@@ -16,7 +17,8 @@ class HomeController(
     private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
     private val commentRepository: CommentRepository,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val activityEventService: ActivityEventService
 ) {
 
     @GetMapping("/")
@@ -32,6 +34,9 @@ class HomeController(
             val user = appUserService.getCurrentUser()
             model.addAttribute("displayName", user.displayName ?: user.username)
         }
+
+        // Recent activity events for timeline
+        model.addAttribute("recentEvents", activityEventService.getRecentEvents(10))
 
         return "index"
     }

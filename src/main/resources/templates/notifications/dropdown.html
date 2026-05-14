@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Notification Dropdown Panel (HTMX Fragment) -->
+<div th:fragment="notificationPanel"
+     class="bg-surface-container-lowest border border-surface-variant rounded-xl shadow-lg overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-surface-variant">
+        <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Notifications</h4>
+        <button th:if="${unreadCount > 0}"
+                class="font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors"
+                hx-post="/notifications/mark-read"
+                hx-target="#notification-badge"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('notification-dropdown').classList.add('hidden')">
+            Mark all read
+        </button>
+    </div>
+
+    <!-- Events List -->
+    <div class="max-h-80 overflow-y-auto">
+        <div th:if="${unreadEvents != null && !unreadEvents.isEmpty()}">
+            <div th:each="event : ${unreadEvents}"
+                 class="flex items-start gap-3 px-4 py-3 hover:bg-surface-container-low transition-colors border-b border-surface-variant last:border-0">
+                <!-- Event Icon -->
+                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container text-on-primary-container' :
+                                      event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error-container text-on-error-container' :
+                                      event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-variant text-on-surface-variant'}">
+                    <span class="material-symbols-outlined text-[16px]"
+                          th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
+                                    event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
+                                    event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
+                                    event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
+                                    event.eventType.name() == 'LIST_CREATED' ? 'layers' : 'public'}">add_circle</span>
+                </div>
+                <!-- Event Content -->
+                <div class="flex-1 min-w-0">
+                    <p class="font-body-md text-body-md text-on-surface leading-tight">
+                        <span class="font-medium" th:text="${event.actor.displayName}">User</span>
+                        <span th:switch="${event.eventType.name()}">
+                            <span th:case="'MATERIAL_CREATED'"> created </span>
+                            <span th:case="'MATERIAL_UPDATED'"> updated </span>
+                            <span th:case="'MATERIAL_DELETED'"> deleted </span>
+                            <span th:case="'COMMENT_ADDED'"> commented on </span>
+                            <span th:case="'LIST_CREATED'"> created </span>
+                            <span th:case="'LIST_MADE_PUBLIC'"> shared </span>
+                        </span>
+                        <a th:if="${event.eventType.name() != 'MATERIAL_DELETED'}"
+                           th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
+                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
+                        <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
+                              class="font-semibold truncate" th:text="${event.targetName}">Waltz Basics</span>
+                    </p>
+                    <p class="font-label-sm text-label-sm text-outline mt-0.5"
+                       th:text="${#temporals.format(event.createdAt, 'MMM d, HH:mm')}">May 13, 14:30</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${unreadEvents == null || unreadEvents.isEmpty()}" class="px-4 py-8 text-center">
+            <span class="material-symbols-outlined text-outline text-[32px] mb-2">notifications_off</span>
+            <p class="font-body-md text-body-md text-outline">You're all caught up!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-4 py-3 border-t border-surface-variant bg-surface-container-low">
+        <a href="/activity-history"
+           class="font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors uppercase tracking-wider block text-center">
+            View all activity
+        </a>
+    </div>
+</div>
+
+</html>

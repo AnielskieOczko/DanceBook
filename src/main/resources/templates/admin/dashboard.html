@@ -31,6 +31,102 @@
         </div>
     </div>
 
+    <!-- Flash Messages for Settings -->
+    <div th:if="${settingsSuccess != null}" class="mb-8 p-4 rounded-button bg-success-soft border border-success/30">
+        <p class="text-sm font-medium text-success" th:text="${settingsSuccess}">Success</p>
+    </div>
+    <div th:if="${settingsError != null}" class="mb-8 p-4 rounded-button bg-danger-soft border border-danger/30">
+        <p class="text-sm font-medium text-danger" th:text="${settingsError}">Error</p>
+    </div>
+
+    <!-- Application Configuration -->
+    <div class="card mb-8 overflow-hidden" th:fragment="systemSettingsSection" id="systemSettingsSection">
+        <div class="px-6 py-4 border-b border-border bg-surface-warm">
+            <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Application Configuration
+            </h2>
+            <div class="flex items-center gap-2 mt-1">
+                <p class="text-sm text-text-secondary">Configure global application behaviors and timeouts.</p>
+                <div class="relative inline-block">
+                    <button type="button" class="js-menu-btn text-text-secondary hover:text-primary transition-colors focus:outline-none flex items-center" title="How this works">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    </button>
+                    <div class="js-menu-dropdown hidden absolute left-0 top-full mt-2 w-64 p-3 bg-surface-warm border border-border rounded-button shadow-lg z-50 text-xs text-text-secondary leading-relaxed">
+                        <strong class="text-text-primary block mb-1 font-medium">How changes apply:</strong>
+                        To test changes immediately in your current browser tab, you must refresh the page after saving. Otherwise, the new values apply on your next page load.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${systemSettingsSuccess != null}" class="px-6 pt-4 pb-2">
+            <div class="p-3 text-sm text-success bg-success-soft rounded-button font-medium border border-success/30" th:text="${systemSettingsSuccess}">Success</div>
+        </div>
+        <div th:if="${systemSettingsError != null}" class="px-6 pt-4 pb-2">
+            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium border border-danger/30" th:text="${systemSettingsError}">Error</div>
+        </div>
+
+        <div class="p-6">
+            <form hx-post="/admin/settings/system" hx-target="#systemSettingsSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="form-label text-sm font-semibold">Notification Polling Interval (minutes)</label>
+                    <input type="number" name="pollInterval" min="1" max="60" required class="form-input mt-1" th:value="${pollInterval}">
+                    <p class="text-xs text-text-secondary mt-2">How often the browser checks for new notifications while the tab is active.</p>
+                </div>
+                <div>
+                    <label class="form-label text-sm font-semibold">Auto-Logout Inactivity (minutes)</label>
+                    <input type="number" name="autoLogout" min="1" max="120" required class="form-input mt-1" th:value="${autoLogout}">
+                    <p class="text-xs text-text-secondary mt-2">How long a user can be inactive before being automatically logged out.</p>
+                </div>
+                <div class="md:col-span-2 flex justify-end pt-2 border-t border-border">
+                    <button type="submit" class="btn-primary">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- System Settings -->
+    <div class="card p-6 mb-8">
+        <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            System Settings & Defaults
+        </h2>
+        <p class="text-sm text-text-secondary mb-6">
+            Configure global default images used throughout the application when specific images are not provided.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Default Collection Image -->
+            <div class="border border-border rounded-button p-4 bg-surface-warm">
+                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Collection Image</h3>
+                <div class="flex items-start gap-4">
+                    <div class="w-24 h-24 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
+                        <img th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default List" class="w-full h-full object-cover">
+                    </div>
+                    <form th:action="@{/admin/settings/default-list-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
+                        <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
+                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Default Category Image -->
+            <div class="border border-border rounded-button p-4 bg-surface-warm">
+                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Category Image</h3>
+                <div class="flex items-start gap-4">
+                    <div class="w-24 h-16 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
+                        <img th:src="@{/uploads/defaults/category-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Category" class="w-full h-full object-cover">
+                    </div>
+                    <form th:action="@{/admin/settings/default-category-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
+                        <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
+                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Storage Maintenance -->
     <div class="card p-6 mb-8">
         <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">

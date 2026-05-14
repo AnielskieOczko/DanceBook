@@ -41,6 +41,26 @@ class FileStorageService(
         return newFilename
     }
 
+    fun storeFileWithFilename(file: MultipartFile, subDirectory: String, filename: String) {
+        if (file.isEmpty) {
+            throw IllegalArgumentException("Failed to store empty file.")
+        }
+
+        val targetLocation = Paths.get(uploadDir, subDirectory).toAbsolutePath().normalize()
+        
+        if (!Files.exists(targetLocation)) {
+            Files.createDirectories(targetLocation)
+        }
+
+        val destinationFile = targetLocation.resolve(filename)
+        
+        if (!destinationFile.parent.equals(targetLocation)) {
+            throw SecurityException("Cannot store file outside current directory.")
+        }
+
+        Files.copy(file.inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING)
+    }
+
     fun deleteFile(filename: String, subDirectory: String) {
         val targetLocation = Paths.get(uploadDir, subDirectory).toAbsolutePath().normalize()
         val fileToDelete = targetLocation.resolve(filename)

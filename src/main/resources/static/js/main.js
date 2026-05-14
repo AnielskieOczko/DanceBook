@@ -96,10 +96,136 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // 5. Delete list modal open
+    const openDeleteModalBtn = event.target.closest('.js-open-delete-modal');
+    if (openDeleteModalBtn) {
+        event.preventDefault();
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) modal.style.display = 'flex';
+        return;
+    }
+
+    // 6. Delete list modal close
+    const closeDeleteModalBtn = event.target.closest('.js-close-delete-modal');
+    if (closeDeleteModalBtn) {
+        event.preventDefault();
+        const modal = document.getElementById('deleteConfirmModal');
+        if (modal) modal.style.display = 'none';
+        return;
+    }
+
+    // 7. Notification bell toggle
+    const bellBtn = event.target.closest('#notification-bell');
+    if (bellBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const dropdown = document.getElementById('notification-dropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('hidden');
+        }
+        return;
+    }
+
+    // Close notification dropdown when clicking outside
+    if (!event.target.closest('#notification-bell-wrapper')) {
+        const notifDropdown = document.getElementById('notification-dropdown');
+        if (notifDropdown) notifDropdown.classList.add('hidden');
+    }
+
     // 4. Close menus when clicking outside
     if (!event.target.closest('.js-menu-dropdown')) {
         document.querySelectorAll('.js-menu-dropdown').forEach(d => {
             d.classList.add('hidden');
         });
     }
+});
+
+/**
+ * AppManager: Handles background tasks like polling and auto-logout.
+ */
+const AppManager = (function() {
+    let lastActivityTime = Date.now();
+    let lastPollTime = Date.now();
+    
+    // Constants (read from body data attributes, with fallbacks)
+    let pollIntervalMs = 5 * 60 * 1000;
+    let inactivityLogoutMs = 10 * 60 * 1000;
+    const CHECK_INTERVAL_MS = 60 * 1000; // 1 minute
+    
+    function loadConfig() {
+        if (document.body.dataset.pollInterval) {
+            pollIntervalMs = parseInt(document.body.dataset.pollInterval) * 60 * 1000;
+        }
+        if (document.body.dataset.logoutInterval) {
+            inactivityLogoutMs = parseInt(document.body.dataset.logoutInterval) * 60 * 1000;
+        }
+    }
+    
+    // Update activity timer
+    function updateActivity() {
+        lastActivityTime = Date.now();
+    }
+    
+    function performChecks() {
+        const now = Date.now();
+        
+        // 1. Auto-Logout Check
+        if (now - lastActivityTime > inactivityLogoutMs) {
+            console.log("Inactivity limit reached. Logging out...");
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/logout';
+            
+            // Add CSRF token
+            const tokenMeta = document.querySelector('meta[name="_csrf"]');
+            if (tokenMeta) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_csrf';
+                input.value = tokenMeta.content;
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            return; // Stop checking
+        }
+        
+        // 2. Notification Polling Check
+        if (now - lastPollTime >= pollIntervalMs) {
+            if (!document.hidden) {
+                lastPollTime = now;
+                document.body.dispatchEvent(new Event('poll-notifications'));
+            }
+        }
+    }
+    
+    function init() {
+        loadConfig();
+        // Listen for activity
+        ['mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+            document.addEventListener(evt, updateActivity, { passive: true });
+        });
+        
+        // Listen for tab visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // If tab becomes visible, check if we missed a poll
+                if (Date.now() - lastPollTime >= pollIntervalMs) {
+                    lastPollTime = Date.now();
+                    document.body.dispatchEvent(new Event('poll-notifications'));
+                }
+            }
+        });
+        
+        // Start background checks
+        setInterval(performChecks, CHECK_INTERVAL_MS);
+    }
+    
+    return { init };
+})();
+
+// Initialize AppManager
+document.addEventListener('DOMContentLoaded', () => {
+    AppManager.init();
 });

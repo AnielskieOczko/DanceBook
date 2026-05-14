@@ -6,16 +6,21 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.CustomListRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import com.jankowski.rafal.dancebook.model.ListCreatedEvent
+import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
 
 @Service
 class CustomListServiceImpl(
     private val customListRepository: CustomListRepository,
     private val appUserService: AppUserService,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val fileStorageService: FileStorageService,
+    private val eventPublisher: ApplicationEventPublisher
 ) : CustomListService {
 
     companion object {
@@ -46,8 +51,16 @@ class CustomListServiceImpl(
             isPublic = request.isPublic
         }
 
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                list.imageFilename = fileStorageService.storeFile(file, "lists")
+            }
+        }
+
         applyRelations(list, request)
-        return customListRepository.save(list)
+        return customListRepository.save(list).also {
+            eventPublisher.publishEvent(ListCreatedEvent(it, currentUser))
+        }
     }
 
     @Transactional
@@ -58,13 +71,27 @@ class CustomListServiceImpl(
         checkOwnership(list, currentUser)
 
         log.debug("User '{}' updating list '{}'", currentUser.username, list.name)
+        val wasPublicBefore = list.isPublic
         list.name = request.name
         list.nameFilter = request.nameFilter?.takeIf { it.isNotBlank() }
         list.minRating = request.minRating
         list.isPublic = request.isPublic
 
+        request.image?.let { file ->
+            if (!file.isEmpty) {
+                list.imageFilename?.let { oldFilename ->
+                    fileStorageService.deleteFile(oldFilename, "lists")
+                }
+                list.imageFilename = fileStorageService.storeFile(file, "lists")
+            }
+        }
+
         applyRelations(list, request)
-        return customListRepository.save(list)
+        return customListRepository.save(list).also {
+            if (!wasPublicBefore && it.isPublic) {
+                eventPublisher.publishEvent(ListMadePublicEvent(it, currentUser))
+            }
+        }
     }
 
     @Transactional
@@ -75,6 +102,9 @@ class CustomListServiceImpl(
         checkOwnership(list, currentUser)
 
         log.debug("User '{}' deleting list '{}'", currentUser.username, list.name)
+        list.imageFilename?.let { filename ->
+            fileStorageService.deleteFile(filename, "lists")
+        }
         customListRepository.delete(list)
     }
 
