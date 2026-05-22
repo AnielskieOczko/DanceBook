@@ -7,7 +7,8 @@ import java.util.UUID
 
 interface DanceFigureService {
     fun findAll(
-        danceTypeId: UUID? = null,
+        typeIds: List<UUID>? = null,
+        categoryIds: List<UUID>? = null,
         danceClass: DanceClass? = null,
         nameSearch: String? = null,
         sortBy: String? = null

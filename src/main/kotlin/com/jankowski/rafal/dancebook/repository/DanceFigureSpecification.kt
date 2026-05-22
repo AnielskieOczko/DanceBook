@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.repository
 
+import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
@@ -10,15 +11,20 @@ import java.util.UUID
 object DanceFigureSpecification {
 
     fun withFilters(
-        danceTypeId: UUID? = null,
+        typeIds: List<UUID>? = null,
+        categoryIds: List<UUID>? = null,
         danceClass: DanceClass? = null,
         nameSearch: String? = null
     ): Specification<DanceFigure> {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>()
 
-            danceTypeId?.let {
-                predicates.add(cb.equal(root.get<DanceType>("danceType").get<UUID>("id"), it))
+            if (!typeIds.isNullOrEmpty()) {
+                predicates.add(root.get<DanceType>("danceType").get<UUID>("id").`in`(typeIds))
+            }
+
+            if (!categoryIds.isNullOrEmpty()) {
+                predicates.add(root.get<DanceType>("danceType").get<DanceCategory>("category").get<UUID>("id").`in`(categoryIds))
             }
 
             danceClass?.let {

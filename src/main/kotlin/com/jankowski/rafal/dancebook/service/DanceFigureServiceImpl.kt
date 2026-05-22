@@ -29,13 +29,19 @@ class DanceFigureServiceImpl(
     }
 
     override fun findAll(
-        danceTypeId: UUID?,
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
         danceClass: DanceClass?,
         nameSearch: String?,
         sortBy: String?
     ): List<DanceFigure> {
-        log.debug("Retrieving dance figures with filters: danceTypeId={}, danceClass={}, nameSearch={}, sortBy={}", danceTypeId, danceClass, nameSearch, sortBy)
-        val spec = DanceFigureSpecification.withFilters(danceTypeId, danceClass, nameSearch)
+        log.debug("Retrieving dance figures with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}", typeIds, categoryIds, danceClass, nameSearch, sortBy)
+        val spec = DanceFigureSpecification.withFilters(
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            danceClass = danceClass,
+            nameSearch = nameSearch
+        )
 
         val sort = when (sortBy) {
             "name_asc" -> Sort.by(Sort.Direction.ASC, "name")

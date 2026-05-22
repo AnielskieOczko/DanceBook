@@ -6,7 +6,7 @@
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
-        <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
+        <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 group">
@@ -27,7 +27,7 @@
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
-                               th:checked="${currentView == 'grid'}"
+                               th:checked="${currentView == 'grid' || currentView == null}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">grid_view</span>
@@ -44,26 +44,80 @@
                 </div>
             </div>
 
-            <!-- Bottom Row: Collapsible Categories -->
-            <div id="categoryFiltersContainer" class="flex overflow-x-auto gap-sm scrollbar-hide py-2 -my-2 transition-all duration-300 max-h-[500px] opacity-100 mt-4">
-                <!-- All Materials Pill -->
-                <label class="cursor-pointer">
-                    <input type="radio" name="categoryIds" value="" class="hidden peer"
-                           th:checked="${selectedCategoryIds == null || #lists.isEmpty(selectedCategoryIds)}"
-                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high">
-                        All Materials
-                    </span>
-                </label>
+            <!-- Bottom Row: Collapsible Filters Container -->
+            <div id="categoryFiltersContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
+                <!-- Column 1: Categories -->
+                <div class="flex flex-col gap-4 mt-4">
+                    <!-- Categories -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Categories</span>
+                        <div class="flex flex-wrap gap-2">
+                            <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                                <input type="checkbox" name="categoryIds" th:value="${c.id}" class="js-category-checkbox hidden peer"
+                                       th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                                       th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span th:text="${c.name}">Category</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Category Pills -->
-                <label th:each="c : ${danceCategories}" class="cursor-pointer">
-                    <input type="radio" name="categoryIds" th:value="${c.id}" class="hidden peer"
-                           th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
-                           th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                    <span class="px-4 py-2 rounded-full whitespace-nowrap text-label-sm font-label-sm transition-all peer-checked:bg-primary-fixed peer-checked:text-on-primary-fixed bg-surface-container text-on-surface hover:bg-surface-container-high"
-                          th:text="${c.name}">Category</span>
-                </label>
+                <!-- Column 2: Styles (Dance Types) & Rating -->
+                <div class="flex flex-col gap-4 mt-4 md:col-span-1">
+                    <!-- Dance Styles -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dance Styles</span>
+                        <div class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin">
+                            <label th:each="t : ${danceTypes}" 
+                                   th:data-category-id="${t.category != null ? t.category.id : ''}"
+                                   class="js-style-pill cursor-pointer transition-all duration-300">
+                                <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
+                                       th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
+                                       th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span th:text="${t.name}">Style</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="flex flex-col gap-1">
+                        <label for="filterRating" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Minimum Rating</label>
+                        <select name="minRating" id="filterRating" 
+                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                            <option value="" th:selected="${selectedMinRating == null}">Any Rating</option>
+                            <option value="5" th:selected="${selectedMinRating == 5}">★★★★★ (5 Stars)</option>
+                            <option value="4" th:selected="${selectedMinRating == 4}">★★★★☆ (4+ Stars)</option>
+                            <option value="3" th:selected="${selectedMinRating == 3}">★★★☆☆ (3+ Stars)</option>
+                            <option value="2" th:selected="${selectedMinRating == 2}">★★☆☆☆ (2+ Stars)</option>
+                            <option value="1" th:selected="${selectedMinRating == 1}">★☆☆☆☆ (1+ Star)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Column 3: Sorting -->
+                <div class="flex flex-col gap-1 mt-4">
+                    <label for="filterSort" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
+                    <select name="sort" id="filterSort" 
+                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <option value="createdAt,desc" th:selected="${currentSort == 'createdAt,desc'}">Newest First</option>
+                        <option value="createdAt,asc" th:selected="${currentSort == 'createdAt,asc'}">Oldest First</option>
+                        <option value="name,asc" th:selected="${currentSort == 'name,asc'}">Name (A-Z)</option>
+                        <option value="name,desc" th:selected="${currentSort == 'name,desc'}">Name (Z-A)</option>
+                        <option value="rating,desc" th:selected="${currentSort == 'rating,desc'}">Rating (High to Low)</option>
+                        <option value="rating,asc" th:selected="${currentSort == 'rating,asc'}">Rating (Low to High)</option>
+                        <option value="danceType.name,asc" th:selected="${currentSort == 'danceType.name,asc'}">Style (A-Z)</option>
+                        <option value="danceType.name,desc" th:selected="${currentSort == 'danceType.name,desc'}">Style (Z-A)</option>
+                        <option value="updatedAt,desc" th:selected="${currentSort == 'updatedAt,desc'}">Recently Updated</option>
+                    </select>
+                </div>
             </div>
         </form>
     </section>
@@ -126,6 +180,10 @@
                                 <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
                                 <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">calendar_today</span> <span th:text="${#temporals.format(m.createdAt, 'dd MMM yyyy')}">Date</span></span>
                                 <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
+                                <span th:if="${m.rating != null}" class="flex items-center gap-0.5 text-label-sm text-amber-500 font-semibold whitespace-nowrap shrink-0">
+                                    <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;">star</span>
+                                    <span th:text="${m.rating}">5</span>
+                                </span>
                             </div>
                         </div>
                         <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
@@ -159,6 +217,10 @@
                     <div class="flex items-center gap-3 text-on-surface-variant">
                         <span th:text="${m.danceType != null ? m.danceType.name : 'Uncategorized'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 pointer-events-auto border border-primary-container/30">Style</span>
                         <span class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schema</span> <span th:text="${#lists.size(m.figures)}">0</span></span>
+                        <span th:if="${m.rating != null}" class="flex items-center gap-0.5 text-label-sm text-amber-500 font-semibold shrink-0">
+                            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;">star</span>
+                            <span th:text="${m.rating}">5</span>
+                        </span>
                     </div>
                 </div>
 

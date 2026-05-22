@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import jakarta.validation.Valid
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,12 +22,14 @@ import java.util.UUID
 @RequestMapping("/dance-figures")
 class DanceFigureWebController(
     private val danceFigureService: DanceFigureService,
-    private val danceTypeService: DanceTypeService
+    private val danceTypeService: DanceTypeService,
+    private val danceCategoryService: DanceCategoryService
 ) {
 
     @GetMapping
     fun listDanceFigures(
-        @RequestParam(required = false) danceTypeId: UUID? = null,
+        @RequestParam(required = false) typeIds: List<UUID>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
         @RequestParam(required = false) danceClass: DanceClass? = null,
         @RequestParam(required = false) nameSearch: String? = null,
         @RequestParam(required = false) sortBy: String? = null,
@@ -35,16 +38,21 @@ class DanceFigureWebController(
         model: Model
     ): String {
         val figures = danceFigureService.findAll(
-            danceTypeId = danceTypeId,
+            typeIds = typeIds,
+            categoryIds = categoryIds,
             danceClass = danceClass,
             nameSearch = nameSearch,
             sortBy = sortBy
         )
 
         model.addAttribute("figures", figures)
-        model.addAttribute("danceTypes", danceTypeService.findAll())
-        model.addAttribute("danceClasses", DanceClass.values())
-        model.addAttribute("selectedDanceTypeId", danceTypeId)
+        if (isHtmxRequest != true) {
+            model.addAttribute("danceTypes", danceTypeService.findAll())
+            model.addAttribute("danceCategories", danceCategoryService.findAll())
+            model.addAttribute("danceClasses", DanceClass.values())
+        }
+        model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
+        model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
         model.addAttribute("selectedDanceClass", danceClass)
         model.addAttribute("selectedNameSearch", nameSearch)
         model.addAttribute("selectedSortBy", sortBy)

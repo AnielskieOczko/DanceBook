@@ -18,7 +18,7 @@
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
-        <form id="filterForm" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
+        <form id="filterForm" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 group">
@@ -39,7 +39,7 @@
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
-                               th:checked="${currentView == 'grid'}"
+                               th:checked="${currentView == 'grid' || currentView == null}"
                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">grid_view</span>
@@ -57,38 +57,65 @@
             </div>
 
             <!-- Bottom Row: Collapsible Filters Container -->
-            <div id="categoryFiltersContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-4 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
-                <!-- Dance Style filter -->
-                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
-                    <label for="filterDanceType" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dance Style</label>
-                    <select name="danceTypeId" id="filterDanceType" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
-                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="">All Dance Styles</option>
-                        <option th:each="dt : ${danceTypes}" th:value="${dt.id}" th:text="${dt.name}" th:selected="${dt.id == selectedDanceTypeId}">
-                            Dance Name
-                        </option>
-                    </select>
+            <div id="categoryFiltersContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
+                <!-- Column 1: Categories -->
+                <div class="flex flex-col gap-4 mt-4">
+                    <!-- Categories -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Categories</span>
+                        <div class="flex flex-wrap gap-2">
+                            <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                                <input type="checkbox" name="categoryIds" th:value="${c.id}" class="js-category-checkbox hidden peer"
+                                       th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
+                                       th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span th:text="${c.name}">Category</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Dancer Class filter -->
-                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
-                    <label for="filterDanceClass" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dancer Class</label>
-                    <select name="danceClass" id="filterDanceClass" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
-                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="">All Classes</option>
-                        <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${dc}" th:selected="${dc == selectedDanceClass}">
-                            H
-                        </option>
-                    </select>
+                <!-- Column 2: Styles (Dance Types) & Class -->
+                <div class="flex flex-col gap-4 mt-4 md:col-span-1">
+                    <!-- Dance Styles -->
+                    <div class="flex flex-col gap-2">
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dance Styles</span>
+                        <div class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin">
+                            <label th:each="t : ${danceTypes}" 
+                                   th:data-category-id="${t.category != null ? t.category.id : ''}"
+                                   class="js-style-pill cursor-pointer transition-all duration-300">
+                                <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
+                                       th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
+                                       th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span th:text="${t.name}">Style</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Dancer Class filter -->
+                    <div class="flex flex-col gap-1">
+                        <label for="filterDanceClass" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dancer Class</label>
+                        <select name="danceClass" id="filterDanceClass" 
+                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                            <option value="">All Classes</option>
+                            <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${dc}" th:selected="${dc == selectedDanceClass}">
+                                H
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Sort By option -->
-                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
+                <!-- Column 3: Sorting -->
+                <div class="flex flex-col gap-1 mt-4">
                     <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
                     <select name="sortBy" id="filterSortBy" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
                             th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}">Default (Style &amp; Name)</option>
                         <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}">Name (A-Z)</option>
@@ -112,7 +139,7 @@
             </div>
             <h3 class="empty-state-title">No figures found</h3>
             <p class="empty-state-text">No figures match the selected filters or the database is empty.</p>
-            <a th:href="@{/dance-figures/new(danceTypeId=${selectedDanceTypeId})}" class="btn-primary">Add figure</a>
+            <a href="/dance-figures/new" class="btn-primary">Add figure</a>
         </div>
 
         <!-- 1. Grid (Cards) View -->

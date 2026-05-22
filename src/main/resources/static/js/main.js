@@ -342,7 +342,59 @@ const AppManager = (function() {
     return { init };
 })();
 
-// Initialize AppManager
+/**
+ * Dynamically hides and disables dance style checkboxes that do not match the selected category filters.
+ */
+function updateStyleFilters() {
+    const categoryCheckboxes = document.querySelectorAll('.js-category-checkbox');
+    if (!categoryCheckboxes.length) return; // Not on the materials page
+
+    const checkedCategories = Array.from(categoryCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const stylePills = document.querySelectorAll('.js-style-pill');
+    
+    stylePills.forEach(pill => {
+        const categoryId = pill.getAttribute('data-category-id');
+        const checkbox = pill.querySelector('.js-style-checkbox');
+        
+        if (checkedCategories.length === 0) {
+            // No category filters selected -> show all styles
+            pill.classList.remove('hidden');
+            if (checkbox) {
+                checkbox.removeAttribute('disabled');
+            }
+        } else {
+            // Category filters selected -> check if this style's category matches any checked category
+            if (checkedCategories.includes(categoryId)) {
+                pill.classList.remove('hidden');
+                if (checkbox) {
+                    checkbox.removeAttribute('disabled');
+                }
+            } else {
+                // Irrelevant category -> hide, disable, and uncheck
+                pill.classList.add('hidden');
+                if (checkbox) {
+                    checkbox.setAttribute('disabled', 'true');
+                    if (checkbox.checked) {
+                        checkbox.checked = false;
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Initialize AppManager and filters on page load
 document.addEventListener('DOMContentLoaded', () => {
     AppManager.init();
+    updateStyleFilters();
 });
+
+// Capturing listener to update styles before HTMX/other event handlers run
+document.addEventListener('change', function(event) {
+    if (event.target.classList.contains('js-category-checkbox')) {
+        updateStyleFilters();
+    }
+}, true);
