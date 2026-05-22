@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
+import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialSpecification
 import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
@@ -21,12 +22,16 @@ import java.util.UUID
 import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
 
 @Service
 class MaterialServiceImpl(
     private val materialRepository: MaterialRepository,
     private val figureRepository: FigureRepository,
     private val danceTypeService: DanceTypeService,
+    private val danceFigureRepository: DanceFigureRepository,
     private val googleDriveService: GoogleDriveService,
     private val eventPublisher: ApplicationEventPublisher,
     private val appUserService: AppUserService
@@ -134,16 +139,39 @@ class MaterialServiceImpl(
 
     @Transactional
     override fun addFigure(materialId: UUID, request: FigureRequest): Figure {
-        log.debug("Adding figure '{}' to material {}", request.name, materialId)
+        log.debug("Adding figure '{}' to material {}", request.danceFigureId, materialId)
         val material = findById(materialId)
+        val df = danceFigureRepository.findById(request.danceFigureId!!)
+            .orElseThrow { EntityNotFoundException("DanceFigure not found") }
         val figure = Figure().apply {
-            name = request.name
             startTime = request.startTime
             endTime = request.endTime
             this.material = material
+            this.danceFigure = df
         }
         material.figures.add(figure)
         materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureAddedEvent(material, df.name, appUserService.getCurrentUser())
+        )
+        return figure
+    }
+
+    @Transactional
+    override fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure {
+        log.debug("Updating figure {} in material {}", figureId, materialId)
+        val material = findById(materialId)
+        val figure = material.figures.find { it.id == figureId }
+            ?: throw EntityNotFoundException("Figure not found in material")
+        val df = danceFigureRepository.findById(request.danceFigureId!!)
+            .orElseThrow { EntityNotFoundException("DanceFigure not found") }
+        figure.startTime = request.startTime
+        figure.endTime = request.endTime
+        figure.danceFigure = df
+        materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureUpdatedEvent(material, df.name, appUserService.getCurrentUser())
+        )
         return figure
     }
 
@@ -151,8 +179,14 @@ class MaterialServiceImpl(
     override fun removeFigure(materialId: UUID, figureId: UUID) {
         log.debug("Removing figure {} from material {}", figureId, materialId)
         val material = findById(materialId)
+        val figure = material.figures.find { it.id == figureId }
+            ?: throw EntityNotFoundException("Figure not found in material")
+        val figureName = figure.danceFigure?.name ?: "Unknown Figure"
         material.figures.removeIf { it.id == figureId }
         materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureDeletedEvent(material, figureName, appUserService.getCurrentUser())
+        )
     }
 
     override fun findFiguresByMaterial(materialId: UUID): List<Figure> {

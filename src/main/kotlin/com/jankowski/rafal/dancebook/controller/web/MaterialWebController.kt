@@ -7,8 +7,11 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.CommentService
+import com.jankowski.rafal.dancebook.service.DanceFigureService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -27,7 +30,8 @@ class MaterialWebController(
     private val materialService: MaterialService,
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
-    private val commentService: CommentService
+    private val commentService: CommentService,
+    private val danceFigureService: DanceFigureService
 ) {
 
     @GetMapping
@@ -39,7 +43,7 @@ class MaterialWebController(
         @RequestParam(required = false, defaultValue = "grid") view: String,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
-        pageable: Pageable
+        @PageableDefault(size = 100, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
     ): String {
         val materialsPage = materialService.findAll(
             typeIds = typeIds,
@@ -56,11 +60,14 @@ class MaterialWebController(
             model.addAttribute("danceCategories", danceCategoryService.findAll())
         }
         
+        val currentSort = pageable.sort.map { "${it.property},${it.direction.name.lowercase()}" }.firstOrNull() ?: "createdAt,desc"
+
         model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
         model.addAttribute("selectedMinRating", minRating)
         model.addAttribute("selectedNameSearch", nameSearch)
         model.addAttribute("currentView", view)
+        model.addAttribute("currentSort", currentSort)
 
         return if (isHtmxRequest == true) {
             "materials/list :: materialsTable"
@@ -74,9 +81,13 @@ class MaterialWebController(
         val material = materialService.findById(id)
         val figures = materialService.findFiguresByMaterial(id)
         val comments = commentService.getCommentsForMaterial(id)
+        val availableFigures = material.danceType?.id?.let {
+            danceFigureService.findByDanceType(it)
+        } ?: emptyList()
         model.addAttribute("material", material)
         model.addAttribute("figures", figures)
         model.addAttribute("comments", comments)
+        model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
     }
@@ -91,11 +102,21 @@ class MaterialWebController(
         if (bindingResult.hasErrors()) {
             val material = materialService.findById(id)
             val figures = materialService.findFiguresByMaterial(id)
+            val comments = commentService.getCommentsForMaterial(id)
+            val availableFigures = material.danceType?.id?.let {
+                danceFigureService.findByDanceType(it)
+            } ?: emptyList()
             model.addAttribute("material", material)
             model.addAttribute("figures", figures)
+            model.addAttribute("comments", comments)
+            model.addAttribute("availableFigures", availableFigures)
             return "materials/view"
         }
-        materialService.addFigure(id, request)
+        if (request.id != null) {
+            materialService.updateFigure(id, request.id, request)
+        } else {
+            materialService.addFigure(id, request)
+        }
         return "redirect:/materials/$id"
     }
 

@@ -17,11 +17,18 @@ class Figure {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: UUID? = null
-    var name: String = ""
+
     var startTime: Int = 0
     var endTime: Int = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id", nullable = false)
     var material: Material? = null
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dance_figure_id", nullable = false)
+    var danceFigure: DanceFigure? = null
+
+    val name: String
+        get() = danceFigure?.name ?: ""
 }

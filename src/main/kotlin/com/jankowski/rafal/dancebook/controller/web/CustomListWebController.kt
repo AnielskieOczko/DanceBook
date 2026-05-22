@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
 @Controller
@@ -25,9 +27,37 @@ class CustomListWebController(
 ) {
 
     @GetMapping
-    fun listAll(model: Model): String {
-        model.addAttribute("lists", customListService.findVisibleByCurrentUser())
-        return "lists/index"
+    fun listAll(
+        @RequestParam(required = false) typeIds: List<UUID>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) nameSearch: String? = null,
+        @RequestParam(required = false) sortBy: String? = null,
+        @RequestParam(required = false, defaultValue = "grid") view: String = "grid",
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val lists = customListService.findVisibleByCurrentUser(
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            nameSearch = nameSearch,
+            sortBy = sortBy
+        )
+        model.addAttribute("lists", lists)
+        if (isHtmxRequest != true) {
+            model.addAttribute("danceTypes", danceTypeService.findAll())
+            model.addAttribute("danceCategories", danceCategoryService.findAll())
+        }
+        model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
+        model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
+        model.addAttribute("selectedNameSearch", nameSearch)
+        model.addAttribute("selectedSortBy", sortBy)
+        model.addAttribute("currentView", view)
+
+        return if (isHtmxRequest == true) {
+            "lists/index :: collectionsTable"
+        } else {
+            "lists/index"
+        }
     }
 
     @GetMapping("/new")

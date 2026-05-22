@@ -39,3 +39,38 @@ class ListMadePublicEvent(
     val list: CustomList,
     actor: AppUser
 ) : DomainEvent(actor)
+
+class MaterialFigureAddedEvent(
+    val material: Material,
+    val figureName: String,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class MaterialFigureUpdatedEvent(
+    val material: Material,
+    val figureName: String,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class MaterialFigureDeletedEvent(
+    val material: Material,
+    val figureName: String,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class DanceFigureCreatedEvent(
+    val danceFigure: DanceFigure,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class DanceFigureUpdatedEvent(
+    val danceFigure: DanceFigure,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class DanceFigureDeletedEvent(
+    val danceFigureId: UUID,
+    val danceFigureName: String,
+    actor: AppUser
+) : DomainEvent(actor)
+

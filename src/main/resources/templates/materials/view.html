@@ -12,7 +12,7 @@
             <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
         </a>
         <div class="flex items-center gap-4">
-            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="px-6 py-sm rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
                 <span class="material-symbols-outlined text-[18px]">edit</span>
                 Edit Notes
             </a>
@@ -35,10 +35,10 @@
         </th:block>
     </section>
 
-    <!-- Two Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mt-lg">
-        <!-- Left Column: Details & Figures -->
-        <div class="lg:col-span-8 space-y-lg">
+    <!-- Content Stack -->
+    <div class="space-y-lg mt-lg">
+        <!-- Details & Figures (Full Width) -->
+        <div class="space-y-lg">
             <!-- Title & Meta -->
             <div class="space-y-4">
                 <div class="flex flex-wrap gap-2">
@@ -70,25 +70,126 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider block mb-1" th:text="${f.startTime + ' – ' + f.endTime}">0:00</span>
-                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.name}">Figure Name</h3>
+                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.danceFigure != null && f.danceFigure.alternativeTiming != null ? f.name + ' [' + f.danceFigure.alternativeTiming + ']' : f.name}">Figure Name</h3>
                         </div>
-                        <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
-                              method="post" class="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button type="submit" class="text-outline-variant hover:text-error transition-colors"
-                                    onclick="return confirm('Delete this figure?')">
-                                <span class="material-symbols-outlined text-[20px]">close</span>
+                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                            <button type="button" 
+                                    class="js-edit-figure-btn text-outline-variant hover:text-primary transition-colors"
+                                    th:data-id="${f.id}"
+                                    th:data-dance-figure-id="${f.danceFigure?.id}"
+                                    th:data-start-time="${f.startTime}"
+                                    th:data-end-time="${f.endTime}"
+                                    title="Edit figure">
+                                <span class="material-symbols-outlined text-[20px]">edit</span>
                             </button>
-                        </form>
+                            <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
+                                  method="post" data-confirm="Delete this figure?"
+                                  class="inline">
+                                <button type="submit" class="text-outline-variant hover:text-error transition-colors" title="Delete figure">
+                                    <span class="material-symbols-outlined text-[20px]">close</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Figure Form -->
+            <div id="figureFormContainer" class="p-4 sm:p-6 border border-surface-variant rounded-xl bg-surface-container/20 space-y-6">
+                <h3 id="figureFormHeader" class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-3">
+                    <span id="figureFormHeaderIcon" class="material-symbols-outlined text-primary">add_circle</span>
+                    <span id="figureFormHeaderText">Add Figure to Sequence</span>
+                </h3>
+
+                <form th:action="@{/materials/{id}/figures(id=${material.id})}" method="post" class="space-y-4">
+                    <input type="hidden" name="id" id="editFigureId" />
+                    <div id="figureSelectFragment" th:fragment="figureSelectFragment" class="flex flex-col gap-2">
+                        <label for="danceFigureId" class="form-label">Select Figure</label>
+                        <div class="relative flex items-center gap-2">
+                            <select name="danceFigureId" id="danceFigureId" required class="form-select flex-1 min-w-0">
+                                <option value="">Select a figure...</option>
+                                <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
+                                    Figure Name
+                                </option>
+                            </select>
+                            <button type="button" class="js-toggle-inline-figure w-10 h-10 rounded-lg border border-primary text-primary hover:bg-primary/10 flex items-center justify-center shrink-0 transition-colors" title="Create a new figure inline">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+                        </div>
+                        <span th:if="${inlineError != null}" class="text-error font-body-sm text-[12px] block mt-1" th:text="${inlineError}">Error message</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="startTime" class="form-label">Start Time (seconds)</label>
+                            <input type="number" name="startTime" id="startTime" min="0" required class="form-input" value="0"/>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="endTime" class="form-label">End Time (seconds)</label>
+                            <input type="number" name="endTime" id="endTime" min="0" required class="form-input" value="0"/>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button type="submit" id="submitFigureBtn" class="btn-primary flex-1">
+                            Save to Sequence
+                        </button>
+                        <button type="button" id="cancelEditFigureBtn" class="btn-outline hidden">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Hidden inline new figure registration form -->
+                <div id="inlineNewFigureForm" class="hidden p-4 rounded-xl border border-surface-variant bg-surface-container/50 space-y-4">
+                    <h4 class="font-label-md text-label-md uppercase tracking-wider text-primary">Create New Figure in Dictionary</h4>
+                    <input type="hidden" name="danceTypeId" id="newFigureDanceTypeId" th:value="${material.danceType?.id}"/>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="newFigureName" class="form-label">Figure Name</label>
+                            <input type="text" name="name" id="newFigureName" placeholder="e.g. Double Spin" class="form-input"/>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="newFigureClass" class="form-label">Dancer Class (Optional)</label>
+                            <select name="danceClass" id="newFigureClass" class="form-select">
+                                <option value="">None (Social/General)</option>
+                                <option value="H">H</option>
+                                <option value="G">G</option>
+                                <option value="F">F</option>
+                                <option value="E">E</option>
+                                <option value="D">D</option>
+                                <option value="C">C</option>
+                                <option value="B">B</option>
+                                <option value="A">A</option>
+                                <option value="S">S</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="newFigureAltTiming" class="form-label">Alternative Timing (Optional)</label>
+                            <input type="text" name="alternativeTiming" id="newFigureAltTiming" placeholder="e.g. 12&3" class="form-input"/>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" class="js-toggle-inline-figure btn-outline">Cancel</button>
+                        <button type="button"
+                                th:attr="hx-post=@{/dance-figures/inline}"
+                                hx-include="#newFigureName, #newFigureClass, #newFigureAltTiming, #newFigureDanceTypeId"
+                                hx-target="#figureSelectFragment"
+                                hx-swap="outerHTML"
+                                class="js-save-inline-figure btn-primary">
+                            Save Figure
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Director's Notes -->
-        <div class="lg:col-span-4 pl-0 lg:pl-6 lg:border-l border-surface-variant">
-            <div class="sticky top-28 space-y-8">
-                <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
-            </div>
+        <!-- Divider -->
+        <hr class="border-surface-variant my-8" />
+
+        <!-- Director's Notes (Comments Section moved to bottom) -->
+        <div class="max-w-4xl">
+            <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
         </div>
     </div>
 

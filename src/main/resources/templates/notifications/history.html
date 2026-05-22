@@ -5,16 +5,7 @@
 <section th:with="activeNav=''" class="space-y-xl">
 
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-        <div class="flex flex-col gap-sm">
-            <h2 class="font-display-lg text-display-lg text-on-surface">Activity History</h2>
-            <p class="font-body-lg text-body-lg text-outline">A complete timeline of all actions across your workspace.</p>
-        </div>
-        <a href="/" class="flex items-center gap-2 text-outline hover:text-on-surface transition-colors font-body-md">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-            Dashboard
-        </a>
-    </div>
+    <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline')}"></div>
 
     <!-- Timeline -->
     <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
@@ -22,23 +13,31 @@
             <div th:each="event : ${events}" class="relative pl-8">
                 <!-- Timeline Dot -->
                 <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
-                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container' :
-                                      event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error' :
-                                      event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' : 'bg-surface-variant'}"></div>
+                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container' :
+                                      event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' :
+                                      event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' :
+                                      event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container' : 'bg-surface-variant'}"></div>
 
                 <!-- Event Content -->
                 <div class="flex items-start gap-3">
                     <!-- Icon -->
                     <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                         th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' ? 'bg-primary-container text-on-primary-container' :
-                                          event.eventType.name() == 'MATERIAL_DELETED' ? 'bg-error-container text-on-error-container' :
-                                          event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-variant text-on-surface-variant'}">
+                         th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container text-on-primary-container' :
+                                          event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error-container text-on-error-container' :
+                                          event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' :
+                                          event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-variant text-on-surface-variant'}">
                         <span class="material-symbols-outlined text-[18px]"
                               th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
                                         event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
                                         event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
                                         event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
-                                        event.eventType.name() == 'LIST_CREATED' ? 'layers' : 'public'}">add_circle</span>
+                                        event.eventType.name() == 'LIST_CREATED' ? 'layers' :
+                                        event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
+                                        event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
+                                        event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
+                                        event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
+                                        event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
+                                        event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' : 'unpublished'}">add_circle</span>
                     </div>
 
                     <!-- Text -->
@@ -52,12 +51,25 @@
                                 <span th:case="'COMMENT_ADDED'"> commented on </span>
                                 <span th:case="'LIST_CREATED'"> created collection </span>
                                 <span th:case="'LIST_MADE_PUBLIC'"> shared collection </span>
+                                <span th:case="'MATERIAL_FIGURE_ADDED'"> added figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' to </span>
+                                <span th:case="'MATERIAL_FIGURE_UPDATED'"> updated figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' in </span>
+                                <span th:case="'MATERIAL_FIGURE_DELETED'"> removed figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' from </span>
+                                <span th:case="'DANCE_FIGURE_CREATED'"> created figure </span>
+                                <span th:case="'DANCE_FIGURE_UPDATED'"> updated figure </span>
+                                <span th:case="'DANCE_FIGURE_DELETED'"> deleted figure </span>
                             </span>
-                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED'}"
+                            <!-- Link for Material / CustomList -->
+                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_')}"
                                th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
-                               class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Waltz Basics</a>
+                               class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
                             <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
-                                  class="font-semibold" th:text="${event.targetName}">Waltz Basics</span>
+                                  class="font-semibold truncate" th:text="${event.targetName}">Waltz Basics</span>
+                            <!-- Link/Text for DanceFigure -->
+                            <a th:if="${event.eventType.name().startsWith('DANCE_FIGURE_') && event.eventType.name() != 'DANCE_FIGURE_DELETED'}"
+                               th:href="@{/dance-figures}"
+                               class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Natural Turn</a>
+                            <span th:if="${event.eventType.name() == 'DANCE_FIGURE_DELETED'}"
+                                  class="font-semibold truncate" th:text="${event.targetName}">Natural Turn</span>
                         </p>
                         <p class="font-label-sm text-label-sm text-outline mt-1"
                            th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>

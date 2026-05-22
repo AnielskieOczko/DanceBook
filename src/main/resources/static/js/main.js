@@ -6,6 +6,27 @@ document.addEventListener('htmx:configRequest', function(event) {
     }
 });
 
+document.addEventListener('htmx:afterRequest', function(event) {
+    const target = event.target;
+    if (target && (target.classList.contains('js-save-inline-figure') || target.closest('.js-save-inline-figure'))) {
+        if (event.detail.successful) {
+            setTimeout(() => {
+                const errorElement = document.querySelector('#figureSelectFragment .text-error');
+                if (!errorElement) {
+                    const nameInput = document.getElementById('newFigureName');
+                    const classInput = document.getElementById('newFigureClass');
+                    const timingInput = document.getElementById('newFigureAltTiming');
+                    const form = document.getElementById('inlineNewFigureForm');
+                    if (nameInput) nameInput.value = '';
+                    if (classInput) classInput.value = '';
+                    if (timingInput) timingInput.value = '';
+                    if (form) form.classList.add('hidden');
+                }
+            }, 50);
+        }
+    }
+});
+
 /**
  * Generic confirm-before-submit handler.
  * Usage: <form data-confirm="Are you sure?"> or <button data-confirm="Delete?">
@@ -16,6 +37,17 @@ document.addEventListener('submit', function(event) {
     const message = form.getAttribute('data-confirm');
     if (message && !confirm(message)) {
         event.preventDefault();
+    }
+});
+
+/**
+ * Generic auto-submit on change handler.
+ * Usage: <select class="js-filter-select">
+ */
+document.addEventListener('change', function(event) {
+    const select = event.target.closest('.js-filter-select');
+    if (select) {
+        select.form.submit();
     }
 });
 
@@ -126,6 +158,91 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // 8. Inline figure form toggle handler
+    const toggleFigureBtn = event.target.closest('.js-toggle-inline-figure');
+    if (toggleFigureBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const form = document.getElementById('inlineNewFigureForm');
+        if (form) {
+            form.classList.toggle('hidden');
+            if (!form.classList.contains('hidden')) {
+                const nameInput = document.getElementById('newFigureName');
+                if (nameInput) nameInput.focus();
+            }
+        }
+        return;
+    }
+
+    // 9. Close notification dropdown on mark all read click
+    const closeNotifDropdownBtn = event.target.closest('.js-close-notification-dropdown');
+    if (closeNotifDropdownBtn) {
+        const dropdown = document.getElementById('notification-dropdown');
+        if (dropdown) {
+            dropdown.classList.add('hidden');
+        }
+    }
+
+    // 10. Edit figure in sequence handler
+    const editFigureBtn = event.target.closest('.js-edit-figure-btn');
+    if (editFigureBtn) {
+        event.preventDefault();
+        const id = editFigureBtn.getAttribute('data-id');
+        const danceFigureId = editFigureBtn.getAttribute('data-dance-figure-id');
+        const startTime = editFigureBtn.getAttribute('data-start-time');
+        const endTime = editFigureBtn.getAttribute('data-end-time');
+
+        const idInput = document.getElementById('editFigureId');
+        const selectEl = document.getElementById('danceFigureId');
+        const startInput = document.getElementById('startTime');
+        const endInput = document.getElementById('endTime');
+        const cancelBtn = document.getElementById('cancelEditFigureBtn');
+        const submitBtn = document.getElementById('submitFigureBtn');
+        const headerText = document.getElementById('figureFormHeaderText');
+        const headerIcon = document.getElementById('figureFormHeaderIcon');
+        const formContainer = document.getElementById('figureFormContainer');
+
+        if (idInput) idInput.value = id;
+        if (selectEl) selectEl.value = danceFigureId;
+        if (startInput) startInput.value = startTime;
+        if (endInput) endInput.value = endTime;
+
+        if (headerText) headerText.textContent = "Edit Figure in Sequence";
+        if (headerIcon) headerIcon.textContent = "edit";
+        if (submitBtn) submitBtn.textContent = "Update Figure";
+        if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+        if (formContainer) {
+            formContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+    }
+
+    // 11. Cancel edit figure in sequence handler
+    const cancelEditBtn = event.target.closest('#cancelEditFigureBtn');
+    if (cancelEditBtn) {
+        event.preventDefault();
+        const idInput = document.getElementById('editFigureId');
+        const selectEl = document.getElementById('danceFigureId');
+        const startInput = document.getElementById('startTime');
+        const endInput = document.getElementById('endTime');
+        const cancelBtn = document.getElementById('cancelEditFigureBtn');
+        const submitBtn = document.getElementById('submitFigureBtn');
+        const headerText = document.getElementById('figureFormHeaderText');
+        const headerIcon = document.getElementById('figureFormHeaderIcon');
+
+        if (idInput) idInput.value = '';
+        if (selectEl) selectEl.value = '';
+        if (startInput) startInput.value = '0';
+        if (endInput) endInput.value = '0';
+
+        if (headerText) headerText.textContent = "Add Figure to Sequence";
+        if (headerIcon) headerIcon.textContent = "add_circle";
+        if (submitBtn) submitBtn.textContent = "Save to Sequence";
+        if (cancelBtn) cancelBtn.classList.add('hidden');
+        return;
+    }
+
     // Close notification dropdown when clicking outside
     if (!event.target.closest('#notification-bell-wrapper')) {
         const notifDropdown = document.getElementById('notification-dropdown');
@@ -225,7 +342,59 @@ const AppManager = (function() {
     return { init };
 })();
 
-// Initialize AppManager
+/**
+ * Dynamically hides and disables dance style checkboxes that do not match the selected category filters.
+ */
+function updateStyleFilters() {
+    const categoryCheckboxes = document.querySelectorAll('.js-category-checkbox');
+    if (!categoryCheckboxes.length) return; // Not on the materials page
+
+    const checkedCategories = Array.from(categoryCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const stylePills = document.querySelectorAll('.js-style-pill');
+    
+    stylePills.forEach(pill => {
+        const categoryId = pill.getAttribute('data-category-id');
+        const checkbox = pill.querySelector('.js-style-checkbox');
+        
+        if (checkedCategories.length === 0) {
+            // No category filters selected -> show all styles
+            pill.classList.remove('hidden');
+            if (checkbox) {
+                checkbox.removeAttribute('disabled');
+            }
+        } else {
+            // Category filters selected -> check if this style's category matches any checked category
+            if (checkedCategories.includes(categoryId)) {
+                pill.classList.remove('hidden');
+                if (checkbox) {
+                    checkbox.removeAttribute('disabled');
+                }
+            } else {
+                // Irrelevant category -> hide, disable, and uncheck
+                pill.classList.add('hidden');
+                if (checkbox) {
+                    checkbox.setAttribute('disabled', 'true');
+                    if (checkbox.checked) {
+                        checkbox.checked = false;
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Initialize AppManager and filters on page load
 document.addEventListener('DOMContentLoaded', () => {
     AppManager.init();
+    updateStyleFilters();
 });
+
+// Capturing listener to update styles before HTMX/other event handlers run
+document.addEventListener('change', function(event) {
+    if (event.target.classList.contains('js-category-checkbox')) {
+        updateStyleFilters();
+    }
+}, true);

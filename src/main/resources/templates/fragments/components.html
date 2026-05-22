@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="page-header(title, subtitle, actionUrl, actionText, actionIcon, actionType)" 
+     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="page-header mb-0">
+        <h1 class="page-title text-3xl" th:text="${title}">Title</h1>
+        <p th:if="${subtitle != null}" class="page-subtitle" th:text="${subtitle}">Subtitle</p>
+    </div>
+    <div th:if="${actionUrl != null}" class="shrink-0">
+        <a th:href="${actionUrl}" th:class="${actionType == 'outline' ? 'btn-outline' : 'btn-primary'}">
+            <span th:if="${actionIcon != null}" class="material-symbols-outlined text-[20px]" th:text="${actionIcon}">add</span>
+            <span th:text="${actionText}">Action</span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -8,6 +8,12 @@ import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
 import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
 import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.TargetType
 import com.jankowski.rafal.dancebook.repository.ActivityEventRepository
 import org.slf4j.LoggerFactory
@@ -73,12 +79,78 @@ class ActivityEventListener(
         save(EventType.LIST_MADE_PUBLIC, event.actor, TargetType.CUSTOM_LIST, event.list.id, event.list.name)
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onMaterialFigureAdded(event: MaterialFigureAddedEvent) {
+        log.info("Recording MATERIAL_FIGURE_ADDED event for figure '{}' on material '{}'", event.figureName, event.material.name)
+        save(
+            eventType = EventType.MATERIAL_FIGURE_ADDED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            metadata = event.figureName
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onMaterialFigureUpdated(event: MaterialFigureUpdatedEvent) {
+        log.info("Recording MATERIAL_FIGURE_UPDATED event for figure '{}' on material '{}'", event.figureName, event.material.name)
+        save(
+            eventType = EventType.MATERIAL_FIGURE_UPDATED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            metadata = event.figureName
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onMaterialFigureDeleted(event: MaterialFigureDeletedEvent) {
+        log.info("Recording MATERIAL_FIGURE_DELETED event for figure '{}' on material '{}'", event.figureName, event.material.name)
+        save(
+            eventType = EventType.MATERIAL_FIGURE_DELETED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            metadata = event.figureName
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onDanceFigureCreated(event: DanceFigureCreatedEvent) {
+        log.info("Recording DANCE_FIGURE_CREATED event for '{}'", event.danceFigure.name)
+        val targetName = "${event.danceFigure.danceType?.name ?: ""} - ${event.danceFigure.name}"
+        save(EventType.DANCE_FIGURE_CREATED, event.actor, TargetType.DANCE_FIGURE, event.danceFigure.id, targetName)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onDanceFigureUpdated(event: DanceFigureUpdatedEvent) {
+        log.info("Recording DANCE_FIGURE_UPDATED event for '{}'", event.danceFigure.name)
+        val targetName = "${event.danceFigure.danceType?.name ?: ""} - ${event.danceFigure.name}"
+        save(EventType.DANCE_FIGURE_UPDATED, event.actor, TargetType.DANCE_FIGURE, event.danceFigure.id, targetName)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onDanceFigureDeleted(event: DanceFigureDeletedEvent) {
+        log.info("Recording DANCE_FIGURE_DELETED event for '{}'", event.danceFigureName)
+        save(EventType.DANCE_FIGURE_DELETED, event.actor, TargetType.DANCE_FIGURE, event.danceFigureId, event.danceFigureName)
+    }
+
     private fun save(
         eventType: EventType,
         actor: com.jankowski.rafal.dancebook.model.AppUser,
         targetType: TargetType,
         targetId: java.util.UUID?,
-        targetName: String?
+        targetName: String?,
+        metadata: String? = null
     ) {
         val activityEvent = ActivityEvent().apply {
             this.eventType = eventType
@@ -86,6 +158,7 @@ class ActivityEventListener(
             this.targetType = targetType
             this.targetId = targetId
             this.targetName = targetName
+            this.metadata = metadata
         }
         activityEventRepository.save(activityEvent)
     }
