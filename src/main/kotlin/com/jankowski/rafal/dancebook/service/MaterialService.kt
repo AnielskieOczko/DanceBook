@@ -22,6 +22,7 @@ interface MaterialService {
     ): Page<Material>
 
     fun addFigure(materialId: UUID, request: FigureRequest): Figure
+    fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure
     fun removeFigure(materialId: UUID, figureId: UUID)
     fun findFiguresByMaterial(materialId: UUID): List<Figure>
 }

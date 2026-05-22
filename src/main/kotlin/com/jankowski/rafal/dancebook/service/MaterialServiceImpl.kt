@@ -152,6 +152,21 @@ class MaterialServiceImpl(
     }
 
     @Transactional
+    override fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure {
+        log.debug("Updating figure {} in material {}", figureId, materialId)
+        val material = findById(materialId)
+        val figure = material.figures.find { it.id == figureId }
+            ?: throw EntityNotFoundException("Figure not found in material")
+        val df = danceFigureRepository.findById(request.danceFigureId!!)
+            .orElseThrow { EntityNotFoundException("DanceFigure not found") }
+        figure.startTime = request.startTime
+        figure.endTime = request.endTime
+        figure.danceFigure = df
+        materialRepository.save(material)
+        return figure
+    }
+
+    @Transactional
     override fun removeFigure(materialId: UUID, figureId: UUID) {
         log.debug("Removing figure {} from material {}", figureId, materialId)
         val material = findById(materialId)

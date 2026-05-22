@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull
 import java.util.UUID
 
 data class FigureRequest(
+    val id: UUID? = null,
+
     @field:NotNull
     val danceFigureId: UUID? = null,
 

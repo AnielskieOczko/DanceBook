@@ -107,7 +107,11 @@ class MaterialWebController(
             model.addAttribute("availableFigures", availableFigures)
             return "materials/view"
         }
-        materialService.addFigure(id, request)
+        if (request.id != null) {
+            materialService.updateFigure(id, request.id, request)
+        } else {
+            materialService.addFigure(id, request)
+        }
         return "redirect:/materials/$id"
     }
 

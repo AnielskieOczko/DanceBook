@@ -183,6 +183,66 @@ document.addEventListener('click', function(event) {
         }
     }
 
+    // 10. Edit figure in sequence handler
+    const editFigureBtn = event.target.closest('.js-edit-figure-btn');
+    if (editFigureBtn) {
+        event.preventDefault();
+        const id = editFigureBtn.getAttribute('data-id');
+        const danceFigureId = editFigureBtn.getAttribute('data-dance-figure-id');
+        const startTime = editFigureBtn.getAttribute('data-start-time');
+        const endTime = editFigureBtn.getAttribute('data-end-time');
+
+        const idInput = document.getElementById('editFigureId');
+        const selectEl = document.getElementById('danceFigureId');
+        const startInput = document.getElementById('startTime');
+        const endInput = document.getElementById('endTime');
+        const cancelBtn = document.getElementById('cancelEditFigureBtn');
+        const submitBtn = document.getElementById('submitFigureBtn');
+        const headerText = document.getElementById('figureFormHeaderText');
+        const headerIcon = document.getElementById('figureFormHeaderIcon');
+        const formContainer = document.getElementById('figureFormContainer');
+
+        if (idInput) idInput.value = id;
+        if (selectEl) selectEl.value = danceFigureId;
+        if (startInput) startInput.value = startTime;
+        if (endInput) endInput.value = endTime;
+
+        if (headerText) headerText.textContent = "Edit Figure in Sequence";
+        if (headerIcon) headerIcon.textContent = "edit";
+        if (submitBtn) submitBtn.textContent = "Update Figure";
+        if (cancelBtn) cancelBtn.classList.remove('hidden');
+
+        if (formContainer) {
+            formContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        return;
+    }
+
+    // 11. Cancel edit figure in sequence handler
+    const cancelEditBtn = event.target.closest('#cancelEditFigureBtn');
+    if (cancelEditBtn) {
+        event.preventDefault();
+        const idInput = document.getElementById('editFigureId');
+        const selectEl = document.getElementById('danceFigureId');
+        const startInput = document.getElementById('startTime');
+        const endInput = document.getElementById('endTime');
+        const cancelBtn = document.getElementById('cancelEditFigureBtn');
+        const submitBtn = document.getElementById('submitFigureBtn');
+        const headerText = document.getElementById('figureFormHeaderText');
+        const headerIcon = document.getElementById('figureFormHeaderIcon');
+
+        if (idInput) idInput.value = '';
+        if (selectEl) selectEl.value = '';
+        if (startInput) startInput.value = '0';
+        if (endInput) endInput.value = '0';
+
+        if (headerText) headerText.textContent = "Add Figure to Sequence";
+        if (headerIcon) headerIcon.textContent = "add_circle";
+        if (submitBtn) submitBtn.textContent = "Save to Sequence";
+        if (cancelBtn) cancelBtn.classList.add('hidden');
+        return;
+    }
+
     // Close notification dropdown when clicking outside
     if (!event.target.closest('#notification-bell-wrapper')) {
         const notifDropdown = document.getElementById('notification-dropdown');
