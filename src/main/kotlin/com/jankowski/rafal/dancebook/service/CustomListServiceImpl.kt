@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 import com.jankowski.rafal.dancebook.model.ListCreatedEvent
 import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
+import com.jankowski.rafal.dancebook.repository.CustomListSpecification
+import org.springframework.data.domain.Sort
 
 @Service
 class CustomListServiceImpl(
@@ -27,9 +29,30 @@ class CustomListServiceImpl(
         private val log = LoggerFactory.getLogger(CustomListServiceImpl::class.java)
     }
 
-    override fun findVisibleByCurrentUser(): List<CustomList> {
+    override fun findVisibleByCurrentUser(
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        nameSearch: String?,
+        sortBy: String?
+    ): List<CustomList> {
         val currentUser = appUserService.getCurrentUser()
-        return customListRepository.findVisibleByUser(currentUser)
+        log.debug("Retrieving collections for user '{}' with filters: typeIds={}, categoryIds={}, nameSearch={}, sortBy={}", currentUser.username, typeIds, categoryIds, nameSearch, sortBy)
+        val spec = CustomListSpecification.withFilters(
+            owner = currentUser,
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            nameSearch = nameSearch
+        )
+
+        val sort = when (sortBy) {
+            "name_asc" -> Sort.by(Sort.Direction.ASC, "name")
+            "name_desc" -> Sort.by(Sort.Direction.DESC, "name")
+            "newest" -> Sort.by(Sort.Direction.DESC, "createdAt")
+            "oldest" -> Sort.by(Sort.Direction.ASC, "createdAt")
+            else -> Sort.by(Sort.Direction.ASC, "name")
+        }
+
+        return customListRepository.findAll(spec, sort)
     }
 
     override fun findById(id: UUID): CustomList {
