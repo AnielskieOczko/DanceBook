@@ -6,6 +6,27 @@ document.addEventListener('htmx:configRequest', function(event) {
     }
 });
 
+document.addEventListener('htmx:afterRequest', function(event) {
+    const target = event.target;
+    if (target && (target.classList.contains('js-save-inline-figure') || target.closest('.js-save-inline-figure'))) {
+        if (event.detail.successful) {
+            setTimeout(() => {
+                const errorElement = document.querySelector('#figureSelectFragment .text-error');
+                if (!errorElement) {
+                    const nameInput = document.getElementById('newFigureName');
+                    const classInput = document.getElementById('newFigureClass');
+                    const timingInput = document.getElementById('newFigureAltTiming');
+                    const form = document.getElementById('inlineNewFigureForm');
+                    if (nameInput) nameInput.value = '';
+                    if (classInput) classInput.value = '';
+                    if (timingInput) timingInput.value = '';
+                    if (form) form.classList.add('hidden');
+                }
+            }, 50);
+        }
+    }
+});
+
 /**
  * Generic confirm-before-submit handler.
  * Usage: <form data-confirm="Are you sure?"> or <button data-confirm="Delete?">
@@ -135,6 +156,31 @@ document.addEventListener('click', function(event) {
             dropdown.classList.toggle('hidden');
         }
         return;
+    }
+
+    // 8. Inline figure form toggle handler
+    const toggleFigureBtn = event.target.closest('.js-toggle-inline-figure');
+    if (toggleFigureBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const form = document.getElementById('inlineNewFigureForm');
+        if (form) {
+            form.classList.toggle('hidden');
+            if (!form.classList.contains('hidden')) {
+                const nameInput = document.getElementById('newFigureName');
+                if (nameInput) nameInput.focus();
+            }
+        }
+        return;
+    }
+
+    // 9. Close notification dropdown on mark all read click
+    const closeNotifDropdownBtn = event.target.closest('.js-close-notification-dropdown');
+    if (closeNotifDropdownBtn) {
+        const dropdown = document.getElementById('notification-dropdown');
+        if (dropdown) {
+            dropdown.classList.add('hidden');
+        }
     }
 
     // Close notification dropdown when clicking outside

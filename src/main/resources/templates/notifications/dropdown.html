@@ -9,11 +9,10 @@
     <div class="flex items-center justify-between px-4 py-3 border-b border-surface-variant">
         <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Notifications</h4>
         <button th:if="${unreadCount > 0}"
-                class="font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors"
+                class="js-close-notification-dropdown font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors"
                 hx-post="/notifications/mark-read"
                 hx-target="#notification-badge"
-                hx-swap="innerHTML"
-                onclick="document.getElementById('notification-dropdown').classList.add('hidden')">
+                hx-swap="innerHTML">
             Mark all read
         </button>
     </div>
