@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='dance-figures'" class="space-y-lg relative">
+
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="page-header mb-0">
+            <h1 class="text-3xl font-headline-lg text-on-surface mb-1">Figures Database</h1>
+            <p class="text-on-surface-variant font-body-md" th:text="${#lists.size(figures)} + ' figures registered'">0 figures registered</p>
+        </div>
+        <a href="/dance-figures/new" class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-full font-label-md text-label-sm uppercase tracking-wider hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Add Figure
+        </a>
+    </div>
+
+    <!-- Sticky Search & Filter Section -->
+    <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
+        <form id="filterForm" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox']" hx-push-url="false">
+            <!-- Top Row: Search + Filter Toggle + View Toggle -->
+            <div class="flex items-center gap-3">
+                <div class="relative flex-1 group">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
+                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           placeholder="Search by name..."
+                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                </div>
+
+                <!-- Filter Toggle -->
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
+                    <span class="material-symbols-outlined text-[20px] pointer-events-none">tune</span>
+                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none">Filters</span>
+                </button>
+
+                <!-- View Toggle -->
+                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="grid" class="hidden peer"
+                               th:checked="${currentView == 'grid'}"
+                               th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="view" value="list" class="hidden peer"
+                               th:checked="${currentView == 'list'}"
+                               th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Collapsible Filters Container -->
+            <div id="categoryFiltersContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-4 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
+                <!-- Dance Style filter -->
+                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
+                    <label for="filterDanceType" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dance Style</label>
+                    <select name="danceTypeId" id="filterDanceType" 
+                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <option value="">All Dance Styles</option>
+                        <option th:each="dt : ${danceTypes}" th:value="${dt.id}" th:text="${dt.name}" th:selected="${dt.id == selectedDanceTypeId}">
+                            Dance Name
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Dancer Class filter -->
+                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
+                    <label for="filterDanceClass" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dancer Class</label>
+                    <select name="danceClass" id="filterDanceClass" 
+                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <option value="">All Classes</option>
+                        <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${dc}" th:selected="${dc == selectedDanceClass}">
+                            H
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Sort By option -->
+                <div class="flex flex-col gap-1 min-w-[200px] mt-4">
+                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
+                    <select name="sortBy" id="filterSortBy" 
+                            class="px-4 py-2 rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                        <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}">Default (Style &amp; Name)</option>
+                        <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}">Name (A-Z)</option>
+                        <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}">Name (Z-A)</option>
+                        <option value="style_asc" th:selected="${selectedSortBy == 'style_asc'}">Style (A-Z)</option>
+                        <option value="style_desc" th:selected="${selectedSortBy == 'style_desc'}">Style (Z-A)</option>
+                        <option value="class_asc" th:selected="${selectedSortBy == 'class_asc'}">Class (H to S)</option>
+                        <option value="class_desc" th:selected="${selectedSortBy == 'class_desc'}">Class (S to H)</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Figures Grid/List (HTMX swappable) -->
+    <div th:fragment="figuresTable" id="figures-grid" class="space-y-gutter">
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(figures)}" class="empty-state">
+            <div class="empty-state-icon">
+                <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
+            </div>
+            <h3 class="empty-state-title">No figures found</h3>
+            <p class="empty-state-text">No figures match the selected filters or the database is empty.</p>
+            <a th:href="@{/dance-figures/new(danceTypeId=${selectedDanceTypeId})}" class="btn-primary">Add figure</a>
+        </div>
+
+        <!-- 1. Grid (Cards) View -->
+        <div th:if="${!#lists.isEmpty(figures) && (currentView == 'grid' || currentView == null)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+            <article th:each="f : ${figures}"
+                     th:with="catName=${f.danceType != null && f.danceType.category != null ? f.danceType.category.name : 'Unknown'},
+                              catImage=${f.danceType != null && f.danceType.category != null ? f.danceType.category.imageFilename : null},
+                              imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-row transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 min-h-[120px]">
+                
+                <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'Edit ' + ${f.name}">Edit Figure</span></a>
+                
+                <!-- Action Menu Dropdown -->
+                <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
+                    <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                        <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                    </button>
+                    <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
+                        <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                        </a>
+                        <!-- Delete action for custom figure -->
+                        <form th:if="${!f.predefined}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
+                              data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                            <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
+                                <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                            </button>
+                        </form>
+                        <!-- Locked action for predefined figure -->
+                        <div th:if="${f.predefined}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[18px]">lock</span> Predefined
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-row w-full relative z-0 pointer-events-none">
+                    <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg rounded-bl-lg bg-surface-container-high block z-0">
+                        <img th:src="${imgSrc}" th:alt="${catName}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
+                    </div>
+                    <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg rounded-br-lg">
+                        <div>
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-normal pr-8 flex-1" th:text="${f.name}">Figure Name</h3>
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
+                                <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
+                                <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-secondary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Class</span>
+                                <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- 2. Compact List View -->
+        <div th:if="${!#lists.isEmpty(figures) && currentView == 'list'}" class="flex flex-col gap-3">
+            <article th:each="f : ${figures}"
+                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                
+                <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'Edit ' + ${f.name}">Edit Figure</span></a>
+                
+                <div class="flex flex-col gap-1.5 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-body-md font-semibold text-on-surface flex-1" th:text="${f.name}">Figure Name</h3>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
+                        <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Class</span>
+                        <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 relative z-20 pointer-events-auto">
+                    <div class="group/menu">
+                        <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
+                            <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                        </button>
+                        <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
+                            <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                            </a>
+                            <!-- Delete action for custom figure -->
+                            <form th:if="${!f.predefined}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
+                                  data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                                <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                                </button>
+                            </form>
+                            <!-- Locked action for predefined figure -->
+                            <div th:if="${f.predefined}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
+                                <span class="material-symbols-outlined text-[18px]">lock</span> Predefined
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</section>
+</html>

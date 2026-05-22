@@ -7,6 +7,7 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.CommentService
+import com.jankowski.rafal.dancebook.service.DanceFigureService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
@@ -27,7 +28,8 @@ class MaterialWebController(
     private val materialService: MaterialService,
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
-    private val commentService: CommentService
+    private val commentService: CommentService,
+    private val danceFigureService: DanceFigureService
 ) {
 
     @GetMapping
@@ -74,9 +76,13 @@ class MaterialWebController(
         val material = materialService.findById(id)
         val figures = materialService.findFiguresByMaterial(id)
         val comments = commentService.getCommentsForMaterial(id)
+        val availableFigures = material.danceType?.id?.let {
+            danceFigureService.findByDanceType(it)
+        } ?: emptyList()
         model.addAttribute("material", material)
         model.addAttribute("figures", figures)
         model.addAttribute("comments", comments)
+        model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
     }
@@ -91,8 +97,14 @@ class MaterialWebController(
         if (bindingResult.hasErrors()) {
             val material = materialService.findById(id)
             val figures = materialService.findFiguresByMaterial(id)
+            val comments = commentService.getCommentsForMaterial(id)
+            val availableFigures = material.danceType?.id?.let {
+                danceFigureService.findByDanceType(it)
+            } ?: emptyList()
             model.addAttribute("material", material)
             model.addAttribute("figures", figures)
+            model.addAttribute("comments", comments)
+            model.addAttribute("availableFigures", availableFigures)
             return "materials/view"
         }
         materialService.addFigure(id, request)

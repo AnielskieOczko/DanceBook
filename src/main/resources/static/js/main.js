@@ -20,6 +20,17 @@ document.addEventListener('submit', function(event) {
 });
 
 /**
+ * Generic auto-submit on change handler.
+ * Usage: <select class="js-filter-select">
+ */
+document.addEventListener('change', function(event) {
+    const select = event.target.closest('.js-filter-select');
+    if (select) {
+        select.form.submit();
+    }
+});
+
+/**
  * Global click handler for delegated events.
  */
 document.addEventListener('click', function(event) {

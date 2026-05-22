@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='dance-figures'" class="max-w-2xl mx-auto py-12">
+
+    <div class="mb-8 pb-6 border-b border-surface-variant">
+        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}">Create New Figure</h1>
+        <p class="text-on-surface-variant font-body-md">Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.</p>
+    </div>
+
+    <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" th:object="${danceFigure}" method="post" 
+          class="bg-surface rounded-xl border border-surface-variant/60 p-8 shadow-ambient space-y-6">
+
+        <!-- Figure Name -->
+        <div>
+            <label for="name" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Figure Name <span class="text-error">*</span></label>
+            <input id="name" type="text" th:field="*{name}" required 
+                   class="w-full bg-surface-container border border-surface-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                   th:classappend="${#fields.hasErrors('name')} ? 'border-error focus:border-error focus:ring-error' : ''"
+                   placeholder="e.g. Back Whisk, Double Reverse Spin...">
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="mt-2 text-sm font-body-md text-error"></p>
+        </div>
+
+        <!-- Dance Style selection -->
+        <div>
+            <label for="danceTypeId" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Dance Style <span class="text-error">*</span></label>
+            <select id="danceTypeId" th:field="*{danceTypeId}" required 
+                    class="w-full bg-surface-container border border-surface-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    th:classappend="${#fields.hasErrors('danceTypeId')} ? 'border-error focus:border-error focus:ring-error' : ''">
+                <option value="">-- Select Dance Style --</option>
+                <option th:each="dt : ${danceTypes}" th:value="${dt.id}" th:text="${dt.name}"></option>
+            </select>
+            <p th:if="${#fields.hasErrors('danceTypeId')}" th:errors="*{danceTypeId}" class="mt-2 text-sm font-body-md text-error"></p>
+        </div>
+
+        <!-- Dancer Class selection -->
+        <div>
+            <label for="danceClass" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Minimum Dancer Class (Optional)</label>
+            <select id="danceClass" th:field="*{danceClass}"
+                    class="w-full bg-surface-container border border-surface-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    th:classappend="${#fields.hasErrors('danceClass')} ? 'border-error focus:border-error focus:ring-error' : ''">
+                <option value="">None (Social/General)</option>
+                <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${'Class ' + dc}"></option>
+            </select>
+            <p th:if="${#fields.hasErrors('danceClass')}" th:errors="*{danceClass}" class="mt-2 text-sm font-body-md text-error"></p>
+        </div>
+
+        <!-- Alternative Timing -->
+        <div>
+            <label for="alternativeTiming" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Alternative Timing (Optional)</label>
+            <input id="alternativeTiming" type="text" th:field="*{alternativeTiming}"
+                   class="w-full bg-surface-container border border-surface-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                   th:classappend="${#fields.hasErrors('alternativeTiming')} ? 'border-error focus:border-error focus:ring-error' : ''"
+                   placeholder="e.g. 12&3, SQQ, Q&Q...">
+            <p th:if="${#fields.hasErrors('alternativeTiming')}" th:errors="*{alternativeTiming}" class="mt-2 text-sm font-body-md text-error"></p>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-surface-variant">
+            <a href="/dance-figures" class="px-6 py-2.5 rounded-lg border border-surface-variant text-on-surface-variant text-body-md hover:bg-surface-container transition-colors">Cancel</a>
+            <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary text-on-primary text-body-md hover:bg-primary-hover transition-colors shadow-sm">Save Figure</button>
+        </div>
+    </form>
+
+</section>
+</html>

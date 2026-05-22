@@ -1,7 +1,7 @@
 package com.jankowski.rafal.dancebook.controller
 
 import com.jankowski.rafal.dancebook.repository.CommentRepository
-import com.jankowski.rafal.dancebook.repository.FigureRepository
+import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping
 @Controller
 class HomeController(
     private val materialRepository: MaterialRepository,
-    private val figureRepository: FigureRepository,
+    private val danceFigureRepository: DanceFigureRepository,
     private val danceTypeService: DanceTypeService,
     private val commentRepository: CommentRepository,
     private val appUserService: AppUserService,
@@ -24,7 +24,7 @@ class HomeController(
     @GetMapping("/")
     fun home(model: Model): String {
         model.addAttribute("materialCount", materialRepository.count())
-        model.addAttribute("figureCount", figureRepository.count())
+        model.addAttribute("figureCount", danceFigureRepository.count())
         model.addAttribute("danceTypeCount", danceTypeService.findAll().size)
         model.addAttribute("commentCount", commentRepository.count())
 
