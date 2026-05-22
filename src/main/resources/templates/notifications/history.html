@@ -5,16 +5,7 @@
 <section th:with="activeNav=''" class="space-y-xl">
 
     <!-- Page Header -->
-    <div class="flex items-center justify-between">
-        <div class="flex flex-col gap-sm">
-            <h2 class="font-display-lg text-display-lg text-on-surface">Activity History</h2>
-            <p class="font-body-lg text-body-lg text-outline">A complete timeline of all actions across your workspace.</p>
-        </div>
-        <a href="/" class="flex items-center gap-2 text-outline hover:text-on-surface transition-colors font-body-md">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-            Dashboard
-        </a>
-    </div>
+    <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline')}"></div>
 
     <!-- Timeline -->
     <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">

@@ -12,7 +12,7 @@
             <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
         </a>
         <div class="flex items-center gap-4">
-            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="px-6 py-sm rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
                 <span class="material-symbols-outlined text-[18px]">edit</span>
                 Edit Notes
             </a>
@@ -104,9 +104,9 @@
                 <form th:action="@{/materials/{id}/figures(id=${material.id})}" method="post" class="space-y-4">
                     <input type="hidden" name="id" id="editFigureId" />
                     <div id="figureSelectFragment" th:fragment="figureSelectFragment" class="flex flex-col gap-2">
-                        <label for="danceFigureId" class="text-label-md font-label-md text-on-surface">Select Figure</label>
+                        <label for="danceFigureId" class="form-label">Select Figure</label>
                         <div class="relative flex items-center gap-2">
-                            <select name="danceFigureId" id="danceFigureId" required class="flex-1 min-w-0 w-full px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none">
+                            <select name="danceFigureId" id="danceFigureId" required class="form-select flex-1 min-w-0">
                                 <option value="">Select a figure...</option>
                                 <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
                                     Figure Name
@@ -121,20 +121,20 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label for="startTime" class="text-label-md font-label-md text-on-surface">Start Time (seconds)</label>
-                            <input type="number" name="startTime" id="startTime" min="0" required class="px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none" value="0"/>
+                            <label for="startTime" class="form-label">Start Time (seconds)</label>
+                            <input type="number" name="startTime" id="startTime" min="0" required class="form-input" value="0"/>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="endTime" class="text-label-md font-label-md text-on-surface">End Time (seconds)</label>
-                            <input type="number" name="endTime" id="endTime" min="0" required class="px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none" value="0"/>
+                            <label for="endTime" class="form-label">End Time (seconds)</label>
+                            <input type="number" name="endTime" id="endTime" min="0" required class="form-input" value="0"/>
                         </div>
                     </div>
 
                     <div class="flex gap-2">
-                        <button type="submit" id="submitFigureBtn" class="flex-1 py-3 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider rounded-lg hover:opacity-90 transition-opacity">
+                        <button type="submit" id="submitFigureBtn" class="btn-primary flex-1">
                             Save to Sequence
                         </button>
-                        <button type="button" id="cancelEditFigureBtn" class="hidden px-4 py-3 border border-outline text-outline font-label-sm text-label-sm uppercase tracking-wider rounded-lg hover:bg-surface-variant/50 transition-colors">
+                        <button type="button" id="cancelEditFigureBtn" class="btn-outline hidden">
                             Cancel
                         </button>
                     </div>
@@ -146,12 +146,12 @@
                     <input type="hidden" name="danceTypeId" id="newFigureDanceTypeId" th:value="${material.danceType?.id}"/>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label for="newFigureName" class="text-label-md font-label-md text-on-surface">Figure Name</label>
-                            <input type="text" name="name" id="newFigureName" placeholder="e.g. Double Spin" class="px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none"/>
+                            <label for="newFigureName" class="form-label">Figure Name</label>
+                            <input type="text" name="name" id="newFigureName" placeholder="e.g. Double Spin" class="form-input"/>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="newFigureClass" class="text-label-md font-label-md text-on-surface">Dancer Class (Optional)</label>
-                            <select name="danceClass" id="newFigureClass" class="px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none">
+                            <label for="newFigureClass" class="form-label">Dancer Class (Optional)</label>
+                            <select name="danceClass" id="newFigureClass" class="form-select">
                                 <option value="">None (Social/General)</option>
                                 <option value="H">H</option>
                                 <option value="G">G</option>
@@ -165,18 +165,18 @@
                             </select>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="newFigureAltTiming" class="text-label-md font-label-md text-on-surface">Alternative Timing (Optional)</label>
-                            <input type="text" name="alternativeTiming" id="newFigureAltTiming" placeholder="e.g. 12&3" class="px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none"/>
+                            <label for="newFigureAltTiming" class="form-label">Alternative Timing (Optional)</label>
+                            <input type="text" name="alternativeTiming" id="newFigureAltTiming" placeholder="e.g. 12&3" class="form-input"/>
                         </div>
                     </div>
                     <div class="flex justify-end gap-2">
-                        <button type="button" class="js-toggle-inline-figure px-4 py-2 text-label-sm font-label-sm uppercase tracking-wider rounded border border-outline hover:bg-surface-variant/50 transition-colors">Cancel</button>
+                        <button type="button" class="js-toggle-inline-figure btn-outline">Cancel</button>
                         <button type="button"
                                 th:attr="hx-post=@{/dance-figures/inline}"
                                 hx-include="#newFigureName, #newFigureClass, #newFigureAltTiming, #newFigureDanceTypeId"
                                 hx-target="#figureSelectFragment"
                                 hx-swap="outerHTML"
-                                class="js-save-inline-figure px-4 py-2 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider rounded hover:opacity-90 transition-opacity">
+                                class="js-save-inline-figure btn-primary">
                             Save Figure
                         </button>
                     </div>

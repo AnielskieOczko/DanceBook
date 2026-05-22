@@ -5,20 +5,11 @@
 <section th:with="activeNav='dance-types'">
 
     <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div class="page-header mb-0">
-            <h1 class="page-title">Dance Styles</h1>
-            <p class="page-subtitle" th:text="${#lists.size(danceTypes)} + ' styles'">0 styles</p>
-        </div>
-        <a href="/dance-types/new" class="btn-primary">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Style
-        </a>
-    </div>
+    <div th:replace="~{fragments/components :: page-header('Dance Styles', ${#lists.size(danceTypes)} + ' styles', '/dance-types/new', 'Add Style', 'add', 'primary')}"></div>
 
     <div th:if="${#lists.isEmpty(danceTypes)}" class="empty-state">
         <div class="empty-state-icon">
-            <svg class="w-8 h-8 text-text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            <span class="material-symbols-outlined text-[32px] text-text-secondary">category</span>
         </div>
         <h3 class="empty-state-title">No dance styles</h3>
         <p class="empty-state-text">Add your first dance style to start categorizing materials.</p>
@@ -29,7 +20,7 @@
         <div th:each="dt : ${danceTypes}" class="flex items-center justify-between p-4 hover:bg-surface-warm/50 transition-colors">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-button bg-primary-soft flex items-center justify-center flex-shrink-0">
-                    <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    <span class="material-symbols-outlined text-primary text-[18px]">category</span>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                     <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
@@ -38,12 +29,12 @@
             </div>
             <div class="flex items-center gap-2">
                 <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="btn-icon p-1.5" title="Edit">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <span class="material-symbols-outlined text-[18px]">edit</span>
                 </a>
                 <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post"
                       onsubmit="return confirm('Delete this style?')">
                     <button type="submit" class="btn-icon p-1.5 hover:text-danger" title="Delete">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
                     </button>
                 </form>
             </div>

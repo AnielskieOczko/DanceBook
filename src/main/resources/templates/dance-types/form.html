@@ -10,33 +10,33 @@
     </div>
 
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
-          th:object="${danceType}" method="post" class="bg-white rounded-xl border border-[#EAEAEA] p-8 shadow-ambient">
+          th:object="${danceType}" method="post" class="card p-8 shadow-ambient">
 
         <div class="space-y-6">
             <div>
-                <label for="typeName" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Style Name <span class="text-danger">*</span></label>
+                <label for="typeName" class="form-label">Style Name *</label>
                 <input id="typeName" type="text" th:field="*{name}" required 
-                       class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                       th:classappend="${#fields.hasErrors('name')} ? 'border-danger focus:border-danger focus:ring-danger' : ''"
+                       class="form-input"
+                       th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
                        placeholder="e.g. Waltz, Tango, Foxtrot...">
-                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="mt-2 text-sm font-body-md text-danger"></p>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
             </div>
 
             <div>
-                <label for="categoryId" class="block text-sm font-label-sm text-on-surface mb-2 uppercase tracking-wide">Category <span class="text-danger">*</span></label>
+                <label for="categoryId" class="form-label">Category *</label>
                 <select id="categoryId" th:field="*{categoryId}" required 
-                        class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                        th:classappend="${#fields.hasErrors('categoryId')} ? 'border-danger focus:border-danger focus:ring-danger' : ''">
+                        class="form-select"
+                        th:classappend="${#fields.hasErrors('categoryId')} ? 'border-danger ring-1 ring-danger' : ''">
                     <option value="">-- Select Category --</option>
                     <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                 </select>
-                <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="mt-2 text-sm font-body-md text-danger"></p>
+                <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="form-error"></p>
             </div>
         </div>
 
-        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-neutral-100">
-            <a href="/dance-categories" class="px-6 py-2.5 rounded-lg border border-outline-variant text-on-surface-variant text-body-md hover:bg-surface-container-high transition-colors">Cancel</a>
-            <button type="submit" class="px-6 py-2.5 rounded-lg bg-primary text-on-primary text-body-md hover:bg-primary-hover transition-colors shadow-sm">Save Style</button>
+        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">
+            <a href="/dance-categories" class="btn-outline">Cancel</a>
+            <button type="submit" class="btn-primary">Save Style</button>
         </div>
     </form>
 

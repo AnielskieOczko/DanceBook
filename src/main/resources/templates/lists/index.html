@@ -5,16 +5,7 @@
 <section th:with="activeNav='lists'" class="space-y-lg relative">
 
     <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div class="page-header mb-0">
-            <h1 class="page-title text-3xl">My Collections</h1>
-            <p class="page-subtitle" th:text="${#lists.size(lists)} + ' collections curated'">0 collections curated</p>
-        </div>
-        <a href="/lists/new" class="btn-primary">
-            <span class="material-symbols-outlined text-[20px]">add</span>
-            New Collection
-        </a>
-    </div>
+    <div th:replace="~{fragments/components :: page-header('My Collections', ${#lists.size(lists)} + ' collections curated', '/lists/new', 'New Collection', 'add', 'primary')}"></div>
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
