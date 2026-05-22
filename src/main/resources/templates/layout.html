@@ -121,11 +121,12 @@
         <span class="material-symbols-outlined" th:style="${activeNav == 'lists' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">layers</span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Collections</span>
     </a>
-    <!-- Profile -->
-    <a href="/profile" class="flex flex-col items-center justify-center transition-all duration-150"
-       th:classappend="${activeNav == 'profile' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:classappend="${activeNav == 'profile' ? 'icon-filled' : ''}">person</span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Profile</span>
+    <!-- Figures -->
+    <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:classappend="${activeNav == 'dance-figures' ? 'icon-filled' : ''}"
+              th:style="${activeNav == 'dance-figures' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">accessibility_new</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Figures</span>
     </a>
 </nav>
 
