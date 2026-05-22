@@ -107,7 +107,7 @@
                         <label for="danceFigureId" class="text-label-md font-label-md text-on-surface">Select Figure</label>
                         <div class="relative flex items-center gap-2">
                             <select name="danceFigureId" id="danceFigureId" required class="flex-1 min-w-0 w-full px-4 py-sm rounded-lg bg-surface border border-surface-variant text-on-surface font-body-md focus:border-primary focus:outline-none">
-                                <option value="">Select a standard figure...</option>
+                                <option value="">Select a figure...</option>
                                 <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
                                     Figure Name
                                 </option>

@@ -22,6 +22,9 @@ import java.util.UUID
 import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
 
 @Service
 class MaterialServiceImpl(
@@ -148,6 +151,9 @@ class MaterialServiceImpl(
         }
         material.figures.add(figure)
         materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureAddedEvent(material, df.name, appUserService.getCurrentUser())
+        )
         return figure
     }
 
@@ -163,6 +169,9 @@ class MaterialServiceImpl(
         figure.endTime = request.endTime
         figure.danceFigure = df
         materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureUpdatedEvent(material, df.name, appUserService.getCurrentUser())
+        )
         return figure
     }
 
@@ -170,8 +179,14 @@ class MaterialServiceImpl(
     override fun removeFigure(materialId: UUID, figureId: UUID) {
         log.debug("Removing figure {} from material {}", figureId, materialId)
         val material = findById(materialId)
+        val figure = material.figures.find { it.id == figureId }
+            ?: throw EntityNotFoundException("Figure not found in material")
+        val figureName = figure.danceFigure?.name ?: "Unknown Figure"
         material.figures.removeIf { it.id == figureId }
         materialRepository.save(material)
+        eventPublisher.publishEvent(
+            MaterialFigureDeletedEvent(material, figureName, appUserService.getCurrentUser())
+        )
     }
 
     override fun findFiguresByMaterial(materialId: UUID): List<Figure> {

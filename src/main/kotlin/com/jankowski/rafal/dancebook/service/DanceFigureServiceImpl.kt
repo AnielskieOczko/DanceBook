@@ -3,10 +3,14 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureSpecification
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,7 +19,9 @@ import java.util.UUID
 @Service
 class DanceFigureServiceImpl(
     private val danceFigureRepository: DanceFigureRepository,
-    private val danceTypeService: DanceTypeService
+    private val danceTypeService: DanceTypeService,
+    private val eventPublisher: ApplicationEventPublisher,
+    private val appUserService: AppUserService
 ) : DanceFigureService {
 
     companion object {
@@ -75,7 +81,11 @@ class DanceFigureServiceImpl(
             this.predefined = false
             this.alternativeTiming = request.alternativeTiming
         }
-        return danceFigureRepository.save(danceFigure)
+        val saved = danceFigureRepository.save(danceFigure)
+        eventPublisher.publishEvent(
+            DanceFigureCreatedEvent(saved, appUserService.getCurrentUser())
+        )
+        return saved
      }
  
     @Transactional
@@ -95,7 +105,11 @@ class DanceFigureServiceImpl(
         danceFigure.danceClass = request.danceClass
         danceFigure.alternativeTiming = request.alternativeTiming
 
-        return danceFigureRepository.save(danceFigure)
+        val saved = danceFigureRepository.save(danceFigure)
+        eventPublisher.publishEvent(
+            DanceFigureUpdatedEvent(saved, appUserService.getCurrentUser())
+        )
+        return saved
     }
 
      @Transactional
@@ -105,6 +119,10 @@ class DanceFigureServiceImpl(
          if (existing.predefined) {
              throw IllegalStateException("Cannot delete predefined standard figures.")
          }
+         val formattedName = "${existing.danceType?.name ?: ""} - ${existing.name}"
          danceFigureRepository.delete(existing)
+         eventPublisher.publishEvent(
+             DanceFigureDeletedEvent(id, formattedName, appUserService.getCurrentUser())
+         )
      }
  }

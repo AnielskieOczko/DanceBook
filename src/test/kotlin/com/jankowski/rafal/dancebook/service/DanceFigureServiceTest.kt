@@ -1,8 +1,12 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import jakarta.persistence.EntityNotFoundException
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.springframework.context.ApplicationEventPublisher
 import java.util.Optional
 import java.util.UUID
 
@@ -21,13 +26,30 @@ class DanceFigureServiceTest {
 
     private lateinit var danceFigureRepository: DanceFigureRepository
     private lateinit var danceTypeService: DanceTypeService
+    private lateinit var eventPublisher: ApplicationEventPublisher
+    private lateinit var appUserService: AppUserService
     private lateinit var danceFigureService: DanceFigureServiceImpl
+    private lateinit var currentUser: AppUser
 
     @BeforeEach
     fun setUp() {
         danceFigureRepository = mock(DanceFigureRepository::class.java)
         danceTypeService = mock(DanceTypeService::class.java)
-        danceFigureService = DanceFigureServiceImpl(danceFigureRepository, danceTypeService)
+        eventPublisher = mock(ApplicationEventPublisher::class.java)
+        appUserService = mock(AppUserService::class.java)
+        
+        currentUser = AppUser().apply {
+            id = UUID.randomUUID()
+            displayName = "Test User"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
+
+        danceFigureService = DanceFigureServiceImpl(
+            danceFigureRepository,
+            danceTypeService,
+            eventPublisher,
+            appUserService
+        )
     }
 
     @Test
@@ -61,6 +83,7 @@ class DanceFigureServiceTest {
         assertEquals("Back Whisk", result.name)
         assertEquals(DanceClass.H, result.danceClass)
         assertEquals(false, result.predefined)
+        verify(eventPublisher).publishEvent(any(DanceFigureCreatedEvent::class.java))
     }
 
     @Test
@@ -125,6 +148,7 @@ class DanceFigureServiceTest {
         assertEquals(DanceClass.H, result.danceClass)
         assertEquals("123&", result.alternativeTiming)
         assertEquals(false, result.predefined)
+        verify(eventPublisher).publishEvent(any(DanceFigureCreatedEvent::class.java))
     }
 
     @Test
@@ -161,6 +185,7 @@ class DanceFigureServiceTest {
         assertEquals("New Name", result.name)
         assertEquals(DanceClass.D, result.danceClass)
         assertEquals("1&2", result.alternativeTiming)
+        verify(eventPublisher).publishEvent(any(DanceFigureUpdatedEvent::class.java))
     }
 
     @Test
@@ -224,6 +249,7 @@ class DanceFigureServiceTest {
             id = figureId
             name = "My Custom Figure"
             predefined = false
+            danceType = DanceType().apply { name = "Waltz" }
         }
 
         `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(customFigure))
@@ -231,6 +257,7 @@ class DanceFigureServiceTest {
         danceFigureService.delete(figureId)
 
         verify(danceFigureRepository).delete(customFigure)
+        verify(eventPublisher).publishEvent(any(DanceFigureDeletedEvent::class.java))
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
