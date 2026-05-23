@@ -47,7 +47,7 @@
   }
   .btn-primary {
     @apply btn btn-md bg-primary-container text-on-primary-container
-           hover:bg-primary-fixed focus:ring-primary active:scale-[0.98];
+           hover:bg-primary-fixed hover:text-on-primary-fixed focus:ring-primary active:scale-[0.98];
   }
   .btn-secondary {
     @apply btn btn-md bg-secondary text-white
@@ -283,7 +283,7 @@
   .bottom-nav-add {
     @apply -mt-4 w-12 h-12 rounded-full bg-primary-container text-on-primary-container
            flex items-center justify-center shadow-ambient
-           hover:bg-primary-fixed transition-all duration-200
+           hover:bg-primary-fixed hover:text-on-primary-fixed transition-all duration-200
            active:scale-95;
   }
 
