@@ -78,7 +78,7 @@
                                 <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
                                     <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>
@@ -160,8 +160,8 @@
                             </div>
                             
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
-                                <span th:if="${list.isPublic}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Public</span>
-                                <span th:unless="${list.isPublic}" class="bg-neutral-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-neutral-container/30">Private</span>
+                                <span th:if="${list.isPublic}" class="badge-secondary">Public</span>
+                                <span th:unless="${list.isPublic}" class="badge-neutral">Private</span>
                                 <span th:each="t : ${list.danceTypes}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30" th:text="${t.name}">Type</span>
                                 <span th:each="c : ${list.danceCategories}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30" th:text="${c.name}">Cat</span>
                                 <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="${list.minRating} + '+ stars'">3+ stars</span>
@@ -190,8 +190,8 @@
                             <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden text-ellipsis" th:text="${list.name}">Collection Name</h3>
                         </div>
                         <div class="flex flex-wrap gap-1.5 items-center relative z-20 pointer-events-auto">
-                            <span th:if="${list.isPublic}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Public</span>
-                            <span th:unless="${list.isPublic}" class="bg-neutral-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-neutral-container/30">Private</span>
+                            <span th:if="${list.isPublic}" class="badge-secondary">Public</span>
+                            <span th:unless="${list.isPublic}" class="badge-neutral">Private</span>
                             <span th:each="t : ${list.danceTypes}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30" th:text="${t.name}">Type</span>
                             <span th:each="c : ${list.danceCategories}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30" th:text="${c.name}">Cat</span>
                             <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="${list.minRating} + '+ stars'">3+ stars</span>

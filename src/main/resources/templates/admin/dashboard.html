@@ -16,14 +16,14 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 gap-4 mb-8">
         <div class="stat-card">
-            <div class="stat-card-icon bg-primary-soft text-primary">
+            <div class="stat-card-icon text-primary">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div class="stat-card-value" th:text="${totalUsers}">0</div>
             <div class="stat-card-label">Users</div>
         </div>
         <div class="stat-card">
-            <div class="stat-card-icon bg-emerald-100 text-secondary">
+            <div class="stat-card-icon text-secondary">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
             </div>
             <div class="stat-card-value" th:text="${totalMaterials}">0</div>
@@ -259,8 +259,8 @@
     </div>
 
     <!-- HTMX Fragments (hidden, returned by HTMX endpoints) -->
-    <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="p-4 rounded-button bg-amber-50 border border-amber-200 mt-2">
-        <h3 class="font-heading font-semibold text-amber-800 mb-2">Simulation Complete</h3>
+    <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="p-4 rounded-button bg-secondary-container/50 border border-secondary/30 mt-2">
+        <h3 class="font-heading font-semibold text-on-secondary-container mb-2">Simulation Complete</h3>
         <p class="text-text-primary text-sm">Found <strong th:text="${orphanedFiles.size()}">0</strong> orphaned file(s).</p>
         <ul th:if="${!orphanedFiles.isEmpty()}" class="list-disc pl-5 mt-2 text-sm text-text-secondary">
             <li th:each="fileId : ${orphanedFiles}" th:text="${fileId}">file-id</li>
@@ -276,25 +276,25 @@
     <div th:fragment="driveSection" th:if="${driveFiles != null}" class="space-y-4">
         <!-- Storage Size Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div class="stat-card bg-blue-50 border-blue-200">
-                <div class="stat-card-label text-blue-900">Total Cloud Space</div>
+            <div class="stat-card bg-surface-container border border-border">
+                <div class="stat-card-label text-text-secondary">Total Cloud Space</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-blue-700" th:text="${T(java.lang.String).format('%.2f MB', totalSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-blue-600" th:text="'(' + ${totalCount} + ' files)'"></span>
+                    <span class="stat-card-value text-text-primary" th:text="${T(java.lang.String).format('%.2f MB', totalSize / 1048576.0)}">0 MB</span>
+                    <span class="text-sm font-medium text-text-secondary" th:text="'(' + ${totalCount} + ' files)'"></span>
                 </div>
             </div>
-            <div class="stat-card bg-success-soft border-success/30">
-                <div class="stat-card-label text-green-900">Linked Materials</div>
+            <div class="stat-card bg-success-soft border border-success/30">
+                <div class="stat-card-label text-success">Linked Materials</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-green-700" th:text="${T(java.lang.String).format('%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-green-600" th:text="'(' + ${linkedCount} + ' files)'"></span>
+                    <span class="stat-card-value text-success" th:text="${T(java.lang.String).format('%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
+                    <span class="text-sm font-medium text-success/80" th:text="'(' + ${linkedCount} + ' files)'"></span>
                 </div>
             </div>
-            <div class="stat-card bg-danger-soft border-danger/30">
-                <div class="stat-card-label text-red-900">Orphaned Waste</div>
+            <div class="stat-card bg-danger-soft border border-danger/30">
+                <div class="stat-card-label text-danger">Orphaned Waste</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-red-700" th:text="${T(java.lang.String).format('%.2f MB', orphanedSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-red-600" th:text="'(' + ${orphanedCount} + ' files)'"></span>
+                    <span class="stat-card-value text-danger" th:text="${T(java.lang.String).format('%.2f MB', orphanedSize / 1048576.0)}">0 MB</span>
+                    <span class="text-sm font-medium text-danger/80" th:text="'(' + ${orphanedCount} + ' files)'"></span>
                 </div>
             </div>
         </div>
