@@ -68,19 +68,13 @@
                     <div th:each="event : ${recentEvents}" class="relative pl-8">
                         <!-- Timeline Dot -->
                         <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
-                             th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container' :
-                                              event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' :
-                                              event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' :
-                                              event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container' : 'bg-surface-variant'}"></div>
+                             th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' : 'bg-primary-container'}"></div>
 
                         <!-- Event Content -->
                         <div class="flex items-start gap-3">
                             <!-- Icon -->
                             <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                                 th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container text-on-primary-container' :
-                                                  event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error-container text-on-error-container' :
-                                                  event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' :
-                                                  event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-variant text-on-surface-variant'}">
+                                 th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error-container text-on-error-container' : 'bg-primary-container text-on-primary-container'}">
                                 <span class="material-symbols-outlined text-[18px]"
                                       th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
                                                 event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :

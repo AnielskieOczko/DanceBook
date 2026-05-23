@@ -80,7 +80,7 @@
                                 <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
                                     <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>
@@ -178,7 +178,7 @@
                             
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
                                 <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                                <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-secondary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Class</span>
+                                <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
                                 <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                     </div>
                     <div class="flex items-center gap-3 text-on-surface-variant">
                         <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                        <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30">Class</span>
+                        <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
                         <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
                     </div>
                 </div>
