@@ -52,7 +52,7 @@ module.exports = {
         "secondary-fixed-dim": "#d5c4a9",
         "inverse-surface": "#313030",
         "on-secondary": "#ffffff",
-        "on-primary-container": "#858c8b",
+        "on-primary-container": "#dde4e2",
 
         // Aliases for smooth transition of existing views
         "text-primary": "#1b1c1b",
