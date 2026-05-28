@@ -1,0 +1,151 @@
+{
+"name": "Running Spin Turn (QUICKSTEP)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/running-spin-turn"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "The Quickstep Running Spin Turn is a Gold Level figure. This online reference gives a detailed description of the dance steps, including timing, footwork, alignment, and movement; steps diagram; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.\nNote: (*) this figure is not in the \"book\", but is often danced.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back pivot, continue turning right",
+      "footwork": "HF",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Strong range of motion, curving body to inside of the turn.",
+        "Continue to turn R"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward in CBMP, 3/8 turn to R",
+      "footwork": "HF",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "Do not allow head and body tip to the right."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "To side, slightly back",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back, right side leading",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back, small step",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward, pivot",
+      "footwork": "HF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/2 pivot turn",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "SQQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Spin turn part",
+      "footwork": "HF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Get shoulder weight connecting down to foot (previous step), using the standing leg to push.",
+        "Do not use shoulders to help with the turn.",
+        "Power comes from the leg."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back, slightly leftwards",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "3/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward, slightly rightwards",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward, left side leading",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Figure not in the \"book\", but is often danced."
+      ]
+    }
+  ]
+}

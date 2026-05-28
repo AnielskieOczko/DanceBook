@@ -1,0 +1,112 @@
+{
+  "name": "Back Corte",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/back-corte"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "DW",
+  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, RF Rock, Reverse Outside Swivel, Rock Turn, Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes": "As described above, the figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step back with left foot, lower new line of dance, inside heel edge of boot, strong frame turning to right, wind up.",
+      "footwork": "IE",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Though books says \"L side leading\", most competitors do CBM and wind up a lot."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back with right foot in CBMP, BDC, BH, CBM.",
+      "footwork": "CBMP",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Mirko Gozzoli lifts the heel and then the toe last. Marcus Hilton lifts the whole foot.",
+        "But Mirko, and contemporary dancers, take much longer steps than Marcus did."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly forward, pointing diagonal wall, inside edge of foot, 1/4 turn to left between steps 2-3.",
+      "footwork": "IE",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/4 to L btwn 2-3",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close right foot to left foot slightly back, facing diagonal wall, whole foot.",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward with right foot, right side leading, down new line of dance, heel, focus forward.",
+      "footwork": "H",
+      "alignment": "Down new LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward in CBMP, DC, heel, CBM.",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side and slightly back, BWD, inside edge of heel, 1/4 turn to left between steps 2-3.",
+      "footwork": "IE",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 to L btwn 2-3",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Close left foot to right foot slightly forward, BWD, whole foot.",
+      "footwork": "WF",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

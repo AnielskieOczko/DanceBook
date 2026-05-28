@@ -1,0 +1,91 @@
+{
+  "name": "Bota Fogos to Promenade and Counter Promenade",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/bota-fogos-to-promenade-and-counter-promenade"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Criss Cross Voltas, Natural Basic Movement, Reverse Basic Movement, Reverse Roll, Reverse Turn, Samba Walk in PP: LF, Samba Walk: Stationary, Side Basic Movement, Traveling Bota Fogos Back, Whisk To Right",
+  "following_figure_names": "Samba Walk in PP: RF, Samba Walk: Side, Traveling Volta to Left (turn to face partner on step 1), Foot Change 5: Promenade Position to Right Contra Position (having made 1/4 turn over 8 & 9)",
+  "notes": "It's ok to dance only step 1-3 as Bota Fogo to PP.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "BF",
+      "alignment": "Forward",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": "a",
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side w/o weight",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "I/E of T (pressure)"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "replace weight to LF in PP",
+      "footwork": "BF",
+      "alignment": "PP",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "BF",
+      "alignment": "Back",
+      "amount_of_turn": "no turn",
+      "comments": [
+        "Steps 1-3: get into Promenade Position."
+      ]
+    },
+    {
+      "step_number": "a",
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side w/o weight",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Lady turns R on this step to PP"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "replace weight to RF in PP",
+      "footwork": "BF",
+      "alignment": "PP",
+      "amount_of_turn": "no turn",
+      "comments": []
+    }
+  ]
+}

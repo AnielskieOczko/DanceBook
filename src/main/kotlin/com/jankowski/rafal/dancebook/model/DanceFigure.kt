@@ -56,13 +56,28 @@ class DanceFigure {
     @Column(name = "ending_position")
     var endingPosition: String? = null
 
-    @Column(name = "preceding_figure_names")
-    var precedingFigureNames: String? = null
+    @Column(name = "preceding_figure_names", columnDefinition = "TEXT")
+    @jakarta.persistence.Convert(converter = StringListConverter::class)
+    var precedingFigureNames: List<String> = emptyList()
 
-    @Column(name = "following_figure_names")
-    var followingFigureNames: String? = null
+    @Column(name = "following_figure_names", columnDefinition = "TEXT")
+    @jakarta.persistence.Convert(converter = StringListConverter::class)
+    var followingFigureNames: List<String> = emptyList()
 
     @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
     var steps: MutableList<DanceFigureStep> = mutableListOf()
+
+    @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
+    var links: MutableList<DanceFigureLink> = mutableListOf()
+
+    @Column(columnDefinition = "TEXT")
+    var notes: String? = null
+
+    fun getLeaderSteps(): List<DanceFigureStep> =
+        steps.filter { it.role == "LEADER" }.sortedBy { it.stepNumber }
+
+    fun getFollowerSteps(): List<DanceFigureStep> =
+        steps.filter { it.role == "FOLLOWER" }.sortedBy { it.stepNumber }
 }
+
 

@@ -1,0 +1,140 @@
+{
+  "RF Rock": {
+   "name": "RF Rock",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "LF Rock, Walk",
+    "following_figure_names": "Back Corte, LF Rock, Tango LF Rock, Tango RF Rock, Reverse Outside Swivel, Rock Turn",
+    "notes": "Rocks may be danced down LOD or DC\nWhen a RF Rock follows a LF Rock, the first step of the RF Rock will be down LOD. When a Closed Finish follows a LF Rock the first step of the Closed Finish will be DC",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "RF back in CBMP",
+        "footwork": "BH",
+        "alignment": "Back LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "Maintain the body position, rotate only on the man's back steps."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "S",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Transfer weight forward to LF in CBMP",
+        "footwork": "H",
+        "alignment": "Against LOD",
+        "amount_of_turn": "0",
+        "comments": []
+      },
+      {
+        "step_number": 3,
+        "timing": "Q",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "LF fwd in CBMP",
+        "footwork": "H",
+        "alignment": "Down LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "Styling option: simply staying left, or, look at each other. More neutral position, so you have more to \"give\" in the next Corte"
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "S",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "Transfer weight back to RF in CBMP",
+        "footwork": "BH",
+        "alignment": "Backing Against LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "Very upward, strong stretch on right side."
+        ]
+      }
+    ]
+  },
+  "LF Rock": {
+    "name": "LF Rock",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link",
+    "following_figure_names": "Open Finish, Closed Finish, RF Rock",
+    "notes": "LF Rock may be danced down LOD or DC\nWhen a LF Rock follows a RF Rock, the first step of the LF Rock will be down LOD. When a Closed Finish follows a LF Rock the first step of the Closed Finish will be DC",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "LF back L side leading",
+        "footwork": "IE of BH",
+        "alignment": "Backing LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "Maintain the body position, rotate only on the man's back steps."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "S",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Transfer weight forward to RF in R side leading",
+        "footwork": "H",
+        "alignment": "Against LOD",
+        "amount_of_turn": "0",
+        "comments": []
+      },
+      {
+        "step_number": 3,
+        "timing": "S",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "RF fwd R side leading",
+        "footwork": "H",
+        "alignment": "Down LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "R side if very \"up\" to Man."
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "S",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "Transfer weight back to LF L side leading",
+        "footwork": "IE of BH",
+        "alignment": "Backing Against LOD",
+        "amount_of_turn": "0",
+        "comments": [
+          "Give center to Man and leave head behind."
+        ]
+      }
+    ]
+  }
+}

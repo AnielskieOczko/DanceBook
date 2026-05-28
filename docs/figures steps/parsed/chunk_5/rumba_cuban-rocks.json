@@ -1,0 +1,58 @@
+{
+  "name": "Cuban Rocks",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/cuban-rocks"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Normal hold, L to R hand hold, no hold. Try to keep both knees straight for all steps.\nMay use rotary or lateral hip action.\nCuban Rock can be danced in LSP as an ending to Aida.\nSome coach prefers: both heels on ground till the last one.\nThe weight changes on the first two steps will not be fully completed.\nLF Cuban Rock may end in Open PP (slight turn L on 3, lady 4).\nRF Cuban Rock may end in Open CPP (slight turn R on 3, Lady L).",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side",
+      "footwork": "BF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "First weight change"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Weight change to opposite foot",
+      "footwork": "BF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Second weight change"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Return to starting foot",
+      "footwork": "BF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Third weight change"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "Natural Roll",
+"urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/natural-roll"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Contact Position",
+  "ending_position": "Various",
+  "preceding_figure_names": "Back Rocks, Closed Rocks (to R and L) (SAMBA), Corta Jaca, Criss Cross Bota Fogos (Shadow Bota Fogos), Maypole (Continuous Volta Spot Turn to R and L) (SAMBA), Natural Basic Movement, Open Rocks (to R and L) (SAMBA), Plait, Progressive Basic Movement, Reverse Basic Movement, Samba Walk: Stationary, Side Basic Movement, Whisk To Left",
+  "following_figure_names": "Promenade And Counter Promenade Runs, Corta Jaca, Back Rocks (after 1-3 of Natural Roll), Plait (after 1-3 of Natural Roll), Open Rocks (to R and L) (SAMBA), Closed Rocks (to R and L) (SAMBA), Whisk To Right, Natural Basic Movement, Side Basic Movement, Progressive Basic Movement",
+  "notes": "Natural Roll may start and finish in various alignments, depending on previous figure.\nLess turn may be made (minimum 1/2 over steps 1-6)\nThe figure is danced in Contact Position, so the arms are held a little higher than normal.\nHead follows the line of the spine.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd, leaning slightly back",
+      "footwork": "HF",
+      "alignment": "1/8 to R",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side, leaning slightly R",
+      "footwork": "BF",
+      "alignment": "1/4 to R btwn 1 & 2",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF, preparing to lean fwd",
+      "footwork": "BF",
+      "alignment": "1/8 to R between 2 and 3",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back, leaning slightly fwd",
+      "footwork": "BF",
+      "alignment": "1/8 to R between 3 and 4",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Knees are slightly straighter during steps 4-6"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side, leaning slightly L",
+      "footwork": "BF",
+      "alignment": "3/8 to R between 4 and 5",
+      "amount_of_turn": "3/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF, preparing to lean back | Body completes turn",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Body completes turn"
+      ]
+    }
+  ]
+}

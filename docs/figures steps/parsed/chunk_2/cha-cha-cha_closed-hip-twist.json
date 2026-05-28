@@ -1,0 +1,136 @@
+{
+"name": "Closed Hip Twist (Advanced)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/closed-hip-twist"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Right Side Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Alemena, Hand To Hand RSP, Natural Top, New York LSP, Rope Spinning, Shoulder To Shoulder Left Side",
+  "following_figure_names": "Alemena, Hockey Stick, Open Basic Movement, Time Step LF, Open Hip Twist, Curl, Cuban Break LF, Split Cuban Break LF, Chase, Turkish Towel, Sweetheart, Follow My Leader, New York LSP, Spot or Switch Turn To R, Underarm Turn to L, Three Cha Cha Chas Forward, Reverse Top",
+  "notes": "Other finishing positions:\nOpen Position\nMan turns 1/4 to L over 7-10\nOpen CPP\nMan turn 1/8 L over 7 & 8, leading lady to overturn on 7, both taking 8 diagonally fwd to chasse in Open CPP\nLady turns an additional 1/8 L on 7 using a loosely crossed spiral action\nContact Position\nMan 1/2 L over 7-10, dancing the ahsse side and slightly fwd.\nLady 3/4 L over 7-10 dancing the chasse with LF behind RF as Cuban Cross.\nNormal hold retained throughout.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side or forward in RSP with slight body turn to R",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "slight to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back in RSP with 1/2 turn to R",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "small locks toward Man, build the tension, till the end, sharp half turn to R (turn body first, then snap hips and head)."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact chasse LRL with very slight body turn to L",
+      "footwork": "B",
+      "alignment": "LRL",
+      "amount_of_turn": "very slight to L",
+      "comments": [
+        "lower L arm."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side to chasse RLR, ending in Fan Position",
+      "footwork": "T",
+      "alignment": "Fan Position",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "?",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF forward in line with LF towards Man's right side, chasse RLR, 1/2 turn to L",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "This is pressed walk with RF fwd, a big diagonal to L. (it's a fwd step, really throw L hip back. hip should not be flat), knee flexed. heel is not lowered.",
+        "\"&\": LF closed to RF, both knees bent.",
+        "\"1\": RF to side, slightly back, still facing Man at this moment.",
+        "\"&\": turn 1/2 to R.",
+        "Keep head stable, not moving left and right."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward passing in front of Man",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn starts at e/o previous beat, Turn is initiated from hips, which are turned more than upper body, Small step"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF forward in line with LF, then turn to end RF back, 1/2 to L, body turns less",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "Turn at end of beat."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back Lock LRL, end in Fan Position, body completes turn",
+      "footwork": "B",
+      "alignment": "Fan Position",
+      "amount_of_turn": "none",
+      "comments": [
+        "Man holding lady on palm, not around fingers. arms low, at Lady's waist level.",
+        "End of \"1\": drop heel",
+        "\"1&\" - on \"&\", settle L hip, which draws in RF, preparing for next step, i.e. Hockey Stick."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "name":"Quick Open Reverse",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/quick-open-reverse"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Curve the step. Connect R shoulder down to R hip (turning the dial). Preparing for L turn (Lady is inside of turn): Lower part of body is rotary, upper body is on sway plane. For left turning figures, upper body turns less. L shoulder positive.\nKeep left side strongly to the Man all through the steps.\nThe movement is still same direction back, foot is pointing LOD.\nSwing L hip and L side through an upward diagonal (push from the R hip), do not put head weight forward too quickly. Feel the lightness. Body stretched.\nChanging from L side positive to R side positive.\nFeather ending.\nLengthen the R side. Take head to L. Turn the feet. Giving/keeping upper body and arms to partner.\nBody position is strongly to the right, head balance on the left.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward in line of dance, beginning turn to left",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side, backing diagonal wall",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(L)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step back in CBMP",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Sway(L)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in CMBP, finish",
+      "footwork": "TH",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "lower"
+      ]
+    }
+  ]
+}

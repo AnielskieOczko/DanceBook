@@ -1,0 +1,107 @@
+{
+  "name": "Change of Direction",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/change-of-direction"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Chasse Reverse Turn, Progressive Chasse To Right, Cross Chasse",
+  "notes": "If you don't pull left hip back, it's easy for the step to become back weighted.\nAfter stepping, pull left hip back, leave L knee fwd, to allow using the standing leg to draw R leg.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, starts to turn L",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF diag fwd, R side leading",
+      "footwork": "IE",
+      "alignment": "DW",
+      "amount_of_turn": "1/4 to L bwtn 1-3",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF closes to RF, slightly fwd without weight",
+      "footwork": "FDC",
+      "alignment": "FDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP",
+      "footwork": "H",
+      "alignment": "CBMP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF diag back, L side leading",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 to L btwn 1-3",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF closes to LF, slightly back without weight",
+      "footwork": "IE",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

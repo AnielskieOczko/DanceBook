@@ -1,0 +1,217 @@
+{
+  "name": "Promenade and Counter Promenade Runs",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/promenade-and-counter-promenade-runs"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Maypole, Natural Basic Movement, Natural Roll, Open Rocks, Reverse Basic Movement, Side Basic Movement, Solo Spot Volta to Left (Lady to Right), Whisk To Left",
+  "following_figure_names": "Whisk To Left (turn to face partner on 1 of Whisk), Samba Walk in PP: LF, Three Step Turn (Turn to R, Lady to L, then follow with Whisk to L), Rhythm Bounce (Man LF, Lady RF), Traveling Volta to Left (start with step 2)",
+  "notes": "Note: body inclination could be reversed as well. incline body to R on step 3, to L on step 6, and to R on step 9.\nShaping direction: into the connecting arms with partner on count 1.\nMovement, hip movement continuous, but not faster.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side",
+      "footwork": "BF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Replace weight",
+      "footwork": "BF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/8 to L between steps 1 and 2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in Open PP and CMBP, start turn R",
+      "footwork": "BF",
+      "alignment": "Open PP and CMBP",
+      "amount_of_turn": "Start to turn R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "3/8 to R",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step back and slightly to side",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3/8 to R",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side in Open CPP",
+      "footwork": "BF",
+      "alignment": "Open CPP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "1/8 to R",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward and across in Open CPP and CBMP",
+      "footwork": "BF",
+      "alignment": "Open CPP and CBMP",
+      "amount_of_turn": "Body turns less",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward between partners' feet, body completes turn",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "Body completes turn",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "1/8 to R",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side in Open PP",
+      "footwork": "BF",
+      "alignment": "Open PP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward and across in Open PP and CBMP, no turn",
+      "footwork": "BF",
+      "alignment": "Open PP and CBMP",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step to side",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "1/8 to R",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Replace weight",
+      "footwork": "BF",
+      "alignment": "PP",
+      "amount_of_turn": "1/8 to R between steps 1 and 2",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "1/8 to R",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward and across in Open PP and CBMP",
+      "footwork": "BF",
+      "alignment": "Open PP and CBMP",
+      "amount_of_turn": "Body turns less",
+      "comments": []
+    },
+    {
+      "step_number": 13,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward (straight leg) between partner's feet, body completes turn",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "Body completes turn",
+      "comments": []
+    },
+    {
+      "step_number": 14,
+      "timing": "3/8 to R",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step to side in Open CPP",
+      "footwork": "BF",
+      "alignment": "Open CPP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward and across in Open PP and CBMP, start turn R",
+      "footwork": "BF",
+      "alignment": "Open PP and CBMP",
+      "amount_of_turn": "Start to turn R",
+      "comments": []
+    },
+    {
+      "step_number": 16,
+      "timing": "3/8 to R",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step back and slightly to side",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 17,
+      "timing": "3/8 to R",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side in Open PP",
+      "footwork": "BF",
+      "alignment": "Open PP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 18,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward and across in Open PP and CBMP, no turn",
+      "footwork": "BF",
+      "alignment": "Open PP and CBMP",
+      "amount_of_turn": "No turn",
+      "comments": []
+    }
+  ]
+}

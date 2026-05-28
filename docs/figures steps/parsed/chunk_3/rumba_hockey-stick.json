@@ -1,0 +1,140 @@
+{
+ "name": "Hockey Stick",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/hockey-stick"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twists,Closed Hip Twist,Curl,Fan,Natural Top,Open Hip Twist,Opening Out From Reverse Top,Spiral,Three Threes",
+  "following_figure_names": "Basic Movements,Shoulder To Shoulder Left Side,Alemana,Open Hip Twist,Curl,Three Threes,New York LSP,Spot or Switch Turn To R",
+  "notes": "Hockey Stick starts in Fan Position, may end in Open Position.\nAlternative finishing: Open CPP.\nMan leads Lady to overturn towards end of 5, both taking 6 diag fwd in Open CPP.\nLady turns an additional 1/4 L on RF using a loosely crossed spiral action.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, no turn",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "WF",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close to RF",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF behind LF (Cuban Cross) 1/8 to R",
+      "footwork": "B",
+      "alignment": "Diagonal",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd small step, no turn",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "6",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close to LF, no turn",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "7",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in Open Position",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "9",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd 1/8 to L",
+      "footwork": "F",
+      "alignment": "Diagonal Left",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "10",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF, then turn underarm to end RF back 1/2 to L",
+      "footwork": "F",
+      "alignment": "Turning",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "11",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in Open Position",
+      "footwork": "B",
+      "alignment": "Backward",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

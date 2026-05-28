@@ -1,0 +1,141 @@
+{
+  "name": "Reverse Roll",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/reverse-roll"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Contact Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Rocks, Closed Rocks, Natural Basic Movement, Open Rocks, Plait, Reverse Basic Movement, Reverse Turn, Side Basic Movement",
+  "following_figure_names": "Reverse Basic Movement, Whisk To Left (Reverse Turn undertuned to face wall), Traveling Bota Fogos Forward (LF), Bota Fogos To Promenade and Counter Promenade (Reverse Turn undertuned to face wall), Reverse Turn, Reverse Roll, Traveling Bota Fogos Back (after step 3), Back Rocks (after step 3), Plait (after step 3)",
+  "notes": "Reverse Roll has bigger upper body motion than Natural Roll.\nWhen body is leaning forward (on top of partner): In Reverse Roll, LF is stepping forward; In Natural Roll, LF is stepping back.\nHead follows the line of the spine.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Fwd",
+      "footwork": "HF",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "Prepare for roll by inclining body R on last 1/4 beat of previous step.",
+        "Body inclination on step 1 is fast and Man's L arm and Lady's R arm is lowered."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Fwd and to L",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Arms return to normal position over steps 2 and 3."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "",
+      "action": "To L",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "",
+      "action": "Back and to L",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Arms raised again over steps 4-5."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "",
+      "action": "Back and to R",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Body has inclination. Roll to L (reverse).",
+        "Head: keep straight neckline with spine and back. Don't turn head to left or right like Standard dances."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "LF to side",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close to LF",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Fwd",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Finish the half circle, now body inclined to R, hip to L. Continue to roll on the other half"
+      ]
+    }
+  ]
+}

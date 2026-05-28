@@ -1,0 +1,85 @@
+{
+  "name": "Left Whisk",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/left-whisk"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Whisk, Basic Weave, Closed Impetus, Contra Check, Fallaway Whisk, Natural Spin Turn, Open Impetus, Open Telemark, Outside Change, Outside Spin, Reverse Turn, Turning Lock, Turning Lock to R, Weave From Promenade Position, Whisk",
+  "following_figure_names": "Outside Change, Fallaway Whisk, Back Whisk, Outside Spin, Open Impetus, Closed Impetus",
+  "notes": "Can enter Left Whisk from different position, e.g. From Weave or Outside Change, ending in Closed Position, but with Lady's head turned to R. No rise in Left Whisk.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "FDW",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF crosses behind LF",
+      "footwork": "T",
+      "alignment": "FDW",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8",
+      "comments": []
+    }
+  ]
+}

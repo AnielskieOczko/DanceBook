@@ -1,0 +1,30 @@
+{
+  "name": "Shadow Travelling Volta",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/shadow-travelling-volta"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "R Shadow Position",
+  "ending_position": "R Shadow Position",
+  "preceding_figure_names": "Cruzados Walks and Locks,Maypole,Foot Change 1: Closed Position to Right Shadow Position,Foot Change 8: Right Side Position to Right Shadow Position,Maypole,Natural Basic Movement,Reverse Basic Movement,Samba Walk in PP: LF,Shadow Circular Volta with LF,Shadow Traveling Volta commenced with LF,Side Basic Movement,Traveling Bota Fogos Forward",
+  "following_figure_names": "Samba Walk in PP: LF (same foot),Traveling Bota Fogos Forward (LF),Shadow Traveling Volta commenced with LF,Shadow Circular Volta with LF,Contra Bota Fogos (Same Foot Bota Fogo to R Contra Postion),Cruzados Walks and Locks (RF),Samba Walk in PP: RF (same foot),Traveling Bota Fogos Forward (RF),Shadow Traveling Volta commenced with RF,Shadow Circular Volta with RF,Contra Bota Fogos (Same Foot Bota Fogo to R Contra Postion),Cruzados Walks and Locks (RF)",
+  "notes": "Silver & Gold: After 2 bars of Traveling Volta, continue with 2 bars of Shadow Circular Volta or vice versa. Count: \"1 a 2 a 3 a 4 a 5 a 6 a7 a 8\". The last 2 steps of Shadow Traveling Volta may be replaced with 2 & 3 of a Bota Fogo. (Amount of Turn unchanged.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1-7",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Begin Traveling Volta, commence with RF moving to L, curving up to 3/8 R",
+      "footwork": "RF",
+      "alignment": "R Shadow Position",
+      "amount_of_turn": "3/8 to R",
+      "comments": []
+    }
+  ]
+}

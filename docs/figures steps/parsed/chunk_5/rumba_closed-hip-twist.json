@@ -1,0 +1,153 @@
+{
+  "name": "Closed Hip Twist",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Alemana, Hand To Hand RSP, Natural Top, New York LSP, Opening Out To Right And Left, Progressive Walks Forward in RSP, Progressive Walks Forward in Right Shadow Position, Rope Spinning, Shoulder To Shoulder Left Side, Three Alemanas",
+  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas, Basic Movements: Open, Open Hip Twist, Curl, Three Threes, New York LSP, Spot or Switch Turn To R, Underarm Turn To L, Reverse Top",
+  "notes": "Alternative Finishing Positions:\nOpen Position: Man turn 1/4 L over 5 & 6\nOpen CPP:\nMan turn 1/8 L over 5 & 6, leading lady to overturn on 5, both taking 6 diag. fwd.\nLady turns an additional 1/8 L on 5 using loosely crossed spiral action.\nContact Position:\nMan turn 1/2 L over 5 & 6 to end RF side and slightly fwd.\nLady 3/4 L over 5 & 6 to end LF behind RF as Cuban Cross.\nNormal hold retained throughout.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side in RSP with slight body turn to R",
+      "footwork": "WF",
+      "alignment": "Side",
+      "amount_of_turn": "Slight to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF with very slight body turn to L",
+      "footwork": "Together",
+      "alignment": "Closed Position",
+      "amount_of_turn": "Slight to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side in Fan Position",
+      "footwork": "WF",
+      "alignment": "Fan Position",
+      "amount_of_turn": "May turn L to enter",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back in RSP, 1/2 turn to R",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Turn starts end of previous beat.",
+        "Turn shoulder first, then turn twist hip sharp for fast 1/2 turn to R, now RF is in front. RF is turned out, lift the heel up. Do not leave RF trailing during turn. RF and R leg should have nice long leg line. then place RF back.",
+        "\"Give\" Man right arm, keep tone in arm, energy forward."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "WF",
+      "alignment": "Line",
+      "amount_of_turn": "None",
+      "comments": [
+        "\"3 &\", on \"&\" start turning 1/2 to L to face Man.",
+        "Keep foot pressure on floor, track RF while turning. Turning shoulder/body first."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF towards Man's R side, 1/2 to L",
+      "footwork": "WF",
+      "alignment": "Line with Man's R side",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "Option 1: \"4 1 &\", do not turn to R early, Hold on 1, straighten R leg with weight, then turn to R on \"&\".",
+        "Option 2: straighten and turn at the same time on \"1\" for more energy."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd passing in front of Man, 1/4 to R",
+      "footwork": "WF",
+      "alignment": "Forward",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn starts end of previous beat.",
+        "after turning, don't pause LF, place it and transfer weight",
+        "Turn is initiated from hips. Hips turn more than body."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF, then turn to end RF back, 1/2 to L, body turn less",
+      "footwork": "WF",
+      "alignment": "Line",
+      "amount_of_turn": "1/2 to L, body turn less",
+      "comments": [
+        "RF step fwd, really wrap R arm around belly tight, do not turn body too early.",
+        "Then sharp 1/2 turn. Forward Walk Turn.",
+        "Do not let body weight take over.",
+        "After turning, there is still weight on LF (LF in front after turning), body weight fwd, keep tone/tension in RH with Man, before stepping LF back on \"4\"."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in Fan Position, body completes turn",
+      "footwork": "WF",
+      "alignment": "Fan Position",
+      "amount_of_turn": "Body completes turn",
+      "comments": [
+        "Release L leg and step back ahead of body. Backward walk action.",
+        "Fan position is a picture pose position. Give it some \"significance\" with more arm styling.",
+        "Body turns to left in the direction of the hand, do not tilt shoulders.",
+        "Look at your audience, along the L arm."
+      ]
+    }
+  ]
+}

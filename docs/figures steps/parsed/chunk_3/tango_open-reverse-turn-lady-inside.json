@@ -1,0 +1,126 @@
+{
+  "name": "Open Reverse Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "This is sort of equivalent of heel turn in Tango. Heel turns are often said to be lead with early rise.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd in CBMP",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Prepare leading Lady the heel turn by rising early."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "BH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "The man steps across the lady on step 2. In contrast to the outside partner version, where step 2 is oriented BDW, this step should end backing LOD.",
+        "The man keeps his weight forward on step 2. When he places his right foot, it should be on the ball of the foot. If the man were to stop on step 2, he would be pushing off the ball of his right foot. If his weight carries too much too quickly to his heel, he will pull the lady off her balance, and prevent her from executing the heel turn.",
+        "The man stays on his side (the left) on step 2, lest he knock the lady over on his right."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back L side leading",
+      "footwork": "IE",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "The man stays on his side (the left) on step 2, lest he knock the lady over on his right."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BH",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF slightly back",
+      "footwork": "Whole Foot",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Toe turned in facing Wall or DW.",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "L",
+      "action": "closes to R Heel",
+      "footwork": "Whole Foot",
+      "alignment": "Toe Pointing down LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Man's rise and cutting across induce Lady's straightening knee a bit and close heels. Both knees are soft (not locked) and slightly bent."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in R side leading",
+      "footwork": "H",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "The inline finish use Corte action. After heel turn, Lady is going forward (upper body drive forward, not just belly button), Lady really has to drive on the Corte.",
+        "Keep shoulder flat, do not rise/pop up.",
+        "After stepping RF fwd into Corte, connect R shoulder to RF as axis, whole left side going forward to extend, do not draw R shoulder back. Axis is not center of body, axis is the right side."
+      ]
+    }
+  ]
+}

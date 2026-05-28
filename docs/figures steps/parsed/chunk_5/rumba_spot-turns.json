@@ -1,0 +1,97 @@
+{
+  "name": "Spot Turns to L or R (Including Switch and Underarm Turns) Developments (CHA_CHA_CHA)",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/spot-turns"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Closed Hip Twist, Cuban Rocks RF, Fencing, Hand To Hand LSP, Hockey Stick, New York RSP, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral",
+  "following_figure_names": "Basic Movements: Open (4-6), New York RSP, Spot or Switch Turn to L (Lady to R), Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Cuban Rocks RF, Fan, Syncopated Cuban Rocks RF, Alemana, Open Hip Twist, Curl, Three Threes, Three Alemanas, Rumba Underarm Turn to Right, Can be danced in Closed Position, L to R hand hold, Man dances RF Alternative Basic or 4-6 of Closed Basic while leading to turn, May end in Open CPP.",
+  "notes": "Spot Turns can be danced solo by Man and/or Lady, circling to L or R. They can be danced as Switch Turns. Start in Closed Position. No hold, or L to R or R to L hand hold. Turning action could be a Forward Walk Turn action, or a brushing action where the free foot closes to standing foot, brush and then do a fwd walk. Different from underarm turn, for spot turns, count \"2\": lady turns about 1/8\", diagonally \"&\" RF brush LF; count \"3\": lady turns about 1/4, RF fwd; if preferred, the ball of the foot may remain in place while turn is made around this foot. count \"4 1\": finish turn to face partner. last step could be fwd or to side depending on distance between couple. Often, one partner is doing Spot Turn, while the other does Alternative Basic or Cuban Rock, or 3 steps of a Closed Basic. Spot Turn is a common ending for New York, Hand to Hand, Fencing and may other figures. Amount of Turns: complete turn, or 7/8 or 3/4, depending on starting and ending position: open PP, Open CPP, facing partner. Spot Turn or Switch to L (Lady to R) could end in Open Position, taking L to R hand hold at step 3, taking step 3 fwd leading Lady to step back. Preceding Figures for Spot or Switch Turn to R (Lady to L) Advanced Hip Twists Alemana Basic Movements: Closed Closed Hip Twist Cuban Rocks RF Cucarachas: RF Curl Fencing Hand To Hand LSP Hockey Stick New York RSP Open Hip Twist Progressive Walks Forward in LSP Rope Spinning Shoulder To Shoulder Right Side Side Step To Right commenced with RF Spiral Spot or Switch Turn to L (Lady to R) Syncopated Cuban Rock LF Underarm Turn To R Following Figures for Spot or Switch Turn to L (Lady to R) Progressive Walks Forward in RSP Progressive Walks Forward Basic Movements: Open (normal; or when ended in Open Position; or when ended in Open Position, follow with 1-3 Open Basic into Natural Top; or when ended in Open Position, follow with Open Basic into Progressive Walks Back) Basic Movements: Closed New York LSP Spot or Switch Turn to L (Lady to R) Underarm Turn To L Hand To Hand RSP Side Step To Left commenced with LF Side Step To Right commenced with LF Cuban Rock LF Fan Syncopated Cuban Rock LF Alemana (when ending in open position) Open Hip Twist (when ending in open position) Curl (when ending in open position) Three Threes (when ending in open position) Three Alemanas (when ending in open position) Rumba Underarm Turn to Left Can be danced in following positions. L to R hand hold. From Closed Position: Man does LF Alternative Basic Movement while leading Lady to turn. From Open CPP: Man does 1-3 of Closed Basic Movement taking 1st step to Lady's L side. May turn L on last step to end in Open PP. (Lady turn 1/8 less) Preceding Figures for Underarm Turn to L Advanced Hip Twists Alemana Basic Movements: Closed Closed Hip Twist Cuban Rocks RF Cuban Rocks RF Curl Fencing Hand To Hand LSP Hockey Stick New York RSP Open Hip Twist Progressive Walks Forward in LSP Rope Spinning Shoulder To Shoulder Right Side Side Step To Right commenced with RF Spiral Spot or Switch Turn to L (Lady to R) Syncopated Cuban Rock LF Underarm Turn To R Following Figures for Underarm Turn to L Basic Movements: Open (4-6) Basic Movements: Closed (4-6) New York RSP Spot or Switch Turn to L (Lady to R) Underarm Turn To R Hand To Hand LSP Side Step To Left commenced with RF Side Step To Right commenced with RF Cuban Rocks RF Fan (4-6) Natural Top (turning slightly R and leading Lady to step RF fwd on last step of Underarm Turn L) Aida Syncopated Cuban Rocks RF Rumba Underarm Turn to Right Danced in Closed Position. L to R hand hold. Man dances RF Alternative Basic or 4-6 of Closed Basic while leading to turn. May end in Open CPP. Preceding Figures for Underarm Turn to R Basic Movements: Closed Cuban Rock LF Cucarachas: LF Hand To Hand RSP Natural Opening Out Movement New York LSP Progressive Walks Back Progressive Walks Forward in RSP Progressive Walks Forward in Right Shadow Position Shoulder To Shoulder Left Side Side Step To Left commenced with LF Side Step To Right commenced with LF Spot or Switch Turn To R (Lady to L) Syncopated Cuban Rocks RF Underarm Turn To L Following Figures for Underarm Turn to R Basic Movements: Open Basic Movements: Closed New York LSP Spot or Switch Turn To R (Lady to L) Underarm Turn To L Shoulder To Shoulder Left Side (end Shoulder to Shoulder facing partner) Hand To Hand RSP Side Step To Left commenced with LF Side Step To Right commenced with LF Cuban Rock LF Fan Syncopated Cuban Rock LF",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/4 to L, step RF, then 1/2 to L",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward with right foot after turning 1/4 to left on preceding '&' in line with left foot.",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "1/2 to left",
+      "comments": [
+        "Turn initiated on preceding '&'."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3: Transfer weight to LF",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight onto left foot.",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "None",
+      "comments": [
+        "Weight transfer prepares for next step."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1: RF to side | 1/4 to L over 3-5",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side with right foot, turning 1/4 to left over counts 3-5.",
+      "footwork": "F",
+      "alignment": "Side",
+      "amount_of_turn": "1/4 to left",
+      "comments": [
+        "Smooth step, do not pause in middle."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2: LF fwd (after 1/4 to L) ... turn 1/2 to L",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward with left foot after turning 1/4 to left on preceding '&', then turn 1/2 to left ending with left foot back.",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "1/2 to left",
+      "comments": [
+        "Switch Turn to Left for follower."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Transfer weight to RF",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight onto right foot, preparing for turn.",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "None",
+      "comments": [
+        "Weight transfer on '&'."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1: LF to side | 1/4 to R over 3-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side with left foot, turning 1/4 to right over counts 3-5.",
+      "footwork": "F",
+      "alignment": "Side",
+      "amount_of_turn": "1/4 to right",
+      "comments": [
+        "Turn/swivel at end of previous beat."
+      ]
+    }
+  ]
+}

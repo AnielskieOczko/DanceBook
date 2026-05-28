@@ -1,0 +1,227 @@
+{
+  "name": "Walks",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/walks"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Basic In Place, Fallaway Rock, Link, Mooch, Reverse Whip, Whip",
+  "following_figure_names": "Fallaway Throwaway, Change of Places Right to Left, Whip, Whip Throwaway",
+  "notes": "What's shown above is a version common taught in classes, followed by a triple step (QaQ) and whip. Walks can start in PP. Variations: A more basic version ends at step 8, no more turns. Man could use a \"merengue\" action in place of single Q's: straighten R knee on second half of preceding step, making R hip to move back and to R; place LF diag fwd with part weight. Lady closes RF to LF, having turned 1/4 L on second half of preceding step; the other foot is similar. When using this variation, it can be curved slightly L.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "1/8 to L on 1, No turn on 2 (part of Fallaway Rock)",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward to chassse LRL, ending in PP",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward and across in PP and CBMP to chassse RLR",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward turning Lady to L",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward and across in PP turning Lady to R",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward turning Lady to L",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward and across in PP turning Lady to R",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward turning Lady to L",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward and across in PP turning Lady to R",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "1-2 of Fallaway Rock | 1/4 to R (start)",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Side chasse RLR, end in PP | 1/4 to L over 3-4, start to turn R on 5",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Fwd chassse LRL, end in PP | 1/4 to R over 5-6, start to turn L on 8",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Raise left arm straight up on side of left ear at end of step 8"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side after turning 1/4 L on LF | start turning R at the end",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Start with straight up arm; elbow down forward, wrist at left side of face, hand behind neck at end"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward in PP after turn 1/4 R on RF | start turning L at the end",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Elbow forward initially to avoid hitting the man; raise L arm straight and gradually place it on top of man's right shoulder over next 4 Q's"
+      ]
+    },
+    {
+      "step_number": 15,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side after turning 1/4 L on LF | start turning R at the end",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Arm slowly getting down to man's right shoulder while twisting"
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward in PP after turning 1/4 R on RF | start turning L at the end",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 17,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side after turning 1/4 L on LF | start turning R at the end",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 18,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward in PP after turning 1/4 R on RF",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "When to close or not depends on what follows next"
+      ]
+    }
+  ]
+}

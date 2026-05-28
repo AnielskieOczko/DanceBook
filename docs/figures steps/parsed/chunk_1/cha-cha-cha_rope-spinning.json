@@ -1,0 +1,89 @@
+{
+  "name": "RopeSpinning",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/rope-spinning"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana",
+  "following_figure_names": "Closed Basic Movement",
+  "notes": "Alternative finishing positions:\nMan and Lady end to side\nMan and Lady end diagonally fwd in Open CPP\nMan: 1/8 to R on step 8 arresting lady's turn with L hand.\nLady: 7/8 to R over steps 1-8.\nLady end fwd toward Man's R side\nMan: turns body slightly R on step 8 to lead Lady towards his R side. Man: LF slightly leftwards on step 7.\nLady: LF fwd in line with RF into fwd lock.\nMan and lady fwd towards partner's R side\nMan: RF fwd in line with LF on step 8, into fwd lock towards Lady's R side. Man may turn up to 1/4 to R over steps 7-10.\nLady: turn up to 1/4 more accordingly.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Move left foot to side and continue turning body to the right",
+      "footwork": "B",
+      "alignment": "Side",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "If preferred, Man can keep his R hand lightly in contact with Lady",
+        "Circle L hand clockwise over head over step 1 and 2"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot and turn body slightly left, returning to normal position",
+      "footwork": "B",
+      "alignment": "Center",
+      "amount_of_turn": "Slight left",
+      "comments": [
+        "Return body to normal position over 2 and 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact Chasse LRL ending in LSP, continue turning body to left",
+      "footwork": "C",
+      "alignment": "LSP",
+      "amount_of_turn": "Continue turning left",
+      "comments": [
+        "End in LSP",
+        "L hand to L side",
+        "Gradually lower to waist level over steps 3-5"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Move right foot back, no turn, continue circling left hand",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "None",
+      "comments": [
+        "Continue to circle L hand clockwise over steps 6-9",
+        "Incline body slightly to L on step 6"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "234&1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Two walks forward RL, then forward lock RLR, circling R behind Man's back",
+      "footwork": "C",
+      "alignment": "LSP",
+      "amount_of_turn": "1/2 to R over 1-5",
+      "comments": [
+        "End in LSP",
+        "Alternative finishing positions as described above"
+      ]
+    }
+  ]
+}

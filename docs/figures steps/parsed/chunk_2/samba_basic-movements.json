@@ -1,0 +1,119 @@
+{
+  "name":"Natural Basic Movement",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/basic-movements"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Rocks, Closed Rocks, Corta Jaca, Maypole, Natural Basic Movement, Natural Roll, Plait, Progressive Basic Movement, Reverse Basic Movement, Samba Walk: Stationary, Side Basic Movement, Traveling Bota Fogos Forward, Whisk To Left, Whisk To Right",
+  "following_figure_names": "Cruzados Walks and Locks, Samba Locks, Promenade And Counter Promenade Runs, Natural Roll, Round About, Contra Bota Fogos, Shadow Circular Volta with RF, Maypole, Plait, Back Rocks, Open Rocks, Closed Rocks, Corta Jaca, Shadow Traveling Volta with RF, Solo Spot Volta to Right, Criss Cross Voltas, Traveling Bota Fogos Back, Traveling Bota Fogos Forward, Traveling Volta to Left, Rhythm Bounce, Samba Walk Stationary, Samba Walk Side, Samba Walk in PP RF, Whisk To Right, Side Basic Movement, Progressive Basic Movement, Three Step Turn, Reverse Roll, Shadow Circular Volta with LF, Argentine Crosses, Rolling Off The Arm, Reverse Turn, Shadow Traveling Volta with LF, Solo Spot Volta to Left, Bota Fogos To Promenade and Counter Promenade, Criss Cross Bota Fogos, Traveling Volta to Right, Samba Walk in PP LF, Whisk To Left, Reverse Basic Movement, Samba Reverse Basic Movement",
+  "notes": "Use minimal bounce and use 4 steps as below. When used as a Precede to Traveling Bota Fogos Forward, start Natural Basic Movement facing LOD and turn 1/8 L over 2 and 3. 4-6 are then danced with follower outside. When used as a Follow to Traveling Bota Fogos Forward, the first step is outside partner. Turn 1/8 R over 2 and 3 to face partner. Precedes: any figure ending facing partner with weight on LF. Follows: any figure commenced with RF.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "No turn or up to 1/4 to R",
+      "amount_of_turn": "0",
+      "comments": [
+        "No turn or up to 1/4 to R over 1-6"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close to RF without weight",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Close LF to RF w/o weight | B (pressure)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step back",
+      "footwork": "B",
+      "alignment": "No turn",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close to LF without weight",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Close RF to LF w/o weight | B (pressure)"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step back",
+      "footwork": "B",
+      "alignment": "No turn or up to 1/4 to R",
+      "amount_of_turn": "0",
+      "comments": [
+        "No turn or up to 1/4 to R over 1-6"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close to LF without weight",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Close RF to LF w/o weight | B (pressure)"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Close to RF without weight",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Close LF to RF w/o weight | B (pressure)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "name": "Reverse Whip",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/reverse-whip"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic In Place, Fallaway Rock, Link, Reverse Whip, Whip",
+  "following_figure_names": "Stalking Walks, Flicks and Break, Basic In Place, Fallaway Rock, Fallaway Throwaway, Change of Places Right to Left, Walks, Mooch, Reverse Whip",
+  "notes": "",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Move forward across partner in Closed Position",
+      "footwork": "F",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "No turn on step 2"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side and slightly back",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Cuban Cross to front of partner",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "5/8 to L",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Move forward and slightly to side",
+      "footwork": "F",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "5/8 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Swivel on ball, ending in front of partner",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Swivel on ball of LF, ending LF in front of RF (Cuban Cross)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side chasse RLR",
+      "footwork": "R",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "5/8 to L",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side in Closed Position, chasse RLR",
+      "footwork": "Q",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "End RF back and slightly to side"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "5/8 to L",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Cuban Cross behind partner",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back and slightly to side",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side chasse LRL",
+      "footwork": "Q",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    }
+  ]
+}

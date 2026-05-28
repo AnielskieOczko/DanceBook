@@ -1,0 +1,108 @@
+{
+"name": "Chugging",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/chugging"
+  ],
+  "dance_type": "JIVE",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Catapult, Change of Places Left to Right, Rolling Off the Arm, Shoulder Spin",
+  "following_figure_names": "American Spin, Catapult, Change of Places Left to Right, Rolling Off the Arm, Shoulder Spin, Miami Special, Change of Hands Behind Back, Hip Bump, Stop and Go, Link",
+  "notes": "Chugging may be danced with double hand hold. Releasing both hands on step 17.\nThe rotation may vary, the size of the circle may vary.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step 1 2 of Link LR | No turn",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact Chasse LRL | 1/8 to R over steps 3-4",
+      "footwork": "H",
+      "alignment": "R",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Retract R arm, increase tone in arm on step 5. (or dance side chassé). Man's L arm on Lady's Left shoulder."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Very small side chassé RLR | 1/8 to L over steps 6-8",
+      "footwork": "H",
+      "alignment": "L",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Retain tone and slightly extend R arm. Man opens L arm to side."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF behind RF (Cuban Cross) to chassé LRL | 1/4 to R over steps 9-11",
+      "footwork": "H",
+      "alignment": "R",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "(Lock chassé) Retain tone and slightly retract R arm. Man's L arm on Lady's Left shoulder."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Very small side chassé RLR | 1/2 to L over steps 12-14",
+      "footwork": "H",
+      "alignment": "L",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "Retain tone and slightly extend R arm. Man opens L arm to side."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Cuban Cross to chassé LRL | 1/4 to R over steps 15-17",
+      "footwork": "H",
+      "alignment": "R",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "(Lock chassé) Retain tone and slightly retract R arm. Turn Lady to R on step 17, release hold. Keep L arm to side, prepare to finish."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side chassé RLR. End in Open Position | 1/8 to L over steps 18-20",
+      "footwork": "H",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "This can be repeated. Lower arm to indicate chugging is ending. Regain L to R or R to R hand hold at end of lady's turn."
+      ]
+    }
+  ]
+}

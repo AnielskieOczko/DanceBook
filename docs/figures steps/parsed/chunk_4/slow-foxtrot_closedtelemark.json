@@ -1,0 +1,108 @@
+{
+  "name": "Closed Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/closedtelemark"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Impetus and Feather Finish, Feather Step, Hover Cross, Hover Feather, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Zig-Zag from PP, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Top Spin",
+  "following_figure_names": "Feather Step, Natural Turn, Natural Weave, Natural Telemark, Hover Cross, Natural Twist Turn, Curved Feather to Back Feather, Natural Hover Telemark",
+  "notes": "This is a closed finish.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, FDC, HT, start to turn L, Sway(S), CBM, rise e/o 1",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "Compress right side."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side, almost BLOD, T, slightly less than 3/8 between 1-2, Sway(L), Up, Connect left shoulder and hip down, Swing R leg ahead of body, Strong base swivel action, body turns more equally, turn Lady back to closed position",
+      "footwork": "T",
+      "alignment": "BLOD",
+      "amount_of_turn": "less than 3/8",
+      "comments": [
+        "Isolate base relative to the turn of upper body."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP, DW, H, --, Sway(S), CBM, --",
+      "footwork": "H",
+      "alignment": "OP",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, BDC, TH, start to turn L, Sway(S), CBM, rise slightly e/o 1, NFR",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Connect right shoulder down, do not turn shoulder. Present left side up in diagonal line. Strong upward feeling."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF (Heel Turn), LOD, HT, 3/8 between 1-2, Sway(R), continue to rise on 2",
+      "footwork": "HT",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Dance right hip across right foot, feel left side lengthen, then step RF out."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, BDW, TH, 3/8 between 2-3, body turns less, Sway(S), Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Keep body left."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP, BDW, T, --, Sway(S), CBM, --",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Close finish."
+      ]
+    }
+  ]
+}

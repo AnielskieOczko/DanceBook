@@ -1,0 +1,111 @@
+{
+ "name": "Fallaway Rock",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/fallaway-rock"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Basic In Place, Fallaway Rock, Link, Mooch, Reverse Whip, Toe Heel Swivels, Whip",
+  "following_figure_names": "Basic In Place, Fallaway Rock, Fallaway Throwaway, Change of Places Right to Left, Walks, Mooch, Whip, Whip Throwaway, Reverse Whip, Stalking Walks, Flicks and Break",
+  "notes": "Variations:\n- Start and end in PP. No turns for both Man and Lady.\n- Start in closed Position, end in PP.\n- Man: 1/8 L on 1.\n- Lady: 1/4 R on 1. 1/8 L over 2-5\n- Start in PP and end in Closed Position\n- Man: 1/8 R over 2-5\n- Lady: 1/8 R on 1, 1/4 L over 2-5",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF in PP",
+      "footwork": "WF",
+      "alignment": "PP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side Chasse LRL",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "turn starts at the end of previous step."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side Chasse RLR",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in fallaway",
+      "footwork": "H",
+      "alignment": "Backing",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF in PP",
+      "footwork": "WF",
+      "alignment": "PP",
+      "amount_of_turn": "",
+      "comments": [
+        "At the end, it starts to turn L"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Side Chasse RLR",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side Chasse LRL",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

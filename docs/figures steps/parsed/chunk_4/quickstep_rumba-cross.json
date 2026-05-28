@@ -1,0 +1,106 @@
+{
+  "name": "Rumba Cross",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Facing LOD",
+  "ending_position": "Backing LOD",
+  "preceding_figure_names": "Natural Pivot Turn, Natural Turn",
+  "following_figure_names": "Running Right Turn (5-11 of Running Right Turn, RF fwd, S, into Tipsy to L), Rumba Cross",
+  "notes": "If preceding the Rumba Cross with 1-5 Natural Turn, a sway to L would be used on step 5 which could be held at the beginning of step 1 of the Rumba Cross. This sway assists in maintaining forward movement through the turn. The Rumba Cross may be danced twice.\nWhen preceding with a Natural Pivot Turn, S is added before this Q.\nLady's description includes mental forward feeling, hip to Man, etc.\nDo not level up shoulders and hips, leaving R side positive. R knee is forward over the toe, completely balanced on RF.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd long step",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "slight turn to R",
+      "comments": [
+        "rise e/o 1",
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "crosses behind LF",
+      "footwork": "F",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "THT",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side slightly back, ending with RF fwd in CBMP",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/4 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back long step",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "start to turn R at end of step",
+      "comments": [
+        "Sway(S)",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "crosses in front of RF",
+      "footwork": "F",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd between partner's feet, end with LF back",
+      "footwork": "F",
+      "alignment": "Start Facing LOD, End backing LOD",
+      "amount_of_turn": "1/4 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "lower e/o 3",
+        "Pivot, head may turn to R (or keep left). needs to be on the foot, ribs to Man.",
+        "Do not level up shoulders and hips, leaving R side positive. R knee is forward over the toe, completely balanced on RF."
+      ]
+    }
+  ]
+}

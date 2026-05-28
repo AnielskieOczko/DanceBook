@@ -1,0 +1,127 @@
+{
+  "name": "Reverse Top",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/reverse-top"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Advanced Hip Twist, Basic Movement In Place, Closed Basic Movement, Closed Hip Twist, Curl, Natural Opening Out Movement, Open Hip Twist, Spiral",
+  "following_figure_names": "There And Back, Closed Basic Movement, Open Basic Movement, Fan, Opening Out From Reverse Top, Aida, Spiral (after leading Lady into her spiral on step 10 of Reverse Top, follow with 6-10 of Spiral)",
+  "notes": "Up to three complete turns over 1-15; maintain frame and keep supporting toe stationary.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly forward",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": [
+        "Man's L toe remains in same place."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Swivel on ball of LF, ending LF in front of RF (Cuban Cross)",
+      "footwork": "T",
+      "alignment": "Center",
+      "amount_of_turn": "0",
+      "comments": [
+        "Maintain frame all the time and keep LF in about same place."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly forward",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF behind RF (Cuban Cross) | Up to three complete turns over 1-15",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "3",
+      "comments": [
+        "The turning action is continuous.",
+        "Body keeps turning, and then stepping. Foot keeps turning.",
+        "Knees will not straighten fully until last step 15.",
+        "Only slight natural hip movement is used."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back and slightly side",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back, toe turned out, to chasse LRL",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back and slightly to side",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF behind RF (Cuban Cross)",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back and slightly to side to chasse RLR",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

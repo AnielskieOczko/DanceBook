@@ -1,0 +1,89 @@
+{
+  "name": "Change ofHands Behind Back",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/change-of-hands-behind-back"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Catapult, Change of Hands Behind Back, Change of Places Left to Right, Chugging, Fallaway Throwaway, Hip Bump, Rolling Off the Arm, Shoulder Spin, Simple Spin, Spanish Arms, Stop and Go",
+  "following_figure_names": "Link, Change of Places Left to Right, Change of Hands Behind Back, Hip Bump, American Spin (from L to R hand hold), Stop and Go",
+  "notes": "Variation: use of hands:\n5: place lady's RH on R side of waist.\n6: release L to R hand hold, allowing lady's R hand to trail around waist.\ncatch L to R hand hold at the end of turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1-2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Start in Open Position, perform Link LR (no turn)",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward chasse LRL towards lady's right side, lead lady with right hand",
+      "footwork": "LF",
+      "alignment": "Forward",
+      "amount_of_turn": "1/8 L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "6-8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Turning chasse RLR to end on right foot, take both hands behind back on count 6, place lady's right hand into left hand behind back on count 7, release right hand hold and extend left arm forward to open position on count 8",
+      "footwork": "RF",
+      "alignment": "Open Position",
+      "amount_of_turn": "3/8 L",
+      "comments": [
+        "Place lady's RH on R side of waist.",
+        "Release L to R hand hold, allowing lady's R hand to trail around waist.",
+        "Catch L to R hand hold at the end of turn."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1-2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Start in Open Position, perform Link RL (no turn)",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3-5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward chasse RLR towards man's right side, 1/8 turn to R over counts 3-5",
+      "footwork": "RF",
+      "alignment": "Forward",
+      "amount_of_turn": "1/8 R",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "6-8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Turning chass LRL to end on left foot, return to Open Position",
+      "footwork": "LF",
+      "alignment": "Open Position",
+      "amount_of_turn": "3/8 R",
+      "comments": []
+    }
+  ]
+}

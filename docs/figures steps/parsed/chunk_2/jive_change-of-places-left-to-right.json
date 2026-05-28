@@ -1,0 +1,85 @@
+{
+  "name":"Change of Places Left to Right",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/change-of-places-left-to-right"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Change of Hands Behind Back, Change of Places Right to Left, Chugging, Fallaway Throwaway, Hip Bump, Miami Special, Rolling Off the Arm, Shoulder Spin, Simple Spin, Spanish Arms, Stop and Go, Whip Throwaway, Windmill",
+  "following_figure_names": "Chugging, Toe Heel Swivels, Hip Bump, Link, American Spin, Stop and Go, Windmill, Spanish Arms, Rolling Off the Arm, Simple Spin, Stalking Walks, Flicks and Break, Miami Special, Shoulder Spin, Catapult",
+  "notes": "Variation - Change of hands: 2 options\nStart with R-to-R hand hold. Man leads lady to start turn L on step 3, then release R hand hold. Take L to R hand hold at the end of lady's turn.\nSame as table above or option 1, except that at the end, take R-to-R hand hold.\nDevelopment: Overturned Change of Places from Left to Right\nOn 5:\nMany lowers L arm and turns lady strongly L by rotating his hand to R from wrist until palm is turned outwards, giving lady's R arm a gental twist.\nLady continues to turn an extra 1/2 on RF allowing LF to cross loosely in front of RF (Spiral action) in Tandem position in front of Man.\nOn 6-8:\nLady may dance a forward lock or 3 small runs fwd.\nAt end of 8, Man turns lady to R to face him by rotating his hand slightly L from wrist.\nLady turns 1/4 R on LF to end in open position with LF back.\nFollow with Chicken Walks, Simple spin from open position or other figures starting in open position. (Lady normally does a flick or oint ball change in place of 1-2 of Link.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1-2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Link LR, no turn",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact chasse LRL, turn 1/4 to R",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "5-6",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward chasse RLR, end in Open Position",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1-2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Link RL, no turn",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Turning chasse underarm RLR, 1/2 L turn",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "5-6",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Backwards chasse LRL, end in Open Position",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    }
+  ]
+}

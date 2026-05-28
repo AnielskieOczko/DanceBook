@@ -1,0 +1,95 @@
+{
+ "name": "Hip Bump",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/hip-bump"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Catapult, Change of Hands Behind Back, Change of Places Left to Right, Change of Places Right to Left, Chugging, Fallaway Throwaway, Hip Bump, Miami Special, Shoulder Spin, Simple Spin, Spanish Arms, Stop and Go, Whip Throwaway, Windmill",
+  "following_figure_names": "Link, Change of Places Left to Right, Change of Hands Behind Back, Hip Bump, American Spin (from L to R hand hold), Stop and Go",
+  "notes": "Start in Open Position.\nWhen bumping \"hip\", it's more comfortable to bump a little lower at upper leg level.\nCould do L shoulder against lady's R shoulder.\nKeep L arm still.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Begin Link step moving left foot forward",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward chasse LRL ending in left side position",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "retract L arm, taking it slightly fwd.",
+        "could do L shoulder against lady's R shoulder",
+        "when bumping \"hip\"- it's more comfortable to bump a little lower at upper leg level.",
+        "keep L arm still"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side chasse to the right ending back in open position",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "extend L arm to normal open position"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Begin Link step moving right foot forward",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward chasse RLR ending in left side position",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "hold position and bump R hip with Man's L hip | no turn",
+        "when bumping \"hip\"- it's more comfortable to bump a little lower at upper leg level."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side chasse to the left ending back in open position",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    }
+  ]
+}

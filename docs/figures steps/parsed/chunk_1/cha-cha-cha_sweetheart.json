@@ -1,0 +1,244 @@
+{
+  "name": "Sweetheart",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/sweetheart"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RSP",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LSP",
+  "starting_position": "Closed Position",
+  "ending_position": "RSP",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Cuban Break RF, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
+  "following_figure_names": "Alemana, Hockey Stick",
+  "notes": "R Shadow Hold can be used on step 5 (L to L hand hold, Man's R hand on Lady's back)",
+  "steps": [
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "none",
+      "comments": [
+        "After ending preceding figure, taking R to R hand hold at the end.",
+        "Slightly extend R arm fwd"
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "BF",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": [
+        "Slightly contract R arm"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Chasse to side LRL ending in RSP",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "none",
+      "comments": [
+        "Gradually raise R arm to R side. On step 5, take L to L hand hold, both arms raised, hands at eye level."
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in RSP, toe turned out, slight body turn to R",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "none",
+      "comments": [
+        "Lower L arm slightly fwd"
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF, no turn",
+      "footwork": "F",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": [
+        "Retain arm position"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Chasse to side RLR moving behind Lady's back ending in LSP",
+      "footwork": "T",
+      "alignment": "LSP",
+      "amount_of_turn": "none",
+      "comments": [
+        "Return body to previous position",
+        "Return L arm to previous position"
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward in LSP, toe turned out, slight body turn to L",
+      "footwork": "F",
+      "alignment": "LSP",
+      "amount_of_turn": "none",
+      "comments": [
+        "Lower R arm slight fwd"
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF, no turn",
+      "footwork": "F",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": [
+        "Retain arm position"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Chasse to side LRL moving behind Lady's back ending in RSP",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "none",
+      "comments": [
+        "Return body to previous position",
+        "Return R arm to previous position. Retain rSp for steps 16-26."
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back",
+      "footwork": "B",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": [
+        "Starting the runs"
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF, no turn",
+      "footwork": "F",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Fwd Runs or Fwd locks RLR",
+      "footwork": "T",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "F",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Backward Runs or Backward Lock LRL",
+      "footwork": "T",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back",
+      "footwork": "B",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "Close LF to RF",
+      "action": "Close LF to RF",
+      "footwork": "T",
+      "alignment": "None",
+      "amount_of_turn": "none",
+      "comments": [
+        "slightly extend L arm to L side and release L to L hand hold"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Chasse to side RLR ending in Fan Position",
+      "footwork": "T",
+      "alignment": "Fan Position",
+      "amount_of_turn": "none",
+      "comments": [
+        "Move R arm slightly across body. Change to L to R hand hold on last step 30."
+      ]
+    }
+  ]
+}

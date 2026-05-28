@@ -12,7 +12,7 @@ import java.nio.file.Paths
 import java.time.Duration
 
 fun main(args: Array<String>) {
-    var chunk: Int? = null
+    var chunkStr: String? = null
     var model = "nvidia/nemotron-3-nano-30b-a3b:free"
     var overwrite = false
     var limit = -1
@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     while (i < args.size) {
         when (args[i]) {
             "--chunk", "-c" -> {
-                chunk = args.getOrNull(i + 1)?.toIntOrNull()
+                chunkStr = args.getOrNull(i + 1)
                 i += 2
             }
             "--model", "-m" -> {
@@ -43,9 +43,26 @@ fun main(args: Array<String>) {
         }
     }
 
-    if (chunk == null) {
-        println("Usage: ./gradlew processFigures --args=\"--chunk <1-10> [--model <model>] [--overwrite] [--limit <n>]\"")
-        System.exit(1)
+    val finalChunkStr = chunkStr
+    if (finalChunkStr == null) {
+        println("Usage: ./gradlew processFigures --args=\"--chunk <1-10|all> [--model <model>] [--overwrite] [--limit <n>]\"")
+        return
+    }
+
+    val chunksToProcess = if (finalChunkStr == "all") {
+        (1..10).toList()
+    } else {
+        val chunkNum = finalChunkStr.toIntOrNull()
+        if (chunkNum != null && chunkNum in 1..10) {
+            listOf(chunkNum)
+        } else {
+            null
+        }
+    }
+
+    if (chunksToProcess == null) {
+        println("Error: Invalid chunk value '$finalChunkStr'. Must be a number between 1 and 10, or 'all'.")
+        return
     }
 
     val apiKey = System.getenv("OPENROUTER_API_KEY")
@@ -76,11 +93,13 @@ fun main(args: Array<String>) {
 
     println("Reading standard figure list from CSV...")
     val referenceFigures = mutableListOf<String>()
+    val referenceNamesSet = mutableSetOf<String>()
     csvFile.readLines().drop(1).forEach { line ->
         if (line.isNotBlank()) {
             val parts = parseCsvLine(line)
             if (parts.size > 2) {
                 val name = parts[1]
+                referenceNamesSet.add(name.trim().lowercase())
                 val danceTypeId = parts[2]
                 val danceName = danceTypeMap[danceTypeId] ?: "UNKNOWN"
                 referenceFigures.add("- $name ($danceName)")
@@ -105,137 +124,172 @@ fun main(args: Array<String>) {
         $referenceFiguresText
     """.trimIndent()
 
-    // 3. Load Chunk Data
-    val chunkFile = Paths.get("docs/figures steps/chunks/chunk_$chunk.json").toFile()
-    if (!chunkFile.exists()) {
-        System.err.println("Error: Chunk file not found at ${chunkFile.absolutePath}")
-        System.exit(1)
-    }
-
-    val objectMapper = jacksonObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    val listType = objectMapper.typeFactory.constructCollectionType(List::class.java, Map::class.java)
-    val rawFigures: List<Map<String, String>> = objectMapper.readValue(chunkFile, listType)
-
-    println("Loaded ${rawFigures.size} figures from chunk $chunk")
-
-    val parsedDir = Paths.get("docs/figures steps/parsed/chunk_$chunk")
-    Files.createDirectories(parsedDir)
-
     val client = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(30))
         .build()
 
-    var processedCount = 0
-    for ((index, rawRecord) in rawFigures.withIndex()) {
-        if (limit > 0 && processedCount >= limit) {
-            println("Limit of $limit figures reached. Stopping processing.")
-            break
-        }
+    val objectMapper = jacksonObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-        val url = rawRecord["url"] ?: continue
-        val text = rawRecord["text"] ?: continue
-        val filename = "${sanitizeUrlToFilename(url)}.json"
-        val outputFile = parsedDir.resolve(filename).toFile()
+    for (chunk in chunksToProcess) {
+        println("\n==================================================")
+        println("Processing chunk $chunk...")
+        println("==================================================")
 
-        if (outputFile.exists() && !overwrite) {
-            println("[${index + 1}/${rawFigures.size}] Skipping $url (already parsed)")
+        // 3. Load Chunk Data
+        val chunkFile = Paths.get("docs/figures steps/chunks/chunk_$chunk.json").toFile()
+        if (!chunkFile.exists()) {
+            System.err.println("Error: Chunk file not found at ${chunkFile.absolutePath}")
             continue
         }
 
-        println("[${index + 1}/${rawFigures.size}] Processing $url...")
+        val listType = objectMapper.typeFactory.constructCollectionType(List::class.java, Map::class.java)
+        val rawFigures: List<Map<String, String>> = objectMapper.readValue(chunkFile, listType)
 
-        val userPrompt = objectMapper.writeValueAsString(mapOf(
-            "url" to url,
-            "text" to text
-        ))
+        println("Loaded ${rawFigures.size} figures from chunk $chunk")
 
-        val payload = mapOf(
-            "model" to model,
-            "messages" to listOf(
-                mapOf("role" to "system", "content" to systemPrompt),
-                mapOf("role" to "user", "content" to userPrompt)
-            ),
-            "response_format" to mapOf("type" to "json_object"),
-            "reasoning" to mapOf("effort" to "medium")
-        )
+        val parsedDir = Paths.get("docs/figures steps/parsed/chunk_$chunk")
+        Files.createDirectories(parsedDir)
 
-        val requestBody = objectMapper.writeValueAsString(payload)
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer $apiKey")
-            .header("HTTP-Referer", "https://github.com/apify/agent-skills")
-            .header("X-Title", "DanceBook Figures Parser")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .timeout(Duration.ofSeconds(60))
-            .build()
-
-        try {
-            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-            if (response.statusCode() != 200) {
-                System.err.println("API Error: HTTP ${response.statusCode()}: ${response.body()}")
-                System.exit(1)
+        var processedCount = 0
+        for ((index, rawRecord) in rawFigures.withIndex()) {
+            if (limit > 0 && processedCount >= limit) {
+                println("Limit of $limit figures reached for chunk $chunk. Skipping remaining figures.")
+                break
             }
 
-            val responseNode = objectMapper.readTree(response.body())
-            val messageNode = responseNode.path("choices").get(0)?.path("message")
-            
-            // Extract and print reasoning details if available
-            val reasoning = messageNode?.path("reasoning")?.asText()?.takeIf { it.isNotBlank() }
-                ?: messageNode?.path("reasoning_details")?.asText()?.takeIf { it.isNotBlank() }
-            if (reasoning != null) {
-                println("--- Reasoning Process ---")
-                println(reasoning)
-                println("-------------------------")
+            val url = rawRecord["url"] ?: continue
+            val text = rawRecord["text"] ?: continue
+            val filename = "${sanitizeUrlToFilename(url)}.json"
+            val outputFile = parsedDir.resolve(filename).toFile()
+
+            if (outputFile.exists() && !overwrite) {
+                println("[Chunk $chunk: ${index + 1}/${rawFigures.size}] Skipping $url (already parsed)")
+                continue
             }
 
-            val content = messageNode?.path("content")?.asText()
-            if (content != null) {
-                val cleanedJson = cleanJsonContent(content)
-                outputFile.writeText(cleanedJson)
-                println("Saved: $filename")
-                processedCount++
+            println("[Chunk $chunk: ${index + 1}/${rawFigures.size}] Processing $url...")
+
+            val userPrompt = objectMapper.writeValueAsString(mapOf(
+                "url" to url,
+                "text" to text
+            ))
+
+            val payload = mapOf(
+                "model" to model,
+                "messages" to listOf(
+                    mapOf("role" to "system", "content" to systemPrompt),
+                    mapOf("role" to "user", "content" to userPrompt)
+                ),
+                "response_format" to mapOf("type" to "json_object"),
+                "reasoning" to mapOf("effort" to "medium")
+            )
+
+            val requestBody = objectMapper.writeValueAsString(payload)
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer $apiKey")
+                .header("HTTP-Referer", "https://github.com/apify/agent-skills")
+                .header("X-Title", "DanceBook Figures Parser")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .timeout(Duration.ofSeconds(60))
+                .build()
+
+            try {
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                if (response.statusCode() != 200) {
+                    System.err.println("API Error: HTTP ${response.statusCode()}: ${response.body()}")
+                    System.exit(1)
+                }
+
+                val responseNode = objectMapper.readTree(response.body())
+                val messageNode = responseNode.path("choices").get(0)?.path("message")
                 
-                // Rate limit spacing
-                Thread.sleep(1000)
-            } else {
-                System.err.println("Error: Could not extract content from API response: ${response.body()}")
+                // Extract and print reasoning details if available
+                val reasoning = messageNode?.path("reasoning")?.asText()?.takeIf { it.isNotBlank() }
+                    ?: messageNode?.path("reasoning_details")?.asText()?.takeIf { it.isNotBlank() }
+                if (reasoning != null) {
+                    println("--- Reasoning Process ---")
+                    println(reasoning)
+                    println("-------------------------")
+                }
+
+                val content = messageNode?.path("content")?.asText()
+                if (content != null) {
+                    val cleanedJson = cleanJsonContent(content)
+                    outputFile.writeText(cleanedJson)
+                    println("Saved: $filename")
+                    processedCount++
+                    
+                    // Rate limit spacing
+                    Thread.sleep(1000)
+                } else {
+                    System.err.println("Error: Could not extract content from API response: ${response.body()}")
+                    System.exit(1)
+                }
+            } catch (e: Exception) {
+                System.err.println("HTTP request failed: ${e.message}")
+                e.printStackTrace()
                 System.exit(1)
             }
-        } catch (e: Exception) {
-            System.err.println("HTTP request failed: ${e.message}")
-            e.printStackTrace()
-            System.exit(1)
         }
-    }
 
-    // 4. Merge parsed results
-    println("All chunk items processed. Merging into single parsed file...")
-    val mergedFile = Paths.get("docs/figures steps/parsed/chunk_${chunk}_parsed.json").toFile()
-    mergedFile.parentFile.mkdirs()
-    val allFigures = mutableListOf<Any>()
+        // 4. Merge parsed results per chunk
+        println("All chunk $chunk items processed. Merging into single parsed file...")
+        val mergedFile = Paths.get("docs/figures steps/parsed/chunk_${chunk}_parsed.json").toFile()
+        mergedFile.parentFile.mkdirs()
+        val allFigures = mutableListOf<Any>()
 
-    val files = parsedDir.toFile().listFiles { _, name -> name.endsWith(".json") }
-    files?.sortedBy { it.name }?.forEach { file ->
-        try {
-            val jsonContent = file.readText().trim()
-            if (jsonContent.startsWith("[")) {
-                @Suppress("UNCHECKED_CAST")
-                val figureList = objectMapper.readValue(file, List::class.java) as List<Any>
-                allFigures.addAll(figureList)
-            } else if (jsonContent.startsWith("{")) {
-                val singleFigure = objectMapper.readValue(file, Map::class.java)
-                allFigures.add(singleFigure)
+        val matchedList = mutableListOf<String>()
+        val unmatchedList = mutableListOf<String>()
+
+        val files = parsedDir.toFile().listFiles { _, name -> name.endsWith(".json") }
+        files?.sortedBy { it.name }?.forEach { file ->
+            try {
+                val jsonContent = file.readText().trim()
+                val parsedList = if (jsonContent.startsWith("[")) {
+                    @Suppress("UNCHECKED_CAST")
+                    objectMapper.readValue(file, List::class.java) as List<Map<String, Any>>
+                } else if (jsonContent.startsWith("{")) {
+                    @Suppress("UNCHECKED_CAST")
+                    listOf(objectMapper.readValue(file, Map::class.java) as Map<String, Any>)
+                } else {
+                    emptyList()
+                }
+
+                for (fig in parsedList) {
+                    allFigures.add(fig)
+                    val figName = fig["name"] as? String ?: "Unknown"
+                    val danceType = fig["dance_type"] as? String ?: "Unknown"
+                    val figUrl = fig["url"] as? String ?: ""
+                    
+                    if (referenceNamesSet.contains(figName.trim().lowercase())) {
+                        matchedList.add("$figName ($danceType)")
+                    } else {
+                        unmatchedList.add("$figName ($danceType) -> URL: $figUrl")
+                    }
+                }
+            } catch (e: Exception) {
+                println("Warning: Failed to parse individual file ${file.name} as JSON. Skipping: ${e.message}")
             }
-        } catch (e: Exception) {
-            println("Warning: Failed to parse individual file ${file.name} as JSON. Skipping: ${e.message}")
         }
-    }
 
-    val mergedJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(allFigures)
-    mergedFile.writeText(mergedJson)
-    println("Successfully merged ${allFigures.size} figures into: ${mergedFile.absolutePath}")
+        val mergedJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(allFigures)
+        mergedFile.writeText(mergedJson)
+        println("Successfully merged ${allFigures.size} figures into: ${mergedFile.absolutePath}")
+
+        println("\n==================================================")
+        println("Chunk $chunk Match Report:")
+        println("Total Parsed Figures: ${allFigures.size}")
+        println("Matched with Database: ${matchedList.size}")
+        println("New (Unmatched) Figures: ${unmatchedList.size}")
+        if (unmatchedList.isNotEmpty()) {
+            println("New Figures List:")
+            unmatchedList.forEach { println("  * $it") }
+        }
+        println("==================================================")
+    }
 }
 
 fun parseCsvLine(line: String): List<String> {

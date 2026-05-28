@@ -1,0 +1,66 @@
+{
+  "url": "https://www.dancecentral.info/ballroom/international-style/rumba/side-steps",
+  "text": "Dance Central - Side Steps\nRumba Side Steps\nThese are Newcomer Level figures. This online reference gives a detailed description of dance steps; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.\nRumba Side Steps are very much the same as Cha Cha Cha Side Steps.\nWhen previous figure ends with feet apart, brush foot.\nL to R hand hold may be used.\nSide Step to Left commenced with LF: When L to R hand hold is used, step 3 may be turned to end in Open PP (Man 1/8 L, Lady 1/8 R). (Side step to Right commenced with RF is similar.)\nSide Step may be curved to L or R.\nPreceding Figures for Side Step to Left commended with LF\nAlemana\nBasic Movements: Closed\nCuban Rocks RF\nCucarachas: RF\nFencing\nHand To Hand LSP\nNew York RSP\nProgressive Walks Forward in LSP\nRope Spinning\nShoulder To Shoulder Right Side\nSide Step To Left commenced with RF\nSpot or Switch Turn to L (Lady to R)\nSyncopated Cuban Rock LF\nThree Alemanas\nUnderarm Turn To R\nFollowng Figures for Side Step to Left commended with LF\nBasic Movements: Open (4-6)\nBasic Movements: Closed (4-6)\nNew York RSP\nSpot or Switch Turn to L (Lady to R)\nUnderarm Turn To R\nShoulder To Shoulder Right Side\nHand To Hand LSP\nSide Step To Left commenced with RF\nCuban Rocks RF\nSyncopated Cuban Rocks RF\nPreceding Figures for Side Step to Left commenced with RF\nBasic Movements: Closed\nCuban Rock LF\nHand To Hand RSP\nNew York LSP\nProgressive Walks Forward in RSP\nProgressive Walks Forward in Right Shadow Position\nShoulder To Shoulder Left Side\nSide Step To Left commenced with LF\nSpot or Switch Turn To R (Lady to L)\nSyncopated Cuban Rocks RF\nUnderarm Turn To L\nFollowing Figures for Side Step to Left commenced with RF\nBasic Movements: Open\nBasic Movements: Closed\nCucarachas: LF\nSide Step To Left commenced with LF\nPreceding Figures for Side Step to Right commenced with LF\nAlemana\nBasic Movements: Closed\nCuban Rocks RF\nFencing\nHand To Hand LSP\nNew York RSP\nProgressive Walks Forward in LSP\nRope Spinning\nShoulder To Shoulder Right Side\nSide Step To Right commenced with RF\nSpot or Switch Turn to L (Lady to R)\nSyncopated Cuban Rock LF\nThree Alemanas\nUnderarm Turn To R\nFollowng Figures for Side Step to Right commenced with LF\nBasic Movements: Open (4-6)\nBasic Movements: Closed (4-6)\nCucarachas: RF\nUnderarm Turn To R\nSide Step To Right commenced with RF\nFan (4-6)\nPreceding Figures for Side Step to Right commenced with RF\nBasic Movements: Closed\nCuban Rock LF\nCucarachas: LF\nHand To Hand RSP\nNew York LSP\nProgressive Walks Forward in RSP\nProgressive Walks Forward in Right Shadow Position\nShoulder To Shoulder Left Side\nSide Step To Right commenced with LF\nSpot or Switch Turn To R (Lady to L)\nSyncopated Cuban Rocks RF\nUnderarm Turn To L\nFollowing Figures for Side Step to Right commenced with RF\nBasic Movements: Open\nBasic Movements: Closed\nNew York LSP\nSpot or Switch Turn To R (Lady to L)\nUnderarm Turn To L\nShoulder To Shoulder Left Side (1/8 turn R on step 3)\nHand To Hand LSP\nSide Step To Right commenced with LF\nCuban Rock LF\nFan\nSyncopated Cuban Rock LF",
+  "figures": [
+    {
+      "name": "Side Step to Left",
+      "urls": [
+        "https://www.dancecentral.info/ballroom/international-style/rumba/side-steps"
+      ],
+      "dance_type": "RUMBA",
+      "level": "Newcomer",
+      "starting_foot_leader": "LF",
+      "ending_foot_leader": "RF",
+      "starting_foot_follower": "RF",
+      "ending_foot_follower": "LF",
+      "starting_position": "Closed Position",
+      "ending_position": "Open Position",
+      "preceding_figure_names": "Alemana, Basic Movements: Closed, Cuban Rocks RF, Cucarachas: RF, Hand To Hand LSP, New York RSP, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side",
+      "following_figure_names": "Basic Movements: Open (4-6), Basic Movements: Closed (4-6), New York RSP, Spot or Switch Turn to L (Lady to R), Underarm Turn To R, Shoulder To Shoulder Right Side, Hand To Hand LSP",
+      "notes": "These are Newcomer Level figures. When previous figure ends with feet apart, brush foot. Side Step may be curved to L or R.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "1",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "Side step to left",
+          "footwork": "B",
+          "alignment": "LOD",
+          "amount_of_turn": "0",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "name": "Side Step to Right",
+      "urls": [
+        "https://www.dancecentral.info/ballroom/international-style/rumba/side-steps"
+      ],
+      "dance_type": "RUMBA",
+      "level": "Newcomer",
+      "starting_foot_leader": "RF",
+      "ending_foot_leader": "LF",
+      "starting_foot_follower": "LF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Closed Position",
+      "ending_position": "Open Position",
+      "preceding_figure_names": "Alemena, Basic Movements: Closed, Cuban Rocks RF, Fencing, Hand To Hand LSP, New York RSP, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side",
+      "following_figure_names": "Basic Movements: Open (4-6), Basic Movements: Closed (4-6), New York LSP, Spot or Switch Turn to L (Lady to L), Underarm Turn To L, Shoulder To Shoulder Left Side, Hand To Hand LSP",
+      "notes": "These are Newcomer Level figures. When previous figure ends with feet apart, brush foot. Side Step may be curved to L or R.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "1",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "Side step to right",
+          "footwork": "B",
+          "alignment": "LOD",
+          "amount_of_turn": "0",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}

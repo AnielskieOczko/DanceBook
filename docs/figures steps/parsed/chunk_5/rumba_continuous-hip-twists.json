@@ -1,0 +1,95 @@
+{
+  "name": "Continuous Hip Twists",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/continuous-hip-twists"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Continuous Hip Twists, Natural Top, Rope Spinning, Three Alemanas, Three Threes",
+  "following_figure_names": "Advanced Hip Twists, Continuous Hip Twists, Circular Hip Twists, Rope Spinning",
+  "notes": "Arms to normal position",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF diagonal back with partial weight, body turns to left",
+      "footwork": "RF",
+      "alignment": "Diagonal Back",
+      "amount_of_turn": "N/A",
+      "comments": [
+        "As Advanced Hip Twist"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF, slight body turn to right",
+      "footwork": "LF",
+      "alignment": "N/A",
+      "amount_of_turn": "N/A",
+      "comments": [
+        "Retain tone"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward in line with LF towards Lady's right side, 1/4 turn to right, body turns slightly more",
+      "footwork": "RF",
+      "alignment": "N/A",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Arms to normal position"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward and across, 3/8 turn to right, hips turn more than upper body",
+      "footwork": "LF",
+      "alignment": "N/A",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "Turn at end of previous beat. turn is initiated from hips. Hips turn more than upper body. Flexible turn."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF forward and across towards Man's right side, 3/8 turn to left, hips turn more than upper body",
+      "footwork": "RF",
+      "alignment": "N/A",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Turn at end of previous beat. turn is initiated from hips. Hips turn more than upper body. Flexible turn."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward in line with RF, then turn to end side and slightly forward, 1/8 to R then further 1/4 to R",
+      "footwork": "LF",
+      "alignment": "N/A",
+      "amount_of_turn": "1/8 to R then 1/4 to R",
+      "comments": []
+    }
+  ]
+}

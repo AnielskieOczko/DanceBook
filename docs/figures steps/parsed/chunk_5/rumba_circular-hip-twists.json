@@ -1,0 +1,47 @@
+{
+  "name": "Circular Hip Twists",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Continuous Hip Twists, Natural Top, Rope Spinning, Three Alemanas, Three Threes",
+  "following_figure_names": "Advanced Hip Twists",
+  "notes": "This may be danced with R to R hand hold following Alemana from Open Position. Then, change to normal L to R hand hold on step 5 of the following Advanced Hip Twist. Keep hand at waist level.\nSlight natural hip movement is used.\nKnees will not straighten fully.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back",
+      "footwork": "B",
+      "alignment": "Side",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Slight natural hip movement is used.",
+        "Knees will not straighten fully."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward",
+      "footwork": "F",
+      "alignment": "Front",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn initiated at hips.",
+        "Hip turns more than upper body."
+      ]
+    }
+  ]
+}

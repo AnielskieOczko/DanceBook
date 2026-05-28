@@ -1,0 +1,135 @@
+{
+  "name": "Natural Opening Out Movement",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/opening-out-to-right-and-left"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Natural Top, Rope Spinning, Three Alemanas",
+  "following_figure_names": "Fan, Basic Movements: Closed, Basic Movements: Open, Natural Opening Out Movement, Closed Hip Twist, Spiral (1/4 R on 1)",
+  "notes": "Note: Man is dancing a LF Cucaracha and RF Cucaracha. Turn on step 1 and 4 are made at end of previous beat. An Extended Forward Walk may be used on steps 3 & 6. Variations (Silver & Gold): Man may place R hand on Lady's back on 6, release L hand hold. Lady: place L hand on Man's R shoulder and turn 1/4 R into step 1 of following figure to 90 degree. Normal hold is regained on step 3 of following figure. Man may lead lady fwd towards his R side on last step of preceding figure and then turn 1/4 R on RF keeping his feet together, at the same time leading Lady to turn R. Lady LF fwd in line with RF towards Man's R side, then turn 1/2 R on LF to end LF back at a 90 degree angle to Man. No turn on step 1 of the following Opening Out Movement.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "step to side, part weight",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "close to RF",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "4 2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "step to side, part weight",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "4 3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "close to LF",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step back at 90° angle to partner, turn 1/4 to right",
+      "footwork": "WF",
+      "alignment": "diagonal",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn started on & of previous beat",
+        "Keep thighs tight together"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight forward",
+      "footwork": "WF",
+      "alignment": "facing",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step forward, then turn to side, 1/4 to left",
+      "footwork": "WF",
+      "alignment": "side",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Delay putting hand on partner's shoulder",
+        "Regain normal hold at end of 6"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "4 2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "step back at 90° angle to partner, turn 1/4 to left",
+      "footwork": "WF",
+      "alignment": "diagonal",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    }
+  ]
+}

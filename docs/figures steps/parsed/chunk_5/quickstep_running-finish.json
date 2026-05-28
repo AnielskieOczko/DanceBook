@@ -1,0 +1,52 @@
+{
+"name": "Running Finish",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/running-finish"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Lock, Cross Swivel, Hover Corte, Natural Turn And Back Lock, Progressive Chasse To Right",
+  "following_figure_names": "Forward Lock, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quick Open Reverse, Fish Tail, Four Quick Run, V6, Tipsy To L, Six Quick Run",
+  "notes": "Timing can also be: QQSS\nCan be commenced in other alignments, e.g. starting BLOD, ending DC.\nMan may turn 1/4 between 1-2 when a facing alignment would be used. Lady would turn 1/8 between 1-2 and 1/8 between 2-3.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back in CBMP, start to turn R, sway S, CBM, rise",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side and slightly forward, pointing to LOD, body turn less, sway L, up",
+      "footwork": "T",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward in CBMP, OP, facing LOD, sway S, CBM",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "name": "BackRocks",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/back-rocks"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Argentine Crosses, Foot Changes, Maypole (Continuous Volta Spot Turn to R and L) (SAMBA), Natural Basic Movement, Natural Roll, Reverse Basic Movement, Samba Walk: Stationary, Side Basic Movement, Solo Spot Volta to Left (Lady to Right), Traveling Volta to Right, Whisk To Left",
+  "following_figure_names": "Traveling Volta to Right, Natural Basic Movement, Reverse Basic Movement, Whisk To Left, Samba Walk in PP, Bota Fogos To Promenade and Counter Promenade, Solo Spot Volta to Left (Lady to Right), Argentine Crosses",
+  "notes": "This may be repeated.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Replace weight to LF, having moved it slightly leftwards",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF, No turn",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF, having moved it slightly rightwards",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Replace weight to LF, No turn",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Needs full weight on front of the foot, not weight in middle of two feet. Center lifted.",
+        "Really come toward close to partner, almost chest to chest."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Replace weight to RF, having moved it slightly rightwards",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "When rocking back, keep upper body more forward, think about only sending hip back to flip the skirt. Rebound elastic look."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF, No Turn",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "No Turn",
+      "comments": [
+        "At end of beat, swivel on LF while RF is trailing through next to LF, brushes and then steps fwd."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Rotate shoulder first, at the end, turn head sharply to R. Head is delayed to give it more emphasis on sharpness. Soft hips, sharp head.",
+        "Don't over swivel the back foot, back foot should still be in a turned out position."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF, having moved it slightly leftwards",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Replace weight to RF, No Turn",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "No Turn",
+      "comments": []
+    }
+  ]
+}

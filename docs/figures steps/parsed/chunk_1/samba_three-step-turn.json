@@ -1,0 +1,100 @@
+{
+  "name": "Three Step Turn",
+   "urls": [
+     "https://www.dancecentral.info/ballroom/international-style/samba/three-step-turn"
+   ],
+   "dance_type": "SAMBA",
+   "level": "Gold",
+   "starting_foot_leader": "LF",
+   "ending_foot_leader": "RF",
+   "starting_foot_follower": "RF",
+   "ending_foot_follower": "RF",
+   "starting_position": "Closed Position",
+   "ending_position": "Open CPP",
+   "preceding_figure_names": "Closed Rocks, Natural Basic Movement, Open Rocks, Promenade And Counter Promenade Runs, Reverse Basic Movement, Side Basic Movement",
+   "following_figure_names": "Samba Locks",
+   "notes": "Note: when preceded by Closed Rock, Man is already holding lady's R hand in his L hand.\nOptions for turns: either continuous turn/pivot (3 half turns), or do spiral on 1 and 3.\nNote the difference in timing for Lady. No bounce.\nFinish the R side: squeeze/compress R side, before pushing off RF to step LF fwd for next step.\nOption: body turned, but keep head looking at partner, push connection with Man before turning head in next Samba Locks.",
+   "steps": [
+     {
+       "step_number": 1,
+       "timing": "1",
+       "role": "LEADER",
+       "foot": "LF",
+       "action": "Close LF to RF",
+       "footwork": "BF",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Note: when preceded by Closed Rock, Man is already holding lady's R hand in his L hand."
+       ]
+     },
+     {
+       "step_number": 2,
+       "timing": "2",
+       "role": "LEADER",
+       "foot": "RF",
+       "action": "Take minimal weight to RF, draw LF back",
+       "footwork": "F",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Continue to turn Lady strongly to L on step 2 and 3, lowering L arm at the end of her turn."
+       ]
+     },
+     {
+       "step_number": 3,
+       "timing": "3",
+       "role": "LEADER",
+       "foot": "RF",
+       "action": "RF to side turning 1/4 L, then continue to turn 3/8 on RF (Spiral action)",
+       "footwork": "BF",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Finish the R side: squeeze/compress R side, before pushing off RF to step LF fwd for next step.",
+         "Option: body turned, but keep head looking at partner, push connection with Man before turning head in next Samba Locks."
+       ]
+     },
+     {
+       "step_number": 4,
+       "timing": "1",
+       "role": "FOLLOWER",
+       "foot": "RF",
+       "action": "RF to side turning L, then continue to turn 5/8 L on RF",
+       "footwork": "BF",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Note the difference in timing for Lady. No bounce.",
+         "Options for turns: either continuous turn/pivot (3 half turns), or do spiral on 1 and 3."
+       ]
+     },
+     {
+       "step_number": 5,
+       "timing": "2",
+       "role": "FOLLOWER",
+       "foot": "LF",
+       "action": "LF fwd continuing to turn L",
+       "footwork": "BF",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Use core when turning"
+       ]
+     },
+     {
+       "step_number": 6,
+       "timing": "3",
+       "role": "FOLLOWER",
+       "foot": "RF",
+       "action": "RF to side turning 1/4 L, then continue to turn 3/8 on RF (Spiral action)",
+       "footwork": "BF",
+       "alignment": "",
+       "amount_of_turn": "",
+       "comments": [
+         "Finish the R side: squeeze/compress R side, before pushing off RF to step LF fwd for next step.",
+         "Option: body turned, but keep head looking at partner, push connection with Man before turning head in next Samba Locks."
+       ]
+     }
+   ]
+}

@@ -257,7 +257,7 @@ class AdminController(
     @PostMapping("/syllabus/import")
     fun importSyllabus(model: Model): String {
         try {
-            val result = syllabusImporterService.importFromDataset("docs/dataset_website-content-crawler_2026-05-25_19-46-36-612.json")
+            val result = syllabusImporterService.importAllAiParsedJson()
             model.addAttribute("importResult", result)
             return "admin/dashboard :: importSuccess"
         } catch (e: Exception) {

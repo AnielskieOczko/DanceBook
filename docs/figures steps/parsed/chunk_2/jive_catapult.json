@@ -1,0 +1,165 @@
+{
+  "name": "Catapult",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/catapult"
+  ],
+  "dance_type": "JIVE",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Change of Places Left to Right, Change of Places Right to Left, Chugging, Rolling Off the Arm, Shoulder Spin",
+  "following_figure_names": "Change of Places Left to Right, American Spin, Rolling Off the Arm, Miami Special, Shoulder Spin, Chugging, Link, Change of Hands Behind Back, Hip Bump, Stop and Go",
+  "notes": "Return to L to R or R to R hand hold at end of Lady's turn. Man may turn 1/4 to L over steps 14-16, then Lady would turn 1/4 to R. Lady should feel she is pulling away from Man. This is the Catapult part of the figure.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1,2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Link to the left, right",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "aQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact chasse LRL",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "R hand to R side. On step 5, raise R hand and start to circle it counterclockwise over Lady's head."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "aQ",
+      "role": "LEADER",
+      "foot": "",
+      "action": "Continue to circle R hand counter-clockwise, then lower it behind back, taking Lady's L hand in L hand behind back.",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in Tandem Position",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slightly extend arms behind back."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF, having moved it slightly rightwards",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slightly retract arms"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "aQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact chasse LRL",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Release hold with R hand and take L hand fwd in front of body to lead Lady well fwd. Lead Lady to turn R and release hold with L hand."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "aQ",
+      "role": "LEADER",
+      "foot": "",
+      "action": "Compact chasse RLR. End in Open Position",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Return to L to R or R to R hand hold at end of Lady's turn. Man may turn 1/4 to L over steps 14-16, then Lady would turn 1/4 to R."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "1,2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Fwd chasse RLR to Man's R side",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "aQ",
+      "role": "FOLLOWER",
+      "foot": "",
+      "action": "Turning chasse underarm LRL. End LF back in Tandem Position behind Man.",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in Tandem Position",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Lady should feel she is pulling away from Man. This is the Catapult part of the figure."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "aQ",
+      "role": "FOLLOWER",
+      "foot": "",
+      "action": "Fwd chasse RLR passing Man's L side, then turn to R on RF",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "7/8 to R between step 12 and 13, then 7/8 to R on RF"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "aQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly back to chasse LRL. End LF back in Open Position.",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    }
+  ]
+}

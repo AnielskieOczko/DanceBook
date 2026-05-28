@@ -1,0 +1,134 @@
+{
+  "name":"New York",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/new-york"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Counter Open PP",
+  "ending_position": "Open PP",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Closed Hip Twist, Cross Basic, Cuban Break RF, Curl, Hand To Hand LSP, Hip Twist Spiral, Hockey Stick, New York RSP, Open Hip Twist, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral, Split Cuban Break RF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Underarm Turn To R",
+  "following_figure_names": "New York RSP, Spot or Switch Turn To L (Lady to R), Cuban Break RF, Split Cuban Break RF, Closed Basic Movement, Open Basic Movement, Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Time Step RF, Fan, Closed Hip Twist, Three Cha Cha Chas Forward",
+  "notes": "Note: Check step switching from forward movement to back. Standard check on &, more difficult to do. Correct execution shows better control. Syncopated check immediately as stepping on 2. Last step 5: can turn extra to end in RSP (or LSP) and continue with 4-9 of Three Cha Cha Chas fwd. When followed by Hand to Hand, the turning is at the end of 4&1&, sharp turn. Syncopated New Yorker, e.g New York LSP (2&3&4&1) syncopated. Lady: Keep tone in arms, fast, keep arm in middle and not moving around. Suck tummy. Eye very focused on one spot (New Yorker), then immediately another spot (your partner), not wandering. Lady keep LF planted, swivel LF but not moving LF anywhere else. 2: 1/4 turn to L, LF fwd, New Yorker, Fast, &: 1/4 turn to R, facing Man, weight on LF, L leg bent 3: RF to side, squeeze R side, R hip high, weight still on LF. LH patty cake. &: weight on LF 4&: repeat New Yorker. 1: weight on to RF, settle on R hip. Weight more forward, suck tummy. 2 hand hold.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward in Left Side Position, turn 1/8 to R",
+      "footwork": "F",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "This is New York to the Left Side Position.",
+        "Preceding step finish in Counter Open PP position, L to R hand hold.",
+        "End of preceding step on '&', turn 1/8 to R.",
+        "Increase tone in connecting arm and keep it with body when turning (over 1-5)."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot",
+      "footwork": "WF",
+      "alignment": "Turning to face partner",
+      "amount_of_turn": "",
+      "comments": [
+        "Breakdown to \"3&\", on \"&\", frame starts turning to L to face partner"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side to chasse LRL, end in Open PP",
+      "footwork": "F",
+      "alignment": "Open PP",
+      "amount_of_turn": "3/8 to L over 3-5",
+      "comments": [
+        "Take required hold at end of depending.",
+        "Here's it's continuing with New York to Right Side Position."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF forward in Left Side Position, turn 1/8 to L",
+      "footwork": "F",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "This is New York to the Left Side Position (Lady on Man's Left).",
+        "End of preceding step on '&', collect body, connect with Man, tone in the connection, Man feels some resistance, after fully transferred weight, turn shoulder/body first, then swivel on LF, then strike RF fwd, immediately into check. (Do not use arm to help the turn. Use hip to turn.)",
+        "\"2\": Place RF forward, foot turned out, don't transfer spine more forward, 50-50% weight split (whenever followed by a check step, it's always split weight.) Hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip)",
+        "Powerful look: squeeze R side, R hip up high, R shoulder slightly down (result of compressing R side), matching with Man. Do not break spine. everything rotating around spine. Left side opens and rotates to back more. Arm matching Man's.",
+        "Arm should be on same plane as body. During the turn, arm line slowly going up, ideally ending with L hand behind head, arm 45 degrees up. Lady: break at wrist (think of showing off your ring), can do one wrist circle before ending pose. Hand at eye level.",
+        "\"&\": check step to change direction.",
+        "(Or, a different option: quick check action all happens on \"2\")",
+        "Arm should be on same plane as body. During the turn, arm line slowly going up, ideally ending with L hand behind head, arm 45 degrees up. Lady: break at wrist (think of showing off your ring), can do one wrist circle before ending pose. Hand at eye level.",
+        "\"3&\", on \"&\", frame starts turning to face partner.",
+        "Make sure RF doesn't do rondes.",
+        "Note:",
+        "Check step: switching from forward movement to back.",
+        "Standard check: on \"&\", more difficult to do. Correct execution shows better control.",
+        "Syncopated check: immediately as stepping on \"2\".",
+        "Last step 5: can turn extra to end in RSP (or LSP) and continue with 4-9 of Three Cha Cha Chas fwd.",
+        "When followed by Hand to Hand, the turning is at the end of \"4&1&\", sharp turn.",
+        "Syncopated New Yorker, e.g New York LSP (2&3&4&1) syncopated.",
+        "Lady:",
+        "Keep tone in arms, fast, keep arm in middle and not moving around. Suck tummy.",
+        "Eye very focused on one spot (New Yorker), then immediately another spot (your partner), not wandering.",
+        "Lady keep LF planted, swivel LF but not moving LF anywhere else.",
+        "2: 1/4 turn to L, LF fwd, New Yorker, Fast,",
+        "&: 1/4 turn to R, facing Man, weight on LF, L leg bent",
+        "3: RF to side, squeeze R side, R hip high, weight still on LF. LH patty cake.",
+        "&: weight on LF",
+        "4&: repeat New Yorker.",
+        "1: weight on to RF, settle on R hip.",
+        "Weight more forward, suck tummy.",
+        "2 hand hold."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to left foot",
+      "footwork": "WF",
+      "alignment": "Turning to face partner",
+      "amount_of_turn": "",
+      "comments": [
+        "\"3&\", on \"&\", frame starts turning to face partner.",
+        "Make sure RF doesn't do rondes."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side to chasse RLR, end in Open PP",
+      "footwork": "F",
+      "alignment": "Open PP",
+      "amount_of_turn": "3/8 to R over 3-5",
+      "comments": [
+        "Take required hold",
+        "Note:",
+        "Check step: switching from forward movement to back.",
+        "Standard check: on \"&\", more difficult to do. Correct execution shows better control.",
+        "Syncopated check: immediately as stepping on \"2\"."
+      ]
+    }
+  ]
+}

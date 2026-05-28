@@ -1,0 +1,87 @@
+{
+  "name":"Rolling Off the Arm",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/rolling-off-the-arm"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position, Right to Left hand hold",
+  "ending_position": "Open Position, R to L hand hold",
+  "preceding_figure_names": "American Spin, Catapult, Change of Places Left to Right, Chugging, Rolling Off the Arm",
+  "following_figure_names": "Change of Hands Behind Back, Change of Places Left to Right, Rolling Off the Arm, Windmill, Spanish Arms, American Spin, Miami Special, Shoulder Spin, Chugging, Catapult",
+  "notes": "Double hand hold:\nTurn lady under raised L arm over step 3 and 4, lowering arm to waist level in front of bodies on step 5, releasing L to R hand hold at end of step 7.\nRight to Right hand hold - get to this hand hold at end of previous figure\nSpin ending when danced with R to R hand hold:\nMan: At end of 7, raise R hand above Lady's R shoulder and circle it quickly in a clockwise direction. Over steps 8-10, continue to circle R hand clockwise, then lower arm to lead lady back at the end of her turn.\nLady: Spin approx. 1 1/8 to R on RF underarm towards end of step 7. 8-10 side and slightly back to chasse LRL, turning 1/2 to R to end LF back in Open Position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1,2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Link LR, no turn",
+      "footwork": "TOGETHER",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Part of opening link"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1a2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd to chasse LRL",
+      "footwork": "F, B, T",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Ends LF side slightly forward in RSP",
+        "1/4 to R over 3-5"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "6,7",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "walks forward in RSP, RL",
+      "footwork": "F, B, T",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "1/2 to R over step 6 and 7",
+        "Option to place RF behind LF (Cuban Cross) on step 6"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "7,8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd chasse RLR, end in Open Position",
+      "footwork": "F, B, T",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "1/8 to R over step 7 and 8",
+        "Continue to circle R hand clockwise"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "8-10",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "extend arm to open position, lead lady back",
+      "footwork": "F, B, T",
+      "alignment": "Open Position",
+      "amount_of_turn": "additional 1/8 to R",
+      "comments": [
+        "Additional turn 1/8 to R over steps 8-10"
+      ]
+    }
+  ]
+}

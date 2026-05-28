@@ -1,0 +1,91 @@
+{
+"name": "Miami Special",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/miami-special"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "LSP",
+  "preceding_figure_names": "American Spin, Catapult, Change of Places Left to Right, Change of Places Right to Left, Chugging, Rolling Off the Arm, Shoulder Spin",
+  "following_figure_names": "Hip Bump (normal; or Man turn 1/8 to R over steps 3-5, Lady 1/8 to L), Link, Change of Places Left to Right (Man turn 1/4 R over steps 3-6, Lady 1/2 to L)",
+  "notes": "Raise R hand and circle it strongly counterclockwise over Lady's head. At end of 5, continue to circle R hand strongly over own head. Place R hand on R shoulder. At same time place L hand on Lady's L shoulder blade.\nRelease hold with R hand. Gradually slide L hand along Lady's R arm to take L to R hand hold on step 8.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "TOGETHER",
+      "action": "Begin in Open Position, Right to Right hand hold; perform Link steps (1,2) with no turn.",
+      "footwork": "TOGETHER",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "TOGETHER",
+      "action": "Begin in Open Position, Left to Left hand hold; perform Link steps (1,2) with no turn.",
+      "footwork": "TOGETHER",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "5/8 to R over steps 3-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step LF to side, chasse LRL, turning underarm, ending with LF back slightly to side.",
+      "footwork": "HF",
+      "alignment": "DC",
+      "amount_of_turn": "5/8 to R",
+      "comments": [
+        "Chasse LRL turning underarm, ending LF back slightly to side."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "5/8 to L over steps 3-5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Chasse turning underarm, RLR, ending in Left Side Position.",
+      "footwork": "HF",
+      "alignment": "LSP",
+      "amount_of_turn": "5/8 to L",
+      "comments": [
+        "Chasse turning underarm, RLR, ending in LSP."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1/8 to R over steps 6-8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side chasses RLR, ending in Left Side Position.",
+      "footwork": "HF",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Release hold with R hand; slide L hand down Lady's R arm to take L to R hand hold on step 8."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/8 to L",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side chasses LRL, sliding R hand down Man's L arm until hand contact is gained, ending in LSP.",
+      "footwork": "HF",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    }
+  ]
+}

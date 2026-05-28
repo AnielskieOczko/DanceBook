@@ -1,0 +1,103 @@
+{
+"name": "Cross Swivel",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Tipple Chasse To Right, Running Finish, Fish Tail, Tipsy To R (After LF back with Lady OP, TH, S, into Tipsy to R)",
+  "notes": "Alternative styling for Leader: RF to side, knees inward.\nLeader technique notes: start to turn L, Sway(S), CBM.\nFollower technique notes: Use hip joint to start the turn, standing knee (R knee) stays forward over the standing foot (RF), do not move the knee off the standing foot. Use ab muscle to pull to the back of foot, do not leave middle forward and shoulder weight back. Heel of RF does not lower until the turn is completed. Head is still left. At end of & there is \"up\" rise feeling before the next S lower to normal.\nFollower styling note: Body forms a line, slanted straight to R, keep left side lifted. Give R side to Man. Stay connected. Turn head to R. At end of & rise in body before next S to lower to normal (not \"sinking down\").",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes (or nearly closes) to LF slightly back w/o weight",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Sway(L)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF slightly fwd w/o weight",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "--"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

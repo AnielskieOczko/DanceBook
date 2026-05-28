@@ -1,0 +1,50 @@
+{
+  "name": "Shoulder To Shoulder",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/shoulder-to-shoulder"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Hockey Stick, Basic Movements: Closed, Underarm Turn To R, Spot or Switch Turn to L (Lady to R), Side Step To Right commenced with RF, Cuban Rocks RF, Fan, Closed Hip Twist, Syncopated Cuban Rocks RF, New York RSP",
+  "following_figure_names": "Shoulder To Shoulder Right Side, Basic Movements: Open (4-6, when ending facing partner), Basic Movements: Closed (4-6, when ending facing partner), Spot or Switch Turn To R (Lady to L) (when ending facing partner; or when ending Open CPP), Underarm Turn To L (when ending facing partner; or when ending Open CPP), Hand To Hand RSP (when ending facing partner), Side Step To Left commenced with LF (when ending facing partner), Side Step To Right commenced with LF (when ending facing partner), Cuban Rock LF (when ending facing partner), Fan (when ending facing partner), Syncopated Cuban Rock LF (when ending facing partner), New York LSP (when ending Open CPP)",
+  "notes": "Shoulder To Shoulder Left side:\nFollowing Hockey Stick (Man move slightly towards Lady's L side on last step), Shoulder to Shoulder may be danced with L to R or double hand hold (end in Open PP, then followed by Spot or Switch turn to L)\nMan keeps the L hand higher than usual to prevent Lady moving too far back on last step of the Hockey Stick, although the couple will be further apart than when dancing the figure in Closed Position.\nWhen danced this way, it can end in Open PP, Lady no turn.\nSimilarly for Shoulder To Shoulder Right side.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward to Lady's left side",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Body has no turns, frame is facing partner. Only lower body turns to step Outside Partner.",
+        "This is Left Side Shoulder to Shoulder.",
+        "LF in CBMP. R shoulder is quite fwd.",
+        "Finishing hip just like Close Basic."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step backward",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Body has no turns, frame is facing partner.",
+        "This is Left Side Shoulder to Shoulder.",
+        "RF in CBMP. Body weight transfer."
+      ]
+    }
+  ]
+}

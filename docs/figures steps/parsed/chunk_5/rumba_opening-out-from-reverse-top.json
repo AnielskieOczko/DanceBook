@@ -1,0 +1,85 @@
+{
+  "name": "Opening Out From Reverse Top",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Reverse Top",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Reverse Top",
+  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas",
+  "notes": "Increase tone in L arm. Release R hand hold.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly forward",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Cuban Cross (LF in front of RF)",
+      "footwork": "F",
+      "alignment": "Front",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side in Fan Position",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "5/8 to L over 1-3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Cuban Cross (LF behind RF)",
+      "footwork": "F",
+      "alignment": "Back",
+      "amount_of_turn": "5/8",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back and slightly to side",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in Fan Position",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

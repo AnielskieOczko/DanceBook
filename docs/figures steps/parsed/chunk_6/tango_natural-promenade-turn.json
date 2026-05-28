@@ -1,0 +1,111 @@
+{
+  "name": "Natural Promenade Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Rock Turn (2-7)",
+  "notes": "Amount of Turn: 3/4 to right.\nIf the Promenade Turn is danced along the side of the room 3/4 is still made. The following Promenade would be taken to the center, or a slight body turn to R may be used as the LF is place to side of RF to enable the following Promenade to be taken DC.\nWhen this Natural Promenade Turn is followed by steps 2-7 Rock Turn, skip step 4 (placing RF to side), it is more flat and rotational (compared to Twist Turn).\nNatural Promenade Turn follows the Fallaway Promenade.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in PP | Along LOD, pointing DW",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Don't pull lady to your lady, instead Man should switch lane."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward in PP and CBMP | DW | H | turning R | CBM",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly back | Backing LOD | BHB | turning R",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, LF placed to side without weight in PP | DW of new LOD. End facing DW | H then IE of B of LF | total of 3/4 to R | CBM",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "3/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in PP | Along LOD, pointing DC | H",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward and across in PP and CBMP | Pointing down LOD | H",
+      "footwork": "F",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd between partner's feet | Down LOD | H | CBM",
+      "footwork": "F",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly back. RF placed to side without weight in PP | End facing DC of new LOD. | BH then IE of B of RF | 3/4 to R",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "3/4 to R",
+      "comments": [
+        "Track Man's hips, stay behind."
+      ]
+    }
+  ]
+}

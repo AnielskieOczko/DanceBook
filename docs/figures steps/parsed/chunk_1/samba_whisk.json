@@ -1,0 +1,45 @@
+{
+ "name": "Whisk to Left",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/whisk"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Counter Promenade Position",
+  "preceding_figure_names": "Argentine Crosses, Corta Jaca, Criss Cross Voltas, Maypole, Natural Basic Movement, Promenade And Counter Promenade Runs, Reverse Basic Movement, Reverse Roll, Reverse Turn, Rolling Off The Arm, Samba Walk in PP: RF, Samba Walk: Stationary, Side Basic Movement, Solo Spot Volta to Right (Lady to Left), Traveling Volta to Left, Whisk To Right",
+  "following_figure_names": "Reverse Basic Movement, Natural Basic Movement, Whisk To Right, Traveling Volta to Left, Solo Spot Volta to Right (Lady to Left), Corta Jaca, Argentine Crosses (commenced with RF), Natural Roll, Promenade And Counter Promenade Runs",
+  "notes": "Whisk (in all dances) is used to change position. So you want to go to counter promenade position on one side, and promenade position on the other side.\nLady's Underarm Turn to R: While Man does whisk to L, lady can do underarm turn to R: use the rise of the first step to make the turn:\nslow turn: \"and\": turn 1/4 to R, \"a 2\": turn 3/4 to R\nsharp turn:\nFocus head/eyes at Man, spot, turn shoulder to R first, then sharp turn, leg follow. Head is straight up (don't do shape as in Standard).\nRF almost stays same place. Ending RF cross in front of LF, knees tucked.\nBy \"a\", should already finish the turn, face partner, do not under turn.\nLady's Underarm Turn to L: While Man does whisk to R, Lady can do underarm turn to L when stepping LF to side.\nWhen Man raises the arm, start turning to L, shape upper body to L and back, stretch R side, head looking to left, turn 1/4 to L, LF is a fwd step.\nKeep turning, RF press floor (after turning another 1/4 L, RF fwd, away from Man, then continue 1/2 to L to turn to face partner), regain normal shaping. Slide LF cross in front of RF, knees tucked.\nBefore \"1\", start rising\n&a: Prepare: start rising, straightening knee, while rotating L hip to L (more to L side, do not over rotate to back, hips are in more neutral position at this time),\nThe action makes R leg goes to side, straight R leg, no weight (weight is still on LF), both heels are up. Do not stick butt out back. Keep toes on floor (not in the air during the movement.)\n1\", weight switch to RF, compress tummy, both knees bent forward, knees more forward and free. bigger bounce action.\nNeck/shoulder are free, relaxed, not held stiff\nNext \"&: start rising\na: LF behind RF w/o weight (cuban cross) | T (pressure)\nLF cuban cross behind RF, do not step too big, do not step too big. or too far behind, both heels up, L hip figure 8 action, finish L hip to back.\n2: take minimal weight to LF and replace weight to RF | BF\nat end of \"2\", flex R knee; heels lower, hip finish one figure 8. and start moving the opposite direction.\n1: LF to side | BF\na: RF behind LF w/o weight (cuban cross) | T (pressure)\n2: take minimal weight to RF and replace weight to LF | BF",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1, a",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": [
+        "RF behind LF w/o weight (cuban cross) | T (pressure)"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to LF",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": [
+        "Take minimal weight to RF and replace weight to LF"
+      ]
+    }
+  ]
+}

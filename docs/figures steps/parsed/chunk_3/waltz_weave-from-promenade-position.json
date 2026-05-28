@@ -1,0 +1,109 @@
+{   
+  "name": "Weave from PP (after Open Impetus Turn)",   
+  "urls": [   
+    "https://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position"   
+  ],   
+  "dance_type": "WALTZ",   
+  "level": "Silver",   
+  "starting_foot_leader": "RF",   
+  "ending_foot_leader": "RF",   
+  "starting_foot_follower": "LF",   
+  "ending_foot_follower": "LF",   
+  "starting_position": "Promenade Position",   
+  "ending_position": "Closed Position",   
+  "preceding_figure_names": "Back Whisk, Contra Check, Fallaway Whisk, Open Impetus, Open Telemark, Outside Change, Turning Lock, Turning Lock to R, Whisk",   
+  "following_figure_names": "Natural Spin Turn, Natural Turn, Wing (when ended in PP), Left Whisk (when ended in PP), Chasse From Promenade Position (when ended in PP), Closed Wing, Cross Hesitation (when ended in PP)",   
+  "notes": "Man: 1/8 to L can be made between 2-3, so 4-5 may be taken BLOD. Less turn can be made on Whisk to end facing LOD, or the Open Impetus could be used an an entry, when the body would be facing LOD. Then, the alignment will be like the Weave in Foxtrot. This may end in PP, same as Outside change to PP from step 4.",   
+  "steps": [   
+    {   
+      "step_number": 1,   
+      "timing": "1",   
+      "role": "LEADER",   
+      "foot": "RF",   
+      "action": "RF fwd and across in PP and CBMP, Pointing DC, body facing LOD, traveling DC",   
+      "footwork": "WF",   
+      "alignment": "DC",   
+      "amount_of_turn": "1/8 btwn preceding step and 1",   
+      "comments": [   
+        "Start to rise at end of 1",   
+        "3 different points in PP: base waist area down to feet, rotate slightly to left; belly button low center, slightly different angle; sternum high center. 3 different points enables you to stay parallel to Lady. Do not turn hips and feet too much to the Lady (makes position awkward). For this left turning figure, keep the differential consistent while moving in a curve, maintain upper body toward to Lady. Don't let upper body rotate further than feet, which will pull the lady to your left."   
+      ]   
+    },   
+    {   
+      "step_number": 2,   
+      "timing": "2",   
+      "role": "LEADER",   
+      "foot": "LF",   
+      "action": "LF fwd, Facing center, T, cont to turn L, CBM, Cont to rise on 2 and 3",   
+      "footwork": "WF",   
+      "alignment": "Center",   
+      "amount_of_turn": "",   
+      "comments": [   
+        "Continue to rise on 2 and 3",   
+        "Rotate the hip, open the door for Lady. Stay parallel."   
+      ]   
+    },   
+    {   
+      "step_number": 3,   
+      "timing": "3",   
+      "role": "LEADER",   
+      "foot": "RF",   
+      "action": "RF to side and slightly back, BLOD, TH, 1/4 btwn 2-3, Up. Lower at end of 3",   
+      "footwork": "TH",   
+      "alignment": "BLOD",   
+      "amount_of_turn": "1/4 btwn 2-3",   
+      "comments": [   
+        "Do not anticipate moving LOD. Allow energy to continue to move / follow through diagonal center.",   
+        "Lead Lady outside partner. Use CBM. Lower through right leg and hip, use abdominal muscle, dance diagonal stretch."   
+      ]   
+    },       {   
+      "step_number": 4,   
+      "timing": "1",   
+      "role": "FOLLOWER",   
+      "foot": "LF",   
+      "action": "LF fwd in PP and CBMP, Facing DC, traveling DC, start to turn L, CBM, start to rise e/o 1",   
+      "footwork": "WF",   
+      "alignment": "DC",   
+      "amount_of_turn": "",   
+      "comments": [           "Both step 1 and 2, think about stepping straight forward, forward, do not curve into Man, do not turn too early (don't turn late either). Legs are ahead of body. Big step. Stay connected with Man. Work the R side a lot to stay with Man.",   
+        "Shaping: starting from PP (L hip up). on count 1, R hip begins to pick up."   
+      ]   
+    },   
+    {   
+      "step_number": 5,   
+      "timing": "2",   
+      "role": "FOLLOWER",   
+      "foot": "RF",   
+      "action": "RF to side and slightly back, BDC, T, 1/4 to half turn btwn 1-2, Cont to rise on 2 and 3",   
+      "footwork": "T",   
+      "alignment": "BDC",   
+      "amount_of_turn": "1/4 to half turn btwn 1-2",         "comments": [   
+        "Swing leg strongly forward, big step. Don't turn right away. Head traveling forward with the RF first, Get weight on RF, balance on RF, then turn body and head. Don't lose R side. Give R side and hip to Man. Do not just rise and let body fall backward. Think about going forward along the curve which will give you better rotation, give Man more space.",   
+        "At end of this step, R hip is swung up at its maximum. Think about \"swing up and hover\".",   
+        "Always stay on left side (Man's right). Give R side to Man. Stretch, create bigger, fuller shape."   
+      ]   
+    },   
+    {   
+      "step_number": 6,   
+      "timing": "3",   
+      "role": "FOLLOWER",   
+      "foot": "LF",   
+      "action": "LF to side and slightly fwd, Pointing DC, TH, 1/2 btwn 2-3, body turn less, Up. Lower e/o 3",   
+      "footwork": "TH",   
+      "alignment": "DC",   
+      "amount_of_turn": "1/2 btwn 2-3",   
+      "comments": [   
+        "It may feel like a diagonally backward step, but because of the turn it will end side and slightly fwd. Do not do directly side step, that will not leave enough room for CBMP in next step.",   
+        "Count 1: RF fwd in CBMP, OP | FDC | HT } -- | -- | Cont to rise e/o 4",   
+        "To go outside forward, relax R shoulder down, do not take it back (which peels off from Man), connecting R shoulder down will drive the R leg forward. Think of Man's elbow as limbo bar, try not to beat it with upper body forward.",   
+        "Contra body. Left side more forward. Stretch head even more.",   
+        "Count 2: LF fwd | FDC | T | start to turn L | -- | CBM | Rise e/o 5",   
+        "LF to left of Man, stay very left/behind Man. Get on LF first, then: If the figure finishes in PP: turn to PP, don't fallback off to PP. Turn head when rising (after getting weight on foot), feet turn to PP as well.",   
+        "Pull center back whenever you rise, be on your own balance.",   
+        "Count 3: RF to side and slightly back | BDW | TH | 1/4 btwn 5-6, body turns less | -- | Up. Lower e/o 6",   
+        "This is closed finish. keep head position and only turn body, give R side to Man, then head ends up to R and body shapes to R.",   
+        "It could end in PP: lift left hip to Man, think about high jump.",   
+        "R side to Man. Check R arm/elbow."         ]   
+    }   
+  ]   
+}

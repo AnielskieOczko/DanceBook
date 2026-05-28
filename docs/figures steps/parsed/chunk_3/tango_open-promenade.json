@@ -1,0 +1,109 @@
+{
+  "name": "Open Promenade",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/open-promenade"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Open Finish",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn, Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte (step 1 in CBMP with Lady OP using CBM on 1 and 2), LF Rock (LF Rock in CBMP with Lady OP, no turn or up to 1/4 to R), Outside Swivel, Closed Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Open Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Promenade Link (having placed LF to side without weight, leading Lady to to PP, count &), Back Open Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Fallaway Promenade (having placed LF to side without weight, leading Lady to to PP, count &)",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC; or normal), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte (step 1 in CBMP with Lady OP using CBM on 1 and 2), LF Rock (LF Rock in CBMP with Lady OP, no turn or up to 1/4 to R), Outside Swivel, Closed Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Open Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Promenade Link (having placed LF to side without weight, leading Lady to to PP, count &), Back Open Promenade (having placed LF to side without weight, leading Lady to to PP, count &), Fallaway Promenade (having placed LF to side without weight, leading Lady to to PP, count &)",
+  "notes": "Man may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot. Head should keep the same distance with Man's head at all times. Keep the volume between 2 heads. There is the tendency that Lady's head goes too far forward on this 'Q' and getting weight on to her RF (this shorten the distance with Man, cut in his space), then the head comes back to left - which is too late. S: LF back in CBMP | Between Wall and DW | Ball Open Finish (as opposed the Closed Finish in Closed Promenade.) This is not \"back and across\", LF is fairly straight on the line with RF. Allow shoulder and arm and upper body to rotate to right. Left shoulder is quite forward, body is twisted. Keep hip up/fwd toward Man (do not sit). Extend back, head left and extend. Stay very left of Man. Do not lower L heel too quickly till you see the center is still moving toward same direction (ie. it will be backward step); it could be a swivel, then you change moving direction.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP",
+      "footwork": "H",
+      "alignment": "Along LOD, pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Along LOD, pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly forward",
+      "footwork": "IE",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in CBMP, OP",
+      "footwork": "H",
+      "alignment": "Between Wall and DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP",
+      "footwork": "H",
+      "alignment": "Along LOD, pointing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Along LOD, pointing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "IE",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "Ball",
+      "alignment": "Between Wall and DW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

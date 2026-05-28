@@ -1,0 +1,69 @@
+{
+  "name": "FootChanges",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/foot-changes"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Right Side Position",
+  "preceding_figure_names": "Open Basic Movement",
+  "following_figure_names": "Closed Basic Movement",
+  "notes": "Gold Level figure. Methods 1-4 described for entering and exiting Right Side or Right Shadow Position and Tandem Position. Includes variations for returning to Open Position. Foot changes can be danced with same foot after partner is in Right Side, Right Shadow, or Tandem Position.\n\nMethod 1: From Open Position to Right Side or Right Shadow Position (normal opposite foot to same foot as partner). Man: 2 3 4& 1: steps described. Lady: normal Open Basic.\nMethod 2: From Right Side or Right Shadow Position to return to Open Position. Both start with weight on LF. Man repeats Method 1 steps; Lady dances normal Open Basic.\nMethod 3: Similar to Method 1 but step 4&1 uses RF diag fwd Lock RLR; ends with LF back in front of Lady. Lady does Open Basic then Closed Basic.\nMethod 4: Man repeats Method 3 steps; Lady follows Open Basic then Closed Basic.\nFootwork and timing details provided for each step.\nAlternative endings and notes included.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2 3 4& 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back with Right Foot",
+      "footwork": "B",
+      "alignment": "Backing",
+      "amount_of_turn": "0",
+      "comments": [
+        "Transfer weight to Left Foot on next beat"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to Left Foot",
+      "footwork": "WF",
+      "alignment": "Neutral",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4&1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step diagonal forward with Right Foot",
+      "footwork": "F",
+      "alignment": "Diagonal Center",
+      "amount_of_turn": "0",
+      "comments": [
+        "Move towards Lady's left side"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward and across toward Lady's left side, turning half turn to right",
+      "footwork": "F",
+      "alignment": "Right Side Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "End in Right Side Position or Right Shadow Position"
+      ]
+    }
+  ]
+}

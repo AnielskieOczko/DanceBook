@@ -1,0 +1,221 @@
+{
+  "Open Impetus": {
+"name": "Open Impetus",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation"
+    ],
+    "dance_type": "WALTZ",
+    "level": "Silver",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Promenade Position",
+    "preceding_figure_names": "Back Lock, Drag Hesitation, Left Whisk, Natural Turn, Progressive Chasse To R, Reverse Corte",
+    "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+    "notes": "Transition into PP; see Open Impetus to Wing Notes. Different from leading Wing, man's arms remain on his right side, lady stays in right front.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Count 1",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Step back with left foot",
+        "footwork": "TH",
+        "alignment": "Line of Dance",
+        "amount_of_turn": "",
+        "comments": [
+          "TH",
+          "start to turn R",
+          "Sway(S)",
+          "CBM",
+          "-"
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "Count 2",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Close to left foot (Heel Turn)",
+        "footwork": "HT",
+        "alignment": "FDC",
+        "amount_of_turn": "3/8 between 1-2",
+        "comments": [
+          "Sway(L)",
+          "rise e/o 2"
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "Count 3",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Diagonal forward in PP, left side leading",
+        "footwork": "TH",
+        "alignment": "Pointing DC, body facing LOD",
+        "amount_of_turn": "slight turn to R",
+        "comments": [
+          "TH",
+          "slight body turn to R",
+          "Sway(S)",
+          "up, lower e/o 3",
+          "Think about a diagonal line to come out in PP."
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "Count 1",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "Step forward with right foot",
+        "footwork": "HT",
+        "alignment": "FLOD",
+        "amount_of_turn": "start to turn R",
+        "comments": [
+          "TH",
+          "Sway(S)",
+          "CBM",
+          "--"
+        ]
+      },
+      {
+        "step_number": 5,
+        "timing": "Count 2",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "Side step",
+        "footwork": "T",
+        "alignment": "BDC",
+        "amount_of_turn": "3/8 between 1-2",
+        "comments": [
+          "Sway(R)",
+          "rise e/o 2",
+          "Allow feet to turn, delay head."
+        ]
+      },
+      {
+        "step_number": 6,
+        "timing": "Count 3",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "Close to left foot",
+        "footwork": "TH",
+        "alignment": "BDC",
+        "amount_of_turn": "1/8 between 2-3",
+        "comments": [
+          "Sway(L)",
+          "lower e/o 6"
+        ]
+      }
+    ]
+  },
+  "Cross Hesitation": {
+    "name": "Cross Hesitation",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation"
+    ],
+    "dance_type": "WALTZ",
+    "level": "Silver",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Promenade Position",
+    "ending_position": "Promenade Position",
+    "preceding_figure_names": "Open Impetus, Back Whisk, Natural Turn, Progressive Chasse To R, Reverse Corte",
+    "following_figure_names": "Wing, Left Whisk, Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation",
+    "notes": "Different from Open Impetus, man's arms remain on his right side, lady stays in right front. Step should be adequately large to keep balance and exted left side.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Count 1",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Step forward in PP and CBMP",
+        "footwork": "HT",
+        "alignment": "Pointing DC, body facing LOD",
+        "amount_of_turn": "--",
+        "comments": [
+          "Pointing DC, body facing LOD",
+          "Sway(S)",
+          "rise e/o 4"
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "Count 2",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Close to RF without weight",
+        "footwork": "T",
+        "alignment": "FDC",
+        "amount_of_turn": "1/4 between 4-5",
+        "comments": [
+          "Sway(L)",
+          "cont to rise on 5 and 6"
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "Count 3",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Position held",
+        "footwork": "TH",
+        "alignment": "FDC",
+        "amount_of_turn": "--",
+        "comments": [
+          "TH (RF)",
+          "Sways(S)",
+          "lower e/o 6"
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "Count 1",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "Step forward and across in PP and CBMP",
+        "footwork": "HT",
+        "alignment": "Pointing Center, moving DC",
+        "amount_of_turn": "start to turn L",
+        "comments": [
+          "Sway(S)",
+          "CBM",
+          "start to rise e/o 4"
+        ]
+      },
+      {
+        "step_number": 5,
+        "timing": "Count 2",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "Side step",
+        "footwork": "T",
+        "alignment": "BLOD",
+        "amount_of_turn": "1/4 between 4-5",
+        "comments": [
+          "Sway(L)",
+          "cont to rise on 5 and 6",
+          "Do not step big. Turn feet underneath the body."
+        ]
+      },
+      {
+        "step_number": 6,
+        "timing": "Count 3",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "Close to RF",
+        "footwork": "TH",
+        "alignment": "BDC",
+        "amount_of_turn": "1/8 between 5-6",
+        "comments": [
+          "Sway(L)",
+          "lower e/o 6"
+        ]
+      }
+    ]
+  }
+}

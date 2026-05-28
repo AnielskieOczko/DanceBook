@@ -1,0 +1,76 @@
+{
+  "name": "Contra Bota Fogos",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/contra-botafogos"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "R Contra Position",
+  "ending_position": "R Contra Position",
+  "preceding_figure_names": "Maypole (Continuous Volta Spot Turn to R and L), Roundabout (to R and L), Shadow Traveling Volta",
+  "following_figure_names": "Foot Change 6, Foot Change 7, Roundabout (to R and L)",
+  "notes": "Contra Bota Fogos may be danced with hand changes as: (when danced as this, the figure is usually repeated, regain normal hold on last step.)\nStart with R to R hand hold (achieved at end of previous figure)\nChange to L to L hand hold on step 3\nChange to R to R hand hold on step 6.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd towards Lady's R side in R Contra Position",
+      "footwork": "BF",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slight pressure with R hand to lead Lady fwd",
+        "Slightly extend hold over steps 2, 3",
+        "LF back and slightly to side without weight. Toe turned out. | 1/4 to R over steps 2, 3 | I/E of T (Pressure)"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd towards Man's R side in R Contra Position",
+      "footwork": "BF",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "LF back and slightly to side without weight. Toe turned out | 1/4 to R over steps 2, 3 | I/E of T (Pressure)"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Take minimal weight to LF and replace weight to RF in L Contra Position",
+      "footwork": "BF",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slightly extend hold over steps 5 and 6",
+        "1: LF fwd towards Lady's L side in L Contra Position | Slight pressure with R hand to lead Lady fwd, returning arms to normal position"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Take minimal weight to LF and replace weight to RF in L Contra Position",
+      "footwork": "BF",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "1: LF fwd towards Man's L side in L Contra Position | No turn | BF",
+        "a: RF back and slightly to side without weight. Toe turned out | 1/4 to L over steps 5, 6 | I/E of T (Pressure)",
+        "2: Take minimal weight to RF and replace weight to LF in R Contra Position, having moved it slightly back | BF"
+      ]
+    }
+  ]
+}

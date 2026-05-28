@@ -1,0 +1,124 @@
+{
+  "name": "Back Corte",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, RF Rock, Reverse Outside Swivel, Rock Turn",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes": "Note:\nAs described above, the figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back, L side leading",
+      "footwork": "IE",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "strong frame turning to R, wind up.",
+        "Though books says \"L side leading\", most competitors do CBM and wind up a lot."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BDC",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Mirko Gozzoli lifts the heel and then the toe last.",
+        "Marcus Hilton lifts the whole foot.",
+        "But Mirko, and contemporary dancers, take much longer steps than Marcus did."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly forward",
+      "footwork": "IE",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "1/4 to L btwn 2-3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF slightly back",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd, R side leading",
+      "footwork": "H",
+      "alignment": "Down new LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Focus on movement forward, not turning shoulder backward. Using right side as axis and move left side forward. Keep shoulder flat.",
+        "Do not leave butt behind. Keep hips underneath body.",
+        "More shaping (extending back) is achieved by by giving center more to Man and leaving head behind, creating a line."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd in CBMP",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Lift LF at very last moment, make it sharp and quick.",
+        "Stay left, do not get into Man's space.",
+        "Step straight forward, not step sideways. do not anticipate turns. Take strong step to drive through Man to fill up the space that the Man gives you"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "IE",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF slightly fwd",
+      "footwork": "WF",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

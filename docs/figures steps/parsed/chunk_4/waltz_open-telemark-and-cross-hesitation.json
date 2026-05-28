@@ -1,0 +1,92 @@
+{  
+  "name": "Open Telemark and Cross Hesitation",    "urls": [  
+    "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation"  
+  ],  
+  "dance_type": "WALTZ",  
+  "level": "Silver",  
+  "starting_foot_leader": "LF",  
+  "ending_foot_leader": "RF",    "starting_foot_follower": "RF",  
+  "ending_foot_follower": "RF",  
+  "starting_position": "Closed Position",  
+  "ending_position": "Open Position (Lady outside)",  
+  "preceding_figure_names": "Closed Change RF, Closed Wing, Double Reverse Spin, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",  
+  "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",  
+  "notes": "Cross Hesitation can be used from other positions and can be overturned. If overturned, RF position will be \"fwd and across\". There is no foot swivel on step 4 unless cross hesitation is overturned. Normal ending is stepping back with Lady outside.",  
+  "steps": [  
+    {  
+      "step_number": 1,  
+      "timing": "1",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "Forward step DC, start turn left, sway S, CBM, rise on 1",  
+      "footwork": "F",  
+      "alignment": "DC",  
+      "amount_of_turn": "start to turn L",  
+      "comments": [  
+        "This is \"Open Telemark\"",  
+        "Has strong swivel action in the base area."  
+      ]  
+    },      {  
+      "step_number": 2,  
+      "timing": "1/4",  
+      "role": "LEADER",  
+      "foot": "RF",  
+      "action": "Side step BDW, toe T, sway L, up",  
+      "footwork": "T",  
+      "alignment": "BDW",  
+      "amount_of_turn": "1/4",  
+      "comments": [  
+        "Man \"roll on\" the lady, turning without the Lady."  
+      ]  
+    },  
+    {  
+      "step_number": 3,  
+      "timing": "1/2",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "Side and slightly forward in PP, point DW, body faces wall, sway S, up, lower on 3",  
+      "footwork": "F",  
+      "alignment": "DW",  
+      "amount_of_turn": "1/2",  
+      "comments": [  
+        "Man complete Telemark with feet."        ]  
+    },  
+    {  
+      "step_number": 4,  
+      "timing": "1",  
+      "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "Back step BDC, toe hold, start turn left, sway S, CBM, rise slightly on 1, NFR",  
+      "footwork": "B",  
+      "alignment": "BDC",  
+      "amount_of_turn": "start to turn L",  
+      "comments": [  
+        "This is \"Open Telemark\"."  
+      ]  
+    },      {  
+      "step_number": 5,  
+      "timing": "3/8",  
+      "role": "FOLLOWER",  
+      "foot": "LF",  
+      "action": "Close to RF heel turn, FLOD, sway R, continue rise on 2",  
+      "footwork": "C",  
+      "alignment": "FLOD",  
+      "amount_of_turn": "3/8",  
+      "comments": [  
+        "Anchor, pull in center. Let base rotate."  
+      ]  
+    },  
+    {  
+      "step_number": 6,  
+      "timing": "3",  
+      "role": "FOLLOWER",  
+      "foot": "RF",        "action": "Diagonal forward in PP, right side leading, point LOD, slight body turn left, sway S, up, lower on 3",  
+      "footwork": "F",  
+      "alignment": "LOD",  
+      "amount_of_turn": "slight",  
+      "comments": [  
+        "Completing the Telemark with body turning to PP."  
+      ]  
+    }  
+  ]  
+}

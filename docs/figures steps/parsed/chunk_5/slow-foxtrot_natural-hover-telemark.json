@@ -1,0 +1,219 @@
+{
+  "name": "Natural Hover Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-hover-telemark"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step (at corner), Change Of Direction (at corner), Hover Telemark (at corner), Reverse Wave (at corner), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes": "Body shape goes to the R (can take head to R as well, or keep head L).\nFeather step finish. Swing rib cage to R. Dancing head to L. Changing shape to L.\nCushion the knee. Pull stomach muscle.\nDon't push tummy toward partner to try to connect.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1",
+        "Start to turn R"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Sway(R)",
+        "Up. Lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side (Heel Pull)",
+      "footwork": "WF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Sway(L)",
+        "Down on 3. Rise e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "L knee veers inwards",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "Up."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diag fwd, preparing to step OP, L side leading",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1. NFR",
+        "L shoulder connects down.",
+        "Body should feel fwd, don't turn shoulder back.",
+        "Diagonal stretch through body upward rightward up."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF closes to LF (Heel Turn)",
+      "footwork": "H",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(L)",
+        "Up. Lower e/o 2. NFR"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "T",
+      "alignment": "Wall",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(R)",
+        "Down on 3. Rise e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF brushes to LF",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Slight body turn to R",
+        "Sway(R)",
+        "Up."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF diag back R side leading",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(R)",
+        "Up."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up. NFR. Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up."
+      ]
+    }
+  ]
+}

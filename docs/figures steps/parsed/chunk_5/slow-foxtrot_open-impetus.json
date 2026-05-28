@@ -1,0 +1,126 @@
+{
+  "name": "Open Impetus Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Curved Feather to Back Feather, Natural Turn, Natural Twist Turn, Reverse Wave",
+  "following_figure_names": "Feather Step, Weave from PP, Natural Weave (Natural Weave from PP), Natural Zig-Zag from PP, Curved Feather to Back Feather (starting in PP)",
+  "notes": "Keep traveling forward. Big step.\nDo not think about turning head position too early. Think about body position staying closed as long as possible.\nAllow feet to turn. Pull center back.\nLet head finish the action at the very last. Head turn slowly.\nFinish with body slightly ahead of Lady.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "WF",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "--"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF (Heel Turn)",
+      "footwork": "C",
+      "alignment": "FDC",
+      "amount_of_turn": "3/8 btwn 1-2",
+      "comments": [
+        "rise e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag. fwd in PP, L side leading",
+      "footwork": "F",
+      "alignment": "Pointing DC, body facing LOD",
+      "amount_of_turn": "slight body turn to R",
+      "comments": [
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in PP and CBMP",
+      "footwork": "WF",
+      "alignment": "Pointing DC, body facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "rise e/o 4",
+        "Finish with body slightly ahead of Lady"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "F",
+      "alignment": "FLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "--"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "3/8 btwn 1-2",
+      "comments": [
+        "rise e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP having brushed to LF",
+      "footwork": "T",
+      "alignment": "Pointing Center, moving DC",
+      "amount_of_turn": "3/8 btwn 2-3, body turns less",
+      "comments": [
+        "Let head finish the action at the very last. Head turn slowly."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "WF",
+      "alignment": "Pointing Center, moving DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "CBM",
+        "start to rise e/o 4"
+      ]
+    }
+  ]
+}

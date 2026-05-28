@@ -1,0 +1,69 @@
+{
+  "name": "Spiral Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/spiral"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Aida, Alemana, Hand To Hand, Natural Top, Opening Out To Right And Left, Progressive Walks Forward in Right Shadow Position, Reverse Top, Rope Spinning, Sliding Doors, Three Alemanas",
+  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Three Alemanas, Basic Movements: Open, Open Hip Twist, Curl, Three Threes, New York LSP, Spot or Switch Turn To R, Underarm Turn To L, Reverse Top",
+  "notes": "Alternatives:\nUnderturned Spiral Turn:\nMan: turn 1/8 L over step 5 and 6 to end in Open Position with RF fwd.\nLady 3/4 L after she has placed step 3. End in Tandem Position with Man; Lady LF fwd; RF fwd in line with LF, then turn 1/2 to end with RF back; then LF back.\nEnding in Open Position:\nMan turn 3/8 to L over step 5 and 6.\nEnding in Open CPP.\nEnd in Contact Position: Closed Spiral\nMan turn 5/8 to L over step 5 and 6 to Contact Position, to end RF side and slightly fwd, overturning Lady, keeping fingers lightly in contact with Lady's waist throughout as she turns within the circle of his R arm. On step 4, lower arms to normal position.\nLady: make a complete turn L over step 4 to 6 to end LF behind RF as Cuban Cross",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in RSP",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "Slight body turn to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF, slight body turn to L to normal position",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "Slight body turn to L",
+      "comments": [
+        "Return arms to normal position and raise L hand above Lady's R shoulder to circle counter clockwise"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4 2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd and slightly across LF in front of Man, then turn underarm, allowing LF to cross in front without weight",
+      "footwork": "WF",
+      "alignment": "Fan Position",
+      "amount_of_turn": "1/4 to L then 7/8 spiral turn",
+      "comments": [
+        "Lady can use extended forward walk.",
+        "Turn could also be made on the R toe with heel well off the floor (High Spiral).",
+        "At end of 1, make sure to settle R hip before stepping next step."
+      ]
+    }
+  ]
+}

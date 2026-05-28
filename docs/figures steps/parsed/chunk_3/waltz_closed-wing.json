@@ -1,0 +1,96 @@
+{
+  "name": "ClosedWing",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/closed-wing"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Weave, Chasse From Promenade Position, Closed Telemark, Outside Change, Turning Lock, Weave From Promenade Position",
+  "following_figure_names": "Closed Telemark (taking step 1 in CBMP OP on L side), Open Telemark (taking step 1 in CBMP OP on L side), Double Reverse Spin (taking step 1 in CBMP OP on L side), Progressive Chasse To R (taking step 1 in CBMP OP on L side), Reverse Turn (taking step 1 in CBMP OP on L side), Fallaway Reverse And Slip Pivot, Whisk (if ended DW)",
+  "notes": "Keep upward balanced poised position, don't try to pull hip back to get around. This step is not too big. Keep it underneath body. (Man is not moving anywhere) Lady keeps her head upward and leftward on step 3 and keep her poise back. L leg goes ahead of body to Wing position. Try not to think body rotating. Think about sway. Try to keep shoulders parallel to partner.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP",
+      "footwork": "H",
+      "alignment": "FDC",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "starts to close to RF",
+      "footwork": "WF",
+      "alignment": "FDC",
+      "amount_of_turn": "Slight to L",
+      "comments": [
+        "Slight body turn to L on 2 and 3",
+        "Slight rise on 2 and 3 NFR"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "closes to RF w/o weight",
+      "footwork": "WF",
+      "alignment": "FDC",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "-",
+      "comments": [
+        "start to rise e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back (small step)",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "-",
+      "comments": [
+        "Slight sway to L on 2 and 3",
+        "continue to rise on 2"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd in CBMP, OP on L side",
+      "footwork": "TH",
+      "alignment": "FDW against LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Slight body turn to L",
+        "Up. Lower e/o 3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "name": "Progressive Chassé to Right",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Outside Partner Position",
+  "preceding_figure_names": "Change of Direction, Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Natural Turn With Hesitation, Reverse Pivot",
+  "following_figure_names": "Closed Impetus, Back Lock, Tipple Chasse To Right, Running Finish, Four Quick Run (when preceding figure ends DC or LOD), V6 (6-12, when preceding figure ends DC or LOD), Tipsy To R, Six Quick Run (when preceding figure ends DC)",
+  "notes": "Bronze: The Progressive Chassé to R could be started facing LOD and ended backing DW (3/8 turn) when the amounts of turn would be:\nMan: 1/4 between 1-2, 1/8 between 2-3 (body turns less), no further turn\nLady: 3/8 between 1-2 (body turns less), slight body turn to L on 3, no further turn.\nSilver and Gold: Started facing DC and ended backing LOD (3/8 turn), or started facing DC and ending backing DC (1/2 turn). If 1/2 turn is mad the amounts of turn will be:\nMan: 1/4 between 1-2, 1/8 between 2-3, 1/8 between 4-5\nLady: 3/8 between 1-2 (body turns less). Body completes turn on 3, 1/8 between 3-4 (body turns less)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8 between 1 and 2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "continue to rise on 2 and 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8 between 2 and 3, body turns less",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "closes to RF",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Up, lower e/o 4"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "TH",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Begin to turn L",
+        "start to rise e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/4 between 1 and 2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "continue to rise on 2 and 3"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to LF",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "slight body turn"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "CBM"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "name": "Natural Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Facing DC",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step (at corner), Change Of Direction (at corner), Hover Telemark (at corner), Reverse Wave (at corner), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes": "Note -- 1/2 or 5/8 turn may be used at a corner. Amount of turn in each case will be 1/4 between 1/2, whether started facing LOD or DW\nNote -- When underturned, the Lady will always turn 3/8 between 1-2",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER | FOLLOWER",
+      "foot": "RF/LF",
+      "action": "Leader steps RF forward, turn start R, sway S, rise; Follower steps LF back, turn start R, sway S, rise slightly",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER | FOLLOWER",
+      "foot": "LF/RF",
+      "action": "Leader steps LF to side, sway R, turn 1/4 between 1-2; Follower closes RF to LF in heel turn, sway L, continue rise",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER | FOLLOWER",
+      "foot": "RF/RF",
+      "action": "Leader steps RF side small, sway S, turn 1/2 between 2-3; Follower steps LF side and RF brushes toward LF, sway S, turn 3/8 between 2-3",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/2",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER | FOLLOWER",
+      "foot": "LF/RF",
+      "action": "Leader steps LF diagonal forward, prepares OP, sway L, turn none; Follower steps RF diagonal back leading R side, sway R, turn none",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER | FOLLOWER",
+      "foot": "RF",
+      "action": "Leader steps RF forward in CBMP, opens position, sway S, rise, lower on 5; Follower (no specific instruction provided)",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER | FOLLOWER",
+      "foot": "LF/RF",
+      "action": "Leader steps LF forward, heel, sway S, CBM; Follower steps RF back, sway S, CBM",
+      "footwork": "H/T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

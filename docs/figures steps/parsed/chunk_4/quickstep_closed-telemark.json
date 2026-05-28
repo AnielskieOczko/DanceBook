@@ -1,0 +1,107 @@
+{
+"name": "Closed Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Fish Tail, Four Quick Run, Six Quick Run",
+  "notes": "Footwork same as Walz Closed Telemark. Possible timings: SSSS, SQQS, QQSS (after a reverse pivot). Leader: LF forward (FDC, HT, start to turn L), sway, CBM, rise; RF to side (almost BLOD, T, slightly less than 3/8 between 1-2), sway left, up; LF side forward (DW, TH, slightly over 3/8 between 2-3), sway, up, lower; RF forward in CBMP, OP, DW, H, sway. Follower: RF back (BDC, TH, start to turn L), strong big step, CBM; LF closes to RF (Heel Turn, LOD, HT, 3/8 between 1-2), sway right, continue rise; RF side back (BDW, TH, 3/8 between 2-3), sway, up, lower; LF back in CBMP (BDW, T), sway. Head shape: right then left; keep contact with man; leave room for man's next step; lower before driving into next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd | FDC | HT | start to turn L",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side | almost BLOD | T | slightly less than 3/8 between 1-2",
+      "footwork": "F",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd | Pointing DW | TH | slightly over 3/8 between 2-3. body turns less",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "less",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP | DW | H",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back | BDC | TH | start to turn L",
+      "footwork": "F",
+      "alignment": "BDC",
+      "amount_of_turn": "start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn) | LOD | HT | 3/8 between 1-2",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back | BDW | TH | 3/8 between 2-3, body turns less",
+      "footwork": "F",
+      "alignment": "BDW",
+      "amount_of_turn": "less",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP | BDW | T",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

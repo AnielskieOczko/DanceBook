@@ -1,0 +1,85 @@
+{
+"name": "Reverse Fleckerl",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/reverse-fleckerl"
+  ],
+  "dance_type": "VIENNESE_WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "BLOD (any other alignment is possible)",
+  "ending_position": "Facing LOD (varies by step)",
+  "preceding_figure_names": "Reverse Fleckerl, Reverse Turn",
+  "following_figure_names": "Contra Check, Reverse Turn, Reverse Fleckerl",
+  "notes": "The amount of turn: can do 1 full turn up to 2 full turns (as shown above). For both Man and Lady, there is a strong rotation, so there must be a foot swivel on the ball of the flat foot on each step. Fleckerls are done on the spot, it doesn't move around, focus on rotation. The power for the rotation does not come from upper body. Speed comes from feet and legs. When the steps are repeated, the Man will dance step 1 as lady's step 4 (draw LF back to RF, L heel closes to inside edge of RF). Note: Commencing facing LOD (any other alignment is possible). This figure can turn 1 full turn or up to 2 turns, up to dancers.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, toe turned out (small step)",
+      "footwork": "F",
+      "alignment": "Pointing center",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, with 1/2 weight",
+      "footwork": "B",
+      "alignment": "Facing DW Against LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF crosses in front of RF",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back to inside edge of Man's LF",
+      "footwork": "B",
+      "alignment": "Facing DW Against LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "1/2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF crosses behind RF, 1/2 weight (a type of twist turn)",
+      "footwork": "B",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "3/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "End weight on RF",
+      "footwork": "B",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    }
+  ]
+}

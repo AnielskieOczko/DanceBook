@@ -1,0 +1,205 @@
+{
+  "name": "Stop and Go",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/stop-and-go"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Catapult, Change of Hands Behind Back, Change of Places Left to Right, Chugging, Fallaway Throwaway, Hip Bump, Shoulder Spin, Simple Spin, Spanish Arms, Stop and Go, Windmill",
+  "following_figure_names": "Link, Change of Places Left to Right, Change of Hands Behind Back, Hip Bump, American Spin (with L to R hand hold), Stop and Go",
+  "notes": "It could be danced without hold during lady's turns.\nMan will lead lady strongly with L hand to turn L on 3, immediately releasing hold, placing R hand on her back to check her turn on 5.\nMan will lead her strongly with RH to turn R on 8, immediately releasing R hand contact, regaining L to R hand hold at the end of her turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Link step LR, no turn",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward chasse LRL to RSP, raise left hand and circle counter clockwise",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": [
+        "raise LH and circle it counter clockwise"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "5",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Place right hand on lady's back to check her turn",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Lower left arm",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in RSP with right foot, toe out, lead lady back with left hand",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Replace weight to left foot in RSP",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Lead lady forward with right hand",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Small backward chasse RLR to Open Position, raise left hand and circle clockwise, releasing right hand contact",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "",
+      "comments": [
+        "raise LH and circle it clockwise",
+        "releasing R hand contact"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Lower arm and lead lady back at the end of her turn",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Link step RL, no turn",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward step RF to chasse RLR turning underarm, ending RF back in RSP",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "1/2 to L over 3-5",
+        "going to Man's R side"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step back with left foot in RSP, no turn",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 13,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Left arm straight up",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 14,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Replace weight to right foot in RSP",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Left arm to side",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 16,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward chasse LRL turning underarm, ending LF back in open position",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "to R",
+      "comments": [
+        "1-2 to R"
+      ]
+    }
+  ]
+}

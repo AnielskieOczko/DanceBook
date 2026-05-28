@@ -35,4 +35,8 @@ class DanceFigureStep {
 
     @Column(name = "amount_of_turn")
     var amountOfTurn: String? = null
+
+    @OneToMany(mappedBy = "danceFigureStep", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var comments: MutableList<DanceFigureStepComment> = mutableListOf()
 }
+

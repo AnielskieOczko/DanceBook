@@ -1,0 +1,33 @@
+{
+  "name": "Shadow Circular Volta",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/shadow-circular-volta"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "R Shadow Position",
+  "ending_position": "R Shadow Position",
+  "preceding_figure_names": "Cruzados Walks and Locks, Samba Walk in PP, Natural Basic Movement, Reverse Basic Movement, Maypole",
+  "following_figure_names": "Foot Change 2, Foot Change 4, Samba Walk in PP, Traveling Bota Fogos Forward, Shadow Traveling Volta, Cruzados Walks and Locks",
+  "notes": "Incline to the center of the circle. Head, looking toward the direction of the foot movement. Person in the inside use smaller steps.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1 a 2 a 3 a 4 a 5 a 6 a 8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Begin circular volta to the right in R shadow position, moving left across the floor",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Incline to the center of the circle. Head, looking toward the direction of the foot movement.",
+        "Person in the inside use smaller steps."
+      ]
+    }
+  ]
+}

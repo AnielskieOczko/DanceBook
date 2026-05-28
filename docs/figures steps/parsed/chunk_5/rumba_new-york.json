@@ -1,0 +1,97 @@
+{
+  "name":"New York (to LSP or RSP) Check from OCPP or OPP",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/new-york"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open CPP",
+  "ending_position": "Open CPP",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Note: RSP may be achieved after New York LSP by turning 1/8 more between step 3 of New York LSP and 1 of the next figure, to follow with Progressive Walks Forward. New York LSP may also be danced from Progressive Walks Forward in LSP (no turn on step 1 of New York LSP). Lady: break at wrist (think of showing off your ring), circle one round, ending downward. Hand at eye level. Advanced technique: Hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip). Spine stays at same place as in basic technique. Do not break shoulder joint, arm is in same plane as body, if body can twist more, arm is more back. During the turn, arm line slowly going up, ideally ending with L hand behind head, arm sloped up. Basic technique: upper body flat forward, arm to the side. During the turn, arm line slowly going up, ideally ending with L hand behind head, arm sloped up. Keep center facing forward, then rotate upper body around spine to left, L hand/arm is \"connected\" with upper frame, don't use shoulder joint as turning point for arm. \"&\": Get spine on to the foot with check action to change direction. R arm, the one connected with partner, do not push it forward, keep it tucked to side of body. Basic technique: upper body flat forward, arm to the side. Advanced technique: Hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip). Spine stays at same place as in basic technique. Do not break shoulder joint, arm is in same plane as body, if body can twist more, arm is more back. During the turn, arm line slowly going up, ideally ending with L hand behind head, arm sloped up.",
+  "steps": [
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward in Left Side Position, turn 1/8 to Right",
+      "footwork": "F",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "This is New York to the Left Side Position."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3&",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Breakdown to \"3&\", on \"&\", frame starts turning to L to face partner"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side, end in Open PP",
+      "footwork": "F",
+      "alignment": "Open PP",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Take required hold at end of depending. Continuing with New York to Right Side Position."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF forward in Left Side Position, turn 1/8 to Left",
+      "footwork": "F",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "This is New York to the Left Side Position (Lady on Man's Left)."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "LF ball flat."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4-5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side, end in Open PP",
+      "footwork": "F",
+      "alignment": "Open PP",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "hips pendulum, then twist to turn to R."
+      ]
+    }
+  ]
+}

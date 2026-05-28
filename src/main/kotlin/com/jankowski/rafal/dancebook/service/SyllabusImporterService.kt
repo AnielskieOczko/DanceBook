@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceFigureStep
+import com.jankowski.rafal.dancebook.model.DanceFigureLink
+import com.jankowski.rafal.dancebook.model.DanceFigureStepComment
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureStepRepository
 import com.jankowski.rafal.dancebook.repository.DanceTypeRepository
@@ -114,8 +116,19 @@ class SyllabusImporterService(
             matchedFigure.endingFootFollower = parsedData.endingFootFollower
             matchedFigure.startingPosition = parsedData.startingPosition
             matchedFigure.endingPosition = parsedData.endingPosition
-            matchedFigure.precedingFigureNames = parsedData.precedingFigures.joinToString(", ")
-            matchedFigure.followingFigureNames = parsedData.followingFigures.joinToString(", ")
+            matchedFigure.precedingFigureNames = parsedData.precedingFigures
+            matchedFigure.followingFigureNames = parsedData.followingFigures
+
+            val hasLink = matchedFigure.links.any { it.url == url }
+            if (!hasLink) {
+                val newLink = DanceFigureLink().apply {
+                    this.danceFigure = matchedFigure
+                    this.url = url
+                    this.title = "DanceCentral Reference"
+                    this.type = "CRAWLED"
+                }
+                matchedFigure.links.add(newLink)
+            }
 
             danceFigureRepository.save(matchedFigure)
 
@@ -463,4 +476,237 @@ class SyllabusImporterService(
         val allowedChars = Regex("^[1-9sqae&/\\s\\-+]+$")
         return allowedChars.matches(lower)
     }
+
+    @Transactional
+    fun importAllAiParsedJson(): ImportResult {
+        val parsedDir = File("docs/figures steps/parsed")
+        if (!parsedDir.exists() || !parsedDir.isDirectory) {
+            throw IllegalArgumentException("Parsed figures directory not found at: ${parsedDir.absolutePath}")
+        }
+
+        val files = parsedDir.listFiles { _, name -> name.matches(Regex("chunk_\\d+_parsed\\.json")) }
+            ?: emptyArray()
+
+        if (files.isEmpty()) {
+            throw IllegalArgumentException("No parsed chunk JSON files found in: ${parsedDir.absolutePath}")
+        }
+
+        files.sortBy { file ->
+            val num = file.name.substringAfter("chunk_").substringBefore("_parsed").toIntOrNull() ?: 0
+            num
+        }
+
+        var totalFiguresUpdated = 0
+        var totalStepsCreated = 0
+        var totalSkippedUnmatched = 0
+        val allWarnings = mutableListOf<String>()
+
+        for (file in files) {
+            log.info("Importing AI parsed figures from file: ${file.name}")
+            try {
+                val result = importFromAiParsedJson(file.absolutePath)
+                totalFiguresUpdated += result.figuresUpdated
+                totalStepsCreated += result.stepsCreated
+                totalSkippedUnmatched += result.skippedUnmatched
+                allWarnings.addAll(result.warnings.map { "[${file.name}] $it" })
+            } catch (e: Exception) {
+                log.error("Failed to import from file: ${file.name}", e)
+                allWarnings.add("Error importing ${file.name}: ${e.message}")
+            }
+        }
+
+        return ImportResult(
+            figuresUpdated = totalFiguresUpdated,
+            stepsCreated = totalStepsCreated,
+            skippedUnmatched = totalSkippedUnmatched,
+            warnings = allWarnings
+        )
+    }
+
+    @Transactional
+    fun importFromAiParsedJson(relativeFilePath: String): ImportResult {
+        val file = File(relativeFilePath)
+        if (!file.exists()) {
+            throw IllegalArgumentException("Parsed JSON file not found at: ${file.absolutePath}")
+        }
+
+        val records = try {
+            objectMapper.readValue<List<AiParsedFigureDto>>(file)
+        } catch (e: Exception) {
+            log.error("Failed to parse AI structured JSON file: ${file.absolutePath}", e)
+            throw IllegalArgumentException("Invalid JSON format in ${file.name}: ${e.message}")
+        }
+
+        var figuresUpdated = 0
+        var stepsCreated = 0
+        var skippedUnmatched = 0
+        val warnings = mutableListOf<String>()
+
+        val danceTypes = danceTypeRepository.findAll()
+
+        for (record in records) {
+            val recName = record.name ?: continue
+            val recDanceType = record.dance_type ?: continue
+
+            val dbDanceTypeName = mapDanceTypeJsonToDbName(recDanceType)
+            val danceType = danceTypes.find { it.name.equals(dbDanceTypeName, ignoreCase = true) }
+            if (danceType == null) {
+                warnings.add("Could not find dance type in DB matching: $recDanceType (mapped to $dbDanceTypeName) for figure $recName")
+                skippedUnmatched++
+                continue
+            }
+
+            val existingFigures = danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceType.id!!)
+            val matchedFigure = findMatchingFigure(recName, danceType.name, existingFigures)
+            if (matchedFigure == null) {
+                skippedUnmatched++
+                warnings.add("Unmatched figure: '$recName' for style '${danceType.name}'")
+                continue
+            }
+
+            // Update metadata
+            matchedFigure.startingFootLeader = record.starting_foot_leader
+            matchedFigure.endingFootLeader = record.ending_foot_leader
+            matchedFigure.startingFootFollower = record.starting_foot_follower
+            matchedFigure.endingFootFollower = record.ending_foot_follower
+            matchedFigure.startingPosition = record.starting_position
+            matchedFigure.endingPosition = record.ending_position
+            matchedFigure.precedingFigureNames = parseListOrStringField(record.preceding_figure_names)
+            matchedFigure.followingFigureNames = parseListOrStringField(record.following_figure_names)
+            matchedFigure.notes = record.notes
+
+            // Update links
+            val urls = mutableListOf<String>()
+            if (record.urls != null) {
+                urls.addAll(record.urls)
+            }
+            if (record.url != null && !urls.contains(record.url)) {
+                urls.add(record.url)
+            }
+
+            for (url in urls) {
+                val hasLink = matchedFigure.links.any { it.url == url }
+                if (!hasLink) {
+                    val newLink = DanceFigureLink().apply {
+                        this.danceFigure = matchedFigure
+                        this.url = url
+                        this.title = "DanceCentral Reference"
+                        this.type = "CRAWLED"
+                    }
+                    matchedFigure.links.add(newLink)
+                }
+            }
+
+            danceFigureRepository.save(matchedFigure)
+
+            // Delete old steps and save new ones
+            danceFigureStepRepository.deleteByDanceFigureId(matchedFigure.id!!)
+
+            if (record.steps != null) {
+                var stepNum = 1
+                for (stepDto in record.steps) {
+                    val step = DanceFigureStep().apply {
+                        this.danceFigure = matchedFigure
+                        this.stepNumber = stepDto.step_number ?: stepNum++
+                        this.timing = stepDto.timing ?: ""
+                        this.role = stepDto.role ?: ""
+                        this.foot = stepDto.foot ?: ""
+                        this.action = stepDto.action ?: ""
+                        this.footwork = stepDto.footwork
+                        this.alignment = stepDto.alignment
+                        this.amountOfTurn = stepDto.amount_of_turn
+                    }
+
+                    if (stepDto.comments != null) {
+                        var displayOrder = 1
+                        for (commentText in stepDto.comments) {
+                            if (commentText.isNotBlank()) {
+                                val comment = DanceFigureStepComment().apply {
+                                    this.danceFigureStep = step
+                                    this.commentText = commentText
+                                    this.displayOrder = displayOrder++
+                                }
+                                step.comments.add(comment)
+                            }
+                        }
+                    }
+
+                    try {
+                        danceFigureStepRepository.save(step)
+                    } catch (e: Exception) {
+                        log.error("FAILED TO SAVE STEP: timing='${step.timing}', role='${step.role}', action='${step.action}'", e)
+                        throw e
+                    }
+                    stepsCreated++
+                }
+            }
+
+            figuresUpdated++
+        }
+
+        return ImportResult(
+            figuresUpdated = figuresUpdated,
+            stepsCreated = stepsCreated,
+            skippedUnmatched = skippedUnmatched,
+            warnings = warnings
+        )
+    }
+
+    private fun parseListOrStringField(field: Any?): List<String> {
+        if (field == null) return emptyList()
+        if (field is List<*>) {
+            return field.mapNotNull { it?.toString()?.trim() }.filter { it.isNotEmpty() }
+        }
+        if (field is String) {
+            return field.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        }
+        return emptyList()
+    }
+
+    private fun mapDanceTypeJsonToDbName(jsonDanceType: String): String {
+        return when (jsonDanceType.uppercase()) {
+            "WALTZ" -> "Waltz"
+            "TANGO" -> "Tango"
+            "VIENNESE_WALTZ" -> "Viennese Waltz"
+            "SLOW_FOXTROT", "FOXTROT" -> "Foxtrot"
+            "QUICKSTEP" -> "Quickstep"
+            "CHA_CHA_CHA", "CHA_CHA" -> "Cha Cha"
+            "SAMBA" -> "Samba"
+            "RUMBA" -> "Rumba"
+            "PASO_DOBLE" -> "Paso Doble"
+            "JIVE" -> "Jive"
+            else -> jsonDanceType
+        }
+    }
+
+    data class AiParsedStepDto(
+        val step_number: Int? = null,
+        val timing: String? = null,
+        val role: String? = null,
+        val foot: String? = null,
+        val action: String? = null,
+        val footwork: String? = null,
+        val alignment: String? = null,
+        val amount_of_turn: String? = null,
+        val comments: List<String>? = null
+    )
+
+    data class AiParsedFigureDto(
+        val name: String? = null,
+        val urls: List<String>? = null,
+        val url: String? = null,
+        val dance_type: String? = null,
+        val level: String? = null,
+        val starting_foot_leader: String? = null,
+        val ending_foot_leader: String? = null,
+        val starting_foot_follower: String? = null,
+        val ending_foot_follower: String? = null,
+        val starting_position: String? = null,
+        val ending_position: String? = null,
+        val preceding_figure_names: Any? = null,
+        val following_figure_names: Any? = null,
+        val notes: String? = null,
+        val steps: List<AiParsedStepDto>? = null
+    )
 }
+

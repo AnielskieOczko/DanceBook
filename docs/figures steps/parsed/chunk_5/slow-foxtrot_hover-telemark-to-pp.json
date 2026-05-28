@@ -1,0 +1,109 @@
+{
+  "url": "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark-to-pp",
+  "text": "Dance Central - Hover Telemark to Promenade Position\nFoxtrot Hover Telemark to Promenade Position\nThe Hover Telemark to Promenade Position is a Silver Level figure. This online reference gives a detailed description of the dance steps, including timing, footwork, alignment, and movement; steps diagram; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.\nLeader\nS: LF fwd | Facing DW | HT | Start to turn L | Sway(S) | CBM | Start to rise e/o 1\nQ: RF to side LF brushes towards RF | Facing LOD | T (RF), then IE of T of LF | 1/8 between 1-2 | Sway(L) | Continue to rise on 2\nQ: LF diag fwd L side leading in PP | Pointing DC, body facing LOD | TH | 1/8 between 2-3. body turns less | Sway(S) | Up. Lower e/o 3\nS: RF fwd in PP and CBMP | Pointing DC, body facing LOD | H | -- | Sway(S) | CBM | --\nNote unusual type of rise\nFollower\nS: RF back | Backing DW | TH | Start to turn L | Sway(S) | CBM | Start to rise e/o 1 NFR\nRF straight back.\nQ: LF to side, RF brushes toward LF | Backing LOD | T (LF) then IE of T of RF | 1/8 between 1-2 | Sway(R) | Continue to rise on 2\nLF is more of the back step, than side step. \nQ: RF to side in PP | Pointing to center (moving DC) | TH | 1/4 to R, body turns less | Sway(S) | Up. Lower e/o 3\nLF is more of the back step, than side step.\nQ: LF fwd and across in PP and CBMP | Pointing to center (moving DC) | H | -- | Sway(S) | CBM | --\nFollowing Figures\nNatural Weave (overturned, commencing in PP)\nFeather Step\nWeave from PP\nNatural Zig-Zag from PP\nCurved Feather to Back Feather (at corner, starting in PP)",
+  "name": "Hover Telemark to Promenade Position",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark-to-pp"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "",
+  "following_figure_names": "Natural Weave, Feather Step, Weave from PP, Natural Zig-Zag from PP, Curved Feather to Back Feather",
+  "notes": "Note unusual type of rise",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "Start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side, LF brushes towards RF",
+      "footwork": "B",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward to side, leading into PP",
+      "footwork": "F",
+      "alignment": "Pointing DC, body facing LOD",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Pointing DC, body facing LOD",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "Start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "6",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side, RF brushes toward LF",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "None",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "7",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in PP",
+      "footwork": "F",
+      "alignment": "Pointing to center (moving DC)",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Pointing to center (moving DC)",
+      "amount_of_turn": "None",
+      "comments": []
+    }
+  ]
+}

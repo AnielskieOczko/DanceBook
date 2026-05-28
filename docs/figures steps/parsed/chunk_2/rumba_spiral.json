@@ -1,0 +1,68 @@
+{
+  "name": "Spiral Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/spiral"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Aida, Alemana Development, Hand to Hand (To Right and Left SP), Natural Top, Opening Out To Right And Left, Progressive Walks Forward in Right Shadow Position, Reverse Top, Rope Spinning, Sliding Doors, Three Alemanas",
+  "following_figure_names": "Alemana Development, Hockey Stick, Sliding Doors, Fencing, Three Alemanas, Open Hip Twist, Curl, Three Threes, New York LSP, Underarm Turn To L, Reverse Top",
+  "notes": "Note:\nAlternatives:\nUnderturned Spiral Turn:\nMan: turn 1/8 L over step 5 and 6 to end in Open Position with RF fwd.\nLady 3/4 L after she has placed step 3. End in Tandem Position with Man; Lady LF fwd,; RF fwd in line with LF, then turn 1/2 to end with RF back; then LF back.\nEnding in Open Position:\nMan turn 3/8 to L over step 5 and 6.\nEnd in Open CPP.\nEnd in Contact Position: Closed Spiral\nMan turn 5/8 to L over step 5 and 6 to Contact Position, to end RF side and slightly fwd, overturning Lady, keeping fingers lightly in contact with Lady's waist throughout as she turns within the circle of his R arm. On step 4, lower arms to normal position.\nLady: make a complete turn L over step 4 to 6 to end LF behind RF as Cuban Cross\nPreceding Figures\nAida\nAlemana\nHand To Hand RSP\nNatural Top\nOpening Out To Right And Left\nProgressive Walks Forward in Right Shadow Position\nReverse Top\nRope Spinning\nSliding Doors\nThree Alemanas\nFollowing Figures\nAlemana (normal; or When finished in Open Position)\nHockey Stick\nSliding Doors\nFencing\nThree Alemanas (normal; or When finished in Open Position)\nBasic Movements: Open (When finished in Open Position, follow with Open Basic, or 1-3 Open Basic into Progressive Walks Back or Natural Top)\nOpen Hip Twist (When finished in Open Position)\nCurl (When finished in Open Position)\nThree Threes (When finished in Open Position)\nNew York LSP (When finished in Open CPP)\nSpot or Switch Turn To R (Lady to L) (When finished in Open CPP)\nUnderarm Turn To L (When finished in Open CPP)\nReverse Top (When finished in Contact Position, follow with 4-6 or 4-9 Reverse Top.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Move LF to side in Right Side Position with slight body turn to the right",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot",
+      "footwork": "WF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF with slight body turn to the left to normal position",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward slightly across leader's left foot, turn underarm allowing left foot to cross without weight",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "1/4 to L then 7/8 spiral turn",
+      "comments": [
+        "Turn could also be made on the R toe with heel well off the floor. (High Spiral)",
+        "At end of 1, make sure to settle R hip before stepping next step (shouldn't fall into next step.)",
+        "L arm elbow do not drop down, keep it up horizontal to keep volume/space.",
+        "L arm in front, keep volume."
+      ]
+    }
+  ]
+}

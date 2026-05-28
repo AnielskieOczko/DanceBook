@@ -1,0 +1,88 @@
+{
+"name": "Natural Spin Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Quarter Turn to Left (Heel Pivot), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Progressive Chasse, Reverse Pivot, Quarter Turn to Left (Heel Pivot), Four Quick Run, V6, Six Quick Run, Hover Corte",
+  "notes": "Rise on toes, it will help to bring the feet together on 3rd step. Have continuous swing of the leg through the step. When connecting with V6 (QQS lock step), the footwork for this count becomes THT. Keep head to far left, follow L elbow, outside circle. Extend. Collect center back to the spine. Have the middle of body go forward to Man and keep leg moving, but leaving head behind which creates more extension, then head catches up. Don't pause body movement. Simply just leave head behind.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd FDW HT Start to turn R Sway(S) CBM Start to rise at end of 1",
+      "footwork": "HF",
+      "alignment": "FDW",
+      "amount_of_turn": "R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side BDC T 1/4 between 1-2 Sway(R) Cont to rise on 2 and 3",
+      "footwork": "F",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Rise on toes, it will help to bring the feet together on 3rd step.",
+        "Have continuous swing of the leg through the step."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF BLOD TH 1/8 between 2-3 Sway(R) Lower at end of 3",
+      "footwork": "T",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back BLOD toe turned in THT 1/2 to R (pivot) Sway(S) CBM No rise",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "R (pivot)",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP FLOD HT Cont to turn Sway(S) CBM Rise e/o 5",
+      "footwork": "HF",
+      "alignment": "FLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly back BDC TH 3/8 between 5-6 Sway(S) Up, Lower e/o 6",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

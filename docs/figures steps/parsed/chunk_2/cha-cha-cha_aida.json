@@ -1,0 +1,89 @@
+{
+  "name": "Aida",
+"urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/aida"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "LSP",
+  "ending_position": "LSP",
+  "preceding_figure_names": "Hand To Hand RSP, Reverse Top, Spot or Switch Turn To R (Lady to L), Three Cha Cha Chas Forward, Underarm Turn to L",
+  "following_figure_names": "Time Step LF, Closed Basic Movement, Open Basic Movement",
+  "notes": "Aida Rock and Spot Turn Ending; Aida Switch an Underarm Turn to Right Ending; The chasse can be replaced with rocks as well.\nLeader\n2: RF back | 1/8 to R\nWhen following Curl or Spiral, Man's steps are the same.\nIncrease tone in L arm. Lower L arm, and start rotating. Release R hand hold.\n3: LF back to LSP | 1/8 to R\nSlightly lower left arm and turn it with body over 2-5\n4 & 1: Back Lock in LSP, RLR | No turn\nOpening up the arms.\nFollower\n2: LF back | 1/8 to L\nKeep arm at waist level, don't raise arm high.\nWhen following Curl or Spiral, Man's steps are the same. Lady does:\n2: LF fwd\n3: RF fwd in line with LF to end RF back in LSP (turn 1/2 to L)\n3: RF back to LSP | 1/8 to L\n4 & 1: Back lock in LSP, LRL | No turn",
+  "steps": [
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back to LSP",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back Lock in LSP, RLR | No turn",
+      "footwork": "??",
+      "alignment": "LSP",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Opening up the arms."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Keep arm at waist level, don't raise arm high."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Fwd in line with LF to end RF back in LSP (turn 1/2 to L)",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back lock in LSP, LRL | No turn",
+      "footwork": "??",
+      "alignment": "LSP",
+      "amount_of_turn": "No turn",
+      "comments": []
+    }
+  ]
+}

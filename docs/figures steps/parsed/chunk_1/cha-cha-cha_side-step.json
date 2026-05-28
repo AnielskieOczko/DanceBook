@@ -1,0 +1,93 @@
+{
+  "name": "Side Step to Left",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/side-step"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break RF, Hand To Hand LSP, New York RSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Left commenced with RF, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), There And Back, Three Cha Cha Chas Forward, Time Step RF, Underarm Turn To R",
+  "following_figure_names": "Closed Basic Movement (6-10), Open Basic Movement (6-10), New York RSP, Spot or Switch Turn To L (Lady to R), Underarm Turn To R, Shoulder To Shoulder Right Side (1/8 turn L on step 5), Hand To Hand LSP, Side Step To Left commenced with RF (moving to L), Time Step RF, Cuban Break RF, Split Cuban Break RF",
+  "notes": "Closed Position. L to R hand hold may be used, in which case, step 5 may be turned to end in Open PP. (Man 1/8 to L, Lady 1/8 R). Step may be curved to L or R. These figures can be dances in pieces, e.g. only dance step 1 to 5, not the whole 10 steps.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side",
+      "footwork": "WF",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "When preceding figure ends with feet apart, brush LF to RF towards end of preceding count \"1\""
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close to LF",
+      "footwork": "Close",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Chasse LRL to side",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Could end in Open PP"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side",
+      "footwork": "WF",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "When preceding figure ends with feet apart, brush RF to LF towards end of preceding count \"1\""
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Close to RF",
+      "footwork": "Close",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Chasse RLR to side",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Could end in Open PP"
+      ]
+    }
+  ]
+}

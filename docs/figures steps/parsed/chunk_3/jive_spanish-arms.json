@@ -1,0 +1,113 @@
+{
+  "name": "Spanish Arms",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/spanish-arms"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position, double hand hold",
+  "ending_position": "Open Position, double hand hold",
+  "preceding_figure_names": "Change of Places Left to Right, Rolling Off the Arm, Spanish Arms, Windmill",
+  "following_figure_names": "Link (release R to L hand hold as needed), Change of Places Left to Right (release R to L hand hold as needed), Change of Hands Behind Back (release R to L hand hold as needed), Hip Bump (release R to L hand hold as needed), American Spin (left to right hand hold), Stop and Go (release R to L hand hold as needed), Windmill (release R to L hand hold as needed), Spanish Arms (release R to L hand hold as needed), Rolling Off the Arm (with double hold or releasing L to R hand hold), Toe Heel Swivels (release R to L hand hold as needed)",
+  "notes": "Spin Ending to Spanish Arms:\nMan: towards end of step 5, give a stronger pull with R hand, then immediately release R to L hand hold on steps 6-8 Compact chasse RLR, making no turn, continue to turn Lady to R under raised L arm and lower arm at end of Lady's turn. End in Open Position.\nLady: Spin approx. a complete turn to R on RF underarm towards end of step 5. Steps 6-8 LF side and slightly back to chasse LRL, turning 1/2 to L to end LF back in Open Position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward small step to start movement",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": [
+        "Begin in Open Position, double hand hold"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Chasse LRL to Tandem Position, Lady in front slightly to right",
+      "footwork": "B",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": [
+        "Raise L hand and circle it counterclockwise",
+        "R hand at Lady's waist level"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward chasse RLR to Open Position",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Continue circling L hand clockwise",
+        "Towards end of step 5 give light pull with R hand"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Optional additional turn 1.8 to R",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "1.8 to R",
+      "comments": [
+        "May be made over steps 6-8"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Turn underarm to R on RF",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to L over steps 3-5, then 1/2 to R on RF",
+      "comments": [
+        "In Tandem Position on step 5, L arm across front of body at waist level"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Chasse LRL back to Open Position",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to R between steps 5 and 6",
+      "comments": [
+        "F sdiag. back to chase LRL, end LF back in Open Position"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Additional",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Spin end continuation",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "Complete turn to R",
+      "comments": [
+        "Spin approx. a complete turn to R on RF underarm (Lady)",
+        "Man gives stronger pull then releases to L hand hold"
+      ]
+    }
+  ]
+}

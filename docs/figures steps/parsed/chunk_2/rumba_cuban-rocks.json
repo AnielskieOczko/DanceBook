@@ -1,0 +1,52 @@
+{
+  "name": "Cuban Rocks",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/cuban-rocks"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open PP",
+  "preceding_figure_names": "Aida, Alemena",
+  "following_figure_names": "New York, Underarm Turn",
+  "notes": "This is a Newcomer Level figure. This online reference gives a detailed description of dance steps; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.\nSee Rumba Technique for details on hip motion.\nCuban Rocks is 3 weight changes while keep feet in place and apart. Can be used when Man or Lady does Spot Turn or Switch Turn.\nNormal hold, L to R hand hold, no hold. Try to keep both knees straight for all steps.\nMay use rotary or lateral hip action.\nLF Cuban Rock may end in Open PP (slight turn L on 3, lady 4).\nRF Cuban Rock may end in Open CPP (slight turn R on 3, Lady L)\nCuban Rock can be danced in LSP as an ending to Aida.\nSome coach prefers: both heels on ground till the last one.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

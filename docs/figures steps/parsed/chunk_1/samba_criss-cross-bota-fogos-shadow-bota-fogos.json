@@ -1,0 +1,58 @@
+{  
+  "name":"Criss Cross Bota Fogos (Shadow Bota Fogos)",  
+  "urls": [  
+    "https://www.dancecentral.info/ballroom/international-style/samba/criss-cross-bota-fogos-shadow-bota-fogos"  
+  ],  
+  "dance_type": "SAMBA",  
+  "level": "Newcomer",  
+  "starting_foot_leader": "LF",  
+  "ending_foot_leader": "LF",  
+  "starting_foot_follower": "RF",  
+  "ending_foot_follower": "RF",    "starting_position": "Open Promenade Position",  
+  "ending_position": "Open CPP",  
+  "preceding_figure_names": "Criss Cross Voltas, Foot Change, Natural Basic Movement, Reverse Basic Movement, Samba Locks, Samba Walk, Side Basic Movement",  
+  "following_figure_names": "Rolling of the Arm, Samba Walk, Corta Jaca, Natural Roll, Criss Cross Voltas, Maypole, Foot Change, Samba Locks",  
+  "notes": "Alternative finishing positions for LF Samba Walk when it follows Criss Cross Bota Fogos:\nPromenade position:\nMan turn 1/8 L on Stationary Samba Walk and lady 1 1/8 R on Spot Volta to end facing LOD, both turning body a little less to shape the Promenade Position.\nRegain normal hold to follow with a RF Samba Walk in PP or a Side Samba Walk.\nRight Side Position\nMan turn 1/8 L on Stationary Samba Walk and lady 1 1/8 R on Spot Volta to end facing LOD. (Body also face LOD).\nLower joined hands to just above waist level in front of bodies. Lady's L hand well across her body at waist level, the Man's R hand behind her back, taking her L hand in his R hand (double hold)\nFollow with a RF Samba Walk into Rolling off the Arm.\n\nKeep shoulder quiet. It should not go up and down.\n\n1 a 2: Traveling Bota Fogos Fwd LRL, passing in front of Man under raised arms. End in Open PP | 1/4 to L over 5 & 6\nend DC",  
+  "steps": [  
+    {  
+      "step_number": 1,  
+      "timing": "1 a 2",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "Traveling Bota Fogos forward LRL",  
+      "footwork": "T",  
+      "alignment": "Open CPP",  
+      "amount_of_turn": "1/4 to L",  
+      "comments": [  
+        "end in Open CPP | 1/4 to L over 2 & 3 same as Traveling Bota Fogos Fwd Commence DW, end DC"  
+      ]  
+    },  
+    {  
+      "step_number": 2,  
+      "timing": "1 a 2",  
+      "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "Traveling Bota Fogos forward RLR, passing in front of Man under raised arms",  
+      "footwork": "T",  
+      "alignment": "Open CPP",  
+      "amount_of_turn": "1/4 to R",  
+      "comments": [  
+        "same as Traveling Bota Fogos Fwd Commence DC, end DW",  
+        "Keep shoulder quiet. It should not go up and down."  
+      ]  
+    },  
+    {  
+      "step_number": 3,  
+      "timing": "1 a 2",  
+      "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "Traveling Bota Fogos forward LRL, passing in front of Man under raised arms",  
+      "footwork": "T",  
+      "alignment": "Open PP",  
+      "amount_of_turn": "1/4 to L",  
+      "comments": [  
+        "end DW"  
+      ]  
+    }  
+  ]  
+}

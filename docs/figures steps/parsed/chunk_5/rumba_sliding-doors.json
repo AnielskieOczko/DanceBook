@@ -1,0 +1,176 @@
+{
+  "name": "Sliding Doors",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/sliding-doors"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "RSP",
+  "preceding_figure_names": "Advanced Hip Twists, Alemana, Closed Hip Twist, Curl, Fan, Open Hip Twist, Opening Out From Reverse Top, Rope Spinning, Spiral, Three Alemanas, Three Threes",
+  "following_figure_names": "Progressive Walks Forward, Spiral",
+  "notes": "Note:\nAlternative hold:\nMan:\n- keep L hand below chest level, taking R to R hand hold at end of 3, releasing hold with L hand.\n- Then, lead Lady with R hand to pass in front of him to R side, releasing hold at end of 5, allowing R hand to trail along Lady's R arm until it reaches her R shoulder blade o step 6.\n- Then, take Lady's L hand into his L hand. (R shadow position, hold 1) Retain this hold for steps 7 to 12.\nWhen following with Lady's Spiral, man lead Lady into her spiral turn by lowering L hand, then immediately gaining normal Fan or Open Position hold at end of last step.\nWhen following with Progressive Walks Forward, retain R Shadow hold.\nVariation w/ Lady's R turn to hip twist position:\n- 2: Cucaracha LF to side, whole foot\n- 3: weight to RF, LF push floor, L heel lift, L hip up, hip diagonally to R and then rotate to R, collect LF near R ankle and then step forward to Man's R side on 4.\n- 4: LF forward to Man's R side. L arm to side, R hand on Man's chest.\nPreceding Figures\nAdvanced Hip Twists\nAlemana\nClosed Hip Twist\nCurl\nFan\nOpen Hip Twist\nOpening Out From Reverse Top\nRope Spinning\nSpiral\nThree Alemanas\nThree Threes\nFollowing Figures\nProgressive Walks Forward (in Right Shadow Position, hold 2 or 3 (Kiki Walks))\nSpiral",
+  "steps": [
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Fan Position",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slightly release L arm tone."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "B",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Contract L arm"
+      ]
+    },
+    {
+      "step_number": "4 1",
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "T",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Raise L hand in front of Lady's head"
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF behind LF (Cuban Cross)",
+      "footwork": "F",
+      "alignment": "1/8 to R",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Extend L arm fwd. Take R to L hand hold (Double hold) at waist level."
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd and slightly leftwards",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Lower L arm to waist level. R arm behind Lady's back."
+      ]
+    },
+    {
+      "step_number": "4 1",
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF in RSP",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "--",
+      "comments": [
+        "Retain tone in arms."
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close RF to LF",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Start in Fan Position."
+      ]
+    },
+    {
+      "step_number": "3",
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "--"
+      ]
+    },
+    {
+      "step_number": "4 1",
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "F",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "--"
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "1/8 to L",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "RF to side and slightly back under arm | No turn",
+        "Hands could be crossed in front of body. Or, Man could change to R to R hand hold. See notes below."
+      ]
+    },
+    {
+      "step_number": "4 1",
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in RSP",
+      "footwork": "F",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "R arm to side."
+      ]
+    },
+    {
+      "step_number": "2",
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "F",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "This is often the starting point of sliding door."
+      ]
+    }
+  ]
+}

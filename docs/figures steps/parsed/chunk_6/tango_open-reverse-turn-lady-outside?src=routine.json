@@ -1,0 +1,121 @@
+{
+  "name": "Open Reverse Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Back Corte,Brush Tap,Closed Promenade,Fallaway Reverse and Slip Pivot,Four Step Change,Open Finish,Open Promenade,Outside Swivel,Promenade Link,Reverse Outside Swivel,Rock Turn,Walk",
+  "following_figure_names": "Walk (LF),Progressive Side Step,Progressive Link,Back Corte,LF Rock,Closed Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Natural Promenade Turn (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Promenade Link (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Back Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Fallaway Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &),Four Step,Outside Swivel,Four Step Change,Brush Tap,Fallaway Four Step,Five Step,Contra Check",
+  "notes": "This is a Newcomer Level figure. Total turn is 3/4 from step 1 to step 6. The shoulders stop rotating, giving the hips a chance to catch up, described as a hover in the orientation of the frame. When the reverse turn is preceded by another reverse turning figure with many quick steps, some dancers reverse the rotation of the shoulders a little on this step to slow down enough for the close at the end of the pattern. Timing options include \"hold\" on count 3 and step on count 4, or step on count 3 and hold on count 4. The lady's left side should be quite strongly forward to the man; upper body is very twisted but keep blocks of weight properly lined up, no dis‑located look at the waist area. Use rotation to create space to move, not dislocation. Upper body should not peel away from the man. Stay connected to the man, drive the whole spine forward, do not break at the hip and do not have the upper body fall forward. Head extended more to the left; achieve more head extension by keeping the head stationary while the shoulder moves forward doing more contra‑body while stepping the right foot forward. Do not bend backward. Focus on the left shoulder more forward. Keep the left hand position the same, do not slide the hand past the man's armpit. The man should do a straight back step, not side steps, to avoid getting in the lady's way. The lady places the left foot PLOD, not a big step, allowing the man to pass. At the end of the count the lady is a bit square to the man, then for the next step (OP) she will rotate the upper body to the right. The timing is broken slow into 2 counts, SQQ is 1 2 3 4. The lady should stay very left to the man, step straight forward \"through\" the man with a big strong step. The right hand position should stay the same. The lady's right foot moves to side and slightly back, pointing diagonal wall, inside edge of foot, 3/8 to L, extending and shaping. The movement emphasizes strong forward left side, twisted upper body, and maintaining connection.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in closed basic movement (CBMP) along line of dance",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side, back direction, back hold",
+      "footwork": "BH",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP, down line of dance",
+      "footwork": "BH",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back step, down line of dance, contrary body movement",
+      "footwork": "BH",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to left foot slightly back, facing diagonal wall",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in closed basic movement (CBMP), back diagonal change, contrary body movement",
+      "footwork": "BH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly forward, placing foot, pointing diagonal wall, inside edge of foot",
+      "footwork": "WF",
+      "alignment": "PLOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to left foot slightly back, facing diagonal wall",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in CBMP, open position, hand hold, height",
+      "footwork": "H",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Hold on count 3 and step on to RF on count 4.",
+        "Step on count 3, and hold on count 4."
+      ]
+    }
+  ]
+}

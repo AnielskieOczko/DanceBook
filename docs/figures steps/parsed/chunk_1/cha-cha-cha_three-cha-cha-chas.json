@@ -1,0 +1,231 @@
+{
+  "name": "Three Cha Cha Chas",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/three-cha-cha-chas"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Movement In Place, Closed Basic Movement, Open Basic Movement",
+  "following_figure_names": "Closed Basic Movement, Open Basic Movement, Fan, Alemana, Natural Top",
+  "notes": "Multiple variations including Forward, Back, Forward In Right Side Position (RSP), Forward In Left Side Position (LSP). Includes different hand holds (Normal Hold, Low double hand hold, Alternating Pat-A-Cake hold, No hold). Styling options such as Pat-A-Cake hand change, arm extensions, and specific footwork descriptions. Preceding figures include Basic Movement In Place, Closed Basic Movement, Open Basic Movement. Following figures include Closed Basic Movement, Open Basic Movement, Fan, Alemana, Natural Top. The figure is danced in 9 steps with timing 4&1, 2&3, 4&1.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back step",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF back",
+        "Twist at end of 3"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Replace",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF replace"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Latin Cross in front of LF",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF latin cross in front LF"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Lock behind RF",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF locks behind RF",
+        "LF knee to the spot, release R knee, L knee straight, step RF into next step"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step under shoulder",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF steps directly under R shoulder, on center line"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Twist to R, side lead",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "2 separate tracks; at the end, twist to R, side lead",
+        "Pat-A-Cake hand change: Man direct plane movement, rotate palm."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Latin Cross",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF Latin Cross; RF lock, LF forward"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2 & 3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Latin Cross",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "Track LF before stepping LF into Latin Cross position"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Latin Cross",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF Latin Cross; LF lock, RF forward",
+        "Continue with Three Cha Cha Chas Back (see Lady's steps)."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward check",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF forward check"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Replace",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF replace"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Tracking through Latin Cross behind RF",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF tracking through, step into Latin Cross behind RF"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "&",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Slide back",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "notes": [
+        "RF slide back"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back on central line",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF back on central line again, 2 tracks"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "2 & 3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Latin Cross back; LF lock in front",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "RF Latin Cross back; LF lock, RF back"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Latin Cross back",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF forward, RF locks behind, LF forward"
+      ]
+    }
+  ]
+}

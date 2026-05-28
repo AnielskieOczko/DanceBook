@@ -1,0 +1,109 @@
+{
+"name": "Open Reverse Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "At the end of this count, Lady is a bit square to Man, then for next step (OP), Lady will rotate upper body to R.\nFirst, relax the hip joint, hip rotate to R, while doing contra body action. This is a more powerful step.\nLady's left side should be quite strongly forward to Man. Upper body is very twisted, but still keep blocks of weight properly lined up, no dis-located look at waist area. Use rotation to create space to move, not dis-location. Upper body should not peel away from Man.\nStay connected to Man. Drive the whole spine fwd, do not break at hip and do not have upper body fall fwd.\nHead extended more to L. To achieve more head extension, the feeling is head is staying, but shoulder is moving forward doing more contra body while stepping RF fwd. Do not bend backward. Focus on L shoulder more fwd.\nTiming, breaking slow into 2 counts, SQQ is 1 2 3 4. Two timing options on this step (below) are all ok, but make it very clear, do not 'mush' all steps together.\n\"Hold\" on count 3 and step on to RF on count 4.\nStep on count 3, and hold on count 4.\n(Open Reverse Turn, Lady Inline is different, where Man leads Lady inside the legs, not OP. )\nBe careful not to get into Man's space. Stay very left to Man.\nStep straight forward, \"through\" Man, big strong step.\nLeft hand position should stay the same, do not slide hand pass Man's armpit.\nQ: RF to side and slightly back | BDW | IE of BH | 3/8 to L\nS: LF closes to RF slightly fwd | BDW | WF\nExtend, shape.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "BH",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "BH",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "BH",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF slightly back",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP",
+      "footwork": "BH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd",
+      "footwork": "WF",
+      "alignment": "PLOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "RF turned in, RF facing wall. Action is initiated with flexing/rotating L hip, not R leg."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF closes to LF slightly back",
+      "footwork": "WF",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

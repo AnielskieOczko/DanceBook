@@ -1,0 +1,170 @@
+{
+  "name": "Natural Twist Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Fallaway Promenade, Progressive Link",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Back Corte, LF Rock",
+  "notes": "Note: Amount of Turn: A complete turn to the right. Other variations: 7/8 to R could be made to end facing LOD. The following Promenade would move DC. 3/4 to R could be made at a corner or at the side of the room to end facing DC. The following Promenade would move to center. When following with Back Corté or LF Rock Man will turn a further 1/4 to face partner. Note: Amount of Turn: a complete turn to R. 2 styles (below) to finish this figure, either is ok, but they all finish in the same alignment. (Tendency is LF is not swiveled enough.) 5-step style finish: (traditional way), Lady pivot on LF on step 6. Pivoting on LF, it needs to pivot enough to have LF finish in the correct position (tendency is underturn). The weight is in transition. When swivel finishes, full weight is transferred onto LF. 4-step style finish, Lady pivot on RF on step 5. Pivoting on RF on step 5, then place LF parallel to RF in the Promenade Position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in PP",
+      "footwork": "H",
+      "alignment": "Along LOD Pointing DW",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Keep the lane, Man in lane1 and lady in lane2.",
+        "Do not cross lady too early."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Along LOD Pointing DW",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "H",
+      "alignment": "Backing DC",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Lane change to lane 3."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF crosses behind LF",
+      "footwork": "H",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Start to twist R allowing feet to uncross",
+      "footwork": "H",
+      "alignment": "Toward the alignment of 6",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Feet almost closed weight on RF in PP",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in PP",
+      "footwork": "H",
+      "alignment": "Along LOD pointing DC",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Strong step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Pointing down LOD",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd between partner's feet",
+      "footwork": "H",
+      "alignment": "Down LOD",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Not too aggressive on this step.",
+        "There is slight rise on R hip /R side when Man cuts off in front."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd preparing to step outside partner L side leading",
+      "footwork": "H",
+      "alignment": "Down LOD pointing DW",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Keep left side up and forward, do not lift shoulder.",
+        "L shoulder lead is important.",
+        "Keep tangent of circle, curving steps not as big."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "H",
+      "alignment": "To Wall",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Left shoulder is \"walking around\", dancing outside the circle. Don't drop left side/shoulder. Head follows the arm."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side small step in PP",
+      "footwork": "H",
+      "alignment": "Facing DC",
+      "amount_of_turn": "Complete turn to the right",
+      "comments": [
+        "Stay behind Man. Don't drop left side/shoulder.",
+        "Head turning to PP: Don't turn head to R too early, don't turn head on its own too late either. (Sharpness depends on the lead, could be smooth turn or sharp head turn.)"
+      ]
+    }
+  ]
+}

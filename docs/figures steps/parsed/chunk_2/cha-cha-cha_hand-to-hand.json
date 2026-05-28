@@ -1,0 +1,85 @@
+{
+  "name": "Hand to Hand",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hand-to-hand"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break RF, Hand To Hand LSP, New York RSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), There And Back, Three Cha Cha Chas Forward, Time Step RF, Underarm Turn To R",
+  "following_figure_names": "Closed Basic Movement (6-10), Open Basic Movement (6-10), New York RSP, Spot or Switch Turn To L (Lady to R), Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Time Step RF, Three Cha Cha Chas Forward (in RSP, after step 2), Fan (6-10, Lady in line on step 6 of Fan), Closed Hip Twist (6-10, leading Lady with R hand to turn R, then changing to L to R hand hold on step 7), Aida, Spiral (Spiral ending: Man almost closes LF to RF on 3 to chasse and leads Lady into her spiral action on 5 to continue with 6-10 of Spiral), Cuban Break RF, Split Cuban Break RF",
+  "notes": "Start in Closed Position. Like reverse New Yorker. Man take R to L hand hold at end of previous figure, simultaneously releasing L to R hand hold when needed. This figure can start with normal hold. Man allows R hand to slide further around Lady's back on step 1, releasing hold with L land. Lady slide L hand across Man's shoulder. For LSP: Man places L hand on Lady's back, releasing R hand hold at end of step 5, while Lady rests R hand lightly across Man's L shoulder. Man's hand on Lady's back is just below her shoulder blade. Take required hold at end of figure. This may end in Open PP for Hand To Hand RSP, or Open CPP for Hand to Hand LSP.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in RSP",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "& 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side (after 1/4 to R) to chasse LRL | 1/4 to R over 3-5",
+      "footwork": "HF",
+      "alignment": "",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in RSP",
+      "footwork": "",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side to chasse RLR | 1/4 to L over 3-5",
+      "footwork": "HF",
+      "alignment": "",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    }
+  ]
+}

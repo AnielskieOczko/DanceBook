@@ -1,0 +1,150 @@
+{
+  "name": "HipTwist Spiral",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hip-twist-spiral"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Counter Position",
+  "preceding_figure_names": "Alemana, Follow My Leader, Natural Top, Open Hip Twist, Rope Spinning",
+  "following_figure_names": "New York LSP, Spot or Switch Turn To R (Lady to L), Underarm Turn to L, Three Cha Cha Chas Forward (step 4-9 in LSP), Cuban Break LF, Split Cuban Break LF",
+  "notes": "Steps 7-10 may be danced following steps 1 to 6 of Open Hip Twist.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "step to side or forward",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "slight turn to R",
+      "comments": [
+        "slight body turn to R"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "none",
+      "amount_of_turn": "none",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "ronde chasse ending in PP",
+      "footwork": "T",
+      "alignment": "PP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "body turns less on step 3",
+        "body completes turn on step 4",
+        "no turn on step 5"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "5",
+      "role": "LEADER",
+      "foot": "—",
+      "action": "return arms to normal position",
+      "footwork": "—",
+      "alignment": "—",
+      "amount_of_turn": "—",
+      "comments": [
+        "slightly to R on step 5",
+        "option: lead lady into Spiral on this step 5 (count \"1\")"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step back in Right Side Position",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "turn starts at e/o previous beat",
+        "do not \"fall\" back, body is quite forward"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "none",
+      "amount_of_turn": "none",
+      "comments": [
+        "e/o beat, starts turn"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "twist chasse ending in PP",
+      "footwork": "T",
+      "alignment": "PP",
+      "amount_of_turn": "5/8 to L on step 3, 1/4 to R on 4",
+      "comments": [
+        "no turn on 5",
+        "pressed forward walk"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "step forward",
+      "footwork": "WF",
+      "alignment": "—",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "&",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "close RF to LF",
+      "footwork": "WF",
+      "alignment": "—",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "turn starts e/o previous beat"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "step diagonal forward in Open Counter Position",
+      "footwork": "WF",
+      "alignment": "CPP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "turn starts e/o previous beat"
+      ]
+    }
+  ]
+}

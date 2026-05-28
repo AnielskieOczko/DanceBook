@@ -1,0 +1,143 @@
+{
+  "name":"Fan",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/fan"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break LF, Cuban Break RF, Hand To Hand LSP, Hand To Hand RSP, Natural Opening Out Movement, Natural Top, New York LSP, New York RSP, Open Basic Movement, Reverse Top, Rope Spinning, Shoulder To Shoulder Left Side, Shoulder To Shoulder Right Side, Side Step To Left commenced with RF, Side Step To Right commenced with LF, Side Step To Right commenced with RF, Split Cuban Break LF, Split Cuban Break RF, Spot or Switch Turn To L (Lady to R), Spot or Switch Turn To R (Lady to L), There And Back, Three Cha Cha Chas Back, Three Cha Cha Chas Forward, Time Step RF, Underarm Turn to L, Underarm Turn To R",
+  "following_figure_names": "Alemana, Hockey Stick",
+  "notes": "Variations:\nMan can take 1/4 L over steps 2-5 and 1/8 over 7-10. (Lady: 1/4 L over 2-5, 3/8 over 7-10)\nGold: Man and Lady: Guapacha timing could be used on 6-10.\nSilver & Bronze variation below is what's often used/seen\nLeader (Silver/Gold)\n2: LF fwd\n3: Transfer weight to RF | 1/4 to L over 2-5\n4 & 1: LF to side, slightly back to chasse LRL, ending promenade position\n2: RF back\n3: Transfer weight to LF | 1/8 to L over 7-10\nIncrease tone in left arm, release right hand hold\n4 & 1: RF to side to chasse RLR end in Fan Position\nSlightly extend left arm. Left hand still.\nFollower (Silver/Gold)\n2: RF back\n3: Transfer weight to LF | 1/8 to L over 2-5\n4 & 1: Diag fwd lock RLR, end in PP\n2: LF fwd, passing in front of Man's body\n3: RF fwd inline with LF, then turn to end RF back | 1/2 to L, body turns less\n4 & 1:Back Lock, LRL, end in Fan Position | body completes turn",
+  "steps": [
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "1/8 to L over 2-5"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side, slightly back to chasse LRL",
+      "footwork": "B",
+      "alignment": "LRL",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side to chase RLR end in Fan Position",
+      "footwork": "B",
+      "alignment": "Fan Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Slightly extend left arm. Left hand still."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8 to L",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "1/8 to L over 2-5"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side, chase RLR",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "For basic Bronze Fan, do side and slightly forward.",
+        "Don't rush through. Forward walk on diagonal. Forward Check Walk.",
+        "There is a lot of energy toward your partner on this \".\" before RF steps back.",
+        "LF rotates before RF back.",
+        "(turn happens in last half of previous step)"
+      ]
+    },
+    {
+      "step_number": "4 & 1",
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back Lock, LRL, end in Fan Position",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Keep tone in R arm to Man, Man should not feel the arm is \"empty\". Keep body position (shoulders down)."
+      ]
+    }
+  ]
+}
