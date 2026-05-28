@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='choreographies'" class="max-w-3xl mx-auto py-12">
+
+    <div class="mb-8 pb-6 border-b border-neutral-100">
+        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" 
+            th:text="${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}">New Choreography</h1>
+        <p class="text-on-surface-variant font-body-md">Set up your choreography metadata. You can add figures to the routine in the next step.</p>
+    </div>
+
+    <form th:action="@{${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/metadata'}}"
+          th:object="${choreographyRequest}" method="post" class="card p-8 shadow-ambient space-y-8">
+
+        <!-- CSRF Token (Automatically handled by Thymeleaf, but good to ensure) -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <!-- Hidden input for dance type if editing -->
+        <input type="hidden" th:if="${choreographyId != null}" name="danceTypeId" th:value="*{danceTypeId}">
+
+        <div class="space-y-6">
+            <!-- Name -->
+            <div>
+                <label for="choreoName" class="form-label font-semibold">Choreography Name *</label>
+                <input id="choreoName" type="text" th:field="*{name}" required 
+                       class="form-input"
+                       placeholder="e.g. Bronze Waltz Routine">
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="choreoDesc" class="form-label font-semibold">Description / Notes</label>
+                <textarea id="choreoDesc" th:field="*{description}" 
+                          class="form-textarea h-28"
+                          placeholder="Add details, target level, or practice focus..."></textarea>
+            </div>
+
+            <!-- Dance Style -->
+            <div>
+                <label for="danceType" class="form-label font-semibold">Dance Style *</label>
+                <select id="danceType" name="danceTypeId" th:field="*{danceTypeId}" required
+                        class="form-select" th:disabled="${choreographyId != null}">
+                    <option value="" disabled selected>Select a dance style...</option>
+                    <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                </select>
+                <p th:if="${choreographyId != null}" class="text-xs text-outline mt-1.5">
+                    Dance style cannot be changed after choreography has been created.
+                </p>
+            </div>
+        </div>
+
+        <hr class="border-outline-variant/30">
+
+        <!-- Visibility Toggle -->
+        <div>
+            <div class="flex items-center gap-3">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" th:field="*{isPublic}" class="sr-only peer">
+                    <div class="w-11 h-6 bg-outline-variant/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+                <div>
+                    <span class="text-sm font-semibold text-on-surface">Public Choreography</span>
+                    <p class="text-xs text-on-surface-variant">Visible and cloneable by other dancers</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
+            <a th:href="${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}" 
+               class="btn-outline">Cancel</a>
+            <button type="submit" class="btn-primary">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                Save Details
+            </button>
+        </div>
+    </form>
+
+</section>
+</html>
