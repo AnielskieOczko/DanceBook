@@ -37,4 +37,32 @@ class DanceFigure {
 
     @Column(name = "alternative_timing")
     var alternativeTiming: String? = null
+
+    @Column(name = "starting_foot_leader")
+    var startingFootLeader: String? = null
+
+    @Column(name = "ending_foot_leader")
+    var endingFootLeader: String? = null
+
+    @Column(name = "starting_foot_follower")
+    var startingFootFollower: String? = null
+
+    @Column(name = "ending_foot_follower")
+    var endingFootFollower: String? = null
+
+    @Column(name = "starting_position")
+    var startingPosition: String? = null
+
+    @Column(name = "ending_position")
+    var endingPosition: String? = null
+
+    @Column(name = "preceding_figure_names")
+    var precedingFigureNames: String? = null
+
+    @Column(name = "following_figure_names")
+    var followingFigureNames: String? = null
+
+    @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
+    var steps: MutableList<DanceFigureStep> = mutableListOf()
 }
+

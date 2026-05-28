@@ -83,11 +83,34 @@
                     <button type="submit" class="btn-primary">Save Configuration</button>
                 </div>
             </form>
+    </div>
+
+    <!-- Syllabus Figures Import -->
+    <div class="card mb-8 overflow-hidden" id="syllabusImportSection">
+        <div class="px-6 py-4 border-b border-border bg-surface-warm">
+            <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Syllabus Figures Import
+            </h2>
+            <p class="text-sm text-text-secondary mt-1">Import dynamic technical breakdowns from the scraped Apify dataset.</p>
+        </div>
+        <div class="p-6">
+            <div class="flex items-center gap-4">
+                <button hx-post="/admin/syllabus/import" hx-target="#syllabusImportResults" hx-swap="innerHTML" class="btn-primary" hx-indicator="#import-indicator">
+                    Import Figures &amp; Steps
+                </button>
+                <div id="import-indicator" class="htmx-indicator flex items-center gap-2 text-text-secondary text-sm">
+                    <svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span>Parsing and importing dataset records...</span>
+                </div>
+            </div>
+            <div id="syllabusImportResults" class="mt-4"></div>
         </div>
     </div>
 
     <!-- System Settings -->
     <div class="card p-6 mb-8">
+
         <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">
             <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             System Settings & Defaults
@@ -413,6 +436,25 @@
             </form>
         </td>
     </tr>
+
+    <div th:fragment="importSuccess" th:if="${importResult != null}" class="p-4 rounded-button bg-success-soft border border-success/30 mt-2">
+        <h3 class="font-heading font-semibold text-success mb-2">Import Successful</h3>
+        <p class="text-text-primary text-sm">
+            Updated <strong th:text="${importResult.figuresUpdated}">0</strong> figures and created/updated <strong th:text="${importResult.stepsCreated}">0</strong> steps.
+            Skipped <strong th:text="${importResult.skippedUnmatched}">0</strong> unmatched figures.
+        </p>
+        <details th:if="${!importResult.warnings.isEmpty()}" class="mt-2 text-xs cursor-pointer">
+            <summary class="font-semibold text-text-primary hover:text-primary">View Warnings (<span th:text="${importResult.warnings.size()}">0</span>)</summary>
+            <ul class="list-disc pl-5 mt-1 text-text-secondary max-h-40 overflow-y-auto space-y-0.5">
+                <li th:each="w : ${importResult.warnings}" th:text="${w}">Warning</li>
+            </ul>
+        </details>
+    </div>
+
+    <div th:fragment="importFailure" th:if="${importError != null}" class="p-4 rounded-button bg-danger-soft border border-danger/30 mt-2">
+        <h3 class="font-heading font-semibold text-danger mb-2">Import Failed</h3>
+        <p class="text-text-primary text-sm" th:text="${importError}">Error details</p>
+    </div>
 </th:block>
 
 </section>
