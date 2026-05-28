@@ -89,6 +89,15 @@ tasks.named("processResources") {
     dependsOn(tasks.named("buildTailwind"))
 }
 
+tasks.register<JavaExec>("processFigures") {
+    group = "application"
+    description = "Processes crawled figures using OpenRouter LLM agent"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.FigureProcessorKt")
+}
+
 sonar {
     properties {
         property("sonar.projectKey", "dancebook")
