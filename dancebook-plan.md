@@ -94,6 +94,14 @@ Figure
 ├── startTime         INTEGER (seconds)
 └── endTime           INTEGER (seconds)
 
+DanceFigure (Global Dictionary)
+├── id                UUID (PK)
+├── name              VARCHAR(255)
+├── danceType         ManyToOne → DanceType
+├── danceClass        Enum (DanceClass)
+├── predefined        BOOLEAN
+└── alternativeTiming VARCHAR(255)
+
 DanceType
 ├── id                UUID (PK)
 ├── name              VARCHAR(100)
@@ -121,6 +129,27 @@ CustomList (Smart Collection)
 ├── minRating         SMALLINT
 ├── danceTypes        ManyToMany → DanceType
 └── danceCategories   ManyToMany → DanceCategory
+
+Choreography (Routine)
+├── id                UUID (PK)
+├── name              VARCHAR(255)
+├── description       TEXT
+├── danceType         ManyToOne → DanceType
+├── owner             ManyToOne → AppUser
+├── isPublic          BOOLEAN
+├── entries           OneToMany → ChoreographyEntry (ordered)
+├── createdAt         TIMESTAMP
+└── updatedAt         TIMESTAMP
+
+ChoreographyEntry (Routine Step)
+├── id                UUID (PK)
+├── choreography      ManyToOne → Choreography
+├── entryType         Enum (EntryType: FIGURE, SECTION_LABEL)
+├── danceFigure       ManyToOne → DanceFigure (nullable)
+├── sectionLabel      VARCHAR(255)
+├── lineIndicator     Enum (LineIndicator: SHORT_WALL, LONG_WALL, DIAGONAL, CORNER) (nullable)
+├── notes             VARCHAR(500)
+└── sortOrder         INTEGER
 ```
 
 ---
@@ -594,13 +623,26 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] CSRF security hardening for administrative and category forms
 - [x] UI integration for viewing and managing custom collections
 
-### Phase 12 — AI-Powered Dance Intelligence 🤖
+### Phase 12 — Choreography Builder & Reordering ✅
+- [x] `Choreography` and `ChoreographyEntry` JPA entities & Flyway migration
+- [x] Service layer for additions, deletions, reorderings, and routine clones
+- [x] HTMX-based builder UI with SortableJS drag-and-drop sequencing
+- [x] Print-friendly timeline layout (`@media print` support)
+- [x] CSP compatibility (no inline event handlers/scripts, unpkg.com whitelists)
+
+### Phase 13 — AI-Powered Dance Intelligence 🤖
 - [ ] Integration of **Spring AI** with Neon's `pgvector` extension
 - [ ] **Semantic Search (RAG):** Natural language discovery (e.g. "Suggest a romantic slow dance")
 - [ ] **Automated Tagging:** AI-driven categorization and difficulty assessment of new uploads
 - [ ] **Multimodal Figure Extraction:** Using Gemini 1.5 Vision to identify figures and timestamps from videos
 - [ ] **AI Choreography Assistant:** Generating logical figure sequences based on skill level
 - [ ] **Dance Coach Chatbot:** Grounded RAG-based Q&A for posture and technique tips
+
+### Phase 14 — Automated Testing & Quality Assurance 📅
+- [ ] Implement unit and integration tests for all core services (Materials, Collections, Choreographies)
+- [ ] Implement WebMvcTest controllers validations
+- [ ] Configure SonarQube / JaCoCo code coverage plugin
+- [ ] Achieve a minimum of 80% test coverage across all features
 
 ---
 

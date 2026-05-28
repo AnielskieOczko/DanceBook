@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='choreographies'" class="space-y-lg relative">
+    
+    <!-- Custom styling for drag-and-drop and CSS counters -->
+    <style>
+        #sequence-entries {
+            counter-reset: figure-counter;
+        }
+        .figure-entry-card {
+            counter-increment: figure-counter;
+        }
+        .figure-number::before {
+            content: counter(figure-counter) ". ";
+        }
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: var(--color-surface-variant, #f5f5f5);
+            border-style: dashed;
+        }
+        .sortable-drag {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <!-- Top Action Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6 mb-6">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <a href="/choreographies" class="text-xs text-text-secondary hover:text-primary flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+                    Back to Choreographies
+                </a>
+            </div>
+            <div class="flex items-center gap-3">
+                <h1 class="text-3xl font-heading font-bold text-on-surface" th:text="${choreography.name}">Bronze Waltz</h1>
+                <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
+                      th:text="${choreography.danceType != null ? choreography.danceType.name : 'Unknown'}">Waltz</span>
+            </div>
+            <p class="text-sm text-text-secondary mt-1" th:text="${choreography.description ?: 'No description. Click Edit Details to add one.'}">Routine notes...</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">edit</span>
+                Edit Details
+            </a>
+            <a th:href="@{/choreographies/{id}(id=${choreography.id})}" class="btn-primary">
+                <span class="material-symbols-outlined text-[20px]">visibility</span>
+                View Routine
+            </a>
+        </div>
+    </div>
+
+    <!-- Builder Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left 2 Columns: Choreography sequence list -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-surface rounded-card border border-border p-6 shadow-sm">
+                <h2 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">route</span>
+                    Routine Sequence
+                </h2>
+                
+                <div id="sequence-timeline-container" class="relative">
+                    <!-- This fragment gets swapped by HTMX on any sequence modifications -->
+                    <div th:fragment="sequenceTimeline" id="sequence-timeline" class="space-y-4">
+                        <input type="hidden" id="choreoIdInput" th:value="${choreography.id}">
+                        
+                        <!-- Empty timeline state -->
+                        <div th:if="${#lists.isEmpty(choreography.entries)}" class="empty-state py-8">
+                            <div class="empty-state-icon">
+                                <span class="material-symbols-outlined text-3xl text-outline">playlist_add</span>
+                            </div>
+                            <h3 class="empty-state-title">Sequence is empty</h3>
+                            <p class="empty-state-text">Start building by choosing figures from the list on the right or adding a section divider.</p>
+                        </div>
+
+                        <!-- Draggable sequence entry cards -->
+                        <div id="sequence-entries" class="space-y-3 min-h-[50px]">
+                            
+                            <div th:each="entry : ${choreography.entries}"
+                                 th:data-id="${entry.id}"
+                                 th:class="${entry.entryType.name() == 'SECTION_LABEL' ? 'section-label-entry' : 'figure-entry-card'}"
+                                 class="relative transition-all duration-200">
+
+                                <!-- Type 1: SECTION LABEL -->
+                                <div th:if="${entry.entryType.name() == 'SECTION_LABEL'}"
+                                     class="flex items-center gap-3 py-3 my-5 group/section">
+                                    <div class="h-px bg-border flex-1"></div>
+                                    <div class="flex items-center gap-2 bg-surface px-3">
+                                        <span class="material-symbols-outlined text-[16px] text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors">drag_indicator</span>
+                                        <input type="text" th:value="${entry.sectionLabel}"
+                                               name="sectionLabel"
+                                               placeholder="e.g. Opening Sequence"
+                                               th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                               hx-trigger="change"
+                                               hx-target="#sequence-timeline-container"
+                                               class="bg-surface-warm font-heading font-semibold text-xs uppercase tracking-wider text-center text-primary px-3 py-1.5 rounded border border-transparent focus:border-primary-container focus:bg-white outline-none w-48 sm:w-64" />
+                                        
+                                        <button type="button"
+                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
+                                                hx-target="#sequence-timeline-container"
+                                                class="opacity-0 group-hover/section:opacity-100 p-1 text-text-secondary hover:text-danger transition-all duration-200 rounded-full hover:bg-surface-warm">
+                                            <span class="material-symbols-outlined text-[16px]">close</span>
+                                        </button>
+                                    </div>
+                                    <div class="h-px bg-border flex-1"></div>
+                                </div>
+
+                                <!-- Type 2: FIGURE -->
+                                <div th:if="${entry.entryType.name() == 'FIGURE'}"
+                                     th:with="indicatorClass=${entry.lineIndicator?.name() == 'SHORT_WALL' ? 'border-l-4 border-amber-500' :
+                                                              entry.lineIndicator?.name() == 'LONG_WALL' ? 'border-l-4 border-blue-500' :
+                                                              entry.lineIndicator?.name() == 'DIAGONAL' ? 'border-l-4 border-purple-500' :
+                                                              entry.lineIndicator?.name() == 'CORNER' ? 'border-l-4 border-rose-500' : 'border-l border-border'}"
+                                     th:classappend="${indicatorClass}"
+                                     class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow group/card">
+                                    
+                                    <div class="flex items-start gap-3 flex-1 min-w-0">
+                                        <!-- Drag handle -->
+                                        <span class="material-symbols-outlined text-[20px] text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors mt-0.5 shrink-0">drag_indicator</span>
+                                        
+                                        <!-- Content -->
+                                        <div class="space-y-1.5 flex-1 min-w-0">
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <span class="figure-number font-bold text-on-surface text-base"></span>
+                                                <span class="font-bold text-on-surface text-base" th:text="${entry.danceFigure?.name}">Natural Turn</span>
+                                                <span th:if="${entry.danceFigure?.danceClass != null}"
+                                                      class="badge bg-secondary-container text-on-surface text-[9px] font-semibold border border-outline-variant/30"
+                                                      th:text="${entry.danceFigure.danceClass.name()}">F</span>
+                                                <span th:if="${entry.danceFigure?.alternativeTiming != null}"
+                                                      class="badge bg-surface-warm text-text-secondary text-[9px]"
+                                                      th:text="${entry.danceFigure.alternativeTiming}">123</span>
+                                            </div>
+                                            <!-- Inline note input -->
+                                            <div class="flex items-center gap-1.5 max-w-lg">
+                                                <span class="material-symbols-outlined text-[14px] text-text-secondary">notes</span>
+                                                <input type="text" name="notes" th:value="${entry.notes}"
+                                                       placeholder="Add practice details..."
+                                                       th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                                       hx-trigger="change"
+                                                       hx-target="#sequence-timeline-container"
+                                                       class="bg-transparent text-xs text-text-secondary placeholder:text-outline w-full border-b border-transparent focus:border-outline-variant/30 py-0.5 outline-none" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Controls -->
+                                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
+                                        <!-- Line Indicator Selector -->
+                                        <select name="lineIndicator"
+                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                                hx-trigger="change"
+                                                hx-target="#sequence-timeline-container"
+                                                class="form-select text-xs py-1.5 px-3 rounded bg-surface border border-outline-variant/30 text-text-secondary hover:text-text-primary transition-all w-[130px] shrink-0 font-medium">
+                                            <option value="">Line Indicator</option>
+                                            <option th:each="indicator : ${lineIndicators}"
+                                                    th:value="${indicator.name()}"
+                                                    th:selected="${entry.lineIndicator == indicator}"
+                                                    th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(indicator.name(), '_', ' ')))}">Short Wall</option>
+                                        </select>
+                                        
+                                        <!-- Delete button -->
+                                        <button type="button"
+                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
+                                                hx-target="#sequence-timeline-container"
+                                                class="p-1.5 text-text-secondary hover:text-danger hover:bg-red-50 transition-colors rounded-full shrink-0">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Section Marker Button -->
+                <div class="flex items-center gap-3 mt-6">
+                    <form th:hx-post="@{/choreographies/{id}/entries(id=${choreography.id})}" hx-target="#sequence-timeline-container" class="inline flex-1">
+                        <input type="hidden" name="entryType" value="SECTION_LABEL" />
+                        <input type="hidden" name="sectionLabel" value="New Section" />
+                        <button type="submit" class="w-full btn-outline flex items-center justify-center gap-2 py-3 rounded-lg border border-dashed border-primary-container hover:bg-surface-container-high transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                            Add Section Divider
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Right 1 Column: Figure Picker -->
+        <div class="space-y-6">
+            <div class="bg-surface rounded-card border border-border p-6 shadow-sm sticky top-[96px]">
+                <h2 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">accessibility_new</span>
+                    Figure Selector
+                </h2>
+                <p class="text-xs text-text-secondary mb-4">Click the "+" icon next to a figure to add it to your routine sequence.</p>
+
+                <!-- Search Input -->
+                <div class="relative group mb-6">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
+                    <input type="text" name="query"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2.5 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           placeholder="Search figures..."
+                           th:hx-get="@{/choreographies/{id}/figures-search(id=${choreography.id})}"
+                           hx-trigger="keyup changed delay:250ms"
+                           hx-target="#figures-list"
+                           hx-swap="innerHTML" />
+                </div>
+
+                <!-- Figure list container (HTMX searchable) -->
+                <div id="figures-list" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 scrollbar-thin">
+                    <div th:fragment="figuresList" class="space-y-2">
+                        
+                        <div th:if="${#lists.isEmpty(figures)}" class="text-center py-6 text-sm text-text-secondary">
+                            No figures found for this style.
+                        </div>
+
+                        <!-- Figure Rows -->
+                        <div th:each="fig : ${figures}"
+                             class="flex items-center justify-between p-3 bg-surface hover:bg-surface-warm border border-border rounded-lg transition-colors group">
+                            
+                            <div class="flex flex-col min-w-0 pr-2">
+                                <span class="font-semibold text-sm text-on-surface line-clamp-1 group-hover:text-primary transition-colors" th:text="${fig.name}">Natural Turn</span>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span th:if="${fig.danceClass != null}"
+                                          class="badge bg-secondary-container text-on-surface text-[9px] border border-outline-variant/30 font-semibold"
+                                          th:text="${fig.danceClass.name()}">F</span>
+                                    <span th:if="${fig.alternativeTiming != null}"
+                                          class="text-[10px] text-text-secondary"
+                                          th:text="'Timing: ' + ${fig.alternativeTiming}">123</span>
+                                </div>
+                            </div>
+
+                            <!-- Add Button -->
+                            <form th:hx-post="@{/choreographies/{id}/entries(id=${choreography.id})}" hx-target="#sequence-timeline-container" class="shrink-0">
+                                <input type="hidden" name="entryType" value="FIGURE" />
+                                <input type="hidden" name="danceFigureId" th:value="${fig.id}" />
+                                <button type="submit" class="btn-icon p-1.5 rounded-full bg-primary-container/10 hover:bg-primary-container text-primary transition-all">
+                                    <span class="material-symbols-outlined text-[18px]">add</span>
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="border-t border-border mt-6 pt-4 text-center">
+                    <a href="/dance-figures" class="text-xs font-semibold text-primary hover:text-primary-hover flex items-center justify-center gap-1">
+                        View global figures list
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Drag and Drop JS setup -->
+    <script src="https://unpkg.com/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script th:src="@{/js/choreography-builder.js}"></script>
+
+</section>
+</html>

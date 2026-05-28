@@ -47,6 +47,8 @@
                th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Figures</a>
             <a href="/lists" class="font-body-md font-medium transition-all duration-200"
                th:classappend="${activeNav == 'lists' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Collections</a>
+            <a href="/choreographies" class="font-body-md font-medium transition-all duration-200"
+               th:classappend="${activeNav == 'choreographies' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Choreographies</a>
             <a href="/profile" class="font-body-md font-medium transition-all duration-200"
                th:classappend="${activeNav == 'profile' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Profile</a>
         </nav>
@@ -120,6 +122,12 @@
        th:classappend="${activeNav == 'lists' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
         <span class="material-symbols-outlined" th:style="${activeNav == 'lists' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">layers</span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Collections</span>
+    </a>
+    <!-- Choreographies -->
+    <a href="/choreographies" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'choreographies' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:style="${activeNav == 'choreographies' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">route</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Choreos</span>
     </a>
     <!-- Figures -->
     <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150"
