@@ -64,20 +64,20 @@
             </div>
         </div>
         
-        <div class="flex items-center gap-2 shrink-0">
+        <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-between sm:justify-start">
             <!-- Print button -->
-            <button id="printBtn" class="btn-outline">
-                <span class="material-symbols-outlined text-[20px]">print</span>
-                Print / PDF
+            <button id="printBtn" class="btn-outline btn-sm flex-1 sm:flex-initial justify-center">
+                <span class="material-symbols-outlined text-[18px]">print</span>
+                <span class="text-xs sm:text-sm">Print / PDF</span>
             </button>
-            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary">
-                <span class="material-symbols-outlined text-[20px]">edit</span>
-                Build Sequence
+            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary btn-sm flex-1 sm:flex-initial justify-center">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                <span class="text-xs sm:text-sm">Build Sequence</span>
             </a>
             <!-- Duplicate & Delete actions -->
             <div class="relative inline-block text-left">
-                <button type="button" class="js-menu-btn btn-outline p-2 rounded-lg">
-                    <span class="material-symbols-outlined text-[20px]">more_horiz</span>
+                <button type="button" class="js-menu-btn btn-outline btn-sm w-8 h-8 flex items-center justify-center p-0">
+                    <span class="material-symbols-outlined text-[18px]">more_horiz</span>
                 </button>
                 <div class="js-menu-dropdown absolute right-0 mt-2 w-44 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                     <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors">
