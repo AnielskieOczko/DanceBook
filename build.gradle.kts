@@ -98,6 +98,15 @@ tasks.register<JavaExec>("processFigures") {
     mainClass.set("com.jankowski.rafal.dancebook.scripts.FigureProcessorKt")
 }
 
+tasks.register<JavaExec>("generateFiguresSql") {
+    group = "application"
+    description = "Generates V23 database migration seed script from parsed JSON figures"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.SqlGeneratorKt")
+}
+
 sonar {
     properties {
         property("sonar.projectKey", "dancebook")

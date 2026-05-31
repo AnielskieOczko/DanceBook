@@ -607,7 +607,14 @@ class SyllabusImporterService(
                 for (stepDto in record.steps) {
                     val step = DanceFigureStep().apply {
                         this.danceFigure = matchedFigure
-                        this.stepNumber = stepDto.step_number ?: stepNum++
+                        val sn = stepDto.step_number
+                        val parsedStepNum = when (sn) {
+                            is Number -> sn.toInt()
+                            is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: stepNum
+                            else -> stepNum
+                        }
+                        this.stepNumber = parsedStepNum
+                        stepNum = parsedStepNum + 1
                         this.timing = stepDto.timing ?: ""
                         this.role = stepDto.role ?: ""
                         this.foot = stepDto.foot ?: ""
@@ -680,7 +687,7 @@ class SyllabusImporterService(
     }
 
     data class AiParsedStepDto(
-        val step_number: Int? = null,
+        val step_number: Any? = null,
         val timing: String? = null,
         val role: String? = null,
         val foot: String? = null,
