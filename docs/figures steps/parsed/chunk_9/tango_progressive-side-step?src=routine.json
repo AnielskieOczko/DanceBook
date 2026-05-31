@@ -1,0 +1,91 @@
+{
+  "name": "Progressive Side Step",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "A slight turn to left can be made, with slight CBM on beats 1 and 3. When turning with CBM, footwork changes to IE of BH or outside edge of BH. Progressive side step is often used to handle traffic and is not typically used in routines. It can be curving but must avoid entering the man's space; stay very left. Followers should allow right inside thigh to turn down, collect weight with abdominal muscle, keep upper center to man, and maintain hips rotating forward with knees. The step is danced as a \"side and slightly forward\" rocking action, not primarily forward movement, though some coaches use big back steps for distance. The figure adds torsion and windup.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "side and slightly back",
+      "footwork": "IE of foot",
+      "alignment": "",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BH",
+      "alignment": "CBMP",
+      "amount_of_turn": "--",
+      "comments": [
+        "slight CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "side, slightly forward",
+      "footwork": "IE Ball",
+      "alignment": "",
+      "amount_of_turn": "--",
+      "comments": [
+        "rocking action"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "--",
+      "comments": [
+        "big step"
+      ]
+    }
+  ]
+}

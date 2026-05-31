@@ -1,0 +1,68 @@
+{                                       
+"name": "Double Reverse Spin",                                        "urls": [                                                           
+    "http://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin"                        
+  ],                                                                      "dance_type": "WALTZ",                                              
+  "level": "Bronze",                                                    
+  "starting_foot_leader": "LF",                                       
+  "ending_foot_leader": "RF",                                         
+  "starting_foot_follower": "RF",                                     
+  "ending_foot_follower": "LF",                                       
+  "starting_position": "Closed Position",                             
+  "ending_position": "Closed Position",                               
+  "preceding_figure_names": "Closed Change RF, Closed Wing, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",                                           
+  "following_figure_names": "Drag Hesitation, Closed Change LF, Whisk, Double Reverse Spin, Reverse Turn, Closed Telemark, Open Telemark, Progressive Chasse To R, Contra Check, Fallaway Reverse And Slip Pivot",                                            
+  "notes": "Advanced dancers often use the timing of 123& when the beat value would be 1, 1, 1/2, 1/2. Per coach: Timing: do 1 2 &3. Man's early rise signals Lady should do heel turn. Lady does RF \"back\", L heel closes to R heel, turn, rise and \"forward\", then RF \"out\" to side (after turning) and \"cross\", stay on left.\nNote: The Double Reverse Spin may be started DC, DW, or LOD. The amount of turn may vary between 3/4 and a whole turn.",                                      
+  "steps": [                                                          
+    {                                                                   
+      "step_number": 1,                                                 
+      "timing": "1",                                                    
+      "role": "LEADER",                                                 
+      "foot": "LF",                                                       
+      "action": "LF fwd, Facing LOD, HT, starts to turn L, Sway(S), CBM, start to rise at end of 1",                             
+      "footwork": "F",                                                    
+      "alignment": "Facing LOD",                                        
+      "amount_of_turn": "Start to turn L",                            
+      "comments": [                                                     
+        "Important to do CBM. Give Lady the indication of left by lowering.",                                                                                                                                                                                                                                                                                                                                                                           
+        "Early rise is to lead Lady into closing her feet into a heel turn."                                                                                                                                                                                                                                                                                                                        
+      ]                                                                 
+    },                                                                 
+    {                                                                   
+      "step_number": 2,                                                 
+      "timing": "2",                                                    
+      "role": "LEADER",                                                 
+      "foot": "RF",                                                       
+      "action": "RF to side, Backing DW, T, 3/8 between 1-2, Sway(S), Up; wait for Lady's feet together, push LF to take RF step, point RF forward with straight knees, turn to L, track RF, lengthen spine",                                                                                                                                                                     
+      "footwork": "F",                                                    
+      "alignment": "Backing DW",                                              "amount_of_turn": "",                                                     "comments": [                                                     
+        "Wait until the lady's feet are together before taking this step.",                                                                                                                                                                                                                                                                                                                                                                            
+        "Push LF to take the RF step.",                                                                                                                                                                                                                                                                                                                                                                
+        "When taking step, point RF forward with straight knees, then step onto the straight knee and turn to L.",                                                                                                                                                                                                                                                                                                                                
+        "Track your RF, don't do ronde.",                                                                                                                                                                                                                                                                                                                                                        
+        "Think about getting hips around, rather than shoulders or feet.",                                                                                                                                                                                                                                                                                                                                                                                
+        "Lengthen spine, don't bend forward."                                                                                                                                                                                                                                                                                                                                                     
+      ]                                                                                                                                                                                                                                                                                                                                                                                   
+    },                                                                 
+    {                                                                   
+      "step_number": 3,                                                 
+      "timing": "3",                                                    
+      "role": "LEADER",                                                 
+      "foot": "LF",                                                             "action": "LF closes to RF (Heel turn), Facing LOD, HT, 1/2 between 2-3, Sway(S), Up, then lower at end of 3; settle and drive to next step, keep lengthening spine",                                                                                                                                                                                                                                                                
+      "footwork": "T",                                                    
+      "alignment": "Facing LOD",                                        
+      "amount_of_turn": "",                                               
+      "comments": [                                                     
+        "settle and then drive to next step.",                                                                                                                                                                                                                                                                                                                                     
+        "Keep lengthening the spine.",                                                                                                                                                                                                                                                                                                                                  
+        "Do not lift toes off ground (no need to show off the bottom of your shoe!).",                                                                                                                                                                                                                                                                                                                                  
+        "Be sure feet are parallel and together.",                                                                                                                                                                                                                                                                                                                                  
+        "Draw trailing foot in, close the foot slowly, both legs should straighten, do not rise too early (though Man is rising), rise after heel turned, weight transferred to LF.",                                                                                                                                                                                                                                                                     
+        "Use the rules of head movement, head turns first, slightly more to left (don't do it too early, though). Keep head left to follow left elbow, and look over left shoulder the whole time to avoid being pulled into the center of the turn.",                                                                                                                                                                                                                                                                                        
+        "Keep body contact with Man throughout the heel turn.",                                                                                                                                                                                                                                                                                                                                                                                  
+        "Do not allow spine to straighten up, keep left.",                                                                                                                                                                                                                                                                                                                                                                                  
+        "Do not pause the turning action between 1 and 2, shoulder and head continue to turn left (while feet are together), then body follows in step 3 on '&'.",                                                                                                                                                                                                                                                                                                                               
+        "Movement is continuous, but speed is different. \"&3\" is faster."                                                                                                                                                                                                                                                                                                                                                                                 
+      ]                                                                                                                                                                                                                                                                                                                                                                                   
+    }                                                                 
+  ]                                                                   
+}

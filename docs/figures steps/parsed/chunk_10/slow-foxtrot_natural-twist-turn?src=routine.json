@@ -1,0 +1,229 @@
+{
+  "name": "Natural Twist Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Three Step, Reverse Turn (just Reverse Turn with Feather finish, or 1-4 Reverse Turn check and Basic Weave), Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel (Turning Left) followed by steps 2 and 3 of Promenade Link (after Open Finish ended DW) (TANGO), Outside Swivel (Turning Left) followed by steps 2 and 3 of Promenade Link (after Open Promenade) (TANGO), Passing Natural Turn (TANGO), Reverse Pivot (TANGO), Rock on Left Foot (TANGO), Rock on Right Foot (TANGO), Syncopated Reverse Turn (TANGO), Whisk (TANGO), Closed Changes (forwards and backwards) (VIENNESE_WALTZ), Check from Reverse Fleckerl to Natural Fleckerl (VIENNESE_WALTZ), Samba Walks in PP Position (RF and LF) (Promenade Samba Walks) (SAMBA), Alternative Endings to The Extended Reverse Wave (SLOW_FOXTROT), Back Feather (SLOW_FOXTROT), Back Whisk (SLOW_FOXTROT), Curved Feather (SLOW_FOXTROT), Double Reverse Spin (SLOW_FOXTROT), Double Top Spin (SLOW_FOXTROT), Extended Reverse Wave (SLOW_FOXTROT), Outside Change (SLOW_FOXTROT), Outside Spin (SLOW_FOXTROT), Passing Natural Turn (from PP) (SLOW_FOXTROT), Tipple Chasse (SLOW_FOXTROT), Weave (after 1-4 Reverse Wave) (SLOW_FOXTROT), Whisk (SLOW_FOXTROT), Quick Open Reverse (SLOW_FOXTROT), Quick Natural Weave (SLOW_FOXTROT), Reverse Pivot (SLOW_FOXTROT), Curved Three Step (SLOW_FOXTROT), Telemark (Closed) (SLOW_FOXTROT)",
+  "notes": "Natural Twist Turn with Hover Feather Ending; Natural Twist Turn with Natural Weave Ending; Natural Twist Turn with Closed Impetus And Feather Finish Ending; Natural Twist Turn with Open Impetus Ending. No upward swing on first 3 steps; Head can keep left; styling options include starting head to left and ending shaped to right; weight distribution details; sway descriptions; continuous movement without hesitation; brush actions; etc.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "Continue to turn R",
+      "comments": [
+        "HT",
+        "Sway(S)",
+        "CBM",
+        "-"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": null,
+      "comments": [
+        "3/8 between steps 1-2",
+        "Sway(R)",
+        "-"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "crosses behind LF slightly back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": null,
+      "comments": [
+        "1/8 between 2-3",
+        "Sway(R)",
+        "-"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "TOGETHER",
+      "action": "Twist on both feet",
+      "footwork": "TOGETHER",
+      "alignment": "Facing DC",
+      "amount_of_turn": null,
+      "comments": [
+        "Twist on both feet.",
+        "End with weight on RF",
+        "3/8 on steps 4-5",
+        "Body turns slightly more",
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "End as in Heel Pull",
+      "footwork": "H",
+      "alignment": "Facing DC",
+      "amount_of_turn": null,
+      "comments": [
+        "T of RF with pressure on IE of T of LF",
+        "Sway(L)",
+        "Rise on 5.",
+        "Body overturns on step 5."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": null,
+      "comments": [
+        "TH",
+        "Sway(S)",
+        "CBM",
+        "Continue to turn R",
+        "No upward swing (rise) on first 3 steps.",
+        "Head can keep left during the whole figure.",
+        "Don't go back to straight position.",
+        "Keep very left, more extended back during Weave.",
+        "Connect L shoulder down, Feel partner on the right side.",
+        "Styling option: start with head to L and by end of Q&Q, head shape to R."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q (1/2)",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to LF (Heel Turn)",
+      "footwork": "HT",
+      "alignment": "Backing LOD",
+      "amount_of_turn": null,
+      "comments": [
+        "1/2 between 1-2",
+        "Sway(L)",
+        "(Man is in an awkward leg position. Man will be stationary. Lady can't step too big.)"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "a (1/2)",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd, preparing to step OP, L side leading",
+      "footwork": "T",
+      "alignment": "Facing almost DW",
+      "amount_of_turn": null,
+      "comments": [
+        "Sway(L)",
+        "-",
+        "A series of T steps. Keep compact steps, soft relaxed knees and ankles. It's very cushioned actions. Even though it's on Toe, do not stand straight tall.",
+        "R side connected to partner."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": null,
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "1/8 between 2-4",
+        "Don't hesitate to place the RF.",
+        "Continuous movement, no hold.",
+        "Head changed shape to R"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side, RF brushes to LF",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": null,
+      "comments": [
+        "T and IE of T of RF",
+        "Sway(R)",
+        "1/4 between 4-5",
+        "Don't be hesitant to place the foot.",
+        "First, place LF, finish the shape to R (L side very stretched, feel like sitting on L leg, compress, and then change shape) and 2nd part (&), change head shape to L (stretch R side) and compress into L knee.",
+        "RF will brush, before pushing off on L leg.",
+        "Head styling: starting with head shaped to R, when finishing the S, head is shaped to L."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF diag back, R side leading",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": null,
+      "comments": [
+        "Sway(R)",
+        "This is a Hover Feather ending."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": null,
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": null,
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

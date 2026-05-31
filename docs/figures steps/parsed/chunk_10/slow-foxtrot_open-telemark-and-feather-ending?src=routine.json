@@ -1,0 +1,174 @@
+{
+  "name": "Open Telemark and Feather Ending",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "PP",
+  "preceding_figure_names": "Closed Impetus and Feather Finish, Fallaway Reverse and Slip Pivot, Feather Step, Hover Cross, Hover Feather, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Zig-Zag from PP, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Top Spin",
+  "following_figure_names": "Three Step, Change Of Direction, Basic Weave (1-4 Reverse Turn to end BDW, check, and Basic Weave), Reverse Turn (1-4 Reverse Turn to end BLOD near corner, check and Basic Weave turning 1/8, 1/8, 3/8; or 1/4, 1/8, 3/4; to end DW of new LOD), Hover Telemark, Reverse Wave, Top Spin (check back after step 6), Outside Swivel (check back after step 6), Fallaway Reverse and Slip Pivot (at corner)",
+  "notes": "When leading to PP ending, Man left his LF there (like in spiral turn), there is no brush, LF then steps out in step 3 to PP. It's different to do feather finish from PP. Lady really has to use this step 4 (S) and next step 5 (Q) to move a lot of space to keep up with Man.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, FDC, HT, start to turn L, Sway(S), CBM, rise e/o 1",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4 between 1-2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side, Backing DW, T",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/2 between 2-3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd in PP, Pointing DW, Body Facing Wall, TH, body turns less, Sway(S), Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "body turns less"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in PP and CBMP, Pointing DW, Body Facing Wall, HT",
+      "footwork": "HT",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag fwd preparing to step OP, Facing DW, T",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Upper body rotate slightly left, indicating Lady to close her head and do Feather Finish"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "6",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, Facing DW, TH, Sway(R), Up, lower e/o 6",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, Facing DW, H, Sway(S), CBM",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, BDC, TH, start to turn L, Sway(S), CBM, rise slightly e/o 1, NFR",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "3/8 between 1-2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn), LOD, HT, continue to rise on 2",
+      "footwork": "HT",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Do not turn the knees, keep knees flexed, keep action soft. Take stomach muscle back."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "diag fwd in PP, R side leading, Pointing to LOD, TH, slight body turn to L, Sway(S), Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "slight body turn to L"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP, Pointing to LOD (Moving DW), HT, start to turn L, Sway(S), CBM, rise e/o 4",
+      "footwork": "HT",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "1/4 between 4-5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back, Backing Wall, TH",
+      "footwork": "TH",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "up"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "6",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, Backing DW, T, --, Sway(S), CBM, --",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

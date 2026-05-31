@@ -1,0 +1,79 @@
+{
+  "name": "Hover Cross",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark,Three Step",
+  "following_figure_names": "Reverse Turn,Closed Telemark,Open Telemark and Feather Ending,Open Telemark,Natural Turn,Outside Swivel and Feather Ending,Fallaway Reverse and Slip Pivot,Reverse Wave,Bounce Fallaway with Weave Ending",
+  "notes": "A slight lowering may be used on step 4, but the L heel should not touch the floor. Do not allow body to overturn on 4.\nLady keeps her head to left (when first learning this figure), stretch left side. Alternatively, Lady can shape head to right. Slightly lift left side.\nIt's all lower body. Do not turn shoulder, do not pull shoulder away from Man.\nLady slides from Man's R side to his L side. It's L side to L side connection with partner.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "HT",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4 between 1-2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Sway(R )",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/2 between 2-3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Pointing DW of new LOD",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Body turns less",
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "--",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "Backing DW",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "rise slightly e/o 1, NFR",
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

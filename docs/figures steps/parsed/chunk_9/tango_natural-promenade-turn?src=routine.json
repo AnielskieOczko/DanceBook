@@ -1,0 +1,119 @@
+{
+  "name": "Natural Promenade Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step",
+  "following_figure_names": "Closed Promenade, Open Promenade, Promenade Link, Back Open Promenade, Fallaway Promenade, Rock Turn (2-7)",
+  "notes": "Amount of Turn: 3/4 to right. If danced along the side of the room, 3/4 still made; following promenade may be taken to the center or a slight body turn to R may be used. When followed by Rock Turn, 4th step omitted and commence DC; better to turn 1/2 to R between 1-3 of Rock Turn and end facing DW. Track man's hips, stay behind; depending on finishing travel direction, lady may need to swivel on LF (S) quite a bit. When followed by steps 2-7 Rock Turn, skip step 4 (placing RF to side), it is more flat and rotational. Natural Promenade Turn follows the Fallaway Promenade. Alignment details: Leader: DW pointing to W; Q: To Wall; Q: BDW; S: Down LOD end facing LOD. Follower: S: DW pointing LOD; Q: Pointing DW; Q: DW; S: BLOD to end facing Center.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP, along LOD, pointing DW",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Don't pull lady to your lady, instead Man should switch lane."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in PP and CBMP, turning R, CBM",
+      "footwork": "B",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly back, backing LOD, turning R",
+      "footwork": "B",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in CBMP, LF placed to side without weight in PP",
+      "footwork": "B",
+      "alignment": "DW",
+      "amount_of_turn": "3/4 to R",
+      "comments": [
+        "Note: Amount of Turn: 3/4 to right."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP, along LOD, pointing DC",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Strong step."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP, pointing down LOD",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Really follow/track Man's leg in time (if it's off time, it'll gap.)."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "forward between partner's feet, down LOD, CBM",
+      "footwork": "B",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Big Step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly back, RF placed to side without weight in PP",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Depending on how much Man rotates, where he puts his foot, Lady will put down foot just a bit late. Because body is turning R, LF appears to be to side and slightly back, then swivel on LF again to Promenade finishing position."
+      ]
+    }
+  ]
+}

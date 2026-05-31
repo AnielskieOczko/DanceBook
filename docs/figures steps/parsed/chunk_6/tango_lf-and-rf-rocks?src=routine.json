@@ -1,0 +1,196 @@
+{
+  "RF Rock": {
+    "name": "RF Rock",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks?src=routine"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "LF Rock",
+    "following_figure_names": "Back Corte",
+    "notes": "Rocks may be danced down LOD or DC\nWhen a RF Rock follows a LF Rock, the first step of the RF Rock will be down LOD. When a Closed Finish follows a LF Rock the first step of the Closed Finish will be DC",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "RF back in CBMP",
+        "footwork": "B",
+        "alignment": "Back LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "BH"
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Transfer weight forward to LF in CBMP",
+        "footwork": "B",
+        "alignment": "Against LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "S",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "RF back small step CBMP",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "BH"
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "Q",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "LF fwd in CBMP",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      },
+      {
+        "step_number": 5,
+        "timing": "Q",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "Transfer weight back to RF in CBMP",
+        "footwork": "B",
+        "alignment": "Backing Against LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "BH"
+        ]
+      },
+      {
+        "step_number": 6,
+        "timing": "S",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "LF fwd small step in CBMP",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      }
+    ]
+  },
+  "LF Rock": {
+    "name": "LF Rock",
+    "urls": [
+      "http://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks?src=routine"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, RF Rock",
+    "following_figure_names": "Open Finish, Closed Finish, RF Rock",
+    "notes": "When this figure is following an Open Finish, the LF Rock will be danced in CBMP with Lady outside and up to 1/4 turn to R may be made.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "LF Back L side leading",
+        "footwork": "B",
+        "alignment": "Backing LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "IE of BH"
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Transfer weight forward to RF in R side leading",
+        "footwork": "B",
+        "alignment": "Against LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "S",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "LF back small step L side leading",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "IE of BH"
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "Q",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "RF fwd R side leading",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      },
+      {
+        "step_number": 5,
+        "timing": "Q",
+        "role": "FOLLOWER",
+        "foot": "LF",
+        "action": "Transfer weight back to LF L side leading",
+        "footwork": "B",
+        "alignment": "Backing Against LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "IE of BH"
+        ]
+      },
+      {
+        "step_number": 6,
+        "timing": "S",
+        "role": "FOLLOWER",
+        "foot": "RF",
+        "action": "RF fwd small step R side leading",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "H"
+        ]
+      }
+    ]
+  }
+}

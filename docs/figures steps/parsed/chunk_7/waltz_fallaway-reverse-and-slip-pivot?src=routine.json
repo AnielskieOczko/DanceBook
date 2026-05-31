@@ -1,0 +1,132 @@
+{
+  "name": "Fallaway Reverse and Slip Pivot",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Back Line of Dance",
+  "preceding_figure_names": "Closed Wing, Double Reverse Spin, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names": "Reverse Turn (At corner), Whisk, Double Reverse Spin, Progressive Chasse To R, Closed Telemark, Open Telemark, Contra Check",
+  "notes": "Timing: 1 2 3& (1 1 1/2 1/2) OR, 1, 2 &, 3 (1 1/2 1/2 1)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd | FDC | HT | Start to turn L",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "-",
+      "comments": [
+        "Rise e/o 1",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back | BDC | TH",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "-",
+      "comments": [
+        "Rise e/o 1 NFR",
+        "Similar to Double Reverse Spin, keep head left the whole time to help with the turn. Legs move backward, but body should not feel dancing backward. body feels upward, leftward curve dancing into Man's R side.",
+        "Lower first. RF back, curve, toe turned in. Center can't fall back. Hips more forward and up to Man. Stay connected. Head goes even more left, stay outside.",
+        "Lower center rotates, upper center (\"dial\") sway only. shoulder does not fall back."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in Fallaway, R side leading | BDW, Moving down LOD | T | 1/4 between step 1-2 | -- | Up",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 between step 1-2",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in Fallaway, L side leading | BDC, moving down LOD | T | -- | -- | Up",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Keep chest area very lifted to Man.",
+        "LF bigger step to match the first step, don't cut it short.",
+        "Use head weight to L to help with turn. Keep head left throughout to help with turn, Head stretched more left.",
+        "Curve. moving BDC. Suck tummy in, a little lift. Stay connected with Man."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP and Fallaway | BLOD | TH | 1/8 between 2-3, body turns less | -- | Up, Lower e/o 3",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP and Fallaway (small step), LF held in CBMP | BDC, end facing center | T | 5/8 to L on step 3 (Pivot) | -- | CBM | Up, lower e/o 3",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "5/8 to L on step 3 (Pivot)",
+      "comments": [
+        "It feels hip is more twisted to left. Do not close left hip. Pick up left side and open left hip, Man's right hip in middle of Lady's left hip and center.",
+        "Lady keeps center lifted to Man. Use tummy muscle, pull center."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "3&",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back, LF held in CBMP | To center, toe turned in, end facing LOD or DW | THT | 1/4 between 3-4, 1/4 or 1/8 on 4 (pivot) | -- | CBM",
+      "footwork": "THT",
+      "alignment": "Center",
+      "amount_of_turn": "1/4 between 3-4, 1/4 or 1/8 on 4 (pivot)",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3&",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP, RF held in CBMP | To center, end BLOD, or BDW | TH | 1/4 or 1/8 on 4 (pivot) | -- | CBM",
+      "footwork": "TH",
+      "alignment": "BLOD or BDW",
+      "amount_of_turn": "1/4 or 1/8 on 4 (pivot)",
+      "comments": [
+        "CBM"
+      ]
+    }
+  ]
+}

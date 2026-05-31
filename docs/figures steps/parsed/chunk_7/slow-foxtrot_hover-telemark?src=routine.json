@@ -1,0 +1,130 @@
+{
+  "name": "Hover Telemark",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Basic Weave, Bounce Fallaway with Weave Ending, Closed Impetus and Feather Finish, Fallaway Reverse and Slip Pivot, Feather Step, Hover Feather, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Weave, Natural Zig-Zag from PP, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Reverse Turn, Top Spin, Weave from PP",
+  "following_figure_names": "Feather Step, Basic Weave, Hover Feather, Natural Turn, Natural Weave, Natural Telemark, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Natural Twist Turn, Natural Zig-Zag from PP, Natural Hover Telemark, Curved Feather to Back Feather",
+  "notes": "Hover Telemark can finish in Promenade Position. See Hover Telemark to PP.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "Compress right shoulder (hip and foot), use CBM sending Lady to inside of turn, stretch abdominal muscle through strong diagonal to the left"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8 between 1-2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "N/A",
+      "comments": [
+        "Swing motion.",
+        "Continue to rise on 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8 between 2-3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "F",
+      "alignment": "Pointing DC",
+      "amount_of_turn": "body turns less",
+      "comments": [
+        "Sways(S)",
+        "Up. Lower e/o 3",
+        "When landing on LF, small range of motion to recover from sway"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "--",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "H",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Note unusual type of rise"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "Small CBM through the hip allowing L hip to release back. Step RF back, anchor right shoulder. R hip is moving across inside of right foot which will allow the hip to swing. Body is picked up through strong diagonal.",
+        "Note: when traveling backwards, never turn shoulders so you don't cross center line. When going back, upper body is not a rotary motion, body should be stretching diagonal.",
+        "Keep elbows in front of body. Pick up stomach back to spine."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/8 between 1-2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "N/A",
+      "comments": [
+        "Continue to rise on 2",
+        "When traveling backwards, never turn shoulders so you don't cross center line. When going back, upper body is not a rotary motion, body should be stretching diagonal.",
+        "Left side is very lengthened, stretched. Head shaped to right. Keep elbows in front of body. Pick up stomach back to spine."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/8 between 2-3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "body turns less",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 3",
+        "Then dissolve the sway."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "--",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "--",
+      "comments": []
+    }
+  ]
+}

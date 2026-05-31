@@ -1,0 +1,79 @@
+{
+ "LF Rock": {
+    "name": "LF Rock",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks?src=routine"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link",
+    "following_figure_names": "Open Finish, Closed Finish, RF Rock",
+    "notes": "Rocks may be danced down LOD or DC\nWhen a RF Rock follows a LF Rock, the first step of the RF Rock will be down LOD. When a Closed Finish follows a LF Rock the first step of the Closed Finish will be DC",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Back L side leading",
+        "footwork": "B",
+        "alignment": "Back LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "Maintain the body position, rotate only on the man's back steps."
+        ]
+      }
+    ]
+  },
+  "RF Rock": {
+    "name": "RF Rock",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/tango/lf-and-rf-rocks?src=routine"
+    ],
+    "dance_type": "TANGO",
+    "level": "Bronze",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "LF Rock",
+    "following_figure_names": "Open Finish, Closed Finish, RF Rock",
+    "notes": "Rocks may be danced down LOD or DC\nWhen a RF Rock follows a LF Rock, the first step of the RF Rock will be down LOD. When a Closed Finish follows a LF Rock the first step of the Closed Finish will be DC",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "Q",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Back in CBMP",
+        "footwork": "B",
+        "alignment": "Back LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "Transfer weight forward to LF in CBMP | Against LOD | H"
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "S",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Back small step CBMP",
+        "footwork": "B",
+        "alignment": "Down LOD",
+        "amount_of_turn": "",
+        "comments": [
+          "S: RF back small step CBMP | Down LOD | BH"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "name":"Closed Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Change RF, Closed Wing, Double Reverse Spin, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names": "Closed Wing, Natural Spin Turn, Natural Turn",
+  "notes": "Stay connected with Man.\nDo not think about shoulder rotation at all, just think about strong diagonal stretch.\nHead: keep head at the same place, rotate body underneath and head ends up on the right.\nKeep head to right, then on 1 of next e.g Natural Spin Turn, rotate body underneath (no sharp head movement).",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, FDC, HT, start to turn L",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Use CBM and rise a bit early to lead heel turn."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side, almost BLOD, T",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "slightly less than 3/8 between 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd, Pointing DW, TH",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "body turns less",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, DW, H",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, BDC, TH, start to turn L",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn), LOD, HT",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back, BDW, TH",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "body turns less",
+      "comments": []
+    }
+  ]
+}

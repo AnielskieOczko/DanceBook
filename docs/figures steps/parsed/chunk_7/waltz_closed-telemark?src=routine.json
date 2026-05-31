@@ -1,0 +1,98 @@
+{
+"name": "Closed Telemark",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Change, Closed Wing, Double Reverse Spin, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names": "Closed Wing, Natural Spin Turn, Natural Turn",
+  "notes": "Next step, Man steps OP.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd | FDC | HT | start to turn L | Sway(S) | CBM | rise e/o 1",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Use CBM and rise a bit early to lead heel turn."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side | almost BLOD | T | slightly less than 3/8 between 1-2 | Sway(L) | Up",
+      "footwork": "T",
+      "alignment": "BLOD",
+      "amount_of_turn": "3/8",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd | Pointing DW | TH | slightly over 3/8 between 2-3. body turns less | Sway(S) | Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "slightly over 3/8",
+      "comments": [
+        "body turns less"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back | BDC | TH | start to turn L | Sway(S) | CBM | rise slightly e/o 1, NFR",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Keep your own balance.",
+        "When starting the figure, feel left hip flexor working, do not think about R leg moving back, think about standing on the L leg to get weight moving into the foot."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn) | LOD | HT | 3/8 between 1-2 | Sway(R) | continue to rise on 2",
+      "footwork": "HT",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Heel turn, the feeling is the turn is mostly done on RF, has a slight feeling of pushing off LF, then RF step back on 3 to finish.",
+        "Stay connected with Man."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back | BDW | TH | 3/8 between 2-3, body turns less | Sway(S) | Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Keep head position (which will make it shape to right).",
+        "Keep head to right, then on 1 of next e.g Natural Spin Turn, rotate body underneath (no sharp head movement, just keep head at same place starting at 1, not later)."
+      ]
+    }
+  ]
+}

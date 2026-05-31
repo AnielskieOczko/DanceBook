@@ -1,0 +1,102 @@
+{
+ "name": "Cross Swivel",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Tipple Chasse To Right, Running Finish, Fish Tail, Tipsy To R",
+  "notes": "Alternative styling options include RF to side, knees inward; LF to side, knee inward, a little space is ok. Body forms a line, slanted straight to R, keep left side lifted. Give R side to Man. Stay connected. Turn head to R. Rise in body before next S to lower to normal (not sinking down).",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF",
+      "footwork": "C",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Alternatively for styling, RF to side, knees inward"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Use hip joint to start the turn, standing knee (R knee) stays forward over the standing foot (RF), do not move the knee off the standing foot.",
+        "Use ab muscle to pull to the back of foot, do not leave middle fwd and shoulder weight back.",
+        "Heel of RF does not lower until the turn is completed.",
+        "Head is still left. At end of &: there is \"up\" rise feeling before the next S lower to normal.",
+        "(not \"sinking down\")"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF",
+      "footwork": "C",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Alternatively for styling, LF to side, knee inward, a little space is ok.",
+        "Body forms a line, slanted straight to R, keep left side lifted. Give R side to Man. Stay connected.",
+        "Turn head to R.",
+        "At end of &: rise in body before next S to lower to normal. (not \"sinking down\")"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Arms \"breathe\", give arms to R.",
+        "Turn head to R.",
+        "Body forms a line, slanted straight to R, keep left side lifted. Give R side to Man. Stay connected."
+      ]
+    }
+  ]
+}

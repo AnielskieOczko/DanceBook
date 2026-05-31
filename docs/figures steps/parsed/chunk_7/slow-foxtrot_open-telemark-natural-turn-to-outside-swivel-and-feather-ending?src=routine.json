@@ -1,0 +1,346 @@
+{
+  "name": "Open Telemark, Natural Turn to Outside Swivel and Feather Ending",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Closed Impetus and Feather Finish, Feather Step, Hover Cross, Hover Feather, Hover Telemark, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Zig-Zag from PP, Open Telemark, Natural Turn, Outside Swivel and Feather Ending",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step (at corner), Change Of Direction (at corner), Hover Telemark (at corner), Reverse Wave (at corner), Weave from PP (after step 7), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Zig-Zag from PP (after step 7)",
+  "notes": "When the Outside Swivel is danced at the side of the room to be followed by Feather Ending into Top Spin, 1/8 turn to R is made on step 7 and 8-10 will be taken DC against LOD. Weave from PP may also be danced following this underturned Outside Swivel, Man using the Basic Weave alignment. If dancing this underturned Outside Swivel at a corner steps 8-11 will be taken DC of new LOD. Follow as for Feather.\nThe Outside Swivel (steps 7-8) could be danced by checking OP on any Feather Movement taken DW without turn and followed as in the previous paragraph.\n\nFollower\nS: RF back | Backing DC | TH | start to turn L | Sway(S) | CBM | rise slightly e/o 1, NFR\nDon't open head too early here, wait till end of next step Q.\nQ: LF closes to RF (Heel Turn) | Facing DW | HT | 1/4 between 1-2 | Sway(R) | continue to rise on 2\nHeel Turn is an abrupt, steep turn for Lady. \nWhen turning left, the right side is the anchor point, left side stretch. \nFirst part of turn is done through feet (base), feet turn more. Do not bring shoulders back too quickly.\nHead is still L. Head slowly turns between end of this step and next Q. Don't open head too early, arrive on L leg first, wait for Man's lead to open head. Turn head slowly \"milk it\".\nQ: RF diag fwd in PP | Facing DW | TH | -- | Sway(S) | Up. Lower e/o 3\nSecond part is to finish the turn with upper body. \nImagine always dancing forward.\nHead turns to Promenade. \nThis completes the \"Open Telemark\" part of the figure. \"Natural Turn\" part only applies to Leader. Lady's steps are not Lady's Natural Turn steps.\nS: LF fwd and across in PP and CBMP | Facing DW (moving to wall) | HT | -- | Sway(S) | Rise e/o 4\nVery important for lady to finish behind Man on previous step. Then Lady's L leg should be behind Man's R leg and and should track Man's R leg movement forward, so it won't feel like Man is blocking Lady.\nAllow Man to get ahead of you. \nLeft shoulder connects to left hip. Keep shaping to left.\nAllow arms to swing across the body.\nThen dance straight forward, follow the Man with upper body, legs are tracking straight.\nQ: RF fwd, between partner's feet | Facing DW | T | -- | Sway(S) | Up. \nKeep the shaping to left, allow R side body/shoulder go forward to Man. Swing R hip forward. Use standing leg to push, don't fall forward. \nHead position changes to left. Leave head behind, send middle of body forward, finish head with more extension. Keeping the wound-up shape for next step.\nMovement is smooth and continuous, no stopping. \nOne style is to keep slight R side lead through the Passing Natural. \nQ: LF fwd preparing to step OP L side leading | Facing DW | TH | -- | Sway(S) | Up. Lower e/o 6\nLF straight fwd. Relax into L knee/leg, head shaping leftward back, wind up for next swivel.\nS: RF fwd in CBMP, OP. LF closes slightly back, without weight. End in PP | Facing DW. End facing DC against LOD, (sometimes more turn is done, ending traveling DC) | HTH and pressure on IE of T of LF | 1/2 to R on 7 | Sway(S) | CBM | --\nThis is the swivel. Bigger step, keep shoulder parallel, turn hips and head. The swivel action is purely happening underneath the body, do not turn the shoulders.\nShoulder should end parallel with Man with hips turned out more.\nHips and and feet are in same alignment.\nS: LF fwd and across in PP and CBMP | Facing DC against LOD (moving to center) | HT | start to turn L | Sway(S) | CBM | Rise e/o 8\nKeep behind Man's hip.\nQ: RF to side and slightly back | Backing LOD | TH | 1/8 between 8-9 | Sway(L) | Up\nSwing right side up and forward. Head back to left.\nFeather finish through the base.\nQ: LF back in CBMP | Backing DC | TH | 1/8 between 9-10, body turns less | Sway(L) | Up. NFR.\nS: RF back | Backing DC | T | Sway(S) | CBM | --\nCan follow with Basic Weave.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, start to turn L",
+      "footwork": "HF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4 between 1-2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4 between 2-3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "sideways in PP",
+      "footwork": "T",
+      "alignment": "Facing DW against LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "start to turn R",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HF",
+      "alignment": "Facing DW against LOD (Moving to Wall)",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 4"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1/8 between 4-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/8 between 5-6",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back R side leading",
+      "footwork": "TH",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/4 turn to R on 7",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP, RF crosses in front without weight",
+      "footwork": "T",
+      "alignment": "PP | DW Toe turned in. End facing DC",
+      "amount_of_turn": "1/4 turn to R",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Rise e/o 8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HF",
+      "alignment": "Facing DC (moving to center)",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 8"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag fwd preparing to step OP L side leading",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "1/8 between 8-9",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Lower e/o 10"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "H",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, start to turn L",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "rise slightly e/o 1, NFR",
+        "Don't open head too early here, wait till end of next step Q."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4 between 1-2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn)",
+      "footwork": "HT",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Heel Turn is an abrupt, steep turn for Lady.",
+        "When turning left, the right side is the anchor point, left side stretch.",
+        "First part of turn is done through feet (base), feet turn more.",
+        "Head is still L. Head slowly turns between end of this step and next Q.",
+        "Don't open head too early, arrive on L leg first, wait for Man's lead to open head. Turn head slowly \"milk it\"."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4 between 1-2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "diag fwd in PP",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "--",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HT",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Rise e/o 4",
+        "Very important for lady to finish behind Man on previous step."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd, between partner's feet",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Keep the shaping to left, allow R side body/shoulder go forward to Man.",
+        "Swing R hip forward.",
+        "Use standing leg to push, don't fall forward.",
+        "Head position changes to left."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "--",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd preparing to step OP L side leading",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Lower e/o 6",
+        "LF straight fwd.",
+        "Relax into L knee/leg, head shaping leftward back, wind up for next swivel."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/2 to R on 7",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "This is the swivel. Bigger step, keep shoulder parallel, turn hips and head. The swivel action is purely happening underneath the body, do not turn the shoulders.",
+        "Shoulder should end parallel with Man with hips turned out more."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "start to turn L",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HF",
+      "alignment": "Facing DC against LOD (moving to center)",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Keep behind Man's hip."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "1/8 between 8-9",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "Swing right side up and forward.",
+        "Head back to left.",
+        "Feather finish through the base."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "1/8 between 9-10",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "Up.",
+        "body turns less."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Can follow with Basic Weave."
+      ]
+    }
+  ]
+}

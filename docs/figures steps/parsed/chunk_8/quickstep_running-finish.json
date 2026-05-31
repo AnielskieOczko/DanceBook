@@ -1,0 +1,110 @@
+{
+  "name": "Running Finish",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/running-finish"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Lock, Cross Swivel, Hover Corte, Natural Turn And Back Lock, Progressive Chasse",
+  "following_figure_names": "Forward Lock Step, Natural Pivot Turn, Natural Spin Turn, Natural Turn, Quick Open Reverse, Fish Tail, Four Quick Run, V6, Tipsy To L, Six Quick Run",
+  "notes": "Timing can also be: QQSS\\nCan be commenced in other alignments, e.g. starting BLOD, ending DC.\\nMan may turn 1/4 between 1-2 when a facing alignment would be used. Lady would turn 1/8 between 1-2 and 1/8 between 2-3.\\nReally drive the step, go through Man.\\nMan should shape left to allow lady to pass and to make the turn easier.\\nLady can turn 1/8, will end BDW on new LOD.\\nLower and push off standing R leg, bigger next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP | Backing DW | Start to turn R | Sway(S) | CBM | Rise e/o 1",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly fwd | Pointing to LOD | 3/8 between 1-2, body turns less | Sway(L) | Up",
+      "footwork": "T",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Man can turn 1/4 to end DW on new LOD",
+        "Man should shape left to allow lady to pass and to make the turn easier"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd preparing to step OP left side leading | Facing LOD | TH | Body turn to R | Sway(L) | Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | Facing LOD | H | - | Sway(S) | CBM",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | Facing DW | HT | Start to turn R | Sway(S) | CBM | Rise e/o 1",
+      "footwork": "OP",
+      "alignment": "Facing DW",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side | Backing DC | 1/4 between 1-2 | Sway(R) | -- | Up",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, R side leading | Backing LOD | 1/8 between 2-3 | Sway(R) | -- | Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP | Backing LOD | T | Sway(S)",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

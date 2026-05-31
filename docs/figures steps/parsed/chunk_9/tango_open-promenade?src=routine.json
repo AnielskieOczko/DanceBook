@@ -1,0 +1,104 @@
+{
+  "name": "Open Promenade",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/open-promenade?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Open Finish",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte, LF Rock, Outside Swivel, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Open Reverse Turn, Lady Outside, Open Reverse Turn, Lady In Line, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte, LF Rock, Outside Swivel, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade",
+  "notes": "Open Finish (as opposed the Closed Finish in Closed Promenade.) This is not \"back and across\", LF is fairly straight on the line with RF. Allow shoulder and arm and upper body to rotate to right. Left shoulder is quite forward, body is twisted. Keep hip up/fwd toward Man (do not sit). Extend back, head left and extend. Stay very left of Man. Do not lower L heel too quickly till you see the center is still moving toward same direction (ie. it will be backward step); it could be a swivel, then you change moving direction. Note: Man may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot. Head should keep the same distance with Man's head at all times. Keep the volume between 2 heads. There is the tendency that Lady's head goes too far forward on this 'Q' and getting weight on to her RF (this shorten the distance with Man, cut in his space), then the head comes back to left - which is too late.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP, Along LOD, pointing DW",
+      "footwork": "H",
+      "alignment": "Pointing Diagonal Wall",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward and across in PP and CBMP, Along LOD, pointing DW",
+      "footwork": "H",
+      "alignment": "Pointing Diagonal Wall",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd, Pointing DW, Rotate through L leg. Range of motion.",
+      "footwork": "IE",
+      "alignment": "Pointing Diagonal Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "Rotate through L leg. Range of motion."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP, Along LOD, pointing DC",
+      "footwork": "H",
+      "alignment": "Pointing Diagonal Center",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP, Along LOD, pointing DC, CBM",
+      "footwork": "H",
+      "alignment": "Pointing Diagonal Center",
+      "amount_of_turn": "",
+      "comments": [
+        "CBM",
+        "Stay \"behind\" Man."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back, Backing DW",
+      "footwork": "IE of BH",
+      "alignment": "Backing Diagonal Wall",
+      "amount_of_turn": "1/4 turn to L between 2-3",
+      "comments": [
+        "Head flip to L to close.",
+        "RF turned in, two feet are in \"pigeon tooed\" position now: RF BDW, LF DC. It clears space for Man, otherwise, feet may clunk and Man doesn't have room to step."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "H",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP, Between Wall and DW, Ball",
+      "footwork": "Ball",
+      "alignment": "Between Wall and DW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

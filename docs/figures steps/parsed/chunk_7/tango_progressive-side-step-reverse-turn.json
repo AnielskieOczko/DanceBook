@@ -1,0 +1,49 @@
+{
+  "name": "Progressive Side Step Reverse Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "Total amount of Turn: 3/4 to L. After steps 1-4, the following endings may be used: Back Corte SQQS, Rock on LF, Rock on RF, Back Corte QQS, QQS, SQQS. Follower keeps head strongly left, shoulders parallel, movement smooth.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd in CBMP",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Strong compression, rotation.",
+        "Quite a bit of turn on the progressive side step. Dancing \"U\" turn.",
+        "Keep head weight to left."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "F",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "For left turning figures, do not allow L shoulder to go beyond the hips.",
+        "The turn doesn't go through shoulders, it goes through hips.",
+        "Allow hip flexors to take you back."
+      ]
+    }
+  ]
+}

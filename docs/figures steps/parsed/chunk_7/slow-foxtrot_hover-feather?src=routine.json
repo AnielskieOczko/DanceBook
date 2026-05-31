@@ -1,0 +1,105 @@
+{
+  "name": "Hover Feather",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-feather?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Hover Telemark, Natural Turn, Reverse Wave",
+  "following_figure_names": "Three Step, Reverse Turn, Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin, Outside Swivel, Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes": "Note -- Body will overturn slightly to R on preceding Heel Pull. the footwork of the Heel Pull will be: 1. TH; 2 H; IE of foot, whole foot, then T of RF and pressure on IE of T of LF\nNote -- Body will overturn to R on preceding Brush step. The Lady will rise from the ball of LF at the end of the Brush step. The L heel does not touch the floor.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward diagonally, preparing to step opposite position",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Rise e/o preceding Heel Pull. Up",
+        "Compress right side, change angle through diagonal, allow head to prepare to go outside partner"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in CBMP, opposite position",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Rise e/o preceding Heel Pull. Up",
+        "Lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward, sway S, CBM",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S) | CBM | --"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step diagonal backward, R side leading",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Rise e/o Brush step. Up",
+        "Feel the left hip is dancing across inside edge of left foot. Keep head very left, feel like dancing rib cage across the feet.",
+        "Hold diagonal extra shaping for the 2 steps.",
+        "Push off standing leg to move. Do not take upper body back too fast. Take everything through lower center. Lower center move faster than upper center.",
+        "Keep counter balance in the Man's arms, leave arms to Man, as you swing rightwards. Pull center back."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step backward in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Release R leg, so it doesn't block Man.",
+        "Q: LF back in CBMP | Backing DC | TH | -- | Sway(S) | Up. NFR Lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step backward, sway S, CBM",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S) | CBM | --",
+        "Note -- Body will overturn to R on preceding Brush step. The Lady will rise from the ball of LF at the end of the Brush step. The L heel does not touch the floor."
+      ]
+    }
+  ]
+}

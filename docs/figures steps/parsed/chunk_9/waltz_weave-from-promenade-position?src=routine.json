@@ -1,0 +1,165 @@
+{
+  "name": "Weave from PP (after Open Impetus Turn)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Whisk, Contra Check, Fallaway Whisk, Open Impetus, Open Telemark, Outside Change, Turning Lock to Right, Whisk",
+  "following_figure_names": "Natural Spin Turn, Natural Turn, Wing (when ended in PP), Left Whisk (when ended in PP), Chasse From Promenade Position (when ended in PP), Closed Wing, Cross Hesitation (when ended in PP)",
+  "notes": "Man: 1/8 to L can be made between 2-3, so 4-5 may be taken BLOD.\nLess turn can be made on Whisk to end facing LOD, or the Open Impetus could be used an an entry, when the body would be facing LOD. Then, the alignment will be like the Weave in Foxtrot.\nThis may end in PP, same as Outside change to PP from step 4.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd and across in PP and CBMP, Pointing DC, body facing LOD, traveling DC, HT, 1/8 btwn preceding step and 1, CBM, Start to rise at end of 1",
+      "footwork": "BF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Start to rise at end of 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, Facing center, T, cont to turn L, - , CBM, Cont to rise on 2 and 3",
+      "footwork": "BF",
+      "alignment": "Facing center",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, BLOD, TH, 1/4 btwn 2-3, - , CBM, Up. Lower at end of 3",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Up. Lower at end of 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP, BDC, TH, 1/8 betwn 3-4, - , CBM, cont to rise e/o 4",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "1/8",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back, BDC, T, start to turn L, - , CBM, Rise e/o 5",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF side and slightly fwd, Pointing DW, TH, 1/4 btwn 5-6, body turns less, Up, Lower e/o 6",
+      "footwork": "TH",
+      "alignment": "DW",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Up, Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in PP and CBMP, Facing DC, traveling DC, HT, start to turn L, -- , CBM, Start to rise e/o 1",
+      "footwork": "BF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "0",
+      "comments": [
+        "Start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, BDC, T, 1/4 to half turn btwn 1-2, -- , Cont to rise on 2 and 3",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Cont to rise on 2 and 3"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "1/2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd, Pointing DC, TH, 1/2 btwn 2-3, body turn less, -- , Up. Lower e/o 3",
+      "footwork": "TH",
+      "alignment": "DC",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Up. Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP, Facing DW, HT, --, - , - , CBM, -",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd, Facing DW, T, start to turn L, -- , CBM, Rise e/o 5",
+      "footwork": "T",
+      "alignment": "DW",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, BDW, TH, 1/4 btwn 5-6, body turns less, -- , Up. Lower e/o 6",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Up. Lower e/o 6"
+      ]
+    }
+  ]
+}

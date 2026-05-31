@@ -1,0 +1,122 @@
+{
+  "name": "Open Impetus Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Curved Feather to Back Feather, Natural Turn, Natural Twist Turn, Reverse Wave",
+  "following_figure_names": "Feather Step, Weave from PP, Natural Weave (Natural Weave from PP), Natural Zig-Zag from PP, Curved Feather to Back Feather (starting in PP)",
+  "notes": "",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Maintain the sway from previous figure as you lower through CBM, keep the diagonal stretch."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3/8 btwn 1-2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF (Heel Turn)",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "3/8 btwn 1-2",
+      "comments": [
+        "Do not lift the toe off the floor. The ball of the foot needs to stay skimming the floor."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag. fwd in PP, L side leading",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Change sway to PP, pull across thighs, hips, rib cage, sending head forward, rotate to right to send lady to PP.",
+        "Finish with body slightly ahead of Lady."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in PP and CBMP",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "FLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep traveling forward. Big step."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3/8 btwn 1-2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "F",
+      "alignment": "BDC",
+      "amount_of_turn": "3/8 btwn 1-2",
+      "comments": [
+        "Do not turn too early, swing left side up (do not drop left shoulder, to be light on Man), stay behind Man.",
+        "Follow Man's hip, gauge step size, if too big, it can gap and throw Man off. Just big enough to stay behind Man.",
+        "Allow feet to turn. Pull center back."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "3/8 btwn 2-3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP having brushed to LF",
+      "footwork": "F",
+      "alignment": "Center",
+      "amount_of_turn": "3/8 btwn 2-3",
+      "comments": [
+        "Let head finish the action at the very last. Head turn slowly."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

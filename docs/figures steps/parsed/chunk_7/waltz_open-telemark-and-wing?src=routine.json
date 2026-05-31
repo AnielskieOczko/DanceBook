@@ -1,0 +1,30 @@
+{
+ "name": "Open Telemark and Wing",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Open Telemark, Back Whisk, Basic Weave, Contra Check, Fallaway Whisk, Open Impetus, Outside Change, Turning Lock, Turning Lock to R, Weave From Promenade Position, Whisk",
+  "following_figure_names": "Closed Telemark, Open Telemark, Double Reverse Spin, Progressive Chasse To R, Reverse Turn, Drag Hesitation, Fallaway Reverse And Slip Pivot, Whisk (at corner)",
+  "notes": "Wing can be used from other positions.\nLess turn can be made on Wing to end facing LOD.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, DC, HT, start to turn L, Sway(S), CBM, rise e/o 1",
+      "footwork": "LF",
+      "alignment": "DC",
+      "amount_of_turn": "start to turn L",
+      "comments": []
+    }
+  ]
+}

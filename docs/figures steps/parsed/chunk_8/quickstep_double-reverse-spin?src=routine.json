@@ -1,0 +1,124 @@
+{
+  "name": "Double Reverse Spin",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Heel Pivot (Quarter Turn To Left), Natural Turn With Hesitation, Reverse Pivot",
+  "following_figure_names": "Chasse Reverse Turn, Progressive Chasse To Right, Double Reverse Spin, Cross Chasse, Zig-Zag, Back Lock And Running Finish, Quick Open Reverse, Closed Telemark, Cross Swivel, Tipsy To R (LF fwd, H, S into Tipsy to R), Change of Direction",
+  "notes": "The Double Reverse Spin may be started LOD (chart above), DC, or DW.\nWhen starting DW, lady: before stepping RF back, turn knee 1/8 to L, step back, so RF is stepping straight down LOD. Body feel quite twisted.\nThe step 1 of both Double Reverse Spin and Progressive Chasse to Right feel the same, the difference is the next step.\nFor Double Reverse Spin: Man steps DC, toward Lady's left shoulder (not her sternum).\nFor Progressive Chasse to Right, Man moves toward LOD, making Lady to step pass her LF to the side.\nDouble Reverse Spin is a traveling step, first Man goes, then Lady goes. It needs to move down the floor.\nThe amount of turn may vary between 3/4 and a whole turn.\nComplete Turn:\nstep 1-2: Man 3/8, Lady: 1/2; step 2-3: Man 5/8: Lady: 1/4; step 3-4: lady: 1/8.\n3/4 Turn:\nstep 1-2: Man 1/4 (or 3/8), Lady: 3/8; step 2-3: Man: 1/2 (or 3/8), Lady: 1/4; step 3-4: Lady 1/8",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Do not collapse left side.",
+        "Stretch left side and not lean toward inside of the turn.",
+        "Rise to toe - early rise."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "F",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF closes to RF without weight (Toe Pivot)",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Sway(S)",
+        "Up, Lower at end of 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "F",
+      "alignment": "BLOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Very important to do CBM, with CBM shoulder will clear way for Man to pass. keep shoulder flat, and do not drop it on one side.",
+        "Use head weight back.",
+        "RF bigger step back.",
+        "Make sure keep body and head very left to Man, keep left side lifted.",
+        "Keep the volume of the frame. Do no allow shoulder to rotate too quickly pass the hips, which will pull the Man into Lady's space and making hips rotate away from partner.",
+        "Do not take elbow back. Think about giving the arm to Man, keeping it forward throughout the figure. Take R shoulder onto RF, not pass RF."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF (Heel turn) | Facing LOD",
+      "footwork": "T",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Draws trailing foot in slowly, both legs should straighten.",
+        "Turn head slightly more to left (don't do it too early, though)",
+        "Draw center back to spine. Do not leave body to Man."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back",
+      "footwork": "F",
+      "alignment": "Backing wall",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Bigger step fwd, stay with Man, keep on his R side. Slight swing.",
+        "Make this fluid with previous heel turn and use LF to push off, then swivel on RF. Like in Viennese Waltz.",
+        "Keeping arms forward, give arms to Man."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF crosses in front of RF",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Do not lower too early, lower on \"&\".",
+        "Finish with L side positive/fwd."
+      ]
+    }
+  ]
+}

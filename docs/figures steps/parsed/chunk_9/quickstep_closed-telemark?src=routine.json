@@ -1,0 +1,123 @@
+{
+  "name": "ClosedTelemark",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Fish Tail, Four Quick Run (at corner, LF back with Lady OP, TH, S, into Four Quick Run), Six Quick Run (at corner, LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes": "Strong big step back, use CBM at the same time.\nDo not take shoulders back, do not leave centre fwd which will block Man.\nR shoulder connect down, R side is anchor for left turning figure. Feel strong upward, leftward through left side (L side slightly raised or heel turns).\nWhen stepping RF, keep contact with Man, step shouldn't be too close to Man. Need to leave room between Lady's RF and Man's LF for Man to step through his next OP step.\nShape head to right (actually by keeping the head where it is, when body turns left, head will be in the shaping right position). Then, head returns to left at next step.\nLowering at end of the step, before driving into next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward, FDC, start turn left, sway, CBM, rise e/o 1",
+      "footwork": "F",
+      "alignment": "Forward Diagonal Centre",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side, almost BLOD, T, sway left, up",
+      "footwork": "F",
+      "alignment": "Almost BLOD",
+      "amount_of_turn": "side",
+      "comments": [
+        "up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side slightly forward, pointing DW, TH, sway",
+      "footwork": "F",
+      "alignment": "Diagonal Wall",
+      "amount_of_turn": "less",
+      "comments": [
+        "slight over 3/8 between 2-3",
+        "UP, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward in CBMP, OP, DW, H, sway",
+      "footwork": "F",
+      "alignment": "Diagonal Wall",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, BDC, TH, start turn left, sway, CBM, rise slightly e/o 1, NFR",
+      "footwork": "F",
+      "alignment": "Back Diagonal Centre",
+      "amount_of_turn": "start turn L",
+      "comments": [
+        "strong big step back",
+        "use CBM"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF (Heel Turn), LOD, HT, sway, continue rise on 2",
+      "footwork": "F",
+      "alignment": "Line Of Dance",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "heel turn drag L heel slowly",
+        "put down heel on & and push"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side slightly back, BDW, TH, sway, UP lower e/o 3",
+      "footwork": "F",
+      "alignment": "Back Diagonal Wall",
+      "amount_of_turn": "3/8 between 2-3",
+      "comments": [
+        "step not too close to Man",
+        "leave room for Man's next OP step"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP, BDW, T, sway, CBM",
+      "footwork": "F",
+      "alignment": "Back Diagonal Centre",
+      "amount_of_turn": "--",
+      "comments": []
+    }
+  ]
+}

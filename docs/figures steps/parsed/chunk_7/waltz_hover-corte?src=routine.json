@@ -1,0 +1,106 @@
+{
+  "name": "HoverCorte",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names": "Back Lock, Outside Change, Fallaway Whisk, Back Whisk, Outside Spin",
+  "notes": "Hover Corte is a Gold Level waltz figure. The movement includes swaying, rise and fall, contralateral body movement, and turning left. Leader begins by stepping back on RF, then steps to the side and slightly forward on LF, then transfers weight back to RF. Follower mirrors with a forward step on LF, a side step with a brush, and continues turning. Options include keeping the head closed or opening to promenade position. Head articulation is delayed until later in the sequence. Rise occurs on counts 1, 2, and 3 with a lowering on count 3. The figure ends with an up and lower motion and prepares for the next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back step, turning left, swaying S, start rise",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Start to rise e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly forward, pointing diagonal wall, continue turning body less",
+      "footwork": "T",
+      "alignment": "DW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "body turns less; Continue to turn body on step 2",
+        "Continue to rise on 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to side and slightly back, backing diagonal center against LOD",
+      "footwork": "TH",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward step, facing line of dance, start turn left",
+      "footwork": "HT",
+      "alignment": "LOD",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "Big step",
+        "Options: keep head closed or open to PP"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side and brush towards RF, facing center then DC against LOD, turn 1/4 on 2",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Continue to turn 1/4 on 2",
+        "Swing forward",
+        "Whole R side to Man, stretch"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Brush towards RF, diag forward, facing DC against LOD, sway L L",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L L)",
+        "Articulate LF coming out",
+        "Soft knees, prepare next step"
+      ]
+    }
+  ]
+}

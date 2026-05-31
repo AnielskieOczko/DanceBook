@@ -1,0 +1,225 @@
+{
+  "name": "CurvedFeather to Back Feather (SLOW_FOXTROT)",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Back Feather Position",
+  "preceding_figure_names": "Change Of Direction, Closed Telemark, Hover Telemark, Hover Telemark to PP, Natural Turn, Open Impetus, Outside Swivel, Reverse Wave, Three Step",
+  "following_figure_names": "Closed Impetus and Feather Finish, Basic Weave (At corner), Open Impetus (After steps 1-3)",
+  "notes": "The figure begins in closed position and progresses through a series of steps with specific sway, CBM and rise patterns. Leader starts with RF forward, followed by LF diagonal forward, RF forward in CBMP, LF back in CBMP, then continues with RF back, LF back, and ends with RF back. Follower mirrors with LF back, RF back, LF back, RF forward in CBMP, LF forward, RF forward in CBMP, and finishes with LF forward. The ending position is typically a Back Feather Position with possible continuation to Feather Finish SQQ. Sway, CBM and rise are emphasized throughout. The figure is at Gold level. Notes include alignment details, amount of turn, and specific footwork instructions.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diag fwd, preparing to step OP, L side leading",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "R",
+        "CBM",
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1.8 between 3-4",
+      "comments": [
+        "Start to rise e/o 4",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back R side leading, curving toward LOD",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway (L)",
+        "Continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": [
+        "Sway (L)",
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, R side leading, backing DW",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP, backing Wall",
+      "footwork": "B",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Sway(L)",
+        "CBM",
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Start to rise e/o 4"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd L side leading, curving towards LOD",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(R)",
+        "Continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "S",
+        "CBM",
+        "-"
+      ]
+    }
+  ]
+}

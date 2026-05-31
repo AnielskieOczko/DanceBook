@@ -1,0 +1,195 @@
+{
+  "name": "Natural Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Closed Impetus (after 1-3), Tipple Chasse To Right (after 1-3), Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Cross Chasse (use 6th step of Natural Turn as entry), Forward Lock (and then Quick Open Reverse, after 1-5 of Natural Turn ending DC, ; or and then any Natural figures, after 1-5 of Natural Turn ending DW of new LOD, ), Zig-Zag, Back Lock And Running Finish (use 6th step of Natural Turn as entry), Tipsy To R (after 1-4 of Natural Turn), Rumba Cross",
+  "notes": "The step can be underturned to end Man facing new LOD, in which case, 1/4 turn should be completed between 4-5.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "side",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 to R between 1-2",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 to R between 2-3",
+      "comments": [
+        "Sway(R)",
+        "Up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "cont to turn R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side small step (heel pull)",
+      "footwork": "H",
+      "alignment": "FDW of new LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "The heel pull can be underturned to face new LOD."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "slight CBM"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/8 between 5-6",
+      "comments": [
+        "slight"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "starts to turn R",
+      "comments": [
+        "start to rise e/o 1",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "side",
+      "footwork": "T",
+      "alignment": "PLOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "body turns less",
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "close to RF",
+      "footwork": "TH",
+      "alignment": "FLOD",
+      "amount_of_turn": "body completes turn",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "FLOD",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "--"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "TH",
+      "alignment": "Back new LOD",
+      "amount_of_turn": "1/4 between 4-5",
+      "comments": [
+        "Sway(S)",
+        "--"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/8 between 5-6",
+      "comments": [
+        "slight"
+      ]
+    }
+  ]
+}

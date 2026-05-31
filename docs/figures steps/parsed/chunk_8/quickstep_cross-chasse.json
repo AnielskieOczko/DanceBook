@@ -1,0 +1,150 @@
+{
+  "url": "http://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse",
+  "name": "Cross Chasse",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Change of Direction, Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Natural Turn, Reverse Pivot",
+  "following_figure_names": "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Forward Lock, Fish Tail",
+  "notes": "Running Cross Chasse\nInstead of closing feet above, keep moving ('running') forward:\nLeader\nS: RF fwd, CBMP, OP | FDW | HT\nS: LF fwd | FDW | T | -- | Sway(S) | CBM | Rise e/o 1\nQ: RF diagonally fwd | FDW | T | -- | Sway(L) | up\nQ: LF fwd, L shoulder leading | FDW | TH | -- | Sway(L) | up, lower e/o 3\nS: RF fwd in CBMP, OP | FDW | H | -- | Sway(S) | CBM | --\nFollower\nS: LF back, CBMP | BDW | TH \nPay attention not to do a lot rotation through shoulders.\nS: RF back | BDW | T | -- | Sway(S) | CBM | Rise e/o 1, NFR \nR shoulder connects down. \nQ: LF diagonally back | BDW | T | -- | Sway(R) | up\nDo not rotate L shoulder.\nStretch L side.\nQ: RF back, R shoulder leading | BDW | TH | -- | Sway(R) | up\nlower e/o 3\nS: LF back in CBMP | BDW | T | -- | Sway(S) | CBM | --",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd, OP | FDW | H",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side | FDW | T",
+      "footwork": "T",
+      "alignment": "FDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(L)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF closes to RF | FDW | TH",
+      "footwork": "TH",
+      "alignment": "FDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(L)",
+        "up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | FDW | H",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back, CBMP | BDW | TH",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Lengthen R side"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back | BDW | TH",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1",
+        "Lady connects R should down"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side | BDW | T",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF closes to LF | BDW | TH",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP | BDW | T",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

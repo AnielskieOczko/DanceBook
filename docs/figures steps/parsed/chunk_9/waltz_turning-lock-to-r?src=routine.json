@@ -1,0 +1,84 @@
+{
+"name": "Turning Lock to R",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": [
+    "Natural Spin Turn",
+    "Outside Spin"
+  ],
+  "following_figure_names": [
+    "Wing",
+    "Chasse From Promenade Position",
+    "Left Whisk",
+    "Weave From Promenade Position",
+    "Cross Hesitation"
+  ],
+  "notes": "Keep big step. There are continuously big steps, if one step is shorter, it stops momentum. Body dance smoothly and continuously. Lady R side/arm to Man. Check R elbow at correct angle. R side can never be \"dead\".",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Count 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back R side leading, down LOD",
+      "footwork": "T",
+      "alignment": "Down LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway: LLSS or RRSS"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Count &",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF crosses loosely in front of RF, facing center",
+      "footwork": "T",
+      "alignment": "Facing center",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Sway: (L or R)",
+        "Continue to rise 2 and 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Count 2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly forward, small step between partner's feet",
+      "footwork": "T",
+      "alignment": "FDC",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Sway(S)",
+        "-",
+        "-"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Count 3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonal forward, left side leading in PP, pointing DC, slight body turn to R",
+      "footwork": "T",
+      "alignment": "Pointing DC",
+      "amount_of_turn": "Slight body turn to R",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 4"
+      ]
+    }
+  ]
+}

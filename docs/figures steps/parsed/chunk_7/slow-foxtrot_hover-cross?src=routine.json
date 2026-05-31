@@ -1,0 +1,263 @@
+{
+  "name": "Hover Cross",
+"urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Facing DW",
+  "ending_position": "Backing DC",
+  "preceding_figure_names": "Closed Telemark, Three Step",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Fallaway Reverse and Slip Pivot, Reverse Wave, Bounce Fallaway with Weave Ending",
+  "notes": "A slight lowering may be used on step 4, but the L heel should not touch the floor. Do not allow body to overturn on 4.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "HT",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "fwd",
+      "alignment": "Facing DW",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "to side",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "to side",
+      "alignment": "Pointing DW of new LOD",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Body turns less",
+        "Sway(S)",
+        "Up",
+        "Dissolve sway and changing sway direction",
+        "Base (feet) swivel more than body. (3 different alignment points)",
+        "Allow body to slide to the other side.",
+        "Contact point is light, brushing past partner."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "fwd",
+      "alignment": "Facing DW of new LOD",
+      "amount_of_turn": "slight body turn to R",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "A slight lowering may be used on step 4, but the L heel should not touch the floor. Do not allow body to overturn on 4."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight back",
+      "footwork": "Transfer weight back",
+      "alignment": "Backing DC against LOD",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "to side and slightly fwd",
+      "alignment": "Pointing DC",
+      "amount_of_turn": "1/4 turn",
+      "comments": [
+        "Body turns less",
+        "Sway(R)",
+        "Up",
+        "Body slides back to basic position."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "TH",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "fwd",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Lower e/o 7"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "H",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "fwd",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "back",
+      "alignment": "Backing DW",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "rise slightly e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "HT",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to LF (Heel Turn)",
+      "footwork": "closes",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "continue to rise on 2",
+        "Do not lock the knees, keep knees soft, compressed.",
+        "Multiple Q's, keep flat, don't rise"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "to side",
+      "alignment": "Backing new LOD",
+      "amount_of_turn": "1/4 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "Think about taking the step fwd (not side).",
+        "Keep own internal balance. Flat."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "back",
+      "alignment": "Backing DW of new LOD",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Let hip turn to R. Rise on L side/hip. Shoulder and head really doesn't change position."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight fwd",
+      "footwork": "Transfer weight fwd",
+      "alignment": "Facing DC against LOD",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up",
+        "NFR",
+        "Lower e/o 5",
+        "Keep head to R"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "to side",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 5-6",
+      "comments": [
+        "Sway(L)",
+        "--",
+        "Lady slide back to Man's R side."
+      ]
+    },
+    {
+      "step_number": 15,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "back",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/8 between 6-7",
+      "comments": [
+        "Sway(L)",
+        "Body turns less"
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "back",
+      "alignment": "Backing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

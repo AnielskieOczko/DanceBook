@@ -1,0 +1,130 @@
+{
+  "name":"Contra Check",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/contra-check?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Double Reverse Spin, Fallaway Reverse and Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn",
+  "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+  "notes": "Focus: smoothness, rotation, elasticity, lightness, softness, finish the extension.\nPreparations and extension details include: bend/lower left knee, shoulder level off, rotate hips to left; do not send stomach muscle forward; connect center into hip joint; CMBP; RF point back first, toe turned in; keep right heel up; weight split; body rotate left while keeping left side up to Man; keep left toe down; flex both knees; get there first, then give (R) hip and ribs to Man; extend R arm; lift glute and center up; imagine stretching R side; upper body rotation and sway; continuous extension to head; elasticity, smoothness, lightness; do not sit or just go down; bounce up; arms belong to partner, never pull back; extend arm to give space; frame: breathe, feel free, continuous movement; push off back foot into PP; stay very left; start articulating head turn; turn may be made between 2-3 to end in PP moving DC; articulate head; prep for next step: lower first and step big.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP, pointing almost LOD",
+      "footwork": "Ball Flat",
+      "alignment": "Closed Position",
+      "amount_of_turn": "--",
+      "comments": [
+        "If preferred, could be LF fwd with foot flat.",
+        "Body turn to L",
+        "CBM",
+        "Down with knees slightly flexed"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP, feet almost BLOD",
+      "footwork": "T",
+      "alignment": "CBMP",
+      "amount_of_turn": "--",
+      "comments": [
+        "The step needs to feel more free.",
+        "Lady does not bend straight back, there is rotation and head continues to extend go along body line.",
+        "Prep: bend/lower left knee, shoulder level off, rotate hips to left.",
+        "Do not send stomach muscle forward, i.e. do not stick tummy up to Man at this time.",
+        "connect center into hip joint, hip has to be able to move.",
+        "CMBP (do not get into Man's space).",
+        "RF point back first, RF toe turned in (for better balance).",
+        "Keep right heel up (solid, not heel moving down and then up).",
+        "Weight split.",
+        "Body rotate to left, but keep left side up to Man (though body is turning left and shaping).",
+        "Don't break neck.",
+        "Keep left toe down on floor, do not lift L toe.",
+        "LF is pretty much flat on floor.",
+        "Flex both knees, at this time, weight in the middle, not on back foot.",
+        "Get there first, then give (R) hip and ribs to Man for extension.",
+        "Extend R arm to Man.",
+        "Lift glute and center up to Man. (butt cheek up) and give whole R side to Man.",
+        "Imagine stretching R side longer to give to Man more, effect is shaping and extending to left.",
+        "Upper body has the look of rotating/shaping to left (but don't rotate away from Man, upper body and hip to Man), head \"finishes\" the extension with breathing.",
+        "The whole body is not one straight piece. There is torch in upper body - rotation and sway (do not just bend backward) and at tail end, stretch even more before recovering.",
+        "Continuous extension and all the way to head. Upper body, not locked and still, but stay soft and flexible, go and fill the space Man created with his R arm/hand.",
+        "Don't \"sit\", don't just go \"down\" which feels heavy. Continuous shaping and then bounce up.",
+        "Man start recovering after Lady finish extending head.",
+        "Arms belong to partner, never pull arms back. extend the arm to give space.",
+        "Frame: breathe, need to feel \"free\". Create elasticity feeling, continuous movement out and come back (no stopping and then rotate. movement is smooth and light.)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight back to RF | DW",
+      "footwork": "Ball Flat",
+      "alignment": "DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Transfer weight back to RF",
+        "Rise e/o 2"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight fwd to LF | Facing DC against LOD",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Push off back foot into PP. Time the push off together with Man.",
+        "Feet swivel underneath the body. Need to be individually balanced.",
+        "Make sure to stay very left (has tendency to shift to R, get into Man's space). Keep big frame and give R side to Man, don't fall to PP.",
+        "At end, start articulating head turn"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in PP | FDW, moving along LOD",
+      "footwork": "TH",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/4 to R between 2-3",
+      "comments": [
+        "Turn may be made between 2-3 to end in PP moving DC."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in PP | FDC, moving LOD",
+      "footwork": "TH",
+      "alignment": "FDC",
+      "amount_of_turn": "1/4 to R between 2-3",
+      "comments": [
+        "Articulate head.",
+        "Make sure R side is to Man.",
+        "Prep for next step: Lower first and step big."
+      ]
+    }
+  ]
+}

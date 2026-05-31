@@ -1,0 +1,49 @@
+{
+  "name": "Natural Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step (at corner), Change Of Direction (at corner), Hover Telemark (at corner), Reverse Wave (at corner), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes": "Note -- 1/2 or 5/8 turn may be used at a corner. Amount of turn in each case will be 1/4 between 1/2, whether started facing LOD or DW\nNote -- When underturned, the Lady will always turn 3/8 between 1-2\nThis step stays on T, there is no toe release for LF into next step.\nCompress into knee without lowering into heel.\nContinue turning through the feet.\nTake head and weight to LF, compress L knee, then brush RF.\nThere is RF toe release when LF is stepping back on this step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "WF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "WF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

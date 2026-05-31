@@ -1,0 +1,71 @@
+{
+  "name": "Open Promenade",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/open-promenade"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Open Finish",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Open Reverse Turn, Lady Outside, Open Reverse Turn, Lady In Line, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte, LF Rock, Outside Swivel, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade",
+  "notes": "Note:\nMan may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot.\nPreceding Figures\nBasic Reverse Turn\nChase\nContra Check\nFallaway Four Step\nFallaway Promenade\nFive Step\nFour Step\nNatural Promenade Turn\nNatural Twist Turn\nOpen Finish\nOpen Promenade\nOpen Reverse Turn, Lady In Line\nOpen Reverse Turn, Lady Outside\nOversway\nProgressive Link\nProgressive Side Step Reverse Turn\nFollowing Figures\nWalk (LF)\nProgressive Side Step\nProgressive Link\nOpen Reverse Turn, Lady Outside (when preceding figure ended DC)\nOpen Reverse Turn, Lady In Line (when preceding figure ended DC)\nProgressive Side Step Reverse Turn (when preceding figure ended DC)\nReverse Outside Swivel (when preceding figure ended DC; or normal)\nBasic Reverse Turn (when preceding figure ended DC)\nFallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal)\nFour Step\nFour Step Change\nBrush Tap\nFallaway Four Step\nOversway\nFive Step\nBack Corte (step 1 in CBMP with Lady OP using CBM on 1 and 2)\nLF Rock (LF Rock in CBMP with Lady OP, no turn or up to 1/4 to R)\nOutside Swivel\nClosed Promenade (having placed LF to side without weight, leading Lady to to PP, count &)\nOpen Promenade (having placed LF to side without weight, leading Lady to to PP, count &)\nNatural Promenade Turn (having placed LF to side without weight, leading Lady to to PP, count &)\nPromenade Link (having placed LF to side without weight, leading Lady to to PP, count &)\nBack Open Promenade (having placed LF to side without weight, leading Lady to to PP, count &)\nFallaway Promenade (having placed LF to side without weight, leading Lady to to PP, count &)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP along LOD, pointing DW",
+      "footwork": "HF",
+      "alignment": "DW",
+      "amount_of_turn": "0",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward and across in PP and CBMP along LOD, pointing DW",
+      "footwork": "HF",
+      "alignment": "DW",
+      "amount_of_turn": "0",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP along LOD, pointing DC",
+      "footwork": "HF",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": [
+        "R Toe in line with LF. Sometimes it is ok to step slightly to side a bit to give it enough room for inside legs to pass through."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP along LOD, pointing DC",
+      "footwork": "HF",
+      "alignment": "DC",
+      "amount_of_turn": "0",
+      "comments": [
+        "Stay \"behind\" Man."
+      ]
+    }
+  ]
+}

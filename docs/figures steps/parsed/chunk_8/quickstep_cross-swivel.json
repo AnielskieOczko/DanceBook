@@ -1,0 +1,103 @@
+{
+  "name": "Cross Swivel",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Facing DW",
+  "ending_position": "Backing DC",
+  "preceding_figure_names": "Double Reverse Spin,Heel Pivot (Quarter Turn To Left),Reverse Pivot",
+  "following_figure_names": "Tipple Chasse To Right,Running Finish,Fish Tail,Tipsy To R",
+  "notes": "Alternatively for styling, RF to side, knees inward\nUse hip joint to start the turn, standing knee (R knee) stays forward over the standing foot (RF), do not move the knee off the standing foot.\nUse ab muscle to pull to the back of foot, do not leave middle fwd and shoulder weight back.\nHeel of RF does not lower until the turn is completed.\nHead is still left. At end of &: there is \"up\" rise feeling before the next S lower to normal.\nBody forms a line, slanted straight to R, keep left side lifted. Give R side to Man. Stay connected.\nTurn head to R.\nAt end of &: rise in body before next S to lower to normal. (not \"sinking down\").",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes (or nearly closes) to LF slightly back without weight",
+      "footwork": "C",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "pressure on T of LF with foot flat and pressure on IE of T of RF"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "HF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF slightly fwd without weight",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Use hip joint to start the turn, standing knee (R knee) stays forward over the standing foot (RF), do not move the knee off the standing foot.",
+        "Use ab muscle to pull to the back of foot, do not leave middle fwd and shoulder weight back.",
+        "Heel of RF does not lower until the turn is completed.",
+        "Head is still left. At end of &: there is \"up\" rise feeling before the next S lower to normal."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Arms \"breathe\", give arms to R.",
+        "Turn head to R.",
+        "At end of &: rise in body before next S to lower to normal. (not \"sinking down\")."
+      ]
+    }
+  ]
+}

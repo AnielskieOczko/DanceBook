@@ -1,0 +1,121 @@
+{
+  "name": "Fallaway Reverse and Slip Pivot",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Reverse Pivot, Reverse Turn",
+  "following_figure_names": "Reverse Turn, Whisk, Double Reverse Spin, Progressive Chasse, Closed Telemark, Open Telemark, Contra Check",
+  "notes": "Timing: 1 2 3& (1 1 1/2 1/2) OR, 1, 2 &, 3 (1 1/2 1/2 1)\nNote: Details about head position, body curve, hip twist, staying connected, etc.\nAlternative endings and general notes as described.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward to FDC, start turn left, CBM, rise",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back in Fallaway, R side leading, BDW, moving down LOD",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 between step 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back in CBMP and Fallaway, BLOD",
+      "footwork": "B",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Up, Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Back, toe turned in, end facing LOD or DW",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back, BDC, TH",
+      "footwork": "B",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back in Fallaway, L side leading, BDC, moving down LOD",
+      "footwork": "B",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back in CBMP and Fallaway, small step, BDC, end facing center",
+      "footwork": "B",
+      "alignment": "BDC",
+      "amount_of_turn": "5/8",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "&",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward in CBMP, end BLOD or BDW",
+      "footwork": "F",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/4 or 1/8",
+      "comments": [
+        "CBM"
+      ]
+    }
+  ]
+}
