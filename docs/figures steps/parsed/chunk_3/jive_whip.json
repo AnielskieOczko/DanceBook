@@ -1,91 +1,76 @@
 {
- "name": "Whip",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/jive/whip"
-  ],
-  "dance_type": "JIVE",
-  "level": "Bronze",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Fallaway Position",
-  "preceding_figure_names": "Curly Whip, Fallaway Rock, Link, Walks",
-  "following_figure_names": "Stalking Walks, Flicks and Break, Fallaway Rock, Fallaway Throwaway, Change of Places Right to Left, Walks, Mooch, Reverse Whip, Curly Whip (when Whip ends in Closed Position)",
-  "notes": "Amounts of turn: Man: 5/8 is minimum, up to 1 1/8. Most of turn is made on step 1 and 2. (Lady: 7/8 minimum; up to 1 3/8)\nDouble Whip: repeat step 1 and 2.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/4 to R",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Cross RF behind LF (Cuban Cross)",
-      "footwork": "BF",
-      "alignment": "LOD",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "Lead lady fwd towards R side"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "1/4 to R btwn 1-2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step LF to side",
-      "footwork": "B",
-      "alignment": "Side",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "1/8 to R over 3-5",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Chasse RLR to side, end in Fallaway Position",
-      "footwork": "T",
-      "alignment": "Fallaway Position",
-      "amount_of_turn": "1/8 to R",
-      "comments": [
-        "End in Fallaway Position"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "1/4 to R",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Step forward towards Man's R side",
-      "footwork": "F",
-      "alignment": "Facing",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "1/4 to R btwn 1-2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Step forward between Man's feet, small step",
-      "footwork": "F",
-      "alignment": "Closed",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "3/8 to R over 3-5",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Side chasse LRL, end in Fallaway Position",
-      "footwork": "T",
-      "alignment": "Fallaway Position",
-      "amount_of_turn": "3/8 to R",
-      "comments": [
-        "End in Fallaway Position"
-      ]
-    }
-  ]
+  "name" : "Whip Double Cross Whip",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/whip" ],
+  "dance_type" : "JIVE",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fallaway Position",
+  "preceding_figure_names" : "Curly Whip, Fallaway Rock, Link, Walks",
+  "following_figure_names" : "Stalking Walks, Flicks and Break, Fallaway Rock, Fallaway Throwaway, Change of Places Right to Left, Walks, Mooch, Reverse Whip, Curly Whip (when Whip ends in Closed Position)",
+  "notes" : "Amounts of turn: Man: 5/8 is minimum, up to 1 1/8. Most of turn is made on step 1 and 2. (Lady: 7/8 minimum; up to 1 3/8)\nDouble Whip: repeat step 1 and 2.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/4 to R",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Cross RF behind LF (Cuban Cross)",
+    "footwork" : "BF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Lead lady fwd towards R side" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/4 to R btwn 1-2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step LF to side",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/8 to R over 3-5",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Chasse RLR to side, end in Fallaway Position",
+    "footwork" : "T",
+    "alignment" : "Fallaway Position",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "End in Fallaway Position" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1/4 to R",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step forward towards Man's R side",
+    "footwork" : "F",
+    "alignment" : "Facing",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1/4 to R btwn 1-2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step forward between Man's feet, small step",
+    "footwork" : "F",
+    "alignment" : "Closed",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3/8 to R over 3-5",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side chasse LRL, end in Fallaway Position",
+    "footwork" : "T",
+    "alignment" : "Fallaway Position",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ "End in Fallaway Position" ]
+  } ]
 }

@@ -1,195 +1,136 @@
 {
-  "name": "Open Telemark and Cross Hesitation",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation?src=routine"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "RF Closed Change, Open Impetus, Turning Lock, Turning Lock to Right, Double Reverse Spin, Fallaway Reverse Slip Pivot",
-  "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
-  "notes": "Cross Hesitation can be used from other positions and can be overturned. If overturned, RF position will be \"fwd and across\". There is no foot swivel on step 4 unless cross hesitation is overturned. Normal ending is stepping back with Lady outside.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "fwd | DC | HT | start to turn L",
-      "footwork": "HF",
-      "alignment": "DC",
-      "amount_of_turn": "start to turn L",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "rise e/o 1"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "to side | BDW | T | 1/4 btwn 1-2",
-      "footwork": "T",
-      "alignment": "BDW",
-      "amount_of_turn": "1/4 btwn 1-2",
-      "comments": [
-        "Sway(L)",
-        "up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly fwd in PP | Pointing DW, body facing wall | TH | 1/2 btwn 2-3, body turns less",
-      "footwork": "TH",
-      "alignment": "DW",
-      "amount_of_turn": "1/2 btwn 2-3",
-      "comments": [
-        "Sway(S)",
-        "up",
-        "lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "fwd in PP and CBMP | Pointing DW, body facing wall | HT",
-      "footwork": "HT",
-      "alignment": "DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "rise e/o 4"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "closes to RF w/o weight | FDW | Toes of both feet | body completes turn",
-      "footwork": "F",
-      "alignment": "FDW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "cont to rise 5 and 6"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Position held | FDW | TH (RF)",
-      "footwork": "TH",
-      "alignment": "--",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "lower e/o 6"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "back | BDC | TH | start to turn L",
-      "footwork": "TH",
-      "alignment": "BDC",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "rise slightly e/o 1",
-        "NFR"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF (Heel Turn) | FLOD | HT | 3/8 btwn 1-2",
-      "footwork": "HT",
-      "alignment": "FLOD",
-      "amount_of_turn": "3/8 btwn 1-2",
-      "comments": [
-        "Sway(R)",
-        "cont rise on 2"
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "diag. fwd in PP, R side leading | Pointing LOD | TH | slightly body turn to L",
-      "footwork": "TH",
-      "alignment": "LOD",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "up",
-        "lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "fwd and across in PP and CBMP | Pointing LOD, moving DW | HT | start to turn L",
-      "footwork": "HT",
-      "alignment": "DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o 4"
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side | Backing Wall | T | 1/4 L btwn 4-5",
-      "footwork": "T",
-      "alignment": "Backing Wall",
-      "amount_of_turn": "1/4 L btwn 4-5",
-      "comments": [
-        "Sway(L)",
-        "cont to rise on 5 and 6",
-        "Swing R hip ahead of body"
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF | BDW | TH | 1/8 btwn 5-6",
-      "footwork": "TH",
-      "alignment": "BDW",
-      "amount_of_turn": "1/8 btwn 5-6",
-      "comments": [
-        "Sway(L)",
-        "lower e/o 6",
-        "Add shaping to left"
-      ]
-    }
-  ]
+  "name" : "Open Telemark into Cross Hesitation",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "RF Closed Change, Open Impetus, Turning Lock, Turning Lock to Right, Double Reverse Spin, Fallaway Reverse Slip Pivot",
+  "following_figure_names" : "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+  "notes" : "Cross Hesitation can be used from other positions and can be overturned. If overturned, RF position will be \"fwd and across\". There is no foot swivel on step 4 unless cross hesitation is overturned. Normal ending is stepping back with Lady outside.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "fwd | DC | HT | start to turn L",
+    "footwork" : "HF",
+    "alignment" : "DC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Sway(S)", "CBM", "rise e/o 1" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side | BDW | T | 1/4 btwn 1-2",
+    "footwork" : "T",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 btwn 1-2",
+    "comments" : [ "Sway(L)", "up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly fwd in PP | Pointing DW, body facing wall | TH | 1/2 btwn 2-3, body turns less",
+    "footwork" : "TH",
+    "alignment" : "DW",
+    "amount_of_turn" : "1/2 btwn 2-3",
+    "comments" : [ "Sway(S)", "up", "lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd in PP and CBMP | Pointing DW, body facing wall | HT",
+    "footwork" : "HT",
+    "alignment" : "DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "rise e/o 4" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "closes to RF w/o weight | FDW | Toes of both feet | body completes turn",
+    "footwork" : "F",
+    "alignment" : "FDW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "cont to rise 5 and 6" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Position held | FDW | TH (RF)",
+    "footwork" : "TH",
+    "alignment" : "--",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "lower e/o 6" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "back | BDC | TH | start to turn L",
+    "footwork" : "TH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "CBM", "rise slightly e/o 1", "NFR" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF (Heel Turn) | FLOD | HT | 3/8 btwn 1-2",
+    "footwork" : "HT",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "3/8 btwn 1-2",
+    "comments" : [ "Sway(R)", "cont rise on 2" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "diag. fwd in PP, R side leading | Pointing LOD | TH | slightly body turn to L",
+    "footwork" : "TH",
+    "alignment" : "LOD",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "up", "lower e/o 3" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "fwd and across in PP and CBMP | Pointing LOD, moving DW | HT | start to turn L",
+    "footwork" : "HT",
+    "alignment" : "DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S)", "CBM", "start to rise e/o 4" ]
+  }, {
+    "step_number" : 11,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side | Backing Wall | T | 1/4 L btwn 4-5",
+    "footwork" : "T",
+    "alignment" : "Backing Wall",
+    "amount_of_turn" : "1/4 L btwn 4-5",
+    "comments" : [ "Sway(L)", "cont to rise on 5 and 6", "Swing R hip ahead of body" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF | BDW | TH | 1/8 btwn 5-6",
+    "footwork" : "TH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/8 btwn 5-6",
+    "comments" : [ "Sway(L)", "lower e/o 6", "Add shaping to left" ]
+  } ]
 }

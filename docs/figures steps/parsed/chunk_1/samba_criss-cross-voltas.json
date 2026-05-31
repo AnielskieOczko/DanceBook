@@ -1,77 +1,56 @@
 {
-  "name": "Criss Cross Voltas",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/samba/criss-cross-voltas"
-  ],
-  "dance_type": "SAMBA",
-  "level": "Bronze",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Open Promenade Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Criss Cross Bota Fogos (Shadow Bota Fogos), Foot Change 7: R Contra Position to Open Counter Promenade Position, Maypole, Natural Basic Movement, Reverse Basic Movement, Samba Locks, Samba Walk: Side, Side Basic Movement",
-  "following_figure_names": "Reverse Basic Movement, Whisk To Left, Samba Walk: Stationary, Bota Fogos To Promenade and Counter Promenade, Argentine Crosses, Criss Cross Bota Fogos (Shadow Bota Fogos), Maypole (Man turning L, when ending in Open PP; or Man turning R, when ending in Open CPP), Foot Change 3: Promenade or Open Promenade to Right Shadow Position (when ending in Open PP), Samba Locks (when ending in Open CPP), Samba Walk in PP: LF (2 Samba Walks in RSP commenced with LF, Lady RF, then Rolling off the Arm, when ending in R Side Position), Rolling Off The Arm (when ending in R Side Position with Double Hand Hold)",
-  "notes": "Alternatives: amount of turn is unchanged.\nstep 6 & 7 may be danced as 2 & 3 of a Bota Fogo (Man turning L and lady R). \nstep 13 & 14 may be danced as 2 & 3 of a Bota Fogo (Man turning R and Lady L).",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1a2a3a4",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Dance 2 bars of Traveling Voltas to R, curving to L behind lady's back",
-      "footwork": "B",
-      "alignment": "Center",
-      "amount_of_turn": "1/4 to L",
-      "comments": [
-        "Raise L arm and gradually move it to L to lead lady to pass in front and to L side.",
-        "Lower arm slightly over 4-7."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "1a2a3a4",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Dance 2 bars of Traveling Voltas to L, curving to R behind lady's back, to end facing her in Closed Position",
-      "footwork": "B",
-      "alignment": "RLRLRLR",
-      "amount_of_turn": "3/8 to R",
-      "comments": [
-        "Raise L arm and gradually move it to R to lead Lady to pass in front.",
-        "Lower arm slightly over 8-14 to return to normal position."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "1a2a3a4",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Dance 2 bars of Traveling Voltas to L, curving to R passing in front of Man, end in Open CPP RLRLRLR | 1/4 to R over 1-7",
-      "footwork": "B",
-      "alignment": "LRLRLRL",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "Do Criss Cross at the end of step 7 'a4': ' & ': Lady: straighten both legs, commence to turn R",
-        "' a ': Lady: turn 1/4 R",
-        "' 1 ' (step 8): Lady: cross RF in front of LF with weight."
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "1a2a3a4",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Dance 2 bars of Traveling Voltas to R, curving to L passing in front of Man to end facing him in Closed Position, LRLRLRL | 3/8 to L over 8-14",
-      "footwork": "B",
-      "alignment": "LRLRLRL",
-      "amount_of_turn": "3/8 to L",
-      "comments": [
-        "Alternatives: amount of turn is unchanged.",
-        "step 6 & 7 may be danced as 2 & 3 of a Bota Fogo (Man turning L and lady R).",
-        "step 13 & 14 may be danced as 2 & 3 of a Bota Fogo (Man turning R and Lady L)."
-      ]
-    }
-  ]
+  "name" : "Criss Cross Voltas (Travelling Voltas to R and L)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/criss-cross-voltas" ],
+  "dance_type" : "SAMBA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Promenade Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Criss Cross Bota Fogos (Shadow Bota Fogos), Foot Change 7: R Contra Position to Open Counter Promenade Position, Maypole, Natural Basic Movement, Reverse Basic Movement, Samba Locks, Samba Walk: Side, Side Basic Movement",
+  "following_figure_names" : "Reverse Basic Movement, Whisk To Left, Samba Walk: Stationary, Bota Fogos To Promenade and Counter Promenade, Argentine Crosses, Criss Cross Bota Fogos (Shadow Bota Fogos), Maypole (Man turning L, when ending in Open PP; or Man turning R, when ending in Open CPP), Foot Change 3: Promenade or Open Promenade to Right Shadow Position (when ending in Open PP), Samba Locks (when ending in Open CPP), Samba Walk in PP: LF (2 Samba Walks in RSP commenced with LF, Lady RF, then Rolling off the Arm, when ending in R Side Position), Rolling Off The Arm (when ending in R Side Position with Double Hand Hold)",
+  "notes" : "Alternatives: amount of turn is unchanged.\nstep 6 & 7 may be danced as 2 & 3 of a Bota Fogo (Man turning L and lady R). \nstep 13 & 14 may be danced as 2 & 3 of a Bota Fogo (Man turning R and Lady L).",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1a2a3a4",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Dance 2 bars of Traveling Voltas to R, curving to L behind lady's back",
+    "footwork" : "B",
+    "alignment" : "Center",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Raise L arm and gradually move it to L to lead lady to pass in front and to L side.", "Lower arm slightly over 4-7." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1a2a3a4",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Dance 2 bars of Traveling Voltas to L, curving to R behind lady's back, to end facing her in Closed Position",
+    "footwork" : "B",
+    "alignment" : "RLRLRLR",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ "Raise L arm and gradually move it to R to lead Lady to pass in front.", "Lower arm slightly over 8-14 to return to normal position." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1a2a3a4",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Dance 2 bars of Traveling Voltas to L, curving to R passing in front of Man, end in Open CPP RLRLRLR | 1/4 to R over 1-7",
+    "footwork" : "B",
+    "alignment" : "LRLRLRL",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Do Criss Cross at the end of step 7 'a4': ' & ': Lady: straighten both legs, commence to turn R", "' a ': Lady: turn 1/4 R", "' 1 ' (step 8): Lady: cross RF in front of LF with weight." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1a2a3a4",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Dance 2 bars of Traveling Voltas to R, curving to L passing in front of Man to end facing him in Closed Position, LRLRLRL | 3/8 to L over 8-14",
+    "footwork" : "B",
+    "alignment" : "LRLRLRL",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ "Alternatives: amount of turn is unchanged.", "step 6 & 7 may be danced as 2 & 3 of a Bota Fogo (Man turning L and lady R).", "step 13 & 14 may be danced as 2 & 3 of a Bota Fogo (Man turning R and Lady L)." ]
+  } ]
 }

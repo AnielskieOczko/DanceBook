@@ -1,93 +1,76 @@
 {
-  "name": "Open Impetus and Cross Hesitation",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "PP",
-  "preceding_figure_names": "Back Lock, Drag Hesitation, Left Whisk, Natural Turn, Progressive Chasse To R, Reverse Corte",
-  "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
-  "notes": "Different from leading Wing, in which, Man allows upper body to do extra rotation to allow Lady to pass from one side of body to another. In this Cross Hesitation, Man's arms remain on his right side, you want Lady to stay in your right front. Connecting Figures for Cross Hesitation See Open Telemark and Cross Hesitation.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "R",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF (Heel Turn)",
-      "footwork": "HT",
-      "alignment": "FDC",
-      "amount_of_turn": "3/8",
-      "comments": [
-        "Sway(L)"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "diag fwd in PP, L side leading",
-      "footwork": "TH",
-      "alignment": "DC",
-      "amount_of_turn": "R",
-      "comments": [
-        "up, lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd",
-      "footwork": "HT",
-      "alignment": "FLOD",
-      "amount_of_turn": "R",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF w/o weight",
-      "footwork": "TOGETHER",
-      "alignment": "FDC",
-      "amount_of_turn": "L",
-      "comments": [
-        "cont to rise 5 and 6"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side in PP having brushed to LF",
-      "footwork": "TH",
-      "alignment": "DC",
-      "amount_of_turn": "R",
-      "comments": [
-        "up, lower e/o 3"
-      ]
-    }
-  ]
+  "name" : "Cross Hesitation after Open Impetus Turn",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "PP",
+  "preceding_figure_names" : "Back Lock, Drag Hesitation, Left Whisk, Natural Turn, Progressive Chasse To R, Reverse Corte",
+  "following_figure_names" : "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+  "notes" : "Different from leading Wing, in which, Man allows upper body to do extra rotation to allow Lady to pass from one side of body to another. In this Cross Hesitation, Man's arms remain on his right side, you want Lady to stay in your right front. Connecting Figures for Cross Hesitation See Open Telemark and Cross Hesitation.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF (Heel Turn)",
+    "footwork" : "HT",
+    "alignment" : "FDC",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Sway(L)" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "diag fwd in PP, L side leading",
+    "footwork" : "TH",
+    "alignment" : "DC",
+    "amount_of_turn" : "R",
+    "comments" : [ "up, lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd",
+    "footwork" : "HT",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF w/o weight",
+    "footwork" : "TOGETHER",
+    "alignment" : "FDC",
+    "amount_of_turn" : "L",
+    "comments" : [ "cont to rise 5 and 6" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side in PP having brushed to LF",
+    "footwork" : "TH",
+    "alignment" : "DC",
+    "amount_of_turn" : "R",
+    "comments" : [ "up, lower e/o 3" ]
+  } ]
 }

@@ -557,11 +557,15 @@ class SyllabusImporterService(
             }
 
             val existingFigures = danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceType.id!!)
-            val matchedFigure = findMatchingFigure(recName, danceType.name, existingFigures)
+            var matchedFigure = findMatchingFigure(recName, danceType.name, existingFigures)
             if (matchedFigure == null) {
-                skippedUnmatched++
-                warnings.add("Unmatched figure: '$recName' for style '${danceType.name}'")
-                continue
+                matchedFigure = DanceFigure().apply {
+                    this.name = recName
+                    this.danceType = danceType
+                    this.predefined = true
+                    this.danceClass = mapLevelToDanceClass(record.level)
+                }
+                log.info("Creating new figure: '$recName' for style '${danceType.name}'")
             }
 
             // Update metadata
@@ -597,16 +601,18 @@ class SyllabusImporterService(
                 }
             }
 
-            danceFigureRepository.save(matchedFigure)
+            val savedFigure = danceFigureRepository.save(matchedFigure) as DanceFigure?
+            val finalFigure = savedFigure ?: matchedFigure
+            val figureId = finalFigure.id!!
 
             // Delete old steps and save new ones
-            danceFigureStepRepository.deleteByDanceFigureId(matchedFigure.id!!)
+            danceFigureStepRepository.deleteByDanceFigureId(figureId)
 
             if (record.steps != null) {
                 var stepNum = 1
                 for (stepDto in record.steps) {
                     val step = DanceFigureStep().apply {
-                        this.danceFigure = matchedFigure
+                        this.danceFigure = finalFigure
                         val sn = stepDto.step_number
                         val parsedStepNum = when (sn) {
                             is Number -> sn.toInt()
@@ -668,6 +674,15 @@ class SyllabusImporterService(
             return field.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         }
         return emptyList()
+    }
+
+    private fun mapLevelToDanceClass(level: String?): com.jankowski.rafal.dancebook.model.DanceClass {
+        return when (level?.lowercase()) {
+            "newcomer", "bronze" -> com.jankowski.rafal.dancebook.model.DanceClass.H
+            "silver" -> com.jankowski.rafal.dancebook.model.DanceClass.F
+            "gold" -> com.jankowski.rafal.dancebook.model.DanceClass.E
+            else -> com.jankowski.rafal.dancebook.model.DanceClass.H
+        }
     }
 
     private fun mapDanceTypeJsonToDbName(jsonDanceType: String): String {

@@ -1,90 +1,76 @@
 {
-  "name": "Closed HipTwist",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Bronze",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Fan Position",
-  "preceding_figure_names": "",
-  "following_figure_names": "",
-  "notes": "Alternative Finishing Positions:\nOpen Position: Man turn 1/4 L over 5 & 6\nOpen CPP:\nMan turn 1/8 L over 5 & 6, leading lady to overthrow on 5, both taking 6 diag. fwd.\nLady turns an additional 1/8 L on 5 using loosely crossed spiral action.\nContact Position:\nMan turn 1/2 L over 5 & 6 to end RF side and slightly fwd.\nLady 3/4 L over 5 & 6 to end LF behind RF as Cuban Cross.\nNormal hold retained throughout.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side in RSP with slight body turn to R",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": [
-        "Previous step: lead lady towards R side.",
-        "Turn frame to R, still a side step. Allow R hand/arm to slide down the lady's arm a little to give her more room for the turn and step. To the Lady, it appears Man in more \"in front and left side, perpendicular\" (vs. in Natural Opening Out or Opening Out to L and R, Man appears to be on the \"side\" of Lady.)"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "a",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to RF",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Close LF to RF with slight body turn to L",
-      "footwork": "T",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF back with slight body turn to L to normal position",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "a",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Transfer weight to LF",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF to side in Fan Position",
-      "footwork": "B",
-      "alignment": "Fan Position",
-      "amount_of_turn": "0",
-      "comments": [
-        "Man could do slight turn to L to get into Fan position."
-      ]
-    }
-  ]
+  "name" : "Closed Hip Twist",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist" ],
+  "dance_type" : "RUMBA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "",
+  "following_figure_names" : "",
+  "notes" : "Alternative Finishing Positions:\nOpen Position: Man turn 1/4 L over 5 & 6\nOpen CPP:\nMan turn 1/8 L over 5 & 6, leading lady to overthrow on 5, both taking 6 diag. fwd.\nLady turns an additional 1/8 L on 5 using loosely crossed spiral action.\nContact Position:\nMan turn 1/2 L over 5 & 6 to end RF side and slightly fwd.\nLady 3/4 L over 5 & 6 to end LF behind RF as Cuban Cross.\nNormal hold retained throughout.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side in RSP with slight body turn to R",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ "Previous step: lead lady towards R side.", "Turn frame to R, still a side step. Allow R hand/arm to slide down the lady's arm a little to give her more room for the turn and step. To the Lady, it appears Man in more \"in front and left side, perpendicular\" (vs. in Natural Opening Out or Opening Out to L and R, Man appears to be on the \"side\" of Lady.)" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "a",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close LF to RF with slight body turn to L",
+    "footwork" : "T",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back with slight body turn to L to normal position",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "a",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side in Fan Position",
+    "footwork" : "B",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "0",
+    "comments" : [ "Man could do slight turn to L to get into Fan position." ]
+  } ]
 }

@@ -1,175 +1,136 @@
 {
-"name": "Cucarachas",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/cucarachas"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Side Step To Right, Aida, Fan",
-  "following_figure_names": "Spot or Switch Turn To R, Underarm Turn, Fan, Aida",
-  "notes": "Feet relative direction to each other: side, side and slightly fwd or back, fwd or diagonally fwd, back or diagonally back.\nGold level: A Press Line may be used by Man when dancing a fwd Cucaracha by allowing RF to swivel slightly to R as he steps a fwd LF in line with RF, on ball of foot with heel raised.\nL knee is flexed, R leg straight and RF flat.\nThere is no hip movement.\nThe Press Line may be used on 1 of Advanced, Continuous and Circular Hip Twists.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side with part weight",
-      "footwork": "B",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "LF to side with part weight."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to RF, flat foot",
-      "footwork": "BF",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Transfer weight to RF | Flat Foot."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "4 1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Close LF to RF",
-      "footwork": "T",
-      "alignment": "Closed Position",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Close LF to RF."
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step to side with part weight",
-      "footwork": "B",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "This is RF Cucaracha."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Transfer weight to LF, flat foot",
-      "footwork": "BF",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Transfer weight to LF | Flat Foot."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "4 1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Close RF to LF",
-      "footwork": "T",
-      "alignment": "Closed Position",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Close RF to LF."
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Step to side with part weight, flat foot",
-      "footwork": "B",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "RF to side with part weight. Flat foot."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Transfer weight to LF, flat foot",
-      "footwork": "BF",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Transfer weight to LF | Flat Foot."
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "4 1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Close RF to LF",
-      "footwork": "T",
-      "alignment": "Closed Position",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Close RF to LF."
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Step to side with part weight",
-      "footwork": "B",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "LF to side with part weight."
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Transfer weight to RF, flat foot",
-      "footwork": "BF",
-      "alignment": "Side",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Transfer weight to RF | Flat Foot."
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "4 1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Close LF to RF",
-      "footwork": "T",
-      "alignment": "Closed Position",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Close LF to RF."
-      ]
-    }
-  ]
+  "name" : "Cucarachas (LF and RF)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/cucarachas" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Side Step To Right, Aida, Fan",
+  "following_figure_names" : "Spot or Switch Turn To R, Underarm Turn, Fan, Aida",
+  "notes" : "Feet relative direction to each other: side, side and slightly fwd or back, fwd or diagonally fwd, back or diagonally back.\nGold level: A Press Line may be used by Man when dancing a fwd Cucaracha by allowing RF to swivel slightly to R as he steps a fwd LF in line with RF, on ball of foot with heel raised.\nL knee is flexed, R leg straight and RF flat.\nThere is no hip movement.\nThe Press Line may be used on 1 of Advanced, Continuous and Circular Hip Twists.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side with part weight",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "LF to side with part weight." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF, flat foot",
+    "footwork" : "BF",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Transfer weight to RF | Flat Foot." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close LF to RF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Close LF to RF." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side with part weight",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "This is RF Cucaracha." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF, flat foot",
+    "footwork" : "BF",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Transfer weight to LF | Flat Foot." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close RF to LF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Close RF to LF." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step to side with part weight, flat foot",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "RF to side with part weight. Flat foot." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF, flat foot",
+    "footwork" : "BF",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Transfer weight to LF | Flat Foot." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Close RF to LF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Close RF to LF." ]
+  }, {
+    "step_number" : 10,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step to side with part weight",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "LF to side with part weight." ]
+  }, {
+    "step_number" : 11,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF, flat foot",
+    "footwork" : "BF",
+    "alignment" : "Side",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Transfer weight to RF | Flat Foot." ]
+  }, {
+    "step_number" : 12,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Close LF to RF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Close LF to RF." ]
+  } ]
 }

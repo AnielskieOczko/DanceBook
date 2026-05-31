@@ -1,87 +1,76 @@
 {
-  "name": "Progressive Walks",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/progressive-walks"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Basic Movements: Open, Sliding Doors, Spot or Switch Turn to L (Lady to R)",
-  "following_figure_names": "Basic Movements: Open, Basic Movements: Closed, Fan, Alemana, Open Hip Twist, Curl, Three Threes, Three Alemanas, Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Cuban Rocks RF, Fan, Closed Hip Twist, Syncopated Cuban Rocks RF",
-  "notes": "Danced in group of 3 or 6 forward or backward steps. Danced in Closed Position or Open Position. No turn or curve to L for walk forward or to R for walk back. See technique details in Latin Technique. When using Shadow holds 2 or 3, the man could lead the lady to dance a spiral turn L when he has danced a Walk Forward on his LF (Lady RF fwd then make a complete turn to L on RF). Continue with Progressive Walks Forward (Man starts RF, Lady LF). Ending: Fan Position: Man leading lady to pass in front of him to his L side, Man turns 1/8 L, Lady 7/8 L. When using Shadow hold 1, change to L to R hand hold on step 5 of Fan. Ending facing partner: omit 6th Forward Walk and both step to side, turning 1/4 to R, Lady to L to face partner. Spiral Ending: Omit 6th Forward Walk and close LF to RF leading Lady into a spiral turn to L. Lady turn 1/4 L on the 6th walk to end in front of Man to dance her spiral turn. Continue with 4-6 Spiral - this is solo spiral for Lady when R Shadow Hold 1 is used.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": [
-        "slight turn or no turn"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "4 1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "4 1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "no turn",
-      "comments": []
-    }
-  ]
+  "name" : "Progressive Walks Forward or Backward",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/progressive-walks" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic Movements: Open, Sliding Doors, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names" : "Basic Movements: Open, Basic Movements: Closed, Fan, Alemana, Open Hip Twist, Curl, Three Threes, Three Alemanas, Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Cuban Rocks RF, Fan, Closed Hip Twist, Syncopated Cuban Rocks RF",
+  "notes" : "Danced in group of 3 or 6 forward or backward steps. Danced in Closed Position or Open Position. No turn or curve to L for walk forward or to R for walk back. See technique details in Latin Technique. When using Shadow holds 2 or 3, the man could lead the lady to dance a spiral turn L when he has danced a Walk Forward on his LF (Lady RF fwd then make a complete turn to L on RF). Continue with Progressive Walks Forward (Man starts RF, Lady LF). Ending: Fan Position: Man leading lady to pass in front of him to his L side, Man turns 1/8 L, Lady 7/8 L. When using Shadow hold 1, change to L to R hand hold on step 5 of Fan. Ending facing partner: omit 6th Forward Walk and both step to side, turning 1/4 to R, Lady to L to face partner. Spiral Ending: Omit 6th Forward Walk and close LF to RF leading Lady into a spiral turn to L. Lady turn 1/4 L on the 6th walk to end in front of Man to dance her spiral turn. Continue with 4-6 Spiral - this is solo spiral for Lady when R Shadow Hold 1 is used.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ "slight turn or no turn" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  } ]
 }

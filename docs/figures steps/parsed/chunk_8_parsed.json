@@ -1,5 +1,5 @@
 [ {
-  "name" : "BackwardLock Step",
+  "name" : "Backward Lock Step (Back Lock)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/back-lock" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -320,7 +320,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "CrossChasse",
+  "name" : "Cross Chasse",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -745,7 +745,7 @@
     "comments" : [ "Do not lower too early, lower on \"&\".", "Finish with L side positive/fwd." ]
   } ]
 }, {
-  "name" : "Fishtail",
+  "name" : "Fish–Tail",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/fishtail" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -890,7 +890,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Four QuickRun",
+  "name" : "Four Quick Run",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -965,7 +965,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Hover Corte",
+  "name" : "Hover Corté",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -1060,7 +1060,7 @@
     "comments" : [ "Sway(S)", "CBM", "--" ]
   } ]
 }, {
-  "name" : "Hover Corte",
+  "name" : "Hover Corté",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -1260,7 +1260,7 @@
     "comments" : [ "Heel kept in contact", "Keep upper thigh contact", "Stay low" ]
   } ]
 }, {
-  "name" : "Natural SpinTurn",
+  "name" : "Natural Spin Turn",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -1515,7 +1515,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "NaturalTurn with Hesitation",
+  "name" : "Natural Turn with Hesitation",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -1650,7 +1650,7 @@
     "comments" : [ "Sway(R)" ]
   } ]
 }, {
-  "name" : "Natural Turn",
+  "name" : "Natural Turn (at a Corner)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -1765,7 +1765,7 @@
     "comments" : [ "Collect RF first before stepping back. Big step." ]
   } ]
 }, {
-  "name" : "Natural Turn",
+  "name" : "Natural Turn (at a Corner)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -2015,7 +2015,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Progressive Chassé to Right",
+  "name" : "Progressive Chasse to Right",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -2130,7 +2130,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "QuarterTurn to Right",
+  "name" : "Quarter Turn to Right",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/quarter-turn-to-right" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -2355,7 +2355,7 @@
     "comments" : [ "RF held in CBMP, toe held, posture tall" ]
   } ]
 }, {
-  "name" : "Reverse Pivot (QUICKSTEP)",
+  "name" : "Reverse Pivot",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -2700,7 +2700,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "RunningRight Turn",
+  "name" : "Running Right Turn",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -2885,7 +2885,7 @@
     "comments" : [ "Sway(S)", "CBM", "--" ]
   } ]
 }, {
-  "name" : "SixQuick Run",
+  "name" : "Six Quick Run",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -3164,7 +3164,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Tipple Chasse To Right",
+  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -3259,7 +3259,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (QUICKSTEP)",
+  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -3429,7 +3429,7 @@
     "comments" : [ "Sway(R/L)", "Down, with sharp flexing of knees" ]
   } ]
 }, {
-  "name" : "V6",
+  "name" : "V-6 (after 1-3 of Nat. Turn)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/v6" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -4092,7 +4092,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Telemark and Feather Ending",
+  "name" : "Open Telemark Feather Ending",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -4237,7 +4237,7 @@
     "comments" : [ "Sway(S) CBM --" ]
   } ]
 }, {
-  "name" : "Open Telemark, Natural Turn to Outside Swivel and Feather Ending",
+  "name" : "Open Telemark Natural Turn Outside Swivel Feather Ending",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -4492,7 +4492,7 @@
     "comments" : [ "Sway(S)", "CBM", "--" ]
   } ]
 }, {
-  "name" : "TopSpin",
+  "name" : "Top Spin",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -4547,7 +4547,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Weave from PP",
+  "name" : "Weave from PP (after Open Impetus)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",

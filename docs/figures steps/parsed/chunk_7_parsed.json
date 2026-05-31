@@ -259,7 +259,7 @@
     "comments" : [ "CBM on step 6 and 9", "Swing R side, and keep side leading position. Do not finish square and flat to Man.", "Changing angle from right to left, spine and head to left", "Head turns back to left when RF to side/back closing up with Man.", "Release leg at very end to give room to Man to step." ]
   } ]
 }, {
-  "name" : "CurvedFeather to Back Feather (SLOW_FOXTROT)",
+  "name" : "Curved Feather to Back Feather",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Gold",
@@ -414,7 +414,7 @@
     "comments" : [ "S", "CBM", "-" ]
   } ]
 }, {
-  "name" : "Fallaway Reverse and Slip Pivot",
+  "name" : "Fallaway Reverse Slip Pivot",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Gold",
@@ -1129,7 +1129,7 @@
     "comments" : [ "TH", "-", "Sway(S)", "CBM", "-" ]
   } ]
 }, {
-  "name" : "NaturalTelemark",
+  "name" : "Natural Telemark",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -1689,7 +1689,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "Open Impetus",
+  "name" : "Impetus Turn (Open)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -1784,7 +1784,7 @@
     "comments" : [ "Let head finish the action at the very last. Head turn slowly." ]
   } ]
 }, {
-  "name" : "Open Telemark and Feather Ending",
+  "name" : "Open Telemark Feather Ending",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -1899,7 +1899,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Telemark, Natural Turn to Outside Swivel and Feather Ending",
+  "name" : "Open Telemark Natural Turn Outside Swivel Feather Ending",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -2444,7 +2444,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "Weavefrom PP",
+  "name" : "Weave from PP (after Open Impetus)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -2834,7 +2834,7 @@
     "comments" : [ "up, lower e/o 6" ]
   } ]
 }, {
-  "name" : "Closed Telemark",
+  "name" : "Telemark (Closed Telemark)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -2909,7 +2909,7 @@
     "comments" : [ "Keep moving, don't hover and stop, strong, bigger step (Man is waiting, need more power). Keep head position (which will make it shape to right).", "Keep head to right; rotate body underneath without sharp head movement, just keep head at same place starting at 1, not later." ]
   } ]
 }, {
-  "name" : "Closed Telemark",
+  "name" : "Telemark (Closed Telemark)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -3059,7 +3059,7 @@
     "comments" : [ "Articulate head.", "Make sure R side is to Man.", "Prep for next step: Lower first and step big." ]
   } ]
 }, {
-  "name" : "DoubleReverse Spin",
+  "name" : "Double Reverse Spin",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -3229,7 +3229,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "HoverCorte",
+  "name" : "Hover Corté",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3349,7 +3349,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "LeftWhisk",
+  "name" : "Left Whisk",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/left-whisk?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3424,7 +3424,7 @@
     "comments" : [ "To produce big shape: Take step LF back (along original travel direction, don't go around Man), move weight back to LF (this is a step, otherwise you'll block Man), collect RF (crossed in front of LF, w/o weight).", "Butt and hip fwd to Man, don't turn out of Man. Hips stop turning, but body can continue to turn more to shape/sway without changing base.", "Contra within own body. Both L and R rib cage and hips fwd to Man and shape to L (w/o turning hips more), R side of body is longer (very stretched). Don't \"sit\" bottom down, heavy. Pick up center and bottom. Really pick up L side ribs to Man while rotating body to L and extending head to L.", "Head turns well to left and extend (without body peeling from Man) to finish the extension. Breathe out to extend head even more.", "Keep arm/elbow forward, extend the arm fwd to Man (check R elbow angle), give it to Man. Don't break shoulder or peel away shoulder." ]
   } ]
 }, {
-  "name" : "Open Impetus and Cross Hesitation",
+  "name" : "Cross Hesitation after Open Impetus Turn",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -3499,7 +3499,7 @@
     "comments" : [ "up, lower e/o 3" ]
   } ]
 }, {
-  "name" : "Open Telemark and Cross Hesitation",
+  "name" : "Open Telemark into Cross Hesitation",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -3769,7 +3769,7 @@
     "comments" : [ "Gracefully collect and get back (especially when extensions last extra measure.)" ]
   } ]
 }, {
-  "name" : "Reverse Corté",
+  "name" : "Reverse Corte",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -3879,7 +3879,7 @@
     "comments" : [ "Every time when turning to the left, imagine the belly button and center slightly turning to the right.", "Do not allow shoulder to completely line up with hips. R shoulder and R hip feel slightly open in left turning figures.", "Step forward, head goes more left. Show off extension.", "Controlled lowering at the end, before next step." ]
   } ]
 }, {
-  "name" : "Turning Lockto Right",
+  "name" : "Turning Lock to Right",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -4089,7 +4089,7 @@
     "comments" : [ "This is closed finish.", "This could end in PP (after RF brushes to LF) in which case, head shape to right in its space. Do not turn head too fast or too early." ]
   } ]
 }, {
-  "name" : "Weave from Promenade Position",
+  "name" : "Weave from PP (after Open Impetus Turn)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",

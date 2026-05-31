@@ -1,113 +1,96 @@
 {
-  "name": "Rope Spinning",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Alemena, Continuous Hip Twists, Hand To Hand LSP, Natural Top, Rope Spinning, Three Alemanas",
-  "following_figure_names": "Hand To Hand RSP (both stepping to side; or When Man and Lady end to side), Basic Movements: Closed, Basic Movements: Open, Fan, Opening Out To Right And Left (Lady end Rope Spinning LF to side), Side Step To Left commenced with LF (When Man and Lady end to side), Side Step To Right commenced with LF (When Man and Lady end to side), Cuban Rock LF (When Man and Lady end to side), Syncopated Cuban Rock LF (When Man and Lady end to side), New York LSP (When ending in Open CPP), Spot or Switch Turn To R (Lady to L) (When ending in Open CPP), Underarm Turn To L (When ending in Open CPP), Natural Opening Out Movement (When Lady ends fwd to Man's Right side), Closed Hip Twist (When Lady ends fwd to Man's Right side), Spiral (When Lady ends fwd to Man's Right side), Rope Spinning (When Lady ends fwd to Man's Right side), Advanced Hip Twists (When Man and Lady fwd toward partner's R side), Continuous Hip Twists (When Man and Lady fwd toward partner's R side), Circular Hip Twists (When Man and Lady fwd toward partner's R side), Progressive Walks Forward in Right Shadow Position (When ending in R Shadow Position), Sliding Doors (When ending in R Shadow Position, follow with 7-12 of Sliding Doors.)",
-  "notes": "Man and Lady end to side\nMan and lady end diagonally fwd in Open CPP\nMan 1/8 R on step 6.\nLady 7/8 to R over step 1 to 6.\nLady end fwd toward Man's R side\nMan turns body slightly R on step 6 to lead Lady towards his R side.\nLady LF fwd in line with RF.\nMan and Lady fwd towards partner's R side\nMan RF fwd in line with LF towards Lady's R side.\nLady LF fwd in line with RF\nR Shadow Position\nMan RF fwd in line with LF towards Lady's R side, and continues to turn her R.\nLady ends LF back having made 1/2 turn R on LF during preceding beat.\nAdopt R shadow Hold.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side",
-      "footwork": "BF",
-      "alignment": "LSP",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight, turn body slightly left",
-      "footwork": "BF",
-      "alignment": "DC",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Close LF to RF in LSP, continue turning to normal position",
-      "footwork": "T",
-      "alignment": "LSP",
-      "amount_of_turn": "0",
-      "comments": [
-        "L hand to L side. Gradually lower to waist level"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step RF back, no turn",
-      "footwork": "BF",
-      "alignment": "DC",
-      "amount_of_turn": "0",
-      "comments": [
-        "Continue to circle L hand clockwise over step 4 and 5. Incline body slightly L"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Transfer weight to LF",
-      "footwork": "BF",
-      "alignment": "DC",
-      "amount_of_turn": "0",
-      "comments": [
-        "return body to normal position."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Close RF to LF in Closed Position, take required hold",
-      "footwork": "T",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "Q Q Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Three walks forward circling behind leader's back (RLR), end in LSP",
-      "footwork": "BF",
-      "alignment": "LSP",
-      "amount_of_turn": "1/2 to R",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "Q Q Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Three walks forward circling behind leader's back (LRL), end in Closed Position",
-      "footwork": "BF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "1/2 to R",
-      "comments": []
-    }
-  ]
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Alemena, Continuous Hip Twists, Hand To Hand LSP, Natural Top, Rope Spinning, Three Alemanas",
+  "following_figure_names" : "Hand To Hand RSP (both stepping to side; or When Man and Lady end to side), Basic Movements: Closed, Basic Movements: Open, Fan, Opening Out To Right And Left (Lady end Rope Spinning LF to side), Side Step To Left commenced with LF (When Man and Lady end to side), Side Step To Right commenced with LF (When Man and Lady end to side), Cuban Rock LF (When Man and Lady end to side), Syncopated Cuban Rock LF (When Man and Lady end to side), New York LSP (When ending in Open CPP), Spot or Switch Turn To R (Lady to L) (When ending in Open CPP), Underarm Turn To L (When ending in Open CPP), Natural Opening Out Movement (When Lady ends fwd to Man's Right side), Closed Hip Twist (When Lady ends fwd to Man's Right side), Spiral (When Lady ends fwd to Man's Right side), Rope Spinning (When Lady ends fwd to Man's Right side), Advanced Hip Twists (When Man and Lady fwd toward partner's R side), Continuous Hip Twists (When Man and Lady fwd toward partner's R side), Circular Hip Twists (When Man and Lady fwd toward partner's R side), Progressive Walks Forward in Right Shadow Position (When ending in R Shadow Position), Sliding Doors (When ending in R Shadow Position, follow with 7-12 of Sliding Doors.)",
+  "notes" : "Man and Lady end to side\nMan and lady end diagonally fwd in Open CPP\nMan 1/8 R on step 6.\nLady 7/8 to R over step 1 to 6.\nLady end fwd toward Man's R side\nMan turns body slightly R on step 6 to lead Lady towards his R side.\nLady LF fwd in line with RF.\nMan and Lady fwd towards partner's R side\nMan RF fwd in line with LF towards Lady's R side.\nLady LF fwd in line with RF\nR Shadow Position\nMan RF fwd in line with LF towards Lady's R side, and continues to turn her R.\nLady ends LF back having made 1/2 turn R on LF during preceding beat.\nAdopt R shadow Hold.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side",
+    "footwork" : "BF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight, turn body slightly left",
+    "footwork" : "BF",
+    "alignment" : "DC",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close LF to RF in LSP, continue turning to normal position",
+    "footwork" : "T",
+    "alignment" : "LSP",
+    "amount_of_turn" : "0",
+    "comments" : [ "L hand to L side. Gradually lower to waist level" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step RF back, no turn",
+    "footwork" : "BF",
+    "alignment" : "DC",
+    "amount_of_turn" : "0",
+    "comments" : [ "Continue to circle L hand clockwise over step 4 and 5. Incline body slightly L" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF",
+    "footwork" : "BF",
+    "alignment" : "DC",
+    "amount_of_turn" : "0",
+    "comments" : [ "return body to normal position." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close RF to LF in Closed Position, take required hold",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q Q Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Three walks forward circling behind leader's back (RLR), end in LSP",
+    "footwork" : "BF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q Q Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Three walks forward circling behind leader's back (LRL), end in Closed Position",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ ]
+  } ]
 }

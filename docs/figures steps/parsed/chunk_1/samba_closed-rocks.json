@@ -1,165 +1,136 @@
 {
-  "name": "ClosedRocks",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/samba/closed-rocks"
-  ],
-  "dance_type": "SAMBA",
-  "level": "Bronze",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Argentine Crosses, Maypole, Natural Basic Movement, Natural Roll, Reverse Basic Movement, Side Basic Movement",
-  "following_figure_names": "Natural Basic Movement, Corta Jaca, Open Rocks, Natural Roll, Three Step Turn, Reverse Basic Movement, Reverse Turn, Reverse Roll",
-  "notes": "",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF forward",
-      "footwork": "BF",
-      "alignment": "",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF forward, small step",
-      "footwork": "BF",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Replace weight to RF, toe slightly turned out",
-      "footwork": "B",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "If preferred, back foot may be drawn slightly towards front foot"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF forward",
-      "footwork": "BF",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF forward, small step",
-      "footwork": "BF",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Replace weight to LF, toe slightly turned out",
-      "footwork": "B",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "If preferred, back foot may be drawn slightly towards front foot"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back",
-      "footwork": "BF",
-      "alignment": "",
-      "amount_of_turn": "no turn",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF back, small step, toe turned out. Knee slightly flexed",
-      "footwork": "B",
-      "alignment": "1/8 to R (RF)",
-      "amount_of_turn": "",
-      "comments": [
-        "The turn of foot is reflected in hips, the upper body remains square to Man. The toe of back foot is opposite heel of front foot."
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Replace weight to LF",
-      "footwork": "B",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "If preferred, front foot may be drawn slightly towards back foot"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF back",
-      "footwork": "BF",
-      "alignment": "1/8 to L (RF)",
-      "amount_of_turn": "",
-      "comments": [
-        "Option: flick RF before stepping RF back - personal preference."
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back, small step, toe turned out. Knee slightly flexed.",
-      "footwork": "B",
-      "alignment": "1/8 to L (LF)",
-      "amount_of_turn": "",
-      "comments": [
-        "Same technique as step 2."
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Replace weight to RF",
-      "footwork": "B",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "If preferred, front foot may be drawn slightly towards back foot"
-      ]
-    }
-  ]
+  "name" : "Closed Rocks (on RF and LF)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/closed-rocks" ],
+  "dance_type" : "SAMBA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Argentine Crosses, Maypole, Natural Basic Movement, Natural Roll, Reverse Basic Movement, Side Basic Movement",
+  "following_figure_names" : "Natural Basic Movement, Corta Jaca, Open Rocks, Natural Roll, Three Step Turn, Reverse Basic Movement, Reverse Turn, Reverse Roll",
+  "notes" : "",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF forward, small step",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF, toe slightly turned out",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "If preferred, back foot may be drawn slightly towards front foot" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF forward",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward, small step",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Replace weight to LF, toe slightly turned out",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "If preferred, back foot may be drawn slightly towards front foot" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "no turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back, small step, toe turned out. Knee slightly flexed",
+    "footwork" : "B",
+    "alignment" : "1/8 to R (RF)",
+    "amount_of_turn" : "",
+    "comments" : [ "The turn of foot is reflected in hips, the upper body remains square to Man. The toe of back foot is opposite heel of front foot." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Replace weight to LF",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "If preferred, front foot may be drawn slightly towards back foot" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back",
+    "footwork" : "BF",
+    "alignment" : "1/8 to L (RF)",
+    "amount_of_turn" : "",
+    "comments" : [ "Option: flick RF before stepping RF back - personal preference." ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back, small step, toe turned out. Knee slightly flexed.",
+    "footwork" : "B",
+    "alignment" : "1/8 to L (LF)",
+    "amount_of_turn" : "",
+    "comments" : [ "Same technique as step 2." ]
+  }, {
+    "step_number" : 12,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "If preferred, front foot may be drawn slightly towards back foot" ]
+  } ]
 }

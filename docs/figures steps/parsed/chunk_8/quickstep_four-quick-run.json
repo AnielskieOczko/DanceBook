@@ -1,99 +1,76 @@
 {
-  "name": "Four QuickRun",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Silver",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Chasse Reverse Turn, Closed Impetus, Closed Telemark, Fish Tail, Forward Lock, Hover Corte, Natural Spin Turn, Progressive Chasse, Progressive Chasse To Right, Quarter Turn to Right, Quick Open Reverse, Running Finish, Six Quick Run, Tipple Chasse To Right, V6",
-  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, V6 (at corner, LF back with Lady OP, TH, S, into 2-12 V6), Fish Tail, Tipsy To L (into 2-5 Back Lock down LOD), Six Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
-  "notes": "Don't be back-weighted, avoid being steppy, keep smooth motion.\nKeep left side strongly to the Man all through the steps.\nDo not think about rotating upper body to R, which can take spine off standing leg.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back",
-      "footwork": "B",
-      "alignment": "Backing LOD",
-      "amount_of_turn": "start to turn L",
-      "comments": [
-        "CBM",
-        "Rise e/o 1"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly fwd",
-      "footwork": "T",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "3/8 between 1-2 body turns less",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "fwd in CBMP",
-      "footwork": "T",
-      "alignment": "Facing DW",
-      "amount_of_turn": "slight body turn to L",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "diag fwd",
-      "footwork": "T",
-      "alignment": "Facing DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "diag fwd",
-      "footwork": "TH",
-      "alignment": "Facing DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Up",
-        "Lower e/o 6"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "fwd in CBMP, OP",
-      "footwork": "H",
-      "alignment": "Facing DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "CBM"
-      ]
-    }
-  ]
+  "name" : "Four Quick Run",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Chasse Reverse Turn, Closed Impetus, Closed Telemark, Fish Tail, Forward Lock, Hover Corte, Natural Spin Turn, Progressive Chasse, Progressive Chasse To Right, Quarter Turn to Right, Quick Open Reverse, Running Finish, Six Quick Run, Tipple Chasse To Right, V6",
+  "following_figure_names" : "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, V6 (at corner, LF back with Lady OP, TH, S, into 2-12 V6), Fish Tail, Tipsy To L (into 2-5 Back Lock down LOD), Six Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes" : "Don't be back-weighted, avoid being steppy, keep smooth motion.\nKeep left side strongly to the Man all through the steps.\nDo not think about rotating upper body to R, which can take spine off standing leg.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back",
+    "footwork" : "B",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "CBM", "Rise e/o 1" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly fwd",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "3/8 between 1-2 body turns less",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd in CBMP",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "slight body turn to L",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "diag fwd",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "diag fwd",
+    "footwork" : "TH",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Up", "Lower e/o 6" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd in CBMP, OP",
+    "footwork" : "H",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "CBM" ]
+  } ]
 }

@@ -1,168 +1,146 @@
 {
-  "name": "Rock Turn",
-"urls": [
-    "https://www.dancecentral.info/ballroom/international-style/tango/rock-turn?src=routine"
-  ],
-  "dance_type": "TANGO",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Natural Promenade Turn, Progressive Side Step, Walk",
-  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "notes": "Start with a preparatory step S on LF (leader) and RF (follower). The figure involves a sequence of S and Q timings with forward, side, back steps, weight transfers, and turns. Detailed alignment and amount of turn instructions are provided for each step. Lady may choose head position and direction, and must maintain space and posture. Specific body leads and foot placements include CBMP, DW, BC, etc. The figure ends with a closing movement of RF to LF slightly back (leader) and LF closing to RF slightly forward (follower).",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF fwd",
-      "footwork": "H",
-      "alignment": "DW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF to side and slightly back",
-      "footwork": "",
-      "alignment": "BC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to RF, R side leading",
-      "footwork": "",
-      "alignment": "DW against LOD",
-      "amount_of_turn": "1/4 to R between 1-3",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF back, small step, L side leading",
-      "footwork": "",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF back in CBMP",
-      "footwork": "",
-      "alignment": "Wall",
-      "amount_of_turn": "No turn",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF closes to LF slightly back",
-      "footwork": "WF",
-      "alignment": "FDW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back",
-      "footwork": "",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF fwd, slightly right wards",
-      "footwork": "",
-      "alignment": "Facing centre",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back and slightly leftwards, L side leading",
-      "footwork": "",
-      "alignment": "BDW against LOD",
-      "amount_of_turn": "1/4 to R from 1-3",
-      "comments": []
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF fwd, small step, R side leading",
-      "footwork": "",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 11,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF fwd in CBMP",
-      "footwork": "",
-      "alignment": "Center",
-      "amount_of_turn": "",
-      "comments": [
-        "Do not initiate with body forward. Use the R leg to drive the step."
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF to side and slightly back",
-      "footwork": "",
-      "alignment": "BDW",
-      "amount_of_turn": "1/4 to L from 4-6",
-      "comments": []
-    },
-    {
-      "step_number": 13,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF closes to RF slightly fwd",
-      "footwork": "WF",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "(Natural) Rock Turn",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/rock-turn?src=routine" ],
+  "dance_type" : "TANGO",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Natural Promenade Turn, Progressive Side Step, Walk",
+  "following_figure_names" : "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes" : "Start with a preparatory step S on LF (leader) and RF (follower). The figure involves a sequence of S and Q timings with forward, side, back steps, weight transfers, and turns. Detailed alignment and amount of turn instructions are provided for each step. Lady may choose head position and direction, and must maintain space and posture. Specific body leads and foot placements include CBMP, DW, BC, etc. The figure ends with a closing movement of RF to LF slightly back (leader) and LF closing to RF slightly forward (follower).",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd",
+    "footwork" : "H",
+    "alignment" : "DW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly back",
+    "footwork" : "",
+    "alignment" : "BC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF, R side leading",
+    "footwork" : "",
+    "alignment" : "DW against LOD",
+    "amount_of_turn" : "1/4 to R between 1-3",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back, small step, L side leading",
+    "footwork" : "",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back in CBMP",
+    "footwork" : "",
+    "alignment" : "Wall",
+    "amount_of_turn" : "No turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF closes to LF slightly back",
+    "footwork" : "WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back",
+    "footwork" : "",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd, slightly right wards",
+    "footwork" : "",
+    "alignment" : "Facing centre",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back and slightly leftwards, L side leading",
+    "footwork" : "",
+    "alignment" : "BDW against LOD",
+    "amount_of_turn" : "1/4 to R from 1-3",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd, small step, R side leading",
+    "footwork" : "",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd in CBMP",
+    "footwork" : "",
+    "alignment" : "Center",
+    "amount_of_turn" : "",
+    "comments" : [ "Do not initiate with body forward. Use the R leg to drive the step." ]
+  }, {
+    "step_number" : 12,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back",
+    "footwork" : "",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 to L from 4-6",
+    "comments" : [ ]
+  }, {
+    "step_number" : 13,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF closes to RF slightly fwd",
+    "footwork" : "WF",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

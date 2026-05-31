@@ -1,88 +1,76 @@
 {
-  "name": "Natural Opening Out Movement",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-opening-out-movement"
-  ],
-  "dance_type": "CHA_CHA_CHA",
-  "level": "Bronze",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Right Side Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Alemana, Natural Top, Rope Spinning",
-  "following_figure_names": "Open Basic Movement (6-10), Closed Basic Movement (6-10), Underarm Turn To R, Fan (6-10), Reverse Top",
-  "notes": "The differences between Closed Hip Twist and Natural Opening Out Movement: (though this is different from the chart)\\nClosed Hip Twist\\nAmount of Turn: Lady does 1/2\\nMan step forward on step 1\\nClosed Hold\\nChasse: Lady does pressed chasse (RF cross in front of LF)\\nFinish in PP\\nNatural Opening Out Movement\\nAmount of Turn: Lady does 1/4 (chart says 1/2)\\nMan step side on step 1(chart says fwd is ok)\\n\"elbow hold\" - both arms extended, Lady's LH near Man's R elbow.\\nChasse: Lady does Compact Chasse (RF closed to LF) - (chart says RF fwd, slightly across LF) \\nFinish in closed position",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side or forward in Right Side Position, slight body turn to right, rotate frame to right",
-      "footwork": "B",
-      "alignment": "Right Side Position",
-      "amount_of_turn": "Slight turn to right",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to right foot",
-      "footwork": "WF",
-      "alignment": "Turning",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "4 & 1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Compact Chasse LRL ending in Closed Position, slight body turn to left",
-      "footwork": "B",
-      "alignment": "Closed Position",
-      "amount_of_turn": "Turn to left",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Step back in Right Side Position, 1/2 turn to right",
-      "footwork": "B",
-      "alignment": "Right Side Position",
-      "amount_of_turn": "1/2 to right",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Transfer weight to left foot",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "4 & 1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Chasse RLR forward and slightly across left foot, ending in Closed Position, 1/4 turn left then further 1/4",
-      "footwork": "B",
-      "alignment": "Closed Position",
-      "amount_of_turn": "1/4 to left then further 1/4",
-      "comments": [
-        "Track RF next to LF",
-        "Finish in closed position"
-      ]
-    }
-  ]
+  "name" : "Natural Opening Out Movement (Opening Out to Right)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-opening-out-movement" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Right Side Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Alemana, Natural Top, Rope Spinning",
+  "following_figure_names" : "Open Basic Movement (6-10), Closed Basic Movement (6-10), Underarm Turn To R, Fan (6-10), Reverse Top",
+  "notes" : "The differences between Closed Hip Twist and Natural Opening Out Movement: (though this is different from the chart)\\nClosed Hip Twist\\nAmount of Turn: Lady does 1/2\\nMan step forward on step 1\\nClosed Hold\\nChasse: Lady does pressed chasse (RF cross in front of LF)\\nFinish in PP\\nNatural Opening Out Movement\\nAmount of Turn: Lady does 1/4 (chart says 1/2)\\nMan step side on step 1(chart says fwd is ok)\\n\"elbow hold\" - both arms extended, Lady's LH near Man's R elbow.\\nChasse: Lady does Compact Chasse (RF closed to LF) - (chart says RF fwd, slightly across LF) \\nFinish in closed position",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side or forward in Right Side Position, slight body turn to right, rotate frame to right",
+    "footwork" : "B",
+    "alignment" : "Right Side Position",
+    "amount_of_turn" : "Slight turn to right",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to right foot",
+    "footwork" : "WF",
+    "alignment" : "Turning",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 & 1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Compact Chasse LRL ending in Closed Position, slight body turn to left",
+    "footwork" : "B",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "Turn to left",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step back in Right Side Position, 1/2 turn to right",
+    "footwork" : "B",
+    "alignment" : "Right Side Position",
+    "amount_of_turn" : "1/2 to right",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight to left foot",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 & 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Chasse RLR forward and slightly across left foot, ending in Closed Position, 1/4 turn left then further 1/4",
+    "footwork" : "B",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "1/4 to left then further 1/4",
+    "comments" : [ "Track RF next to LF", "Finish in closed position" ]
+  } ]
 }

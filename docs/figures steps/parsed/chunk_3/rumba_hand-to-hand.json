@@ -1,45 +1,36 @@
 {
-  "name": "Hand To Hand",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/hand-to-hand"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Closed Position, Cuban Rock LF, Hand To Hand RSP, New York LSP, Progressive Walks Forward in RSP, Progressive Walks Forward in Right Shadow Position, Shoulder To Shoulder Left Side, Side Step To Left commenced with LF, Side Step To Right commenced with RF, Spot or Switch Turn To R (Lady to L), Syncopated Cuban Rocks RF, Underarm Turn To L",
-  "following_figure_names": "Basic Movements: Open, Basic Movements: Closed, New York LSP, Spot or Switch Turn To R (Lady to L), Underarm Turn To L, Hand To Hand RSP, Side Step To Left commenced with LF, Side Step To Right commenced with LF, Cuban Rock LF, Fan, Progressive Walks Forward in LSP (no turn on 2&3), Rope Spinning, Syncopated Cuban Rock LF",
-  "notes": "It appears sharper if step 3 is danced fwd, then turn to end to side, facing partner.\nAnother option is to dance 4 1 fwd step and turn 1/2 at end of count \"1\", sharper.\nVariation: end of count \"4\" do not turn and do 1/2 turn at end of count \"1\", sharper.\nHand To Hand RSP: may end in Open PP (1/8 over 2 & 3)\nRSP could be retained, making no turn over 2 &3 and taking step 3 forward to follow with Progressive Walks Forward.\nMore advanced: step 3 may be taken fwd in line with RF, then turn 1/2 to R to end LF back in LSP having release R to L hand hold and taken L to R hand hold. (Lady opposite.)\nAlternative hold: Can start with Normal hold. Man allow R hand to slide further around Lady's back on step 1, releasing hold with L hand.\nLady slide L hand naturally across Man's shoulder.\nWhen following with Hand To Hand LSP, Man places L hand on Lady's back, releasing R hand hold at end of step 3, while Lady rests R hand lightly across Man's L shoulder.\nMan's hand on Lady's back is just below her shoulder blade.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Back in Right Side Position with 1/4 turn to left",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "1/4 to L",
-      "comments": [
-        "Commence in Closed Position, R to L hand hold."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "3&",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Transfer weight and turn 1/4 to right",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "RF back in RSP (after 1/4 to R) | 1/4 to R."
-      ]
-    }
-  ]
+  "name" : "Hand to Hand (To Right and Left SP)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/hand-to-hand" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Closed Position, Cuban Rock LF, Hand To Hand RSP, New York LSP, Progressive Walks Forward in RSP, Progressive Walks Forward in Right Shadow Position, Shoulder To Shoulder Left Side, Side Step To Left commenced with LF, Side Step To Right commenced with RF, Spot or Switch Turn To R (Lady to L), Syncopated Cuban Rocks RF, Underarm Turn To L",
+  "following_figure_names" : "Basic Movements: Open, Basic Movements: Closed, New York LSP, Spot or Switch Turn To R (Lady to L), Underarm Turn To L, Hand To Hand RSP, Side Step To Left commenced with LF, Side Step To Right commenced with LF, Cuban Rock LF, Fan, Progressive Walks Forward in LSP (no turn on 2&3), Rope Spinning, Syncopated Cuban Rock LF",
+  "notes" : "It appears sharper if step 3 is danced fwd, then turn to end to side, facing partner.\nAnother option is to dance 4 1 fwd step and turn 1/2 at end of count \"1\", sharper.\nVariation: end of count \"4\" do not turn and do 1/2 turn at end of count \"1\", sharper.\nHand To Hand RSP: may end in Open PP (1/8 over 2 & 3)\nRSP could be retained, making no turn over 2 &3 and taking step 3 forward to follow with Progressive Walks Forward.\nMore advanced: step 3 may be taken fwd in line with RF, then turn 1/2 to R to end LF back in LSP having release R to L hand hold and taken L to R hand hold. (Lady opposite.)\nAlternative hold: Can start with Normal hold. Man allow R hand to slide further around Lady's back on step 1, releasing hold with L hand.\nLady slide L hand naturally across Man's shoulder.\nWhen following with Hand To Hand LSP, Man places L hand on Lady's back, releasing R hand hold at end of step 3, while Lady rests R hand lightly across Man's L shoulder.\nMan's hand on Lady's back is just below her shoulder blade.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back in Right Side Position with 1/4 turn to left",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Commence in Closed Position, R to L hand hold." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3&",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Transfer weight and turn 1/4 to right",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "RF back in RSP (after 1/4 to R) | 1/4 to R." ]
+  } ]
 }

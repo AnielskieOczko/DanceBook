@@ -1,126 +1,96 @@
 {
-  "name": "Hover Corte",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Chasse Reverse Turn, Closed Impetus, Natural Spin Turn, Quarter Turn to Right, Quick Open Reverse",
-  "following_figure_names": "Tipple Chasse To Right, Tipsy To R, Running Finish, Tipsy To L, Four Quick Run (At corner), V6 (At corner, 2-12 of V6), Six Quick Run (At corner)",
-  "notes": "The figure begins with the leader stepping RF back, turning left with sway and CBM, rising on step 1. The follower steps LF forward, similar sway. Leader transfers weight to RF, sways, continues turning. Follower brushes LF towards RF, aligns, etc. Emphasis on low abdominal shape, avoid bending from waist, maintain connection, etc.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "Start to turn L",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly forward",
-      "footwork": "T",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "3/8 to L between 1-2",
-      "comments": [
-        "Body turns less. Continue to turn body on step 2.",
-        "Sway(R) | - | continue to rise on 2."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "transfer weight side and slightly back",
-      "footwork": "TH",
-      "alignment": "Backing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S) | -- | Up. Lower e/o 3."
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back in CBMP",
-      "footwork": "T",
-      "alignment": "Backing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S) | CBM | --"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "fwd",
-      "footwork": "HT",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Start to turn L",
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o1"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side, LF brushes towards RF",
-      "footwork": "T",
-      "alignment": "Facing center, end facing DC against LOD",
-      "amount_of_turn": "1/4 to L between 1 and 2",
-      "comments": [
-        "Continue to turn 1/8 on step 2.",
-        "Sway(L) | - | Continue to rise on 2"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "diag fwd",
-      "footwork": "TH",
-      "alignment": "Facing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S) | - | Up. Lower e/o 3."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd in CBMP; OP",
-      "footwork": "H",
-      "alignment": "Facing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S) | CBM | --"
-      ]
-    }
-  ]
+  "name" : "Hover Corté",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Chasse Reverse Turn, Closed Impetus, Natural Spin Turn, Quarter Turn to Right, Quick Open Reverse",
+  "following_figure_names" : "Tipple Chasse To Right, Tipsy To R, Running Finish, Tipsy To L, Four Quick Run (At corner), V6 (At corner, 2-12 of V6), Six Quick Run (At corner)",
+  "notes" : "The figure begins with the leader stepping RF back, turning left with sway and CBM, rising on step 1. The follower steps LF forward, similar sway. Leader transfers weight to RF, sways, continues turning. Follower brushes LF towards RF, aligns, etc. Emphasis on low abdominal shape, avoid bending from waist, maintain connection, etc.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "Start to turn L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly forward",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "3/8 to L between 1-2",
+    "comments" : [ "Body turns less. Continue to turn body on step 2.", "Sway(R) | - | continue to rise on 2." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "transfer weight side and slightly back",
+    "footwork" : "TH",
+    "alignment" : "Backing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S) | -- | Up. Lower e/o 3." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back in CBMP",
+    "footwork" : "T",
+    "alignment" : "Backing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S) | CBM | --" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "fwd",
+    "footwork" : "HT",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Start to turn L", "Sway(S)", "CBM", "start to rise e/o1" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side, LF brushes towards RF",
+    "footwork" : "T",
+    "alignment" : "Facing center, end facing DC against LOD",
+    "amount_of_turn" : "1/4 to L between 1 and 2",
+    "comments" : [ "Continue to turn 1/8 on step 2.", "Sway(L) | - | Continue to rise on 2" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "diag fwd",
+    "footwork" : "TH",
+    "alignment" : "Facing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S) | - | Up. Lower e/o 3." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd in CBMP; OP",
+    "footwork" : "H",
+    "alignment" : "Facing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S) | CBM | --" ]
+  } ]
 }

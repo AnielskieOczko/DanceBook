@@ -1,85 +1,76 @@
 {
- "name": "Rumba Fencing",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/rumba/fencing"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Gold",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Fan Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Advanced Hip Twists,Closed Hip Twist,Curl,Fan,Open Hip Twist,Opening Out From Reverse Top,Spiral,Three Threes",
-  "following_figure_names": "New York LSP,Spot or Switch Turn To R (Lady to L),Underarm Turn To L,Basic Movements: Closed,Basic Movements: Open,Cucarachas: LF,Side Step To Left commenced with LF,Fan,Hand To Hand RSP,Side Step To Right commenced with LF,Cuban Rock LF",
-  "notes": "Notes on endings:\nMan and Lady's Solo Spin\nOn step 6, at end of count 4, continue turning a further 7/8 (Lady to L and Man to R), release L to R hand hold. End facing partner, both feet closed. Man LF without weight. Lady with RF without weight, but with pressure into the ball of foot. Take required hold.\nLady's Under Arm Spin to L\nOn step 6, at end of count 4, Lady spins a full turn to L under Man's raise arm, end with RF closed to LF without weight, with pressure into the ball of RF.\nMan's Solo spin to L\nLady does not turn, Man does his full spin to his R, end facing partner.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "step forward",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "transfer weight",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "4 1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "step to side in PP",
-      "footwork": "BF",
-      "alignment": "PP",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "closed to LF",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "step forward",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "4 1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "step forward and turn to PP with LF extended back",
-      "footwork": "WF",
-      "alignment": "CPP",
-      "amount_of_turn": "3/8 to R",
-      "comments": []
-    }
-  ]
+  "name" : "Fencing",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/fencing" ],
+  "dance_type" : "RUMBA",
+  "level" : "Gold",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Fan Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Advanced Hip Twists,Closed Hip Twist,Curl,Fan,Open Hip Twist,Opening Out From Reverse Top,Spiral,Three Threes",
+  "following_figure_names" : "New York LSP,Spot or Switch Turn To R (Lady to L),Underarm Turn To L,Basic Movements: Closed,Basic Movements: Open,Cucarachas: LF,Side Step To Left commenced with LF,Fan,Hand To Hand RSP,Side Step To Right commenced with LF,Cuban Rock LF",
+  "notes" : "Notes on endings:\nMan and Lady's Solo Spin\nOn step 6, at end of count 4, continue turning a further 7/8 (Lady to L and Man to R), release L to R hand hold. End facing partner, both feet closed. Man LF without weight. Lady with RF without weight, but with pressure into the ball of foot. Take required hold.\nLady's Under Arm Spin to L\nOn step 6, at end of count 4, Lady spins a full turn to L under Man's raise arm, end with RF closed to LF without weight, with pressure into the ball of RF.\nMan's Solo spin to L\nLady does not turn, Man does his full spin to his R, end facing partner.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "step forward",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "transfer weight",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "step to side in PP",
+    "footwork" : "BF",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "closed to LF",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "step forward",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "step forward and turn to PP with LF extended back",
+    "footwork" : "WF",
+    "alignment" : "CPP",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ ]
+  } ]
 }

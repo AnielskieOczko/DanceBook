@@ -1,275 +1,186 @@
 {
-  "name": "RunningRight Turn",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Silver",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Telemark, Fish Tail, Four Quick Run, Progressive Chasse, Rumba Cross, Running Right Turn, V6",
-  "following_figure_names": "Running Right Turn, Fish Tail, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn, Quarter Turn to Right, Forward Lock, Quick Open Reverse, Tipsy To L",
-  "notes": "Other alignments:\nAcross corner: 3/8 on Pivot, 1/2 on Natural Turn, 3/8 on Running Finish.\nTwo corners: 3/8 on Pivot, 3/8 on Natural Turn, 1/4 on Running Finish\nSide of room: 1/2 on pivot, 1/2 on Natural Turn, 3/8 on Running Finish\nWhen 3/8 is made on Running Finish, using \"pointing\" instead of \"facing\" at step 9 for Man.\nAlternative timing SQQ may be used on steps 5-7, in which case, SQQS will be used on the Running Finish.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step forward, start turn to the right",
-      "footwork": "HF",
-      "alignment": "FDW",
-      "amount_of_turn": null,
-      "comments": [
-        "Start to turn R",
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o 1"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Side step, turn 1/4 to the right",
-      "footwork": "T",
-      "alignment": "BDC",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "1/4 to R between 1-2",
-        "Sway(R)",
-        "up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Close to LF, continue turn",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "1/8 to R",
-      "comments": [
-        "toe turned in",
-        "1/8 to R between 2-3",
-        "Sway(R)",
-        "up",
-        "lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Back step, pivot 1/2 turn to the right",
-      "footwork": "THT",
-      "alignment": "FLOD",
-      "amount_of_turn": "1/2 to R",
-      "comments": [
-        "Pivot: do not lean forward and stick butt out"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Forward in CBMP, continue turn",
-      "footwork": "HT",
-      "alignment": "facing LOD",
-      "amount_of_turn": null,
-      "comments": [
-        "continue to turn",
-        "Sway(S)",
-        "CBM",
-        "rise e/o 5"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side, 3/8 turn",
-      "footwork": "T",
-      "alignment": "BDC",
-      "amount_of_turn": "3/8",
-      "comments": [
-        "Man does not have to complete turn with his body on this step, the turn completes through next step"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Back step, leading right side",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "1/8",
-      "comments": [
-        "Body completes turn",
-        "Sway(R)",
-        "up",
-        "lower e/o 7"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Back in CBMP, continue turn",
-      "footwork": "T",
-      "alignment": "BLOD",
-      "amount_of_turn": "continue to turn",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "rise e/o 8"
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Side and slightly forward, new LOD",
-      "footwork": "T",
-      "alignment": "facing new LOD",
-      "amount_of_turn": "1/4",
-      "comments": [
-        "Sway(L)",
-        "up"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Prepare OP step, L side leading",
-      "footwork": "TH",
-      "alignment": "LOD",
-      "amount_of_turn": null,
-      "comments": [
-        "Sway(L)",
-        "up",
-        "lower e/o 10"
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Forward in CBMP, OP",
-      "footwork": "H",
-      "alignment": "LOD",
-      "amount_of_turn": null,
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "--"
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Step back, start turn to the right",
-      "footwork": "TH",
-      "alignment": "BDW",
-      "amount_of_turn": null,
-      "comments": [
-        "Start to turn R",
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o 1",
-        "NFR"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Side step, point LOD, turn 3/8 to the right",
-      "footwork": "T",
-      "alignment": "pointing LOD",
-      "amount_of_turn": "3/8 to R",
-      "comments": [
-        "body turns less",
-        "Sway(L)",
-        "up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Forward, LOD, prepare pivot",
-      "footwork": "HTH",
-      "alignment": "LOD",
-      "amount_of_turn": "1/2 to R",
-      "comments": [
-        "Pivot on RF",
-        "--"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Start turn, prepare Running Finish",
-      "footwork": "HT",
-      "alignment": "facing new LOD",
-      "amount_of_turn": null,
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "rise e/o 8"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Back step, R side leading",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "1/8",
-      "comments": [
-        "Sway(R)",
-        "up",
-        "lower e/o 10"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Back in CBMP",
-      "footwork": "T",
-      "alignment": "BLOD",
-      "amount_of_turn": null,
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "--"
-      ]
-    }
-  ]
+  "name" : "Running Right Turn",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Fish Tail, Four Quick Run, Progressive Chasse, Rumba Cross, Running Right Turn, V6",
+  "following_figure_names" : "Running Right Turn, Fish Tail, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn, Quarter Turn to Right, Forward Lock, Quick Open Reverse, Tipsy To L",
+  "notes" : "Other alignments:\nAcross corner: 3/8 on Pivot, 1/2 on Natural Turn, 3/8 on Running Finish.\nTwo corners: 3/8 on Pivot, 3/8 on Natural Turn, 1/4 on Running Finish\nSide of room: 1/2 on pivot, 1/2 on Natural Turn, 3/8 on Running Finish\nWhen 3/8 is made on Running Finish, using \"pointing\" instead of \"facing\" at step 9 for Man.\nAlternative timing SQQ may be used on steps 5-7, in which case, SQQS will be used on the Running Finish.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step forward, start turn to the right",
+    "footwork" : "HF",
+    "alignment" : "FDW",
+    "amount_of_turn" : null,
+    "comments" : [ "Start to turn R", "Sway(S)", "CBM", "start to rise e/o 1" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Side step, turn 1/4 to the right",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "1/4 to R between 1-2", "Sway(R)", "up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close to LF, continue turn",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "toe turned in", "1/8 to R between 2-3", "Sway(R)", "up", "lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back step, pivot 1/2 turn to the right",
+    "footwork" : "THT",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ "Pivot: do not lean forward and stick butt out" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Forward in CBMP, continue turn",
+    "footwork" : "HT",
+    "alignment" : "facing LOD",
+    "amount_of_turn" : null,
+    "comments" : [ "continue to turn", "Sway(S)", "CBM", "rise e/o 5" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side, 3/8 turn",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Man does not have to complete turn with his body on this step, the turn completes through next step" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back step, leading right side",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8",
+    "comments" : [ "Body completes turn", "Sway(R)", "up", "lower e/o 7" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back in CBMP, continue turn",
+    "footwork" : "T",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "continue to turn",
+    "comments" : [ "Sway(S)", "CBM", "rise e/o 8" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Side and slightly forward, new LOD",
+    "footwork" : "T",
+    "alignment" : "facing new LOD",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Sway(L)", "up" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Prepare OP step, L side leading",
+    "footwork" : "TH",
+    "alignment" : "LOD",
+    "amount_of_turn" : null,
+    "comments" : [ "Sway(L)", "up", "lower e/o 10" ]
+  }, {
+    "step_number" : 11,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Forward in CBMP, OP",
+    "footwork" : "H",
+    "alignment" : "LOD",
+    "amount_of_turn" : null,
+    "comments" : [ "Sway(S)", "CBM", "--" ]
+  }, {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step back, start turn to the right",
+    "footwork" : "TH",
+    "alignment" : "BDW",
+    "amount_of_turn" : null,
+    "comments" : [ "Start to turn R", "Sway(S)", "CBM", "start to rise e/o 1", "NFR" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side step, point LOD, turn 3/8 to the right",
+    "footwork" : "T",
+    "alignment" : "pointing LOD",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ "body turns less", "Sway(L)", "up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Forward, LOD, prepare pivot",
+    "footwork" : "HTH",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ "Pivot on RF", "--" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Start turn, prepare Running Finish",
+    "footwork" : "HT",
+    "alignment" : "facing new LOD",
+    "amount_of_turn" : null,
+    "comments" : [ "Sway(S)", "CBM", "rise e/o 8" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Back step, R side leading",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8",
+    "comments" : [ "Sway(R)", "up", "lower e/o 10" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in CBMP",
+    "footwork" : "T",
+    "alignment" : "BLOD",
+    "amount_of_turn" : null,
+    "comments" : [ "Sway(S)", "CBM", "--" ]
+  } ]
 }

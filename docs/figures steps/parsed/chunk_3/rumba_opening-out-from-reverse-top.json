@@ -1,85 +1,76 @@
 {
- "name": "Opening Out From Reverse Top",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Silver",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Reverse Top",
-  "ending_position": "Fan Position",
-  "preceding_figure_names": "Reverse Top",
-  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas",
-  "notes": "",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/8",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF to side and slightly fwd",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "1/8",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF in front of RF (Cuban Cross)",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "1/8",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF to side in Fan Position",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "5/8",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF behind RF (Cuban Cross)",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "5/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF back and slightly to side",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back in Fan Position",
-      "footwork": "F",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "Opening Out from Reverse Top",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Reverse Top",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Reverse Top",
+  "following_figure_names" : "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas",
+  "notes" : "",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/8",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly fwd",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/8",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF in front of RF (Cuban Cross)",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/8",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side in Fan Position",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "5/8",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF behind RF (Cuban Cross)",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "5/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back and slightly to side",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back in Fan Position",
+    "footwork" : "F",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

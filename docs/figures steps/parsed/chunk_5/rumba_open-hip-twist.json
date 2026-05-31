@@ -1,120 +1,96 @@
 {
-  "name": "OpenHip Twist",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/rumba/open-hip-twist"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Fan Position",
-  "preceding_figure_names": "Advanced Hip Twists, Basic Movements: Open, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
-  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas, Basic Movements: Open, Open Hip Twist, Curl, Three Threes, New York LSP, Spot or Switch Turn to R (Lady to L), Underarm Turn to L, Reverse Top",
-  "notes": "Dynamic variations include settling on the hip, rotating the hip, and pulling tension. The lady stretches and delays weight transfer, holds on beat 3, and turns 1/2 to the left before completing the turn. Body action remains active throughout, with emphasis on hip movement and arm extension.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Forward step, no turn",
-      "footwork": "F",
-      "alignment": "Forward",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to right foot",
-      "footwork": "WF",
-      "alignment": "Center",
-      "amount_of_turn": "0",
-      "comments": [
-        "Transfer weight to RF"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Close LF to RF slightly back",
-      "footwork": "F",
-      "alignment": "Side",
-      "amount_of_turn": "0",
-      "comments": [
-        "Brace L arm towards end of preceding beat, then L arm to L side"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "4",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step to side in Fan Position",
-      "footwork": "F",
-      "alignment": "Fan Position",
-      "amount_of_turn": "0",
-      "comments": [
-        "Slightly extend L arm"
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Back step, no turn",
-      "footwork": "B",
-      "alignment": "Back",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Transfer weight to left foot",
-      "footwork": "F",
-      "alignment": "Forward",
-      "amount_of_turn": "0",
-      "comments": [
-        "Delay weight transfer, hold 3, weight transfer on &"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Forward step toward partner",
-      "footwork": "F",
-      "alignment": "Diagonal to partner's right side",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "Settle R side, center back, compress, R elbow out, keep volume"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "4",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Back in Fan Position, complete turn",
-      "footwork": "F",
-      "alignment": "Fan Position",
-      "amount_of_turn": "1/8 to L then 1/2",
-      "comments": [
-        "Turn initiates from hips, walk into own arm, tighten thighs, collect center",
-        "Turn 1/2 to left into partner's hand, then back in Fan Position"
-      ]
-    }
-  ]
+  "name" : "Open Hip Twist",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/open-hip-twist" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Advanced Hip Twists, Basic Movements: Open, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names" : "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas, Basic Movements: Open, Open Hip Twist, Curl, Three Threes, New York LSP, Spot or Switch Turn to R (Lady to L), Underarm Turn to L, Reverse Top",
+  "notes" : "Dynamic variations include settling on the hip, rotating the hip, and pulling tension. The lady stretches and delays weight transfer, holds on beat 3, and turns 1/2 to the left before completing the turn. Body action remains active throughout, with emphasis on hip movement and arm extension.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Forward step, no turn",
+    "footwork" : "F",
+    "alignment" : "Forward",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to right foot",
+    "footwork" : "WF",
+    "alignment" : "Center",
+    "amount_of_turn" : "0",
+    "comments" : [ "Transfer weight to RF" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close LF to RF slightly back",
+    "footwork" : "F",
+    "alignment" : "Side",
+    "amount_of_turn" : "0",
+    "comments" : [ "Brace L arm towards end of preceding beat, then L arm to L side" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "4",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side in Fan Position",
+    "footwork" : "F",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "0",
+    "comments" : [ "Slightly extend L arm" ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Back step, no turn",
+    "footwork" : "B",
+    "alignment" : "Back",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight to left foot",
+    "footwork" : "F",
+    "alignment" : "Forward",
+    "amount_of_turn" : "0",
+    "comments" : [ "Delay weight transfer, hold 3, weight transfer on &" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Forward step toward partner",
+    "footwork" : "F",
+    "alignment" : "Diagonal to partner's right side",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Settle R side, center back, compress, R elbow out, keep volume" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "4",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in Fan Position, complete turn",
+    "footwork" : "F",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "1/8 to L then 1/2",
+    "comments" : [ "Turn initiates from hips, walk into own arm, tighten thighs, collect center", "Turn 1/2 to left into partner's hand, then back in Fan Position" ]
+  } ]
 }

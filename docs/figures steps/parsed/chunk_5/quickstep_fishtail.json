@@ -1,141 +1,116 @@
 {
-  "name": "Fishtail",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Silver",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Telemark, Cross Chasse, Cross Swivel, Forward Lock, Four Quick Run, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6",
-  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Four Quick Run, V6, Tipsy To L",
-  "notes": "The Fishtail may be danced DW with no turn. Fishtail is often dance after Cross Swivel. After LF back (Lady shapes to L, RF can cross in front of LF)",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "--",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "forward in CBMP, outside partner, start turning right, sway, CBM, rise",
-      "footwork": "F",
-      "alignment": "Facing DC",
-      "amount_of_turn": "--",
-      "comments": [
-        "Motion continues down the floor, don't tracktrack.",
-        "Man's body does a pendulum swing from left to right."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "1/8 between 1-2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "crosses behind RF",
-      "footwork": "B",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "1/8 between 2-3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "forward and slightly to side (small step)",
-      "footwork": "F",
-      "alignment": "Facing DW",
-      "amount_of_turn": "--",
-      "comments": [
-        "Man lowers while staying on toe at beginning of step, and rises out of it into the forward lock, similar to a tipple chasse."
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "--",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back in CBMP, backing DC, start turning right, sway, CBM, rise",
-      "footwork": "F",
-      "alignment": "Backing DC",
-      "amount_of_turn": "--",
-      "comments": [
-        "Man is stepping outside partner.",
-        "Take LF cross right behind RF, do not step too big.",
-        "Option - do a big shape/extension (looks like \"dipping\" Lady, but Man should not \"drop\" Lady down).",
-        "Keep R side connected with Man, do not break at the hip when doing extension.",
-        "After moment of large extension, return to \"normal\" extension to keep balance on next step.",
-        "This is more rotation of body, not taking left should down."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "1/8 between 1-2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "crosses in front of LF",
-      "footwork": "B",
-      "alignment": "Backing LOD",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "1/8 between 2-3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back and slightly to side (small step)",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "--",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "diagonal back, R side leading",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "--",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "crosses in front of RF",
-      "footwork": "B",
-      "alignment": "Backing DW",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "--",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "diagonal back",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "--",
-      "comments": []
-    },
-    {
-      "step_number": 10,
-      "timing": "--",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back in CBMP",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "--",
-      "comments": []
-    }
-  ]
+  "name" : "Fish–Tail",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Cross Chasse, Cross Swivel, Forward Lock, Four Quick Run, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6",
+  "following_figure_names" : "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Four Quick Run, V6, Tipsy To L",
+  "notes" : "The Fishtail may be danced DW with no turn. Fishtail is often dance after Cross Swivel. After LF back (Lady shapes to L, RF can cross in front of LF)",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "--",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "forward in CBMP, outside partner, start turning right, sway, CBM, rise",
+    "footwork" : "F",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "--",
+    "comments" : [ "Motion continues down the floor, don't tracktrack.", "Man's body does a pendulum swing from left to right." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/8 between 1-2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "crosses behind RF",
+    "footwork" : "B",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/8 between 2-3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "forward and slightly to side (small step)",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Man lowers while staying on toe at beginning of step, and rises out of it into the forward lock, similar to a tipple chasse." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "--",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back in CBMP, backing DC, start turning right, sway, CBM, rise",
+    "footwork" : "F",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "--",
+    "comments" : [ "Man is stepping outside partner.", "Take LF cross right behind RF, do not step too big.", "Option - do a big shape/extension (looks like \"dipping\" Lady, but Man should not \"drop\" Lady down).", "Keep R side connected with Man, do not break at the hip when doing extension.", "After moment of large extension, return to \"normal\" extension to keep balance on next step.", "This is more rotation of body, not taking left should down." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1/8 between 1-2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "crosses in front of LF",
+    "footwork" : "B",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "1/8 between 2-3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back and slightly to side (small step)",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "--",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "diagonal back, R side leading",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "--",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "crosses in front of RF",
+    "footwork" : "B",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "--",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "diagonal back",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "--",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back in CBMP",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  } ]
 }

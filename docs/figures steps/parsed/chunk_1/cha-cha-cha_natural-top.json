@@ -1,89 +1,66 @@
 {
-  "name":"Natural Top",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-top"
-  ],
-  "dance_type": "CHA_CHA_CHA",
-  "level": "Bronze",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Basic Movement In Place, Closed Basic Movement, Open Basic Movement, Three Cha Cha Chas Back, Underarm Turn to L",
-  "following_figure_names": "Open Basic Movement, Closed Basic Movement, Fan, Natural Opening Out Movement, Closed Hip Twist, Spiral, Rope Spinning, Advanced Hip Twist, Hip Twist Spiral, Hockey Stick",
-  "notes": "Gold variation includes Lady's Left turn between counts 6 and 7. Repeats up to 3 complete turns over counts 1-15. Steps 1,7,11 are pressed backward walks. Heel of RF may stay up until LF moves next.\nLady's turn between 6 and 7 depends on Man's turn.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Close RF to LF",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "",
-      "comments": [
-        "RF behind LF (Cuban Cross) up to 3 complete turns over 1-15",
-        "Pressed Backward Walks on counts 1,7,11"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF behind LF (Cuban Cross) continuing",
-      "footwork": "WF",
-      "alignment": "Cuban Cross",
-      "amount_of_turn": "up to 3 complete turns",
-      "comments": [
-        "LF to side",
-        "Walking tangent to circle"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF to side",
-      "footwork": "WF",
-      "alignment": "Tangent to Circle",
-      "amount_of_turn": "",
-      "comments": [
-        "Keep compact frame, maintain closed hold",
-        "Pick up center, look at partner",
-        "Slight tension in arms"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "4&1 234&1 234&",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Repeat steps 1 and 2 six times",
-      "footwork": "WF",
-      "alignment": "Progressive Turn",
-      "amount_of_turn": "",
-      "comments": [
-        "Repeat pattern six times",
-        "Up to 3 complete turns over 1-15"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF to side (last step, more linear)",
-      "footwork": "WF",
-      "alignment": "Closed Position",
-      "amount_of_turn": "",
-      "comments": [
-        "End of figure, linear movement"
-      ]
-    }
-  ]
+  "name" : "Natural Top Development (Underarm Turn)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-top" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic Movement In Place, Closed Basic Movement, Open Basic Movement, Three Cha Cha Chas Back, Underarm Turn to L",
+  "following_figure_names" : "Open Basic Movement, Closed Basic Movement, Fan, Natural Opening Out Movement, Closed Hip Twist, Spiral, Rope Spinning, Advanced Hip Twist, Hip Twist Spiral, Hockey Stick",
+  "notes" : "Gold variation includes Lady's Left turn between counts 6 and 7. Repeats up to 3 complete turns over counts 1-15. Steps 1,7,11 are pressed backward walks. Heel of RF may stay up until LF moves next.\nLady's turn between 6 and 7 depends on Man's turn.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close RF to LF",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "",
+    "comments" : [ "RF behind LF (Cuban Cross) up to 3 complete turns over 1-15", "Pressed Backward Walks on counts 1,7,11" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF behind LF (Cuban Cross) continuing",
+    "footwork" : "WF",
+    "alignment" : "Cuban Cross",
+    "amount_of_turn" : "up to 3 complete turns",
+    "comments" : [ "LF to side", "Walking tangent to circle" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side",
+    "footwork" : "WF",
+    "alignment" : "Tangent to Circle",
+    "amount_of_turn" : "",
+    "comments" : [ "Keep compact frame, maintain closed hold", "Pick up center, look at partner", "Slight tension in arms" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "4&1 234&1 234&",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Repeat steps 1 and 2 six times",
+    "footwork" : "WF",
+    "alignment" : "Progressive Turn",
+    "amount_of_turn" : "",
+    "comments" : [ "Repeat pattern six times", "Up to 3 complete turns over 1-15" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side (last step, more linear)",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "",
+    "comments" : [ "End of figure, linear movement" ]
+  } ]
 }

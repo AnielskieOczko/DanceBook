@@ -1,148 +1,106 @@
 {
-  "name": "New York",
-"urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/new-york"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Open CPP",
-  "ending_position": "Open CPP",
-  "preceding_figure_names": "Advanced Hip Twists, Alemana, Basic Movements: Closed, Closed Hip Twist, Cuban Rocks RF, Curl, Fencing, Hand To Hand LSP, Hockey Stick, New York RSP, Open Hip Twist, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral, Spot or Switch Turn to L (Lady to R), Syncopated Cuban Rock LF, Three Alemanas, Underarm Turn To R",
-  "following_figure_names": "Side Step To Left commenced with RF, New York LSP (when ending in Open PP), Spot or Switch Turn to L (Lady to R) (when ending in Open PP), Basic Movements: Open (4-6, when ending facing partner), Basic Movements: Closed (4-6, when ending facing partner), Underarm Turn To R (when ending facing partner), Hand To Hand LSP (when New York LSP ends facing partner), Side Step To Right commenced with RF (when New York LSP ends facing partner), Cuban Rocks RF (when New York LSP ends facing partner), Fan (4-6, when New York LSP ends facing partner), Progressive Walks Forward in RSP (overturned to end fwd in RSP), Closed Hip Twist (4-6, when New York LSP ends facing partner), Syncopated Cuban Rocks RF (when New York LSP ends facing partner)",
-  "notes": "Increase tone in connecting arm and keep it with body when turning (over 1-5). Note: RSP may be achieved after New York LSP by turning 1/8 more between step 3 of New York LSP and 1 of the next figure, to follow with Progressive Walks Forward. New York LSP may also be danced from Progressive Walks Forward in LSP (no turn on step 1 of New York LSP).",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "step forward in Left Side Position",
-      "footwork": "F",
-      "alignment": "LSP",
-      "amount_of_turn": "1/8 to R",
-      "comments": [
-        "This is New York to the Left Side Position.",
-        "Preceding step finish in Counter Open PP position, L to R hand hold.",
-        "End of preceding step on '&', turn 1/8 to R."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "transfer weight to right foot",
-      "footwork": "WF",
-      "alignment": "LSP",
-      "amount_of_turn": "",
-      "comments": [
-        "Breakdown to \"3&\", on \"&\", frame starts turning to L to face partner"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "step to side, ending in Open Promenade Position",
-      "footwork": "F",
-      "alignment": "Open PP",
-      "amount_of_turn": "3/8 to L",
-      "comments": [
-        "Take required hold at end of depending.",
-        "Here's it's continuing with New York to Right Side Position."
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "step forward in Right Side Position",
-      "footwork": "F",
-      "alignment": "RSP",
-      "amount_of_turn": "1/8 to L",
-      "comments": [
-        "See note in step #1."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "transfer weight to left foot",
-      "footwork": "WF",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "Advanced technique: hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip)."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "step to side, ending in Open Promenade Position",
-      "footwork": "F",
-      "alignment": "Open CPP",
-      "amount_of_turn": "3/8 to R",
-      "comments": [
-        "Take required hold."
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "step forward in Left Side Position",
-      "footwork": "F",
-      "alignment": "LSP",
-      "amount_of_turn": "1/8 to L",
-      "comments": [
-        "This is New York to the Left Side Position (Lady on Man's Left).",
-        "End of preceding step on '&': previous step is a strong side step. Make sure weight is fully transferred to LF, tighten the core before swiveling.",
-        "Turning shoulder first, then hip, strong twist left side, pull right side through and lateral leg action. Turn to L. Feet turned out and step in slight 5th position (on central line). Forward Check Action. split weight.",
-        "Basic technique: upper body flat forward, arm to the side.",
-        "Advanced technique: hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip).",
-        "During the turn, arm line slowly going up, ideally ending with L hand behind head, arm sloped up.",
-        "Lady: break at wrist (think of showing off your ring), circle one round, ending downward. Hand at eye level."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "transfer weight to left foot",
-      "footwork": "WF",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": [
-        "LF ball flat.",
-        "RF tracks under body next to LF first before stepping. (Make sure RF doesn't do rondes.)",
-        "Use backward walk technique here: on \"&\", connected action, R leg release (ahead of body) and point R toe back (upper body remaining fwd), slightly turned out, knees connected at the spot. Then, use forward walk turn action (R toe has pressure, rotate onto the foot) to turn frame and use inside edge of RF to side (ending in same position as basic side step, R leg bent, then straighten)."
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "step to side, ending in Open Promenade Position",
-      "footwork": "F",
-      "alignment": "Open CPP",
-      "amount_of_turn": "3/8 to R",
-      "comments": [
-        "hips pendulum, then twist to turn to R.",
-        "Take required hold"
-      ]
-    }
-  ]
+  "name" : "New York (To LSP or RSP)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/new-york" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Open CPP",
+  "ending_position" : "Open CPP",
+  "preceding_figure_names" : "Advanced Hip Twists, Alemana, Basic Movements: Closed, Closed Hip Twist, Cuban Rocks RF, Curl, Fencing, Hand To Hand LSP, Hockey Stick, New York RSP, Open Hip Twist, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral, Spot or Switch Turn to L (Lady to R), Syncopated Cuban Rock LF, Three Alemanas, Underarm Turn To R",
+  "following_figure_names" : "Side Step To Left commenced with RF, New York LSP (when ending in Open PP), Spot or Switch Turn to L (Lady to R) (when ending in Open PP), Basic Movements: Open (4-6, when ending facing partner), Basic Movements: Closed (4-6, when ending facing partner), Underarm Turn To R (when ending facing partner), Hand To Hand LSP (when New York LSP ends facing partner), Side Step To Right commenced with RF (when New York LSP ends facing partner), Cuban Rocks RF (when New York LSP ends facing partner), Fan (4-6, when New York LSP ends facing partner), Progressive Walks Forward in RSP (overturned to end fwd in RSP), Closed Hip Twist (4-6, when New York LSP ends facing partner), Syncopated Cuban Rocks RF (when New York LSP ends facing partner)",
+  "notes" : "Increase tone in connecting arm and keep it with body when turning (over 1-5). Note: RSP may be achieved after New York LSP by turning 1/8 more between step 3 of New York LSP and 1 of the next figure, to follow with Progressive Walks Forward. New York LSP may also be danced from Progressive Walks Forward in LSP (no turn on step 1 of New York LSP).",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "step forward in Left Side Position",
+    "footwork" : "F",
+    "alignment" : "LSP",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "This is New York to the Left Side Position.", "Preceding step finish in Counter Open PP position, L to R hand hold.", "End of preceding step on '&', turn 1/8 to R." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "transfer weight to right foot",
+    "footwork" : "WF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "",
+    "comments" : [ "Breakdown to \"3&\", on \"&\", frame starts turning to L to face partner" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "step to side, ending in Open Promenade Position",
+    "footwork" : "F",
+    "alignment" : "Open PP",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ "Take required hold at end of depending.", "Here's it's continuing with New York to Right Side Position." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "step forward in Right Side Position",
+    "footwork" : "F",
+    "alignment" : "RSP",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "See note in step #1." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "transfer weight to left foot",
+    "footwork" : "WF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "Advanced technique: hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip)." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "step to side, ending in Open Promenade Position",
+    "footwork" : "F",
+    "alignment" : "Open CPP",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ "Take required hold." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "step forward in Left Side Position",
+    "footwork" : "F",
+    "alignment" : "LSP",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "This is New York to the Left Side Position (Lady on Man's Left).", "End of preceding step on '&': previous step is a strong side step. Make sure weight is fully transferred to LF, tighten the core before swiveling.", "Turning shoulder first, then hip, strong twist left side, pull right side through and lateral leg action. Turn to L. Feet turned out and step in slight 5th position (on central line). Forward Check Action. split weight.", "Basic technique: upper body flat forward, arm to the side.", "Advanced technique: hip turns 1/8 extra than feet, frame (upper body) turn as much as possible to L (isolated from hip).", "During the turn, arm line slowly going up, ideally ending with L hand behind head, arm sloped up.", "Lady: break at wrist (think of showing off your ring), circle one round, ending downward. Hand at eye level." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "transfer weight to left foot",
+    "footwork" : "WF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "LF ball flat.", "RF tracks under body next to LF first before stepping. (Make sure RF doesn't do rondes.)", "Use backward walk technique here: on \"&\", connected action, R leg release (ahead of body) and point R toe back (upper body remaining fwd), slightly turned out, knees connected at the spot. Then, use forward walk turn action (R toe has pressure, rotate onto the foot) to turn frame and use inside edge of RF to side (ending in same position as basic side step, R leg bent, then straighten)." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "step to side, ending in Open Promenade Position",
+    "footwork" : "F",
+    "alignment" : "Open CPP",
+    "amount_of_turn" : "3/8 to R",
+    "comments" : [ "hips pendulum, then twist to turn to R.", "Take required hold" ]
+  } ]
 }

@@ -724,7 +724,7 @@
     "comments" : [ "On the last chasse 8-10, lady may be lead to Fan Position, Open Position or Open CPP, adjusting turn accordingly.", "When not following with another Cross Basic, the last chasse is taken to side." ]
   } ]
 }, {
-  "name" : "Cuban Breaks",
+  "name" : "Cuban Breaks (LFoot, RFoot, Split)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cuban-breaks" ],
   "dance_type" : "CHA_CHA_CHA",
   "level" : "Silver",
@@ -779,7 +779,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Curl",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/curl" ],
   "dance_type" : "CHA_CHA_CHA",
   "level" : "Silver",
@@ -964,7 +964,7 @@
   "notes" : "Steps 8 through 25 have a figure 8 pattern.\nWhen turning R, Man takes slightly smaller steps. Lady is following him and her circumference of circle is larger.\nWhen turning L, the roles are reversed, and Lady takes smaller steps.\nAlternative finishing position\nMan and Lady dance a fwd lock toward partner's R side on steps 28-30. Man turns body slightly R to invite Lady to his R side. Then, follow with Advanced Hip Twist or Hip Twist Spiral.",
   "steps" : [ ]
 }, {
-  "name" : "FootChanges",
+  "name" : "Foot Changes",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/foot-changes" ],
   "dance_type" : "CHA_CHA_CHA",
   "level" : "Gold",
@@ -1019,7 +1019,7 @@
     "comments" : [ "End in Right Side Position or Right Shadow Position" ]
   } ]
 }, {
-  "name" : "Hand to Hand",
+  "name" : "Hand to Hand (To Right and Left SP)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hand-to-hand" ],
   "dance_type" : "CHA_CHA_CHA",
   "level" : "Newcomer",
@@ -1169,7 +1169,7 @@
     "comments" : [ "LF diag back to chasse LRL", "end LF back in open position", "1/4 to R over 6-8" ]
   } ]
 }, {
-  "name" : "Basic In Place",
+  "name" : "Basic in Place",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/basic-in-place" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -1399,7 +1399,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Change ofHands Behind Back",
+  "name" : "Change of Hands Behind Back",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/change-of-hands-behind-back" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -1474,7 +1474,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Change of Places Left to Right",
+  "name" : "Change of Place L to R",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/change-of-places-left-to-right" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -1754,7 +1754,7 @@
     "comments" : [ "End in Closed Position.", "1/2 to L over steps 2-5." ]
   } ]
 }, {
-  "name" : "Fallaway Rock",
+  "name" : "Basic in Fallaway (Fallaway Rock) Development",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/fallaway-rock" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -1849,7 +1849,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Fallaway Throwaway",
+  "name" : "Fallaway Throwaway Overturned Fallaway Throwaway",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/fallaway-throwaway" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -1964,7 +1964,7 @@
     "comments" : [ "end in open position." ]
   } ]
 }, {
-  "name" : "Advanced Hip Twists",
+  "name" : "Hip Twists (Advanced, Continuous and Circular)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/advanced-hip-twists" ],
   "dance_type" : "RUMBA",
   "level" : "Gold",
@@ -2354,7 +2354,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Circular Hip Twists",
+  "name" : "Hip Twists (Advanced, Continuous and Circular)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists" ],
   "dance_type" : "RUMBA",
   "level" : "Gold",
@@ -2429,7 +2429,7 @@
     "comments" : [ "On ball of RF, Pressed Walk. Late lowering of the heel. Finish R hip, full." ]
   } ]
 }, {
-  "name" : "Closed HipTwist",
+  "name" : "Closed Hip Twist",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist" ],
   "dance_type" : "RUMBA",
   "level" : "Bronze",
@@ -2624,7 +2624,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Cucarachas",
+  "name" : "Cucarachas (LF and RF)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/cucarachas" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -2759,7 +2759,7 @@
     "comments" : [ "Close LF to RF." ]
   } ]
 }, {
-  "name" : "Curl",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/curl" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -2874,7 +2874,7 @@
     "comments" : [ "For Fan finish, keep thighs tightly closed" ]
   } ]
 }, {
-  "name" : "Progressive Walks",
+  "name" : "Progressive Walks Forward or Backward",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/progressive-walks" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -3004,7 +3004,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rope Spinning",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -3099,7 +3099,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Shoulder To Shoulder",
+  "name" : "Shoulder to Shoulder (Left Side and Right Side) Development",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/shoulder-to-shoulder" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -3393,7 +3393,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Spiral Turn",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/spiral" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -3448,7 +3448,7 @@
     "comments" : [ "Turn could also be made on the R toe with heel well off the floor. (High Spiral)", "At end of 1, make sure to settle R hip before stepping next step (shouldn't fall into next step.)", "L arm elbow do not drop down, keep it up horizontal to keep volume/space.", "L arm in front, keep volume." ]
   } ]
 }, {
-  "name" : "Spot Turns (including Switch Turns, Underarm Turns)",
+  "name" : "Spot Turns to L or R",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/spot-turns" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -4028,7 +4028,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Natural Basic Movement",
+  "name" : "Natural Basic Movement (Alternative)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/basic-movements" ],
   "dance_type" : "SAMBA",
   "level" : "Newcomer",

@@ -1,0 +1,173 @@
+[ {
+  "name" : "RopeSpinning",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "Side Step to Left",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "Spot or Switch Turn To L (Lady to R)",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "BackRocks",
+  "dance_type" : "SAMBA",
+  "url" : ""
+}, {
+  "name" : "Unknown",
+  "dance_type" : "Unknown",
+  "url" : ""
+}, {
+  "name" : "Whisk to Left",
+  "dance_type" : "SAMBA",
+  "url" : ""
+}, {
+  "name" : "Alemana",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "Cha Cha Cha Closed Basic",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "Change ofPlaces Right to Left",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "Closed Basic Movement",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "ContinuousHip Twists",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Cuban Rocks",
+  "dance_type" : "SAMBA",
+  "url" : ""
+}, {
+  "name" : "HipTwist Spiral",
+  "dance_type" : "CHA_CHA_CHA",
+  "url" : ""
+}, {
+  "name" : "Walks",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "Open Reverse Turn",
+  "dance_type" : "TANGO",
+  "url" : ""
+}, {
+  "name" : "Natural Turn and Back Lock",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "Foxtrot Fallaway with Weave Ending",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : ""
+}, {
+  "name" : "Tumble Turn",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : ""
+}, {
+  "name" : "Open Telemark",
+  "dance_type" : "WALTZ",
+  "url" : ""
+}, {
+  "name" : "Tipsy To Right and Left",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "Advanced HipTwists",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Rumba Closed Basic Movements",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Hand To Hand RSP",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "New York (to LSP or RSP) Check from OCPP or OPP",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Progressive Walks Forward",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Side Step toLeft",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Spot Turns to L or R (Including Switch and Underarm Turns) Developments (CHA_CHA_CHA)",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Hover Telemark to Promenade Position",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark-to-pp"
+}, {
+  "name" : "Tango Walk",
+  "dance_type" : "TANGO",
+  "url" : ""
+}, {
+  "name" : "Natural Turn andBack Lock",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "Rumba Cross",
+  "dance_type" : "RUMBA",
+  "url" : ""
+}, {
+  "name" : "Six Quick Run",
+  "dance_type" : "WALTZ",
+  "url" : ""
+}, {
+  "name" : "Tipsy to Right",
+  "dance_type" : "WALTZ",
+  "url" : ""
+}, {
+  "name" : "Zig-Zag, Back Lock And Running Finish",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "Natural Pivot Turn",
+  "dance_type" : "WALTZ",
+  "url" : ""
+}, {
+  "name" : "Natural Turn with Hesitation",
+  "dance_type" : "WALTZ",
+  "url" : ""
+}, {
+  "name" : "Tipsy to Right",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "Hover Telemark to PP",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : ""
+}, {
+  "name" : "Fishtail",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "NaturalTurn and Back Lock",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "RunningFinish",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "QuickstepV6",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "Unknown",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : ""
+} ]

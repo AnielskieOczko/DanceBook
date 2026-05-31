@@ -189,7 +189,7 @@
     "comments" : [ "Keep going straight, in front of Man, don't veer off to left.", "Small steps, don't go too far, create arm window, R hand on left shoulder, make sure both shoulders down, don't raise shoulders.", "Difference from Alemana: R hand directly comes up and then place it on Lady's left shoulder.", "Alternative - do checked chasse instead of forward lock: 4: RF fwd; &: check: make sure it has 50% weight, do not put all weight on front foot; 1: RF closes to LF, twist hip; 2: LF fwd | 1/8 to L; Step straight first, then turn 1/8 to L on this step, so next step is diagonal fwd (making it a hockey stick). Man's arm should be in front of Lady's face, or already over on Lady's L shoulder. (Lady can help putting his arm on her L shoulder.)", "3: RF fwd in line with LF, then turn underarm to end RF back | 1/2 to L, body turns less; Forward Walk Turn technique.", "End of beat \\\"3&\\\": Do flexible turn - turn upper body first (leaving head and foot where it is), then sharp turn head and hips.", "After turning, weight is more forward (chest forward, not leaning body forward which is too much, suck tummy). Don't be back weighted. Use front LF to push the floor and release to step back.", "4 & 1: Back Lock in Open Position LRL | body completes turn; Spine moves straight back, do not veer off to left side; Give the Man tone in the arm; Man/Lady together is not on same line as started, turned 1/8, that's why it's a hockey stick." ]
   } ]
 }, {
-  "name" : "Hip Bump",
+  "name" : "Hip Bump (Left Shoulder Shove)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/hip-bump" ],
   "dance_type" : "JIVE",
   "level" : "Newcomer",
@@ -574,7 +574,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rolling Off the Arm",
+  "name" : "Rolling of the Arm",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/rolling-off-the-arm" ],
   "dance_type" : "JIVE",
   "level" : "Silver",
@@ -934,7 +934,7 @@
     "comments" : [ "Spin approx. a complete turn to R on RF underarm (Lady)", "Man gives stronger pull then releases to L hand hold" ]
   } ]
 }, {
-  "name" : "Stalking Walks, Flicks and Break",
+  "name" : "Stalking Walks, Flicks and Break (Flicks into Break)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/stalking-walks-flicks-and-break" ],
   "dance_type" : "JIVE",
   "level" : "Gold",
@@ -1254,7 +1254,7 @@
     "comments" : [ "1-2 to R" ]
   } ]
 }, {
-  "name" : "ToeHeel Swivels",
+  "name" : "Toe Heel Swivels",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/toe-heel-swivels" ],
   "dance_type" : "JIVE",
   "level" : "Gold",
@@ -1659,7 +1659,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Whip",
+  "name" : "Whip Double Cross Whip",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/whip" ],
   "dance_type" : "JIVE",
   "level" : "Bronze",
@@ -2059,7 +2059,7 @@
     "comments" : [ "Take required hold" ]
   } ]
 }, {
-  "name" : "Hand To Hand",
+  "name" : "Hand to Hand (To Right and Left SP)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/hand-to-hand" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -2369,7 +2369,7 @@
     "comments" : [ "no turn" ]
   } ]
 }, {
-  "name" : "New York",
+  "name" : "New York (To LSP or RSP)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/new-york" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -2549,7 +2549,7 @@
     "comments" : [ "RF step fwd to Man (slightly diagonal to Man's R side). Upper body diagonal, L arm straight up" ]
   } ]
 }, {
-  "name" : "Opening Out From Reverse Top",
+  "name" : "Opening Out from Reverse Top",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -2759,7 +2759,7 @@
     "comments" : [ "In advanced form, this step can be taken fwd in line with other foot, then turn 1/2 to end at the 90\" angle to Man." ]
   } ]
 }, {
-  "name" : "Back Corte",
+  "name" : "Back Corté",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/back-corte" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -3284,7 +3284,7 @@
     "comments" : [ "1/4 between 5-6, body turn less", "up, lower e/o 6", "Finish the turn on LF (in previous step) before stepping RF diagonally back.", "This could end in PP." ]
   } ]
 }, {
-  "name" : "Closed Telemark",
+  "name" : "Telemark (Closed Telemark)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -3359,7 +3359,7 @@
     "comments" : [ "Keep moving, don't hover and stop, strong, bigger step (Man is waiting, need more power). Keep head position (which will make it shape to right)." ]
   } ]
 }, {
-  "name" : "ClosedWing",
+  "name" : "Closed Wing",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/closed-wing" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3604,7 +3604,7 @@
     "comments" : [ "Cross feet (LF maintains pressure on ground while dragging to cross RF), lower into plie. Hips up the Man.", "Do not lower too early, lower on \"&\"", "Note: The Double Reverse Spin may be started DC, DW, or LOD. The amount of turn may vary between 3/4 and a whole turn." ]
   } ]
 }, {
-  "name" : "FallawayReverse and Slip Pivot",
+  "name" : "Fallaway Reverse and Slip Pivot",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3689,7 +3689,7 @@
     "comments" : [ "It feels hip is more twisted to left. Do not close left hip. Pick up left side and open left hip, Man's right hip in middle of Lady's left hip and center", "Lady keeps center lifted to Man. Use tummy muscle, pull center." ]
   } ]
 }, {
-  "name" : "Hover Corte",
+  "name" : "Hover Corté",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3909,7 +3909,7 @@
     "comments" : [ "RF should track under the body.", "Body begins turning at the beginning of this step.", "Small step. Straight back.", "Keep head weight on your left.", "Watch Lady's position, don't pivot too much too early, which will peel off from lady.", "LF fwd in CBMP (small step) RF held in CBMP | DC | TH | up to 1/2 L (Pivot) | ", "Every time when turning to the left, imagine the belly button and center slightly turning to the right.", "Do not allow shoulder to completely line up with hips.", "R shoulder and R hip feel slightly open in left turning figures.", "Step forward, head goes more left. Show off extension.", "Controlled lowering at the end, before next step." ]
   } ]
 }, {
-  "name" : "TurningLock to Right",
+  "name" : "Turning Lock to Right",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",

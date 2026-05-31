@@ -1,129 +1,116 @@
 {
-  "name": "Open Reverse Turn, Lady Outside",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside?src=routine"
-  ],
-  "dance_type": "TANGO",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Back Corte,Brush Tap,Closed Promenade,Fallaway Reverse and Slip Pivot,Four Step Change,Open Finish,Open Promenade,Outside Swivel,Promenade Link,Reverse Outside Swivel,Rock Turn,Walk",
-  "following_figure_names": "Walk,Progressive Side Step,Progressive Link,Back Corte,LF Rock,Closed Promenade,Open Promenade,Natural Promenade Turn,Promenade Link,Back Open Promenade,Fallaway Promenade,Four Step,Outside Swivel,Four Step Change,Brush Tap,Fallaway Four Step,Five Step,Contra Check",
-  "notes": "The shoulders stop rotating, giving the hips a chance to catch up. It was described as a hover in the orientation of the frame. When reverse turn is preceded by another reverse turning figure with many quick steps, some dancers even reverse the rotation of the shoulders a little on this step, to slow down enough for the close at the end of the pattern. Man do straight back step, do not do side steps which will get in the way of lady. Man on inside of turn, smaller step, commit weight completely to LF. Extend, shape. Be careful not to get into Man's space. Stay very left to Man. Step straight forward, \"through\" Man, big strong step. Left hand position should stay the same, do not slide hand pass Man's armpit. Extend, shape. Hold on count 3 and step on to RF on count 4. Step on count 3, and hold on count 4. (Open Reverse Turn, Lady Inline is different, where Man leads Lady inside the legs, not OP.)",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF fwd in CBMP | DC | H | CBM",
-      "footwork": "H",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF to side | BDW | BH | 3/8 to L",
-      "footwork": "",
-      "alignment": "BDW",
-      "amount_of_turn": "3/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF back in CBMP | Down LOD | BH",
-      "footwork": "",
-      "alignment": "Down LOD",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF back | Down LOD | BH | CBM",
-      "footwork": "",
-      "alignment": "Down LOD",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF to side and slightly fwd | Pointing DW | IE of foot | 3/8 to L",
-      "footwork": "",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "3/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF closes to LF slightly back | Facing DW | WF",
-      "footwork": "WF",
-      "alignment": "Facing DW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF back in CBMP | BDC | BH | CBM",
-      "footwork": "",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF turned in, RF facing wall. Action is initiated with flexing/rotating L hip, not R leg.",
-      "footwork": "",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF to side and slightly fwd | PLOD | WF | 3/8 to L",
-      "footwork": "WF",
-      "alignment": "PLOD",
-      "amount_of_turn": "3/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF closes to LF slightly back | Facing DW | WF",
-      "footwork": "WF",
-      "alignment": "Facing DW",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "Open Reverse, Lady Outside (Open Finish)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside?src=routine" ],
+  "dance_type" : "TANGO",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Back Corte,Brush Tap,Closed Promenade,Fallaway Reverse and Slip Pivot,Four Step Change,Open Finish,Open Promenade,Outside Swivel,Promenade Link,Reverse Outside Swivel,Rock Turn,Walk",
+  "following_figure_names" : "Walk,Progressive Side Step,Progressive Link,Back Corte,LF Rock,Closed Promenade,Open Promenade,Natural Promenade Turn,Promenade Link,Back Open Promenade,Fallaway Promenade,Four Step,Outside Swivel,Four Step Change,Brush Tap,Fallaway Four Step,Five Step,Contra Check",
+  "notes" : "The shoulders stop rotating, giving the hips a chance to catch up. It was described as a hover in the orientation of the frame. When reverse turn is preceded by another reverse turning figure with many quick steps, some dancers even reverse the rotation of the shoulders a little on this step, to slow down enough for the close at the end of the pattern. Man do straight back step, do not do side steps which will get in the way of lady. Man on inside of turn, smaller step, commit weight completely to LF. Extend, shape. Be careful not to get into Man's space. Stay very left to Man. Step straight forward, \"through\" Man, big strong step. Left hand position should stay the same, do not slide hand pass Man's armpit. Extend, shape. Hold on count 3 and step on to RF on count 4. Step on count 3, and hold on count 4. (Open Reverse Turn, Lady Inline is different, where Man leads Lady inside the legs, not OP.)",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd in CBMP | DC | H | CBM",
+    "footwork" : "H",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side | BDW | BH | 3/8 to L",
+    "footwork" : "",
+    "alignment" : "BDW",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP | Down LOD | BH",
+    "footwork" : "",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back | Down LOD | BH | CBM",
+    "footwork" : "",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly fwd | Pointing DW | IE of foot | 3/8 to L",
+    "footwork" : "",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF closes to LF slightly back | Facing DW | WF",
+    "footwork" : "WF",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back in CBMP | BDC | BH | CBM",
+    "footwork" : "",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF turned in, RF facing wall. Action is initiated with flexing/rotating L hip, not R leg.",
+    "footwork" : "",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly fwd | PLOD | WF | 3/8 to L",
+    "footwork" : "WF",
+    "alignment" : "PLOD",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF closes to LF slightly back | Facing DW | WF",
+    "footwork" : "WF",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

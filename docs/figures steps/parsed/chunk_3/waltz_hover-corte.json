@@ -1,91 +1,76 @@
 {
-  "name": "Hover Corte",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
-  "following_figure_names": "Back Lock, Outside Change, Fallaway Whisk, Back Whisk, Outside Spin",
-  "notes": "Options: keep head closed or open to PP (especially when dancing extra bar of music). Big step. Swing forward. Whole R side to Man, stretch. To create big shape, breathe the frame. After stepping RF forward, turning body from bottom to up, feet, hip, upper toros, and lastly head (articulate head). Really delay head, slow. Feels like head isn't finishing till way into next step. Then articulate LF coming out. Do not shape from lower waist area. Think about high jump, \"up and over\", pick up center. When developing the shape, do not take arms back, leave arms to Man, extend. Count 3 4 5: RF moves towards LF | Towards alignment of 6 | T LF and pressure on IE T RF | Continue to turn body on step 2 | Sway(R R R) | -. Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees. Count 1: RF fwd in CBMP, OP | Facing DC against LOD | H | - | Sway(S) | CBM | -.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Back with BLOD, start to turn left, sway S, CBM, start to rise",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "To side and slightly forward, pointing DW, T, body turns less, continue to turn body on step 2, sway R, continue to rise",
-      "footwork": "T",
-      "alignment": "DW",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to side and slightly back, backing DC against LOD, TH, sway S, up lower e/o 3",
-      "footwork": "TH",
-      "alignment": "DC against LOD",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Fwd, facing LOD, start to turn left, sway S, CBM, start to rise",
-      "footwork": "HT",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Big step."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Side and LF brushes towards RF, facing center to end facing DC against LOD, T, 1/4 btwn 1-2; continue to turn 1/4 on 2, sway L",
-      "footwork": "T",
-      "alignment": "Center to DC against LOD",
-      "amount_of_turn": "1/4",
-      "comments": [
-        "Swing forward. Whole R side to Man, stretch, To create big shape, breathe the frame. After stepping RF forward, turning body from bottom to up, feet, hip, upper toros, and lastly head (articulate head). Really delay head, slow. Feels like head isn't finishing till way into next step."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF diag. fwd, facing DC against LOD, TH, - , sway S, - , up lower e/o 6",
-      "footwork": "TH",
-      "alignment": "DC against LOD",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees"
-      ]
-    }
-  ]
+  "name" : "Hover Corté",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte" ],
+  "dance_type" : "WALTZ",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names" : "Back Lock, Outside Change, Fallaway Whisk, Back Whisk, Outside Spin",
+  "notes" : "Options: keep head closed or open to PP (especially when dancing extra bar of music). Big step. Swing forward. Whole R side to Man, stretch. To create big shape, breathe the frame. After stepping RF forward, turning body from bottom to up, feet, hip, upper toros, and lastly head (articulate head). Really delay head, slow. Feels like head isn't finishing till way into next step. Then articulate LF coming out. Do not shape from lower waist area. Think about high jump, \"up and over\", pick up center. When developing the shape, do not take arms back, leave arms to Man, extend. Count 3 4 5: RF moves towards LF | Towards alignment of 6 | T LF and pressure on IE T RF | Continue to turn body on step 2 | Sway(R R R) | -. Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees. Count 1: RF fwd in CBMP, OP | Facing DC against LOD | H | - | Sway(S) | CBM | -.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back with BLOD, start to turn left, sway S, CBM, start to rise",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "To side and slightly forward, pointing DW, T, body turns less, continue to turn body on step 2, sway R, continue to rise",
+    "footwork" : "T",
+    "alignment" : "DW",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to side and slightly back, backing DC against LOD, TH, sway S, up lower e/o 3",
+    "footwork" : "TH",
+    "alignment" : "DC against LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Fwd, facing LOD, start to turn left, sway S, CBM, start to rise",
+    "footwork" : "HT",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Big step." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side and LF brushes towards RF, facing center to end facing DC against LOD, T, 1/4 btwn 1-2; continue to turn 1/4 on 2, sway L",
+    "footwork" : "T",
+    "alignment" : "Center to DC against LOD",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Swing forward. Whole R side to Man, stretch, To create big shape, breathe the frame. After stepping RF forward, turning body from bottom to up, feet, hip, upper toros, and lastly head (articulate head). Really delay head, slow. Feels like head isn't finishing till way into next step." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF diag. fwd, facing DC against LOD, TH, - , sway S, - , up lower e/o 6",
+    "footwork" : "TH",
+    "alignment" : "DC against LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees" ]
+  } ]
 }

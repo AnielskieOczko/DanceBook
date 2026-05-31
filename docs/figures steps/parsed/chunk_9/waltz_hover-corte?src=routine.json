@@ -1,95 +1,76 @@
 {
-  "name": "Hover Corte",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
-  "following_figure_names": "Back Lock, Outside Change, Fallaway Whisk, Back Whisk, Outside Spin",
-  "notes": "Options: keep head closed, or open to PP (especially when dancing extra bar of music).\nBig step.\nArticulate head during count 2-3-4-5. Breathe, body to Man to create more shape.\nDo not shape from lower waist area. Think about high jump, \"up and over\", pick up center.\nWhen developing the shape, do not take arms back, leave arms to Man, extend.\nCount 1: RF back | BLOD | TH | Start to turn L | Sway(S) | CBM | Start to rise e/o 1, NFR\nCount 2: LF to side and slightly fwd | Pointing DW | T | 3/8 btwn 1-2, body turns less; Continue to turn body on step 2. | Sway(R) | Continue to rise on 2\nCount 3: Transfer weight to RF side and slightly back | Backing DC against LOD | TH | - | Sway(S) | Up. Lower e/o 3\nCount 1: LF back in CBMP | Backing DC against LOD | T | - | Sway(S) | CBM | -\nCount 2: LF side | Facing center | T | 1/4 btwn 1-2 | Sway(L) | - | Continue to rise on 2\nCount 3-4: LF brushes towards RF | Towards alignment of 5 | T (RF) and IE of LF | continue to turn 1/4 btwn 3-5 | Sway (L L ) | -\nCount 5: LF brushes to RF | Facing DC against LOD | T (RF) and IE of LF | - | Sway(L) | -\nCount 6: LF diag. fwd | Facing DC against LOD | TH | - | Sway(S) | - | Up. Lower e/o 6\nArticulate LF coming out. soft knees, prepare next step by controlled lowering of knees\nCount 1: RF fwd in CBMP, OP | Facing DC against LOD | H | - | Sway(S) | CBM | -\n",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Back, start to turn left",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "To side and slightly forward",
-      "footwork": "T",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "3/8",
-      "comments": [
-        "Continue to rise on 2"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight side and slightly back",
-      "footwork": "TH",
-      "alignment": "Backing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Up. Lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Forward",
-      "footwork": "HT",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Start to turn L"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Side and brush towards RF",
-      "footwork": "T",
-      "alignment": "Facing center to end facing DC against LOD",
-      "amount_of_turn": "1/4",
-      "comments": [
-        "Swing forward. Whole R side to Man, stretch,"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Diagonal forward",
-      "footwork": "T",
-      "alignment": "Facing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees"
-      ]
-    }
-  ]
+  "name" : "Hover Corté",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names" : "Back Lock, Outside Change, Fallaway Whisk, Back Whisk, Outside Spin",
+  "notes" : "Options: keep head closed, or open to PP (especially when dancing extra bar of music).\nBig step.\nArticulate head during count 2-3-4-5. Breathe, body to Man to create more shape.\nDo not shape from lower waist area. Think about high jump, \"up and over\", pick up center.\nWhen developing the shape, do not take arms back, leave arms to Man, extend.\nCount 1: RF back | BLOD | TH | Start to turn L | Sway(S) | CBM | Start to rise e/o 1, NFR\nCount 2: LF to side and slightly fwd | Pointing DW | T | 3/8 btwn 1-2, body turns less; Continue to turn body on step 2. | Sway(R) | Continue to rise on 2\nCount 3: Transfer weight to RF side and slightly back | Backing DC against LOD | TH | - | Sway(S) | Up. Lower e/o 3\nCount 1: LF back in CBMP | Backing DC against LOD | T | - | Sway(S) | CBM | -\nCount 2: LF side | Facing center | T | 1/4 btwn 1-2 | Sway(L) | - | Continue to rise on 2\nCount 3-4: LF brushes towards RF | Towards alignment of 5 | T (RF) and IE of LF | continue to turn 1/4 btwn 3-5 | Sway (L L ) | -\nCount 5: LF brushes to RF | Facing DC against LOD | T (RF) and IE of LF | - | Sway(L) | -\nCount 6: LF diag. fwd | Facing DC against LOD | TH | - | Sway(S) | - | Up. Lower e/o 6\nArticulate LF coming out. soft knees, prepare next step by controlled lowering of knees\nCount 1: RF fwd in CBMP, OP | Facing DC against LOD | H | - | Sway(S) | CBM | -\n",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back, start to turn left",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "To side and slightly forward",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Continue to rise on 2" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight side and slightly back",
+    "footwork" : "TH",
+    "alignment" : "Backing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Up. Lower e/o 3" ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Forward",
+    "footwork" : "HT",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Start to turn L" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side and brush towards RF",
+    "footwork" : "T",
+    "alignment" : "Facing center to end facing DC against LOD",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Swing forward. Whole R side to Man, stretch," ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Diagonal forward",
+    "footwork" : "T",
+    "alignment" : "Facing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Articulate LF coming out. soft knees, prepare next step by controlled lowering of knees" ]
+  } ]
 }

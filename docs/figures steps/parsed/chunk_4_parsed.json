@@ -1,5 +1,5 @@
 [ {
-  "name" : "BackLock",
+  "name" : "Backward Lock Step (Back Lock)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/back-lock" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -559,7 +559,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "NaturalTurn with Hesitation",
+  "name" : "Natural Turn with Hesitation",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -694,7 +694,7 @@
     "comments" : [ "Always, always stay on Man's right side.", "No rise in legs, just extend left side, the rise is in the body" ]
   } ]
 }, {
-  "name" : "Natural Turn",
+  "name" : "Natural Turn (at a Corner)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Newcomer",
@@ -749,7 +749,7 @@
     "comments" : [ "3/8 between 1-2", "body turns less", "Sway(L)", "Up" ]
   } ]
 }, {
-  "name" : "Passing Natural Turn",
+  "name" : "Passing Natural Turn (from PP)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/passing-natural-turn" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -824,7 +824,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Progressive Chassé to Right",
+  "name" : "Progressive Chasse to Right",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -1254,7 +1254,7 @@
     "comments" : [ "4-7 overturned Basic Weave" ]
   } ]
 }, {
-  "name" : "Closed Telemark",
+  "name" : "Telemark (Closed)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/closedtelemark" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -1574,7 +1574,7 @@
     "comments" : [ "CBM", "--" ]
   } ]
 }, {
-  "name" : "Fallaway Reverse and Slip Pivot",
+  "name" : "Fallaway Reverse Slip Pivot",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Gold",
@@ -2236,7 +2236,7 @@
     "comments" : [ "Turns right on pivot" ]
   } ]
 }, {
-  "name" : "Weave from PP",
+  "name" : "Weave from PP (after Open Impetus)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -2999,7 +2999,7 @@
     "comments" : [ "Tango walk, big step. Don't cut it short." ]
   } ]
 }, {
-  "name" : "Rock Turn",
+  "name" : "(Natural) Rock Turn",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/rock-turn" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -3489,7 +3489,7 @@
     "comments" : [ "Count 3: RF to side in PP, having brushed to LF | Pointing to center (moving DC) | TH | 3/8 btwn 2-3, body turns less | Sway(S) | up, lower e/o 3", "Feel the turn, delay the head.", "Develop strong left side stretch at the end." ]
   } ]
 }, {
-  "name" : "Open Telemark and Cross Hesitation",
+  "name" : "Open Telemark into Cross Hesitation",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -3699,7 +3699,7 @@
     "comments" : [ "No swivel on LF." ]
   } ]
 }, {
-  "name" : "Progressive Chassé to Right",
+  "name" : "Progressive Chasse to Right",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",

@@ -189,7 +189,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "Double ReverseSpin",
+  "name" : "Double Reverse Spin",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -267,7 +267,7 @@
     "comments" : [ "Sway(S)", "Up", "Lower e/o 4", "Do not lower too early, lower on \"&\".", "Finish with L side positive/fwd." ]
   } ]
 }, {
-  "name" : "Fishtail",
+  "name" : "Fish–Tail",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -537,7 +537,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Hover Corte",
+  "name" : "Hover Corté",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -1002,7 +1002,7 @@
     "comments" : [ "end of step" ]
   } ]
 }, {
-  "name" : "Running Spin Turn (QUICKSTEP)",
+  "name" : "Running Spin Turn",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/running-spin-turn" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -1127,7 +1127,7 @@
     "comments" : [ "Figure not in the \"book\", but is often danced." ]
   } ]
 }, {
-  "name" : "Six QuickRun",
+  "name" : "Six Quick Run",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -1282,7 +1282,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Tipple Chasse to Right (along side of room) (QUICKSTEP)",
+  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -1412,7 +1412,7 @@
     "comments" : [ "Down, with sharp flexing of knees" ]
   } ]
 }, {
-  "name" : "Quarter Turn toRight",
+  "name" : "Quarter Turn to Right",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/v6" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Silver",
@@ -1587,7 +1587,7 @@
     "comments" : [ "Head returns to normal left." ]
   } ]
 }, {
-  "name" : "Zig-Zag Back Lock And Running Finish",
+  "name" : "Zig-Zag Back Lock Running Finish",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -2017,7 +2017,7 @@
     "comments" : [ "RF ball flat.", "R side twist to move L leg to side. L hip will be pendulum diagonally fwd." ]
   } ]
 }, {
-  "name" : "Circular Hip Twists",
+  "name" : "Hip Twists (Advanced, Continuous and Circular)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists" ],
   "dance_type" : "RUMBA",
   "level" : "Gold",
@@ -2167,7 +2167,7 @@
     "comments" : [ "Release L leg and step back ahead of body. Backward walk action.", "Fan position is a picture pose position. Give it some \"significance\" with more arm styling.", "Body turns to left in the direction of the hand, do not tilt shoulders.", "Look at your audience, along the L arm." ]
   } ]
 }, {
-  "name" : "Continuous Hip Twists",
+  "name" : "Hip Twists (Advanced, Continuous and Circular)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/continuous-hip-twists" ],
   "dance_type" : "RUMBA",
   "level" : "Gold",
@@ -2287,7 +2287,7 @@
     "comments" : [ "Third weight change" ]
   } ]
 }, {
-  "name" : "Curl",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/curl" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -2652,7 +2652,7 @@
     "comments" : [ "hips pendulum, then twist to turn to R." ]
   } ]
 }, {
-  "name" : "OpenHip Twist",
+  "name" : "Open Hip Twist",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/open-hip-twist" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -2747,7 +2747,7 @@
     "comments" : [ "Turn initiates from hips, walk into own arm, tighten thighs, collect center", "Turn 1/2 to left into partner's hand, then back in Fan Position" ]
   } ]
 }, {
-  "name" : "Opening Out From Reverse Top",
+  "name" : "Opening Out from Reverse Top",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -2897,7 +2897,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rope Spinning",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -3142,7 +3142,7 @@
     "comments" : [ "This is often the starting point of sliding door." ]
   } ]
 }, {
-  "name" : "Spiral Turn",
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/spiral" ],
   "dance_type" : "RUMBA",
   "level" : "Silver",
@@ -4095,7 +4095,7 @@
     "comments" : [ "start to turn L", "CBM", "start to rise e/o 4" ]
   } ]
 }, {
-  "name" : "OpenTelemark and Feather Ending",
+  "name" : "Open Telemark Feather Ending",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -4250,7 +4250,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Telemark, Natural Turn to Outside Swivel and Feather Ending",
+  "name" : "Open Telemark Natural Turn Outside Swivel Feather Ending",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",

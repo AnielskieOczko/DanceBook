@@ -1,107 +1,96 @@
 {
-"name": "Basic In Place",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/jive/basic-in-place"
-  ],
-  "dance_type": "JIVE",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Basic In Place,Fallaway Rock,Link,Mooch,Reverse Whip",
-  "following_figure_names": "Basic In Place,Fallaway Rock,Fallaway Throwaway,Change of Places Right to Left,Walks,Mooch,Reverse Whip,Stalking Walks,Flicks and Break (Stalking Walks)",
-  "notes": "This is a practice step to develop rhythm and action.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Close LF to RF",
-      "footwork": "TOGETHER",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Replace weight to RF",
-      "footwork": "F",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "QaQ",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Side Chasse LRL",
-      "footwork": "LF",
-      "alignment": "",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "QaQ",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Side Chasse RLR",
-      "footwork": "RF",
-      "alignment": "",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Close RF to LF",
-      "footwork": "TOGETHER",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Replace weight to LF",
-      "footwork": "F",
-      "alignment": "Closed Position",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "QaQ",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Side Chasse RLR",
-      "footwork": "RF",
-      "alignment": "",
-      "amount_of_turn": "0",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "QaQ",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Side Chasse LRL",
-      "footwork": "LF",
-      "alignment": "",
-      "amount_of_turn": "0",
-      "comments": []
-    }
-  ]
+  "name" : "Basic in Place",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/basic-in-place" ],
+  "dance_type" : "JIVE",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic In Place,Fallaway Rock,Link,Mooch,Reverse Whip",
+  "following_figure_names" : "Basic In Place,Fallaway Rock,Fallaway Throwaway,Change of Places Right to Left,Walks,Mooch,Reverse Whip,Stalking Walks,Flicks and Break (Stalking Walks)",
+  "notes" : "This is a practice step to develop rhythm and action.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close LF to RF",
+    "footwork" : "TOGETHER",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF",
+    "footwork" : "F",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "QaQ",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Side Chasse LRL",
+    "footwork" : "LF",
+    "alignment" : "",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "QaQ",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Side Chasse RLR",
+    "footwork" : "RF",
+    "alignment" : "",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Close RF to LF",
+    "footwork" : "TOGETHER",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Replace weight to LF",
+    "footwork" : "F",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "QaQ",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side Chasse RLR",
+    "footwork" : "RF",
+    "alignment" : "",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "QaQ",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Side Chasse LRL",
+    "footwork" : "LF",
+    "alignment" : "",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  } ]
 }

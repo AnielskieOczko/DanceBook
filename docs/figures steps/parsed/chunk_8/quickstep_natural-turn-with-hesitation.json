@@ -1,182 +1,136 @@
 {
-  "name": "NaturalTurn with Hesitation",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Newcomer",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
-  "following_figure_names": "Chasse Reverse Turn, Progressive Chasse To Right, Double Reverse Spin",
-  "notes": "Sway in step 5-6 is optional.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF fwd | FDW | HT | Start to turn R",
-      "footwork": "F",
-      "alignment": "FDW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF side",
-      "footwork": "F",
-      "alignment": "BDC",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "Sway(R)",
-        "Up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF",
-      "footwork": "F",
-      "alignment": "BLOD",
-      "amount_of_turn": "1/8 to R",
-      "comments": [
-        "Sway(R)",
-        "Up, lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back | cont to turn R",
-      "footwork": "F",
-      "alignment": "BLOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "to side",
-      "footwork": "F",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(L)"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "closes to RF without weight",
-      "footwork": "F",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(L)"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF back | BDW | TH | starts to turn R",
-      "footwork": "F",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o 1, NFR"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF side",
-      "footwork": "F",
-      "alignment": "PLOD",
-      "amount_of_turn": "3/8 between 1-2",
-      "comments": [
-        "Sway(L)",
-        "Up",
-        "body turns less"
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF close to RF",
-      "footwork": "F",
-      "alignment": "FLOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(L)",
-        "Up, lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF fwd | FLOD | HT | start to turn R",
-      "footwork": "F",
-      "alignment": "FLOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF to side | BDC",
-      "footwork": "F",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(R)"
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF closes to LF without weight",
-      "footwork": "F",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(R)"
-      ]
-    }
-  ]
+  "name" : "Natural Turn with Hesitation",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names" : "Chasse Reverse Turn, Progressive Chasse To Right, Double Reverse Spin",
+  "notes" : "Sway in step 5-6 is optional.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd | FDW | HT | Start to turn R",
+    "footwork" : "F",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF side",
+    "footwork" : "F",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Sway(R)", "Up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF",
+    "footwork" : "F",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "Sway(R)", "Up, lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back | cont to turn R",
+    "footwork" : "F",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side",
+    "footwork" : "F",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(L)" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "closes to RF without weight",
+    "footwork" : "F",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(L)" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back | BDW | TH | starts to turn R",
+    "footwork" : "F",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM", "start to rise e/o 1, NFR" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF side",
+    "footwork" : "F",
+    "alignment" : "PLOD",
+    "amount_of_turn" : "3/8 between 1-2",
+    "comments" : [ "Sway(L)", "Up", "body turns less" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF close to RF",
+    "footwork" : "F",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(L)", "Up, lower e/o 3" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd | FLOD | HT | start to turn R",
+    "footwork" : "F",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM" ]
+  }, {
+    "step_number" : 11,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side | BDC",
+    "footwork" : "F",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(R)" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF closes to LF without weight",
+    "footwork" : "F",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(R)" ]
+  } ]
 }

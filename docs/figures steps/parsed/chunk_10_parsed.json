@@ -1,5 +1,5 @@
 [ {
-  "name" : "Back Lock",
+  "name" : "Backward Lock Step (Back Lock)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/back-lock?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -664,7 +664,7 @@
     "comments" : [ "--", "CBM" ]
   } ]
 }, {
-  "name" : "Hover Corte",
+  "name" : "Hover Corté",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Gold",
@@ -1879,7 +1879,7 @@
     "comments" : [ "CBM" ]
   } ]
 }, {
-  "name" : "Tipple Chasse To Right",
+  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r?src=routine" ],
   "dance_type" : "QUICKSTEP",
   "level" : "Bronze",
@@ -2594,7 +2594,7 @@
     "comments" : [ "Typically, continue with Feather Finish SQQ. This first LF fwd on S, do not follow Man's curve, step straight forward in between Man's legs, otherwise, at the end of Feather finish, Lady's hip will gap/end up to the side of Man's hip. When swing on Q: do not dip shoulder low, keep should flat, swing forward, traveling. Give center to Man, shape. Breathe, release so body does not stiff up. If Man shapes, Lady turn her head to R on QQ, keep ribs/side to Man." ]
   } ]
 }, {
-  "name" : "Fallaway Reverse and Slip Pivot",
+  "name" : "Fallaway Reverse Slip Pivot",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Gold",
@@ -3019,7 +3019,7 @@
     "comments" : [ "Sway(S)", "CBM" ]
   } ]
 }, {
-  "name" : "Natural Zig-Zag from Promenade Position",
+  "name" : "Natural Zig-Zag from PP",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Gold",
@@ -3249,7 +3249,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Telemark and Feather Ending",
+  "name" : "Open Telemark Feather Ending",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine" ],
   "dance_type" : "SLOW_FOXTROT",
   "level" : "Silver",
@@ -3807,7 +3807,7 @@
     "comments" : [ "Sway(S)", "CBM", "--" ]
   } ]
 }, {
-  "name" : "Closed Telemark",
+  "name" : "Telemark (Closed Telemark)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",

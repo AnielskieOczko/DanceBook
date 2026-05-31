@@ -1,85 +1,76 @@
 {
-  "name": "ClosedWing",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/waltz/closed-wing"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Basic Weave, Chasse From Promenade Position, Closed Telemark, Outside Change, Turning Lock, Weave From Promenade Position",
-  "following_figure_names": "Closed Telemark (taking step 1 in CBMP OP on L side), Open Telemark (taking step 1 in CBMP OP on L side), Double Reverse Spin (taking step 1 in CBMP OP on L side), Progressive Chasse To R (taking step 1 in CBMP OP on L side), Reverse Turn (taking step 1 in CBMP OP on L side), Fallaway Reverse And Slip Pivot, Whisk (if ended DW)",
-  "notes": "This step is not too big. Keep it underneath body. (Man is not moving anywhere)\nKeep upward balanced poised position, don't try to pull hip back to get around.\nTry not to think body rotating. Think about sway. Try to keep shoulders parallel to partner.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Forward in CBMP, Open Position",
-      "footwork": "HF",
-      "alignment": "Forward Diagonal Center",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Closes to RF without weight, slight body turn to L",
-      "footwork": "WF",
-      "alignment": "Forward Diagonal Center",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Closes to RF without weight",
-      "footwork": "WF",
-      "alignment": "Forward Diagonal Center",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Back in CBMP",
-      "footwork": "TH",
-      "alignment": "Back Diagonal Center",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Step to side and slightly back",
-      "footwork": "T",
-      "alignment": "Back Diagonal Center",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Forward in CBMP, OP on L side",
-      "footwork": "TH",
-      "alignment": "Facing Diagonal Wall",
-      "amount_of_turn": "Slight body turn to L",
-      "comments": []
-    }
-  ]
+  "name" : "Closed Wing",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/closed-wing" ],
+  "dance_type" : "WALTZ",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic Weave, Chasse From Promenade Position, Closed Telemark, Outside Change, Turning Lock, Weave From Promenade Position",
+  "following_figure_names" : "Closed Telemark (taking step 1 in CBMP OP on L side), Open Telemark (taking step 1 in CBMP OP on L side), Double Reverse Spin (taking step 1 in CBMP OP on L side), Progressive Chasse To R (taking step 1 in CBMP OP on L side), Reverse Turn (taking step 1 in CBMP OP on L side), Fallaway Reverse And Slip Pivot, Whisk (if ended DW)",
+  "notes" : "This step is not too big. Keep it underneath body. (Man is not moving anywhere)\nKeep upward balanced poised position, don't try to pull hip back to get around.\nTry not to think body rotating. Think about sway. Try to keep shoulders parallel to partner.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Forward in CBMP, Open Position",
+    "footwork" : "HF",
+    "alignment" : "Forward Diagonal Center",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Closes to RF without weight, slight body turn to L",
+    "footwork" : "WF",
+    "alignment" : "Forward Diagonal Center",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Closes to RF without weight",
+    "footwork" : "WF",
+    "alignment" : "Forward Diagonal Center",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in CBMP",
+    "footwork" : "TH",
+    "alignment" : "Back Diagonal Center",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step to side and slightly back",
+    "footwork" : "T",
+    "alignment" : "Back Diagonal Center",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Forward in CBMP, OP on L side",
+    "footwork" : "TH",
+    "alignment" : "Facing Diagonal Wall",
+    "amount_of_turn" : "Slight body turn to L",
+    "comments" : [ ]
+  } ]
 }

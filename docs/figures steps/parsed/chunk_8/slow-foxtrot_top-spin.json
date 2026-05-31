@@ -1,65 +1,56 @@
 {
-  "name": "TopSpin",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin"
-  ],
-  "dance_type": "SLOW_FOXTROT",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Basic Weave, Bounce Fallaway with Weave Ending, Closed Impetus and Feather Finish, Feather Step, Hover Feather, Natural Twist Turn, Natural Weave, Open Telemark and Feather Ending, Reverse Turn",
-  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Reverse Wave, Three Step, Change Of Direction, Hover Telemark, Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
-  "notes": "On step 1 the footwork of TH may be used. This will often result in a softer and more flowing movement. When this footwork is used the rise will be \"Up NFR\" on step 2. \nOn step 6 of the preceding Reverse Turn with Feather Ending, Man's body will be facing DW and the Lady will be backing DW.\nSilver and Gold: Closed Impetus and Feather Finish may be danced turning 1/2 on step 1-3 to back against LOD and 3/8 on Feather Finish to face DC against LOD. Continue with Top Spin to face DW.\nOpen Telemark, Natural Turn to Outside Swivel may be danced, turning only 1/8 to R for Man, 3/8 for Lady on step 7 to follow with Feather Ending DC against LOD into Top Spin.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/8",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Backing against LOD, T, 1/8 turn left, sway forward, rise up",
-      "footwork": "B",
-      "alignment": "Backing Against LOD",
-      "amount_of_turn": "1/8 to L",
-      "comments": [
-        "On step 1 the footwork of TH may be used."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "1/8 between 1-2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Backing DW Against LOD, T, 1/8 between 1-2, sway forward, CBM, up",
-      "footwork": "B",
-      "alignment": "Backing DW Against LOD",
-      "amount_of_turn": "1/8 between 1-2",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "1/4 between 2-3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "To side and slightly forward, pointing DC of new LOD, T, 1/4 between 2-3, body turns less, sway right, rise up",
-      "footwork": "T",
-      "alignment": "Pointing DC of new LOD",
-      "amount_of_turn": "less",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "--",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF forward in CBMP, opposite position, facing DC, sway right, lower at end of 4",
-      "footwork": "F",
-      "alignment": "Facing DC",
-      "amount_of_turn": "none",
-      "comments": []
-    }
-  ]
+  "name" : "Top Spin",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin" ],
+  "dance_type" : "SLOW_FOXTROT",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic Weave, Bounce Fallaway with Weave Ending, Closed Impetus and Feather Finish, Feather Step, Hover Feather, Natural Twist Turn, Natural Weave, Open Telemark and Feather Ending, Reverse Turn",
+  "following_figure_names" : "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Reverse Wave, Three Step, Change Of Direction, Hover Telemark, Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes" : "On step 1 the footwork of TH may be used. This will often result in a softer and more flowing movement. When this footwork is used the rise will be \"Up NFR\" on step 2. \nOn step 6 of the preceding Reverse Turn with Feather Ending, Man's body will be facing DW and the Lady will be backing DW.\nSilver and Gold: Closed Impetus and Feather Finish may be danced turning 1/2 on step 1-3 to back against LOD and 3/8 on Feather Finish to face DC against LOD. Continue with Top Spin to face DW.\nOpen Telemark, Natural Turn to Outside Swivel may be danced, turning only 1/8 to R for Man, 3/8 for Lady on step 7 to follow with Feather Ending DC against LOD into Top Spin.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/8",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Backing against LOD, T, 1/8 turn left, sway forward, rise up",
+    "footwork" : "B",
+    "alignment" : "Backing Against LOD",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "On step 1 the footwork of TH may be used." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/8 between 1-2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Backing DW Against LOD, T, 1/8 between 1-2, sway forward, CBM, up",
+    "footwork" : "B",
+    "alignment" : "Backing DW Against LOD",
+    "amount_of_turn" : "1/8 between 1-2",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/4 between 2-3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "To side and slightly forward, pointing DC of new LOD, T, 1/4 between 2-3, body turns less, sway right, rise up",
+    "footwork" : "T",
+    "alignment" : "Pointing DC of new LOD",
+    "amount_of_turn" : "less",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "--",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward in CBMP, opposite position, facing DC, sway right, lower at end of 4",
+    "footwork" : "F",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "none",
+    "comments" : [ ]
+  } ]
 }

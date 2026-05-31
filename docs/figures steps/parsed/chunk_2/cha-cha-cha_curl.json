@@ -1,73 +1,56 @@
 {
-  "name": "Curl",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/curl"
-  ],
-  "dance_type": "CHA_CHA_CHA",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Open Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
-  "following_figure_names": "Chase, Alemana, Hockey Stick, Open Basic Movement, Open Hip Twist, Cuban Break LF, Split Cuban Break LF, Turkish Towel, Sweetheart, Follow My Leader, New York LSP, Spot or Switch Turn To R (Lady to L), Underarm Turn to L, Three Cha Cha Chas Forward, Reverse Top",
-  "notes": "Alternative finishing positions are the same as Spiral.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2:3:4&1",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step forward",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": [
-        "Compact Chasse LRL",
-        "Raise L hand to above Lady's R shoulder to circle counterclockwise"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight",
-      "footwork": "W",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": [
-        "Transfer weight to RF"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "4 & 1",
-      "role": "LEADER",
-      "foot": "?",
-      "action": "Compact Chasse LRL",
-      "footwork": "C",
-      "alignment": "LOD",
-      "amount_of_turn": "0",
-      "comments": [
-        "Compact Chasse LRL"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "5",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF fwd lock to chasse RLR, then turn allowing LF to cross loosely in front without weight (Spiral turn)",
-      "footwork": "?",
-      "alignment": "LOD",
-      "amount_of_turn": "5/8 to L",
-      "comments": [
-        "Turn is made on ball of RF with foot flat (T of LF)",
-        "Continue with 6-10 of Spiral"
-      ]
-    }
-  ]
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/curl" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
+  "following_figure_names" : "Chase, Alemana, Hockey Stick, Open Basic Movement, Open Hip Twist, Cuban Break LF, Split Cuban Break LF, Turkish Towel, Sweetheart, Follow My Leader, New York LSP, Spot or Switch Turn To R (Lady to L), Underarm Turn to L, Three Cha Cha Chas Forward, Reverse Top",
+  "notes" : "Alternative finishing positions are the same as Spiral.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2:3:4&1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step forward",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ "Compact Chasse LRL", "Raise L hand to above Lady's R shoulder to circle counterclockwise" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight",
+    "footwork" : "W",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ "Transfer weight to RF" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 & 1",
+    "role" : "LEADER",
+    "foot" : "?",
+    "action" : "Compact Chasse LRL",
+    "footwork" : "C",
+    "alignment" : "LOD",
+    "amount_of_turn" : "0",
+    "comments" : [ "Compact Chasse LRL" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "5",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd lock to chasse RLR, then turn allowing LF to cross loosely in front without weight (Spiral turn)",
+    "footwork" : "?",
+    "alignment" : "LOD",
+    "amount_of_turn" : "5/8 to L",
+    "comments" : [ "Turn is made on ball of RF with foot flat (T of LF)", "Continue with 6-10 of Spiral" ]
+  } ]
 }

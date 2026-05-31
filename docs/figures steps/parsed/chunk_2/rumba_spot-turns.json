@@ -1,107 +1,96 @@
 {
-  "name": "Spot Turns (including Switch Turns, Underarm Turns)",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/rumba/spot-turns"
-  ],
-  "dance_type": "RUMBA",
-  "level": "Newcomer",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Advanced Hip Twists, Alemana, Basic Movements: Closed, Closed Hip Twist, Cuban Rocks RF, Cucarachas: RF, Curl, Fencing, Hand To Hand LSP, Hockey Stick, New York RSP, Open Hip Twist, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral, Spot or Switch Turn to L (Lady to R), Syncopated Cuban Rock LF, Underarm Turn To R",
-  "following_figure_names": "Basic Movements: Open (4-6), Basic Movements: Closed (4-6), New York RSP, Spot or Switch Turn to L (Lady to R), Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Cuban Rocks RF, Fan (4-6), Aida, Syncopated Cuban Rocks RF, Rumba Underarm Turn to Right",
-  "notes": "Spot Turn or Switch Turn to L (Lady to R) could end in Open Position, taking L to R hand hold at step 3, taking step 3 fwd leading Lady to step back. Spot Turn is a common ending for New York, Hand to Hand, Fencing and many other figures. Amount of Turns: complete turn, or 7/8 or 3/4, depending on starting and ending position: open PP, Open CPP, facing partner.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/4 to L, step RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step forward with RF after turning 1/4 to the left",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "1/2 to L, step RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Continue turning to complete a half turn, ending with RF in the back",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "1/2 to L",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "&",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Transfer weight to LF",
-      "footwork": "BF",
-      "alignment": "LOD",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "1/4 to L, side step RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Side step to the left with RF",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "1/2 to L",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Step forward with LF after turning 1/4 to the right",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "1/2 to R",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Complete half turn ending with LF in the back",
-      "footwork": "F",
-      "alignment": "LOD",
-      "amount_of_turn": "1/2 to R",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "&",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Transfer weight to RF",
-      "footwork": "BF",
-      "alignment": "LOD",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "1/4 to R, side step LF",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Side step to the right with LF",
-      "footwork": "B",
-      "alignment": "LOD",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    }
-  ]
+  "name" : "Spot Turns to L or R",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/spot-turns" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Advanced Hip Twists, Alemana, Basic Movements: Closed, Closed Hip Twist, Cuban Rocks RF, Cucarachas: RF, Curl, Fencing, Hand To Hand LSP, Hockey Stick, New York RSP, Open Hip Twist, Progressive Walks Forward in LSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Spiral, Spot or Switch Turn to L (Lady to R), Syncopated Cuban Rock LF, Underarm Turn To R",
+  "following_figure_names" : "Basic Movements: Open (4-6), Basic Movements: Closed (4-6), New York RSP, Spot or Switch Turn to L (Lady to R), Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Cuban Rocks RF, Fan (4-6), Aida, Syncopated Cuban Rocks RF, Rumba Underarm Turn to Right",
+  "notes" : "Spot Turn or Switch Turn to L (Lady to R) could end in Open Position, taking L to R hand hold at step 3, taking step 3 fwd leading Lady to step back. Spot Turn is a common ending for New York, Hand to Hand, Fencing and many other figures. Amount of Turns: complete turn, or 7/8 or 3/4, depending on starting and ending position: open PP, Open CPP, facing partner.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/4 to L, step RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step forward with RF after turning 1/4 to the left",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/2 to L, step RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Continue turning to complete a half turn, ending with RF in the back",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/2 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "&",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF",
+    "footwork" : "BF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1/4 to L, side step RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Side step to the left with RF",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1/2 to L",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step forward with LF after turning 1/4 to the right",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "1/2 to R",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Complete half turn ending with LF in the back",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "&",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF",
+    "footwork" : "BF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "1/4 to R, side step LF",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Side step to the right with LF",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  } ]
 }

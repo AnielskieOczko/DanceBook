@@ -1,190 +1,136 @@
 {
-  "name": "Zig-Zag Back Lock And Running Finish",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Bronze",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Natural Turn, Reverse Pivot, Natural Turn",
-  "following_figure_names": "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Forward Lock, Quick Open Reverse",
-  "notes": "Could use the alternative Running Finish timing QQSS (7-10). Keep body parallel with Man during heel turn. After RF step back on step 3 CBMP, it will give room for Lady to move RF with heel lead (HT). With the plie position, lady and man will not bump knees. At heel turn: keep body forward, do not shift to right and get into Man's space. Head could turn to right, but it needs to be clear. Turning head to right has the tendency to make lady more in front of Man, which is not good. Start by keeping the head to left. Keep knees flexed, keep head left during the lock. Keep right side stretched and connected with Man. During Running Finish, keep upward swing. Right side positive, don't rotate right shoulder off Man. Head shape to R. Often, this is the start of Natural Turn. Big step.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step forward",
-      "footwork": "F",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "Start to turn L",
-      "comments": [
-        "HT",
-        "Sway(S)",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step to side",
-      "footwork": "F",
-      "alignment": "Backing Wall",
-      "amount_of_turn": "1/4 between 1-2",
-      "comments": [
-        "Sway(S)"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step back in CBMP",
-      "footwork": "B",
-      "alignment": "Backing DW",
-      "amount_of_turn": "1/8 between 2-3",
-      "comments": [
-        "Body turns less",
-        "Sway(S)",
-        "slight CBM",
-        "Start to rise e/o 3",
-        "NFR"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step back",
-      "footwork": "B",
-      "alignment": "Backing DW",
-      "amount_of_turn": "T",
-      "comments": [
-        "Sway(S)",
-        "Continue to rise on 4 and 5"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Cross in front of RF",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "T",
-      "comments": [
-        "Sway(S)"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Diagonal back",
-      "footwork": "F",
-      "alignment": "Backing DW",
-      "amount_of_turn": "TH",
-      "comments": [
-        "Sway(S)",
-        "Up. Lower e/o 6"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step back in CBMP",
-      "footwork": "B",
-      "alignment": "Backing DW",
-      "amount_of_turn": "Start to turn R",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "Rise e/o 7"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Side and slightly forward",
-      "footwork": "F",
-      "alignment": "Pointing to LOD",
-      "amount_of_turn": "3/8 between 7-8",
-      "comments": [
-        "Sway(L)",
-        "Up"
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Prepare step OP L side leading",
-      "footwork": "F",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "Body turn to R",
-      "comments": [
-        "Sway(L)",
-        "Up, Lower e/o 9"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Step forward in CBMP OP",
-      "footwork": "H",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "H",
-      "comments": [
-        "Sway(S)",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Step back",
-      "footwork": "B",
-      "alignment": "Backing LOD",
-      "amount_of_turn": "Start to turn L",
-      "comments": [
-        "Sway(S)",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "H",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Close to RF (Heel Turn)",
-      "footwork": "H",
-      "alignment": "Facing DW",
-      "amount_of_turn": "3/8 between 1-2",
-      "comments": [
-        "Body turns less",
-        "Sway(S)"
-      ]
-    }
-  ]
+  "name" : "Zig-Zag Back Lock Running Finish",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Natural Turn, Reverse Pivot, Natural Turn",
+  "following_figure_names" : "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Forward Lock, Quick Open Reverse",
+  "notes" : "Could use the alternative Running Finish timing QQSS (7-10). Keep body parallel with Man during heel turn. After RF step back on step 3 CBMP, it will give room for Lady to move RF with heel lead (HT). With the plie position, lady and man will not bump knees. At heel turn: keep body forward, do not shift to right and get into Man's space. Head could turn to right, but it needs to be clear. Turning head to right has the tendency to make lady more in front of Man, which is not good. Start by keeping the head to left. Keep knees flexed, keep head left during the lock. Keep right side stretched and connected with Man. During Running Finish, keep upward swing. Right side positive, don't rotate right shoulder off Man. Head shape to R. Often, this is the start of Natural Turn. Big step.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step forward",
+    "footwork" : "F",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "Start to turn L",
+    "comments" : [ "HT", "Sway(S)", "CBM" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side",
+    "footwork" : "F",
+    "alignment" : "Backing Wall",
+    "amount_of_turn" : "1/4 between 1-2",
+    "comments" : [ "Sway(S)" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step back in CBMP",
+    "footwork" : "B",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/8 between 2-3",
+    "comments" : [ "Body turns less", "Sway(S)", "slight CBM", "Start to rise e/o 3", "NFR" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step back",
+    "footwork" : "B",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "T",
+    "comments" : [ "Sway(S)", "Continue to rise on 4 and 5" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Cross in front of RF",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "T",
+    "comments" : [ "Sway(S)" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Diagonal back",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "TH",
+    "comments" : [ "Sway(S)", "Up. Lower e/o 6" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step back in CBMP",
+    "footwork" : "B",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "Start to turn R",
+    "comments" : [ "Sway(S)", "CBM", "Rise e/o 7" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Side and slightly forward",
+    "footwork" : "F",
+    "alignment" : "Pointing to LOD",
+    "amount_of_turn" : "3/8 between 7-8",
+    "comments" : [ "Sway(L)", "Up" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Prepare step OP L side leading",
+    "footwork" : "F",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "Body turn to R",
+    "comments" : [ "Sway(L)", "Up, Lower e/o 9" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step forward in CBMP OP",
+    "footwork" : "H",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "H",
+    "comments" : [ "Sway(S)", "CBM" ]
+  }, {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step back",
+    "footwork" : "B",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "Start to turn L",
+    "comments" : [ "Sway(S)", "CBM" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "H",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Close to RF (Heel Turn)",
+    "footwork" : "H",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "3/8 between 1-2",
+    "comments" : [ "Body turns less", "Sway(S)" ]
+  } ]
 }

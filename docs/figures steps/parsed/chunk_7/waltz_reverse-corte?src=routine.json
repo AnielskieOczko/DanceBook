@@ -1,97 +1,76 @@
 {
-  "name": "Reverse Corté",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte?src=routine"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Bronze",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
-  "following_figure_names": "Natural Turn, Fallaway Whisk, Back Whisk, Closed Impetus, Back Lock, Outside Change, Open Impetus, Outside Spin",
-  "notes": "On step 2 turn may be made on ball of RF with foot flat. Footwork would then be 1. THT; 2 Toes both feet; 3 TH(RF)\\nNote: When Man uses different alignments as above, the Lady will turn:\\nJust over 1/4 to L between 1-2, just under 1/4 to L between 2-3\\n3/8 to L between 1-2, 1/8 to L between 2-3\\n1/8 to L between 1-2, 1/8 to L between 2-3\\n\\nOther alignments (between steps 1-2) are the following, with different ending alignment:\\nbacking LOD, 1/2 L between 1-2, ending against LOD\\nbacking LOD, 5/8 L between 1-2, ending BDW against LOD\\nbacking DC, 1/4 to L between 1-2, ending BDC against LOD.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Backward step",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": null,
-      "comments": [
-        "Do not step sideways, straight back, use CBM"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Closes to RF without weight",
-      "footwork": "H then T both feet",
-      "alignment": "BDC against LOD (or BDC on new LOD)",
-      "amount_of_turn": "3/8 between 1-2",
-      "comments": [
-        "Track foot. Drag LF in with heel. No rondes. Keep feet flat, keep knees flexed. Do not pop up both toes too early. Stay down till lady gets on her RF, then rise."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": null,
-      "action": "Position held",
-      "footwork": null,
-      "alignment": "BDC against LOD (or BDC on new LOD | TH(RF) | -- | Sway(R) | up, lower e/o 3)",
-      "amount_of_turn": null,
-      "comments": [
-        "Lower down through the right foot."
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Fwd",
-      "footwork": "HT",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "start to turn L",
-      "comments": [
-        "This is the same footwork as second half of Reverse Turn. Use CBM to help with the turn and stay together with Man. Do not drive using upper body. Connect shoulder with hip joint, release hip joint forward which starts the motion."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF to side",
-      "footwork": "T",
-      "alignment": "Facing Center",
-      "amount_of_turn": "1/4 turn between 1-2",
-      "comments": [
-        "Track RF. Do not step too big, it will pull man off his feet. Stay very left. Connect L shoulder down. If spine travels to the right, it will pull weight over to right and off balance. Show off extension between 2 and 3."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Closes to RF",
-      "footwork": "TH",
-      "alignment": "DC against LOD",
-      "amount_of_turn": "1/8 between 2-3",
-      "comments": [
-        "Gracefully collect and get back (especially when extensions last extra measure.)"
-      ]
-    }
-  ]
+  "name" : "Reverse Corte",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names" : "Natural Turn, Fallaway Whisk, Back Whisk, Closed Impetus, Back Lock, Outside Change, Open Impetus, Outside Spin",
+  "notes" : "On step 2 turn may be made on ball of RF with foot flat. Footwork would then be 1. THT; 2 Toes both feet; 3 TH(RF)\\nNote: When Man uses different alignments as above, the Lady will turn:\\nJust over 1/4 to L between 1-2, just under 1/4 to L between 2-3\\n3/8 to L between 1-2, 1/8 to L between 2-3\\n1/8 to L between 1-2, 1/8 to L between 2-3\\n\\nOther alignments (between steps 1-2) are the following, with different ending alignment:\\nbacking LOD, 1/2 L between 1-2, ending against LOD\\nbacking LOD, 5/8 L between 1-2, ending BDW against LOD\\nbacking DC, 1/4 to L between 1-2, ending BDC against LOD.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Backward step",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : null,
+    "comments" : [ "Do not step sideways, straight back, use CBM" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Closes to RF without weight",
+    "footwork" : "H then T both feet",
+    "alignment" : "BDC against LOD (or BDC on new LOD)",
+    "amount_of_turn" : "3/8 between 1-2",
+    "comments" : [ "Track foot. Drag LF in with heel. No rondes. Keep feet flat, keep knees flexed. Do not pop up both toes too early. Stay down till lady gets on her RF, then rise." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : null,
+    "action" : "Position held",
+    "footwork" : null,
+    "alignment" : "BDC against LOD (or BDC on new LOD | TH(RF) | -- | Sway(R) | up, lower e/o 3)",
+    "amount_of_turn" : null,
+    "comments" : [ "Lower down through the right foot." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Fwd",
+    "footwork" : "HT",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "This is the same footwork as second half of Reverse Turn. Use CBM to help with the turn and stay together with Man. Do not drive using upper body. Connect shoulder with hip joint, release hip joint forward which starts the motion." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side",
+    "footwork" : "T",
+    "alignment" : "Facing Center",
+    "amount_of_turn" : "1/4 turn between 1-2",
+    "comments" : [ "Track RF. Do not step too big, it will pull man off his feet. Stay very left. Connect L shoulder down. If spine travels to the right, it will pull weight over to right and off balance. Show off extension between 2 and 3." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Closes to RF",
+    "footwork" : "TH",
+    "alignment" : "DC against LOD",
+    "amount_of_turn" : "1/8 between 2-3",
+    "comments" : [ "Gracefully collect and get back (especially when extensions last extra measure.)" ]
+  } ]
 }

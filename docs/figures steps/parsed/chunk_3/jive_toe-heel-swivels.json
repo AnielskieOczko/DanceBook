@@ -1,157 +1,136 @@
 {
-  "name": "ToeHeel Swivels",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/jive/toe-heel-swivels"
-  ],
-  "dance_type": "JIVE",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Open Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Change of Places Left to Right,Spanish Arms,Windmill",
-  "following_figure_names": "Fallaway Rock (step 3-8 of Fallway Rock, regain normal hold on 2nd chasse),Fallaway Throwaway (step 3-8 Fallaway Throwaway),Change of Places Right to Left,Stalking Walks, Flicks and Break (step 3-20, retain double hold throughout)",
-  "notes": "The turn on the swiveling foot may be a little less than specified turn above.\nAlternative timing for swivels steps 3-8: QQS QQS\nCombination timing (repeating 3-8 once) from step 1: QQ QQS QQS QQQ QQQ\n\"Break\" follow:\nQ: Hold the position from step 8 for an extra 3/4 beat - Man weight on RF, Lady LF\na: Replace part weight to LF (Lady RF) in PP (ball of foot) 1/4 beat\nQ: Replace weight to RF (Lady LF) in PP (ball, flat) 1 beat\nThen, follow step 3-8 of Fallaway Throwaway of Change of Places R to L.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/8 to R on RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Swivel to R on RF to CPP and place LF close to RF on toe, without weight",
-      "footwork": "T",
-      "alignment": "CPP",
-      "amount_of_turn": "1/8 to R",
-      "comments": [
-        "Keep tone in arm"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "1/4 to L on RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Swivel to L on RF to PP and place LF diag fwd on heel, without weight",
-      "footwork": "H",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to L",
-      "comments": [
-        "Keep tone"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "1/4 to R on RF",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Swivel to R on RF and LF fwd an across in CPP",
-      "footwork": "T",
-      "alignment": "CPP",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "1/4 to L on LF",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Swivel to L on LF to PP and place RF close to LF on toe, without weight",
-      "footwork": "T",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "1/4 to R on LF",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Swivel to R on LF to CPP and place RF diag fwd on heel, without weight",
-      "footwork": "H",
-      "alignment": "CPP",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "1/4 to L on LF",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Swivel to L on LF and RF fwd and across in PP",
-      "footwork": "T",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "1/8 to L on LF",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to L on LF to CPP and place RF closed to LF on toe, without weight",
-      "footwork": "T",
-      "alignment": "CPP",
-      "amount_of_turn": "1/8 to L",
-      "comments": [
-        "Lady accept leads - match Man's tone in arms through steps 3-8."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "1/4 to R on LF",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to R on LF to PP and place RF diag fwd on heel, without weight",
-      "footwork": "H",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "1/4 to L on LF",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to L on LF and RF fwd and across in CPP",
-      "footwork": "T",
-      "alignment": "CPP",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 10,
-      "timing": "1/4 to R on RF",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Swivel to R on RF to PP and place LF close to RF on toe, without weight",
-      "footwork": "T",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 11,
-      "timing": "1/4 to L on RF",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Swivel to L on RF to CPP and place LF diag fwd on heel, without weight",
-      "footwork": "H",
-      "alignment": "CPP",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 12,
-      "timing": "1/4 to R on RF",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Swivel to R on RF and LF fwd and across in PP",
-      "footwork": "T",
-      "alignment": "PP",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    }
-  ]
+  "name" : "Toe Heel Swivels",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/toe-heel-swivels" ],
+  "dance_type" : "JIVE",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Change of Places Left to Right,Spanish Arms,Windmill",
+  "following_figure_names" : "Fallaway Rock (step 3-8 of Fallway Rock, regain normal hold on 2nd chasse),Fallaway Throwaway (step 3-8 Fallaway Throwaway),Change of Places Right to Left,Stalking Walks, Flicks and Break (step 3-20, retain double hold throughout)",
+  "notes" : "The turn on the swiveling foot may be a little less than specified turn above.\nAlternative timing for swivels steps 3-8: QQS QQS\nCombination timing (repeating 3-8 once) from step 1: QQ QQS QQS QQQ QQQ\n\"Break\" follow:\nQ: Hold the position from step 8 for an extra 3/4 beat - Man weight on RF, Lady LF\na: Replace part weight to LF (Lady RF) in PP (ball of foot) 1/4 beat\nQ: Replace weight to RF (Lady LF) in PP (ball, flat) 1 beat\nThen, follow step 3-8 of Fallaway Throwaway of Change of Places R to L.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/8 to R on RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Swivel to R on RF to CPP and place LF close to RF on toe, without weight",
+    "footwork" : "T",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "Keep tone in arm" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/4 to L on RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Swivel to L on RF to PP and place LF diag fwd on heel, without weight",
+    "footwork" : "H",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Keep tone" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/4 to R on RF",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Swivel to R on RF and LF fwd an across in CPP",
+    "footwork" : "T",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1/4 to L on LF",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Swivel to L on LF to PP and place RF close to LF on toe, without weight",
+    "footwork" : "T",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1/4 to R on LF",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Swivel to R on LF to CPP and place RF diag fwd on heel, without weight",
+    "footwork" : "H",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "1/4 to L on LF",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Swivel to L on LF and RF fwd and across in PP",
+    "footwork" : "T",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "1/8 to L on LF",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to L on LF to CPP and place RF closed to LF on toe, without weight",
+    "footwork" : "T",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "Lady accept leads - match Man's tone in arms through steps 3-8." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "1/4 to R on LF",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to R on LF to PP and place RF diag fwd on heel, without weight",
+    "footwork" : "H",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "1/4 to L on LF",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to L on LF and RF fwd and across in CPP",
+    "footwork" : "T",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "1/4 to R on RF",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Swivel to R on RF to PP and place LF close to RF on toe, without weight",
+    "footwork" : "T",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 11,
+    "timing" : "1/4 to L on RF",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Swivel to L on RF to CPP and place LF diag fwd on heel, without weight",
+    "footwork" : "H",
+    "alignment" : "CPP",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 12,
+    "timing" : "1/4 to R on RF",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Swivel to R on RF and LF fwd and across in PP",
+    "footwork" : "T",
+    "alignment" : "PP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  } ]
 }

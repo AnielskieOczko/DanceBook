@@ -1,192 +1,146 @@
 {
-  "name": "Rock Turn",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/tango/rock-turn"
-  ],
-  "dance_type": "TANGO",
-  "level": "Newcomer",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Natural Promenade Turn, Progressive Side Step, Walk, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "notes": "Dance Central - Rock Turn\nTango Rock Turn\nRock Turn is a Newcomer Level figure. This online reference gives a detailed description of the dance steps, including timing, footwork, alignment, and movement; steps diagram; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "fwd",
-      "footwork": "H",
-      "alignment": "DW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM",
-        "This step is straight."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly back",
-      "footwork": "IE of BH",
-      "alignment": "BC",
-      "amount_of_turn": "",
-      "comments": [
-        "--"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to RF, R side leading",
-      "footwork": "IE of BH",
-      "alignment": "DW against LOD",
-      "amount_of_turn": "1/4 to R between 1-3",
-      "comments": [
-        "Direction is confusing. Man is backing DC.",
-        "(Coach is doing H.)"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back, small step, L side leading",
-      "footwork": "IE of BH",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": [
-        "Man is backing DC, moving DC direction."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back in CBMP",
-      "footwork": "BH",
-      "alignment": "Wall",
-      "amount_of_turn": "",
-      "comments": [
-        "moving toward center, position is BC"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly fwd",
-      "footwork": "IE of foot",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "1/4 to L between 4-6",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF slightly back",
-      "footwork": "WF",
-      "alignment": "FDW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back",
-      "footwork": "BH",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM",
-        "Need to keep wide enough tracks so Man has enough room to step.",
-        "To be dramatic: Man lead Lady to go back strong with extra shaping from head/body.",
-        "Straight back."
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd, slightly rightwards",
-      "footwork": "H",
-      "alignment": "Facing centre",
-      "amount_of_turn": "",
-      "comments": [
-        "During the rock QQS: no funny shoulder movement, keep shoulder flat.",
-        "Take center with the foot when rocking.",
-        "Rotate, but be very aware to stay left of Man, do not get into Man's space."
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back and slightly leftwards, L side leading",
-      "footwork": "IE of BH",
-      "alignment": "BDW against LOD",
-      "amount_of_turn": "1/4 to R from 1-3",
-      "comments": [
-        "Rocking action, legs positions are held."
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd, small step, R side leading",
-      "footwork": "H",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "There is more body turn to R to wind up.",
-        "Corte: keep center to Man, leave head behind, bigger step, rotate shoulder, center is very forward, extend and shape.",
-        "Stay very left throughout. Lady's left side is very forward to Man. (despite the \"R side leading\")",
-        "Head flick: \"&S\": timing is critical - sync up with Man, otherwise it looks awkward and artificial.",
-        "Head to R option: Lady opens up more, shape to R, head to R, but give R side to Man.",
-        "Weight should be on RF, not in middle. Man is stretching to his left side."
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "to side and slightly back",
-      "footwork": "IE of BH",
-      "alignment": "BDW",
-      "amount_of_turn": "1/4 to L from 4-6",
-      "comments": []
-    },
-    {
-      "step_number": 13,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF slightly fwd",
-      "footwork": "WF",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "(Natural) Rock Turn",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/rock-turn" ],
+  "dance_type" : "TANGO",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Natural Promenade Turn, Progressive Side Step, Walk, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "following_figure_names" : "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes" : "Dance Central - Rock Turn\nTango Rock Turn\nRock Turn is a Newcomer Level figure. This online reference gives a detailed description of the dance steps, including timing, footwork, alignment, and movement; steps diagram; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd",
+    "footwork" : "H",
+    "alignment" : "DW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM", "This step is straight." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly back",
+    "footwork" : "IE of BH",
+    "alignment" : "BC",
+    "amount_of_turn" : "",
+    "comments" : [ "--" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF, R side leading",
+    "footwork" : "IE of BH",
+    "alignment" : "DW against LOD",
+    "amount_of_turn" : "1/4 to R between 1-3",
+    "comments" : [ "Direction is confusing. Man is backing DC.", "(Coach is doing H.)" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back, small step, L side leading",
+    "footwork" : "IE of BH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ "Man is backing DC, moving DC direction." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back in CBMP",
+    "footwork" : "BH",
+    "alignment" : "Wall",
+    "amount_of_turn" : "",
+    "comments" : [ "moving toward center, position is BC" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly fwd",
+    "footwork" : "IE of foot",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/4 to L between 4-6",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF slightly back",
+    "footwork" : "WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back",
+    "footwork" : "BH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM", "Need to keep wide enough tracks so Man has enough room to step.", "To be dramatic: Man lead Lady to go back strong with extra shaping from head/body.", "Straight back." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd, slightly rightwards",
+    "footwork" : "H",
+    "alignment" : "Facing centre",
+    "amount_of_turn" : "",
+    "comments" : [ "During the rock QQS: no funny shoulder movement, keep shoulder flat.", "Take center with the foot when rocking.", "Rotate, but be very aware to stay left of Man, do not get into Man's space." ]
+  }, {
+    "step_number" : 10,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back and slightly leftwards, L side leading",
+    "footwork" : "IE of BH",
+    "alignment" : "BDW against LOD",
+    "amount_of_turn" : "1/4 to R from 1-3",
+    "comments" : [ "Rocking action, legs positions are held." ]
+  }, {
+    "step_number" : 11,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd, small step, R side leading",
+    "footwork" : "H",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "There is more body turn to R to wind up.", "Corte: keep center to Man, leave head behind, bigger step, rotate shoulder, center is very forward, extend and shape.", "Stay very left throughout. Lady's left side is very forward to Man. (despite the \"R side leading\")", "Head flick: \"&S\": timing is critical - sync up with Man, otherwise it looks awkward and artificial.", "Head to R option: Lady opens up more, shape to R, head to R, but give R side to Man.", "Weight should be on RF, not in middle. Man is stretching to his left side." ]
+  }, {
+    "step_number" : 12,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "to side and slightly back",
+    "footwork" : "IE of BH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 to L from 4-6",
+    "comments" : [ ]
+  }, {
+    "step_number" : 13,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF slightly fwd",
+    "footwork" : "WF",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

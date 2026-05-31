@@ -1,111 +1,96 @@
 {
-  "name": "Back Corte",
-"urls": [
-    "https://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine"
-  ],
-  "dance_type": "TANGO",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, RF Rock, Reverse Outside Swivel, Rock Turn",
-  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "notes": "Figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.\nNote:\nAs described above, the figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back, L side leading, down new LOD, inside edge of ballroom heel, strong frame turning to R, wind up",
-      "footwork": "WF",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Though books says \"L side leading\", most competitors do CBM and wind up a lot."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back in CBMP, BDC, BH, CBM",
-      "footwork": "B",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly forward, pointing diagonal wall, inside edge of foot, 1/4 turn to left between steps 2-3",
-      "footwork": "T",
-      "alignment": "DW",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF slightly back, facing diagonal wall, whole foot",
-      "footwork": "WF",
-      "alignment": "DW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "forward, R side leading, down new LOD, H",
-      "footwork": "F",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "forward in CBMP, DC, H, CBM",
-      "footwork": "F",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Lift LF at very last moment, make it sharp and quick."
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side and slightly back, BDW, inside edge of BH, 1/4 turn to left between steps 2-3",
-      "footwork": "T",
-      "alignment": "BDW",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF slightly forward, BDW, whole foot",
-      "footwork": "WF",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "Back Corté",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine" ],
+  "dance_type" : "TANGO",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Back Corte, Basic Reverse Turn, Brush Tap, Closed Promenade, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, RF Rock, Reverse Outside Swivel, Rock Turn",
+  "following_figure_names" : "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes" : "Figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.\nNote:\nAs described above, the figure is danced in corner. This can also be danced at side of room, i.e. starting man DW, at step 1, man turn 1/4 to R, BDC. Then tango close, turning 1/4 to L again, ending DW.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back, L side leading, down new LOD, inside edge of ballroom heel, strong frame turning to R, wind up",
+    "footwork" : "WF",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Though books says \"L side leading\", most competitors do CBM and wind up a lot." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back in CBMP, BDC, BH, CBM",
+    "footwork" : "B",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly forward, pointing diagonal wall, inside edge of foot, 1/4 turn to left between steps 2-3",
+    "footwork" : "T",
+    "alignment" : "DW",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF slightly back, facing diagonal wall, whole foot",
+    "footwork" : "WF",
+    "alignment" : "DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "forward, R side leading, down new LOD, H",
+    "footwork" : "F",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "forward in CBMP, DC, H, CBM",
+    "footwork" : "F",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Lift LF at very last moment, make it sharp and quick." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side and slightly back, BDW, inside edge of BH, 1/4 turn to left between steps 2-3",
+    "footwork" : "T",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF slightly forward, BDW, whole foot",
+    "footwork" : "WF",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

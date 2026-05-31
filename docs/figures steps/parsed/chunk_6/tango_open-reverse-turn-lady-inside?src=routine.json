@@ -1,118 +1,106 @@
 {
-  "name": "Open Reverse Turn, Lady Inline",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside?src=routine"
-  ],
-  "dance_type": "TANGO",
-  "level": "Bronze",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
-  "following_figure_names": "Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
-  "notes": "This is sort of equivalent of heel turn in Tango. Heel turns are often said to be lead with early rise.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "fwd in CBMP",
-      "footwork": "WF",
-      "alignment": "DC",
-      "amount_of_turn": null,
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "to side and slightly back",
-      "footwork": "WF",
-      "alignment": "Backing LOD",
-      "amount_of_turn": "3/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back L side leading",
-      "footwork": "WF",
-      "alignment": "Down LOD",
-      "amount_of_turn": null,
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back in CBMP",
-      "footwork": "WF",
-      "alignment": "DC",
-      "amount_of_turn": null,
-      "comments": []
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly back",
-      "footwork": "WF",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF slightly back",
-      "footwork": "WF",
-      "alignment": "Facing DW",
-      "amount_of_turn": null,
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "back in CBMP",
-      "footwork": "WF",
-      "alignment": "BDC",
-      "amount_of_turn": null,
-      "comments": []
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "heel closes to R Heel",
-      "footwork": "HF",
-      "alignment": "LOD",
-      "amount_of_turn": "3/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd in R side leading",
-      "footwork": "WF",
-      "alignment": "Down LOD",
-      "amount_of_turn": null,
-      "comments": []
-    }
-  ]
+  "name" : "Open Reverse, Lady in Line (Closed Finish)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside?src=routine" ],
+  "dance_type" : "TANGO",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names" : "Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes" : "This is sort of equivalent of heel turn in Tango. Heel turns are often said to be lead with early rise.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "fwd in CBMP",
+    "footwork" : "WF",
+    "alignment" : "DC",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side and slightly back",
+    "footwork" : "WF",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back L side leading",
+    "footwork" : "WF",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back in CBMP",
+    "footwork" : "WF",
+    "alignment" : "DC",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly back",
+    "footwork" : "WF",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF slightly back",
+    "footwork" : "WF",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "back in CBMP",
+    "footwork" : "WF",
+    "alignment" : "BDC",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "heel closes to R Heel",
+    "footwork" : "HF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd in R side leading",
+    "footwork" : "WF",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : null,
+    "comments" : [ ]
+  } ]
 }

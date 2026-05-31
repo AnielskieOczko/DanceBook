@@ -1,5 +1,5 @@
 [ {
-  "name" : "Cucarachas",
+  "name" : "Cucarachas (LF and RF)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/cucarachas" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -74,7 +74,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rumba Fencing",
+  "name" : "Fencing",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/fencing" ],
   "dance_type" : "RUMBA",
   "level" : "Gold",
@@ -434,7 +434,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Shoulder To Shoulder",
+  "name" : "Shoulder to Shoulder (Left Side and Right Side) Development",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/shoulder-to-shoulder" ],
   "dance_type" : "RUMBA",
   "level" : "Newcomer",
@@ -574,7 +574,7 @@
     "comments" : [ "Pressed Fwd Walk. Lady should bring her weight well fwd, responding to Man's tone in his L arm.", "Open L hip up, stretching the body (L hip back, R chest fwd to Man), release/drop R hip down.", "L arm shoot out to L side." ]
   } ]
 }, {
-  "name" : "Back Corte",
+  "name" : "Back Corté",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/back-corte" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -669,7 +669,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Back Corte",
+  "name" : "Back Corté",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -1850,7 +1850,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Reverse Turn, Lady Inline",
+  "name" : "Open Reverse, Lady in Line (Closed Finish)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside?src=routine" ],
   "dance_type" : "TANGO",
   "level" : "Bronze",
@@ -1955,7 +1955,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Open Reverse Turn, Lady Outside",
+  "name" : "Open Reverse, Lady Outside (Open Finish)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -2610,7 +2610,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rock Turn",
+  "name" : "(Natural) Rock Turn",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/rock-turn" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -2755,7 +2755,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "Rock Turn",
+  "name" : "(Natural) Rock Turn",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/tango/rock-turn?src=routine" ],
   "dance_type" : "TANGO",
   "level" : "Newcomer",
@@ -3024,7 +3024,7 @@
   "#header ul#nav, #nav li { border: none; }" : "2",
   "#header .searchtrigger { display: none; }" : "1"
 }, {
-  "name" : "ClosedWing",
+  "name" : "Closed Wing",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/closed-wing" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3705,7 +3705,7 @@
     "comments" : [ "No swivel on LF.", "Stay connected with Man on the wrong side." ]
   } ]
 }, {
-  "name" : "Progressive Chassé to Right",
+  "name" : "Progressive Chasse to Right",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -3800,7 +3800,7 @@
     "comments" : [ ]
   } ]
 }, {
-  "name" : "ReversePivot",
+  "name" : "Reverse Pivot",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot" ],
   "dance_type" : "WALTZ",
   "level" : "Bronze",
@@ -3835,7 +3835,7 @@
     "comments" : [ "Every time when turning to the left, imagine the belly button and center slightly turning to the right.", "Do not allow shoulder to completely line up with hips.", "R shoulder and R hip feel slightly open in left turning figures.", "Step forward, head goes more left. Show off extension." ]
   } ]
 }, {
-  "name" : "Turning Lock to R",
+  "name" : "Turning Lock",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r" ],
   "dance_type" : "WALTZ",
   "level" : "Gold",
@@ -3930,7 +3930,7 @@
     "comments" : [ "Up. Lower e/o 4", "Keep big step. There are continuously big steps, if one step is shorter, it stops momentum. Body dance smoothly and continuously.", "Lady R side/arm to Man. Check R elbow at correct angle. R side can never be \"dead\"." ]
   } ]
 }, {
-  "name" : "Turning Lock to Right (WALTZ)",
+  "name" : "Turning Lock to Right",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",
@@ -4025,7 +4025,7 @@
     "comments" : [ "This is closed finish.", "This could end in PP (after RF brushes to LF) in which case, head shape to right in its space. Do not turn head too fast or too early." ]
   } ]
 }, {
-  "name" : "Weave from Promenade Position",
+  "name" : "Weave from PP (after Open Impetus Turn)",
   "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position" ],
   "dance_type" : "WALTZ",
   "level" : "Silver",

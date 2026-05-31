@@ -1,157 +1,116 @@
 {
-  "name": "Samba Plait",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/samba/plait"
-  ],
-  "dance_type": "SAMBA",
-  "level": "Silver",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Back Rocks, Maypole, Natural Basic Movement, Natural Roll, Reverse Basic Movement, Reverse Roll, Reverse Turn, Side Basic Movement",
-  "following_figure_names": "Reverse Basic Movement, Reverse Turn, Reverse Roll, Natural Basic Movement, Natural Roll",
-  "notes": "If figure is repeated, it may gradually curve 1/4 left around a corner.\nLower heel and take full weight on to foot when starting first step of following figure.\nPlait has Merengue action.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF back, with part weight, 1/8 to L, then swivel",
-      "footwork": "BF",
-      "alignment": "B",
-      "amount_of_turn": "1/8 to L",
-      "comments": [
-        "L knee is firmly straightened at 2nd half of preceding step, causing L hip to move back and to L, then RF is placed back with kneed flexed.",
-        "This step is slightly larger to create space with Lady.",
-        "Man pulls Lady a bit."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Taking full weight to RF, LF back, small step, with part weight, then swivel",
-      "footwork": "BF",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "R knee is firmly straightened at 2nd half of preceding step, causing R hip to move back and to R, then LF is placed back with kneed flexed.",
-        "Man pushes the Lady."
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Taking full weight to LF, RF back, small step, with part weight, then swivel",
-      "footwork": "BF",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "Q: Taking full weight to LF, RF back, small step, with part weight | No turn | BF, then swivel"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Taking full weight to RF, LF back, small step, with part weight, then swivel",
-      "footwork": "BF",
-      "alignment": "B",
-      "amount_of_turn": "o turn",
-      "comments": [
-        "Q: Taking full weight to RF, LF back, small step, with part weight | o turn | BF, then swivel"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Taking full weight to LF, RF back, small step, with part weight, then swivel",
-      "footwork": "BF",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "The figure can be repeated starting with LF."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Swivel to L on RF and LF fwd, small step, 1/4 to L",
-      "footwork": "B",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "Swiveling happens on the 2nd half of preceding step. LF fwd, knee straight.",
-        "Collecting L toe to instep of RF, pick up R heel, and then swivel",
-        "Center collected, but feeling slightly leaning back"
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to R on LF and RF fwd, small step, 1/4 to R",
-      "footwork": "B",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "Swiveling happens on the 2nd half of preceding step. RF fwd, knee straight.",
-        "Knee is slightly flexed as foot tracks under body passing the other foot.",
-        "Turn is initiated in the feet which are parallel throughout.",
-        "There is no turn in upper body. Shoulder remain square to partner. Maintain upright position."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Swivel to LF on RF and LF fwd, small step, 1/4 to L",
-      "footwork": "B",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "Swiveling happens on the 2nd half of preceding step."
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to R on LF and RF fwd, small step, 1/4 to R",
-      "footwork": "B",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "Swiveling happens on the 2nd half of preceding step."
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Swivel to LF on RF and LF fwd, small step, 1/4 to L",
-      "footwork": "B",
-      "alignment": "B",
-      "amount_of_turn": "No turn",
-      "comments": [
-        "BF if figure is not repeated. If preferred, heel may lightly touch the floor on each step."
-      ]
-    }
-  ]
+  "name" : "Plait",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/plait" ],
+  "dance_type" : "SAMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Back Rocks, Maypole, Natural Basic Movement, Natural Roll, Reverse Basic Movement, Reverse Roll, Reverse Turn, Side Basic Movement",
+  "following_figure_names" : "Reverse Basic Movement, Reverse Turn, Reverse Roll, Natural Basic Movement, Natural Roll",
+  "notes" : "If figure is repeated, it may gradually curve 1/4 left around a corner.\nLower heel and take full weight on to foot when starting first step of following figure.\nPlait has Merengue action.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back, with part weight, 1/8 to L, then swivel",
+    "footwork" : "BF",
+    "alignment" : "B",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "L knee is firmly straightened at 2nd half of preceding step, causing L hip to move back and to L, then RF is placed back with kneed flexed.", "This step is slightly larger to create space with Lady.", "Man pulls Lady a bit." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Taking full weight to RF, LF back, small step, with part weight, then swivel",
+    "footwork" : "BF",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "R knee is firmly straightened at 2nd half of preceding step, causing R hip to move back and to R, then LF is placed back with kneed flexed.", "Man pushes the Lady." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Taking full weight to LF, RF back, small step, with part weight, then swivel",
+    "footwork" : "BF",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Q: Taking full weight to LF, RF back, small step, with part weight | No turn | BF, then swivel" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Taking full weight to RF, LF back, small step, with part weight, then swivel",
+    "footwork" : "BF",
+    "alignment" : "B",
+    "amount_of_turn" : "o turn",
+    "comments" : [ "Q: Taking full weight to RF, LF back, small step, with part weight | o turn | BF, then swivel" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Taking full weight to LF, RF back, small step, with part weight, then swivel",
+    "footwork" : "BF",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "The figure can be repeated starting with LF." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Swivel to L on RF and LF fwd, small step, 1/4 to L",
+    "footwork" : "B",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Swiveling happens on the 2nd half of preceding step. LF fwd, knee straight.", "Collecting L toe to instep of RF, pick up R heel, and then swivel", "Center collected, but feeling slightly leaning back" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to R on LF and RF fwd, small step, 1/4 to R",
+    "footwork" : "B",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Swiveling happens on the 2nd half of preceding step. RF fwd, knee straight.", "Knee is slightly flexed as foot tracks under body passing the other foot.", "Turn is initiated in the feet which are parallel throughout.", "There is no turn in upper body. Shoulder remain square to partner. Maintain upright position." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Swivel to LF on RF and LF fwd, small step, 1/4 to L",
+    "footwork" : "B",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Swiveling happens on the 2nd half of preceding step." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to R on LF and RF fwd, small step, 1/4 to R",
+    "footwork" : "B",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Swiveling happens on the 2nd half of preceding step." ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Swivel to LF on RF and LF fwd, small step, 1/4 to L",
+    "footwork" : "B",
+    "alignment" : "B",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "BF if figure is not repeated. If preferred, heel may lightly touch the floor on each step." ]
+  } ]
 }

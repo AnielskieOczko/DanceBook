@@ -1,177 +1,146 @@
 {
-  "name":"Rock Turn",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/tango/rock-turn"
-  ],
-  "dance_type": "TANGO",
-  "level": "Newcomer",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Natural Promenade Turn, Progressive Side Step, Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Open Reverse Turn, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Open Reverse Turn, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
-  "notes": "Head flick timing is critical; maintain proper space; keep shoulders flat; rotate as indicated; stay left of partner; detailed foot and alignment instructions provided throughout.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "fwd",
-      "footwork": "H",
-      "alignment": "DW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly back",
-      "footwork": "IE",
-      "alignment": "BC",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight",
-      "footwork": "IE",
-      "alignment": "DW",
-      "amount_of_turn": "1/4 to R",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back",
-      "footwork": "",
-      "alignment": "BDC",
-      "amount_of_turn": "",
-      "comments": [
-        "small step, L side leading"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back in CBMP",
-      "footwork": "",
-      "alignment": "Wall",
-      "amount_of_turn": "",
-      "comments": [
-        "No turn",
-        "CBM"
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "closes to LF slightly back",
-      "footwork": "WF",
-      "alignment": "FDW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back",
-      "footwork": "",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": [
-        "slight CBM"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd, slightly rightwards",
-      "footwork": "H",
-      "alignment": "Facing centre",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "back and slightly leftwards, L side leading",
-      "footwork": "IE",
-      "alignment": "BDW against LOD",
-      "amount_of_turn": "1/4 to R",
-      "comments": [
-        "Rocking action, legs positions are held"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd, small step, R side leading",
-      "footwork": "",
-      "alignment": "DC",
-      "amount_of_turn": "",
-      "comments": [
-        "There is more body turn to R to wind up."
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "fwd in CBMP",
-      "footwork": "",
-      "alignment": "Center",
-      "amount_of_turn": "",
-      "comments": [
-        "Do not initiate with body forward; use R leg to drive the step; CBM"
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side and slightly back",
-      "footwork": "IE",
-      "alignment": "BDW",
-      "amount_of_turn": "1/4 to L",
-      "comments": []
-    },
-    {
-      "step_number": 13,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "closes to RF slightly fwd",
-      "footwork": "WF",
-      "alignment": "BDW",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "(Natural) Rock Turn",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/tango/rock-turn" ],
+  "dance_type" : "TANGO",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Natural Promenade Turn, Progressive Side Step, Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Open Reverse Turn, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "following_figure_names" : "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Open Reverse Turn, Progressive Side Step Reverse Turn, Reverse Outside Swivel, Basic Reverse Turn, Fallaway Reverse and Slip Pivot, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes" : "Head flick timing is critical; maintain proper space; keep shoulders flat; rotate as indicated; stay left of partner; detailed foot and alignment instructions provided throughout.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd",
+    "footwork" : "H",
+    "alignment" : "DW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly back",
+    "footwork" : "IE",
+    "alignment" : "BC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight",
+    "footwork" : "IE",
+    "alignment" : "DW",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back",
+    "footwork" : "",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ "small step, L side leading" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back in CBMP",
+    "footwork" : "",
+    "alignment" : "Wall",
+    "amount_of_turn" : "",
+    "comments" : [ "No turn", "CBM" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "closes to LF slightly back",
+    "footwork" : "WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back",
+    "footwork" : "",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "slight CBM" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd, slightly rightwards",
+    "footwork" : "H",
+    "alignment" : "Facing centre",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "back and slightly leftwards, L side leading",
+    "footwork" : "IE",
+    "alignment" : "BDW against LOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Rocking action, legs positions are held" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd, small step, R side leading",
+    "footwork" : "",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "There is more body turn to R to wind up." ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "fwd in CBMP",
+    "footwork" : "",
+    "alignment" : "Center",
+    "amount_of_turn" : "",
+    "comments" : [ "Do not initiate with body forward; use R leg to drive the step; CBM" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side and slightly back",
+    "footwork" : "IE",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 13,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "closes to RF slightly fwd",
+    "footwork" : "WF",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

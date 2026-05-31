@@ -1,173 +1,136 @@
 {
-  "name": "SixQuick Run",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Closed Impetus, Closed Telemark, Fish Tail, Forward Lock Step, Four Quick Run, Natural Spin Turn, Progressive Chasse, Quarter Turn to Right, Running Finish, Tipple Chasse to Right",
-  "following_figure_names": "Natural Turn, Fish Tail, Tipsy To L, Four Quick Run",
-  "notes": "Arms belong to partner. Head left to balance. Stretch body and stay connected to Man.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Back, Backing DC, start to turn left",
-      "footwork": "T",
-      "alignment": "Backing DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Rise e/o preceding step, NFR Up."
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "To side and slightly forward, Pointing DW, 1/2 turn less",
-      "footwork": "T",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "1/2 turn less",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Fwd in CBMP, OP, Facing DW",
-      "footwork": "T",
-      "alignment": "Facing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "Q",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Diag fwd, Facing DW",
-      "footwork": "T",
-      "alignment": "Facing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Lower e/o 6"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "S",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Fwd in CBMP, OP, Facing DW",
-      "footwork": "H",
-      "alignment": "Facing DW",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Fwd, Facing DC, start to turn left, CBM, Rise e/o preceding step. Up.",
-      "footwork": "T",
-      "alignment": "Facing DC",
-      "amount_of_turn": "",
-      "comments": [
-        "Up."
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "To side and slightly back, Backing DW, 1/4 between 1-2. Body turns less",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "1/4 between 1-2. Body turns less",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Back in CBMP, Backing DW",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 9,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Diag back, Backing DW",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 10,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Crosses in front of RF, Backing DW",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Up"
-      ]
-    },
-    {
-      "step_number": 11,
-      "timing": "Q",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "Diag back, Backing DW, TH",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "Lower e/o 6"
-      ]
-    },
-    {
-      "step_number": 12,
-      "timing": "S",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Back in CBMP, Backing DW",
-      "footwork": "T",
-      "alignment": "Backing DW",
-      "amount_of_turn": "",
-      "comments": [
-        "CBM"
-      ]
-    }
-  ]
+  "name" : "Six Quick Run",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Impetus, Closed Telemark, Fish Tail, Forward Lock Step, Four Quick Run, Natural Spin Turn, Progressive Chasse, Quarter Turn to Right, Running Finish, Tipple Chasse to Right",
+  "following_figure_names" : "Natural Turn, Fish Tail, Tipsy To L, Four Quick Run",
+  "notes" : "Arms belong to partner. Head left to balance. Stretch body and stay connected to Man.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back, Backing DC, start to turn left",
+    "footwork" : "T",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Rise e/o preceding step, NFR Up." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "To side and slightly forward, Pointing DW, 1/2 turn less",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/2 turn less",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Fwd in CBMP, OP, Facing DW",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Diag fwd, Facing DW",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Lower e/o 6" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Fwd in CBMP, OP, Facing DW",
+    "footwork" : "H",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Fwd, Facing DC, start to turn left, CBM, Rise e/o preceding step. Up.",
+    "footwork" : "T",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Up." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "To side and slightly back, Backing DW, 1/4 between 1-2. Body turns less",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/4 between 1-2. Body turns less",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in CBMP, Backing DW",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Diag back, Backing DW",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Crosses in front of RF, Backing DW",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Up" ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Diag back, Backing DW, TH",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Lower e/o 6" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in CBMP, Backing DW",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "CBM" ]
+  } ]
 }

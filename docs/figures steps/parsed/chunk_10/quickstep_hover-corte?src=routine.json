@@ -1,144 +1,96 @@
 {
-  "name": "Hover Corte",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine"
-  ],
-  "dance_type": "QUICKSTEP",
-  "level": "Gold",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Closed Position",
-  "ending_position": "Closed Position",
-  "preceding_figure_names": "Chasse Reverse Turn, Closed Impetus, Natural Spin Turn, Quarter Turn to Right (Heel Pivot), Quick Open Reverse",
-  "following_figure_names": "Tipple Chasse to Right, Tipsy to R, Running Finish, Tipsy to L, Four Quick Run, V6, Six Quick Run",
-  "notes": "Be aware of Man's center. Drive toward the Man, but not shaping too early. This figure has delayed reaction to Man's body. Man takes head to the foot and then develops the shape out of standing leg.\nConnection is lower (hips, upper legs is pressing with Man), allowing even more extension.\nThink of the shape coming from lower part of abdominal first, then taking the curve up to upper body.\nDon't just bend back from waist and fall back.\nThe side connects to arm. When giving right ribs/side, the tone extends to R arm and give that toned arm/hand to Man forward.\nAt beginning: head can still kept left throughout the figure. When more comfortable, head can be more free, open to the right at end of 1st S, then close and turn to L when developing shaping.\nAfter lowering at e/o step 3, hips turn R, makes space to move legs in between. Typically, you breathe out when coming down.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "back",
-      "footwork": "TH",
-      "alignment": "BLOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o 1. NFR"
-      ]
-    },
-    {
-      "step_number": 2,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "to side and slightly fwd",
-      "footwork": "T",
-      "alignment": "Pointing DW",
-      "amount_of_turn": "3/8 to L",
-      "comments": [
-        "Sway(R)",
-        "continue to rise on 2"
-      ]
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "side and slightly back",
-      "footwork": "TH",
-      "alignment": "Backing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "Up. Lower e/o 3"
-      ]
-    },
-    {
-      "step_number": 4,
-      "timing": "4",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "back in CBMP",
-      "footwork": "T",
-      "alignment": "Backing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "--"
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "1",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "fwd",
-      "footwork": "HT",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "start to rise e/o1",
-        "Be aware of Man's center. Drive toward the Man, but not shaping too early. This figure has delayed reaction to Man's body. Man takes head to the foot and then develops the shape out of standing leg."
-      ]
-    },
-    {
-      "step_number": 6,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "to side",
-      "footwork": "T",
-      "alignment": "Facing center",
-      "amount_of_turn": "1/4 to L between 1 and 2. Continue to turn 1/8 on step 2.",
-      "comments": [
-        "Sway(L)",
-        "Continue to rise on 2",
-        "To be stable, right shoulder, hip and leg need to be all lined up, weight on RF",
-        "R side (ribs) to Man (which will pull hip forward and collect the legs), R hip/middle to Man. Then turn head, stretch/extend.",
-        "Connection is lower (hips, upper legs is pressing with Man), allowing even more extension.",
-        "Think of the shape coming from lower part of abdominal first, then taking the curve up to upper body.",
-        "Don't just bend back from waist and fall back.",
-        "The side connects to arm. When giving right ribs/side, the tone extends to R arm and give that toned arm/hand to Man forward.",
-        "At beginning: head can still kept left throughout the figure. When more comfortable, head can be more free, open to the right at end of 1st S, then close and turn to L when developing shaping."
-      ]
-    },
-    {
-      "step_number": 7,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "diag fwd",
-      "footwork": "TH",
-      "alignment": "Facing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "Up. Lower e/o 3",
-        "After lowering at e/o step 3, hips turn R, makes space to move legs in between. Typically, you breathe out when coming down."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "4",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "fwd in CBMP",
-      "footwork": "T",
-      "alignment": "Facing DC against LOD",
-      "amount_of_turn": "",
-      "comments": [
-        "Sway(S)",
-        "CBM",
-        "--"
-      ]
-    }
-  ]
+  "name" : "Hover Corté",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Chasse Reverse Turn, Closed Impetus, Natural Spin Turn, Quarter Turn to Right (Heel Pivot), Quick Open Reverse",
+  "following_figure_names" : "Tipple Chasse to Right, Tipsy to R, Running Finish, Tipsy to L, Four Quick Run, V6, Six Quick Run",
+  "notes" : "Be aware of Man's center. Drive toward the Man, but not shaping too early. This figure has delayed reaction to Man's body. Man takes head to the foot and then develops the shape out of standing leg.\nConnection is lower (hips, upper legs is pressing with Man), allowing even more extension.\nThink of the shape coming from lower part of abdominal first, then taking the curve up to upper body.\nDon't just bend back from waist and fall back.\nThe side connects to arm. When giving right ribs/side, the tone extends to R arm and give that toned arm/hand to Man forward.\nAt beginning: head can still kept left throughout the figure. When more comfortable, head can be more free, open to the right at end of 1st S, then close and turn to L when developing shaping.\nAfter lowering at e/o step 3, hips turn R, makes space to move legs in between. Typically, you breathe out when coming down.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "back",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM", "start to rise e/o 1. NFR" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "to side and slightly fwd",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "3/8 to L",
+    "comments" : [ "Sway(R)", "continue to rise on 2" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "side and slightly back",
+    "footwork" : "TH",
+    "alignment" : "Backing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "Up. Lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "4",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back in CBMP",
+    "footwork" : "T",
+    "alignment" : "Backing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM", "--" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "fwd",
+    "footwork" : "HT",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM", "start to rise e/o1", "Be aware of Man's center. Drive toward the Man, but not shaping too early. This figure has delayed reaction to Man's body. Man takes head to the foot and then develops the shape out of standing leg." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side",
+    "footwork" : "T",
+    "alignment" : "Facing center",
+    "amount_of_turn" : "1/4 to L between 1 and 2. Continue to turn 1/8 on step 2.",
+    "comments" : [ "Sway(L)", "Continue to rise on 2", "To be stable, right shoulder, hip and leg need to be all lined up, weight on RF", "R side (ribs) to Man (which will pull hip forward and collect the legs), R hip/middle to Man. Then turn head, stretch/extend.", "Connection is lower (hips, upper legs is pressing with Man), allowing even more extension.", "Think of the shape coming from lower part of abdominal first, then taking the curve up to upper body.", "Don't just bend back from waist and fall back.", "The side connects to arm. When giving right ribs/side, the tone extends to R arm and give that toned arm/hand to Man forward.", "At beginning: head can still kept left throughout the figure. When more comfortable, head can be more free, open to the right at end of 1st S, then close and turn to L when developing shaping." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "diag fwd",
+    "footwork" : "TH",
+    "alignment" : "Facing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "Up. Lower e/o 3", "After lowering at e/o step 3, hips turn R, makes space to move legs in between. Typically, you breathe out when coming down." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "4",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "fwd in CBMP",
+    "footwork" : "T",
+    "alignment" : "Facing DC against LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway(S)", "CBM", "--" ]
+  } ]
 }

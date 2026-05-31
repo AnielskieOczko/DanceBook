@@ -1,53 +1,36 @@
 {
-  "name": "ReversePivot",
-  "urls": [
-    "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot"
-  ],
-  "dance_type": "WALTZ",
-  "level": "Bronze",
-  "starting_foot_leader": "RF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "LF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Backing LOD",
-  "ending_position": "Facing DW",
-  "preceding_figure_names": "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
-  "following_figure_names": "Closed Change LF, Whisk, Double Reverse Spin, Contra Check, Reverse Turn, Progressive Chasse To R, Closed Telemark, Open Telemark, Fallaway Reverse And Slip Pivot",
-  "notes": "If the Reverse Pivot is started backing DC the alignment for the Pivot (Man) would be \\\"to center, toe turned in\\\". Note also that this step is in CBMP owing to the body turning strongly to L as the RF foot slips back. This step is on the half beat, at end of last step of previous figure (e.g. Closed Impetus) - body has not completely lowered in previous figure when stepping on this step.\nAllow this step to blend smoothly with the preceding step, if necessary borrowing from the next beat.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "1/2",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "RF back in CBMP (small step)",
-      "footwork": "B",
-      "alignment": "Backing LOD",
-      "amount_of_turn": "1/2 to L",
-      "comments": [
-        "RF should track under the body.",
-        "Body begins turning at the beginning of this step.",
-        "Small step.",
-        "Straight back.",
-        "Keep head weight on your left.",
-        "Watch Lady's position, don't pivot too much too early, which will peel off from lady."
-      ]
-    },
-    {
-      "step_number": 1,
-      "timing": "1/2",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "LF forward in CBMP (small step)",
-      "footwork": "B",
-      "alignment": "Facing LOD",
-      "amount_of_turn": "1/2 to L",
-      "comments": [
-        "Every time when turning to the left, imagine the belly button and center slightly turning to the right.",
-        "Do not allow shoulder to completely line up with hips.",
-        "R shoulder and R hip feel slightly open in left turning figures.",
-        "Step forward, head goes more left. Show off extension."
-      ]
-    }
-  ]
+  "name" : "Reverse Pivot",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot" ],
+  "dance_type" : "WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Backing LOD",
+  "ending_position" : "Facing DW",
+  "preceding_figure_names" : "Closed Impetus, Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names" : "Closed Change LF, Whisk, Double Reverse Spin, Contra Check, Reverse Turn, Progressive Chasse To R, Closed Telemark, Open Telemark, Fallaway Reverse And Slip Pivot",
+  "notes" : "If the Reverse Pivot is started backing DC the alignment for the Pivot (Man) would be \\\"to center, toe turned in\\\". Note also that this step is in CBMP owing to the body turning strongly to L as the RF foot slips back. This step is on the half beat, at end of last step of previous figure (e.g. Closed Impetus) - body has not completely lowered in previous figure when stepping on this step.\nAllow this step to blend smoothly with the preceding step, if necessary borrowing from the next beat.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back in CBMP (small step)",
+    "footwork" : "B",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "1/2 to L",
+    "comments" : [ "RF should track under the body.", "Body begins turning at the beginning of this step.", "Small step.", "Straight back.", "Keep head weight on your left.", "Watch Lady's position, don't pivot too much too early, which will peel off from lady." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1/2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF forward in CBMP (small step)",
+    "footwork" : "B",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "1/2 to L",
+    "comments" : [ "Every time when turning to the left, imagine the belly button and center slightly turning to the right.", "Do not allow shoulder to completely line up with hips.", "R shoulder and R hip feel slightly open in left turning figures.", "Step forward, head goes more left. Show off extension." ]
+  } ]
 }

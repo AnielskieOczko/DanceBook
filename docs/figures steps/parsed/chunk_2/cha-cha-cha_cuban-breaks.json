@@ -1,63 +1,56 @@
 {
-  "name": "Cuban Breaks",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cuban-breaks"
-  ],
-  "dance_type": "CHA_CHA_CHA",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "LF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "RF",
-  "starting_position": "Open Position",
-  "ending_position": "Open Position",
-  "preceding_figure_names": "Advanced Hip Twist, Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Closed Hip Twist, Cross Basic, Cuban Break RF, Curl, Follow My Leader, Hand To Hand LSP, Hip Twist Spiral, Hockey Stick, New York RSP, Open Hip Twist, Rope Spinning, Shoulder To Shoulder Right Side, Spiral, Spot or Switch Turn To L (Lady to R), Time Step RF, Turkish Towel, Underarm Turn To R",
-  "following_figure_names": "Fan (into Fan step 6-10), Time Step RF, Side Step To Right commenced with RF, Side Step To Left commenced with RF, Hand To Hand LSP, Closed Basic Movement (6-10 of Closed Basic), Cuban Break RF, Cuban Break RF - Preceding Figures, Cuban Break LF - Preceding Figures, Cuban Break LF - Following Figures, Split Cuban Break RF - Preceding Figures, Split Cuban Break LF - Preceding Figures, Split Cuban Break RF - Following Figures, Split Cuban Break LF - Following Figures",
-  "notes": "On Cuban Breaks, use the hips to counterbalance foot movements, to allow for faster, free movement. Both Man and Lady would be stepping forward on Cuban Breaks, except one is doing RF Cuban Break, the other is doing LF Cuban Break. Hands: don't wave around, keep it more or less stable, unaffected on the side.\nSplit Cuban Break (Lady or Man)\nSplit Cuban Breaks can be danced in place or normal Cuban Break and may be commenced with either foot in any of the positions given for Cuban Breaks.\n2 & 3: Dance 1-3 of LF Cuban Break LRL\nSmall side steps, body spine not moving much, keep under the body\n2: opposite shoulder forward\nFinish with on 3 with two straight legs, settle hip, shoulder flat before changing direction.\n4 & 1: Dance 1-3 of RF Cuban Break RLR\nNote:\nFootwork: Ball flat on each step.\nVariation: Dance from Open PP or Open CPP: turn, changing hands as in new York. Dance more turn if dancing the New York with quick timing and use only one step in place of the chasse.\nSplit Cuban Break with Guapacha Timing (Lady or Man)\nWith RF fwd Split Cuban Break:\nBeat count \"2&3 4&1\n2: hold, Guapacha timing part.\n&: RF fwd, flat. LF heel up. Very fast.\n3: L heel down. R heel up.\n4&1: side chasse.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF fwd and across, toe turned out, small step",
-      "footwork": "Ball Flat",
-      "alignment": "Diagonal Center",
-      "amount_of_turn": "1/8 to R",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "&",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Replace weight to RF, Ball Flat, weight on RF, RF heel down, whole foot",
-      "footwork": "Ball Flat",
-      "alignment": "Diagonal Center",
-      "amount_of_turn": "",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "LF to side, inside edge of LF, Toe, Ball",
-      "footwork": "Ball",
-      "alignment": "Diagonal Wall",
-      "amount_of_turn": "1/8 to L",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "&",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Replace weight to RF",
-      "footwork": "Ball Flat",
-      "alignment": "",
-      "amount_of_turn": "",
-      "comments": []
-    }
-  ]
+  "name" : "Cuban Breaks (LFoot, RFoot, Split)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cuban-breaks" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Advanced Hip Twist, Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Closed Hip Twist, Cross Basic, Cuban Break RF, Curl, Follow My Leader, Hand To Hand LSP, Hip Twist Spiral, Hockey Stick, New York RSP, Open Hip Twist, Rope Spinning, Shoulder To Shoulder Right Side, Spiral, Spot or Switch Turn To L (Lady to R), Time Step RF, Turkish Towel, Underarm Turn To R",
+  "following_figure_names" : "Fan (into Fan step 6-10), Time Step RF, Side Step To Right commenced with RF, Side Step To Left commenced with RF, Hand To Hand LSP, Closed Basic Movement (6-10 of Closed Basic), Cuban Break RF, Cuban Break RF - Preceding Figures, Cuban Break LF - Preceding Figures, Cuban Break LF - Following Figures, Split Cuban Break RF - Preceding Figures, Split Cuban Break LF - Preceding Figures, Split Cuban Break RF - Following Figures, Split Cuban Break LF - Following Figures",
+  "notes" : "On Cuban Breaks, use the hips to counterbalance foot movements, to allow for faster, free movement. Both Man and Lady would be stepping forward on Cuban Breaks, except one is doing RF Cuban Break, the other is doing LF Cuban Break. Hands: don't wave around, keep it more or less stable, unaffected on the side.\nSplit Cuban Break (Lady or Man)\nSplit Cuban Breaks can be danced in place or normal Cuban Break and may be commenced with either foot in any of the positions given for Cuban Breaks.\n2 & 3: Dance 1-3 of LF Cuban Break LRL\nSmall side steps, body spine not moving much, keep under the body\n2: opposite shoulder forward\nFinish with on 3 with two straight legs, settle hip, shoulder flat before changing direction.\n4 & 1: Dance 1-3 of RF Cuban Break RLR\nNote:\nFootwork: Ball flat on each step.\nVariation: Dance from Open PP or Open CPP: turn, changing hands as in new York. Dance more turn if dancing the New York with quick timing and use only one step in place of the chasse.\nSplit Cuban Break with Guapacha Timing (Lady or Man)\nWith RF fwd Split Cuban Break:\nBeat count \"2&3 4&1\n2: hold, Guapacha timing part.\n&: RF fwd, flat. LF heel up. Very fast.\n3: L heel down. R heel up.\n4&1: side chasse.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd and across, toe turned out, small step",
+    "footwork" : "Ball Flat",
+    "alignment" : "Diagonal Center",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "&",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF, Ball Flat, weight on RF, RF heel down, whole foot",
+    "footwork" : "Ball Flat",
+    "alignment" : "Diagonal Center",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side, inside edge of LF, Toe, Ball",
+    "footwork" : "Ball",
+    "alignment" : "Diagonal Wall",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "&",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF",
+    "footwork" : "Ball Flat",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
 }

@@ -1,112 +1,96 @@
 {
- "name": "Spiral",
-  "urls": [
-    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/spiral"
-  ],
-  "dance_type": "CHA_CHA_CHA",
-  "level": "Silver",
-  "starting_foot_leader": "LF",
-  "ending_foot_leader": "RF",
-  "starting_foot_follower": "RF",
-  "ending_foot_follower": "LF",
-  "starting_position": "Closed Position",
-  "ending_position": "Fan Position",
-  "preceding_figure_names": "Alemana, Cross Basic, Hand To Hand RSP, Natural Top, Reverse Top, Rope Spinning",
-  "following_figure_names": "Chase, Alemana (normal; or when ending in Open Position), Hockey Stick, Open Basic Movement (when ending in Open Position, follow with Open Basic, or 1-2 Open Basic and Three Cha Cha Chas Back, or 1-5 Open Basic into Natural Top), Time Step LF (when ending in Open Position), Open Hip Twist (when ending in Open Position), Curl (when ending in Open Position), Cuban Break LF (when ending in Open Position; or when ending in Open CPP; or when ending in LSP), Split Cuban Break LF (when ending in Open Position; or when ending in Open CPP), Turkish Towel (when ending in Open Position), Sweetheart (when ending in Open Position), Follow My Leader (when ending in Open Position), New York LSP (when ending in Open CPP; or when ending in LSP, follow with New York LSP, no turn on first step), Spot or Switch Turn To R (Lady to L) (when ending in Open CPP; or when ending in LSP), Underarm Turn to L (when ending in Open CPP), Three Cha Cha Chas Forward (when ending in Open CPP, follow 4-9 Three Cha Chas fwd in LSP; or when ending in LSP, follow with Three Cha Chas Fwd in LSP), Reverse Top (when ending in Contact Position, follow with 6-10 or 6-15 Reverse Top)",
-  "notes": "Spiral Turn:\\nPut full weight on the spiral foot (in this case, RF), with head, center, hips all stacked up. Do not leave hip behind. Put whole weight on foot as fast as possible before doing spiral.\\nTurning, Man lead arm, move elbow across body, do not turn and leave arm and elbow behind.\\nAs spiraling, keep thighs crossed, helps to pull legs together fast.\\nUndertuned spiral - an alternative:\\nMan: turn 1/8 L over 7-10, dancing a fwd lock to end in Open Position.\\nLady: \\n3/4 L after placing step 5, to end in Tandem Position.\\nStep 6: LF fwd\\nStep 7: RF fwd in line with LF, then continue to turn 1/2 to end with RF back.\\nStep 8-10: Back lock LRL.\\nAlternative finishing positions\\nOpen Position: Man turns 3/8 to L over steps 7-10.\\nOpen CPP\\nContact Position: ( Known as Closed Spiral)\\nMan turn 5/8 to L over steps 7-10, dancing the chasse side and slightly fwd, overturning Lady, keeping fingers lightly in contact with Lady's waist throughout as Lady turns within the circle of his R arm. On 6: lower arms to normal position. Man keeps his RH in contact with Lady's back to indicate finishing in contact position\\nLady makes a complete turn L over steps 6-10, dancing the chasse with LF behind RF as Cuban Cross.\\nLeft Side Position\\nMan: no turn over 7 to 10, leading Lady to overturn on 7, lowering L arm and taking it slightly fwd.\\nLady: turn an additional 1/8 to L on 7, using a loosely crossed spiral action\\nBoth dance a fwd lock on steps 8-10.",
-  "steps": [
-    {
-      "step_number": 1,
-      "timing": "2",
-      "role": "LEADER",
-      "foot": "LF",
-      "action": "Step to side or forward in RSP with slight body turn to R",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 2,
-      "timing": "3",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Transfer weight to RF",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 3,
-      "timing": "4 & 1",
-      "role": "LEADER",
-      "foot": "RF",
-      "action": "Compact Chasse LRL with slight body turn to L",
-      "footwork": "LRU",
-      "alignment": "RSP",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 4,
-      "timing": "5",
-      "role": "LEADER",
-      "foot": "N/A",
-      "action": "Raise L hand above Lady's R shoulder to circle counterclockwise",
-      "footwork": "N/A",
-      "alignment": "N/A",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "If preferred, Man can keep his fingers lightly in contact with Lady's waist as Lady does her spiral turn."
-      ]
-    },
-    {
-      "step_number": 5,
-      "timing": "2",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF back in RSP with 1/2 turn to R",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "1/2 to R",
-      "comments": []
-    },
-    {
-      "step_number": 6,
-      "timing": "3",
-      "role": "FOLLOWER",
-      "foot": "LF",
-      "action": "Transfer weight to LF",
-      "footwork": "B",
-      "alignment": "RSP",
-      "amount_of_turn": "N/A",
-      "comments": []
-    },
-    {
-      "step_number": 7,
-      "timing": "4 & 1",
-      "role": "FOLLOWER",
-      "foot": "RF",
-      "action": "RF fwd and slightly across LF in front of Man to chasse RLR, then turn underarm allowing LF to cross front without weight",
-      "footwork": "LRU",
-      "alignment": "RSP",
-      "amount_of_turn": "N/A",
-      "comments": [
-        "1/4 to L between 2 &3. Then a further 7/8 on step 5 doing spiral.",
-        "Can also finish in other positions, see Note below."
-      ]
-    },
-    {
-      "step_number": 8,
-      "timing": "N/A",
-      "role": "FOLLOWER",
-      "foot": "N/A",
-      "action": "Alternative finishing positions described in notes",
-      "footwork": "N/A",
-      "alignment": "N/A",
-      "amount_of_turn": "N/A",
-      "comments": []
-    }
-  ]
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/spiral" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Alemana, Cross Basic, Hand To Hand RSP, Natural Top, Reverse Top, Rope Spinning",
+  "following_figure_names" : "Chase, Alemana (normal; or when ending in Open Position), Hockey Stick, Open Basic Movement (when ending in Open Position, follow with Open Basic, or 1-2 Open Basic and Three Cha Cha Chas Back, or 1-5 Open Basic into Natural Top), Time Step LF (when ending in Open Position), Open Hip Twist (when ending in Open Position), Curl (when ending in Open Position), Cuban Break LF (when ending in Open Position; or when ending in Open CPP; or when ending in LSP), Split Cuban Break LF (when ending in Open Position; or when ending in Open CPP), Turkish Towel (when ending in Open Position), Sweetheart (when ending in Open Position), Follow My Leader (when ending in Open Position), New York LSP (when ending in Open CPP; or when ending in LSP, follow with New York LSP, no turn on first step), Spot or Switch Turn To R (Lady to L) (when ending in Open CPP; or when ending in LSP), Underarm Turn to L (when ending in Open CPP), Three Cha Cha Chas Forward (when ending in Open CPP, follow 4-9 Three Cha Chas fwd in LSP; or when ending in LSP, follow with Three Cha Chas Fwd in LSP), Reverse Top (when ending in Contact Position, follow with 6-10 or 6-15 Reverse Top)",
+  "notes" : "Spiral Turn:\\nPut full weight on the spiral foot (in this case, RF), with head, center, hips all stacked up. Do not leave hip behind. Put whole weight on foot as fast as possible before doing spiral.\\nTurning, Man lead arm, move elbow across body, do not turn and leave arm and elbow behind.\\nAs spiraling, keep thighs crossed, helps to pull legs together fast.\\nUndertuned spiral - an alternative:\\nMan: turn 1/8 L over 7-10, dancing a fwd lock to end in Open Position.\\nLady: \\n3/4 L after placing step 5, to end in Tandem Position.\\nStep 6: LF fwd\\nStep 7: RF fwd in line with LF, then continue to turn 1/2 to end with RF back.\\nStep 8-10: Back lock LRL.\\nAlternative finishing positions\\nOpen Position: Man turns 3/8 to L over steps 7-10.\\nOpen CPP\\nContact Position: ( Known as Closed Spiral)\\nMan turn 5/8 to L over steps 7-10, dancing the chasse side and slightly fwd, overturning Lady, keeping fingers lightly in contact with Lady's waist throughout as Lady turns within the circle of his R arm. On 6: lower arms to normal position. Man keeps his RH in contact with Lady's back to indicate finishing in contact position\\nLady makes a complete turn L over steps 6-10, dancing the chasse with LF behind RF as Cuban Cross.\\nLeft Side Position\\nMan: no turn over 7 to 10, leading Lady to overturn on 7, lowering L arm and taking it slightly fwd.\\nLady: turn an additional 1/8 to L on 7, using a loosely crossed spiral action\\nBoth dance a fwd lock on steps 8-10.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side or forward in RSP with slight body turn to R",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to RF",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 & 1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Compact Chasse LRL with slight body turn to L",
+    "footwork" : "LRU",
+    "alignment" : "RSP",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "5",
+    "role" : "LEADER",
+    "foot" : "N/A",
+    "action" : "Raise L hand above Lady's R shoulder to circle counterclockwise",
+    "footwork" : "N/A",
+    "alignment" : "N/A",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "If preferred, Man can keep his fingers lightly in contact with Lady's waist as Lady does her spiral turn." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back in RSP with 1/2 turn to R",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "1/2 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight to LF",
+    "footwork" : "B",
+    "alignment" : "RSP",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "4 & 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd and slightly across LF in front of Man to chasse RLR, then turn underarm allowing LF to cross front without weight",
+    "footwork" : "LRU",
+    "alignment" : "RSP",
+    "amount_of_turn" : "N/A",
+    "comments" : [ "1/4 to L between 2 &3. Then a further 7/8 on step 5 doing spiral.", "Can also finish in other positions, see Note below." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "N/A",
+    "role" : "FOLLOWER",
+    "foot" : "N/A",
+    "action" : "Alternative finishing positions described in notes",
+    "footwork" : "N/A",
+    "alignment" : "N/A",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  } ]
 }
