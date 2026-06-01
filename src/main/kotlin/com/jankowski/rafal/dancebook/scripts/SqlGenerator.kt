@@ -196,7 +196,7 @@ fun main() {
         }
     }
 
-    val migrationFile = Paths.get("src/main/resources/db/migration/V23__seed_figures_details.sql").toFile()
+    val migrationFile = Paths.get("src/main/resources/db/migration/V24__seed_figures_details.sql").toFile()
     migrationFile.parentFile.mkdirs()
     migrationFile.writeText(sqlBuilder.toString())
 
