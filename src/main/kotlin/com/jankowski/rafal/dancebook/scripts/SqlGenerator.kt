@@ -34,6 +34,21 @@ fun main() {
     sqlBuilder.append("-- Auto-generated seeding script for parsed figures metadata, steps, links, and comments\n")
     sqlBuilder.append("-- Source of truth: docs/figures steps/parsed/chunk_*_parsed.json\n\n")
 
+    // Clean up existing links and steps first in bulk for clean transaction re-entrancy
+    sqlBuilder.append("-- 1. Bulk delete existing crawled steps and links to avoid key violations during re-inserts\n")
+    sqlBuilder.append("DELETE FROM dance_figure_link WHERE type = 'CRAWLED';\n")
+    sqlBuilder.append("DELETE FROM dance_figure_step WHERE dance_figure_id IN (SELECT id FROM dance_figure WHERE predefined = true);\n\n")
+
+    val figuresValues = mutableListOf<String>()
+    val linksValues = mutableListOf<String>()
+    val stepsValues = mutableListOf<String>()
+    val commentsValues = mutableListOf<String>()
+
+    val seenFigures = mutableSetOf<String>()
+    val seenLinks = mutableSetOf<String>()
+    val seenSteps = mutableSetOf<String>()
+    val seenComments = mutableSetOf<String>()
+
     var figuresCount = 0
     var stepsCount = 0
     var linksCount = 0
@@ -53,18 +68,23 @@ fun main() {
             val jsonDanceType = record.dance_type ?: continue
 
             val dbDanceTypeName = mapDanceTypeJsonToDbName(jsonDanceType)
+            val uniqueFigureKey = "${dbDanceTypeName.lowercase()}_${name.lowercase().trim()}"
+
+            // If we've already defined this figure in this script run, skip it to avoid ON CONFLICT duplicate key errors
+            if (seenFigures.contains(uniqueFigureKey)) {
+                continue
+            }
+            seenFigures.add(uniqueFigureKey)
+
             val escapedName = escapeSql(name)
             val escapedDanceTypeName = escapeSql(dbDanceTypeName)
 
-            sqlBuilder.append("-- Figure: $name ($dbDanceTypeName)\n")
-
-            // 1. Insert or update the figure
+            // 1. Collect figure insert values
             val precedingNamesJson = serializeList(record.preceding_figure_names)
             val followingNamesJson = serializeList(record.following_figure_names)
 
-            sqlBuilder.append("""
-                INSERT INTO dance_figure (id, name, dance_type_id, predefined, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position, preceding_figure_names, following_figure_names, notes)
-                VALUES (
+            figuresValues.add("""
+                (
                     gen_random_uuid(),
                     $escapedName,
                     (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName),
@@ -79,30 +99,10 @@ fun main() {
                     ${escapeSql(followingNamesJson)},
                     ${escapeSql(record.notes)}
                 )
-                ON CONFLICT (dance_type_id, name) DO UPDATE SET
-                    predefined = EXCLUDED.predefined,
-                    starting_foot_leader = EXCLUDED.starting_foot_leader,
-                    ending_foot_leader = EXCLUDED.ending_foot_leader,
-                    starting_foot_follower = EXCLUDED.starting_foot_follower,
-                    ending_foot_follower = EXCLUDED.ending_foot_follower,
-                    starting_position = EXCLUDED.starting_position,
-                    ending_position = EXCLUDED.ending_position,
-                    preceding_figure_names = EXCLUDED.preceding_figure_names,
-                    following_figure_names = EXCLUDED.following_figure_names,
-                    notes = EXCLUDED.notes;
-
             """.trimIndent())
-            sqlBuilder.append("\n")
+            figuresCount++
 
-            // 2. Clear existing links and steps
-            sqlBuilder.append("""
-                DELETE FROM dance_figure_link WHERE dance_figure_id = (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName));
-                DELETE FROM dance_figure_step WHERE dance_figure_id = (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName));
-
-            """.trimIndent())
-            sqlBuilder.append("\n")
-
-            // 3. Insert links
+            // 2. Collect links
             val urls = mutableListOf<String>()
             if (record.urls != null) {
                 urls.addAll(record.urls)
@@ -113,23 +113,24 @@ fun main() {
 
             for (url in urls) {
                 val linkKey = "${dbDanceTypeName}_${name}_$url"
+                if (seenLinks.contains(linkKey)) continue
+                seenLinks.add(linkKey)
+
                 val linkUuid = UUID.nameUUIDFromBytes(linkKey.toByteArray()).toString()
 
-                sqlBuilder.append("""
-                    INSERT INTO dance_figure_link (id, dance_figure_id, url, title, type)
-                    VALUES (
+                linksValues.add("""
+                    (
                         '$linkUuid',
                         (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName)),
                         ${escapeSql(url)},
                         'DanceCentral Reference',
                         'CRAWLED'
-                    );
+                    )
                 """.trimIndent())
-                sqlBuilder.append("\n")
                 linksCount++
             }
 
-            // 4. Insert steps and comments
+            // 3. Collect steps and comments
             if (record.steps != null) {
                 for ((stepIndex, stepDto) in record.steps.withIndex()) {
                     val sn = stepDto.step_number
@@ -141,6 +142,10 @@ fun main() {
                     val rawRole = stepDto.role ?: ""
                     val role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
                     val stepKey = "${dbDanceTypeName}_${name}_${role}_${stepNumber}_$stepIndex"
+                    
+                    if (seenSteps.contains(stepKey)) continue
+                    seenSteps.add(stepKey)
+
                     val stepUuid = UUID.nameUUIDFromBytes(stepKey.toByteArray()).toString()
 
                     val rawTiming = stepDto.timing ?: ""
@@ -150,9 +155,8 @@ fun main() {
                     val rawFootwork = stepDto.footwork
                     val footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
 
-                    sqlBuilder.append("""
-                        INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
-                        VALUES (
+                    stepsValues.add("""
+                        (
                             '$stepUuid',
                             (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName)),
                             $stepNumber,
@@ -163,37 +167,87 @@ fun main() {
                             ${escapeSql(footwork)},
                             ${escapeSql(stepDto.alignment)},
                             ${escapeSql(stepDto.amount_of_turn)}
-                        );
+                        )
                     """.trimIndent())
-                    sqlBuilder.append("\n")
                     stepsCount++
 
                     if (stepDto.comments != null) {
                         for ((commentIndex, commentText) in stepDto.comments.withIndex()) {
                             if (commentText.isNotBlank()) {
                                 val commentKey = "${stepKey}_comment_$commentIndex"
+                                if (seenComments.contains(commentKey)) continue
+                                seenComments.add(commentKey)
+
                                 val commentUuid = UUID.nameUUIDFromBytes(commentKey.toByteArray()).toString()
 
-                                sqlBuilder.append("""
-                                    INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
-                                    VALUES (
+                                commentsValues.add("""
+                                    (
                                         '$commentUuid',
                                         '$stepUuid',
                                         ${escapeSql(commentText)},
                                         ${commentIndex + 1}
-                                    );
+                                    )
                                 """.trimIndent())
-                                sqlBuilder.append("\n")
                                 commentsCount++
                             }
                         }
                     }
                 }
             }
-
-            sqlBuilder.append("\n")
-            figuresCount++
         }
+    }
+
+    // Write bulk insert statements to the file
+    sqlBuilder.append("-- 2. Bulk insert / update figures\n")
+    for (chunk in figuresValues.chunked(100)) {
+        sqlBuilder.append("""
+            INSERT INTO dance_figure (id, name, dance_type_id, predefined, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position, preceding_figure_names, following_figure_names, notes)
+            VALUES
+        """.trimIndent()).append("\n")
+        sqlBuilder.append(chunk.joinToString(",\n"))
+        sqlBuilder.append("\nON CONFLICT (dance_type_id, name) DO UPDATE SET\n")
+        sqlBuilder.append("""
+            predefined = EXCLUDED.predefined,
+            starting_foot_leader = EXCLUDED.starting_foot_leader,
+            ending_foot_leader = EXCLUDED.ending_foot_leader,
+            starting_foot_follower = EXCLUDED.starting_foot_follower,
+            ending_foot_follower = EXCLUDED.ending_foot_follower,
+            starting_position = EXCLUDED.starting_position,
+            ending_position = EXCLUDED.ending_position,
+            preceding_figure_names = EXCLUDED.preceding_figure_names,
+            following_figure_names = EXCLUDED.following_figure_names,
+            notes = EXCLUDED.notes;
+        """.trimIndent()).append("\n\n")
+    }
+
+    sqlBuilder.append("-- 3. Bulk insert links\n")
+    for (chunk in linksValues.chunked(200)) {
+        sqlBuilder.append("""
+            INSERT INTO dance_figure_link (id, dance_figure_id, url, title, type)
+            VALUES
+        """.trimIndent()).append("\n")
+        sqlBuilder.append(chunk.joinToString(",\n"))
+        sqlBuilder.append(";\n\n")
+    }
+
+    sqlBuilder.append("-- 4. Bulk insert steps\n")
+    for (chunk in stepsValues.chunked(200)) {
+        sqlBuilder.append("""
+            INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+            VALUES
+        """.trimIndent()).append("\n")
+        sqlBuilder.append(chunk.joinToString(",\n"))
+        sqlBuilder.append(";\n\n")
+    }
+
+    sqlBuilder.append("-- 5. Bulk insert comments\n")
+    for (chunk in commentsValues.chunked(200)) {
+        sqlBuilder.append("""
+            INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+            VALUES
+        """.trimIndent()).append("\n")
+        sqlBuilder.append(chunk.joinToString(",\n"))
+        sqlBuilder.append(";\n\n")
     }
 
     val migrationFile = Paths.get("src/main/resources/db/migration/V24__seed_figures_details.sql").toFile()
