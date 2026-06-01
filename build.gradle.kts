@@ -107,6 +107,10 @@ tasks.register<JavaExec>("generateFiguresSql") {
     mainClass.set("com.jankowski.rafal.dancebook.scripts.SqlGeneratorKt")
 }
 
+springBoot {
+    mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
+}
+
 sonar {
     properties {
         property("sonar.projectKey", "dancebook")
