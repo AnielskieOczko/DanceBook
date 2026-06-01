@@ -140,11 +140,17 @@ class SyllabusImporterService(
                 val step = DanceFigureStep().apply {
                     this.danceFigure = matchedFigure
                     this.stepNumber = stepNum++
-                    this.timing = stepDto.timing
-                    this.role = stepDto.role
-                    this.foot = stepDto.foot
+                    
+                    val rawTiming = stepDto.timing
+                    this.timing = if (rawTiming.length > 50) rawTiming.substring(0, 50) else rawTiming
+                    val rawRole = stepDto.role
+                    this.role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
+                    val rawFoot = stepDto.foot
+                    this.foot = if (rawFoot.length > 50) rawFoot.substring(0, 50) else rawFoot
                     this.action = stepDto.action
-                    this.footwork = stepDto.footwork
+                    val rawFootwork = stepDto.footwork
+                    this.footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
+                    
                     this.alignment = stepDto.alignment
                     this.amountOfTurn = stepDto.amountOfTurn
                 }
@@ -621,11 +627,17 @@ class SyllabusImporterService(
                         }
                         this.stepNumber = parsedStepNum
                         stepNum = parsedStepNum + 1
-                        this.timing = stepDto.timing ?: ""
-                        this.role = stepDto.role ?: ""
-                        this.foot = stepDto.foot ?: ""
+                        
+                        val rawTiming = stepDto.timing ?: ""
+                        this.timing = if (rawTiming.length > 50) rawTiming.substring(0, 50) else rawTiming
+                        val rawRole = stepDto.role ?: ""
+                        this.role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
+                        val rawFoot = stepDto.foot ?: ""
+                        this.foot = if (rawFoot.length > 50) rawFoot.substring(0, 50) else rawFoot
                         this.action = stepDto.action ?: ""
-                        this.footwork = stepDto.footwork
+                        val rawFootwork = stepDto.footwork
+                        this.footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
+                        
                         this.alignment = stepDto.alignment
                         this.amountOfTurn = stepDto.amount_of_turn
                     }

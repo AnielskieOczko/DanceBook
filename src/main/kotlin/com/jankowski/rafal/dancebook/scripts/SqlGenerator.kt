@@ -138,9 +138,17 @@ fun main() {
                         is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: (stepIndex + 1)
                         else -> stepIndex + 1
                     }
-                    val role = stepDto.role ?: ""
+                    val rawRole = stepDto.role ?: ""
+                    val role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
                     val stepKey = "${dbDanceTypeName}_${name}_${role}_${stepNumber}_$stepIndex"
                     val stepUuid = UUID.nameUUIDFromBytes(stepKey.toByteArray()).toString()
+
+                    val rawTiming = stepDto.timing ?: ""
+                    val timing = if (rawTiming.length > 50) rawTiming.substring(0, 50) else rawTiming
+                    val rawFoot = stepDto.foot ?: ""
+                    val foot = if (rawFoot.length > 50) rawFoot.substring(0, 50) else rawFoot
+                    val rawFootwork = stepDto.footwork
+                    val footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
 
                     sqlBuilder.append("""
                         INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
@@ -148,11 +156,11 @@ fun main() {
                             '$stepUuid',
                             (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName)),
                             $stepNumber,
-                            ${escapeSql(stepDto.timing)},
+                            ${escapeSql(timing)},
                             ${escapeSql(role)},
-                            ${escapeSql(stepDto.foot)},
+                            ${escapeSql(foot)},
                             ${escapeSql(stepDto.action)},
-                            ${escapeSql(stepDto.footwork)},
+                            ${escapeSql(footwork)},
                             ${escapeSql(stepDto.alignment)},
                             ${escapeSql(stepDto.amount_of_turn)}
                         );
