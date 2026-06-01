@@ -1,0 +1,101 @@
+{
+ "name": "Cross Basic",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cross-basic"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break RF, Hand To Hand LSP, New York RSP, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Right commenced with RF, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Underarm Turn To R",
+  "following_figure_names": "Fan (normal; or after steps 1-5 of Cross Basic, follow with steps 6-10 of Fan), Hockey Stick (Cross Basic ending in Fan position), Alemana (Cross Basic ending in Fan position), New York LSP, Closed Basic Movement, Spot or Switch Turn To R (Lady to L), Hand To Hand RSP, Side Step To Left commenced with LF, Side Step To Right commenced with LF, There And Back, Time Step LF, Cross Basic, Cuban Break LF, Split Cuban Break LF, Underarm Turn To R (after steps 1-5 of Cross Basic), Spiral (after steps 1-5 of Cross Basic, leady Lady to do Spiral on step 5, then steps 6-10 of Spiral)",
+  "notes": "The difference from Closed Basic is that the legs will cross in Cross Basic (in Cuban Cross position)\nThe figure can be danced in either Closed Position or open no hand hold position.\nGuapacha timing is often used on this figure.\nGuapacha timing requires firm tone with Man.\n2: hold, use center body, \"center in\" (\"zip/button in\") and feeling like body is more \"up\", build energy and power in body, almost a little more fwd energy toward and closer to man before stepping back on RF on \"a\".\na: Man is sending Lady back, Lady RF back, L knee bent, very fast.\nLady's body movement is not together with Man, Lady settles R hip, while Man is already going back (his back), Lady needs to finish back step\nMan and Lady are moving \"away\" from each other for a moment, Lady does not go fwd with Man in sync, Lady is delayed\n3 4&1: move together with Man. L thigh has to push fwd on lock to move fwd.\nWhen not following with another Cross Basic, the last chasse is taken to side.\nOn the last chasse 8-10, lady may be lead to Fan Position, Open Position or Open CPP, adjusting turn accordingly. Then, any of the normal follows to those positions may be used.\nGold variation:\nMan:\nRaise L arm and lead lady into Spiral turn to L on 5.\nGet back to normal hold on 8.\nLady:\n5/8 L on spiral turn, then two fwd steps continuing to turn L to end RF back and slightly to side facing partner.\nContinue with the normal 8-10 of Cross Basic.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Cross LF in front of RF, toe turned out",
+      "footwork": "Cross",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Retain pressure into ball of foot as it moves toward cross position.",
+        "Body incline slightly to L."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back, having moved it slightly rightwards",
+      "footwork": "BF",
+      "alignment": "DC",
+      "amount_of_turn": "N/A",
+      "comments": [
+        "Body incline slightly to L."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly forward to chassé LRL",
+      "footwork": "T",
+      "alignment": "Side",
+      "amount_of_turn": "1/8 to L over 3-5",
+      "comments": [
+        "Chassé LRL across 3-5 counts."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Cross RF behind LF, toe turned out",
+      "footwork": "Cross",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Body incline slightly to R.",
+        "On Ball of foot, Heel lowers towards floor.",
+        "Retain pressure into ball of foot as it moves towards crossed position."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd, having moved it slightly leftwards",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "continue to turn L",
+      "comments": [
+        "Body incline slightly to R."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back to chassé RLR",
+      "footwork": "T",
+      "alignment": "Side",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "On the last chasse 8-10, lady may be lead to Fan Position, Open Position or Open CPP, adjusting turn accordingly.",
+        "When not following with another Cross Basic, the last chasse is taken to side."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "name" : "Passing Natural Turn (from PP)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/passing-natural-turn" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Promenade Position",
+  "ending_position" : "Promenade Position",
+  "preceding_figure_names" : "",
+  "following_figure_names" : "",
+  "notes" : "Note: This figure is not in the \"book\", but is often danced.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd, CBMP in PP | Pointing DW, Body Facing Wall | HT",
+    "footwork" : "F",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "",
+    "comments" : [ "HT" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side, slightly back | BLOD | T | turning to R",
+    "footwork" : "T",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back, R shoulder leading | BLOD | TH",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF across fwd, in CBMP, in PP | Moving DW, pointing LOD | HT",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "HT" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd small step, in between partner's feet | LOD | T",
+    "footwork" : "T",
+    "alignment" : "LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd, L shoulder leading, prepare for stepping OP in CBMP | LOD | TH",
+    "footwork" : "TH",
+    "alignment" : "LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
+}

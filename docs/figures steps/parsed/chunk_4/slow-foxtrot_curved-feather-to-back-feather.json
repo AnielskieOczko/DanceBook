@@ -1,0 +1,125 @@
+{
+  "name":"Curved Feather to Back Feather",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Open Impetus Turn, Outside Swivel, Reverse Wave, Three Step",
+  "following_figure_names": "Closed Impetus and Feather Finish, Open Impetus Turn",
+  "notes": "Typically, continue with Feather Finish SQQ. If Man shapes, Lady turn her head to R on QQ, keep ribs to Man. Lady can lower her R heel on step 2. Head to L. Hip and body rotating to R, follow Man's hips, rotate hip to Man, connected with Man, hip is still in front of Man, not to the side of Man's hip. Leave RF loosely in front, do not stick R leg too early. Prepare to really use LF to push for next RF fwd step. This is the circling movement action, get weight into heel and then push forward. When swing on Q: do not dip shoulder low, keep shoulders flat, swing forward, traveling. Give center to Man, shape. Breathe, release so body does not stiff up.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/8 R",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "preparing to step OP",
+        "L side leading",
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP",
+      "footwork": "F",
+      "alignment": "Facing wall",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "OP",
+        "R",
+        "CBM",
+        "Up. Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1.8",
+      "comments": [
+        "Start to rise e/o 4",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back R side leading",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "-",
+      "comments": [
+        "Curving toward LOD",
+        "Sway (L)",
+        "Continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Sway (L)",
+        "Up. Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway (S)",
+        "CBM",
+        "-"
+      ]
+    }
+  ]
+}

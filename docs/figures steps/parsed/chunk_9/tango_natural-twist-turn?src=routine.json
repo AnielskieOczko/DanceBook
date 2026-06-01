@@ -1,0 +1,169 @@
+{
+  "name": "Natural Twist Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Fallaway Promenade, Progressive Link",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Back Corte, LF Rock",
+  "notes": "Amount of Turn: A complete turn to the right\nOther variations:\n7/8 to R could be made to end facing LOD. The following Promenade would move DC.\n3/4 to R could be made at a corner or at the side of the room to end facing DC. The following Promenade would move to center.\nWhen following with Back Corté or LF Rock Man will turn a further 1/4 to face partner\n\nFollower notes:\nAmount of Turn: a complete turn to R.\n2 styles (below) to finish this figure, either is ok, but they all finish in the same alignment. (Tendency is LF is not swiveled enough.)\n5-step style finish: (traditional way), Lady pivot on LF on step 6.\nPivoting on LF, it needs to pivot enough to have LF finish in the correct position (tendency is underturn).\nLF begins swivel when it starts to receive weight, not delay till full weight on it and then swivel. The weight is in transition. When swivel finishes, full weight is transferred onto LF.\n4-step style finish, Lady pivot on RF on step 5.\nPivoting on RF on step 5, then place LF parallel to RF in the Promenade Position.\nPreceding Figures\nFallaway Promenade\nProgressive Link\nFollowing Figures\nClosed Promenade\nOpen Promenade\nNatural Promenade Turn\nPromenade Link\nBack Open Promenade\nFallaway Promenade\nBack Corte\nLF Rock",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in PP",
+      "footwork": "H",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF crosses behind LF",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Start to twist R allowing feet to uncross",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Feet almost closed weight on RF in PP",
+      "footwork": "",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in PP",
+      "footwork": "H",
+      "alignment": "Pointing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Strong step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Pointing down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "After the step, center stays with L leg. Allow man to get ahead of Lady."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd between partner's feet",
+      "footwork": "H",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Not too aggressive on this step.",
+        "After the step, center stays with L leg. Allow man to get ahead of Lady.",
+        "There is slight rise on R hip /R side when Man cuts off in front.",
+        "Take head to left. Then keep head very left."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd preparing to step outside partner L side leading",
+      "footwork": "H",
+      "alignment": "Down LOD pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep left side up and forward, do not lift shoulder.",
+        "L shoulder lead is important.",
+        "Keep tangent of circle, curving steps not as big."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | To Wall",
+      "footwork": "HB",
+      "alignment": "To Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "Left shoulder is \"walking around\", dancing outside the circle. Don't drop left side/shoulder. Head follows the arm."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side small step in PP",
+      "footwork": "BH",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Stay behind Man. Don't drop left side/shoulder.",
+        "Head turning to PP: Don't turn head to R too early, don't turn head on its own too late either. (Sharpness depends on the lead, could be smooth turn or sharp head turn.)"
+      ]
+    }
+  ]
+}

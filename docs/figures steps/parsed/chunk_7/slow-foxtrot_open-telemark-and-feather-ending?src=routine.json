@@ -1,0 +1,116 @@
+{
+  "name" : "Open Telemark Feather Ending",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine" ],
+  "dance_type" : "SLOW_FOXTROT",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Closed Impetus and Feather Finish,Fallaway Reverse and Slip Pivot,Feather Step,Hover Cross,Hover Feather,Natural Hover Telemark,Natural Telemark,Natural Twist Turn,Natural Zig-Zag from PP,Open Telemark, Natural Turn, Outside Swivel and Feather Ending,Top Spin",
+  "following_figure_names" : "Three Step,Change Of Direction,Basic Weave (1-4 Reverse Turn to end BDW, check, and Basic Weave),Reverse Turn (1-4 Reverse Turn to end BLOD near corner, check and Basic Weave turning 1/8, 1/8, 3/4; or 1/4, 1/8, 3/4; to end DW of new LOD),Hover Telemark,Reverse Wave,Top Spin (check back after step 6),Outside Swivel (check back after step 6),Fallaway Reverse and Slip Pivot (at corner)",
+  "notes" : "",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd | FDC | HT | start to turn L | Sway(S) | CBM | rise e/o 1",
+    "footwork" : "F",
+    "alignment" : "FDC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side | Backing DW | T | 1/4 between 1-2 | Sway(L) | Up",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/4",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly fwd in PP | Pointing DW | Body Facing Wall | TH | 1/2 between 2-3. body turns less | Sway(S) | Up, lower e/o 3",
+    "footwork" : "F",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/2",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd in CBMP, OP | Facing DW | TH | Sway(R) | Up, lower e/o 6",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd | Facing DW | H | Sway(S) | CBM | --",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back | BDC | TH | start to turn L | Sway(S) | CBM | rise slightly e/o 1, NFR",
+    "footwork" : "F",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF closes to RF (Heel Turn) | LOD | HT | 3/8 between 1-2 | Sway(R) | continue to rise on 2",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "3/8",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF diag fwd in PP, R side leading | Pointing to LOD | TH | slight body turn to L | Sway(S) | Up, lower e/o 3",
+    "footwork" : "F",
+    "alignment" : "Pointing to LOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd in CBMP | Backing DW | TH | 1/8 between 5-6, body turns less | Sway(L) | up, NFR Lower e/o6",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/8",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back | Backing DW | T | -- | Sway(S) | CBM | --",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
+}

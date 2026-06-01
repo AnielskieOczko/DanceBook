@@ -1,0 +1,34 @@
+{ "name": "Rhythm Bounce (on LF and RF)", 
+  "urls": [ 
+    "https://www.dancecentral.info/ballroom/international-style/samba/rhythm-bounce"   ], 
+  "dance_type": "SAMBA", 
+  "level": "Newcomer", 
+  "starting_foot_leader": "LF | RF", 
+  "ending_foot_leader": "LF | RF", 
+  "starting_foot_follower": "LF | RF", 
+  "ending_foot_follower": "LF | RF",   "starting_position": "Closed Position", 
+  "ending_position": "Closed Position", 
+  "preceding_figure_names": "Maypole (Continuous Volta Spot Turn to R and L) (SAMBA), Natural Basic Movement, Promenade and Counter Promenade Runs, Reverse Basic Movement, Side Basic Movement", 
+  "following_figure_names": "Traveling Volta to Left, Traveling Volta to Right", 
+  "notes": "The Samba Rhythm Bounce is Newcomer Level figure. This online reference gives a detailed description of the dance steps, including timing, and movement, technique; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.\nStart with weight on either LF or RF. Repeat movement for the desired number of counts to suit musical phrasing. Examples:\nCan start with maintaining both weight on standing leg and foot position, e.g after any Bota Fogo action.\nMaintain weight on standing leg, moving free leg to side or diagonally back position, e.g after a Whisk.\nDancing a weight change by stepping side or diagonally forward, e.g. after Traveling Volta (start on count \"1\").\nStarting the dance with Samba bounce: face partner:\nLeader: L leg forward, bent knee with weight, R leg straight.\nFollower: mirror opposite, left hip twisted diagonally back, left hip up.\nBack foot heel should be lifted.\nThe \"Bounce\" action is done more diagonally (than straight front and back). It's a swinging motion. Swing pelvis softly forward and back.\nJust swing the hip back, don't think too much about straightening front knee (it will become more straighten naturally); keep the leg behind straight.\nGoing back: front leg becomes straight. Extend the back R leg, crunch the side, lift the left hip to give it a longer line.\nGoing forward: it's more like diagonally fwd, it's swinging to bottom and then pushing right hip up/fwd.", 
+  "steps": [ 
+    { 
+      "step_number": 1, 
+      "timing": "1", 
+      "role": "LEADER", 
+      "foot": "LF", 
+      "action": "Bounce action: swing pelvis diagonally forward and back, maintain weight on standing leg, free leg moves side or diagonally back.",       "footwork": "WF",       "alignment": "Closed Position",       "amount_of_turn": "0", 
+      "comments": [ 
+        "Think of bounce action more of re-bound, not as much stomping down. Think about belly button is never open, but it \"blinks\".", 
+        "Start with weight on either LF or RF. Repeat movement for the desired number of counts to suit musical phrasing.", 
+        "Can start with maintaining both weight on standing leg and foot position, e.g after any Bota Fogo action.", 
+        "Maintain weight on standing leg, moving free leg to side or diagonally back position, e.g after a Whisk.", 
+        "Dancing a weight change by stepping side or diagonally forward, e.g. after Traveling Volta (start on count \"1\").",         "Starting the dance with Samba bounce: face partner:", 
+        "Leader: L leg forward, bent knee with weight, R leg straight.", 
+        "Follower: mirror opposite, left hip twisted diagonally back, left hip up.", 
+        "Back foot heel should be lifted.", 
+        "The \"Bounce\" action is done more diagonally (than straight front and back). It's a swinging motion. Swing pelvis softly forward and back.",         "Just swing the hip back, don't think too much about straightening front knee (it will become more straighten naturally); keep the leg behind straight.", 
+        "going back: front leg becomes straight. Extend the back R leg, crunch the side, lift the left hip to give it a longer line.",         "going forward: it's more like diagonally fwd, it's swinging to bottom and then pushing right hip up/fwd."       ] 
+    } 
+  ] 
+}

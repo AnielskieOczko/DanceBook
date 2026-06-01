@@ -1,0 +1,85 @@
+{
+  "name": "Open Telemark and Wing",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Whisk, Basic Weave, Contra Check, Fallaway Whisk, Open Impetus, Open Telemark, Outside Change, Turning Lock, Turning Lock to R, Weave From Promenade Position, Whisk",
+  "following_figure_names": "Closed Telemark (taking step 1 in CBMP OP on L side), Open Telemark (taking step 1 in CBMP OP on L side), Double Reverse Spin (taking step 1 in CBMP OP on L side), Progressive Chasse To R (taking step 1 in CBMP OP on L side), Reverse Turn (taking step 1 in CBMP OP on L side), Drag Hesitation, Fallaway Reverse And Slip Pivot, Whisk (at corner)",
+  "notes": "Wing can be used from other positions. Less turn can be made on Wing to end facing LOD.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Sway(S) | CBM | rise e/o 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd | DC | HT | start to turn L",
+      "footwork": "HT",
+      "alignment": "DC",
+      "amount_of_turn": "start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Sway(L) | up",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side | BDW | T",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 btwn 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Sway(S) | up, lower e/o 3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd in PP | Pointing DW, body facing wall",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/2 btwn 2-3, body turns less",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Sway(S) | --",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back | BDC | TH | start to turn L",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Sway(R) | cont rise on 2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF (Heel Turn) | FLOD | HT",
+      "footwork": "HT",
+      "alignment": "FLOD",
+      "amount_of_turn": "3/8 btwn 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Sway(S)",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF diag. fwd and slightly to R in PP, R side leading | Pointing LOD | TH | slightly body turn to L",
+      "footwork": "TH",
+      "alignment": "Pointing LOD",
+      "amount_of_turn": "slightly body turn to L",
+      "comments": []
+    }
+  ]
+}

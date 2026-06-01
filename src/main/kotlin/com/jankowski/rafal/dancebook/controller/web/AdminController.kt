@@ -9,6 +9,7 @@ import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import com.jankowski.rafal.dancebook.service.StorageCleanupJob
+import com.jankowski.rafal.dancebook.service.SyllabusImporterService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
@@ -48,7 +49,8 @@ class AdminController(
     private val googleDriveService: GoogleDriveService,
     private val objectMapper: ObjectMapper,
     private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService,
-    private val systemSettingService: SystemSettingService
+    private val systemSettingService: SystemSettingService,
+    private val syllabusImporterService: SyllabusImporterService
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
@@ -248,6 +250,19 @@ class AdminController(
             user.role = request.role
             model.addAttribute("editUser", user)
             return "admin/dashboard :: editUserRow"
+        }
+    }
+
+    // HTMX Endpoint for Syllabus Import
+    @PostMapping("/syllabus/import")
+    fun importSyllabus(model: Model): String {
+        try {
+            val result = syllabusImporterService.importAllAiParsedJson()
+            model.addAttribute("importResult", result)
+            return "admin/dashboard :: importSuccess"
+        } catch (e: Exception) {
+            model.addAttribute("importError", e.message ?: "Unknown error occurred")
+            return "admin/dashboard :: importFailure"
         }
     }
 }

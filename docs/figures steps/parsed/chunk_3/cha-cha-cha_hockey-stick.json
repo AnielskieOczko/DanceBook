@@ -1,0 +1,98 @@
+{
+  "name": "Hockey Stick",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hockey-stick"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twist, Closed Hip Twist, Cross Basic, Curl, Fan, Natural Top, Open Hip Twist, Opening Out From Reverse Top, Spiral, Sweetheart",
+  "following_figure_names": "Open Basic Movement, Shoulder To Shoulder Left Side, Time Step LF, Alemana, Open Hip Twist, Curl, Chase, Turkish Towel, Sweetheart, Follow My Leader, Three Cha Cha Chas Forward, New York LSP, Spot or Switch Turn To R, Underarm Turn to L, Cuban Break LF, Split Cuban Break LF",
+  "notes": "Other Finishing positions:\nOpen CPP\nMan leads Lady to overturn towards end of 7, both taking 8 diagonally fwd in Open CPP to chasse.\nLady turns an additional 1/4 L on RF using a loosely crossed spiral action.\nLeft Side Position (LSP)\nMan leads Lady to overturn towards end of 7, then turns 1/8 R to chasse fwd, lowering L arm and taking it fwd to below shoulder level.\nLady turns towards end of 7 as for CPP above, then turns an additional 1/8 L, to chasse fwd\nForward Runs could be used in place of last chasse",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "L",
+      "action": "Compact Chasse LRL",
+      "footwork": "LRL",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "The hand goes up on 1, but remains to the right side of the lady."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cuban Cross behind LF, turn 1/8 to R",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Hand is brought across the lady's face, causing her to turn 1/8. On the & after 3, the lady is turned a half-turn."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Small step forward",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "R",
+      "action": "Forward Lock in Open Position RLR",
+      "footwork": "RLR",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep going straight, in front of Man, don't veer off to left.",
+        "Small steps, don't go too far, create arm window, R hand on left shoulder, make sure both shoulders down, don't raise shoulders.",
+        "Difference from Alemana: R hand directly comes up and then place it on Lady's left shoulder.",
+        "Alternative - do checked chasse instead of forward lock: 4: RF fwd; &: check: make sure it has 50% weight, do not put all weight on front foot; 1: RF closes to LF, twist hip; 2: LF fwd | 1/8 to L; Step straight first, then turn 1/8 to L on this step, so next step is diagonal fwd (making it a hockey stick). Man's arm should be in front of Lady's face, or already over on Lady's L shoulder. (Lady can help putting his arm on her L shoulder.)",
+        "3: RF fwd in line with LF, then turn underarm to end RF back | 1/2 to L, body turns less; Forward Walk Turn technique.",
+        "End of beat \\\"3&\\\": Do flexible turn - turn upper body first (leaving head and foot where it is), then sharp turn head and hips.",
+        "After turning, weight is more forward (chest forward, not leaning body forward which is too much, suck tummy). Don't be back weighted. Use front LF to push the floor and release to step back.",
+        "4 & 1: Back Lock in Open Position LRL | body completes turn; Spine moves straight back, do not veer off to left side; Give the Man tone in the arm; Man/Lady together is not on same line as started, turned 1/8, that's why it's a hockey stick."
+      ]
+    }
+  ]
+}

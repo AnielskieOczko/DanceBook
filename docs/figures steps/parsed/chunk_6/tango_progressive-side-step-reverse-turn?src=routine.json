@@ -1,0 +1,210 @@
+{
+  "name": "Progressive Side Step Reverse Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "Total amount of Turn: 3/4 to L\nNote: After steps 1-4, the following endings may be used\nBack Corté SQQS\nRock on LF, Rock on RF, Back Corté QQS, QQS, SQQS\nFollower: Keep head strongly left throughout, keeps shoulders parallel, not rotating through shoulders. Keep everything in the base. The movement of this step is a bit more smooth (not as staccato as Closed Promenade, for example.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd in CBMP",
+      "footwork": "HF",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Strong compression, rotation.",
+        "Quite a bit of turn on the progressive side step. Dancing \"U\" turn.",
+        "Keep head weight to left."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "HF",
+      "alignment": "FDC against LOD",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd in CBMP",
+      "footwork": "HF",
+      "alignment": "Almost against LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd R side leading",
+      "footwork": "HF",
+      "alignment": "Against LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight back",
+      "footwork": "HF",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight fwd",
+      "footwork": "HF",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back small step L side leading",
+      "footwork": "HF",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "HF",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "HF",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF slightly back",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "HF",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "HF",
+      "alignment": "BDC against LOD",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "HF",
+      "alignment": "Almost backing against LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back L side leading",
+      "footwork": "HF",
+      "alignment": "Backing against LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight fwd to RF R side leading",
+      "footwork": "HF",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 16,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight back to LF L side leading",
+      "footwork": "HF",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 17,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd small step R side leading",
+      "footwork": "HF",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

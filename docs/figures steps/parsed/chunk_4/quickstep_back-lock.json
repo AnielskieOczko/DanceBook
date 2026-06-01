@@ -1,0 +1,66 @@
+{
+  "name" : "Backward Lock Step (Back Lock)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/back-lock" ],
+  "dance_type" : "WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Progressive Chasse To Right, Tipsy To L",
+  "following_figure_names" : "Closed Impetus, Tipple Chasse To Right, Running Finish, Tipsy To R",
+  "notes" : "When one is doing Back Lock, the partner is doing Forward Lock.\nThe Man (but not the Lady) may use foot rise at the end of 1.\nThe Footwork would be THT, but left heel must not rise abruptly.\nThe Lady must release the toe of the left foot from the floor as it starts to move back to become step 3.\nBody should be backing between wall and DW throughout.\nLock step has zero turn, more rotation. Rotate more to R.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back in CBMP, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "0",
+    "comments" : [ "start to rise e/o 1, NFR" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back in BW, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "0",
+    "comments" : [ "Continue to rise on 2 and 3" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Crosses in front of RF, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Diag and back, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "0",
+    "comments" : [ "Up. Lower e/o 4" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back in CBMP, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "0",
+    "comments" : [ "CBM" ]
+  } ]
+}

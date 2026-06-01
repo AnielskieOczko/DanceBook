@@ -1,0 +1,116 @@
+{
+  "name" : "Fallaway Throwaway Overturned Fallaway Throwaway",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/fallaway-throwaway" ],
+  "dance_type" : "JIVE",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Basic In Place, Chicken Walks, Fallaway Rock, Link, Mooch, Reverse Whip, Stalking Walks, Flicks and Break, Toe Heel Swivels, Walks, Whip",
+  "following_figure_names" : "Link, Change of Places Left to Right, Change of Hands Behind Back, Hip Bump, American Spin (from L to R hand hold), Stop and Go, Chicken Walks",
+  "notes" : "Fallaway Throwaway may start in PP, making no turn on 1.\nOverturned Fallaway Throwaway (Silver & Gold)\nStart in Closed Position.\nLeader\nQ: LF back in Fallaway | 1/8 to L\nStart turn at end of previous step. Turn Lady to R\nQ: Replace weight to RF in PP | continue to turn L\nTurn Lady to L\nQaQ: Fwd to chasse LRL. End in Closed Position | 1/8 to L btwn 2-3\nLead Lady fwd. On 5, body slightly L and return L hand to normal position.\nQaQ: RF diagonally fwd to chasse RLR, end RF fwd in Open Position. | 1/8 to L btwn 5-6\nLead spiral turn.\nFollower\nQ: RF back in Fallaway | 1/4 to R\nstart turn at end of previous step.\nQ: Replace weight to LF in PP | 1/8 to L\nQaQ: 3 small runs fwd passing in front of Man's body, then turn at the very end. | No turn over 3-5\nThen 3/8 to L. Then another 3/8 to L\nDuring 3 small runs, Lady's L arm go up, then down like windmill, end on waist.\nMan leads to signal continuous turn. Lady does spiral turn, foot wrapped.\nQaQ: 3 small runs fwd. At the very end, turn to R to face Man, point RF LH at waist.\nGold Variation\nOn step 5:\nMan lowers L arm a little more and turns Lady strongly L by rotating his hand to R from wrist until palm is turned outwards, give Lady's R arm a gentle twist.\nLady continues to turn an additional 1/2 on RF, allowing LF to cross loosely in front of RF (Spiral action) in Tandem Position in front of Man.\nOn steps 6-8:\nLady may dance a forward lock or 3 small runs forward.\nat end of 8, Man turns Lady to R to face him by rotating hand slightly L from wrist.\nLady turns 1/2 R on LF to end in Open position with LF back.\nFollow with Chicken Walks, Simple Spin from Open Position or other figures started in open position.\nLady normally does a flick (or point) ball change replacing 1-2 of Link.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "back in Fallaway",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "Start turn at end of previous step." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "replace weight to PP",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "QaQ",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "diag fwd to chasse LRL",
+    "footwork" : "T",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "incline body slightly L, return L hand to normal position" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "QaQ",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "fwd chasse RLR",
+    "footwork" : "T",
+    "alignment" : "Open Position",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "",
+    "action" : "Turn Lady to R",
+    "footwork" : "",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "On first Q, lead lady back with R hand, then release R hand hold." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "aQ",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "extend L arm fwd",
+    "footwork" : "",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "On aQ, extend L arm fwd to normal open position." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "back in Fallaway",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "start turn at end of previous step.", "Could make no turn, or 1/8 R." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "replace weight to PP",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "QaQ",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "to side to chasse RLR",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "3/8 L",
+    "comments" : [ "On 5: incline body slightly R, return body to normal on 6." ]
+  }, {
+    "step_number" : 10,
+    "timing" : "QaQ",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "backward chase LRL",
+    "footwork" : "B",
+    "alignment" : "Open Position",
+    "amount_of_turn" : "",
+    "comments" : [ "end in open position." ]
+  } ]
+}

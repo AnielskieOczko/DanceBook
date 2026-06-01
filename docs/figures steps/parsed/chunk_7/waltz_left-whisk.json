@@ -1,0 +1,52 @@
+{
+"name": "Left Whisk",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/left-whisk"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Whisk, Basic Weave, Closed Impetus, Contra Check, Fallaway Whisk, Natural Spin Turn, Open Impetus, Open Telemark, Outside Change, Outside Spin, Reverse Turn, Turning Lock, Turning Lock to R, Weave From Promenade Position, Whisk",
+  "following_figure_names": "Outside Change (releasing LF on step 3), Fallaway Whisk (after running around Man to R 12&3), Back Whisk (after running around Man to R 12&3), Outside Spin (after running around Man to R 12&3), Open Impetus (after running around Man to R 12&3), Closed Impetus (after running around Man to R 12&3)",
+  "notes": "Man looks towards Lady's face, not over her R shoulder.\nMan's RH will lower as the next step is taken.\nLady tends to have a tendency to take her R elbow in, keep elbow slightly out to maintain volume, extend her R arm (give to Man, create room to create shape).\nTo produce big shape: Take step LF back (along original travel direction, don't go around Man), move weight back to LF (this is a step, otherwise you'll block Man), collect RF (crossed in front of LF, w/o weight).\nButt and hip fwd to Man, don't turn out of Man. Hips stop turning, but body can continue to turn more to shape/sway without changing base.\nContra within own body. Both L and R rib cage and hips fwd to Man and shape to L (w/o turning hips more), R side of body is longer (very stretched). Don't \"sit\" bottom down, heavy. Pick up center and bottom. Really pick up L side ribs to Man while rotating body to L and extending head to L.\nHead turns well to left and extend (without body peeling from Man) to finish the extension. Breathe out to extend head even more.\nKeep arm/elbow forward, extend the arm fwd to Man (check R elbow angle), give it to Man. Don't break shoulder or peel away shoulder.\nNote: Can enter Left Whisk from different position, e.g. From Weave or Outside Change, ending in Closed Position, but with Lady's head turned to R.\nNo rise in Left Whisk.\nAlternative Alignment - Man start with RF back, BLOD\nLeader\nCount 1: RF back | BLOD | TH | Start to turn L | - | CBM | -\nCount 2: LF to side and slightly fwd | Pointing DW | TH | 3/8 btwn steps 1-2, body turns less | - | - | -\nCount 3: RF crosses behind LF | FDW | T | Body turn to L | - | - | -\nMan looks towards Lady's face, not over her R shoulder.\nMan's RH will lower as the next step is taken.\nFollower\nCount 1: LF fwd | FLOD | HT | start to turn L | - | CBM | -\nCount 2: RF to side and slightly back | BDW | TH | 3/8 btwn 1-2 | - | -\nCount 3: LF back in CBMP | BLOD | TH | 1/8 btwn 2-3 | - | -\nLady may overturn slightly to L on step 3 and turn her head well to the L.\nVariation: Left Whisk on Count 1 with Contra Check\nMan:\nDance Natural Spin Turn (123) and 1-4 of Turning Lock (1&2 3): end with: LF to side pointing DW\n1: Cross RF behind LF into Left Whisk\n2: Replace weight to LF\n3: RF to side and slightly fwd pointing DW against LOD\n1: LF fwd into Contra Check DW against LOD\nContinue with steps 2-3 Contra Check turning 1/4 to L.\nLady:\nDance Natural Spin Turn (123) and 1-4 of Turning Lock (1&2 3): end with: RF to side pointing DC\n1: turning L, cross LF behind RF into Left Whisk. Lady's head to Left. On ball of LF. The step is not too big (not as big as contra check). Weight in middle.\n2: RF fwd. Head keep left.\n3: LF side. Lady finish inline. (need to step enough around Man), head can keep left, or turn to right, make sure left side is very up. Chest is up to Man. Heel down.\n1: RF back into Contra Check \nContinue with steps 2-3 Contra Check",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward and across in closed position and contrary body movement position, moving along line of dance.",
+      "footwork": "F",
+      "alignment": "Forward (FDW)",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly forward, pointing diagonal wall.",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cross behind LF, moving forward along line of dance.",
+      "footwork": "T",
+      "alignment": "FDW",
+      "amount_of_turn": "-",
+      "comments": []
+    }
+  ]
+}

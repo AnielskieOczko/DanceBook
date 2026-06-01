@@ -1,0 +1,77 @@
+{
+  "name": "Quick Open Reverse",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Forward Lock, Heel Pivot (Quarter Turn To Left), Progressive Chasse, Reverse Pivot, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag Back Lock And Running Finish",
+  "following_figure_names": "Progressive Chasse, Reverse Pivot (after step 3), Four Quick Run, Heel Pivot (Quarter Turn To Left) (after 1-3 of Quick Open Reverse), Hover Corte",
+  "notes": "When this is the danced after a Forward Lock, one walk on S is added (Man RF fwd, Lady LF back)\nPrepping the walk: get to knees, hip rotate to R, which gives more room to move as well.\nWhen the Progressive Chassé is danced after an underturned Natural Spin Turn or an Impetus Turn as an entry to the Quick Open Reverse, the normal alignment of the Progressive Chassé will be (from Man's view):\n1. Backing DC against LOD\n2. Pointing DC\n3,4,5 Facing DC.\nWhen the Progressive Chassé is taken after a Natural Spin turn danced with normal alignment it will be:\n1 Backing DC\n2 Pointing to LOD\n3,4,5 Facing LOD",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "S",
+      "alignment": "Backing DW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "A Reverse Pivot may be used on step 4."
+      ]
+    }
+  ]
+}

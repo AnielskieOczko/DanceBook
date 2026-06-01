@@ -1,0 +1,135 @@
+{
+"name": "Natural Promenade Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "DW",
+  "preceding_figure_names": "Basic Reverse Turn,Chase,Contra Check,Fallaway Four Step,Fallaway Promenade,Five Step,Four Step,Rock Turn (2-7)",
+  "following_figure_names": "Closed Promenade,Open Promenade,Natural Promenade Turn,Promenade Link,Back Open Promenade,Fallaway Promenade,Rock Turn (2-7)",
+  "notes": "Amount of Turn: 3/4 to right.\nIf the Promenade Turn is danced along the side of the room 3/4 is still made. The following Promenade would be taken to the center, or a slight body turn to R may be used as the LF is place to side of RF to enable the following Promenade to be taken DC.\nWhen the Promenade Turn is followed by the Rock Turn the 4th step of the Promenade Turn will become the 1st step of the Rock Turn, taken DW of the new LOD in CBMP and the placing of the LF to side of the RF will be omitted.\nIf danced along the side of the room into a Rock Turn the Rock Turn will be commenced DC and if the normal amount of turn is used, will end facing DC. It is however better to turn 1/2 to R between 1-3 of the Rock Turn and end facing DW.\nTrack Man's hips, stay behind. Depending on intended finishing travel direction, Lady may need to swivel on LF (S) quite a bit.\nWhen this Natural Promenade Turn is followed by steps 2-7 Rock Turn, skip step 4 (placing RF to side), it is more flat and rotational (compared to Twist Turn).\nNatural Promenade Turn follows the Fallaway Promenade",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in PP and CBMP",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "turning R",
+      "comments": [
+        "turning R",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly back",
+      "footwork": "H",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "turning R",
+      "comments": [
+        "Don't pull lady to your lady, instead Man should switch lane.",
+        "Stepping back slightly side to leave room for lady to step in between, fully commit the weight so the foot doesn't slip when moving into the 4th step."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward in CBMP, LF placed to side without weight in PP",
+      "footwork": "H",
+      "alignment": "DW of new LOD, ending facing DW",
+      "amount_of_turn": "3/4 to R",
+      "comments": [
+        "Should be strong forward step, as Man is on outside of turn, inside R knee should track the inside of Lady's R knee.",
+        "Do not take elbow behind body.",
+        "Amount of Turn: 3/4 to right.",
+        "If the Promenade Turn is danced along the side of the room 3/4 is still made. The following Promenade would be taken to the center, or a slight body turn to R may be used as the LF is place to side of RF to enable the following Promenade to be taken DC.",
+        "When the Promenade Turn is followed by the Rock Turn the 4th step of the Promenade Turn will become the 1st step of the Rock Turn, taken DW of the new LOD in CBMP and the placing of the LF to side of the RF will be omitted.",
+        "If danced along the side of the room into a Rock Turn the Rock Turn will be commenced DC and if the normal amount of turn is used, will end facing DC. It is however better to turn 1/2 to R between 1-3 of the Rock Turn and end facing DW"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Hip more \"up\" with Man. Strong step."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP",
+      "footwork": "H",
+      "alignment": "Pointing down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Really follow/track Man's leg in time (if it's off time, it'll gap.).",
+        "Lower into RF (previous step) to generate power, Extend L leg first, it has a moment of straight leg, before heel touches floor.",
+        "Try not to turn the right side at this step (too early)."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "forward between partner's feet",
+      "footwork": "H",
+      "alignment": "Down LOD",
+      "amount_of_turn": "CBM",
+      "comments": [
+        "Big Step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "placed to side without weight in PP, ending facing DC of new LOD",
+      "footwork": "BH then IE of B of RF",
+      "alignment": "3/4 to R",
+      "amount_of_turn": "",
+      "comments": [
+        "Bigger step to give Man room to step his leg. Stay behind Man.",
+        "Depending on how much Man rotates, where he puts his foot, Lady will put down foot just a bit late. Because body is turning R, LF appears to be to side and slightly back, then swivel on LF again to Promenade finishing position.",
+        "R foot is drawing a circle on floor naturally because of the turn, but don't do intentional ronde.",
+        "Lift left side up to Man during turn.",
+        "Don't turn head too early.",
+        "Track Man's hips, stay behind. Depending on intended finishing travel direction, Lady may need to swivel on LF (S) quite a bit."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Change of Direction",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/change-of-direction"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "",
+  "ending_position": "",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Chasse Reverse Turn, Progressive Chasse To Right (step 4 of Change of Direction would not be taken in CBMP when followed by Progressive Chasse To Right), Cross Chasse (at corner)",
+  "notes": "If you don't pull left hip back, it's easy for the step to become back weighted.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd | FDW | H | starts to turn L | Sway(S) | CBM",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back | BDW | TH | starts to turn L | Sway(S) | CBM",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "After stepping, pull left hip back, leave L knee fwd, to allow using the standing leg to draw R leg."
+      ]
+    }
+  ]
+}

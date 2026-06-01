@@ -1,0 +1,26 @@
+{
+  "name" : "Maypole (Continuous Volta Spot Turn to R and L)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/maypole" ],
+  "dance_type" : "SAMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Criss Cross Bota Fogos, Criss Cross Voltas, Samba Locks, Samba Walk: Side, Samba Walk: Stationary, Side Basic Movement, Progressive Basic Movement",
+  "following_figure_names" : "Reverse Turn, Whisk To Left, Cruzados Walks and Locks, Samba Locks, Promenade And Counter Promenade Runs, Natural Roll, Round About, Contra Bota Fogos, Shadow Traveling Volta with RF, Plait, Back Rocks, Open Rocks, Closed Rocks, Corta Jaca, Traveling Bota Fogos Back, Traveling Bota Fogos Forward, Traveling Volta to Left, Rhythm Bounce, Samba Walk: Stationary, Samba Walk: Side, Samba Walk in PP: RF, Whisk To Right, Natural Basic Movement, Side Basic Movement, Progressive Basic Movement",
+  "notes" : "Maypole may be danced over two, three or four bars of music.\nEnd in Closed Position, regaining normal hold.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1 a 2 a 3 a 4",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Circular Volta turning 1/4 to left",
+    "footwork" : "HF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Spot Volta turning 1/4, then 3/4; 1/4 then 3/4", "Can be danced over 2, 3 or 4 bars of music" ]
+  } ]
+}

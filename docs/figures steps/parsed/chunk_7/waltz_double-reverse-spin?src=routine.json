@@ -1,0 +1,76 @@
+{
+  "name" : "Double Reverse Spin",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Backing DW",
+  "preceding_figure_names" : "Closed Change RF, Closed Wing, Double Reverse Spin, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names" : "Drag Hesitation, Closed Change LF, Whisk, Reverse Turn, Closed Telemark, Open Telemark, Progressive Chasse To R",
+  "notes" : "Advanced dancers often use the timing of 123& when the beat value would be 1, 1, 1/2, 1/2. Per coach: Timing: do 1 2 &3. Man's early rise signals Lady should do heel turn. Lady does RF \"back\", L heel closes to R heel, turn, rise and \"forward\", then RF \"out\" to side (after turning) and \"cross\", stay on left. Note: The Double Reverse Spin may be started DC, DW, or LOD. The amount of turn may vary between 3/4 and a whole turn.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd | Facing LOD | HT | Starts to turn L",
+    "footwork" : "F",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Important to do CBM. Give Lady the indication of left by lowering.", "Early rise is to lead Lady into closing her feet into a heel turn." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side | BDW | T | 3/8 btwn 1-2 | Sway(S) | Up",
+    "footwork" : "T",
+    "alignment" : "BDW",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Wait until the lady's feet are together before taking this step.", "Push LF to take the RF step.", "When taking step, point RF forward with straight knees, then step onto the straight knee and turn to L.", "Track your RF, don't do ronde. It will help with balance.", "Think about getting hips around, rather than shoulders or feet." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF closes to RF without weight (Toe Pivot) | Facing DW | T | 1/2 btwn 2-3 | Sway(S) | Up, Lower at end of 3",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "1/2",
+    "comments" : [ "settle and then drive to next step.", "Keep lengthening the spine." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back | BLOD | TH | starts to turn L | Sway(S) | CBM | rise slightly e/o 1, NFR",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Very important to do CBM, with CBM shoulder will clear way for Man to pass.", "Keep shoulder flat, and do not drop it on one side, do not pull left shoulder away from Man.", "Lift center, shoulder slightly to R, left side positive on left turning figures.", "Step directly back moving down the floor, turn RF in. Do not step to the side, bigger step.", "Start the turn with head (not including shoulder), using head weight.", "Keep the head going left and look over your shoulder the whole time to avoid being pulled into the center of the turn.", "Stay very left to Man, give left side to Man more, do not get in front of Man.", "Do not pull left shoulder away from Man, i.e. do not peel off left side.", "Head can stretch more to left, move center (suck tummy). right arm to Man (this is from extending back)", "Use Man, lower first, move center, and then stepping RF/ R leg back, get on to the leg.", "Do not fall back or lean forward. Keep spine upright.", "Do not be afraid to move." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back | Backing wall | T | 1/4 between 2-3 | Sway(S) | Up",
+    "footwork" : "T",
+    "alignment" : "Backing wall",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Be active, Lady \"takes over\", swing forward.", "Bigger step, push off left foot, get around (or \"through\") partner with more power.", "RF forward should be crossing LOD, Man is at one place, do not peel off from him, keep hips distance (on the right side), don't gap.", "Stay with Man, keep on his R side." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF crosses in front of RF | Backing DW | TH | 1/4 between 3-4 | Sway(S) | Up. Lower e/o 4",
+    "footwork" : "TH",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Cross feet (LF maintains pressure on ground while dragging to cross RF),", "lower into plie.", "Hips up the Man.", "Do not lower too early, lower on \"&\"." ]
+  } ]
+}

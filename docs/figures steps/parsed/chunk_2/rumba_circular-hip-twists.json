@@ -1,0 +1,76 @@
+{
+  "name" : "Hip Twists (Advanced, Continuous and Circular)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists" ],
+  "dance_type" : "RUMBA",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Three Threes",
+  "following_figure_names" : "",
+  "notes" : "This may be danced with R to R hand hold following Alemana from Open Position. Then, change to normal L to R hand hold on step 5 of the following Advanced Hip Twist. Keep hand at waist level.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/8 to L",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side and slightly back",
+    "footwork" : "RF to side",
+    "alignment" : "Line of Dance (LOD)",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/8 to L",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Cuban Cross behind partner",
+    "footwork" : "LF behind RF",
+    "alignment" : "Diagonal Center (DC)",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "1/8 to L",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side",
+    "footwork" : "RF to side",
+    "alignment" : "Line of Dance (LOD)",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Pressed Backward Walk",
+    "footwork" : "LF backward",
+    "alignment" : "Diagonal Wall (DW)",
+    "amount_of_turn" : "",
+    "comments" : [ "Because of the continuous turn, knees will not straighten fully. Slight natural hip movement is used." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1/4 to R",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step forward",
+    "footwork" : "LF forward",
+    "alignment" : "Line of Dance (LOD)",
+    "amount_of_turn" : "",
+    "comments" : [ "Lady circles around Man, try to keep shoulder relative parallel to Man and have hips do the work." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "1/2 to L",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Close to Leader's Left Foot",
+    "footwork" : "RF close to LF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "1/2 to L",
+    "comments" : [ "On ball of RF, Pressed Walk. Late lowering of the heel. Finish R hip, full." ]
+  } ]
+}

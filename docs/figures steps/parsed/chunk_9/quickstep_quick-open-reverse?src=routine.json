@@ -1,0 +1,164 @@
+{
+  "name": "Quick Open Reverse",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Facing LOD",
+  "preceding_figure_names": "Double Reverse Spin, Forward Lock, Heel Pivot (Quarter Turn To Left), Progressive Chasse, Reverse Pivot, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Progressive Chasse, Reverse Pivot (after step 3), Four Quick Run, Heel Pivot (Quarter Turn To Left) (after 1-3 of Quick Open Reverse), Hover Corte",
+  "notes": "When this is the danced after a Forward Lock, one walk on S is added (Man RF fwd, Lady LF back)\nPrepping the walk: get to knees, hip rotate to R, which gives more room to move as well.\nWhen the Progressive Chassé is danced after an underturned Natural Spin Turn or an Impetus Turn as an entry to the Quick Open Reverse, the normal alignment of the Progressive Chassé will be (from Man's view):\n1. Backing DC against LOD\n2. Pointing DC\n3,4,5 Facing DC.\nWhen the Progressive Chassé is taken after a Natural Spin turn danced with normal alignment it will be:\n1 Backing DC\n2 Pointing to LOD\n3,4,5 Facing LOD",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "Facing LOD (or DC)",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "3/8 between 1-2",
+        "Sway(L)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "1/8 between 2-3",
+        "Sway(L)",
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "slight body turn",
+        "Sway(R)",
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BLOD (or BDC)",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "start to rise e/o 1, NFR",
+        "Curve the step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "T",
+      "alignment": "Pointing to LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "1/2 to L between 1-2",
+        "Body turns less",
+        "Sway(R)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "slight body turn",
+        "Sway(R)",
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

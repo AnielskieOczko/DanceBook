@@ -1,0 +1,76 @@
+{
+  "name" : "Opening Out from Reverse Top",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/opening-out-from-reverse-top" ],
+  "dance_type" : "CHA_CHA_CHA",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Reverse Top",
+  "following_figure_names" : "Alemana, Hockey Stick",
+  "notes" : "Increase tone in L arm. At the end of \"3\", start lowering L hand. Release R hand hold.\nSlightly extend L arm. L hand still. R arm open out to side.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side and slightly forward",
+    "footwork" : "WF",
+    "alignment" : "Side",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "Increase tone in L arm." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "in front of RF (Cuban Cross)",
+    "footwork" : "BF",
+    "alignment" : "Forward",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "Increase tone in L arm.", "At the end of \"3\", start lowering L hand.", "Release R hand hold." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 & 1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "chasse RLR to side, ending in Fan Position",
+    "footwork" : "RF, LF, RF",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "1/8 to L over 3-5",
+    "comments" : [ "Slightly extend L arm.", "L hand still.", "R arm open out to side." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "behind RF (Cuban Cross)",
+    "footwork" : "BF",
+    "alignment" : "Back",
+    "amount_of_turn" : "5/8 to L over 1-5",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "back and slightly to side",
+    "footwork" : "B",
+    "alignment" : "Side",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 & 1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "chasse LRL back, ending in Fan Position",
+    "footwork" : "LF, RF, LF",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
+}

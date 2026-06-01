@@ -1,0 +1,76 @@
+{
+  "name" : "Cross Hesitation after Open Impetus Turn",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "PP",
+  "preceding_figure_names" : "Back Lock, Drag Hesitation, Left Whisk, Natural Turn, Progressive Chasse To R, Reverse Corte",
+  "following_figure_names" : "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+  "notes" : "Different from leading Wing, in which, Man allows upper body to do extra rotation to allow Lady to pass from one side of body to another.\nIn this Cross Hesitation, Man's arms remain on his right side, you want Lady to stay in your right front.\nExtension: shoulder and chest - \"rotate up\" feel like high jump. Head: do not break the neck.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back",
+    "footwork" : "T",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "This is \"Open Impetus\". Main the sway from previous Natural Turn and transition into PP.", "start to turn R" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Closes to LF (Heel Turn)",
+    "footwork" : "T",
+    "alignment" : "FDC",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Heel Turn" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Diagonal forward in PP, L side leading",
+    "footwork" : "T",
+    "alignment" : "Pointing DC",
+    "amount_of_turn" : "slight turn to R",
+    "comments" : [ "Think about a diagonal line to come out in PP." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Forward",
+    "footwork" : "T",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Open Impetus", "Big step. Depending on Man's lead, may have big swooping action here." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "To side",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Sway(R)", "Allow feet to turn, delay head.", "Step should be adequately large in order to keep balance, keep extending left side, then lift left side to turn head to the right at end of 2" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "To side in PP having brushed to LF",
+    "footwork" : "T",
+    "alignment" : "Pointing Center",
+    "amount_of_turn" : "3/8",
+    "comments" : [ "Sway(L)", "body turns less", "Extension: shoulder and chest - \"rotate up\" feel like high jump. Head: do not break the neck." ]
+  } ]
+}

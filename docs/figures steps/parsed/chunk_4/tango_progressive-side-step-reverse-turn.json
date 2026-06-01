@@ -1,0 +1,71 @@
+{
+  "name": "Progressive Side Step Reverse Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "Total amount of Turn: 3/4 to L\nAfter steps 1-4, the following endings may be used\n- Back Corté SQQS\n- Rock on LF, Rock on RF, Back Corté QQS, QQS, SQQS\nLady: Keep head strongly left throughout, keeps shoulders parallel, not rotating through shoulders. Keep everything in the base.\nThe movement of this step is a bit more smooth (not as staccato as Closed Promenade, for example.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP | DC | H | CBM",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Strong compression, rotation.",
+        "Quite a bit of turn on the progressive side step. Dancing \"U\" turn.",
+        "Keep head weight to left."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back | FDC against LOD | IE of foot | 1/4 to L",
+      "footwork": "IE",
+      "alignment": "FDC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP | BDC | BH | CBM",
+      "footwork": "BH",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "For left turning figures, do not allow L shoulder to go beyond the hips, (e.g. L side should be positive). The feeling is body is slightly turned right of the feet."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd | BDC against LOD | IE of foot | 1/4 to L",
+      "footwork": "IE",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "S: RF back in CBMP | Almost backing against LOD | BH | 1/8 to L | CBM"
+      ]
+    }
+  ]
+}

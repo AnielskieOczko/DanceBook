@@ -1,0 +1,76 @@
+{
+  "name" : "Weave from PP (after Open Impetus)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp?src=routine" ],
+  "dance_type" : "SLOW_FOXTROT",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Promenade Position",
+  "ending_position" : "Open Position",
+  "preceding_figure_names" : "Hover Telemark to PP, Open Impetus, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step, Change Of Direction",
+  "following_figure_names" : "Three Step, Change Of Direction, Hover Telemark, Reverse Wave, Fallaway Reverse and Slip Pivot (at corner)",
+  "notes" : "Note -- On step 4 the Footwork of TH may be used. The Rise on 5 will then be \"Up NFR\".\nAlternate alignments for the Weave from PP may be found in the Waltz charts.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd in PP and CBMP",
+    "footwork" : "RF",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "feet, low center, high center: the offset position of these 3 points must be maintained through PP and weave." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd",
+    "footwork" : "LF",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Angle left shoulder and hip down, do not pull weight back.", "Step through a curved line." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back",
+    "footwork" : "RF",
+    "alignment" : "DW",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "Energy still moves diagonal center. Do not think about BLOD." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP",
+    "footwork" : "LF",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/8",
+    "comments" : [ "Pull center back." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd and across in PP and CBMP",
+    "footwork" : "LF",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Keep center toward the Man.", "Body doesn't turn till second step." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back",
+    "footwork" : "RF",
+    "alignment" : "DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Depends on how Man shapes. Head can keep left or right. Head following the arc.", "If shaping to R, keep head position, turn body underneath (base rotate), effectively, head will shape to right during weave.", "Think step forward and it will end in \"side and slightly back\"." ]
+  } ]
+}

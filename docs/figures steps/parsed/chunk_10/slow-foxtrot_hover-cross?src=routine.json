@@ -1,0 +1,127 @@
+{
+  "name": "Hover Cross",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark,Three Step",
+  "following_figure_names": "Reverse Turn,Closed Telemark,Open Telemark and Feather Ending,Open Telemark, Natural Turn,Outside Swivel and Feather Ending,Fallaway Reverse and Slip Pivot,Reverse Wave,Bounce Fallaway with Weave Ending",
+  "notes": "Note -- A slight lowering may be used on step 4, but the L heel should not touch the floor. Do not allow body to overturn on 4.\nLady keeps her head to left (when first learning this figure), stretch left side. Alternatively, Lady can shape head to right. Slightly lift left side.\nShaping head to R goes with the sway, end of previous step 3. Make head movement really smooth, do not get to shaping right too fast\nIt's all lower body. Do not turn shoulder, do not pull shoulder away from Man.\nLady slides from Man's R side to his L side. It's L side to L side connection with partner.\nKeep head to right on steps 4-5, extend upper body even more on step 4, then return to normal starting end of step 5 (Q), then step 6 (Q).\nKeep own internal balance. Flat.\nDo not lock the knees, keep knees soft, compressed.\nMultiple Q's, keep flat, don't rise\nIsolate body, turn purely in feet underneath body. Allow arms to stay as still as possible.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "none",
+      "comments": [
+        "Use CBM sending Lady to inside of turn. Stretch through diagonal. Rise to lead Lady heel turn"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "S",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Really a forward step, then transfer weight and then turn."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "F",
+      "alignment": "Pointing DW of new LOD",
+      "amount_of_turn": "1/2",
+      "comments": [
+        "Dissolve sway and changing sway direction.",
+        "Base (feet) swivel more than body. (3 different alignment points)",
+        "Allow body to slide to the other side.",
+        "Contact point is light, brushing past partner."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward in CBMP",
+      "footwork": "F",
+      "alignment": "Facing DW of new LOD",
+      "amount_of_turn": "slight body turn to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "start to turn R",
+      "comments": [
+        "rise slightly e/o 1, NFR",
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF closes to LF (Heel Turn)",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "Do not lock the knees, keep knees soft, compressed.",
+        "Multiple Q's, keep flat, don't rise"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "S",
+      "alignment": "Backing new LOD",
+      "amount_of_turn": "1/4 between 2-3",
+      "comments": [
+        "Think about taking the step fwd (not side).",
+        "Keep own internal balance. Flat."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DW of new LOD",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "Let hip turn to R. Rise on L side/hip. Shoulder and head really doesn't change position."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "name": "Foxtrot Fallaway with Weave Ending",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Closed Impetus and Feather Finish, Feather Step, Hover Cross, Hover Feather, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Zig-Zag from PP, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Top Spin",
+  "following_figure_names": "Three Step, Change Of Direction, Basic Weave (1-4 Reverse Turn to end BDW, check, and Basic Weave), Reverse Turn (1-4 Reverse Turn to end BLOD near corner, check and Basic Weave turning 1/8, 1/8, 3/8; or 1/4, 1/8, 3/4; to end DW of new LOD), Hover Telemark, Reverse Wave, Top Spin (check back after step 6), Outside Swivel (check back after step 6), Fallaway Reverse and Slip Pivot (at corner)",
+  "notes": "Head options: can keep head to R all the way till feather finish. Keep volume/space with Man (think about even more shape). Use glute hip more forward to Man, shoulder toward Man (helps to create the PP shape), do not open up side. Stay very left, don't get in front of Man. It feels like Man stays in the fallaway longer (compared to Fallaway and Slip Pivot). Default is a reverse weave action, if leader wants to do fallaway, he will block at the hips, which makes lady open immediately and do a Fallaway. Cushion the knees.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to turn L",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in Fallaway",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "R side leading",
+        "Sway(S)",
+        "Up. Lower e/o 2",
+        "Slight flexing of the knees; heel lowers towards floor and may lightly touch"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP and Fallaway",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Sway(S)",
+        "Down. Rise e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 4"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 4-5",
+      "comments": [
+        "Sway(S)",
+        "Down. Rise e/o 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "QQQS",
+      "role": "LEADER",
+      "foot": "T/T/TH/T",
+      "action": "overturned Basic Weave (steps 4-7)",
+      "footwork": "T T TH T",
+      "alignment": "Sway(SRRS)",
+      "amount_of_turn": "CBM on step 6 and 9",
+      "comments": [
+        "4-7 of overturned Basic Weave"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "Slight body turn",
+      "comments": [
+        "Body diagonally stretched"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF back",
+      "action": "RF back",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Lady's head is to left",
+        "Bounce/rise action",
+        "Release L leg faster"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "&",
+      "role": "FOLLOWER",
+      "foot": "LF back",
+      "action": "LF back in Fallaway",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "LF bigger step, more like a side step LOD",
+        "follow Man's hips",
+        "Shoulder is flat"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF back in CBMP",
+      "action": "RF back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing DC",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "CBM",
+        "Down. Rise e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF to side and slightly fwd",
+      "action": "LF to side and slightly fwd",
+      "footwork": "F",
+      "alignment": "Pointing to LOD",
+      "amount_of_turn": "3/8 between 3-4, body turns less",
+      "comments": [
+        "Swivel RF, not turning body and then step LF fwd",
+        "L side positive",
+        "Shoulder is parallel to Man"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF fwd in CBMP, OP",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "Slight body turn",
+      "comments": [
+        "Body diagonally stretched"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "QQQS",
+      "role": "FOLLOWER",
+      "foot": "T TH TH T",
+      "action": "overturned Basic Weave",
+      "footwork": "T TH TH T",
+      "alignment": "Sway(SLLS)",
+      "amount_of_turn": "CBM on step 6 and 9",
+      "comments": [
+        "4-7 overturned Basic Weave"
+      ]
+    }
+  ]
+}

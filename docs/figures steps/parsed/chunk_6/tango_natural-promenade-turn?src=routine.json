@@ -1,0 +1,123 @@
+{
+  "name": "Natural Promenade Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "End facing DW",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Rock Turn (2-7)",
+  "notes": "When this Natural Promenade Turn is followed by steps 2-7 Rock Turn, skip step 4 (placing RF to side), it is more flat and rotational (compared to Twist Turn). Natural Promenade Turn follows the Fallaway Promenade. This is at Silver and Gold level. See alignment below.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side in closed position along line of dance, pointing diagonal wall",
+      "footwork": "WF",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in closed position and CBMP, turning right with CBM",
+      "footwork": "WF",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly back, backing line of dance, turning right",
+      "footwork": "WF",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Don't pull lady to your lady, instead Man should switch lane."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in CBMP, place left foot to side without weight, end facing diagonal wall, total turn 3/4 to right",
+      "footwork": "WF",
+      "alignment": "DW",
+      "amount_of_turn": "3/4 to R",
+      "comments": [
+        "Should be strong forward step, as Man is on outside of turn, inside R knee should track the inside of Lady's R knee.",
+        "Do not take elbow behind body."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side in closed position along line of dance, pointing diagonal centre",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward and across in closed position and CBMP, pointing down line of dance",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Really follow/track Man's leg in time (if it's off time, it'll gap.)."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward between partner's feet, down line of dance, CBM",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Big Step.",
+        "Return head to left. Keep head strongly to the left until last S, turning head too early tips balance and brings head into Man's space. Speed of turning head - it depends on Man's lead. It could be slow or fast.",
+        "At the end of this beat, start turning to R."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step to side and slightly back, RF placed to side without weight in PP, end facing diagonal centre of new LOD, BH then IE of B of RF, 3/4 to R",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "3/4 to R",
+      "comments": [
+        "Depending on how much Man rotates, where he puts his foot, Lady will put down foot just a bit late. Because body is turning R, LF appears to be to side and slightly back, then swivel on LF again to Promenade finishing position.",
+        "Lift left side up to Man during turn.",
+        "Don't turn head too early.",
+        "Track Man's hips, stay behind."
+      ]
+    }
+  ]
+}

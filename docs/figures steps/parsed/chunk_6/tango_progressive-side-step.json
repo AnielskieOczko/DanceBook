@@ -1,0 +1,93 @@
+{
+  "name": "Progressive Side Step",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk, Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "Technique Notes\nA slight turn to left can be made, in which case there is slight CBM on 1 and 3\nWhen there is turn and CBM, footwork changes accordingly to IE of BH (or outside edge of BH, as it applies).\nAllow right inside thigh to turn down. Use ab muscle to collect weight, keep upper center to Man.\nAllow hips to rotate and body to stay forward with the knees.\nIt's curving, but make sure not to get into Man's space. Stay very left.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "CBMP",
+      "amount_of_turn": "0",
+      "comments": [
+        "According to Previous Figure"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "side and slightly back",
+      "footwork": "IE",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BH",
+      "alignment": "Nil",
+      "amount_of_turn": "0",
+      "comments": [
+        "According to Previous Figure",
+        "Nil",
+        "slight CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "side, slightly forward",
+      "footwork": "IE",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": [
+        "Ball"
+      ]
+    }
+  ]
+}

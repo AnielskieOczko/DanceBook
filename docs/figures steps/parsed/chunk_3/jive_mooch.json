@@ -1,0 +1,60 @@
+{
+  "name": "Mooch",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/mooch"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic In Place, Fallaway Rock, Link, Reverse Whip, Whip",
+  "following_figure_names": "Basic In Place, Fallaway Rock, Fallaway Throwaway, Change of Places Right to Left, Walks, Stalking Walks, Flicks and Break",
+  "notes": "On Flicks: ankle and instep are stretched. Variations: (lady: normal opposite). \"Bobby\" Hops: repeat. aQ: slight hop on RF and at same time flick LF off floor. aQ: slight hop on RF and at same time close LF to RF. \"Flick Cross\" action: repeat. aQ: Slight hop on RF and at same time flick LF off floor. A: Spring to LF, crossing it well in front of RF, RF slightly off floor at back.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step back in RSP, turn lady to left",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "use LH turn lady to R, then release L to R hand hold.",
+        "Let R hand slide further around lady's back.",
+        "turn starts at end of previous beat."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF in RSP, retain position",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back in RSP, turn starts at end of previous beat",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Q: RF back in RSP | 1/4 to R",
+        "turn starts at end of previous beat",
+        "Lady slide L hand across Man's shoulder on 1."
+      ]
+    }
+  ]
+}

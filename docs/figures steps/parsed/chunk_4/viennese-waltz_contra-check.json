@@ -1,0 +1,61 @@
+{
+"name": "Contra Check",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/contra-check"
+  ],
+  "dance_type": "VIENNESE_WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position facing LOD",
+  "ending_position": "Backing against LOD",
+  "preceding_figure_names": "Reverse Fleckerl, Reverse Turn",
+  "following_figure_names": "Natural Fleckerl, Natural Turn",
+  "notes": "Commence facing LOD or other alignments. The Viennese Waltz Reverse Turn is a Gold Level figure. Man commences with a forward step in CBMP, weight split, extending right side forward without hip rotation. Transfer weight back to RF backing against LOD, then step back with LF pivoting on toe, ending facing against LOD. Lady mirrors with a back step in CBMP, then transfers weight forward to LF, and finally steps forward between partner's feet ending backing against LOD. Do not peel left side off, keep head space relative to partner, and maintain contact without lifting toe. LF may stay flat or release heel slightly. Stay left to partner, head follows left elbow, look at RF over shoulder.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/8 to L",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Small forward step in CBMP, foot flat",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Lady: RF back small step in CBMP, foot flat, BDC, 1/8 to L."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8 to R",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight forward to LF, facing against LOD",
+      "footwork": "F",
+      "alignment": "Facing Against LOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Lady: Transfer weight forward to LF, facing against LOD, foot flat."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3/8 to R",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Small forward step between partner's feet, ending backing against LOD",
+      "footwork": "F",
+      "alignment": "Backing against LOD",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "Lady: RF fwd small step between Man's feet, FDC, to end backing against LOD, stay flat.",
+        "Do not pop up high, stay flat.",
+        "Preceding Figures: Reverse Fleckerl, Reverse Turn",
+        "Following Figures: Natural Fleckerl, Natural Turn"
+      ]
+    }
+  ]
+}

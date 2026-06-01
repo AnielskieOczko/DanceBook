@@ -1,0 +1,178 @@
+{  
+"name": "Fishtail",    "urls": [  
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail?src=routine"  
+  ],    "dance_type": "JIVE",  
+  "level": "Silver",  
+  "starting_foot_leader": "RF",  
+  "ending_foot_leader": "RF",  
+  "starting_foot_follower": "LF",  
+  "ending_foot_follower": "LF",  
+  "starting_position": "Closed Position",  
+  "ending_position": "Closed Position",  
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Cross Swivel, Forward Lock, Four Quick Run, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6",  
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Four Quick Run, V6, Tipsy To L, Six Quick Run",  
+  "notes": "The Fishtail may be danced DW with no turn. Fishtail is often dance after Cross Swivel. After LF back (Lady shapes to L, RF can cross in front of LF)",  
+  "steps": [  
+    {  
+      "step_number": 1,  
+      "timing": "S",  
+      "role": "LEADER",  
+      "foot": "RF",  
+      "action": "fwd in CBMP, OP, start to turn R, Sway(S), CBM, Rise e/o 1",  
+      "footwork": "HF",  
+      "alignment": "Facing DC",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Motion continues down the floor, don't tracktrack.",          "Man's body does a pendulum swing from left to right."  
+      ]  
+    },  
+    {  
+      "step_number": 2,  
+      "timing": "Q",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "crosses behind RF, Facing LOD, T, 1/8 between 1-2, Sway(R), Up",  
+      "footwork": "T",  
+      "alignment": "Facing LOD",  
+      "amount_of_turn": "",  
+      "comments": []  
+    },  
+    {        "step_number": 3,        "timing": "Q",        "role": "LEADER",        "foot": "RF",  
+      "action": "fwd and slightly to side (small step), Facing DW, T, 1/8 between 2-3, Sway(S), Up",  
+      "footwork": "HF",  
+      "alignment": "Facing DW",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Man lowers while staying on toe at beginning of step, and rises out of it into the forward lock, similar to a tipple chasse.",  
+        "step 3 is just outside lady's LF"  
+      ]  
+    },      {  
+      "step_number": 4,  
+      "timing": "Q",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "diag fwd L side leading, Facing DW, T, --, Sway(S), Up",  
+      "footwork": "HF",  
+      "alignment": "Facing DW",  
+      "amount_of_turn": "",  
+      "comments": []      },  
+    {  
+      "step_number": 5,  
+      "timing": "Q",  
+      "role": "LEADER",  
+      "foot": "RF",  
+      "action": "crosses behind LF, Facing DW, T, --, Sway(S), Up",  
+      "footwork": "T",  
+      "alignment": "Facing DW",  
+      "amount_of_turn": "",  
+      "comments": []  
+    },  
+    {  
+      "step_number": 6,  
+      "timing": "S",  
+      "role": "LEADER",  
+      "foot": "LF",  
+      "action": "diag fwd, Facing DW, TH, --, Sway(S), Up. Lower e/o 6",        "footwork": "HF",        "alignment": "Facing DW",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Lower e/o 6"  
+      ]  
+    },  
+    {        "step_number": 7,        "timing": "S",        "role": "LEADER",        "foot": "RF",  
+      "action": "fwd in CBMP, OP, Facing DW, T, --, Sway(S), CBM, --",  
+      "footwork": "HF",  
+      "alignment": "Facing DW",  
+      "amount_of_turn": "",  
+      "comments": []  
+    },  
+    {  
+      "step_number": 8,  
+      "timing": "S",  
+      "role": "FOLLOWER",  
+      "foot": "LF",  
+      "action": "back in CBMP, Backing DC, T, start to turn R, Sway(S), CBM, Rise e/o 1",  
+      "footwork": "BF",  
+      "alignment": "Backing DC",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Man is stepping outside partner. Watch Man's center, keeping center toward each other.",  
+        "Take LF cross right behind RF, do not step too big. don't put heel down on this S.",  
+        "Option - do a big shape/extension (looks like \\\"dipping\\\" Lady, but Man should not \\\"drop\\\" Lady down)",  
+        "Keep R side connected with Man, do not break at the hip when doing extension.",  
+        "After moment of large extension, return to \\\"normal\\\" extension to keep balance on next step.",  
+        "This is more rotation of body, not taking left should down."  
+      ]  
+    },  
+    {        "step_number": 9,        "timing": "Q",        "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "crosses in front of LF, Backing LOD, T, 1/8 between 1-2, Sway(L), Up",  
+      "footwork": "T",  
+      "alignment": "Backing LOD",        "amount_of_turn": "",        "comments": [  
+        "When the lady's RF starts to cross in front of LF on 2, the heel should be in contact with the floor.",  
+        "RF is almost replace at almost same spot, while body is turning. Pick up center.",  
+        "There is foot rise, but the knees are flexed.",  
+        "Do not back track, movement is continuous down on the floor; back to \\\"normal\\\" extension, start rotating to R."  
+      ]      },  
+    {  
+      "step_number": 10,  
+      "timing": "Q",  
+      "role": "FOLLOWER",  
+      "foot": "LF",        "action": "back and slightly to side (small step), Backing DW, T, 1/8 between 2-3, Sway(S), Up",  
+      "footwork": "HF",  
+      "alignment": "Backing DW",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Keep rotating to R. do not back track",          "R side is very stretched. Whenever there is rotation it's backed up with an internal sway.",  
+        "Make sure don't fall back, upper body almost feels more forward in order to move back more powerful. Keep left side lifted. Body has torque, twisted to R.",  
+        "Hip girdle area has to be free to move, not sticking hip up to try to connect to Man",  
+        "Head is strongly left, outside of LF."  
+      ]  
+    },      {  
+      "step_number": 11,  
+      "timing": "Q",  
+      "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "diag back R side leading, Backing DW, T, --, Sway(S), Up",  
+      "footwork": "HF",  
+      "alignment": "Backing DW",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Lock step QQS: don't slow down and lose the power and movement"  
+      ]  
+    },  
+    {  
+      "step_number": 12,  
+      "timing": "Q",  
+      "role": "FOLLOWER",  
+      "foot": "LF",  
+      "action": "crosses in front of RF, Backing DW, T, --, Sway(S), Up",  
+      "footwork": "T",  
+      "alignment": "Backing DW",  
+      "amount_of_turn": "",  
+      "comments": []  
+    },  
+    {  
+      "step_number": 13,  
+      "timing": "S",  
+      "role": "FOLLOWER",  
+      "foot": "RF",  
+      "action": "diag back, Backing DW, TH, --, Sway(S), Up. Lower e/o 6",  
+      "footwork": "HF",  
+      "alignment": "Backing DW",  
+      "amount_of_turn": "",  
+      "comments": [  
+        "Lower e/o 6"  
+      ]  
+    },      {  
+      "step_number": 14,  
+      "timing": "S",  
+      "role": "FOLLOWER",  
+      "foot": "LF",  
+      "action": "back in CBMP, Backing DW, T, --, Sway(S), CBM, --",  
+      "footwork": "BF",  
+      "alignment": "Backing DW",  
+      "amount_of_turn": "",  
+      "comments": []  
+    }  
+  ]  
+}

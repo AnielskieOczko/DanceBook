@@ -1,0 +1,139 @@
+{
+  "name": "Natural Pivot Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Rumba Cross",
+  "notes": "Difference between a Pivot Turn and a Spin Turn is that there is no Rise in Pivot Turn. There is Rise (and brush) in Spin Turn.\nAt corner: turn 3/8 to face DW on new LOD.\nTurn amount is up to 1/2 to face BLOD, followed by any Natural figure.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd | FDW | HT | Start to turn R",
+      "footwork": "F",
+      "alignment": "FDW",
+      "amount_of_turn": "0",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF side | BDC | T",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF | BLOD | TH",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Sway(R)",
+        "Up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "R",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back (RF held in CBMP) | Point BDW | THT",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "R up to 1/2 turn",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back | BDW | TH",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "0",
+      "comments": [
+        "starts to turn R",
+        "Sway(S)",
+        "CBM",
+        "start to rise e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF side | PLOD | T",
+      "footwork": "T",
+      "alignment": "PLOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "body turns less",
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF close to RF | FLOD | TH",
+      "footwork": "TH",
+      "alignment": "FLOD",
+      "amount_of_turn": "body completes turn",
+      "comments": [
+        "Sway(L)",
+        "Up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd (pivot) | FLOD | HTH",
+      "footwork": "HTH",
+      "alignment": "FLOD",
+      "amount_of_turn": "up to 1/2 to R",
+      "comments": [
+        "(Heel is kept in contact with floor)",
+        "up to 1/2 to R",
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

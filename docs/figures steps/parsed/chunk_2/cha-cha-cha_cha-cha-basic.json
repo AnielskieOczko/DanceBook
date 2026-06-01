@@ -1,0 +1,73 @@
+{
+"name": "Cha Cha Cha Closed Basic",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cha-cha-basic"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open CPP",
+  "preceding_figure_names": "Aida, Alemena Development, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break LF, Cuban Break RF, Foot Changes Method 1, Hand To Hand LSP, Hand To Hand RSP, Natural Opening Out Movement, Natural Top, New York LSP, New York RSP, Open Basic Movement, Reverse Top, Rope Spinning, Shoulder To Shoulder Left Side, Shoulder To Shoulder Right Side, Side Step To Left commenced with LF, Side Step To Left commenced with RF, Side Step To Right commenced with LF, Side Step To Right commenced with RF, Spot or Switch Turn To L (Lady to R), Spot or Switch Turn To R (Lady to L), There And Back, Three Cha Cha Chas Back, Three Cha Cha Chas Forward, Time Step LF, Time Step RF, Underarm Turn to L, Underarm Turn To R",
+  "following_figure_names": "Time Step RF (after 1-5), Open Basic Movement (normal; or after step 1-5 of Closed Basic, follow with 6-10 Open Basic), Closed Basic Movement, New York LSP (after having turned to Open CPP over 8-10), Spot or Switch Turn To R (Lady to L), Underarm Turn to L, Shoulder To Shoulder Left Side, Side Step To Left commenced with LF, Side Step To Right commenced with LF, Hand To Hand RSP (with alternative hold), There And Back, Time Step LF, Fan, Cross Basic, Cuban Break LF, Split Cuban Break LF, Three Cha Cha Chas Back (afer step 1-2), Underarm Turn To R (after step 1-5)",
+  "notes": "Closed Position is maintained throughout the figure. Closed Basic can end with Man and Lady turning to Open CPP over 8-10. Man Turning 1/8 R and Lady 1/8 L, man release R hand hold. Variations: No Turn or 1/4 Turn. Ending variation could be in Open CPP over 8-10. Opinion 1: lateral movement (minimal rotation). Opinion 2: hip does continuous figure 8 even on chasse for movement. On \"1\", push off LF. slightly bigger step. Hip settle on \"1&\".",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward step",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "WF",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side chassé LRL, slightly back, 1/8 turn to L",
+      "footwork": "T",
+      "alignment": "LRL",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Variation: No Turn or 1/4 turn",
+        "Ending variation: could be in Open CPP over 8-10"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back step, hip rotate half circle to R, then to L",
+      "footwork": "F",
+      "alignment": "Backing",
+      "amount_of_turn": "",
+      "comments": [
+        "Hip rotate half circle to R",
+        "Hip rotate half circle to L",
+        "LF to side, chassé RLR | 1/8 to L over 2-5",
+        "very small step",
+        "Opinion 1: lateral movement (minimal rotation)",
+        "Opinion 2: hip does continuous figure 8 even on chasse for movement."
+      ]
+    }
+  ]
+}

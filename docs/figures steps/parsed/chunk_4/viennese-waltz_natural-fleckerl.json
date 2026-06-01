@@ -1,0 +1,88 @@
+{
+ "name": "Natural Fleckerl",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-fleckerl"
+  ],
+  "dance_type": "VIENNESE_WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Contra Check, Natural Fleckerl, Natural Turn",
+  "following_figure_names": "Natural Fleckerl, Natural Turn",
+  "notes": "The figure can commence anywhere where previous figure has ended.\nIt can rotate 1 up to 2 revolutions depending on the couple.\nFor both Man and Lady, there is a strong rotation, so there must be a foot swivel on the ball of the flat foot on each step.\nMiddle of body forward, side to Man. Shaping is not as big as other dances, focus on rotation.\nThe figure can complete one or two full turns, depending upon the dancers.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward step between Lady's feet",
+      "footwork": "F",
+      "alignment": "Facing DC Against LOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side step with weight change",
+      "footwork": "B",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Continue turning on RF, take full weight, LF held behind",
+      "footwork": "F",
+      "alignment": "Facing Against LOD",
+      "amount_of_turn": "3/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side step to side and slightly forward",
+      "footwork": "B",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "1/2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Cross behind LF with half weight",
+      "footwork": "B",
+      "alignment": "Facing DC Against LOD",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Pull ab muscle, keep body lined up and forward.",
+        "Do not stick butt out. No big shape."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Untwist on RF then step side small step",
+      "footwork": "B",
+      "alignment": "Facing Against LOD",
+      "amount_of_turn": "3/8 to R",
+      "comments": []
+    }
+  ]
+}

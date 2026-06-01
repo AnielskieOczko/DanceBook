@@ -1,0 +1,65 @@
+{
+  "name":"Simple Spin",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/simple-spin"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open CPP",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Change of Places Left to Right",
+  "following_figure_names": "Link, Change of Places Left to Right, Hip Bump, Change of Hands Behind Back, American Spin (spin from L to R hand hold), Stop and Go",
+  "notes": "Variation - dance an overturned Fallaway Throwaway or overturned Change of Places L to R, ending in Tandem Position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "WF",
+      "alignment": "Open CPP",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF in Open Position",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Turn to R on LF, then RF fwd, small step",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Turn is started at end of previous beat."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Turn to R on RF, then LF back and slightly side in Open Position",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "name" : "Open Telemark Feather Ending",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending" ],
+  "dance_type" : "SLOW_FOXTROT",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Closed Impetus and Feather Finish,Fallaway Reverse and Slip Pivot,Feather Step,Hover Cross,Hover Feather,Natural Hover Telemark,Natural Telemark,Natural Twist Turn,Natural Zig-Zag from PP",
+  "following_figure_names" : "Three Step,Change Of Direction,Basic Weave (1-4 Reverse Turn to end BDW, check, and Basic Weave),Reverse Turn (1-4 Reverse Turn to end BLOD near corner, check and Basic Weave turning 1/8, 1/8, 3/4; or 1/4, 1/8, 3/4; to end DW of new LOD),Hover Telemark,Reverse Wave,Top Spin (check back after step 6),Outside Swivel (check back after step 6),Fallaway Reverse and Slip Pivot (at corner)",
+  "notes" : "This online reference gives a detailed description of the dance steps, including timing, footwork, alignment, and movement; steps diagram; a list of figures that may precede or follow the pattern; and videos providing instruction and demonstration of the figure, techniques and practice routines that include it.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF forward, feathered, start turn left",
+    "footwork" : "HT",
+    "alignment" : "FDC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Compress down through right shoulder, hip and foot. Use CBM to send lady to inside turn. Rise through LF leading heel turn." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/4 between 1-2",
+    "comments" : [ "Sway(L) Up" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly forward in PP, pointing diagonal wall",
+    "footwork" : "TH",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/2 between 2-3",
+    "comments" : [ "Body turns less", "Sway(S) Up, lower e/o 3" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward in PP and CBMP, pointing diagonal wall",
+    "footwork" : "HT",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S) Rise e/o 4" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward in CBMP, OP, pointing diagonal wall",
+    "footwork" : "TH",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(R) Up" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF forward, facing diagonal wall, H",
+    "footwork" : "H",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S) CBM" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back, backing diagonal curve, start turn left",
+    "footwork" : "TH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Sway(S) CBM rise slightly e/o 1, NFR" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF closes to RF (Heel Turn), LOD",
+    "footwork" : "HT",
+    "alignment" : "LOD",
+    "amount_of_turn" : "3/8 between 1-2",
+    "comments" : [ "Sway(R) continue to rise on 2" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF diag fwd in PP, R side leading, pointing to LOD",
+    "footwork" : "TH",
+    "alignment" : "Pointing to LOD",
+    "amount_of_turn" : "slight body turn to L",
+    "comments" : [ "Sway(S) Up, lower e/o 3" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd and across in PP and CBMP, pointing to LOD",
+    "footwork" : "HT",
+    "alignment" : "Pointing to LOD (Moving DW)",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Sway(S) CBM rise e/o 4" ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back, backing wall",
+    "footwork" : "TH",
+    "alignment" : "Backing Wall",
+    "amount_of_turn" : "1/4 between 4-5",
+    "comments" : [ "Sway(L) up" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP, backing diagonal wall",
+    "footwork" : "TH",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/8 between 5-6, body turns less",
+    "comments" : [ "Sway(L) up, NFR Lower e/o6" ]
+  }, {
+    "step_number" : 13,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back, backing diagonal wall",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Sway(S) CBM --" ]
+  } ]
+}

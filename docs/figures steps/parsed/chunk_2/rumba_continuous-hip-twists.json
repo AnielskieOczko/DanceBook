@@ -1,0 +1,98 @@
+{
+  "name": "ContinuousHip Twists",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/continuous-hip-twists"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Continuous Hip Twists, Natural Top, Rope Spinning, Three Alemanas, Three Threes",
+  "following_figure_names": "Advanced Hip Twists, Continuous Hip Twists, Circular Hip Twists, Rope Spinning",
+  "notes": "",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Diagonal back with partial weight, body completes turn to L",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "At end of previous beat, extend L arm slightly fwd at normal level and retain tone in arms",
+        "Body completes turn to L"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF, slight body turn to R",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Retain tone"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4,1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in line with LF towards Lady's right side, 1/4 turn to R, body turns slightly more",
+      "footwork": "F",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Arms to normal position"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward and across, 3/8 to R, turn initiated from hips, hips turn more than upper body",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "Flexible turn"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward and across towards Man's right side, 3/8 to L, turn initiated from hips, hips turn more than upper body",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Flexible turn"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4,1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward in line with RF, then turn to end side and slightly forward, 1/8 to R then further 1/4 to R",
+      "footwork": "F",
+      "alignment": "Facing Side",
+      "amount_of_turn": "1/8 to R, then 1/4 to R",
+      "comments": [
+        "Turn to end side and slightly fwd"
+      ]
+    }
+  ]
+}

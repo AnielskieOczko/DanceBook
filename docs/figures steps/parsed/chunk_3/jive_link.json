@@ -1,0 +1,91 @@
+{
+  "name": "Link",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/link"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "American Spin,Catapult,Change of Hands Behind Back,Change of Places Left to Right,Chugging,Fallaway Throwaway,Hip Bump,Miami Special,Shoulder Spin,Simple Spin,Spanish Arms,Stop and Go,Windmill",
+  "following_figure_names": "Basic In Place,Fallaway Rock,Fallaway Throwaway,Change of Places Right to Left,Walks,Mooch,Whip (after 1-5),Whip Throwaway (after 1-5),Reverse Whip,Stalking Walks Flicks and Break",
+  "notes": "Step 1 and 2 can be repeated, known as Double Link.\nWhen preceding Whip or Whip Throwaway: dance 1-5 of Link, turn 1/4 R over 3-5 (Man's step 5 is diag fwd to end LF side and slightly fwd)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight",
+      "footwork": "WF",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "Together",
+      "action": "Forward Chasse LRL",
+      "footwork": "HF, BF, H",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": [
+        "slightly retract L arm"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight",
+      "footwork": "WF",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "Together",
+      "action": "Forward Chasse RLR",
+      "footwork": "HF, BF, H",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": [
+        "Q: Hold position with weight on LF",
+        "a: Close RF to LF, OR, replace weight forward to RF",
+        "Q: LF forward"
+      ]
+    }
+  ]
+}

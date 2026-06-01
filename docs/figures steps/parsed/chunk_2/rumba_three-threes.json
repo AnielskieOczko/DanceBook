@@ -1,0 +1,379 @@
+{
+  "name": "Three Threes",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/three-threes"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Advanced Hip Twists, Basic Movements: Open, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names": "Basic Movements: Closed, Basic Movements: Open, Fan, Advanced Hip Twists, Continuous Hip Twists, Circular Hip Twists, Alemana (when ending in Fan Position), Hockey Stick (when ending in Fan Position), Sliding Doors (when ending in Fan Position), Fencing (when ending in Fan Position)",
+  "notes": "Note: Lady's alternative steps for steps 10 to 12: dance 1-2 of Switch Turn to R (1/2 turn). Then count 41: LF fwd, after having turned another 1/2 to R. No turn on step 9, then turn 1/4 to R into step 1 and 2 of LF Side Cucaracha on count 2 3; then LF fwd. Then, LF fwd after having turned a further 1/4 to R. Finishing Position: Man and lady can step fwd towards partners R side, followed by different Hip Twists. Fan Ending: Man: Step 9 (41): Close LF to RF, 1/8 to L; Increase tone, L arm slightly fwd. R arm slightly back; then release hold allowing R hand to slide down Lady's R arm to R to R hand hold. 2: RF back, no turn; R arm towards L side, then change to L to R hand hold. 3: Transfer weight to LF, 1/8 to L, over count 3 4 1; increase tone in L arm. 41: RF to side in Fan Position. Slightly extend L arm. Lady: Step 10-12: dance the finishing steps for Closed Hip Twist to end in Fan Position. 2: LF fwd passing in front of Man's body. 3: RF fwd in line with LF, then turn 1/2 to L, body turns less; ending RF back. 41: LF back in Fan position, body completes turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "step forward",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "Start in Open Position. Slightly extend L arm forward."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "closed step to RF slightly back, end in TP",
+      "footwork": "F",
+      "alignment": "TP",
+      "amount_of_turn": "0",
+      "comments": [
+        "End in TP"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "step back",
+      "footwork": "B",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "close to LF in TP",
+      "footwork": "F",
+      "alignment": "TP",
+      "amount_of_turn": "0",
+      "comments": [
+        "Increase tone, R arm slightly forward, L arm slightly back, then release hold. Place hands on Lady's shoulder at end of her turn."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diagonal forward with part weight",
+      "footwork": "F",
+      "alignment": "Diagonal",
+      "amount_of_turn": "Slight turn to R",
+      "comments": [
+        "Slight body turn to R"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Diagonal",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "close to RF, slight turn to L to normal position",
+      "footwork": "F",
+      "alignment": "Normal",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slight body turn to L to normal position"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "step back, no turn",
+      "footwork": "B",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "close to LF, end in Closed Position",
+      "footwork": "F",
+      "alignment": "Closed",
+      "amount_of_turn": "0",
+      "comments": [
+        "Take required hold."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step back, no turn",
+      "footwork": "B",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "Start in Open Position. More rotation, take center really really back, squeeze R side, counter balance with Man. Hand: pull tension with Man, delayed coming toward Man."
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd, then turn, closing LF to RF without weight in TP",
+      "footwork": "F",
+      "alignment": "TP",
+      "amount_of_turn": "1/2 turn to R",
+      "comments": [
+        "RF fwd, lady dancing R side more forward to Man, step onto RF, bring weight well fwd onto RF.",
+        "Start turning shoulder to R, body twisted. At very end of count 1, turn hips, turn on ball of RF, foot flat, pressure on ball of LF.",
+        "Do not go up, which will lose energy. Try to keep flat, grounded."
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "23: in place hip action, figure 8"
+      ]
+    },
+    {
+      "step_number": 17,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "rotate to R, R hip high, straightening R leg"
+      ]
+    },
+    {
+      "step_number": 18,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "replace weight, then turn, closing RF to LF slightly back without weight in TP",
+      "footwork": "F",
+      "alignment": "TP",
+      "amount_of_turn": "Full turn to L",
+      "comments": [
+        "4: weight onto LF, L leg straightened, shoulder wind up to R first, before prepping to turn by turning upper body first to L.",
+        "1: turn body first, then turn hips, all turns around spine, ending L leg straight, collect R leg, R knee drape over, using upper thigh muscle to stop the turn; Remember to: collect center in, thighs tight, \"close the ribs\", weight on balls of foot",
+        "LF flat, pressure on ball of RF."
+      ]
+    },
+    {
+      "step_number": 19,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "diag back with part weight, no turn",
+      "footwork": "B",
+      "alignment": "Side",
+      "amount_of_turn": "0",
+      "comments": [
+        "Often danced as side or side slightly back cucarachas",
+        "Breathe and do not tense up body, making it look rigid when doing steps faster.",
+        "Eyes - focus on a spot in each turning direction, with focus, body is more compact"
+      ]
+    },
+    {
+      "step_number": 20,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "F",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "Foot flat. Squeeze left side, on & collect/brush RF to LF before striking out RF on 4 next."
+      ]
+    },
+    {
+      "step_number": 21,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd, then turn with LF trailing behind without weight",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "RF forward, dancing R side forward, chest is more diagonal; fully send weight to R hip, continue turning shoulder to R, then finish half turn to R.",
+        "For this and next few turns, use flexible turn (brush RF to LF) to show off leg movement",
+        "1: end of beat, turn on ball of RF, foot flat. Inside edge of toe of LF. hip needs to turn more, finish R hip. R shoulder fwd, it helps to stop the turn. After initiating turn with turning R shoulder, R shoulder more or less stays in place, so R shoulder ends fwd and create counter with settling R hip. Do not over turn R shoulder to R."
+      ]
+    },
+    {
+      "step_number": 22,
+      "timing": "2 3 4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "3 fwd walks LRL. End in Closed Position",
+      "footwork": "F",
+      "alignment": "Closed",
+      "amount_of_turn": "A complete turn to R over these 4 counts",
+      "comments": [
+        "2: LF fwd Forward Walk Turn, 1/2 turn to R",
+        "3: RF swivel, 1/2 to R",
+        "41: LF fwd to Man's R side"
+      ]
+    },
+    {
+      "step_number": 23,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd Forward Walk Turn, 1/2 turn to R",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "1/2 turn to R",
+      "comments": [
+        "End of beat, turn on ball of RF, foot flat. Inside edge of toe of LF."
+      ]
+    },
+    {
+      "step_number": 24,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "swivel, 1/2 to R",
+      "footwork": "S",
+      "alignment": "Back",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "End in Closed Position"
+      ]
+    },
+    {
+      "step_number": 25,
+      "timing": "41",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd to Man's R side",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "Note: Lady's alternative steps for steps 10 to 12: ..."
+      ]
+    },
+    {
+      "step_number": 26,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back, no turn",
+      "footwork": "B",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "RF back, no turn; R arm towards L side, then change to L to R hand hold."
+      ]
+    },
+    {
+      "step_number": 27,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "WF",
+      "alignment": "Back",
+      "amount_of_turn": "0",
+      "comments": [
+        "3: Transfer weight to LF, 1/8 to L, over count 3 4 1; increase tone in L arm."
+      ]
+    },
+    {
+      "step_number": 28,
+      "timing": "41",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side in Fan Position",
+      "footwork": "F",
+      "alignment": "Fan",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slightly extend L arm."
+      ]
+    }
+  ]
+}

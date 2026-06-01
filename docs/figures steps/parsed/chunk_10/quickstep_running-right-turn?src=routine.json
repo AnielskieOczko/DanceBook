@@ -1,0 +1,37 @@
+{
+  "name": "Running Right Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Fish Tail, Four Quick Run, Progressive Chasse, Rumba Cross, Running Right Turn, V6",
+  "following_figure_names": "Running Right Turn, Fish Tail (normal; or when ended DC), Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Quick Open Reverse (when ended DC), Tipsy To L (Tipsy to L into 2-12 V6 DC or 2-5 Back Lock down LOD)",
+  "notes": "Other alignments:\nAcross corner: 3/8 on Pivot, 1/2 on Natural Turn, 3/8 on Running Finish.\nTwo corners: 3/8 on Pivot, 3/8 on Natural Turn, 1/4 on Running Finish\nSide of room: 1/2 on pivot, 1/2 on Natural Turn, 3/8 on Running Finish\nWhen 3/8 is made on Running Finish, using \"pointing\" instead of \"facing\" at step 9 for Man.\nAlternative timing SQQ may be used on steps 5-7, in which case, SQQS will be used on the Running Finish.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQS",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Running Right Turn sequence",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Other alignments:",
+        "Across corner: 3/8 on Pivot, 1/2 on Natural Turn, 3/8 on Running Finish.",
+        "Two corners: 3/8 on Pivot, 3/8 on Natural Turn, 1/4 on Running Finish",
+        "Side of room: 1/2 on pivot, 1/2 on Natural Turn, 3/8 on Running Finish",
+        "When 3/8 is made on Running Finish, using \"pointing\" instead of \"facing\" at step 9 for Man.",
+        "Alternative timing SQQ may be used on steps 5-7, in which case, SQQS will be used on the Running Finish."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "name" : "Quarter Turn to Right",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/quarter-turn-to-right" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position or Outside Partner Position (depending on previous figure)",
+  "ending_position" : "Square, inline, step in between man's legs",
+  "preceding_figure_names" : "Closed Telemark, Fish Tail, Four Quick Run, Progressive Chasse, Running Right Turn, V6",
+  "following_figure_names" : "Progressive Chasse, Reverse Pivot, Heel Pivot (Quarter Turn To Left), Four Quick Run, V6 (2-12, L heel should still lower on preceeding step), Six Quick Run (L heel should still lower on preceeding step), Hover Corte",
+  "notes" : "If this figure starts facing LOD:\nLeader: turn 1/4 to R between 1-2, and 1/8 between 2-3.\nFollower: turn 3/8 to R between 1-2, body turns less, finish the turn on 3.\nDon't let head and shoulder weight drop back. It's controlled action.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward, FDW, HT, start to turn R, sway S, CBM, start to rise e/o 1",
+    "footwork" : "F",
+    "alignment" : "DW",
+    "amount_of_turn" : "",
+    "comments" : [ "Roll your foot, so it's not jerky." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF side, BC, T, 1/8 to R between 1-2, sway R, cont to rise on 2 and 3",
+    "footwork" : "T",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF closes to LF, BDC, T, 1/8 to R between 2-3, sway R, No rise & fall",
+    "footwork" : "T",
+    "alignment" : "",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "No rise & fall" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF side/slightly back, BDC, TH, --, sway S, Up, lower e/o 4",
+    "footwork" : "TH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "",
+    "comments" : [ "Don't let head and shoulder weight drop back. It's controlled action." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back, BDW, TH, start to turn R, sway S, CBM, start to rise e/o 1, NFR",
+    "footwork" : "TH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "When starting a dance, this is not OP. After initial figure, this will always be OP." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF side, PDC, T, 1/4 to R between 1-2, body turns less, sway L, cont to rise on 2 and 3",
+    "footwork" : "T",
+    "alignment" : "PDC",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Keep head to left, do not allow head and shoulder to start going to the right. In Quarter Turn, the turn happens sooner (compared to heel turns), swing R leg/hip to side. Compared to Natural Turn, this is less effort (less turn)." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF close to RF, FDC, T, slight body turn, sway L, --, No rise & fall",
+    "footwork" : "T",
+    "alignment" : "FDC",
+    "amount_of_turn" : "",
+    "comments" : [ "In Quarter Turn, there is a check point at end of step 3 (not like Chasse which progressive, trapezoid movement)." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF diagonal fwd, FDC, TH, --, sway S, Up, lower e/o 4",
+    "footwork" : "TH",
+    "alignment" : "FDC",
+    "amount_of_turn" : "",
+    "comments" : [ "Finish square, inline. Step in between Man's legs." ]
+  } ]
+}

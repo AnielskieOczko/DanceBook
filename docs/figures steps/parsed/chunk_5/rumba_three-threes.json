@@ -1,0 +1,184 @@
+{
+  "name": "Three Threes",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/three-threes"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Advanced Hip Twists, Basic Movements: Open, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names": "Basic Movements: Closed, Basic Movements: Open, Fan, Advanced Hip Twists, Continuous Hip Twists, Circular Hip Twists, Alemana (when ending in Fan Position), Hockey Stick (when ending in Fan Position), Sliding Doors (when ending in Fan Position)",
+  "notes": "Lady's alternative steps for steps 10 to 12:\\n2, 3: Dance 1-2 of Switch Turn to R (1/2 turn). Then, count 41: LF fwd, after having turned another 1/2 to R.\\nNo turn on step 9, then turn 1/4 to R into step 1 and 2 of LF Side Cucaracha on count 2 3; then LF fwd. Then, LF fwd after having turned a further 1/4 to R.\\nFinishing Position: Man and lady can step fwd towards partners R side, followed by different Hip Twists.\\nFan Ending:\\nMan:\\nStep 9 (41): Close LF to RF, 1/8 to L; Increase tone, L arm slightly fwd. R arm slightly back; then release hold allowing R hand to slide down Lady's R arm to R to R hand hold.\\n2: RF back, no turn; R arm towards L side, then change to L to R hand hold.\\n3: Transfer weight to LF, 1/8 to L, over count 3 4 1; increase tone in L arm.\\n41: RF to side in Fan Position. Slightly extend L arm.\\nLady:\\nStep 10 -12: dance the finishing steps for Closed Hip Twist to end in Fan Position.\\n2: LF fwd passing in front of Man's body\\n3: RF fwd in line with LF, then turn 1/2 to L, body turns less; ending RF back\\n41: LF back in Fan position, body completes turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Closed LF to RF, slightly back, end in TP",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF in TP",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Diagonal forward with part weight, slight body turn to R",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF, slight body turn to L to normal position",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back, no turn",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward then turn 1/2 turn to R",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 13,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 14,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF then turn 1/2 turn to L",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    }
+  ]
+}

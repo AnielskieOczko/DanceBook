@@ -1,0 +1,65 @@
+{
+  "name": "Foot Changes",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/foot-changes"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "R Shadow Position",
+  "preceding_figure_names": "Any figure ending in Closed Position with weight on LF (Lady RF)",
+  "following_figure_names": "Any figure commenced with RF",
+  "notes": "Bronze Level figure. Man uses Foot Changes (minimal Bounce) to achieve Right Shadow Position while Lady dances 1-3 of Spot Volta turning 1/2 L (LRL). Alternative method: turn Lady under raised L arm and then change to R Shadow hold.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF leading Lady to turn L and releasing hold",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Man leads Lady to turn left and releases hold"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Hold position with weight on RF",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diagonally forward, small step; take R Shadow hold at end of Lady's turn",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 1,
+      "timing": "1-3",
+      "role": "FOLLOWER",
+      "foot": "",
+      "action": "Perform 1-3 of Spot Volta turning 1/2 L (LRL)",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

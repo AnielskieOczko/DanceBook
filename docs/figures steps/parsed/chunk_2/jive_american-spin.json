@@ -1,0 +1,99 @@
+{
+  "name": "American Spin",
+"urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/american-spin"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Catapult,Change of Hands Behind Back,Change of Places Left to Right,Chugging,Fallaway Throwaway,Hip Bump,Rolling Off the Arm,Shoulder Spin,Simple Spin,Spanish Arms,Stop and Go",
+  "following_figure_names": "American Spin,Rolling Off the Arm,Miami Special,Shoulder Spin,Chugging,Catapult,Link,Change of Hands Behind Back,Stop and Go",
+  "notes": "Start in L to R hand hold.\nRetain hold and lead lady to spin under raise arm on 5. Lower at end of lady's turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "TOGETHER",
+      "action": "Link LR, no turn",
+      "footwork": "TO",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF near RF, slightly forward for compact chasse LRL",
+      "footwork": "LF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "retract R arm to lead lady fwd.",
+        "increase tone in arm on 5, then turn lady to R, release hold"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact chasse RLR, end in open position",
+      "footwork": "RF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "compact chasse RLR",
+        "End in open position",
+        "regain L to R or R to R hand hold at end of lady's turn"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "TOGETHER",
+      "action": "Link RL, no turn",
+      "footwork": "TO",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward chasse RLR, then turn R on RF",
+      "footwork": "RF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "no turn on 3-5, then 1/2 to R on RF",
+        "Lady may turn up to 3/4 R on RF on 5, completing turn over 6-7."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF diagonal back to chasse LRL, end in open position, 1/4 to R over 6-8",
+      "footwork": "LF",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "LF diag back to chasse LRL",
+        "end LF back in open position",
+        "1/4 to R over 6-8"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "name": "Weave in Waltz Time",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/basic-weave?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names": "Natural Spin Turn, Natural Turn, Hesitation Change, Left Whisk, Wing, Chasse from Promenade Position, Closed Wing, Cross Hesitation",
+  "notes": "Variation: this step can finish in Promenade position going DW\nstep 3: ending moving down LOD\nstep 4: same, LOD\nstep 5: Man back step, Lady: fwd; CBM\nstep 6: lady: RF forward DW (after collecting/brushing). then collect LF, ending in promenade position.\nThis step is usually used in corners. Not very good to use along LOD to stop movement.\nWhen Reverse Turn precedes this step, it's better to commence 3 steps Reverse Turn facing LOD.\nMore advanced version: use ball of foot to whole foot on step 1.\nSoft knee on this step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "Back Diagonal Wall",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Back Diagonal Wall",
+      "amount_of_turn": "--",
+      "comments": [
+        "starts to turn L",
+        "rise e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "S",
+      "alignment": "Back Line of Dance",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "Back Diagonal Corner",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "starts to rise e/o4, NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "Back Diagonal Wall",
+      "amount_of_turn": "--",
+      "comments": [
+        "starts to turn L",
+        "continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly forward",
+      "footwork": "F",
+      "alignment": "Pointing Diagonal Wall",
+      "amount_of_turn": "1/4 between 5-6, body turns less",
+      "comments": [
+        "up, lower e/o 6"
+      ]
+    }
+  ]
+}

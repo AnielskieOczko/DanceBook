@@ -1,0 +1,187 @@
+{
+ "name": "Shoulder Spin",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/shoulder-spin"
+  ],
+  "dance_type": "JIVE",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "American Spin, Catapult, Change of Places Left to Right, Change of Places Right to Left, Chugging, Rolling Off the Arm",
+  "following_figure_names": "Change of Places Left to Right, American Spin, Rolling Off the Arm, Miami Special, Chugging, Catapult, Link, Change of Hands Behind Back, Hip Bump, Stop and Go",
+  "notes": "Lady must take her weight well forward to lean against Man's hand on her shoulder.\nRetain position, placing L hand on Lady's R shoulder. Towards end of step 13, increase tone in L arm and turn Lady L with pressure through L hand. Immediately release L hand contact to R to R hand hold.\nRegain L to R or R to R hand hold at end of Lady's turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1,2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Link step to left (LR)",
+      "footwork": "H",
+      "alignment": "Open Position",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward chassé LRL, moving left turn 1/8",
+      "footwork": "BF",
+      "alignment": "Open CPP",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Gradually raise R arm leading Lady towards R side. Circle R hand counterclockwise towards end of step 5."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact chassé RLR, end in Open CPP",
+      "footwork": "H",
+      "alignment": "Open CPP",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Lower R arm across back at waist level"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in Open CPP, no turn",
+      "footwork": "B",
+      "alignment": "Open CPP",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF in Open CPP, no turn",
+      "footwork": "B",
+      "alignment": "Open CPP",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd small steps, chassé in CPP LRL, retain position, place left hand on Lady's right shoulder",
+      "footwork": "H",
+      "alignment": "Open CPP",
+      "amount_of_turn": null,
+      "comments": [
+        "Towards end of step 13, increase tone in L arm and turn Lady L with pressure through L hand. Immediately release L hand contact to R to R hand hold."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact chassé RLR, end in Open Position",
+      "footwork": "H",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Regain L to R or R to R hand hold at end of Lady's turn."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "1,2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Link step to right (RL)",
+      "footwork": "H",
+      "alignment": "Open Position",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward chassé RLR to Man's right side, then turn underarm on RF",
+      "footwork": "BF",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to L then 3/8 to L on RF",
+      "comments": [
+        "Turn underarm on RF, step count includes 1/8 to L over steps 3-5, then 3/8 to L on RF."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side chassé LRL, end in Open CPP",
+      "footwork": "H",
+      "alignment": "Open CPP",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in Open CPP, no turn",
+      "footwork": "B",
+      "alignment": "Open CPP",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF in Open CPP, no turn",
+      "footwork": "B",
+      "alignment": "Open CPP",
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 13,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd small step, chassé to CPP RLR, turn on RF, then 5/8 to R on RF",
+      "footwork": "H",
+      "alignment": "Open CPP",
+      "amount_of_turn": "5/8 to R on RF",
+      "comments": [
+        "No turn during steps 11-13, then 5/8 to R on RF."
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "1/2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF diag back to chassé LRL, end LF back in Open Position",
+      "footwork": "H",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Lady must take her weight well forward to lean against Man's hand on her shoulder."
+      ]
+    }
+  ]
+}

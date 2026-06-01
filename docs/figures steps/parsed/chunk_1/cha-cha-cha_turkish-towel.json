@@ -1,0 +1,288 @@
+{
+
+
+        "name": "Turkish Towel",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/turkish-towel"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Cuban Break RF, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF",
+  "following_figure_names": "Alemana, Open Basic Movement (Open Basic; Or, 1,2 of Open Basic to Three Cha Cha Chas Back; Or 1-5 of Open Basic to Natural Top), Time Step LF, Open Hip Twist, Curl, Cuban Break LF, Split Cuban Break LF, Chase, Sweetheart, Follow My Leader",
+  "notes": "Alternative ending: \"2\": LF fwd, \"3\" RF fwd, spiral, then a three step turn on \"4&1\".",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "234&1 23",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Same as Alemana from Open Position | No turn",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact Chasse RLR. End RF to side in L Shadow Position, Lady behind Man.",
+      "footwork": "WF",
+      "alignment": "L Shadow Position",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Lower R arm, slowly taking it behind back.",
+        "On Step 10, take L to L hand hold, slightly to L side at hip level."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in LSP, toe turned out.",
+      "footwork": "T",
+      "alignment": "LSP",
+      "amount_of_turn": "0",
+      "comments": [
+        "L arm slightly forward"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "LSP",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "4&1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side to chasse LRL. End in R Shadow Position, Lady behind.",
+      "footwork": "WF",
+      "alignment": "R Shadow Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slowly reverse arm positions to L arm behind back, R hand slightly to R side"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in RSP, toe turned out.",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "0",
+      "comments": [
+        "R arm slightly forward"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "WF",
+      "alignment": "LSP",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "4&1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side to chasse RLR. End in L Shadow Position, Lady behind.",
+      "footwork": "WF",
+      "alignment": "L Shadow Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slowly reverse arm positions to R arm behind back, L hand slightly to L side"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "2 3 4& 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Release L hand hold on count \"4\". On count \"1\", R arm down and fwd, then release R to R hand hold.",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "2 3 4& 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Same as steps 6-10 of Hockey Stick, end in Open Position.",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 11,
+      "timing": "Take required hold at the end.",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Take required hold at the end.",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "2 3 4& 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in LSP, toe turned out. Behind Man's back. RF to his L.",
+      "footwork": "T",
+      "alignment": "LSP",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "Moving behind Man's back to end LF side and slightly fwd in L Shadow Position, Man in front."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in RSP, toe turned out.",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "0",
+      "comments": [
+        "Behind Man's back, LF to his R."
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight to LF",
+      "footwork": "WF",
+      "alignment": "LSP",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 15,
+      "timing": "4&1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side to chase RLR, moving behind Man's back to R Shadow Position, Man in front.",
+      "footwork": "WF",
+      "alignment": "R Shadow Position",
+      "amount_of_turn": "3/8 to R",
+      "comments": [
+        "RF to side to chase RLR, moving behind Man's back to R Shadow Position, Man in front."
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side to chasse LRL, moving behind Man's back to L Shadow Position, Man in front.",
+      "footwork": "WF",
+      "alignment": "L Shadow Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "2: LF fwd in RSP, toe turned out. Behind Man's back, LF to his R."
+      ]
+    },
+    {
+      "step_number": 17,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "LSP",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 18,
+      "timing": "4&1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side to chasse LRL, moving behind Man's back to L Shadow Position, Man in front.",
+      "footwork": "WF",
+      "alignment": "L Shadow Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slowly reverse arm positions to R arm behind back, L hand slightly to L side"
+      ]
+    },
+    {
+      "step_number": 19,
+      "timing": "2 3 4&",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Same as steps 11-14",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 20,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd and slightly to side in RSP, then turn on RF allowing LF to cross in front without weight (Spiral Turn)",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "3/4 to L",
+      "comments": [
+        "Another option: Do normal RF side. Then, follow with alternative ending below."
+      ]
+    },
+    {
+      "step_number": 21,
+      "timing": "2 3 4& 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Same as steps 6-10 of Hockey Stick, end in Open Position.",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Alternative ending: \"2\": LF fwd, \"3\" RF fwd, spiral, then a three step turn on \"4&1\"."
+      ]
+    },
+    {
+      "step_number": 22,
+      "timing": "Take required hold at the end.",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Take required hold at the end.",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

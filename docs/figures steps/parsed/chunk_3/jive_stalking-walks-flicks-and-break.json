@@ -1,0 +1,146 @@
+{
+  "name" : "Stalking Walks, Flicks and Break (Flicks into Break)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/jive/stalking-walks-flicks-and-break" ],
+  "dance_type" : "JIVE",
+  "level" : "Gold",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Basic In Place, Change of Places Left to Right, Fallaway Rock, Link, Mooch, Reverse Whip, Toe Heel Swivels, Whip",
+  "following_figure_names" : "Fallaway Throwaway, Change of Places Right to Left",
+  "notes" : "This figure may start in Open Position with double hand hold, in which case, replace Fallaway Rock with 1,2 of Link. Double hand hold is retained throughout the figure.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "QQ",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "1,2 of Fallaway Rock LR, 1/8 to L",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "No turn on step 2", "BF, BF; Turn Lady to R on step 1. Increase tone in arms on step 2." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Point LF diagonal forward in PP, without weight, incline body to L",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "T; Keep tone in arms", "Dance with the pointing leg straight and the instep stretched." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Replace weight to LF in PP, return to normal position",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "BF" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Point RF forward and across in PP and CBMP, without weight, incline body to R",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "OE of T; Keep tone in arms", "Dance with the pointing leg straight and the instep stretched." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF in PP, return to normal position",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "BF" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "QQ",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Repeat step 3 and 4 (LF point and step) – no turn",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "T, BF;" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Flick RF forward and across in PP and CBMP, slightly off floor, slight body turn to L",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "Slight body turn to L",
+    "comments" : [ "Foot slightly off floor; Allow R hand to slip slightly rightwards and keep tone in arms.", "Flick leg from knee with the foot about 6 inches from floor and instep stretched.", "Q: Close RF near to LF in Closed Position | 1/4 to R, body turns less", "BF" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Flick LF forward and across in CPP and CBMP, slightly off floor, slight body turn to R",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "Slight body turn to R",
+    "comments" : [ "Foot slightly off floor; Keep tone in arms.", "Flick leg from knee with the foot about 6 inches from floor and instep stretched.", "Q: Close LF near to RF in Closed Position | 1/4 to L, body turns less", "BF" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "QQQQ",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Repeat steps 9-12 (RF flick, close, LF flick, close)",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "same as steps 9-12", "repeat" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd and across in PP and CBMP, knees slightly flexed, slight body turn to L",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "Slight body turn to L",
+    "comments" : [ "Start \"Break\" (step 17-19)", "BF; An inclination of body to L or R can be used on this step and is held on step 18." ]
+  }, {
+    "step_number" : 11,
+    "timing" : "QQ",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Hold position weight on RF, no turn",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "Hold position with front foot flat. Keep tone in arms. (1 3/4 beat)" ]
+  }, {
+    "step_number" : 12,
+    "timing" : "a",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Replace part weight to LF in PP",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "B; Keep tone in arms (1/4 beat)" ]
+  }, {
+    "step_number" : 13,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF in PP",
+    "footwork" : "BF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "None",
+    "comments" : [ "BF" ]
+  } ]
+}

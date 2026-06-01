@@ -1,0 +1,246 @@
+{
+  "figure": [
+    {
+      "name": "Solo Spot Volta to Left",
+      "urls": [
+        "https://www.dancecentral.info/ballroom/international-style/samba/solo-spot-volta"
+      ],
+      "dance_type": "SAMBA",
+      "level": "Bronze",
+      "starting_foot_leader": "LF",
+      "ending_foot_leader": "LF",
+      "starting_foot_follower": "RF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Open Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Maypole, Natural Basic Movement, Reverse Basic Movement, Samba Locks, Samba Walk: Stationary, Side Basic Movement",
+      "following_figure_names": "Whisk To Left, Samba Walk: Stationary (RF), Solo Spot Volta to Left (Lady to Right), Argentine Crosses",
+      "notes": "Note:\nMan and Lady can switch, i.e. Man does Lady's part and vice versa.\nContinuous Spot Voltas: Can repeat 2&3 twice for an additional bar of music, completing another full turn. Count \"a1 a2\". Continue 'pedaling' with the foot (stepping fwd) while keeping the other foot at same place.\nCombination: whisk to underarm turn to R for Lady, then start turning L for Solo Spot Volta. Normally does it in 2's or 4's in same direction and then switch direction.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "1",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "LF in front of RF (Cuban Cross)",
+          "footwork": "BF",
+          "alignment": "Open Position",
+          "amount_of_turn": "1/2 to L",
+          "comments": [
+            "Move LH slightly to L to turn Lady to R, then release hold"
+          ]
+        },
+        {
+          "step_number": 2,
+          "timing": "a",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF to side and slightly back w/o weight. Toe turned out",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to L",
+          "comments": []
+        },
+        {
+          "step_number": 3,
+          "timing": "2",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "Take part of weight to RF and swivel on ball of LF, keeping it in place. End LF in front of RF (Cuban Cross) in Closed Position",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to L",
+          "comments": [
+            "Regain required hold at end of turn",
+            "Heel lowers at end of turn"
+          ]
+        },
+        {
+          "step_number": 4,
+          "timing": "1",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "RF in front of LF (Cuban Cross)",
+          "footwork": "BF",
+          "alignment": "Open Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "Start with LF in front, RF cuban cross in back",
+            "Lady's RH patty cake with Man's LH."
+          ]
+        },
+        {
+          "step_number": 5,
+          "timing": "a",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Turn 1/2 to R (like body is unwinding)",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to R",
+          "comments": []
+        },
+        {
+          "step_number": 6,
+          "timing": "1",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Weight on RF, RF crossed in front of LF, L knee tucked behind R knee",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "RF crossed in front of LF"
+          ]
+        },
+        {
+          "step_number": 7,
+          "timing": "a",
+          "role": "FOLLOWER",
+          "foot": "LF",
+          "action": "LF to side and slightly back w/o weight. Toe turned out. 1/2 to R over 2&3",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to R",
+          "comments": []
+        },
+        {
+          "step_number": 8,
+          "timing": "2",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Take part of weight to LF and swivel on ball of RF, keeping it in place. End RF in front of LF (Cuban Cross) in Closed Position",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "End RF in front of LF (Cuban Cross) in Closed Position",
+            "To shorten the distance with Man, slide RF a bit fwd. L knee tucked behind R knee.",
+            "Heel lowers at end of turn"
+          ]
+          }
+      ]
+    },
+    {
+      "name": "Solo Spot Volta to Right",
+      "urls": [
+        "https://www.dancecentral.info/ballroom/international-style/samba/solo-spot-volta"
+      ],
+      "dance_type": "SAMBA",
+      "level": "Bronze",
+      "starting_foot_leader": "LF",
+      "ending_foot_leader": "LF",
+      "starting_foot_follower": "RF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Open Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Argentine Crosses, Corta Jaca, Natural Basic Movement, Reverse Basic Movement, Samba Walk: Side, Samba Walk: Stationary, Side Basic Movement",
+      "following_figure_names": "Whisk To Right, Samba Walk: Stationary (LF), Solo Spot Volta to Right (Lady to Left), Argentine Crosses (started with RF)",
+      "notes": "Note:\nMan and Lady can switch, i.e. Man does Lady's part and vice versa.\nContinuous Spot Voltas: Can repeat 2&3 twice for an additional bar of music, completing another full turn. Count \"a1 a2\". Continue 'pedaling' with the foot (stepping fwd) while keeping the other foot at same place.\nCombination: whisk to underarm turn to R for Lady, then start turning L for Solo Spot Volta. Normally does it in 2's or 4's in same direction and then switch direction.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "1",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "LF in front of RF (Cuban Cross)",
+          "footwork": "BF",
+          "alignment": "Open Position",
+          "amount_of_turn": "1/2 to L",
+          "comments": [
+            "Move LH slightly to L to turn Lady to R, then release hold"
+          ]
+        },
+        {
+          "step_number": 2,
+          "timing": "a",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF to side and slightly back w/o weight. Toe turned out",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to L",
+          "comments": []
+        },
+        {
+          "step_number": 3,
+          "timing": "2",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "Take part of weight to RF and swivel on ball of LF, keeping it in place. End LF in front of RF (Cuban Cross) in Closed Position",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to L",
+          "comments": [
+            "Regain required hold at end of turn",
+            "Heel lowers at end of turn"
+          ]
+        },
+        {
+          "step_number": 4,
+          "timing": "1",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "RF in front of LF (Cuban Cross)",
+          "footwork": "BF",
+          "alignment": "Open Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "Start with LF in front, RF cuban cross in back",
+            "Lady's RH patty cake with Man's LH."
+          ]
+        },
+        {
+          "step_number": 5,
+          "timing": "a",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Turn 1/2 to R (like body is unwinding)",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to R",
+          "comments": []
+        },
+        {
+          "step_number": 6,
+          "timing": "1",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Weight on RF, RF crossed in front of LF, L knee tucked behind R knee",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "RF crossed in front of LF"
+          ]
+        },
+        {
+          "step_number": 7,
+          "timing": "a",
+          "role": "FOLLOWER",
+          "foot": "LF",
+          "action": "LF to side and slightly back w/o weight. Toe turned out. 1/2 to R over 2&3",
+          "footwork": "T",
+          "alignment": "I/E of T (pressure)",
+          "amount_of_turn": "1/2 to R",
+          "comments": []
+        },
+        {
+          "step_number": 8,
+          "timing": "2",
+          "role": "FOLLOWER",
+          "foot": "RF",
+          "action": "Take part of weight to LF and swivel on ball of RF, keeping it in place. End RF in front of LF (Cuban Cross) in Closed Position",
+          "footwork": "BF",
+          "alignment": "Closed Position",
+          "amount_of_turn": "1/2 to R",
+          "comments": [
+            "End RF in front of LF (Cuban Cross) in Closed Position",
+            "To shorten the distance with Man, slide RF a bit fwd. L knee tucked behind R knee.",
+            "Heel lowers at end of turn"
+          ]
+          }
+      ]
+    }
+  ]
+}

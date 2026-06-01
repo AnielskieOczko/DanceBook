@@ -1,0 +1,165 @@
+{
+  "name": "Sliding Doors",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/sliding-doors"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "RSP",
+  "preceding_figure_names": "Advanced Hip Twists, Alemena, Closed Hip Twist, Curl, Fan, Open Hip Twist, Opening Out From Reverse Top, Rope Spinning, Spiral, Three Alemanas, Three Threes",
+  "following_figure_names": "Progressive Walks Forward, Spiral",
+  "notes": "Alternative hold: Man can keep L hand below chest level, taking R to R hand hold at end of 3, releasing hold with L hand. Then lead Lady with R hand to pass in front of him to R side, releasing hold at end of 5, allowing R hand to trail along Lady's R arm until it reaches her R shoulder blade on step 6. When following with Lady's Spiral, man lead Lady into her spiral turn by lowering L hand, then immediately gaining normal Fan or Open Position hold at end of last step. When following with Progressive Walks Forward, retain R Shadow hold. Variation w/ Lady's R turn to hip twist position: 2: Cucaracha LF to side, whole foot; 3: weight to RF, LF push floor, L heel lift, L hip up, hip diagonally to R and then rotate to R, collect LF near R ankle and then step forward to Man's R side on 4. 4: LF forward to Man's R side. L arm to side, R hand on Man's chest. Preceding Figures: Advanced Hip Twists, Alemena, Closed Hip Twist, Curl, Fan, Open Hip Twist, Opening Out From Reverse Top, Rope Spinning, Spiral, Three Alemanas, Three Threes. Following Figures: Progressive Walks Forward (in Right Shadow Position, hold 2 or 3 (Kiki Walks)), Spiral.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward from Fan Position, slightly release left arm tone",
+      "footwork": "F",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to Right Foot",
+      "footwork": "WF",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "0",
+      "comments": [
+        "Contract L arm"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close Left Foot to Right Foot",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Raise L hand in front of Lady's head"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cuban Cross (RF behind LF) with 1/8 turn to Right",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Extend L arm fwd. Take R to L hand hold (Double hold) at waist level."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward and slightly leftwards",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "0",
+      "comments": [
+        "Lower L arm to waist level. R arm behind Lady's back."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close Right Foot to Left Foot in RSP",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "0",
+      "comments": [
+        "Retain tone in arms."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side with slight body turn to Right",
+      "footwork": "B",
+      "alignment": "Slight body turn to R",
+      "amount_of_turn": "0",
+      "comments": [
+        "Option: Man can do side Cucarachas from step 7 to 12. Footwork: Flat on 8 and 11."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to Right Foot; close LF to RF in TP, slight body turn to Left to normal position",
+      "footwork": "WF",
+      "alignment": "0",
+      "amount_of_turn": "0",
+      "comments": [
+        "Extend arms slightly fwd; retain tone in arms."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close Right Foot to Left Foot, start in Fan Position",
+      "footwork": "T",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "No turn",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step back in RSP",
+      "footwork": "F",
+      "alignment": "RSP",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

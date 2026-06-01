@@ -1,0 +1,56 @@
+{
+  "name" : "Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Outside Position",
+  "preceding_figure_names" : "Back Lock, Cross Swivel, Hover Corte, Natural Turn, Natural Turn And Back Lock, Progressive Chasse To Right, Tipsy To L",
+  "following_figure_names" : "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quick Open Reverse (at corner, when ended DC), Fish Tail (at corner, when ended DC), Tipsy To R (1-4 at corner, then followed by Tipsy to L), Four Quick Run (at corner, LF back with Lady OP, TH, S into Four Quick Run), V6 (2-12, at corner, LF back with Lady OP, TH, S into 2-12 V6), Tipsy To L (then into 2-12 V6 DC or 2-5 Back Lock down LOD), Six Quick Run (at corner, LF back with Lady OP, TH, S into Six Quick Run)",
+  "notes" : "The man begins shaping, bending his spine to the right. After the check step, he returns his spine to the left. The degree to which the direction of movement changes determines how much checking is done on the check step. To continue in a line down the floor, there is hardly any check at all.\nSilver/Gold: Underturned Tipple Chasse: when starting BLOD after 1-3 of Natural Turn, less turn can be made so this ends with man facing new LOD. Then, step 4 will be to the side, flex knees to check the turn. Continue with 2-5 Forward Lock, moving DC of new LOD. Step 5 as Lady must be taken diagonal back when this alignment is used.\nRise will be: slight rise on 2 and 3, lower on 4, commence to rise e/o 4, continue to rise on 5 and 6, up on 7, lower e/o 7.\nfootwork: step 4 will be TH, and IE of T of LF\nSway: to R with head turned to R (Lady to L) may be used.\nThis can be used along the side of the room turning 3/8 on the Chasse to end DC. Follow with Quick Open Reverse or Fishtail.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back | BLOD | TH | start to turn R",
+    "footwork" : "TH",
+    "alignment" : "--",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side | Face new LOD",
+    "footwork" : "T",
+    "alignment" : "--",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "cont to rise on 2 and 3" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd | LOD | HT | start to turn R",
+    "footwork" : "HT",
+    "alignment" : "--",
+    "amount_of_turn" : "--",
+    "comments" : [ "start to rise e/o 1" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side | Back new LOD",
+    "footwork" : "T",
+    "alignment" : "--",
+    "amount_of_turn" : "1/4",
+    "comments" : [ "cont to rise on 2 and 3" ]
+  } ]
+}

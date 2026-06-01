@@ -1,0 +1,176 @@
+{
+  "name": "Open Hip Twist",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/open-hip-twist"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Cuban Break RF, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
+  "following_figure_names": "Alemana, Hockey Stick, Hip Twist Spiral, Open Basic Movement, Time Step LF, Open Hip Twist, Curl, Cuban Break LF, Split Cuban Break LF, Chase, Turkish Towel, Sweetheart, Follow My Leader, New York LSP, Spot or Switch Turn To R, Underarm Turn To L, Three Cha Cha Chas Forward, Reverse Top",
+  "notes": "If a Spiral is done, finish with Runaway Chasse. (LF fwd, RF fwd, turn 1/2 to end LF back). See types of chasses in Cha Cha Technique.\nIf no Spiral: this can also finish in Open Position (with diagonal side chassse or back chassse), Contact Position (with side chassse), or CPP",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward with left foot",
+      "footwork": "F",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Slightly extend L arm fwd, close left thumb."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot",
+      "footwork": "WF",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Slip Chasse left‑right‑left",
+      "footwork": "L,R,L",
+      "alignment": "Side",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Brace L arm towards end of preceding beat, then L arm to side"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back, small step",
+      "footwork": "B",
+      "alignment": "Backing",
+      "amount_of_turn": "0",
+      "comments": [
+        "Transfer weight to LF | 1/8 to L over 7-10"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to left foot, turn 1/8 to L",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Increase tone in L arm"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side to chasse RLR, ending in Fan Position",
+      "footwork": "R,L,R",
+      "alignment": "Fan Position",
+      "amount_of_turn": "Ending in Fan Position",
+      "comments": [
+        "Ending in Fan Position. Body completes turn."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back with right foot",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Start from Open Position.",
+        "Receive weight, step RF back, but keep weight forward, not pulling Man back.",
+        "Hook RH finger on Man's hand. Extend R arm. Delayed Walk."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to left foot",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Fwd Lock RLR",
+      "footwork": "R,L,R",
+      "alignment": "Open Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Response to Man's lead, Lady brings her weight well fwd at end of this step.",
+        "match arm tone to Man's. Allow R arm to bend."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Fwd | 1/4 to R",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn starts at tend of previous beat. Turn is initiated from hips. Hips turn more than upper body."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd and slightly across, then turn to end RF back | 1/8 to L",
+      "footwork": "F,R",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Turn is initiated from hips. Hips turn more than upper body.",
+        "Advanced Option: At end of \"3\", do a Spiral, ending LF wrapped loose in front of RF, facing away from Man."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back Lock LRL, end in Fan Position",
+      "footwork": "L,R,L",
+      "alignment": "Fan Position",
+      "amount_of_turn": "Body completes turn",
+      "comments": [
+        "If a Spiral is done, finish with Runaway Chasse. (LF fwd, RF fwd, turn 1/2 to end LF back). See types of chasses in Cha Cha Technique.",
+        "If no Spiral: this can also finish in Open Position (with diagonal side chassse or back chassse), Contact Position (with side chassse), or CPP"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "name": "Closed Promenade",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/closed-promenade?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Reverse Turn,Chase,Contra Check,Fallaway Four Step,Fallaway Promenade,Five Step,Four Step,Natural Promenade Turn,Natural Twist Turn,Open Finish,Open Promenade,Open Reverse Turn, Lady In Line,Open Reverse Turn, Lady Outside,Oversway,Progressive Link,Progressive Side Step Reverse Turn",
+  "following_figure_names": "Walk (LF),Progressive Side Step,Progressive Link,Back Corte,LF Rock,Open Reverse Turn, Lady Outside,Open Reverse Turn, Lady In Line,Progressive Side Step Reverse Turn,Reverse Outside Swivel,Basic Reverse Turn,Fallaway Reverse and Slip Pivot,Four Step,Outside Swivel,Four Step Change,Brush Tap,Fallaway Four Step,Oversway,Five Step,Contra Check",
+  "notes": "Man may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in closed position, along line of dance, pointing diagonal wall, heel",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Man's first step needs to be side, not forward, i.e., he does not turn his left foot out to point the direction he is stepping."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward and across in closed position, along line of dance, pointing diagonal wall, heel",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Be in sync with lady, flexing knee to start shifting weight (don't tilt body though), moving across the feet."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly forward, pointing diagonal wall, inside edge of foot",
+      "footwork": "IE",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF slightly back, facing diagonal wall, whole foot",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "If feet don't close, Man's R leg will be in Lady's way.",
+        "Rotate right hip to close the lady up."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side in closed position, along line of dance, pointing diagonal center, heel",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Timing is \"hold on 1, step on 2\": R knee moving forward, body weight shifting with hips. When foot can't hold anymore, lift and strike and place RF out strong. (inside edge of heel, then flat, roll onto it.)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF forward and across in closed position, along line of dance, pointing diagonal center, heel, contrary body movement",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep L hip \"behind\" Man's hip. Do not move head. In sync with Man's leg movement, track behind his R leg."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, backing diagonal wall, inside edge of ball heel, 1/4 turn to left between 2-3",
+      "footwork": "H",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "RF turned in. Two feet are in funny position now: RF BDW, LF DC. \"pigeon toe'ed\" position is mid point (can rock for practice). roll onto RF.",
+        "This is partial weight transfer to RF. R hip should be higher. RF and center of gravity should not go too far pass. Do not overshoot weight, body would be slanted to L do not put too much weight on RF, it would become too heavy.",
+        "Head sharp flip to L, keep the volume between 2 heads, extended right away (do not close with Man and then extend in 2 steps). It's very easy to get in front of Man during transition of steps. Be very aware to continue to stretch L during the steps.",
+        "Keep frame solid: don't lose R arm, R arm fwd to Man with tone, it doesn't go back, or becomes \"loose\". keep R elbow out, not down.",
+        "This is the sharp, accent step. (compared to next step \"LF closes to RF\" is softer and smoother)"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF slightly forward, backing diagonal wall, whole foot",
+      "footwork": "H",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Do not slide foot. Left foot roll off and end on ball of front of LF, then lift and place LF close to RF (could have a very small gap), slightly forward.",
+        "Softer and smoother step, not the sharp accent.",
+        "Back to starting foot position."
+      ]
+    }
+  ]
+}

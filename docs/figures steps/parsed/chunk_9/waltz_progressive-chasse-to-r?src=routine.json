@@ -1,0 +1,96 @@
+{
+  "name" : "Progressive Chasse to Right",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Facing DW",
+  "preceding_figure_names" : "Closed Change RF, Closed Wing, Double Reverse Spin, Fallaway Reverse And Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names" : "Natural Turn (4-6), Hesitation Change (4-6), Closed Impetus, Back Lock, Fallaway Whisk (standard, or with turn at corner), Back Whisk (standard, or with turn at corner), Open Impetus, Outside Spin (underturned)",
+  "notes" : "Bronze: The Progressive Chassé to R could be started facing LOD and ended backing DW (3/8 turn) when the amounts of turn would be:\nMan: 1/4 between 1-2, 1/8 between 2-3 (body turns less), no further turn\nLady: 3/8 between 1-2 (body turns less), slight body turn to L on 3, no further turn.\nSilver and Gold: Started facing DC and ended backing LOD (3/8 turn), or started facing DC and ending backing DC (1/2 turn). If 1/2 turn is made the amounts of turn will be:\nMan: 1/4 between 1-2, 1/8 between 2-3, 1/8 between 4-5; Lady: 3/8 between 1-2 (body turns less). Body completes turn on 3, 1/8 between 3-4 (body turns less)\nDon't rush, stay on top longer, keep with Man. Give R side to Man.\nKeep head left\nDo not rush, stay on top longer, keep with Man. Give R side to Man.\nLeft shoulder is quite forward.\nFinishing position: hips lifted to Man (especially left side), don't just turn upper body.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "fwd",
+    "footwork" : "F",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "",
+    "comments" : [ "HT", "Start to turn L", "CBM", "start to rise e/o 1" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side",
+    "footwork" : "T",
+    "alignment" : "Backing Wall",
+    "amount_of_turn" : "1/8 between 1 and 2",
+    "comments" : [ "continue to rise on 2 and 3" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "&",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "closes to RF",
+    "footwork" : "T",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/8 between 2 and 3, body turns less",
+    "comments" : [ "Up", "lower e/o 4" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "to side and slightly back",
+    "footwork" : "TH",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "--" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "back",
+    "footwork" : "TH",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "",
+    "comments" : [ "Begin to turn L", "CBM", "start to rise e/o 1", "NFR", "Inside of turn, don't dance too quickly ahead of Man.", "Don't stick foot out early, lower body first.", "let the body initiate smooth movement.", "R shoulder and hip connecting down, axis point, strong stretch through left side of body.", "RF straight back.", "Turn your hips from the crossed position" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "to side",
+    "footwork" : "T",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/4 between 1 and 2, body turns less",
+    "comments" : [ "continue to rise on 2 and 3", "Pull ab muscle back to spine.", "Keep centers long, not push tummy out to connect with Man.", "Give R side to Man." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "&",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "closes to LF",
+    "footwork" : "T",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "slight body turn",
+    "comments" : [ "--" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "to side and slightly fwd",
+    "footwork" : "TH",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Left shoulder is quite forward.", "Finishing position: hips lifted to Man (especially left side), don't just turn upper body." ]
+  } ]
+}

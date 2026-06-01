@@ -1,0 +1,54 @@
+{
+ "name": "Contra Check",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/waltz/contra-check"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Double Reverse Spin, Fallaway Reverse and Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn",
+  "following_figure_names": "Chasse From Promenade Position, Weave From Promenade Position, Cross Hesitation, Wing, Left Whisk",
+  "notes": "Focus: smoothness, rotation, elasticity, lightness, softness, finish the extension.\nPrep: bend/lower left knee, shoulder level off, rotate hips to left. Do not send stomach muscle forward, i.e. do not stick tummy up to Man at this time. connect center into hip joint, hip has to be able to move.\nBig step back after rotating hips (if step is too short, upper body weight will take over when doing contra check), also need bigger step to create more extension. CMBP (do not get into Man's space).\nRF point back first, RF toe turned in (for better balance), then on ball of feet, keep right heel up (solid, not heel moving down and then up), weight split. body rotate to left, but keep left side up to Man (though body is turning left and shaping). Don't break neck.\nKeep left toe down on floor, do not lift L toe. LF is pretty much flat on floor.\nFlex both knees, at this time, weight in the middle, not on back foot. Get there first, then give (R) hip and ribs to Man for extension, left leg can go more straight at this time, allowing for more extension, putting a bit more weight on RF, take the center back, but keep R heel up, R leg is bent, then extend upper body diagonally back. Extend R arm to Man.\nThe whole body is not one straight piece. There is torch in upper body - rotation and sway (do not just bend backward) and at tail end, stretch even more before recovering. The elasticity doesn't stop.\nContinuous extension and all the way to head. Upper body, not locked and still, but stay soft and flexible, go and fill the space Man created with his R arm/hand.\nDon't \"sit\", don't just go \"down\" which feels heavy. Continuous shaping and then bounce up. Man start recovering after Lady finish extending head.\nArms belong to partner, never pull arms back. extend the arm to give space.\nFrame: breathe, need to feel \"free\". Create elasticity feeling, continuous movement out and come back (no stopping and then rotate. movement is smooth and light.)\nCount 2: Transfer weight fwd to LF | Facing DC against LOD | T | Body turn to R | -- | Rise e/o 2\nPush off back foot into PP. Time the push off together with Man. Feet swivel underneath the body. Need to be individually balanced.\nMake sure to stay very left (has tendency to shift to R, get into Man's space). Keep big frame and give R side to Man, don't fall to PP.\nAt end, start articulating head turn\nCount 3: RF to side in PP | FDC, moving LOD | TH | 1/4 to R between 2-3 | -- | Up. Lower e/o 3\nArticulate head.\nMake sure R side is to Man.\nPrep for next step: Lower first and step big.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP | DW, pointing almost LOD | H or Ball Flat | Body turn to L | CBM | Down with knees slightly flexed",
+      "footwork": "Ball Flat",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "If preferred, could be LF fwd with foot flat."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight back to RF | DW | T | Body turn to R | -- | Rise e/o 2",
+      "footwork": "T",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side in PP | FDW, moving along LOD | TH | -- | -- | Up, Lower e/o 3",
+      "footwork": "TH",
+      "alignment": "FDW",
+      "amount_of_turn": "1/4 to R between 2-3",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Natural Pivot Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Rumba Cross",
+  "notes": "Difference between a Pivot Turn and a Spin Turn is that there is no Rise in Pivot Turn. There is Rise (and brush) in Spin Turn. At corner: turn 3/8 to face DW on new LOD. Turn amount is up to 1/2 to face BLOD, followed by any Natural figure.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward with RF, FDW, start to turn R, sway, CBM, start rise",
+      "footwork": "F",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side step, BDC, T, turn 1/4 to R, sway right, up",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Closes to LF, BLOD, TH, turn 1/8 to R, sway right, up then lower",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Back step, point BDW, turn up to 1/2 turn, sway, CBM",
+      "footwork": "THT",
+      "alignment": "Point BDW",
+      "amount_of_turn": "R up to 1/2 turn",
+      "comments": []
+    }
+  ]
+}

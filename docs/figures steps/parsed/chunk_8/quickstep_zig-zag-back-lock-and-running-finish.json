@@ -1,0 +1,295 @@
+{
+  "name": "Zig-Zag, Back Lock And Running Finish",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Outside Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Natural Turn, Reverse Pivot, Forward Lock",
+  "following_figure_names": "Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Forward Lock, Quick Open Reverse",
+  "notes": "Could use the alternative Running Finish timing QQSS (7-10).",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "HT",
+        "Sway(S)",
+        "CBM",
+        "Start to turn L"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "F",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Body turns less",
+        "Sway(S)",
+        "slight CBM",
+        "Start to rise e/o 3",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Continue to rise on 4 and 5"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "crosses in front of RF",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "diagonally back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 7"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly fwd",
+      "footwork": "F",
+      "alignment": "Pointing to LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Start to turn L"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF (Heel Turn)",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Body turns less",
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Body completes turn",
+        "Sway(S)",
+        "slight CBM",
+        "Start to rise e/o 3",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 17,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "diag fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Continue to rise on 4 and 5"
+      ]
+    },
+    {
+      "step_number": 19,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "crosses behind LF",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 20,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "diagonally fwd, preparing to step OP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 21,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 7"
+      ]
+    },
+    {
+      "step_number": 22,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 25,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, R side leading",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Sway(R)",
+        "Lower e/o 9"
+      ]
+    },
+    {
+      "step_number": 26,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

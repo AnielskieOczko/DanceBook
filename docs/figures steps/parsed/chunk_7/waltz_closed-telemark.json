@@ -1,0 +1,76 @@
+{
+  "name" : "Telemark (Closed Telemark)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark" ],
+  "dance_type" : "WALTZ",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Change RF, Closed Wing, Double Reverse Spin, Fallaway Reverse and Slip Pivot, Hesitation Change, Reverse Pivot, Reverse Turn, Wing",
+  "following_figure_names" : "Closed Wing, Natural Spin Turn, Natural Turn",
+  "notes" : "Next step, Man steps OP. Keep head to right; rotate body underneath without sharp head movement.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step forward with left foot",
+    "footwork" : "F",
+    "alignment" : "DC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Use CBM and rise a bit early to lead heel turn." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step to side with right foot",
+    "footwork" : "T",
+    "alignment" : "DW",
+    "amount_of_turn" : "almost 3/8 between 1-2",
+    "comments" : [ "Get strong rotation through the feet, do not come off RF too early, which will allow Lady to turn. A little hover helps to keep Lady in front of Man." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side and slightly forward with left foot",
+    "footwork" : "F",
+    "alignment" : "Pointing",
+    "amount_of_turn" : "slightly over 3/8 between 2-3, body turns less",
+    "comments" : [ "Keep moving, don't hover and stop, strong, bigger step (Man is waiting, need more power). Keep head position (which will make it shape to right)." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step back with right foot",
+    "footwork" : "B",
+    "alignment" : "DC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Keep your own balance.", "When starting the figure, feel left hip flexor working, do not think about R leg moving back, think about standing on the L leg to get weight moving into the foot.", "Do not think about shoulder rotation at all, just think about strong diagonal stretch, stretching the left side.", "Turn is all going to happen through base area. Lower center/hips are rotating. From sternum area, feel strong leftward, upward sway from sternum up, no rotation through shoulders. If you rotate shoulder, you'll end up on Man's left side.", "Step straight back, not off to the side. Head: keep head at the same place, rotate body underneath and head ends up on the right and keep it there" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Close to right foot (Heel Turn)",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "3/8 between 1-2",
+    "comments" : [ "Heel turn, the feeling is the turn is mostly done on RF, has a slight feeling of pushing off LF, then RF step back on 3 to finish.", "Stay connected with Man." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step to side and slightly back with right foot",
+    "footwork" : "T",
+    "alignment" : "DW",
+    "amount_of_turn" : "3/8 between 2-3, body turns less",
+    "comments" : [ "Keep moving, don't hover and stop, strong, bigger step (Man is waiting, need more power). Keep head position (which will make it shape to right).", "Keep head to right; rotate body underneath without sharp head movement, just keep head at same place starting at 1, not later." ]
+  } ]
+}

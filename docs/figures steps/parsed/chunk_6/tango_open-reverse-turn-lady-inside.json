@@ -1,0 +1,128 @@
+{
+  "name": "Open Reverse Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Natural Promenade Turn (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Promenade Link (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Back Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Fallaway Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "This is sort of equivalent of heel turn in Tango. Heel turns are often said to be lead with early rise.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP, DC, H",
+      "footwork": "H",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Prepare leading Lady the heel turn by rising early."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, Backing LOD, BH, 3/8 to L",
+      "footwork": "",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "The man steps across the lady on step 2. In contrast to the outside partner version, where step 2 is oriented BDW, this step should end backing LOD."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back L side leading, Down LOD, IE of BH",
+      "footwork": "",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in CBMP, DC, BH, 1/8 to L",
+      "footwork": "",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly back, Pointing DW, IE of foot, 1/4 to L",
+      "footwork": "",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF slightly back, Facing DW, Whole Foot",
+      "footwork": "Whole Foot",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP, BDC, BH, CBM",
+      "footwork": "",
+      "alignment": "BDC",
+      "amount_of_turn": "",
+      "comments": [
+        "Toe turned in facing Wall or DW."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "L Heel closes to R Heel, Toe Pointing down LOD, Whole Foot, 3/8 to L",
+      "footwork": "H",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Man's rise and cutting across induce Lady's straightening knee a bit and close heels. Both knees are soft (not locked) and slightly bent."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in R side leading, Down LOD, H",
+      "footwork": "H",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

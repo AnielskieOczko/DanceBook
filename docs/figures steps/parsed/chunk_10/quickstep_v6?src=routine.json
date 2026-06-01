@@ -1,0 +1,235 @@
+{
+  "name": "QuickstepV6",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/v6?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Backing DC",
+  "ending_position": "Facing DW",
+  "preceding_figure_names": "Closed Impetus, Fish Tail, Forward Lock, Four Quick Run, Hover Corte, Natural Spin Turn, Progressive Chasse, Progressive Chasse To Right, Quarter Turn to Right, Running Finish, Tipple Chasse To Right, Tipsy To L",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Fish Tail, Quick Open Reverse (after 6-8 of V6 overturned to LOD), Four Quick Run (at corner, LF back with Lady OP, TH, S, into Four Quick Run), Tipsy To L (into 2-5 Back Lock down LOD), Six Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes": "For side leading position: low center (hip, belly button area) is turned ~ 1/8 relative to feet, then upper body (sternum) is turned another 1/8.\nPreceding Figures\nClosed Impetus\nFish Tail\nForward Lock\nFour Quick Run\nHover Corte\nNatural Spin Turn\nProgressive Chasse\nProgressive Chasse To Right\nQuarter Turn to Right\nRunning Finish\nTipple Chasse To Right\nTipsy To L\nFollowing Figures\nRunning Right Turn\nNatural Turn And Back Lock\nNatural Pivot Turn\nNatural Spin Turn\nNatural Turn With Hesitation\nNatural Turn\nQuarter Turn to Right\nForward Lock\nFish Tail\nQuick Open Reverse (after 6-8 of V6 overturned to LOD)\nFour Quick Run (at corner, LF back with Lady OP, TH, S, into Four Quick Run)\nTipsy To L (into 2-5 Back Lock down LOD)\nSix Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "e/o 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to rise e/o 1",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back R side leading",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "continue to rise on 2 and 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "crosses in front of RF",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "e/o 4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Up. Lower e/o 4"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "e/o 5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to rise e/o 5",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "T",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back ... start to turn L",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "CBM",
+        "continue to rise on 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/4 between 6-7",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "TH",
+      "alignment": "Point DW",
+      "amount_of_turn": "1/4 between 6-7 Body turns less",
+      "comments": [
+        "Point DW",
+        "1/4 between 6-7 Body turns less",
+        "Up. Lower e/o 8"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "H",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "H",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "e/o 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd L side leading",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "continue to rise on 2 and 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "crosses behind LF",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "-"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "e/o 4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd, preparing to step OP",
+      "footwork": "TH",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Up, Lower e/o 4"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "e/o 5",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "HT",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to rise e/o 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "start to turn L",
+        "CBM",
+        "Continue to rise on 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/4 between 6-7",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "TH",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 between 6-7",
+      "comments": [
+        "Shape head to right on QQ (step 5 and 6) and return head to normal on last S.",
+        "RF needs to swivel to left to avoid hitting knee with Man on S"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Head returns to normal left."
+      ]
+    }
+  ]
+}

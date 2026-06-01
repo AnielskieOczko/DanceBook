@@ -1,0 +1,96 @@
+{
+  "name" : "Travelling Bota Fogos Back",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/traveling-bota-fogos-back" ],
+  "dance_type" : "SAMBA",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Promenade Position",
+  "preceding_figure_names" : "Maypole, Natural Basic Movement, Reverse Basic Movement, Reverse Roll, Reverse Turn, Side Basic Movement",
+  "following_figure_names" : "Samba Walk in PP: RF, Samba Walk: Side, Traveling Volta to Left (turning to face partner on step 1), Bota Fogos To Promenade and Counter Promenade (4-9), Foot Change 5: Promenade Position to Right Contra Position",
+  "notes" : "Bronze Level figure. Detailed description includes bounce action, weight changes, and turning instructions for both leader and follower. The figure involves a series of back steps in CBMP, side steps with 1/4 turns, and ending in promenade position with slight body turn. Comments include technique cues such as \"Nail the RF\", \"Contract and bounce first\", and \"Apply pressure to IE of LF\".",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1/4 to L over 2 & 3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back",
+    "footwork" : "BF",
+    "alignment" : "No turn",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "I/E of T (pressure)" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "1/4 to R over 5 and 6",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side w/o weight",
+    "footwork" : "BF",
+    "alignment" : "No turn",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Pressure on IE of T" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Take minimal weight to LF and replace to RF",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back in CBMP",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "RF back w/o weight, toe turned out",
+    "footwork" : "I/E of T (pressure)",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Take minimal weight to RF and replace weight to LF in PP",
+    "footwork" : "Slight body turn to L",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "See Leader Technique in Traveling Bota Fogos Forward." ]
+  } ]
+}

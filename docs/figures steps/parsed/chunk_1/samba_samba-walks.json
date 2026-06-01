@@ -1,0 +1,52 @@
+{
+ "name": "Samba Walks in PP Position (RF and LF) (Promenade Samba Walks)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/samba-walks"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Maypole, Criss Cross Voltas, Shadow Circular Volta, Shadow Traveling Volta",
+  "following_figure_names": "Shadow Circular Volta, Shadow Traveling Volta, Whisk To Left",
+  "notes": "Samba walks can be danced on same foot as partner when in R shadow position.\nSilver & Gold: Samba Walks are danced in RSP during Rolling off the Arm.\nPreceding Figures for Samba Walk in PP: RF\nBota Fogos To Promenade and Counter Promenade\nCriss Cross Bota Fogos (Shadow Bota Fogos)\nFoot Change 4: Right Shadow Position to Promenade Position\nFoot Change 6: R Contra Position to Promenade Position\nMaypole\nNatural Basic Movement\nReverse Basic Movement\nSamba Walk in PP: LF\nShadow Circular Volta with LF\nShadow Traveling Volta commenced with LF\nSide Basic Movement\nTraveling Bota Fogos Back\nFollowing Figures for Samba Walk in PP: RF\nShadow Circular Volta with RF\nShadow Traveling Volta commenced with RF\nSamba Walk in PP: RF\nSamba Walk: Side\nWhisk To Left\nPreceding Figures for Samba Walk in PP: LF\nCriss Cross Voltas\nNatural Basic Movement\nPromenade And Counter Promenade Runs\nReverse Basic Movement\nRolling Off The Arm\nSamba Walk in PP: RF\nSamba Walk: Side\nBota Fogos To Promenade and Counter Promenade (4-9)\nSide Samba Walk in Promenade Position\nGoing from Side Samba walk to Boto Fogos: man keep the forward motion to keep lady moving, man holds back (without stepping back).",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd in PP",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": "a",
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back in PP, w/o weight",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "take minimal weight and draw LF back in PP",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

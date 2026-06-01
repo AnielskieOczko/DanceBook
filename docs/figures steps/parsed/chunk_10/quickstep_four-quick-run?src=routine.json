@@ -1,0 +1,196 @@
+{
+  "name": "Four Quick Run",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Chasse Reverse Turn, Closed Impetus, Closed Telemark, Fish Tail, Forward Lock, Hover Corte, Natural Spin Turn, Progressive Chasse, Progressive Chasse To Right, Quarter Turn to Right, Quick Open Reverse, Running Finish, Six Quick Run, Tipple Chasse To Right, V6",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, V6 (at corner, LF back with Lady OP, TH, S, into 2-12 V6), Fish Tail, Tipsy To L (into 2-5 Back Lock down LOD), Six Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes": "Don't be back-weighted, avoid being steppy, keep smooth motion.\nKeep left side strongly to the Man all through the steps.\nA series of backward steps - keep body upward and forward toward partner.\nLengthen R side of body, take head strongly left, outside of L elbow.\nDo not think about rotating upper body to R, which can take spine off standing leg.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Backing LOD",
+      "footwork": "B",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "CBM",
+        "Rise e/o 1",
+        "start to turn L"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "To side and slightly forward",
+      "footwork": "BF",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "3/8 between 1-2 body turns less",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward in CBMP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "slight body turn to L",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Diagonal forward",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Diagonal forward",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward in CBMP, OP",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "--",
+      "comments": [
+        "start to turn L",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "To side",
+      "footwork": "F",
+      "alignment": "Backing wall",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Up",
+        "Swivel RF so R knee won't be in Man's way"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back in CBMP",
+      "footwork": "B",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/8 between 2-3 body turns less",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Diagonal back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Crosses in front of RF",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Up"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Diagonal back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "--",
+        "CBM"
+      ]
+    }
+  ]
+}

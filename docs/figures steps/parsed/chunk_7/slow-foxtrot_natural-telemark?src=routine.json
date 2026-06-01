@@ -1,0 +1,196 @@
+{
+  "name": "Natural Telemark",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark?src=routine"
+  ],
+  "dance_type": "FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Reverse Turn, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step, Change Of Direction, Hover Telemark, Reverse Wave, Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending",
+  "notes": "Note -- 1/2 or 5/8 turn may be used at a corner. Amount of turn in each case will be 1/4 between 1/2, whether started facing LOD or DW.\nWhen underturned, the Lady will always turn 3/8 between 1-2.\nThere is RF toe release when LF is stepping back on this step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "HT",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "side (small step)",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/2 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag fwd, preparing to step OP, L side leading",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "",
+      "alignment": "Backing DW",
+      "amount_of_turn": "TH",
+      "comments": [
+        "start to turn R",
+        "Sway(S)",
+        "CBM",
+        "rise slightly e/o 1",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to LF (Heel Turn)",
+      "footwork": "",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "continue to rise on 2"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side, RF brushes toward LF",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "3/8 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "diag back R side leading",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "NFR",
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "",
+      "alignment": "Backing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

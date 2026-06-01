@@ -1,0 +1,96 @@
+{
+  "name" : "Turning Lock to Right",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r?src=routine" ],
+  "dance_type" : "WALTZ",
+  "level" : "Gold",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Promenade Position",
+  "preceding_figure_names" : "Natural Spin Turn, Outside Spin",
+  "following_figure_names" : "Wing, Chasse From Promenade Position, Left Whisk, Weave From Promenade Position, Cross Hesitation",
+  "notes" : "Lady will not brush on preceding Natural Spin Turn, but brush towards when moving into step 4 of Turning Lock to R.\nLady R side/arm to Man. Check R elbow at correct angle. R side can never be \"dead\".\nKeep big step. There are continuously big steps, if one step is shorter, it stops momentum. Body dance smoothly and continuously.\nLady's head weight to left which helps the turn. Only turn to R going into count 3.\nSway: LLSS or RRSS",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back right side leading",
+    "footwork" : "T",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway (L or R)", "Start to rise e/o 1" ]
+  }, {
+    "step_number" : 2,
+    "timing" : "&",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF crosses loosely in front of RF",
+    "footwork" : "T",
+    "alignment" : "Facing center",
+    "amount_of_turn" : "1/4 to R btwn 1-2",
+    "comments" : [ "Sway (L or R)", "Continue to rise 2 and 3" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly forward, small step between partner's feet",
+    "footwork" : "T",
+    "alignment" : "FDC",
+    "amount_of_turn" : "1/8 btwn 2-3",
+    "comments" : [ "Sway(S)" ]
+  }, {
+    "step_number" : 4,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF diagonal forward, left side leading in PP",
+    "footwork" : "TH",
+    "alignment" : "Pointing DC, body facing LOD",
+    "amount_of_turn" : "Slight body turn to R",
+    "comments" : [ "Sway(S)", "Up. Lower e/o 4" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd left side leading",
+    "footwork" : "T",
+    "alignment" : "Down LOD",
+    "amount_of_turn" : "",
+    "comments" : [ "Sway (R or L)", "Start to rise e/o 1" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "&",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF crosses loosely behind LF",
+    "footwork" : "T",
+    "alignment" : "Backing center",
+    "amount_of_turn" : "1/4 to R btwn 1-2",
+    "comments" : [ "Sway (R or L)", "Continue to rise on 2 and 3" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly back",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/8 btwn 2-3",
+    "comments" : [ "Small step. hip fwd", "Lady's head weight to left which helps the turn. Only turn to R going into count 3." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side in PP, having brushed towards LF",
+    "footwork" : "TH",
+    "alignment" : "Pointing to Center, moving DC",
+    "amount_of_turn" : "3/8 btwn 3-4, body turns less",
+    "comments" : [ "Sway(S)", "Up. Lower e/o 4", "Keep big step. There are continuously big steps, if one step is shorter, it stops momentum. Body dance smoothly and continuously.", "Lady R side/arm to Man. Check R elbow at correct angle. R side can never be \"dead\"." ]
+  } ]
+}

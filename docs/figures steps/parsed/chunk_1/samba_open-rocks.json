@@ -1,0 +1,96 @@
+{
+  "name" : "Open Rocks (to R and L)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/open-rocks" ],
+  "dance_type" : "SAMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "",
+  "following_figure_names" : "",
+  "notes" : "First step of following figure is back and slightly to side.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd, no turn",
+    "footwork" : "BF",
+    "alignment" : "No turn",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd, small step",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Replace weight to RF, toe slightly turned out",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF fwd",
+    "footwork" : "BF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back",
+    "footwork" : "BF",
+    "alignment" : "1/8 to R",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back at 90 degree to Man on his R side, small step, toe turned out",
+    "footwork" : "B",
+    "alignment" : "1/8 to R",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Replace weight to LF, start turning L",
+    "footwork" : "B",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back and slightly to side",
+    "footwork" : "BF",
+    "alignment" : "1/4 to L",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  } ]
+}

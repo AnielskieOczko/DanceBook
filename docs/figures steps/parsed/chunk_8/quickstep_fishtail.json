@@ -1,0 +1,146 @@
+{
+  "name" : "Fish–Tail",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/fishtail" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Cross Chasse, Cross Swivel, Forward Lock, Four Quick Run, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6",
+  "following_figure_names" : "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Four Quick Run (at corner, LF back with Lady OP, TH, S, into Four Quick Run), V6 (at corner, LF back with Lady OP, TH, S, into 2-12 V6), Tipsy To L (into 2-5 Back Lock down LOD), Six Quick Run (LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes" : "The Fishtail may be danced DW with no turn.\nFishtail is often dance after Cross Swivel.\nAfter LF back (Lady shapes to L, RF can cross in front of LF)",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd in CBMP, OP, facing DC, start to turn R, sway, CBM, rise at end of 1",
+    "footwork" : "F",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "Right",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF crosses behind RF, facing LOD, T, 1/8 between 1-2, sway(R), up",
+    "footwork" : "Cross",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "1/8 between 1-2",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd and slightly to side (small step), facing DW, T, 1/8 between 2-3, sway(S), up",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "1/8 between 2-3",
+    "comments" : [ "Man lowers while staying on toe at beginning of step, and rises out of it into the forward lock, similar to a tipple chasse." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF diag fwd L side leading, facing DW, T, --, sway(S), up",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF crosses behind LF, facing DW, T, --, sway(S), up",
+    "footwork" : "Cross",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF diag fwd, facing DW, TH, --, sway(S), up. Lower e/o 6",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Lower e/o 6" ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd in CBMP, OP, facing DW, T, --, sway(S), CBM, --",
+    "footwork" : "F",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP, backing DC, T, start to turn R, sway(S), CBM, rise at end of 1",
+    "footwork" : "B",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "Right",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF crosses in front of LF, backing LOD, T, 1/8 between 1-2, sway(L), up",
+    "footwork" : "Cross",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "1/8 between 1-2",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back and slightly to side (small step), backing DW, T, 1/8 between 2-3, sway(S), up",
+    "footwork" : "B",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "1/8 between 2-3",
+    "comments" : [ ]
+  }, {
+    "step_number" : 11,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF diag back R side leading, backing DW, T, --, sway(S), up",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  }, {
+    "step_number" : 12,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF diag back, backing DW, TH, --, sway(S), up. Lower e/o 6",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ "Lower e/o 6" ]
+  }, {
+    "step_number" : 13,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF diag back, backing DW, T, --, sway(S), CBM, --",
+    "footwork" : "F",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "--",
+    "comments" : [ ]
+  } ]
+}

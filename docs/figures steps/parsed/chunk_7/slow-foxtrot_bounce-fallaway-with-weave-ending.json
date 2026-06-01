@@ -1,0 +1,162 @@
+{
+  "name": "Bounce Fallaway with Weave Ending",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Closed Impetus and Feather Finish, Feather Step, Hover Cross, Hover Feather, Natural Hover Telemark, Natural Telemark, Natural Twist Turn, Natural Zig-Zag from PP, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Top Spin",
+  "following_figure_names": "Three Step, Change Of Direction, Basic Weave, Reverse Turn, Hover Telemark, Reverse Wave, Top Spin, Outside Swivel, Fallaway Reverse and Slip Pivot",
+  "notes": "Lady's head is to left at this time. Keep previous head shape (maybe think about doing more).\nThere is a bounce/rise action. dancing the last T footwork is to dance body forward to get onto Toe of RF. It creates lightness through the legs.\nRelease L leg faster.\nLF bigger step, more like a side step LOD. follow Man's hips. Weight onto L leg. Don't over turn shoulders or turn shoulders early. Shoulder is flat, going into Fallaway.\nStay very left, don't get in front of Man.\nIt feels like Man stays in the fallaway longer (compared to Fallaway and Slip Pivot).\nDefault is a reverse weave action, if leader wants to do fallaway, he will block at the hips, which makes lady open immediately and do a Fallaway.\nTurn head into PP position. Keep volume/space with Man (think about even more shape).\nUse glute hip more forward to Man, shoulder toward Man (helps to create the PP shape), do not open up side.\nKeep head to right. Keep body to Man, very stretched. Keep head volume with Man.\nCushion the knees\nRF back in CBMP and Fallaway | Backing DC, moving down LOD | T | Start to turn L | Sway(S) | CBM | Down. Rise e/o 3\nKeep head to right.\nKeep body to Man, very stretched. Keep head volume with Man.\nCushion the knees\nLF to side and slightly fwd | Pointing to LOD | T | 3/8 between 3-4, body turns less | Sway(S) | Up. Lower e/o 4\nSwivel RF, not turning body and then step LF fwd. L side positive. Keep shoulder parallel to Man.\nFeels like left shoulder is leading and stretching forward\nThe energy has to keep very leftward (stretch L side) and not get into Man's space (when head is to R, easy to get into Man's space)\nHead options:\ncan keep head to R all the way till feather finish. Don't rush turning head, smooth movement. stretch to L.\nOr at this time, take the time to turn head back to left, articulate the head.\nRF fwd in CBMP, OP | Facing LOD | T | Slight body turn | Sway(S) | | Down. Rise e/o 5\nBody diagonally stretched.\nswing R side, and keep side leading position. Do not finish square and flat to Man.\nChanging angle from right to left, spine and head to left\nHead turns back to left when RF to side/back closing up with Man.\nRelease leg at very end to give room to Man to step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, Facing DC, HT, start to turn L, Sway (S), CBM, Rise e/o 1",
+      "footwork": "LF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4 between 1-2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in Fallaway, R side leading, Backing DW, moving down LOD",
+      "footwork": "RF",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Slight flexing of the knees; heel lowers towards floor and may lightly touch"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP and Fallaway, Backing DW, moving down LOD, No turn",
+      "footwork": "LF",
+      "alignment": "Backing DW",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Slight flexing of the knees; heel lowers towards floor and may lightly touch"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, Backing DW",
+      "footwork": "RF",
+      "alignment": "Backing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Slight flexing of the knees; heel lowers towards floor and may lightly touch"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1/8 between 4-5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP, Backing LOD",
+      "footwork": "LF",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 4-5",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, Backing DC, THT, -",
+      "footwork": "RF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "-",
+      "comments": [
+        "Lady's head is to left at this time. Keep previous head shape (maybe think about doing more)."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "-",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in Fallaway, L side leading, Backing DC, moving down LOD",
+      "footwork": "LF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "-",
+      "comments": [
+        "Release L leg faster."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP and Fallaway, Backing DC, moving down LOD, Start to turn L, Sway(S), CBM, Down. Rise e/o 3",
+      "footwork": "RF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "Start to turn L",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "3/8 between 3-4, body turns less",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd, Pointing to LOD, T, 3/8 between 3-4, body turns less",
+      "footwork": "LF",
+      "alignment": "Pointing to LOD",
+      "amount_of_turn": "3/8 between 3-4",
+      "comments": [
+        "Swivel RF, not turning body and then step LF fwd. L side positive. Keep shoulder parallel to Man.",
+        "Feels like left shoulder is leading and stretching forward",
+        "The energy has to keep very leftward (stretch L side) and not get into Man's space (when head is to R, easy to get into Man's space)",
+        "Head options: can keep head to R all the way till feather finish. Don't rush turning head, smooth movement. stretch to L.",
+        "Or at this time, take the time to turn head back to left, articulate the head."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "T",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP, Facing LOD, Slight body turn",
+      "footwork": "RF",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "Slight body turn",
+      "comments": [
+        "Body diagonally stretched."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "QQQS: 4-7 overturned Basic Weave | T TH TH T | | Sway(SLLS) | CBM on step 6 and 9",
+      "role": "FOLLOWER",
+      "foot": "N/A",
+      "action": "Overturned Basic Weave, T TH TH T, Sway (SLLS), CBM on step 6 and 9",
+      "footwork": "T TH TH T",
+      "alignment": "-",
+      "amount_of_turn": "-",
+      "comments": [
+        "swing R side, and keep side leading position. Do not finish square and flat to Man.",
+        "Changing angle from right to left, spine and head to left",
+        "Release leg at very end to give room to Man to step."
+      ]
+    }
+  ]
+}

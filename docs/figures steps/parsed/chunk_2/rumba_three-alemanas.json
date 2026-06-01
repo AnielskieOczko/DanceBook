@@ -1,0 +1,102 @@
+{
+  "name": "Three Alemanas",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/three-alemanas"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Advanced Hip Twists,Closed Hip Twist,Curl,Fan,Hockey Stick,Open Hip Twist,Opening Out From Reverse Top,Progressive Walks Forward,Spiral,Spot or Switch Turn to L (Lady to R),Three Threes",
+  "following_figure_names": "Circular Hip Twists,Continuous Hip Twists,Advanced Hip Twists,Sliding Doors,Rope Spinning,Spiral,Closed Hip Twist,Natural Opening Out Movement,Cuban Rock LF,Side Step To Right,Side Step To Left,Hand To Hand RSP,New York LSP,Basic Movements: Closed,Basic Movements: Open,Fan,Opening Out To Right And Left",
+  "notes": "There are a lot of turns/twists. Step onto foot, axis moved to the new standing foot, turn/twist around axis (shoulder first, hip follows), release free hip, move to new axis and start over. One coach's imagery: rotisserie chicken on a skewer. The axis/skewer does not change, shift, break or move. chicken rotates around skewer.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward and slightly leftwards, no turn",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Begin in Fan Position.",
+        "Weight transfer to left foot."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF in RSP, slight body turn to right",
+      "footwork": "BF",
+      "alignment": "RSP",
+      "amount_of_turn": "Slight turn to R",
+      "comments": [
+        "Slight body turn to the right.",
+        "Prepare for next step."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side with partial weight, slight body turn to left returning to normal position",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Shift weight partially.",
+        "Turn body slightly to the left."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF, no turn",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Weight placed on right foot."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF, no turn indicated",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Close left foot to right foot."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "2 3 4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Repeat Alemana pattern (steps 4-6 of Alemana), raise left hand above lady's right shoulder, circle counter‑clockwise",
+      "footwork": "F",
+      "alignment": "General",
+      "amount_of_turn": "Multiple turns (full Alemana pattern)",
+      "comments": [
+        "Raise left hand above lady's right shoulder.",
+        "Circle counter‑clockwise.",
+        "Complete full Alemana pattern."
+      ]
+    }
+  ]
+}

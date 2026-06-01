@@ -1,0 +1,116 @@
+{
+  "name" : "Natural Turn (at a Corner)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names" : "Closed Impetus (after 1-3), Tipple Chasse To Right (after 1-3), Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Cross Chasse (use 6th step of Natural Turn as entry), Forward Lock (and then Quick Open Reverse, after 1-5 of Natural Turn ending DC, ; or and then any Natural figures, after 1-5 of Natural Turn ending DW of new LOD, ), Zig-Zag, Back Lock And Running Finish (use 6th step of Natural Turn as entry), Tipsy To R (after 1-4 of Natural Turn), Rumba Cross",
+  "notes" : "The step can be underturned to end Man facing new LOD, in which case, 1/4 turn should be completed between 4-5.\nThe heel pull can be underturned to face new LOD.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward, FDW, start turn R, sway, CBM, start rise",
+    "footwork" : "WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back, BDW, start turn R, sway, CBM, start rise, NFR",
+    "footwork" : "BF",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "Pay special attention not to tilt shoulder. Shoulder needs to maintain flat throughout. Head follows elbow." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF side, BDC, T, 1/4 to R between 1-2, sway, up",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF side, PLOD, T, 3/8 between 1-2, body turns less, sway left, up",
+    "footwork" : "T",
+    "alignment" : "PLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF closes to LF, BLOD, TH, 1/8 to R between 2-3, sway right, up, lower",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ "Collect at e/o 3" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back, BLOD, TH, continue turn R, sway, CBM",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side, small step (heel pull), FDW of new LOD, H, IE, WF, 3/8 between 4-5, sway",
+    "footwork" : "WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ "The heel pull can be underturned to face new LOD." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF forward, FDW, H, --, sway, slight CBM",
+    "footwork" : "H",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "Big driving step." ]
+  }, {
+    "step_number" : 9,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side, back new LOD, TH, 1/4 between 4-5, sway",
+    "footwork" : "TH",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ "Technically it's a side step. But in practice, it's often a fwd step, then turn." ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back, BDW, T, 1/8 between 5-6, sway, slight",
+    "footwork" : "T",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ "Collect RF first before stepping back. Big step." ]
+  } ]
+}

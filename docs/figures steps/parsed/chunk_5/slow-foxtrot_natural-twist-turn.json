@@ -1,0 +1,160 @@
+{
+  "name":"Natural Twist Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+  "following_figure_names": "Three Step, Reverse Turn, Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin, Outside Swivel (check back after step 3 of Feather Step), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Weave, Closed Impetus and Feather Finish, Open Impetus",
+  "notes": "Lady optional styling: head could change to R during Weave.\nNatural Twist Turn with Hover Feather Ending described with specific sway and CBM details.\nNatural Twist Turn with Natural Weave Ending includes continuation with 3-8 of Natural Weave and finish BDW.\nNatural Twist Turn with Closed Impetus And Feather Finish Ending ends with feather finish after RF brush.\nNatural Twist Turn with Open Impetus Ending uses Open Impetus movement and feather finish.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward step",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "HT",
+      "comments": [
+        "Continue to turn R",
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "3/8 between steps 1-2",
+      "comments": [
+        "Sway(R)",
+        "-"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cross behind LF slightly back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Sway(R)",
+        "-"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close to LF (Heel Turn)",
+      "footwork": "HT",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/2 between 1-2",
+      "comments": [
+        "Heel turn.",
+        "Positive R side stretch."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "&",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward step preparing OP L side leading",
+      "footwork": "T",
+      "alignment": "Facing almost DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(L)",
+        "-"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward in CBMP, OP",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 between 2-4",
+      "comments": [
+        "Don't hesitate to place the RF.",
+        "Continuous movement, no hold.",
+        "Head changed shape to R"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "To side, RF brushes to LF",
+      "footwork": "T and IE of T of RF",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4 between 4-5",
+      "comments": [
+        "Don't be hesitant to place the foot.",
+        "First, place LF, finish the shape to R (L side very stretched, feel like sitting on L leg, compress, and then change shape) and 2nd part (&), change head shape to L (stretch R side) and compress into L knee.",
+        "RF will brush, before pushing off on L leg.",
+        "Head styling: starting with head shaped to R, when finishing the S, head is shaped to L."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Diagonal back, R side leading",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "Sway(R)",
+      "comments": [
+        "This is a Hover Feather ending."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back in CBMP",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "Sway(S)",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "Sway(S)",
+      "comments": [
+        "CBM"
+      ]
+    }
+  ]
+}

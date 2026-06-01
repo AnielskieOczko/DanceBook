@@ -55,6 +55,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:junit-jupiter")
 }
 
 kotlin {
@@ -71,6 +74,13 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging {
+        events("failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
 }
 
 tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwind") {
@@ -87,6 +97,28 @@ tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwind") {
 
 tasks.named("processResources") {
     dependsOn(tasks.named("buildTailwind"))
+}
+
+tasks.register<JavaExec>("processFigures") {
+    group = "application"
+    description = "Processes crawled figures using OpenRouter LLM agent"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.FigureProcessorKt")
+}
+
+tasks.register<JavaExec>("generateFiguresSql") {
+    group = "application"
+    description = "Generates V23 database migration seed script from parsed JSON figures"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.SqlGeneratorKt")
+}
+
+springBoot {
+    mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
 }
 
 sonar {

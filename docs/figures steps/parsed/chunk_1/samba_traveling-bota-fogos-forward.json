@@ -1,0 +1,116 @@
+{
+  "name" : "Travelling Bota Fogos Forward",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/samba/traveling-bota-fogos-forward" ],
+  "dance_type" : "SAMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Contra Position",
+  "preceding_figure_names" : "Maypole, Natural Basic Movement, Reverse Basic Movement, Reverse Roll, Reverse Turn, Shadow Circular Volta with LF, Shadow Circular Volta with RF, Shadow Traveling Volta commenced with LF, Shadow Traveling Volta commenced with RF, Side Basic Movement",
+  "following_figure_names" : "Shadow Circular Volta with LF, Shadow Circular Volta with RF, Natural Basic Movement (commenced OP - turn 1/8 R over 2 and 3 to face partner), Contra Bota Fogos (when same foot Bota Fogos ending in Contra Position), Round About (when same foot Bota Fogos ending in Contra Position), Shadow Traveling Volta commenced with RF (when LF Traveling Bota Fogos Fwd is dance with same foot), Shadow Traveling Viola commenced with LF (when RF Traveling Bota Fogos Fwd is dance with same foot)",
+  "notes" : "Focus on bouncing up action, do not focus on \"going down\" action.\nPay attention to create upper body line:\nDo not lean tilt forward, squeeze the side, back hip up, Body has a more backward feeling.)\nTaking small steps, that will help to create higher back hip line.\nTo create the line, it's not only in the hips, upper body has to do diagonal stretch, project chest fwd.\nLead for changing from Bota Fogos to Voltas is very subtle - lower the hand.\nLady assumes continuing with Bota Fogo, use visual and hand lead and finish to volta, if she senses more turn and man is going to the same direction.\nCan be danced on same foot as partner when in R Shadow Position.\nSame foot Bota Fogo commenced with LF may be turned 1/8 or 1/4 to L, leading Lady to turn strongly to L towards end of step 1, then releasing hold (Lady turn 5/8 or 3/4 to L). End in R Contra Position taking normal hold.\nSimilar (opposite) for Bota Fogo commenced with RF.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd in CBMP, OP, Facing DC | No turn | BF",
+    "footwork" : "BF",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Slide RF even more fwd, then bend R knee (bend more for more pronounced bigger hip movement); really get into the knee, weight fully transferred to the foot, sternum fwd, back leg straight. leg line. Point back foot.", "RF soft absorbing action, gets into the knee. then the heel of RF (the front foot) should touch floor. Grounded look, not light, floating look." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Take minimal weight to LF and replace weight to RF. Facing DW | BF",
+    "footwork" : "BF",
+    "alignment" : "Facing DW",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Lead with weight change. When weight on LF for a split second, R leg should be straight (don't have bent R knee all the time, make sure to have this moment of straight knee) before weight is put back onto RF again, then RF is flat, heel down. Weight is on RF, not in the middle of two feet. Sternum fwd," ]
+  }, {
+    "step_number" : "a",
+    "timing" : "a",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side without weight. Toe pointing DW. Body facing LOD | 1/4 turn to L over 5&6 | Pressure on I/E of Toe",
+    "footwork" : "TOE",
+    "alignment" : "Facing LOD",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Retain tone in arms.", "After turning, the previous step would be like a side step.", "R leg straight. There is a moment of 2 straight legs before absorbing onto RF.", "Try to finish the hip L hip even more.", "Pay attention to direction of body. Quarter turn each time. Don't just turn hip and keep body forward LOD. Body should be either facing DC or DW." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Take minimal weight to RF and replace weight to LF. Facing DC | BF",
+    "footwork" : "BF",
+    "alignment" : "Facing DC",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Lead with weight change." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back in CBMP. Backing DC | No turn | BF",
+    "footwork" : "BF",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "No turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : "a",
+    "timing" : "a",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side without weight. RF backing DW. Body backing LOD | 1/4 turn to right over 2&3 | Pressure on I/E of Toe",
+    "footwork" : "TOE",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Retain tone in arms.", "After turning, the previous step would be like a side step.", "R leg straight. There is a moment of 2 straight legs before absorbing onto RF.", "Try to finish the hip L hip even more.", "Pay attention to direction of body. Quarter turn each time. Don't just turn hip and keep body forward LOD. Body should be either facing DC or DW." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Take minimal weight to RF and replace weight to LF. Backing DW | BF",
+    "footwork" : "BF",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Lead with weight change." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF back in CBMP. Backing DW | No turn | BF",
+    "footwork" : "BF",
+    "alignment" : "Backing DW",
+    "amount_of_turn" : "No turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : "a",
+    "timing" : "a",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side without weight. RF backing DC. Body backing LOD | 1/4 turn to L over 5&6 | Pressure on I/E of T",
+    "footwork" : "TOE",
+    "alignment" : "Backing LOD",
+    "amount_of_turn" : "1/4 to L",
+    "comments" : [ "Retain tone in arms." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Take minimal weight to LF and replace weight to RF. Backing DC | BF",
+    "footwork" : "BF",
+    "alignment" : "Backing DC",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Lead with weight change." ]
+  } ]
+}

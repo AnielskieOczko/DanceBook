@@ -1,0 +1,191 @@
+{
+  "name": "Natural Spin Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock Step, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Progressive Chasse, Reverse Pivot, Heel Pivot (Quarter Turn To Left), Four Quick Run, V6 (2-12, heel should lower on previous step), Six Quick Run (heel should lower on previous step), Hover Corte",
+  "notes": "The footwork is the same as Waltz Natural Spin Turn. When connecting with V6 (QQS lock step), the footwork for this count becomes THT.\nHave continuous swing of the leg through the step.\nLeave head behind, turn body. Continue to keep head to left during the whole Natural Spin Turn.\nLower at end of 3.\nRise on toes, it will help to bring the feet together on 3rd step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Start to turn R",
+      "footwork": "HT",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to rise at end of 1",
+        "Have continuous swing of the leg through the step."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Cont to rise on 2 and 3",
+        "Sway(R)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "R",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF closes to LF",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Lower at end of 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "THT",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/2 to R (pivot)",
+      "comments": [
+        "No rise."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP",
+      "footwork": "HT",
+      "alignment": "FLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Cont to turn",
+        "Rise e/o 5",
+        "Up, Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly back",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "3/8 between 5-6",
+      "comments": [
+        "Sway(S)",
+        "Up, Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Starts to turn R",
+        "Sway(S)",
+        "Start to rise e/o 1, NFR",
+        "Leave head behind, turn body. Continue to keep head to left during the whole Natural Spin Turn."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "T",
+      "alignment": "PLOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "body turns less",
+        "Cont to rise on 2 and 3",
+        "Sway(L)"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF closes to RF",
+      "footwork": "TH",
+      "alignment": "FLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "body completes turn",
+        "Sway(L)",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "HT",
+      "alignment": "FLOD",
+      "amount_of_turn": "1/2 to R (pivot)",
+      "comments": [
+        "No rise"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back and slightly side",
+      "footwork": "T",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Cont to turn",
+        "Sway(S)",
+        "Rise e/o 5"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF diagonally fwd after brushing to LF",
+      "footwork": "TH",
+      "alignment": "FDC",
+      "amount_of_turn": "3/8 between 5-6",
+      "comments": [
+        "Sway(S)",
+        "Up. Lower e/o 6",
+        "When connecting with V6 (QQS lock step), the footwork for this count becomes THT."
+      ]
+    }
+  ]
+}

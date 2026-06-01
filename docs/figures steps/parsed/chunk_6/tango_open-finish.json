@@ -1,0 +1,81 @@
+{
+  "name": "Open Finish",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/open-finish"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Open Finish",
+  "preceding_figure_names": "LF Rock, Walk (LF), Progressive Side Step, Progressive Link, Open Reverse Turn, Lady Outside (when preceding figure ends DC), Open Reverse Turn, Lady In Line (when preceding figure ends DC), Progressive Side Step Reverse Turn (when preceding figure ends DC), Reverse Outside Swivel (when preceding figure ends DC; or normal), Basic Reverse Turn (when preceding figure ends DC), Fallaway Reverse and Slip Pivot (when preceding figure ends DC; or normal), Four Step, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Back Corte (step 1 of Back Corte in CBMP with Lady OP), LF Rock (LF Rock in CBMP with Lady OP, no turn or up to 1/4 to R), Outside Swivel, Closed Promenade (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure), Open Promenade (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure), Natural Promenade Turn (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure), Promenade Link (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure), Back Open Promenade (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure), Fallaway Promenade (after Open Finish, place LF to side without weight leading Lady to turn to PP, count &, then proceed with the Promenade figure)",
+  "following_figure_names": "",
+  "notes": "Technique Notes\nOther alignments and directions may be used.\nAmount of turn: slightly less turn to L will be made on a figure when changing a Closed Finish to Open Finish. Although normal turn will be made when following with a curve or turn to L, e.g. Walk on LF, or Outside Swivel turning L from Open Finish (method 2).\nFollows can be moving forward, back or to side. When stepping forward from and Open Finish, step 1 will not be taken in CBMP.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q, Q, S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward from PP",
+      "footwork": "F",
+      "alignment": "Pointing between Wall and DW",
+      "amount_of_turn": "none",
+      "comments": [
+        "Start from PP",
+        "Pointing between Wall and DW",
+        "IE of foot"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in CBMP, OP, H",
+      "footwork": "F",
+      "alignment": "Between wall and DW",
+      "amount_of_turn": "slightly less turn to L",
+      "comments": [
+        "Rotate to the R, take R hip back, L leg back in CBMP, landing OE of front of LF.",
+        "Keep hips toward Man.",
+        "Allow upper body to rotate to R, without becoming back weighted.",
+        "Never allow body to go behind the hips.",
+        "Practice to not be back weighted: should be easy to do rocking action, keep weight on ball of foot.",
+        "The step becomes BH when next step is a back step.",
+        "If doing RF flick, LF heel may kiss the floor but still keep weight more forward and not let upper body fall back behind hips."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "Q, Q, S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward from PP",
+      "footwork": "F",
+      "alignment": "Backing between Wall and DW",
+      "amount_of_turn": "none",
+      "comments": [
+        "Start from PP",
+        "Backing between Wall and DW",
+        "IE of BH"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step back in CBMP",
+      "footwork": "B",
+      "alignment": "Between Wall and DW",
+      "amount_of_turn": "none",
+      "comments": [
+        "LF back in CBMP | between Wall and DW | B"
+      ]
+    }
+  ]
+}

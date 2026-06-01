@@ -1,0 +1,116 @@
+{
+  "name": "NaturalTurn and Back Lock",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-and-back-lock?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Closed Telemark,Cross Chasse,Fish Tail,Forward Lock,Four Quick Run,Heel Pivot (Quarter Turn To Left),Natural Pivot Turn,Natural Turn,Progressive Chasse,Running Finish,Running Right Turn,Tipple Chasse To Right,V6,Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names": "Closed Impetus,Tipple Chasse To Right,Running Finish,Tipsy To R",
+  "notes": "At corner, 1-3 Natural Turn may be danced to end backing DW of new LOD to follow with Back Lock",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1/4 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Sway(R)",
+        "Up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "Sway(S)",
+      "comments": [
+        "CBM",
+        "Start to rise e/o 4, NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back, right side leading",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "Continue to rise on 5 and 6",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "crosses in front of RF",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "T",
+      "comments": [
+        "Sway(S)"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "diagonally back",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "TH",
+      "comments": [
+        "SwayS)",
+        "The right side retains its position from step 5"
+      ]
+    }
+  ]
+}

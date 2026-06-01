@@ -1,0 +1,85 @@
+{
+  "name": "Whip Throwaway",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/whip-throwaway"
+  ],
+  "dance_type": "JIVE",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Curly Whip, Fallaway Rock, Link, Walks",
+  "following_figure_names": "Change of Places Left to Right, Hip Bump",
+  "notes": "Amounts of turn: more turn can be made over 1 and 2.\nDouble Whip Throwaway: repeat step 1 and 2.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cross RF behind LF (Cuban Cross)",
+      "footwork": "RF",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd towards Man's R side",
+      "footwork": "LF",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "LF",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd btwn Man's feet, small step",
+      "footwork": "RF",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3-5",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact chasse RLR ending in open position, almost facing lady",
+      "footwork": "RF",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "3-5",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly back to chasse LRL ending LF back in open position, almost facing Man",
+      "footwork": "LF",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+"name": "Spot or Switch Turn To L (Lady to R)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/spot-turn"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Closed Hip Twist, Cuban Break RF, Curl, Hand To Hand LSP, Hip Twist Spiral, Hockey Stick, New York RSP, Open Hip Twist, Rope Spinning, Shoulder To Shoulder Right Side, Spiral, Split Cuban Break RF",
+  "following_figure_names": "Closed Basic Movement (6-10), Open Basic Movement (6-10), New York RSP, Spot or Switch Turn To R (Lady to L), Underarm Turn To R, Hand To Hand LSP, Side Step To Left commenced with RF, Side Step To Right commenced with RF, Time Step RF, Fan (6-10), Aida, Cuban Break RF, Split Cuban Break RF",
+  "notes": "Starts from Closed Position with no initial hold; ends in Open Position taking L to R hand hold. Includes a 1/4 turn to the left, weight transfers, and a side chassé. Variations cover arm positions and timing options.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "RF fwd (after turning 1/4 to L on preceding \"&\") in line with LF"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3&",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight",
+      "footwork": "B",
+      "alignment": "Facing",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Turn 1/4 to L"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side chassé",
+      "footwork": "RF",
+      "alignment": "Side",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "RF to side to chassé RLR | 1/4 to L over 3-5",
+        "At end of \"1\": turn to R."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "LF fwd (after turning 1/4 to R on preceding \"&\") in line with RF"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3&",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "B",
+      "alignment": "Facing",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turn 1/4 to R"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Side chassé",
+      "footwork": "LF",
+      "alignment": "Side",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "LF to side to chassé LRL | 1/4 to R over 3-5"
+      ]
+    }
+  ]
+}

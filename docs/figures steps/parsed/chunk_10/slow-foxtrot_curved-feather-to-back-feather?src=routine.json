@@ -1,0 +1,187 @@
+{
+  "name": "Curved Feather to Back Feather",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Change Of Direction, Closed Telemark, Hover Telemark, Hover Telemark to PP, Natural Turn, Open Impetus, Outside Swivel, Reverse Wave, Three Step",
+  "following_figure_names": "Closed Impetus and Feather Finish, Basic Weave (At corner), Open Impetus",
+  "notes": "Gold Level figure. Detailed description includes timing, footwork, alignment, movement; steps diagram; list of preceding and following figures; videos providing instruction and demonstration.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd | Facing LOD | HT | Start to turn R | Sway(S) | CBM | Rise e/o 1",
+      "footwork": "HT",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "diag fwd, preparing to step OP, L side leading | Facing DW | T | 1/8 between 1-2 | Sway(R) | Up",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP | Facing wall | TH | 1/8 between 2-3 | R | CBM | Up. Lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Facing wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP | Backing DC | TH | 1.8 between 3-4 | S | CBM | Start to rise e/o 4, NFR",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1.8 between 3-4",
+      "comments": [
+        "Gradual rise is used in Back Feather."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back R side leading | Curving toward LOD | T | - | Sway (L) | | Continue to rise on 5",
+      "footwork": "T",
+      "alignment": "-",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP | Backing LOD | TH | 1/8 between 4-6 | Sway (L) | | Up. Lower e/o 6.",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back | Backing LOD | T | - | Sway (S) | CBM | -",
+      "footwork": "-",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back | Backing LOD | TH | Start to turn R | Sway(S) | CBM | Rise e/o 1, NFR",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Curve, the rotation is mostly in the hip area, follow Man's hip, don't stop turning to R (other you'll block Man), continue the rotation and give Man middle and side and stay connected. Upper body/shoulder should not turn too much which will pull off from partner (but it does turn to R, otherwise Man can't pass). Upper body is diagonally stretched (R side is upward), keep parallel to partner. Push off standing leg to move. Forward with body and arms."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, R side leading | Backing DW | T | 1/8 between 1-2 | Sway(L) | Up",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP | Backing Wall | TH | 1/8 between 2-3 | Sway(L) | CBM | Up. Lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Small step LF behind RF, shape to L, like winding up to go. Lady should lower late on 3."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | Facing DC | HT | 1/8 between 3-4 | Sway(S) | CBM | Start to rise e/o 4",
+      "footwork": "HT",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "Rotate hip more and lower more into L knee, push off LF/L leg to drive for bigger movement. Do not go downward in this step. The lowering happens in previous step (weight into heel on previous Q). This step drives forward and up (rise e/o this step). Left side now swings forward (body does not stop - which will make it look like going backward), do not swing too much up, focus on forward, body rotate a lot to the right. Head turns and shapes to R. Do not cross into Man's space. Smooth changes. Movement should feel \"free\", not constrained. Body breathes."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd L side leading | Curving towards LOD | T | - | Sway(R) | Continue to rise on 5",
+      "footwork": "T",
+      "alignment": "-",
+      "amount_of_turn": "-",
+      "comments": [
+        "If Man shapes, Lady turn her head to R, but stay very left, keep ribs/side to Man. Really needs to turn body (rotate to R)"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP | Facing LOD | TH | 1/8 between 4-6 | Sway(R) | Up, Lower e/o 6",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": [
+        "Do not dip shoulder low, keep shoulders flat, swing forward, traveling. Give center to Man, shape. When swing on Q: do not dip shoulder low, keep should flat, swing forward, traveling. Give center to Man, shape. (But note: If Man shapes, Lady turn her head to R on QQ, keep ribs/side to Man.)"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd | Facing LOD | H | - | S | CBM | -",
+      "footwork": "-",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Typically, continue with Feather Finish SQQ. This first LF fwd on S, do not follow Man's curve, step straight forward in between Man's legs, otherwise, at the end of Feather finish, Lady's hip will gap/end up to the side of Man's hip. When swing on Q: do not dip shoulder low, keep should flat, swing forward, traveling. Give center to Man, shape. Breathe, release so body does not stiff up. If Man shapes, Lady turn her head to R on QQ, keep ribs/side to Man."
+      ]
+    }
+  ]
+}

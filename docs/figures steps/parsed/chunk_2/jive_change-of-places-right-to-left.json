@@ -1,0 +1,85 @@
+{
+  "name": "Change ofPlaces Right to Left",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/change-of-places-right-to-left"
+  ],
+  "dance_type": "JIVE",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Basic In Place,Fallaway Rock,Link,Mooch,Reverse Whip,Stalking Walks, Flicks and Break,Toe Heel Swivels,Walks,Whip",
+  "following_figure_names": "Chugging,Link,Change of Places Left to Right (normal; or with change of hands when Change of Places R to L is danced with change of hands),Change of Hands Behind Back,Hip Bump,American Spin (from L to R hand hold; or when Change of Places R to L is danced with change of hands),Stop and Go,Miami Special (when Change of Places R to L is danced with change of hands),Shoulder Spin (when Change of Places R to L is danced with change of hands),Catapult (when Change of Places R to L is danced with change of hands)",
+  "notes": "Variation - Change of hands: 2 options\nlead lady with RH to turn R on 5, release R hand hold. Catch R-to-R hand hold at end of lady's turn.\nMan leads lady do a R underarm turn and change to R-to-R hand hold at end of her turn.\nDevelopment:\nMan leads the lady to increase her speed on step 5, Man keeping his arm raised until step 8.\nLady spin about 1 1/8 R on RF toward end of 5, then continue to turn another 5/8 to R over 6-8 to end LF back in open position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1-2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Fallaway Rock step back with left foot, 1/8 turn to left, no turn on 2",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3a4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Diagonal forward left foot to chassé LRL, turning lady to left over 3-4",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "5a6",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Forward chassé RLR to open position, 1/8 turn left between 5-6",
+      "footwork": "T",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1-2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Fallaway Rock step back with right foot, 1/4 turn to right",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3a4",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Side chassé RLR, turning underarm to left, start turn right on 5",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "5a6a7a8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Diagonal back left foot to chassé LRL, turning underarm to end in open position, 3/4 turn to right over 5-8",
+      "footwork": "T",
+      "alignment": "DC",
+      "amount_of_turn": "3/4 to R",
+      "comments": []
+    }
+  ]
+}

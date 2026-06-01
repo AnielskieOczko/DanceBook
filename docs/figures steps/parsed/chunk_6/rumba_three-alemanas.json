@@ -1,0 +1,129 @@
+{
+ "name": "Three Alemanas",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/three-alemanas"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "RSP",
+  "preceding_figure_names": "Advanced Hip Twists, Closed Hip Twist, Curl, Fan, Hockey Stick, Open Hip Twist, Opening Out From Reverse Top, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R), Three Threes",
+  "following_figure_names": "Circular Hip Twists, Continuous Hip Twists, Advanced Hip Twists, Sliding Doors",
+  "notes": "Note:\nThere are a lot of turns/twists. Step onto foot, axis moved to the new standing foot, turn/twist around axis (shoulder first, hip follows), release free hip, move to new axis and start over.\nOne coach's imagery: rotisserie chicken on a skewer. The axis/skewer does not change, shift, break or move. chicken rotates around skewer.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward step slightly leftwards",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close to LF in RSP",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": "Slight body turn to R",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side with part weight",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "Slight body turn to L",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "DC",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "5",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "T",
+      "alignment": "RSP",
+      "amount_of_turn": " — ",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "6",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Raise L hand above Lady's R shoulder and circle counter‑clockwise",
+      "footwork": " — ",
+      "alignment": " — ",
+      "amount_of_turn": " — ",
+      "comments": [
+        "Raise L hand above Lady's R shoulder and circle it counter‑clockwise."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Slight leftwards step, then turn underarm allowing LF to cross loosely in front of RF without weight (Spiral Turn)",
+      "footwork": "T",
+      "alignment": " — ",
+      "amount_of_turn": "1/8 to L, then further 3/4 to L",
+      "comments": [
+        "Small step onto RF first (don't do shoulders yet), then turn shoulders.",
+        "Different styles of spiral turn: wrap foot (wing the foot, do not sickle foot), high spiral, locking ankles."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward step",
+      "footwork": "F",
+      "alignment": "1/8 to L",
+      "amount_of_turn": "Almost feel like stepping away from Man",
+      "comments": [
+        "LF fwd underneath shoulder, keep very small steps, don't travel too much, do not step big outside body."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Forward step",
+      "footwork": "F",
+      "alignment": "1/2 to L",
+      "amount_of_turn": "The turn is made at end of previous beat",
+      "comments": [
+        "Pressed Fwd Walk. Lady should bring her weight well fwd, responding to Man's tone in his L arm.",
+        "Open L hip up, stretching the body (L hip back, R chest fwd to Man), release/drop R hip down.",
+        "L arm shoot out to L side."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+[ {
+  "name" : "Fishtail",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "NaturalTurn and Back Lock",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "RunningFinish",
+  "dance_type" : "JIVE",
+  "url" : ""
+}, {
+  "name" : "Tipsy to Right",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "QuickstepV6",
+  "dance_type" : "QUICKSTEP",
+  "url" : ""
+}, {
+  "name" : "Unknown",
+  "dance_type" : "SLOW_FOXTROT",
+  "url" : ""
+} ]

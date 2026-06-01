@@ -1,0 +1,191 @@
+{
+  "name": "Corta Jaca",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/corta-jaca"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Argentine Crosses, Closed Rocks, Criss Cross Bota Fogos (Shadow Bota Fogos), Maypole, Natural Basic Movement, Natural Roll, Progressive Basic Movement, Reverse Basic Movement, Samba Walk: Stationary, Side Basic Movement, Whisk To Left",
+  "following_figure_names": "Whisk To Left, Natural Basic Movement (4-6), Solo Spot Volta to Left (Lady to Right), Natural Roll (4-6)",
+  "notes": "Keep shoulders quiet.\nSilver & Gold: After step 7: Man may dance 1-7 of Lady's steps. Lady dance Man's. Follow with Natural Basic Movement or Whisk to R. May turn up to 3/4 to R. Follow with any figure commenced with RF.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd, strong step",
+      "footwork": "HF",
+      "alignment": null,
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd and slightly to side",
+      "footwork": "H",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "toe is not lowered"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Slide RF leftwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back and slightly to side",
+      "footwork": "B",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Slide RF leftwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd and slightly to side",
+      "footwork": "H",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "toe is not lowered"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Slide RF leftwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "step 4-7 may be repeated."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "BF",
+      "alignment": null,
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Shoulder is contra body, stay active, but not going up and down too much."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back and slightly to side",
+      "footwork": "B",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Slide LF rightwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "Slide the whole foot."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd and slightly to side",
+      "footwork": "H",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "Some prefers to do a little RF flick back before stepping RF fwd with heel"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Slide LF rightwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "Toe is not lowered, tail bone up, keep upper thigh tight together."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Slide LF rightwards",
+      "footwork": "B",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "Hip is really forward. Hip crease is flat."
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Slide LF rightwards",
+      "footwork": "F (Pressure on ball of foot)",
+      "alignment": null,
+      "amount_of_turn": null,
+      "comments": [
+        "The way to know that Man is finishing this figure is the rise and starting of bounce action again."
+      ]
+    }
+  ]
+}

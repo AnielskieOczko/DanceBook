@@ -1,0 +1,118 @@
+{
+  "name":"Running Finish",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/running-finish?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Back Lock, Cross Swivel, Hover Corte, Natural Turn And Back Lock, Progressive Chasse To Right",
+  "following_figure_names": "Forward Lock, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quick Open Reverse, Fish Tail, Four Quick Run (at corner, LF back with Lady OP, TH, S into Four Quick Run; or at corner, LF back with lady OP, TH, S into Four Quick Runs), V6 (2-12, at corner, LF back with Lady OP, TH, S into 2-12 V6; or 2-12, at corner, LF back with Lady OP, TH, S into Four Quick Runs), Tipsy To L (then into 2-12 V6 DC or 2-5 Back Lock down LOD.; or then into 2-12 V6 DC or 2-5 Back Lock down LOD.), Six Quick Run (at corner, LF back with Lady OP, TH, S into Six Quick Run; or at corner, LF back with Lady OP, TH, S into Six Quick Run.)",
+  "notes": "Timing can also be: QQSS\nCan be commenced in other alignments, e.g. starting BLOD, ending DC.\nMan may turn 1/4 between 1-2 when a facing alignment would be used. Lady would turn 1/8 between 1-2 and 1/8 between 2-3.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP, Backing DW, T, Start to turn R, Sway(S), CBM, Rise e/o 1",
+      "footwork": "BF",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly fwd, Pointing to LOD, T, body turns less, Sway(L), Up",
+      "footwork": "T",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Man can turn 1/4 to end DW on new LOD.",
+        "Man should shape left to allow lady to pass and to make the turn easier."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd preparing to step OP left side leading, Facing LOD, TH, Body turn to R, Sway(L), Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, Facing LOD, H, Sway(S), CBM",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, Facing DW, HT, Start to turn R, Sway(S), CBM, Rise e/o 1",
+      "footwork": "HT",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Really drive the step, go through Man"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side, Backing DC, T, 1/4 between 1-2, Sway(R), Up",
+      "footwork": "T",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "L side is very stretched, lift L hip",
+        "Can shape to R, head goes with shape, to R",
+        "Lady can turn 1/8, will end BDW on new LOD"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, R side leading, Backing LOD, TH, 1/8 between 2-3, Sway(R), Up, lower e/o 3",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Lower and push off standing R leg, bigger next step."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP, Backing LOD, T, Sway(S)",
+      "footwork": "T",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

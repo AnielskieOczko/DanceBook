@@ -1,0 +1,89 @@
+{
+  "name": "Windmill",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/windmill"
+  ],
+  "dance_type": "JIVE",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Change of Places Left to Right,Rolling Off the Arm,Spanish Arms,Windmill",
+  "following_figure_names": "Toe Heel Swivels,Stop and Go,Hip Bump,Change of Places Left to Right,Windmill,Rolling Off the Arm,Link",
+  "notes": "Turn commences at end of previous beat. Extend L arm downwards and to L and R arm upwards and to R. Incline body slightly L. On step 5, rotate L hand slightly R from wrist. Steps 3-5: arms are extended from the elbows, keeping elbows near to body. Return arms and body to starting position. Incline body slightly R on steps 3-5. Return body to normal position on step 6.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "QQ",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step as part of Link",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "QaQ",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Turn left on right foot and perform forward chasse LRL ending in Closed Position",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "3/8 to L",
+      "comments": [
+        "Extend L arm downwards and to L and R arm upwards and to R.",
+        "Incline body slightly L.",
+        "Steps 3-5: arms are extended from the elbows, keeping elbows near to body."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step as part of Link",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Three small runs forward, passing in front of partner, then turn",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Backward chasse LRL ending in Open Position",
+      "footwork": "B",
+      "alignment": "Facing",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Return body to normal position",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "0",
+      "comments": []
+    }
+  ]
+}

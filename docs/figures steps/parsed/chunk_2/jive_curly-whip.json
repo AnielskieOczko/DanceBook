@@ -1,0 +1,60 @@
+{
+  "name": "Curly Whip",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/jive/curly-whip"
+  ],
+  "dance_type": "JIVE",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Whip",
+  "following_figure_names": "Whip Throwaway",
+  "notes": "Option: Man can turn slightly R on step 1, leading Lady to turn R. (Lady 1/4 to R to a 90 degree angle to Man on his R side.)\nOption: Man turns Lady more strongly L over steps 2-5 (Lady turns 3/4 to L.)\nRaise L arm and circle hand in a counter‑clockwise direction. Loosen R hand hold on Lady's back for Lady to turn within circle of arm. Regain normal hold at end of Lady's turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward",
+      "footwork": "F",
+      "alignment": "Closed Position",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "Lower and extend L arm fwd."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF, start to turn R",
+      "footwork": "BF",
+      "alignment": "Turning R",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "Option: Man can turn slightly R on step 1, leading Lady to turn R. (Lady 1/4 to R to a 90 degree angle to Man on his R side.)",
+        "Option: Man turns Lady more strongly L over steps 2-5 (Lady turns 3/4 to L.)"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "QaQ",
+      "role": "FOLLOWER",
+      "foot": "TOGETHER",
+      "action": "Compact chasse RLR underarm",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "End in Closed Position.",
+        "1/2 to L over steps 2-5."
+      ]
+    }
+  ]
+}

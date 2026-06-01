@@ -1,0 +1,49 @@
+{
+  "name": "Rumba Cross",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross?src=routine"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Natural Pivot Turn, Natural Turn",
+  "following_figure_names": "Running Right Turn, Rumba Cross",
+  "notes": "Note--If preceding the Rumba Cross with 1-5 Natural Turn, a sway to L would be used on step 5 which could be held at the beginning of step 1 of the Rumba Cross. This sway assists in maintaining forward movement through the turn. The Rumba Cross may be danced twice.\nWhen preceding with a Natural Pivot Turn, S is added before this Q.\nLady's head stays in place, after QQ, as body turns underneath the head, head left.\nDo not level up shoulders and hips, leaving R side positive. R knee is forward over the toe, completely balanced on RF.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Long step forward",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "slight turn to R",
+      "comments": [
+        "HT | slight turn to R at end of step",
+        "Sway(S)",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back long step",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "turn to R at end of step",
+      "comments": [
+        "T | start to turn R at end of step",
+        "Sway(S)",
+        "rise e/o 1"
+      ]
+    }
+  ]
+}

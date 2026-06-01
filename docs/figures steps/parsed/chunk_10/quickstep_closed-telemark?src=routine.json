@@ -1,0 +1,48 @@
+{
+  "name":"Closed Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Quarter Turn to Left, Reverse Pivot",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Fish Tail, Four Quick Run, Six Quick Run",
+  "notes": "When stepping RF, keep contact with Man, step shouldn't be too close to Man. Need to leave room between Lady's RF and Man's LF for Man to step through his next OP step.\nShape head to right (actually by keeping the head where it is, when body turns left, head will be in the shaping right position). Then, head returns to left at next step.\nLowering at end of the step, before driving into next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward step, turn left, sway, use CBM, rise",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Start with LF forward in FDC, begin turn left",
+        "Maintain CBM and rise"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back step, turn left, sway, use CBM, slight rise",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Strong big step back, use CBM",
+        "Do not take shoulders back, do not leave center fwd which will block Man.",
+        "R shoulder connect down, R side is anchor for left turning figure. Feel strong upward, leftward through left side (L side slightly raised or heel turns)"
+      ]
+    }
+  ]
+}

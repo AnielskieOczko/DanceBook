@@ -1,0 +1,164 @@
+{
+  "name": "Alemana",
+"urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/alemana"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Hockey Stick",
+  "following_figure_names": "Advanced Hip Twist",
+  "notes": "May also be commenced in Open Position.\nGold: Alemana may be danced with R to R hand hold.\nFinishing positions: Man and Lady end to side; Man and Lady end diagonally forward in Open CPP; Lady ends forward toward Man's right side; Man may turn up to 1/4 R over counts 8-10 adjusting Lady's turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward with left foot, no turn",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Compact chasse LRL (left-right-left)",
+      "footwork": "LF, RF, LF",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Man raises his L arm, table through elbow while Lady turns.",
+        "Compact chasses to left, right, left."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step back with right foot",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to left foot",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Compact chasse RLR ending in Closed Position",
+      "footwork": "RF, LF, RF",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "End in Closed Position.",
+        "Lady completes a full turn to the right.",
+        "Man may turn up to 1/4 R over counts 8-10 adjusting Lady's turn."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close RF to LF, no turn (starting from Fan Position)",
+      "footwork": "F",
+      "alignment": "Fan Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Start from Fan Position; in Open Position dance as back step.",
+        "Fast knee switch; compress R side; left knee drapes over right knee."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Step forward with left foot",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Begin movement under raised arms.",
+        "Shift weight and prepare for lock."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RLR",
+      "action": "Fwd lock RLR, 1/8 turn to R",
+      "footwork": "RLR",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Lock under raised arms LRLRL, ending in Closed Position.",
+        "Turn 1/8 to the right between count & and 1.",
+        "Man's left hand may hint at Hockey Stick vs Alemana."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "2 3 4&1",
+      "role": "FOLLOWER",
+      "foot": "LRLRL",
+      "action": "Two forward steps and a forward lock under raised arms",
+      "footwork": "LRLRL",
+      "alignment": "LOD",
+      "amount_of_turn": "1 1/8 to R over counts 6-10",
+      "comments": [
+        "Lady may use Extended Forward Walk on count 6.",
+        "Finish facing partner's right side."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "4&1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Finishing step toward partner's right side",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": [
+        "Man turns body slightly right on step 8 to lead.",
+        "Lady ends forward toward man's right side.",
+        "Man's RF moves forward in line with LF into forward lock toward Lady's right side."
+      ]
+    }
+  ]
+}

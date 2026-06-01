@@ -1,0 +1,217 @@
+{
+  "name": "Chase",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/chase"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Closed Hip Twist, Cuban Break RF, Curl, Follow My Leader, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
+  "following_figure_names": "Open Basic Movement (Normal Open Basic, or 1-2 Open Basic into Three Cha Cha Chas Back, or 1-5 of Open Basic into Natural Top), Time Step LF, Alemena, Open Hip Twist, Curl, Sweetheart, Turkish Towel, Follow My Leader",
+  "notes": "Styling option: L knee bent. Styling option: R knee bent. Turn is commenced at end of previous beat (for sharper action, can finish full turn at end of \"3\", then do chasse in place, crossing knees, then LF back). Replace weight to RF | 1/8 to R. Turn is commenced at end of previous beat.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in line with RF or LF as appropriate, then turn to end LF back in Tandem Position, Lady behind.",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF without weight",
+      "footwork": "C",
+      "alignment": "Tandem Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RLR",
+      "action": "Fwd lock RLR",
+      "footwork": "RLR",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd in line with RF or LF as appropriate, then turn to end LF back in Tandem Position, Lady in front.",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LRL",
+      "action": "Fwd lock LRL following Lady",
+      "footwork": "LRL",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in line with RF or LF as appropriate, then turn to end RF back in Tandem Position, Lady behind.",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "RLR",
+      "action": "Fwd lock RLR. End in Open Position.",
+      "footwork": "RLR",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "B",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to LF in Tandem Position, Man in front",
+      "footwork": "T",
+      "alignment": "Tandem Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RLR",
+      "action": "Fwd lock RLR, following Man",
+      "footwork": "RLR",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in line with RF or LF as appropriate, then turn to end LF back in Tandem Position, Man behind.",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "LRL",
+      "action": "Fwd lock LRL",
+      "footwork": "LRL",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF or RF as appropriate, then turn to end RF back in Tandem Position, Man in front.",
+      "footwork": "F",
+      "alignment": "Open Position",
+      "amount_of_turn": "1/2 to L",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RLR",
+      "action": "Fwd lock RLR. End in Open Position.",
+      "footwork": "RLR",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

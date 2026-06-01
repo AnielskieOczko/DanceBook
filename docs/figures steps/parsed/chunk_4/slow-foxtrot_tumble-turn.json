@@ -1,0 +1,58 @@
+{
+  "name": "Tumble Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/tumble-turn"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Lady's head starts right, turns to left over first three steps, then turns right on Pivot.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "Facing Wall",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Lady's head starts right"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side",
+      "footwork": "F",
+      "alignment": "Line of Dance",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "Turns left"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "&",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Reverse Pivot",
+      "footwork": "B",
+      "alignment": "Diagonal Center",
+      "amount_of_turn": "1/2 to R",
+      "comments": [
+        "Turns right on pivot"
+      ]
+    }
+  ]
+}

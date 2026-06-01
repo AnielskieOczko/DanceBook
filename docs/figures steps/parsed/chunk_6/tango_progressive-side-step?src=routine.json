@@ -1,0 +1,96 @@
+{
+  "name": "Progressive Side Step",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Side Position",
+  "preceding_figure_names": "Back Corte, Brush Tap, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Outside Swivel, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Closed Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Natural Promenade Turn (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Promenade Link (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Back Open Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Fallaway Promenade (at end of last step of preceding figure, using Open Finish, keep feet in place and turn Lady to PP, count &), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Five Step, Contra Check",
+  "notes": "A slight turn to left can be made, in which case there is slight CBM on 1 and 3\nWhen there is turn and CBM, footwork changes accordingly to IE of BH (or outside edge of BH, as it applies).\nProgressive side step is often used to handle traffic, not typically designed to be used in a routine.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "The amount of turn depends on the Man.",
+        "Man compress through R shoulder, rotate. Do not go to lady's left side."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "side and slightly back",
+      "footwork": "IE",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward in CBMP",
+      "footwork": "H",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "BH",
+      "alignment": "Nil",
+      "amount_of_turn": "slight CBM",
+      "comments": [
+        "RF Toe in line with LF. CBMP, use more OE of RF, more compact, that will add more power and torque.",
+        "Allow right inside thigh to turn down. Use ab muscle to collect weight, keep upper center to Man.",
+        "Allow hips to rotate and body to stay forward with the knees.",
+        "It's curving, but make sure not to get into Man's space. Stay very left."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "side, slightly forward",
+      "footwork": "IE",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "By the book, it is \"side, slightly fwd\". It's more of a rocking action with a side aspect. This figure will add torsion and windup. The intention is not to move forward, though some coaches prefer big back steps to really move and cover more distance.",
+        "When doing it \"side and slightly fwd\", the sensation is the lower of R inner thigh forces/pushes L leg to go to side, add torque to next step."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

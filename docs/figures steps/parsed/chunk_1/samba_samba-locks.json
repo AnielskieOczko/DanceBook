@@ -1,0 +1,93 @@
+{
+"name": "Samba Locks",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/samba-locks"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Open Counter Promenade Position",
+  "ending_position": "Open Counter Promenade Position",
+  "preceding_figure_names": "Criss Cross Bota Fogos (Shadow Bota Fogos), Criss Cross Voltas, Maypole, Natural Basic Movement, Reverse Basic Movement, Side Basic Movement, Three Step Turn",
+  "following_figure_names": "Criss Cross Bota Fogos (Shadow Bota Fogos), Criss Cross Voltas (start from step 4 or 8), Maypole (Man turning R), Solo Spot Volta to Right (Lady to Left) (Lady turning L)",
+  "notes": "Articulate the legs and feet. Also have more isolation of upper body and hips, not one big piece. Hips move more.\nMan and Lady: free arm is extended to side, just below shoulder level to match partner's arm line.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward, part weight, toe turned out, turn 1/8 to R on LF, body and RF turn more",
+      "footwork": "F",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Body and RF turn more"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward, small step, toe turned out, no turn, body forward",
+      "footwork": "F",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "No turn"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF behind RF (Cuban Cross), no turn, toe position T",
+      "footwork": "T",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward, small step, in Open CPP, toe turned out, no turn, body forward",
+      "footwork": "F",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward, part weight, toe turned out, turn 1/8 to L on RF, body and LF turn more",
+      "footwork": "F",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Body and LF turn more"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF forward, small step, toe turned out, no turn, body forward",
+      "footwork": "F",
+      "alignment": "Open Counter Promenade Position",
+      "amount_of_turn": "No turn",
+      "comments": [
+        "No turn"
+      ]
+    }
+  ]
+}

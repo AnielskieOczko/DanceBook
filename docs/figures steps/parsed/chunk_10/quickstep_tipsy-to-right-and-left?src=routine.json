@@ -1,0 +1,104 @@
+{
+  "name": "Tipsy to Right",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/tipsy-to-right-and-left?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Lock, Cross Swivel, Double Reverse Spin, Hover Corte, Natural Turn, Natural Turn And Back Lock, Progressive Chasse To Right, Reverse Pivot, Tipple Chasse To Right, Tipsy To L",
+  "following_figure_names": "Forward Lock (steps 2-5), Tipsy To L, Tipsy to Left",
+  "notes": "When a Tipsy is danced after a forward step on the LF any turn made will be to L. When it is danced after a step back on LF, any turn made will be to R.\nPrecede with a step forward on RF, OP in CBMP",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side (small step) according to preceding figure",
+      "footwork": "H",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(S)",
+        "None, or up to 3/8 to R or L (see note)",
+        "Slight rise on 1 and 2"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Move LF halfway towards RF",
+      "footwork": "B",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(L/S)",
+        "Lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side (small step) with IE of T of LF",
+      "footwork": "H",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(L/R)",
+        "Down, with sharp flexing of knees"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side (small step) according to preceding figure",
+      "footwork": "H",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(S)",
+        "Slight rise on 1 and 2"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Move RF halfway towards LF",
+      "footwork": "B",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(R/S)",
+        "Lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side (small step) with IE of T of RF",
+      "footwork": "H",
+      "alignment": "None",
+      "amount_of_turn": "None",
+      "comments": [
+        "Sway(R/L)",
+        "Down, with sharp flexing of knees"
+      ]
+    }
+  ]
+}

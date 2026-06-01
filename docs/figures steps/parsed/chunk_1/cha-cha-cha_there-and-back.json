@@ -1,0 +1,107 @@
+{
+  "name":"There and Back",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/there-and-back"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Aida, Alemana, Basic Movement In Place, Closed Basic Movement, Cross Basic, Cuban Break RF, Hand To Hand LSP, New York RSP, Reverse Top, Rope Spinning, Shoulder To Shoulder Right Side, Side Step To Left commenced with RF, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), There And Back, Three Cha Cha Chas Forward, Time Step RF, Underarm Turn To R",
+  "following_figure_names": "Closed Basic Movement, Open Basic Movement, Spot or Switch Turn To R (Lady to L), Underarm Turn to L, Side Step To Left commenced with LF, Side Step To Right commenced with LF, Hand To Hand RSP, There And Back, Time Step LF, Fan, Cuban Break RF, Split Cuban Break RF",
+  "notes": "Sit and Pose. Style\nPose, Styling\nStyle",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Replace weight to RF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 & 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Three small steps back LRL (Backward Runs)",
+      "footwork": "HF",
+      "alignment": "Backward Runs",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back, Sit and Pose",
+      "footwork": "WF",
+      "alignment": "Sit and Pose",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Close RF to LF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Replace weight to LF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "4 & 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Three small steps Backward Runs RLR",
+      "footwork": "HF",
+      "alignment": "Backward Runs",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Pose, Styling",
+      "footwork": "WF",
+      "alignment": "Pose",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

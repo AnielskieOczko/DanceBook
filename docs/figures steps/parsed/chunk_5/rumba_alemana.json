@@ -1,0 +1,180 @@
+{
+  "name": "Alemana",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/alemana"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Advanced Hip Twists, Basic Movements: Open, Closed Hip Twist, Curl, Fan, Hockey Stick, Open Hip Twist, Opening Out From Reverse Top, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R), Three Threes",
+  "following_figure_names": "Basic Movements: Closed, Fan, Opening Out To Right And Left (Lady LF side on 6), Hand To Hand RSP (when ending to side), Side Step To Left commenced with LF (when ending to side), Side Step To Right commenced with LF (when ending to side), Cuban Rock LF (when ending to side), Syncopated Cuban Rock LF (when ending to side), New York LSP (when ending diagonally fwd in Open CPP), Spot or Switch Turn To R (Lady to L) (when ending diagonally fwd in Open CPP), Underarm Turn To L (when ending diagonally fwd in Open CPP), Natural Opening Out Movement (when ending Lady fwd toards Man's R side), Closed Hip Twist (when ending Lady fwd toards Man's R side), Spiral (when ending Lady fwd toards Man's R side), Rope Spinning (when ending Lady fwd toards Man's R side), Progressive Walks Forward in Right Shadow Position (when ending R Shadow Position)",
+  "notes": "This is really a signature figure for Lady. Make it count!\nLady may use Extended Forward Walk on step 4.\nAlemana may start in Fan Position or Open Position (Lady steps back on 1 instead of closing RF to LF, make a complete turn R over 4-6)\nAlternative Finishing positions:\nMay and Lady end to side (could be in closed position)\nMan steps in front of Lady, forcing her to step side instead of front.\nAnother option is to finish in Open Position: last step Man steps fwd, strongly hold hand and have Lady step back.\nMan and Lady end diagonally fwd in Open CPP\nMan 1/8 to R, on 6 stop Lady's turn with L hand, Lady 1 1/8 R over 3-6.\nLady end fwd towards Man's R Side (normal for continuing with Closed Hip Twist) - sort of true Alemana.\nMan turns body slightly R on 6 to lead lady towards his R side. Lady LF fwd in line with RF.\nMan LF slightly leftwards on the next step.\nMan and Lady fwd towards partner's R side\nMan RF fwd in line with LF towards Lady's R side\nLead next and last step as position 3.\nMan may take up to 1/4 R over 5 & 6, adjusting Lady's turn accordingly.\nR Shadow Position\nMan leads Lady towards R side as above\nContinue to turn her R.\nLady ends LF back having made 1/2 turn R on LF during beat 1. Gain R Shadow Hold.\nAlemana can be danced with R to R hand hold. Precedes with Hockey Stick or any figure ending in Open Position.\nThen Man changes Lady's R hand into his R hand on last step and release hold with L hand.\nLady makes a complete turn R on Alemana.\nMan takes last step fwd i line with LF towards partner's R side.\nLead next and Lady's last step as # 3 position.\nMan may take up to 1/4 R over 5 & 6, adjusting Lady's turn accordingly.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "transfer weight",
+      "footwork": "Transfer",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "close to RF",
+      "footwork": "T",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "Switch weight on '1'."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "Backward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "transfer weight",
+      "footwork": "Transfer",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "6",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "side step forward",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "Side step; then step 6 would be a RF forward"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "close to LF",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": [
+        "Close RF to LF. End in Closed Position."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2 3 4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward under raised arm",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Three Fwd walks under raised arm LF RF LF. End in Closed Position | 1 1/8 to R over 4 to 6"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "1/8 to R",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "RF fwd | 1/8 to R"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "3 4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Lady steps in a equilateral triangle."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "2&",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "step forward to Man's L side diagonally",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "\"2&\": LF step fwd to Man's L side, diagonally. Draw in L arm to front of body. Weight onto LF, On \"&\", RF brush (draw crescent moon) and point out (away from Man, no weight yet) to 2nd point in the triangle (middle in front of man)"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "3&",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step on RF, turn upper body to R, hold LF",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "\"3&\": step on RF, on \"&\", turn upper body to R, hold LF as long as possible, then sharp leg movement to place L leg."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward step",
+      "footwork": "F",
+      "alignment": "Forward",
+      "amount_of_turn": "0",
+      "comments": [
+        "\"4\": LF fwd step (could be to the side depending on next figure). Need to finish this step, settle weight with chest forward toward Man before next step."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+ "name": "Weave in Waltz Time",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/basic-weave?src=routine"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Natural Spin Turn, Outside Spin, Reverse Turn",
+  "following_figure_names": "Natural Spin Turn, Natural Turn, Hesitation Change, Left Whisk, Wing, Chasse from Promenade Position, Closed Wing, Cross Hesitation",
+  "notes": "Could end in PP. Man steps Outside Partner. Variation: this step can finish in Promenade position going DW. step 3: ending moving down LOD. step 4: same, LOD. step 5: Man back step, Lady: fwd; CBM. step 6: lady: RF forward DW (after collecting/brushing). then collect LF, ending in promenade position. This step is usually used in corners. Not very good to use along LOD to stop movement. When Reverse Turn precedes this step, it's better to commence 3 steps Reverse Turn facing LOD.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "starts to turn L"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "TH",
+      "alignment": "BLOD",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "starts to rise e/o4, NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "BDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "TH",
+      "alignment": "PDW",
+      "amount_of_turn": "1/4 between 5-6",
+      "comments": [
+        "up, lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "--",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Soft knee on this step."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "starts to turn L",
+        "rise e/o 2"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "TH",
+      "alignment": "PDC",
+      "amount_of_turn": "1/4 between 2-3",
+      "comments": [
+        "body turn less",
+        "up, lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "like outside change step.",
+        "Body stay behind the foot.",
+        "Allow R side to relax down to create the diagonal.",
+        "Avoid turn center and shoulder to left."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "T",
+      "alignment": "FDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "starts to turn L",
+        "cont to rise on 5",
+        "Taking spine to LF."
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4 between 5-6",
+      "comments": [
+        "up, lower e/o 6",
+        "Finish the turn on LF (in previous step) before stepping RF diagonally back."
+      ]
+    }
+  ]
+}

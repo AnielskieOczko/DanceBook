@@ -1,0 +1,130 @@
+{
+  "name": "Closed Promenade",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/closed-promenade?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Reverse Turn, Chase, Contra Check, Fallaway Four Step, Fallaway Promenade, Five Step, Four Step, Natural Promenade Turn, Natural Twist Turn, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Oversway, Progressive Link, Progressive Side Step Reverse Turn",
+  "following_figure_names": "Walk (LF), Progressive Side Step, Progressive Link, Back Corte, LF Rock, Open Reverse Turn, Lady Outside (when preceding figure ended DC), Open Reverse Turn, Lady In Line (when preceding figure ended DC), Progressive Side Step Reverse Turn (when preceding figure ended DC), Reverse Outside Swivel (when preceding figure ended DC), Basic Reverse Turn (when preceding figure ended DC), Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal), Four Step, Outside Swivel, Four Step Change, Brush Tap, Fallaway Four Step, Oversway, Five Step, Contra Check",
+  "notes": "Note:\nMan may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot.\n\nThe feeling is that Lady is dancing at Man's right edge. Upper body is very much behind Man's hip.\nStay connected with Man, keep R side fwd rotated to Man.\nRF Toe in line with LF. \"side\" step is like a forward step. Move \"with\" the Man.\nHead sharp flip to L, keep the volume between 2 heads, extended right away (do not close with Man and then extend in 2 steps). It's very easy to get in front of Man during transition of steps. Be very aware to continue to stretch L during the steps. Head motion is generally in sync with hip movement.\nKeep frame solid: don't lose R arm, R arm fwd to Man with tone, it doesn't go back, or becomes \"loose\". keep R elbow out, not down.\nThis is the sharp, accent step. (compared to next step \"LF closes to RF\" is softer and smoother)\nS: LF closes to RF slightly fwd | Backing DW | Whole foot\nDo not slide foot. Left foot roll off and end on ball of front of LF, then lift and place LF close to RF (could have a very small gap), slightly forward.\nSofter and smoother step, not the sharp accent.\nBack to starting foot position.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "step to side in closed position along line of dance, pointing diagonal wall, heel down",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "step forward and across in closed position, pointing diagonal wall, in contrary body movement position",
+      "footwork": "BF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "step to side and slightly forward, pointing diagonal wall, inside edge of foot",
+      "footwork": "IE",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "close to LF slightly back, whole foot, facing diagonal wall",
+      "footwork": "WF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step to side in closed position along line of dance, pointing diagonal centre, heel down",
+      "footwork": "WF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "step forward and across in closed position, contrary body movement, keep L hip behind man's hip",
+      "footwork": "BF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep L hip \"behind\" Man's hip",
+        "Do not move head",
+        "Track behind his R leg"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "step to side and slightly back, backing diagonal wall, inside edge of heel, quarter turn to left between 2-3",
+      "footwork": "IE",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Keep L hip \"behind\" Man's hip",
+        "Do not move head",
+        "Track behind his R leg",
+        "R hip should be higher",
+        "RF and centre of gravity should not go too far pass",
+        "Do not overshoot weight",
+        "Body would be slanted to L do not put too much weight on RF, it would become too heavy",
+        "Head sharp flip to L, keep the volume between 2 heads, extended right away (do not close with Man and then extend in 2 steps)",
+        "Continue to stretch L during the steps",
+        "Head motion is generally in sync with hip movement",
+        "Keep frame solid: don't lose R arm, R arm fwd to Man with tone, it doesn't go back, or becomes \"loose\"",
+        "R elbow out, not down",
+        "This is the sharp, accent step (compared to next step \"LF closes to RF\" is softer and smoother)"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF slightly forward, whole foot, backing diagonal wall",
+      "footwork": "WF",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Do not slide foot",
+        "Left foot roll off and end on ball of front of LF, then lift and place LF close to RF (could have a very small gap), slightly forward",
+        "Softer and smoother step, not the sharp accent",
+        "Back to starting foot position"
+      ]
+    }
+  ]
+}

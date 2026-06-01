@@ -1,0 +1,245 @@
+{
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Hover Telemark to PP, Open Impetus, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Three Step, Change Of Direction",
+  "following_figure_names": "Three Step, Change Of Direction, Hover Telemark, Reverse Wave, Fallaway Reverse and Slip Pivot",
+  "notes": "Alternate alignments for the Weave from PP may be found in the Waltz charts.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in PP and CBMP, Pointing DC, Body facing LOD, HT, Sway(S), rise e/o 1",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "HT",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, Facing DC, T, start to turn L, Sways(S), CBM, Up",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sways(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side and slightly back, Backing DW, T, 1/4 between 2-3, Sway(L), Up",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 L",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back in CBMP, Backing LOD, T, 1/8 between 3-4, Sway(L), Up",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back, Backing LOD, T, start to turn L, Sway(S), CBM, Up",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd, Pointing DW, T, 3/8 between 5-6, Body turns less, Sway(R), Up",
+      "footwork": "F",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "TH",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, Facing DW, TH, --, Sway(R), Up",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "Lower e/o 7"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd, Facing DW, H, Sway(S), CBM",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP, Pointing to center (moving DC), HT, start to turn L, Sway(S), CBM, rise e/o 1",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "--",
+      "comments": [
+        "HT",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back, Backing DC, T, 3/8 between 1-2, Sway(S), Up",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side and slightly fwd, Pointing to LOD, T, 3/8 between 2-3, Body turns less, Sway(R), Up",
+      "footwork": "F",
+      "alignment": "Pointing to LOD",
+      "amount_of_turn": "3/8",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP, Facing LOD, T, --, Sway(R), Up",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd, Facing LOD, T, start to turn L, Sways(S), CBM, Up",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sways(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "RF",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side, Backing Wall, TH, 1/4 between 5-6, Sway(L), Up",
+      "footwork": "F",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/4 L",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 15,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP, Backing DW, TH, 1/8 between 6-7, Body turns less, Sway(L), Up",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "NFR",
+        "Lower e/o 7"
+      ]
+    },
+    {
+      "step_number": 16,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back, Backing DW, T, --, Sway(S), CBM, --",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

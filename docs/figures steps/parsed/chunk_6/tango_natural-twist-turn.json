@@ -1,0 +1,175 @@
+{
+  "name": "Natural Twist Turn",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn"
+  ],
+  "dance_type": "TANGO",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Fallaway Promenade, Progressive Link",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Back Corte, LF Rock",
+  "notes": "Amount of Turn: A complete turn to the right.\nOther variations:\n7/8 to R could be made to end facing LOD. The following Promenade would move DC.\n3/4 to R could be made at a corner or at the side of the room to end facing DC. The following Promenade would move to center.\nWhen following with Back Corté or LF Rock Man will turn a further 1/4 to face partner\nFollower:\nS: RF to side in PP | Along LOD pointing DC | H\nStrong step.\nQ; LF fwd and across in PP and CBMP | Pointing down LOD | H\nAfter the step, center stays with L leg. Allow man to get ahead of Lady.\nQ: RF fwd between partner's feet | Down LOD | H | CBM\nNot too aggressive on this step.\nThere is slight rise on R hip /R side when Man cuts off in front. \nTake head to left. Then keep head very left.\nS: LF fwd preparing to step outside partner L side leading | Down LOD pointing DW | H\nKeep left side up and forward, do not lift shoulder.\nL shoulder lead is important.\nKeep tangent of circle, curving steps not as big.\nQ: RF fwd in CBMP, OP | To Wall | HB | CBM\nLeft shoulder is \"walking around\", dancing outside the circle. Don't drop left side/shoulder. Head follows the arm.\nQ: LF to side small step in PP | Facing DC | BH and IE of B of RF \nStay behind Man. Don't drop left side/shoulder. \nHead turning to PP: Don't turn head to R too early, don't turn head on its own too late either. (Sharpness depends on the lead, could be smooth turn or sharp head turn.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP",
+      "footwork": "F",
+      "alignment": "Along LOD Pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Along LOD Pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "H",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "F",
+      "alignment": "Backing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "BH"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "crosses behind LF",
+      "footwork": "F",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "B"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "start to twist R allowing feet to uncross",
+      "footwork": "F",
+      "alignment": "Toward the alignment of 6",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "feet almost closed weight on RF in PP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP",
+      "footwork": "F",
+      "alignment": "Along LOD pointing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Pointing down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd between partner's feet",
+      "footwork": "F",
+      "alignment": "Down LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "H",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd preparing to step outside partner L side leading",
+      "footwork": "F",
+      "alignment": "Down LOD pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "H"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "To Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "HB",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side small step in PP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "BH",
+        "IE of B of RF"
+      ]
+    }
+  ]
+}

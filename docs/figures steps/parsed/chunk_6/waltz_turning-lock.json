@@ -1,0 +1,96 @@
+{
+  "name" : "Turning Lock to Right",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock" ],
+  "dance_type" : "WALTZ",
+  "level" : "Silver",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Impetus, Natural Spin Turn, Outside Spin",
+  "following_figure_names" : "Wing, Weave From Promenade Position, Cross Hesitation, Natural Spin Turn, Natural Turn, Closed Wing, Chasse From Promenade Position, Left Whisk",
+  "notes" : "Turning lock curves gently forward.\nIn Turning Lock, foot rise comes before body rise (rise on count 2 LF, or end of 1& on RF).\nLast step of preceding Natural Spin Turn: Footwork for will be the normal TH for Man and Lady.\nIt may be shaped to the man's left, leading the lady to turn her head right.\nThe Turning Lock may end in PP, see Outside Change ended in PP.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1 (1/2 beat)",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back, R side leading",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "0",
+    "comments" : [ "Thigh and hips are 1/8 to R. (not turning feet)", "Angle through diagonal, head stretch leftward. Poised diagonally forward. Do not pull back." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "& (1/2 beat)",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF crosses in front of RF",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "0",
+    "comments" : [ "rise on 2 and 3" ]
+  }, {
+    "step_number" : 3,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF back and slightly R",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Rotate through the hips, pivot RF and turn, make sure Lady stays with you." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side and slightly fwd",
+    "footwork" : "TH",
+    "alignment" : "Pointing DW",
+    "amount_of_turn" : "1/4 btwn 3-4",
+    "comments" : [ "body turns less", "Sway(S)", "up, lower e/o 4" ]
+  }, {
+    "step_number" : 5,
+    "timing" : "1 (1/2 beat)",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd, L side leading",
+    "footwork" : "T",
+    "alignment" : "DC",
+    "amount_of_turn" : "0",
+    "comments" : [ "After end of previous step (often, Natural Spin Turn) which is ending R side lead, connect R shoulder down. Really swing L side forward, let L hip and L side come diagonally forward (feels like shoulder rotating to R) sooner, changing it to L side lead.", "Don't think about dancing around the Man, think about dancing \"through\" the Man.", "Keep all step size in sync with Man.", "Middle of body stays with Man, keep contact and fill in the space" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "& (1/2 beat)",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF crosses behind LF",
+    "footwork" : "T",
+    "alignment" : "DC",
+    "amount_of_turn" : "0",
+    "comments" : [ "Glute forward, don't sag.", "head weight to left.", "Both knees are flexed, cushioned.", "Both feet on toes, soft.", "Make sure weight is over ball of RF, soft, cushioned. Use the ankle and knees to push out." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF fwd and slightly L",
+    "footwork" : "T",
+    "alignment" : "DC",
+    "amount_of_turn" : "start to turn L",
+    "comments" : [ "Be very ab aware when rising, pull center back and stay on your own balance.", "Body dancing forward, arms to partner." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side and slightly back",
+    "footwork" : "TH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/4 btwn 3-4",
+    "comments" : [ "This is closed finish.", "This could end in PP (after RF brushes to LF) in which case, head shape to right in its space. Do not turn head too fast or too early." ]
+  } ]
+}

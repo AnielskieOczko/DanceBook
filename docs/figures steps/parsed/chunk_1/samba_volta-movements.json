@@ -1,0 +1,293 @@
+{
+  "Traveling Volta to Left": {
+    "name": "Traveling Volta to Left",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/samba/volta-movements"
+    ],
+    "dance_type": "SAMBA",
+    "level": "Newcomer",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "Natural Basic Movement, Reverse Basic Movement, Rhythm Bounce, Side Basic Movement, Whisk To Left, Traveling Bota Fogos Back",
+    "following_figure_names": "Whisk To Left",
+    "notes": "Keep the movement compact, do not step too big. Soften the movement, access the joints, not using muscle unnecessarily which may make movement stiff. Body still faces forward. (Hip turn is relative to body. If body also turns, there is really no twist.) Keep head flat, do not pop up and down. Front leg has to do a lot of work. For beginners, use \"Up-side-down\" to remember the motion for Voltas: Use front leg to go up, then step to side, then come down (and Cuban cross feet). Do not use back leg to step and push. When practicing, release back foot from floor and let front leg do all the work. There is hip rotation, but the more prominent movement should be bounce, pendulum movement. Heel of front foot: not flat, nor up the whole time. It should \"kissing\" the floor, down on beat, up on 1/2 beat. Volta action (when finishing Volta, knee fwd, butt in, don't leave butt out/back). Pay attention to elbow position, elbow is diagonally down, not upward. Body inclination: When starting with RF (RF crossing in front), there can be slight inclination of body to the right. (incline to L when starting with LF). The degree of inclination may be increased in proportion to the amount of turn used. There are exceptions: no body inclination: when Lady dances Maypole, when Lady dances Spot Volta turning under arm, or during a Foot change. In Roundabout, when commenced with RF, Man may incline his body slightly to R or L, (lady normal opposite). Same when commencing with LF. Arms: The free arm should not be static. Option: 1 - draw free arm in quickly, then take the whole a2a3a4 to extend it out to the side. Option: same side arm as the foot crossing in front goes in front of the body, drawing an almost half circle plate in front over the 4 counts. When in closed position: Lady's RH to Man's LH, elbow is downward/out angle, not too out/flat, not too close to body either. Keep tone and not flapping elbow when doing multiple Voltas.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "1",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "LF in front of RF (Cuban Cross) | BF",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "push off ball of LF (standing leg) to create power, rise, LF heel up, squeeze left side, pendulum and L hip rotate to L (draws figure 8 half circle).",
+          "maintain body facing forward, hip rotation relative to body."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "continue with foot rise, \"a\" is very fast, L hip rotate to L, which sends R leg to side, small step.",
+        "footwork": "T",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "R leg to side, small step, both legs straight, on balls of both feet, then move spine to RF."
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "2",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Take part weight to RF and draw LF in front of RF (Cuban Cross) | BF (Pressure on ball of foot)",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "Push off ball of LF, take part of weight to RF, rotating R hip to R (belt buckle 1 o'clock), the rotation draws LF across in front."
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Repeat step 2 and 3 twice.",
+        "footwork": "",
+        "alignment": "",
+        "amount_of_turn": "",
+        "comments": [
+          "Continue repeating the pattern for additional counts as needed."
+        ]
+      }
+    ]
+  },
+  "Traveling Volta to Right": {
+    "name": "Traveling Volta to Right",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/samba/volta-movements"
+    ],
+    "dance_type": "SAMBA",
+    "level": "Newcomer",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "Natural Basic Movement, Reverse Basic Movement, Rhythm Bounce, Side Basic Movement, Whisk To Right",
+    "following_figure_names": "Whisk To Right",
+    "notes": "Mirror of Traveling Volta to Left. Keep movement compact, avoid excessive step size, maintain forward facing, soften movement, use bounce and pendulum action. Similar technique but mirrored for the right side.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "1",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "RF in front of LF (Cuban Cross) | BF",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "Mirrored technique to left side."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "LF to side and slightly back w/o weight, toe turned out | Pressure on IE of T",
+        "footwork": "T",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "Mirror of step a for left side."
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "2",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Take part weight to LF and draw RF in front of LF (Cuban Cross) | BF (Pressure on ball of foot)",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "none",
+        "comments": [
+          "Push off ball of RF, take part of weight to LF, rotating L hip to L."
+        ]
+      },
+      {
+        "step_number": 4,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Repeat step 2 and 3 twice.",
+        "footwork": "",
+        "alignment": "",
+        "amount_of_turn": "",
+        "comments": [
+          "Repeat pattern as needed."
+        ]
+      }
+    ]
+  },
+  "Drop Volta": {
+    "name": "Drop Volta",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/samba/volta-movements"
+    ],
+    "dance_type": "SAMBA",
+    "level": "Newcomer",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "",
+    "following_figure_names": "",
+    "notes": "Danced with no turn in Closed Position or Shadow Position, holding 2 beats. Example: Step on count \"1\" weight on LF, hold position for \"2\", continue with steps Traveling Volta steps 2-5 for counts \"a3 a4\". Keep movement compact, do not step too big.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "1",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Step on count \"1\", weight on LF",
+        "footwork": "WF",
+        "alignment": "Closed Position",
+        "amount_of_turn": "none",
+        "comments": [
+          "Hold position for \"2\"."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "2",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Hold position",
+        "footwork": "",
+        "alignment": "",
+        "amount_of_turn": "",
+        "comments": [
+          "Hold for beat 2."
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "",
+        "action": "Continue with steps Traveling Volta steps 2-5 for counts \"a3 a4\".",
+        "footwork": "",
+        "alignment": "",
+        "amount_of_turn": "",
+        "comments": [
+          "Proceed with Traveling Volta pattern."
+        ]
+      }
+    ]
+  },
+  "Circular Volta": {
+    "name": "Circular Volta",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/samba/volta-movements"
+    ],
+    "dance_type": "SAMBA",
+    "level": "Silver | Gold",
+    "starting_foot_leader": "LF",
+    "ending_foot_leader": "RF",
+    "starting_foot_follower": "RF",
+    "ending_foot_follower": "LF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "",
+    "following_figure_names": "",
+    "notes": "Circular Volta is a Silver and Gold level step: 1 complete turn to L or R over 2 bars of music. Front foot travels around circumference of a small circle. Used in Maypole, Shadow Circular Volta, Roundabout.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "1 2",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Begin turn, travel around small circle",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "1/4 to R",
+        "comments": [
+          "Complete turn over 2 bars, front foot traces circle."
+        ]
+      }
+    ]
+  },
+  "Spot Volta": {
+    "name": "Spot Volta",
+    "urls": [
+      "https://www.dancecentral.info/ballroom/international-style/samba/volta-movements"
+    ],
+    "dance_type": "SAMBA",
+    "level": "Silver | Gold",
+    "starting_foot_leader": "RF",
+    "ending_foot_leader": "LF",
+    "starting_foot_follower": "LF",
+    "ending_foot_follower": "RF",
+    "starting_position": "Closed Position",
+    "ending_position": "Closed Position",
+    "preceding_figure_names": "",
+    "following_figure_names": "",
+    "notes": "Spot Volta: 1 complete turn over 1 bar of music. Spot Volta to L: start with RF in front, weight on RF, 1/2 turn, step onto LF with weight on \"1\", etc. Lady can dance Spot Volta to R under raised arms (Man dances Whisk to L). Can be ending to Criss Cross Bota Fogos, Argentine Crosses.",
+    "steps": [
+      {
+        "step_number": 1,
+        "timing": "1",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Start rising and turning to L, 1/2 turn, step onto LF with weight on \"1\".",
+        "footwork": "LF",
+        "alignment": "Facing",
+        "amount_of_turn": "1/2 turn to L",
+        "comments": [
+          "Maintain foot position, continue turning."
+        ]
+      },
+      {
+        "step_number": 2,
+        "timing": "a",
+        "role": "LEADER",
+        "foot": "LF",
+        "action": "Keep LF in spot, RF small step fwd, keep turning L.",
+        "footwork": "RF",
+        "alignment": "Facing",
+        "amount_of_turn": "",
+        "comments": [
+          "Small step forward on \"a\"."
+        ]
+      },
+      {
+        "step_number": 3,
+        "timing": "2",
+        "role": "LEADER",
+        "foot": "RF",
+        "action": "Take minimal weight on RF and replace weight on to LF on \"2\", lowering front LF heel, facing partner again.",
+        "footwork": "BF",
+        "alignment": "Facing",
+        "amount_of_turn": "",
+        "comments": [
+          "Can continue Spot Volta to R."
+        ]
+      }
+    ]
+  }
+}

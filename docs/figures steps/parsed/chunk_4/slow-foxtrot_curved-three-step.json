@@ -1,0 +1,102 @@
+{
+  "name": "Curved Three Step",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-three-step"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Wall",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Not listed in \"gray book\", but often danced.\nCan be followed with Feather Finish.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Center",
+      "amount_of_turn": "1/2 to L",
+      "comments": [
+        "Sway(L)",
+        "rise e/o 1",
+        "R shoulder leading"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "forward",
+      "footwork": "F",
+      "alignment": "Against LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "up, lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "F",
+      "alignment": "BLOD",
+      "amount_of_turn": "",
+      "comments": [
+        "rise e/o 1",
+        "NFR",
+        "Sway(R)"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "F",
+      "alignment": "Wall",
+      "amount_of_turn": "1/2 turn to L",
+      "comments": [
+        "Sway(R)",
+        "up, NFR, lower e/o 2"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "F",
+      "alignment": "Backing Against LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

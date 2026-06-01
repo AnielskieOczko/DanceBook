@@ -1,0 +1,101 @@
+{
+  "name": "Roundabout (to R and L)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/roundabout"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Contra Position",
+  "ending_position": "Contra Position",
+  "preceding_figure_names": "Contra Bota Fogos, Foot Change 5: Promenade Position to Right Contra Position, Maypole, Reverse Basic Movement, Round About, Side Basic Movement, Traveling Bota Fogos Forward",
+  "following_figure_names": "Contra Bota Fogos (Roundabout to R followed by LF Contra Bota Fogos, Roundabout to L followed by RF Contra Bota Fogos), Round About (Roundabout to R followed by Roundabout to L, Roundabout to L followed by Roundabout to R)",
+  "notes": "This figure may be repeated. Man and Lady circle around an imaginary spot between them, keeping the shoulders parallel.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1 a 2 a 3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Circular Volta in R Contra Position, commence with RF, 7/8 to R over steps 1-5",
+      "footwork": "BF",
+      "alignment": "R Contra Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Starts in R Contra Position",
+        "Uses bounce action"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side without weight, 3/8 to R over steps 6-7, I/E of T (Pressure)",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "",
+      "comments": [
+        "LF to side without weight"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Take minimal weight to LF and replace weight to RF in L Contra Position",
+      "footwork": "BF",
+      "alignment": "L Contra Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Replace weight to RF",
+        "Ends in L Contra Position"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1 a 2 a 3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Circular Volta in L Contra Position, commence with RF, 7/8 to R over steps 1-5",
+      "footwork": "BF",
+      "alignment": "L Contra Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Starts in L Contra Position",
+        "Uses bounce action"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side without weight, 3/8 to R over steps 6-7, I/E of T (Pressure)",
+      "footwork": "BF",
+      "alignment": "Side",
+      "amount_of_turn": "",
+      "comments": [
+        "RF to side without weight"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Take minimal weight to RF and replace weight to LF in R Contra Position",
+      "footwork": "BF",
+      "alignment": "R Contra Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Replace weight to LF",
+        "Ends in R Contra Position"
+      ]
+    }
+  ]
+}

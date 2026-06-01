@@ -1,0 +1,85 @@
+{
+  "name":"Tango Walk",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/walk?src=routine"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Finish, Closed Promenade, Four Step Change, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step, Progressive Side Step Reverse Turn, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk, Progressive Side Step, Progressive Side Step Reverse Turn, Progressive Link, Rock Turn, Open Reverse Turn, Lady Outside, Open Reverse Turn, Lady In Line, RF Rock (after Walk back on LF)",
+  "notes": "Technique Notes: There are different Types of \"Slow\" timing in Tango, For Tango Walk, use step on count 1 - hold on count 2. Slow Walk: effort at beginning, then let it ride for remainder of the step, Step starts from \"middle\" weight and end in middle. Next Slow is another effort. When leg felt being pushed, it's the difference in timing. Communicate via center, then leg won't be pushing. First feel the movement of your center, as center starts to move back, the leading foot (e.g. RF step back) goes ahead of it to reach back. In Swing dances, a step typically starts from feet together and finish feet together. In Tango, a step typically starts from weight in between leg and finish in between. In Swing dances, foot (different parts of foot) stays in contact with floor 100% of time. In Tango, to create the sharpness and lightness, we break the contact with floor for just a split second. Leave foot in original place for just a split of second longer (but the foot bears no weight), do not retract foot immediately, do not drag/slide/glide the foot. Same for backward walk: after having rolled off the heel, leave it there for just a split second and then lift and place back. Don't lift too high, too much. Just need to break contact and lift. Don't over do it. \"lift and place\" lift over a pencil. The focus is how sharply the foot arrives at the destination. Any step that has the chance of feet apart, try to keep them apart for a second longer, e.g. Closed Promenade, after S, leave the back foot longer before step on Q. The time foot stays in the air is short. The delay in the foot and their faster foot placement are what makes Tango look sharp and snappy. (The delay and release are more dramatic in Tango than Swing dances.) Feet are staccato, but body/spine should be moving across the floor smoothly. There is no rise and fall in Tango. Stay flat. Walk like carrying two heavy suitcases, grounded. Arm should not be tense, otherwise Man is dancing with the arm and elbow. Man should be dancing with rib cage, hips and legs, not with arm. Tango Walk normally curves to L. In Tango continuous Walk, you are always alternating CBMP and side leading. Curving comes from hip and standing leg twisting and rotating. Quarter of a turn can be accomplished by 4 steps, or 2 steps, or even 1 step (swivel). When accomplished by less steps, it's more turn, and steps are shorter. Do not drop shoulder when doing CBMP, keep shoulder flat. Length of the step: Forward step: center of gravity moves, delay straightening leg as long, as far as you can, then strike the leg at the last second (extend the leg), otherwise you'll fall. When the knee strikes, it's not perfectly straight, it's slightly flexed. It gets close to straight when it hits the floor. Back Walk: To gain extra length of a step: first \"reach\" with extended leg to the fullest (not locked straight, slightly flexed, but not bent knee); then L hip can open up a bit (hip slightly rise is ok). For continuous back walk, L hip is constantly turning more to L adding a bit more. Bigger step does not mean faster step. Forward Walk: Articulate through knees to ankle. There is a point where body weight is middle of two feet, then back foot comes underneath you, then body doesn't get over the front foot until moving foot passes the standing leg. Do not put weight over receiving foot too quickly (lurching look). Back Walk: Dividing leg, leaving body/weight at front foot, then moving body back. Extend foot, heel comes down gradually, as the other foot draws in (as body/foot is passing), do not drop heel too quickly. The Foot: (ISTD technique) Lady: when stepping back on either foot, do toe release for front foot. Man: step back LF with L side lead: R heel will be released; for other back steps, do toe release. Moving direction, alignment: In closed position, the stepping foot always points in the same direction as the body. If one were to fold one's hands pointing outward at the solar plexus, even with the body in CBMP, the stepping foot is in line with those folded hands. Man: In Tango Walk, LF steps in line of RF, in CBMP (not across RF). It does not point in the same direction, however, as the CBMP will have the left foot slightly turned out relative to the right foot. The right foot steps in a separate track, and, again, will be turned in relative to the left foot.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward in CBMP using left foot, outside edge of heel, slight CBM; foot lightly turned out.",
+      "footwork": "HF",
+      "alignment": "CBMP",
+      "amount_of_turn": "",
+      "comments": [
+        "LF Heel in line with RF, step with outside edge of heel. foot is light turned out."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to the side slightly forward with right foot, heel to inside edge, step under right shoulder, feet turned in.",
+      "footwork": "HF",
+      "alignment": "Side",
+      "amount_of_turn": "",
+      "comments": [
+        "Right side lead, step under R shoulder, IE of Heel, Feet turned \"in\"."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to the side slightly back with left foot, bring left shoulder onto left foot, extend upper body left, keep shape.",
+      "footwork": "HF",
+      "alignment": "Side",
+      "amount_of_turn": "",
+      "comments": [
+        "Take L side more to L, bring L shoulder onto LF. It is very easy to drift to right on this step, try extra to go more left (and in fact, it will end up keeping L.) Extend upper body and shape, keep the volume with Man."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back in CBMP using right foot, outside edge of foot, slight CBM, more compact, cross in upper thighs.",
+      "footwork": "HF",
+      "alignment": "CBMP",
+      "amount_of_turn": "",
+      "comments": [
+        "More compact, more cross in upper thighs."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Lift front toe (toe release) when weight fully on RF, then lift and place LF to step next step; heel goes down as front foot passes.",
+      "footwork": "T",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "LF front toe lifted (toe release) when weight is fully on RF. Then lift and place LF to step next step.",
+        "Heel goes down as front foot passes. Do not take body weight back too quickly."
+      ]
+    }
+  ]
+}

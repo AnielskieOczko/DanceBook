@@ -1,0 +1,165 @@
+{
+  "name": "Natural Zig-Zag from PP",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp?src=routine"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Facing DW",
+  "preceding_figure_names": "Hover Telemark, Hover Telemark to PP, Open Impetus, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Outside Swivel",
+  "following_figure_names": "Three Step, Change Of Direction, Hover Telemark, Reverse Wave (normal; or if ended DC), Reverse Turn (if ended DC), Closed Telemark (if ended DC), Open Telemark and Feather Ending (if ended DC), Fallaway Reverse and Slip Pivot (if ended DC), Bounce Fallaway with Weave Ending (if ended DC), Open Telemark, Natural Turn, Outside Swivel and Feather Ending",
+  "notes": "Do not drop R side, ribs to Man.\nMan is doing swiveling through his feet. Lady changes from PP to Man's L side and then R side, OP.\nUse glute, pick up the hip fwd, Swing hip fwd and up.\nTake head to L and keep head head through the rest of steps.\nDo not try making connection by arching the back.\nHave loose contact with Man, sliding from one side to another.\nDifferent alignment for Man and Lady on steps 3-4.\nUse L glute to push. Swing R hip. Feather finish.\nLower e/o 5\nSway(L) | Up\n",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "F",
+      "alignment": "Backing center",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing center",
+      "amount_of_turn": "L",
+      "comments": [
+        "Different alignment for Man and Lady on steps 3-4."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly fwd",
+      "footwork": "F",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "1/8 between 3-4, body turns less"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "F",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd and across in PP and CBMP",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF diag fwd, preparing to step OP on L side",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "1/8 between 1-2"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in CBMP, OP on L side",
+      "footwork": "F",
+      "alignment": "Facing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Start to turn L"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF to side",
+      "footwork": "F",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "",
+      "comments": [
+        "1/8 between 3-4, body turns less"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "F",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": []
+    }
+  ]
+}

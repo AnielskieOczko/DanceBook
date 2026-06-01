@@ -1,0 +1,89 @@
+{
+"name": "Aida (4 Endings)",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/aida"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Silver",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Left Side Position (LSP)",
+  "preceding_figure_names": "",
+  "following_figure_names": "",
+  "notes": "Ending with Cuban Rock and Spot Turn; Ending with Double Spot Turn; Ending With Side Cucaracha. Details: Leader transfers weight to LF and performs Cuban Rock in LSP LRL, then RF fwd and slightly across after turning 1/2 to L, Spot Turn or Switch Turn; Follower transfers weight to RF and performs analogous movements. Further endings include Side Cucaracha with described turns.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Increase tone in L arm. Release R hand hold"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to R",
+      "comments": [
+        "Slightly lower L arm and turn it with body over step 2 and 3."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "1/8 to L",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "B",
+      "alignment": "LSP",
+      "amount_of_turn": "No turn",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "name": "Progressive Link",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/progressive-link"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Promenade Position",
+  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Chase, Closed Finish, Closed Promenade, Fallaway Reverse and Slip Pivot, Four Step Change, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step Reverse Turn, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Closed Promenade, Open Promenade, Natural Twist Turn, Natural Promenade Turn, Promenade Link, Back Open Promenade, Fallaway Promenade, Chase",
+  "notes": "The figure has solid, sharp feeling, not soft. It is more of an \"upward\" action with body projecting upward.\n90 body rotation in body seems to give the right look and impact.\nPreceding Figures\nBack Corte\nBasic Reverse Turn\nBrush Tap\nChase\nClosed Finish\nClosed Promenade\nFallaway Reverse and Slip Pivot\nFour Step Change\nOpen Finish\nOpen Promenade\nOpen Reverse Turn, Lady In Line\nOpen Reverse Turn, Lady Outside\nOutside Swivel\nProgressive Side Step Reverse Turn\nPromenade Link\nReverse Outside Swivel\nRock Turn\nWalk\nFollowing Figures\nClosed Promenade\nOpen Promenade\nNatural Twist Turn\nNatural Promenade Turn\nPromenade Link\nBack Open Promenade\nFallaway Promenade\nChase",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF forward in CBMP | DW | H | No Turn | No CBM",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Turn his frame when his weight is on his left foot, then put down right foot under shoulder, in promenade position.",
+        "Very small step, very strong CBMP feel, very tight, using inside L knee next to outside of Lady's L knee, mini contra check, feeling the LF is slightly turned in to help with the rotation into link.",
+        "Create torque to wind up lady before turning her.",
+        "Turn the lady to Right, not Left.",
+        "Man steps beneath the lady.",
+        "There is the effect of a windup before the second step.",
+        "Keep shoulder flat, do not pop."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF side to side and slightly back in PP | Facing DW | IE of foot and IE of B of LF | 1/4 to R | No CBM",
+      "footwork": "S",
+      "alignment": "DW",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "As the second step is taken, the RF should move slightly back and to the side of the left foot.",
+        "This step release the tension of the CBM of the last step.",
+        "RF steps under right shoulder, frame turns sharply right.",
+        "rotate thigh and hips first, then upper torso catches up, but elbow never goes behind body.",
+        "Lady is in front Man, but behind right hip.",
+        "Frame is turning to R at the same time to lead lady into a link (as opposed to progressive side step).",
+        "Make it quick and short.",
+        "Head should always be at the same level. Avoid the tendency to lower on a walk, and then rise back up on the side step on the progressive link, which causes right side to go up relative to left side.",
+        "Knees coming together, flexed.",
+        "do not to raise right shoulder, expand across chest, maintain big frame."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back in CBMP | BDW | BH | No Turn | No CBM",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Start with winding up to left (rotate L hip to L, R hip fwd).",
+        "RF strong CBMP (underneath body, crossing in the back more to give Man room to step, otherwise Lady's R leg blocks Man's L leg).",
+        "Think about front of lower R thigh is against the back lower L thigh very tightly (that paper in between won't drop, there is a lot of pressure).",
+        "RF follows where center moves.",
+        "R toe in, outside edge first, small step.",
+        "The second the RF lands, start rotating to R (the tendency is rotating to R too late, action feels disconnected. Rotation to R, swiveling on RF starts after more than half weight is committed on RF, not when weight is fully committed on RF).",
+        "After putting Ball of RF down, R heel will kiss the floor before transfer weight to LF on next step.",
+        "Stay very left behind in Man's R arm throughout.",
+        "Hip is quite closed up to Man.",
+        "Center is to Man.",
+        "To increase impact, turn left first on this step and then sharp turn to R on next step.",
+        "It's not just placement of the foot, but also shift of the center."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF side, slightly back in PP | Facing DC | IE BH of LF and IE of B of RF | 1/4 to R",
+      "footwork": "S",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 to R",
+      "comments": [
+        "The position of the step is slightly back in relation to the body (after 1/4 turn), not LOD.",
+        "Body is more or less facing wall, Hip FDC.",
+        "Depending on the direction Man wants to go, this could be either almost in place or side/slightly back step.",
+        "Stay on Man's R, stepping a bigger step, to end behind Man in promenade position.",
+        "Swivel on Ball of LF. Hip turn 1/4 to R, but body turns 1/8.",
+        "Keep body as still as possible. Things happen in base areas.",
+        "Promenade finishing position: Rib and hip should rotate 1/8 relative to each other.",
+        "Knees more together, not open.",
+        "L hip is higher (but not in a way falling forward), it enables upper body to forward easily.",
+        "You want to dance off the ball of foot, not heel of the foot (so you don't want to sit back and have R hip higher).",
+        "LF (yes, LF) should be on the IE of the foot. LF is 45 degrees (DC) off the line of travel (LOD), parallel to RF.",
+        "RF is one floor board off to R, giving it room for Man and Lady to step through in the middle.",
+        "Bring R side to Man. Upward feeling.",
+        "Extend - from 7th vertebra bend back. Connection with Man moves lower to hip/leg",
+        "Do not turn away from Man. Right shoulder needs to stay with Man, try to get shoulder to square with Man (end up with small V is ok). Do not turn shoulder out, otherwise, it cancels the effect of extension.",
+        "R hand: do not bend wrist back. wrist forward.",
+        "L hand: maintain \"up and out\" position, do not slide.",
+        "Head turning: should not be on its own, shouldn't be too late or too early. Turning the head when weight is changing onto LF.",
+        "Head change finishes when the action finishes.",
+        "The figure has solid, sharp feeling, not soft. It is more of an \"upward\" action with body projecting upward.",
+        "90 body rotation in body seems to give the right look and impact.",
+        "Promenade position: Lady's L hip feels like rolled downward and backward, R hip fwd stretched, toward Man.",
+        "Hip is level, Lady may feel R hip is higher.",
+        "Hips has an diagonal angle to Man. L hip is \"released\". Upper body is closed more.",
+        "Actions are in hips, nothing should affect top shoulder line, arm relaxed, no increased tension.",
+        "When moving out of PP, LF fwd, legs are moving, hips don't change, L hip stays in \"bent/release\" position, don't flatten out L hip when stepping LF fwd."
+      ]
+    }
+  ]
+}

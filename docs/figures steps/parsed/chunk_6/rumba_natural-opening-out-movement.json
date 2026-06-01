@@ -1,0 +1,87 @@
+{
+  "name": "Natural Opening Out Movement",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/natural-opening-out-movement"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Natural Top, Opening Out To Right And Left, Rope Spinning, Three Alemanas",
+  "following_figure_names": "Basic Movements: Open (4-6), Basic Movements: Closed (4-6), Underarm Turn To R, Fan (4-6), Reverse Top",
+  "notes": "Man turns 1/8 L on 3 to contact position, placing LF in front of RF as Cuban Cross. Lady turns an additional 1/8 on 3 to end with RF back and slightly side",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side in RSP with slight body turn to the right",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "Slight turn to R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to right foot",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close left foot to right foot, ending in Closed Position with slight body turn to the left",
+      "footwork": "TOGETHER",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/4 to L",
+      "comments": [
+        "Slight body turn to L to normal position"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back in RSP with half turn to the right",
+      "footwork": "B",
+      "alignment": "RSP",
+      "amount_of_turn": "1/2 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight to left foot",
+      "footwork": "WF",
+      "alignment": "RSP",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step forward and slightly across left foot, turning to end side in Closed Position with 1/4 turn left, then another 1/4 left",
+      "footwork": "B",
+      "alignment": "Closed Position",
+      "amount_of_turn": "1/4 to L then another 1/4 to L",
+      "comments": []
+    }
+  ]
+}

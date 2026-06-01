@@ -1,0 +1,116 @@
+{
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/rumba/curl" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Advanced Hip Twists, Aida, Basic Movements: Open, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names" : "Alemana (normal; or When finished in Open Position), Hockey Stick, Sliding Doors, Fencing, Three Alemanas (normal; or When finished in Open Position), Basic Movements: Open (When finished in Open Position, follow with Open Basic, or 1-3 Open Basic into Progressive Walks Back or Natural Top), Open Hip Twist (When finished in Open Position), Curl (When finished in Open Position), Three Threes (When finished in Open Position), New York LSP (When finished in Open CPP), Spot or Switch Turn To R (Lady to L) (When finished in Open CPP), Underarm Turn To L (When finished in Open CPP), Reverse Top (When finished in Contact Position, follow with 4-6 or 4-9 Reverse Top.)",
+  "notes" : "Finish in Fan position. Settle hip and maintain tight thigh closure before transitioning to next figure. Detailed weight transfer and turning instructions provided for both leader and follower.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step forward",
+    "footwork" : "F",
+    "alignment" : "Open Position",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight",
+    "footwork" : "WF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close to partner",
+    "footwork" : "T",
+    "alignment" : "Closed",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step back",
+    "footwork" : "B",
+    "alignment" : "Open",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step back",
+    "footwork" : "B",
+    "alignment" : "No turn",
+    "amount_of_turn" : "",
+    "comments" : [ "No turn" ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight",
+    "footwork" : "WF",
+    "alignment" : "",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step forward and turn",
+    "footwork" : "F",
+    "alignment" : "Spiral Turn",
+    "amount_of_turn" : "1/8 to L",
+    "comments" : [ "(Spiral Turn)" ]
+  }, {
+    "step_number" : 8,
+    "timing" : "5",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Cross to left, turn upper body",
+    "footwork" : "T",
+    "alignment" : "Diagonal",
+    "amount_of_turn" : "1/8",
+    "comments" : [ "Keep right arm level and rounded" ]
+  }, {
+    "step_number" : 9,
+    "timing" : "6",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Finish in Fan",
+    "footwork" : "F",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "",
+    "comments" : [ "Settle hip" ]
+  }, {
+    "step_number" : 10,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Step back in Fan Position",
+    "footwork" : "B",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "",
+    "comments" : [ "For Fan finish, keep thighs tightly closed" ]
+  } ]
+}

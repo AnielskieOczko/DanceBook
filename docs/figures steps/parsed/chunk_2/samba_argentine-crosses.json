@@ -1,0 +1,129 @@
+{
+  "name": "Argentine Crosses",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/argentine-crosses"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Criss Cross Voltas, Natural Basic Movement, Reverse Basic Movement, Samba Walk: Side, Samba Walk: Stationary, Side Basic Movement, Solo Spot Volta to Left (Lady to Right), Solo Spot Volta to Right (Lady to Left), Whisk To Left, Whisk To Right",
+  "following_figure_names": "Open Rocks, Closed Rocks, Corta Jaca, Whisk To Left, Samba Walk: Stationary, Whisk To Right, Solo Spot Volta to Left (Lady to Right)",
+  "notes": "Keep good frame with partner (more parallel). Lady can do underarm turn over steps 10-12. Variation: over steps 4 to 6, Man can turn Lady to R under raised L arm and then regain hold. Lady does 1 complete turn to R after closing her left side to Man.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd, toe turned out",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF behind LF (Cuban Cross)",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 1 and 2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF, small step. Toe turned out",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/4 to R btwn 3 and 4",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side and slightly back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 4 and 5",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF, small step. Toe turned out",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 5 and 6",
+      "comments": []
+    },
+    {
+      "step_number": 1,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in line with LF, small step. Toe turned out",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "start to turn R",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side and slightly back",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 1 and 2",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd, toe turned out",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/4 to R btwn 3 and 4",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF behind LF (Cuban Cross)",
+      "footwork": "B",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 4 and 5",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd in line with LF, small step. Toe turned out",
+      "footwork": "BF",
+      "alignment": "",
+      "amount_of_turn": "1/8 to R btwn 5 and 6",
+      "comments": []
+    }
+  ]
+}

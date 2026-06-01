@@ -1,0 +1,136 @@
+{
+  "name" : "Natural Turn (at a Corner)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn?src=routine" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Closed Telemark, Cross Chasse, Fish Tail, Forward Lock, Four Quick Run, Heel Pivot (Quarter Turn To Left), Natural Pivot Turn, Natural Turn, Progressive Chasse, Running Finish, Running Right Turn, Six Quick Run, Tipple Chasse To Right, V6, Zig-Zag, Back Lock And Running Finish",
+  "following_figure_names" : "Closed Impetus (after 1-3), Tipple Chasse To Right (after 1-3), Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Cross Chasse (use 6th step of Natural Turn as entry), Forward Lock (and then Quick Open Reverse, after 1-5 of Natural Turn ending DC, ; or and then any Natural figures, after 1-5 of Natural Turn ending DW of new LOD, ), Zig-Zag, Back Lock And Running Finish (use 6th step of Natural Turn as entry), Tipsy To R (after 1-4 of Natural Turn), Rumba Cross",
+  "notes" : "The step can be underturned to end Man facing new LOD, in which case, 1/4 turn should be completed between 4-5. The heel pull can be underturned to face new LOD. Pay special attention not to tilt shoulder. Shoulder needs to maintain flat throughout. Head follows elbow. When preceding step finishes with head turned to R, on this S, do not turn head sharp to left. Leave head and turn body underneath, smooth movement. Collect at e/o 3.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Forward step, FDW alignment, start turn to R, sway S, CBM, start rise",
+    "footwork" : "F",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Side step to left, BDC alignment, turn 1/4 to R, sway R, up",
+    "footwork" : "T",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "Q",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close RF to LF, BLOD alignment, 1/8 turn to R, sway R, up",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Back step, BLOD alignment, continue turn to R, sway S, CBM",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Side step, heel pull, FDW of new LOD, H, IE of foot, WF",
+    "footwork" : "H IE WF",
+    "alignment" : "FDW",
+    "amount_of_turn" : "3/8 between 4-5",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "S",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Forward step, FDW alignment, H, slight CBM",
+    "footwork" : "H",
+    "alignment" : "FDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back step, BDW alignment, start turn to R, sway S, CBM, start rise, NFR",
+    "footwork" : "TH",
+    "alignment" : "BDW",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 8,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Side step, PLOD alignment, 3/8 turn, sway L, up",
+    "footwork" : "T",
+    "alignment" : "PLOD",
+    "amount_of_turn" : "3/8",
+    "comments" : [ ]
+  }, {
+    "step_number" : 9,
+    "timing" : "Q",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Close LF to RF, FLOD alignment, body completes turn, sway L, up, lower",
+    "footwork" : "TH",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 10,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Forward step, FLOD alignment, start turn to R, sway S, CBM",
+    "footwork" : "HT",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "",
+    "comments" : [ ]
+  }, {
+    "step_number" : 11,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Side step, back new LOD, TH alignment, 1/4 turn, sway S",
+    "footwork" : "TH",
+    "alignment" : "Back new LOD",
+    "amount_of_turn" : "1/4 between 4-5",
+    "comments" : [ ]
+  }, {
+    "step_number" : 12,
+    "timing" : "S",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Back step, BDW alignment, 1/8 turn, sway S, slight",
+    "footwork" : "T",
+    "alignment" : "BDW",
+    "amount_of_turn" : "1/8",
+    "comments" : [ ]
+  } ]
+}

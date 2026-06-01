@@ -1,0 +1,167 @@
+{
+  "name": "Closed Telemark",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Double Reverse Spin, Heel Pivot (Quarter Turn To Left), Reverse Pivot",
+  "following_figure_names": "Running Right Turn, Natural Turn And Back Lock, Natural Pivot Turn, Natural Spin Turn, Natural Turn With Hesitation, Natural Turn, Quarter Turn to Right, Forward Lock, Fish Tail, Four Quick Run (at corner, LF back with Lady OP, TH, S, into Four Quick Run), Six Quick Run (at corner, LF back with Lady OP, TH, S, into Six Quick Run)",
+  "notes": "Strong big step back, use CBM at the same time.\nDo not take shoulders back, do not leave center fwd which will block Man.\nR shoulder connect down, R side is anchor for left turning figure. Feel strong upward, leftward through left side (L side slightly raised or heel turns).\nHell turn: drag L heel slowly, don't put down L heel too fast, almost a \"S S&\" count, put down heel on & and push\nWhen stepping RF, keep contact with Man, step shouldn't be too close to Man. Need to leave room between Lady's RF and Man's LF for Man to step through his next OP step.\nShape head to right (actually by keeping the head where it is, when body turns left, head will be in the shaping right position). Then, head returns to left at next step.\nLowering at end of the step, before driving into next step.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward to line of dance, start turn left",
+      "footwork": "HT",
+      "alignment": "FDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step to side, almost BLOD, with T footwork",
+      "footwork": "T",
+      "alignment": "almost BLOD",
+      "amount_of_turn": "slightly less than 3/8 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly forward, pointing diagonal wall",
+      "footwork": "TH",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "slightly over 3/8 between 2-3",
+      "comments": [
+        "Sway(S)",
+        "UP",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Step forward in CBMP, opposite door position",
+      "footwork": "H",
+      "alignment": "DW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back, big step, start turn left",
+      "footwork": "TH",
+      "alignment": "BDC",
+      "amount_of_turn": "--",
+      "comments": [
+        "start to turn L",
+        "Sway(S)",
+        "CBM",
+        "rise slightly e/o 1, NFR",
+        "Strong big step back, use CBM at the same time."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "--",
+      "action": "Do not take shoulders back, do not leave center fwd which will block Man.",
+      "footwork": "--",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "Do not take shoulders back, do not leave center fwd which will block Man."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "--",
+      "action": "R shoulder connect down, R side is anchor for left turning figure.",
+      "footwork": "--",
+      "alignment": "--",
+      "amount_of_turn": "--",
+      "comments": [
+        "R shoulder connect down, R side is anchor for left turning figure. Feel strong upward, leftward through left side (L side slightly raised or heel turns)"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Closes to RF (Heel Turn)",
+      "footwork": "HT",
+      "alignment": "LOD",
+      "amount_of_turn": "3/8 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "continue to rise on 2",
+        "Hell turn: drag L heel slowly, don't put down L heel too fast, almost a \"S S&\" count, put down heel on & and push"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side and slightly back, BDW",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "3/8 between 2-3, body turns less",
+      "comments": [
+        "Sway(S)",
+        "UP",
+        "lower e/o 3",
+        "When stepping RF, keep contact with Man, step shouldn't be too close to Man. Need to leave room between Lady's RF and Man's LF for Man to step through his next OP step."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Back in CBMP",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "--",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "--"
+      ]
+    }
+  ]
+}

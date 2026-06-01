@@ -1,0 +1,83 @@
+{
+  "name": "Tango Walk",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/tango/walk"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Corte, Basic Reverse Turn, Brush Tap, Closed Finish, Closed Promenade, Four Step Change, Open Finish, Open Promenade, Open Reverse Turn, Lady In Line, Open Reverse Turn, Lady Outside, Outside Swivel, Progressive Side Step, Progressive Side Step Reverse Turn, Promenade Link, Reverse Outside Swivel, Rock Turn, Walk",
+  "following_figure_names": "Walk, Progressive Side Step, Progressive Side Step Reverse Turn, Progressive Link, Rock Turn, Open Reverse Turn, Lady Outside, Open Reverse Turn, Lady In Line, RF Rock (after Walk back on LF)",
+  "notes": "Various technique notes regarding timing, weight distribution, CBM, foot release, and step articulation. The figure uses a slow timing on count 1 with hold on count 2. Steps begin from middle weight and end in middle. No rise and fall; stay flat. Footwork must be sharp with brief lift and placement, maintaining contact only briefly. Leader and follower alternate CBMP and side positions, curving to the left. CBM must be sufficient to avoid blocking. Foot release occurs at toe for certain steps. The walk curves via hip and standing leg rotation. Step length varies; forward step extends leg late, backward step reaches with flexed knee, hip opens. Ensure shoulders stay level, do not drop them when using CBMP. No heavy weighting on front foot; keep weight centered.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward step in CBMP, outside edge of heel",
+      "footwork": "HEEL",
+      "alignment": "CBMP with slight CBM",
+      "amount_of_turn": "0",
+      "comments": [
+        "LF Heel in line with RF, step with outside edge of heel. foot is light turned out.",
+        "Slight CBM"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Side step slightly forward",
+      "footwork": "HEEL",
+      "alignment": "IE Heel to IE",
+      "amount_of_turn": "0",
+      "comments": [
+        "Right side lead, step under R shoulder, IE of Heel, Feet turned \"in\"."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side step slightly back",
+      "footwork": "BALL",
+      "alignment": "",
+      "amount_of_turn": "0",
+      "comments": [
+        "Take L side more to L, bring L shoulder onto LF.",
+        "Extend leg to gain more distance.",
+        "LF turned \"out\" a bit. Do not make the legs too tight, step a bit to the side, keep wider tracks to give Man enough room to step.",
+        "Extend leg to gain more distance.",
+        "RF front toe lifted (toe release) when weight is fully on LF.",
+        "Hip rolls from R leg to L leg.",
+        "Fast release of RF and R leg to step back and prepare; this gives more room for Man."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back step in CBMP",
+      "footwork": "OE",
+      "alignment": "CBMP with slight CBM",
+      "amount_of_turn": "0",
+      "comments": [
+        "More compact, more cross in upper thighs.",
+        "Don't fall back, Keep R side to Man and R arm forward. Think about stretching L elbow more L.",
+        "Flex the hip and turn hip to L, bend knee.",
+        "Keep tailbone vertical 90 to floor. Do not flatten the front part of the hip crease in an attempt to create bigger shape. Hip girdle is bent, but shouldn't flatten the girdle area. Use the muscle and feel active, otherwise it would look heavy sitting down.",
+        "Use CBM, step in CBMP to give Man room to put his foot.",
+        "Do not turn hip and shoulder the same amount, otherwise, it cancels CBM effect.",
+        "There needs to be enough CBM so lady's R leg will not block Man's L leg.",
+        "R toe in line with LF. Toe turned \"in\" to be on \"circle tangent line\" ..\"\""
+    ],
+    "    \"comments\": [\n        \"More compact, more cross in upper thighs.\",\n        \"Don't fall back, Keep R side to Man and R arm forward. Think about stretching L elbow more L.\",\n        \"Flex the hip and turn hip to L, bend knee.\",\n        \"Keep tailbone vertical 90 to floor. Do not flatten the front part of the hip crease in an attempt to create bigger shape. Hip girdle is bent, but shouldn't flatten the girdle area. Use the muscle and feel active, otherwise it would look heavy sitting down.\",\n        \"Use CBM, step in CBMP to give Man room to put his foot.\",\n        \"Do not turn hip and shoulder the same amount, otherwise, it cancels CBM effect.\",\n        \"There needs to be enough CBM so lady's R leg will not block Man's L leg.\",\n        \"R toe in line with LF. Toe turned \\\"in\\\" to be on \\\"circle tangent line\\\". Don't worry too much about \\\"not crossing the line\\\" - per the book\"\n      ]\n    },\n    {\n      \"step_number\": 5,\n      \"timing\": \"S\",\n      \"role\": \"FOLLOWER\",\n      \"foot\": \"LF\",\n      \"action\": \"Side step slightly back\",\n      \"footwork\": \"BALL\",\n      \"alignment\": \"\",\n      \"amount_of_turn\": \"0\",\n      \"comments\": [\n        \"Take L side more to L, bring L shoulder onto LF.\",\n        \"LF turned \\\"out\\\" a bit. Do not make the legs too tight, step a bit to the side, keep wider tracks to give Man enough room to step.\",\n        \"Extend leg to gain more distance.\",\n        \"RF front toe lifted (toe release) when weight is fully on LF.\",\n        \"Hip rolls from R leg to L leg.\",\n        \"Fast release of RF and R leg to step back and prepare; this gives more room for Man.\",\n        \"After stepping RF and getting weight on RF, release L leg quickly to make room for Man, otherwise Man feels blocked.\"\n      ]\n    }\n  ]\n}"

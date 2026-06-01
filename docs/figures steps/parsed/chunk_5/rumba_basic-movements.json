@@ -1,0 +1,103 @@
+{
+  "name": "Rumba Closed Basic Movements",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/basic-movements"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemena, Basic Movements: Closed, Basic Movements: Open, Cuban Rock LF, Cuban Rocks RF, Cucarachas: LF, Cucarachas: RF, Fencing, Hand To Hand LSP, Hand To Hand RSP, Natural Opening Out Movement, Natural Top, New York LSP, New York RSP, Opening Out To Right And Left, Progressive Walks Back, Progressive Walks Forward, Progressive Walks Forward in LSP, Progressive Walks Forward in RSP, Progressive Walks Forward in Right Shadow Position, Reverse Top, Rope Spinning, Shoulder To Shoulder Left Side, Shoulder To Shoulder Right Side, Side Step To Left commenced with LF, Side Step To Left commenced with RF, Side Step To Right commenced with LF, Side Step To Right commenced with RF, Spot or Switch Turn to L (Lady to R), Spot or Switch Turn To R (Lady to L), Syncopated Cuban Rock LF, Syncopated Cuban Rocks RF, Three Alemanas, Three Threes, Underarm Turn To L, Underarm Turn To R",
+  "following_figure_names": "Reverse Top, Basic Movements: Open (normal; or after 1-3 Closed Basic, follow with 4-6 Open Basic), Basic Movements: Closed, New York LSP (having turned to Open CPP on last step), Spot or Switch Turn To R (Lady to L), Underarm Turn To L, Shoulder To Shoulder Left Side, Side Step To Left commenced with LF, Side Step To Right commenced with LF, Hand To Hand RSP, Cuban Rock LF, Fan, Syncopated Cuban Rocks RF, Natural Top (after 1-3 Closed Basic, Man step 3 LF side turning slightly R, Lady RF fwd), Basic In Place, 3 steps are danced in place with feet together, Closed Position, No Turn. This can be danced in place of Closed Basic Movements., Alternative Basic, Closed Position, start with feet apart. Normal hold, L to R hand hold, no hold. Think of walking \"--\" horizontal line. This can be danced in place of Closed Basic Movements., LF Alternative Basic Movement may end in Open PP, Man turning 1/8 L and Lady 1/8 R on 3. Likewise, RF Alternative Basic may end in Open CPP., Leader, 2: LF closes to RF, This is LF Alternative Basic Movement., 3: Transfer weight on RF, 4 1: LF to side, 2: RF closes to LF, This is RF Alternative Basic Movement., 3: Transfer weight to LF, 4 1: RF to side, Follower, 2: RF closes to LF, This is LF Alternative Basic Movement. Lady could do normal basic action, allowing body to move back more (pushing LF, try not to think about pulling center or foot back), allow R arm to extend., Still need to have forward energy toward partner., 3: Transfer weight on LF, 4 1: RF to side, This is RF Alternative Basic Movement., 3: Transfer weight to RF, 4 1: LF to side, Note: Silver & Gold: may dance this figure as: (may start with the other foot). count 2: close LF to RF without weight but with pressure. slight hip action count 3: hold position with weight on RF. Footwork: flat. Slight hip action. count 4 1: then LF side. Man may dance LF Alternative Basic in place of first 3 steps of any figure commenced in Open Position or Fan position, while leading Lady to dance her normal first 3 steps of figure selected. When commenced in Fan position, step 3 will be very small to keep correct positon in relation to Lady. When Man dances a LF Alternative Basic from Open Position as precede to Natural Top, he turns slightly R on step 3. Lady will dance \"close fwd fwd\" (RF LF RF)",
+  "notes": "Silver & Gold: Turn 3/8 to L over 4-6 to get to Contact Position.\nstep 3: RF side and slightly fwd. Lady LF behind RF as Cuban Cross.\nNote: One should feel a continuous figure 8 action all the time.\nClosed Basic Movement may end with taking step 6 in Open CPP, Man turning 1/8 R, Lady 1/8 L, Man release R hand hold.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step forward",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to 1/4 turn",
+      "comments": [
+        "Check/settle on \"a\"",
+        "Collect LF to closer to RF before stepping to side."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight and step back",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Transfer weight on RF | 1/8 to L over 2-3",
+        "On \"a\", collect LF to closer to RF before stepping to side."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Step to side and slightly back",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Hold on 4 1, rotating hips",
+        "Collect RF, step back."
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step back",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "",
+      "comments": [
+        "Out - Separate with partner. settle more, but make sure to have forward tone to Man, not pulling Man toward you.",
+        "Twist right side to cause LF to move forward, pendulum hip action diagonally."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight and continue forward",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Transfer weight on LF | 1/8 to L over 5-6",
+        "Continue pendulum action forward."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Step to side",
+      "footwork": "F",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "RF ball flat.",
+        "R side twist to move L leg to side. L hip will be pendulum diagonally fwd."
+      ]
+    }
+  ]
+}

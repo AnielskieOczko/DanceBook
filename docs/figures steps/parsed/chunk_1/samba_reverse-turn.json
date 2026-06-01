@@ -1,0 +1,132 @@
+{
+  "name": "Reverse Turn",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/samba/reverse-turn"
+  ],
+  "dance_type": "SAMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Rocks, Closed Rocks, Maypole, Natural Basic Movement, Open Rocks, Plait, Reverse Basic Movement, Reverse Roll, Reverse Turn, Rolling Off The Arm, Side Basic Movement",
+  "following_figure_names": "Reverse Basic Movement, Whisk To Left (Reverse Turn undertuned to face wall), Traveling Bota Fogos Forward (LF), Bota Fogos To Promenade and Counter Promenade (Reverse Turn undertuned to face wall), Reverse Turn, Reverse Roll, Traveling Bota Fogos Back (after step 3), Back Rocks (after step 3), Plait (after step 3)",
+  "notes": "May be repeated. Could use some arm shaping.\nWhen following another Reverse Turn, For Man: step 1 is LOD. Turn 1/4 L between 1 and 2 to back wall, then continue as shown above. (Lady: do the normal opposite.)\nTiming: \"SQQ SQQ\" can be used, the differences would be:\nNo bounce action.\nFull weight is taken on to each step\nFootwork: step 2: Ball, step 5 BF\nPreceding Figures\nBack Rocks\nClosed Rocks\nMaypole\nNatural Basic Movement\nOpen Rocks\nPlait\nReverse Basic Movement\nReverse Roll\nReverse Turn\nRolling Off The Arm\nSide Basic Movement\nFollowing Figures\nReverse Basic Movement\nWhisk To Left (Reverse Turn undertuned to face wall)\nTraveling Bota Fogos Forward (LF)\nBota Fogos To Promenade and Counter Promenade (Reverse Turn undertuned to face wall)\nReverse Turn\nReverse Roll\nTraveling Bota Fogos Back (after step 3)\nBack Rocks (after step 3)\nPlait (after step 3)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Incline body slightly fwd"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "a",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side and slightly back, w/o weight",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "I/E of T (pressure)",
+        "Incline body fwd and slightly L"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Cross LF in front of RF",
+      "footwork": "BF",
+      "alignment": "DC",
+      "amount_of_turn": "1/8 to L between 2&3",
+      "comments": [
+        "Incline body fwd and slightly L",
+        "Styling: L arm comes in and then out (a circle)"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "Incline body slightly back"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "a",
+      "role": "FOLLOWER",
+      "foot": "L",
+      "action": "Place L heel close to R heel, w/o weight",
+      "footwork": "WF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/4 to L between 1&2",
+      "comments": [
+        "B (pressure)",
+        "Incline body back and slightly R"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Take minimal weight to LF and close RF to LF",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": " completes turn",
+      "comments": [
+        "Foot closes",
+        "Incline body back and slightly R",
+        "Styling: lady could push the butt out"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L between 3&4",
+      "comments": [
+        "Incline body slightly fwd",
+        "RF to side and slightly back, w/o weight",
+        "I/E of T(Pressure)",
+        "Incline body fwd and slightly L"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Cross LF in front of RF",
+      "footwork": "BF",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8 to L between 5&6",
+      "comments": [
+        "LF crosses in front",
+        "Incline body fwd and slightly L"
+      ]
+    }
+  ]
+}

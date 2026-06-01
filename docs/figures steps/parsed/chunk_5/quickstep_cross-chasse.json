@@ -1,0 +1,162 @@
+{
+"name": "Cross Chasse",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Change of Direction,Double Reverse Spin,Quarter Turn to Left (Heel Pivot),Natural Turn,Reverse Pivot",
+  "following_figure_names": "Natural Turn And Back Lock,Natural Pivot Turn,Natural Spin Turn,Natural Turn With Hesitation,Natural Turn,Forward Lock,Fish–Tail",
+  "notes": "Man steps OP. The figure ends with the body wound up perfect for leading natural turning figures (with first step CBMP, OP). Running variation described below.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Man steps OP."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "HT",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "closes to RF",
+      "footwork": "TH",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(L)",
+        "up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP",
+      "footwork": "H",
+      "alignment": "FDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Lengthen R side."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1",
+        "NFR"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(R)",
+        "up"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "closes to LF",
+      "footwork": "TH",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(R)",
+        "up",
+        "lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "T",
+      "alignment": "BDW",
+      "amount_of_turn": "",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

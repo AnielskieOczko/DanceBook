@@ -1,0 +1,26 @@
+{
+  "name" : "Reverse Pivot",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot?src=routine" ],
+  "dance_type" : "QUICKSTEP",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Backing LOD",
+  "ending_position" : "Backing LOD",
+  "preceding_figure_names" : "Chasse Reverse Turn, Closed Impetus, Natural Spin Turn, Quarter Turn to Right, Quick Open Reverse",
+  "following_figure_names" : "Chasse Reverse Turn, Progressive Chasse To Right, Double Reverse Spin, Cross Chasse, Zig-Zag, Back Lock And Running Finish, Quick Open Reverse, Closed Telemark, Cross Swivel, Tipsy To R (after a step fwd on LF), Change of Direction",
+  "notes" : "If the Reverse Pivot is started backing DC the alignment for the Pivot (Man) would be \"to center, toe turned in\". Note also that this step is in CBMP owing to the body turning strongly to L as the RF foot slips back.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "S or &",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back in CBMP (small step)",
+    "footwork" : "B",
+    "alignment" : "CBMP",
+    "amount_of_turn" : "1/2 to L",
+    "comments" : [ "LF held in CBMP | DC toe turned in | THT | -- | CBM | --" ]
+  } ]
+}

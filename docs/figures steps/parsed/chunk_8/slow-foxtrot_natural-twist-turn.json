@@ -1,0 +1,196 @@
+{
+  "figures": [
+    {
+      "name": "Natural Twist Turn with Hover Feather Ending",
+      "urls": [
+        "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn"
+      ],
+      "dance_type": "SLOW_FOXTROT",
+      "level": "Gold",
+      "starting_foot_leader": "RF",
+      "ending_foot_leader": "RF",
+      "starting_foot_follower": "LF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Closed Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+      "following_figure_names": "Three Step, Reverse Turn (just Reverse Turn with Feather finish, or 1-4 Reverse Turn check and Basic Weave), Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin (check back after step 3 of feather finish), Outside Swivel (check back after step 3 of Feather Step), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Weave (after step 5, continue with 3-8 of Natural Weave), Closed Impetus and Feather Finish (after step 5, continue with 3-7 Closed Impetus and Feather Finish), Open Impetus ( ater step 5, continue with 3-4 of Open Impetus)",
+      "notes": "Note:\nLady optional styling: head could change to R during Weave.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "S",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF fwd",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 2,
+          "timing": "Q (1/2)",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "to side",
+          "footwork": "WF",
+          "alignment": "Backing DC",
+          "amount_of_turn": "",
+          "comments": [
+            "Sway(R)",
+            "3/8 between steps 1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Natural Twist Turn with Natural Weave Ending",
+      "urls": [
+        "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn"
+      ],
+      "dance_type": "SLOW_FOXTROT",
+      "level": "Gold",
+      "starting_foot_leader": "RF",
+      "ending_foot_leader": "RF",
+      "starting_foot_follower": "LF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Closed Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+      "following_figure_names": "Three Step, Reverse Turn (just Reverse Turn with Feather finish, or 1-4 Reverse Turn check and Basic Weave), Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin (check back after step 3 of feather finish), Outside Swivel (check back after step 3 of Feather Step), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Weave (after step 5, continue with 3-8 of Natural Weave), Closed Impetus and Feather Finish (after step 5, continue with 3-7 Closed Impetus and Feather Finish), Open Impetus ( ater step 5, continue with 3-4 of Open Impetus)",
+      "notes": "Note:\nLady optional styling: head could change to R during Weave.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "S",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF fwd",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 2,
+          "timing": "Q (1/2)",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "to side",
+          "footwork": "WF",
+          "alignment": "Backing DC",
+          "amount_of_turn": "",
+          "comments": [
+            "Sway(R)",
+            "3/8 between steps 1-2"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Natural Twist Turn with Closed Impetus And Feather Finish Ending",
+      "urls": [
+        "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn"
+      ],
+      "dance_type": "SLOW_FOXTROT",
+      "level": "Gold",
+      "starting_foot_leader": "RF",
+      "ending_foot_leader": "RF",
+      "starting_foot_follower": "LF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Closed Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+      "following_figure_names": "Three Step, Reverse Turn (just Reverse Turn with Feather finish, or 1-4 Reverse Turn check and Basic Weave), Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin (check back after step 3 of feather finish), Outside Swivel (check back after step 3 of Feather Step), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Weave (after step 5, continue with 3-8 of Natural Weave), Closed Impetus and Feather Finish (after step 5, continue with 3-7 Closed Impetus and Feather Finish), Open Impetus ( ater step 5, continue with 3-4 of Open Impetus)",
+      "notes": "Note:\nLady needs to monitor where Man's body is, where his center is.\nShe needs own individual balance.\nDissolve sway, use range of motion, taking head, spine to LF, Swing, turn feet underneath body.\nKeep shoulders quiet. Arms belong to partner at all times (especially when going backward.)",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "SQ&QQ",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "As for Natural Twist Turn",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 2,
+          "timing": "Q",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "LF to side and slightly back | Backing DC against LOD",
+          "footwork": "WF",
+          "alignment": "Backing DC",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 3,
+          "timing": "QQS",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF back into Feather Finish",
+          "footwork": "WF",
+          "alignment": "Facing DC",
+          "amount_of_turn": "",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "name": "Natural Twist Turn with Open Impetus Ending",
+      "urls": [
+        "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn"
+      ],
+      "dance_type": "SLOW_FOXTROT",
+      "level": "Gold",
+      "starting_foot_leader": "RF",
+      "ending_foot_leader": "RF",
+      "starting_foot_follower": "LF",
+      "ending_foot_follower": "RF",
+      "starting_position": "Closed Position",
+      "ending_position": "Closed Position",
+      "preceding_figure_names": "Closed Telemark, Hover Telemark, Three Step",
+      "following_figure_names": "Three Step, Reverse Turn (just Reverse Turn with Feather finish, or 1-4 Reverse Turn check and Basic Weave), Change Of Direction, Closed Telemark, Open Telemark and Feather Ending, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Hover Telemark, Reverse Wave, Top Spin (check back after step 3 of feather finish), Outside Swivel (check back after step 3 of Feather Step), Fallaway Reverse and Slip Pivot, Bounce Fallaway with Weave Ending, Natural Weave (after step 5, continue with 3-8 of Natural Weave), Closed Impetus and Feather Finish (after step 5, continue with 3-7 Closed Impetus and Feather Finish), Open Impetus ( ater step 5, continue with 3-4 of Open Impetus)",
+      "notes": "Note:\nLeader description includes step: LF diag fwd in PP L side leading | Pointing DC. body facing LOD | TH\nFollower description includes step: RF to side in PP | Pointing to center, moving DC | TH\nThis is the Open Impetus.\nSQQS: RF fwd in PP and CBMP | Pointing DC. body facing LOD\nFeather finish.",
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "SQ&QQ",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "As for Natural Twist Turn",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 2,
+          "timing": "Q",
+          "role": "LEADER",
+          "foot": "LF",
+          "action": "LF diag fwd in PP L side leading | Pointing DC. body facing LOD",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        },
+        {
+          "step_number": 3,
+          "timing": "QQS",
+          "role": "LEADER",
+          "foot": "RF",
+          "action": "RF fwd in PP and CBMP | Pointing DC. body facing LOD",
+          "footwork": "WF",
+          "alignment": "Facing LOD",
+          "amount_of_turn": "",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Alemena, Continuous Hip Twists, Hand To Hand LSP, Natural Top, Rope Spinning, Three Alemanas",
+  "following_figure_names" : "Hand To Hand RSP, Basic Movements: Closed, Basic Movements: Open, Fan, Opening Out To Right And Left, Side Step To Left, Side Step To Right, Cuban Rock LF, Syncopated Cuban Rock LF, New York LSP, Spot or Switch Turn To R, Underarm Turn To L, Natural Opening Out Movement, Closed Hip Twist, Spiral, Rope Spinning, Advanced Hip Twists, Continuous Hip Twists, Circular Hip Twists, Progressive Walks Forward in Right Shadow Position",
+  "notes" : "Alternative finishing positions:\nMan and Lady end to side\nMan and lady end diagonally fwd in Open CPP\nMan 1/8 R on step 6.\nLady 7/8 to R over step 1 to 6.\nLady end fwd toward Man's R side\nMan turns body slightly R on step 6 to lead Lady towards his R side.\nLady LF fwd in line with RF.\nMan and Lady fwd towards partner's R side\nMan RF fwd in line with LF towards Lady's R side.\nLady LF fwd in line with RF\nR Shadow Position\nMan RF fwd in line with LF towards Lady's R side, and continues to turn her R.\nLady ends LF back having made 1/2 turn R on LF during preceding beat.\nAdopt R shadow Hold.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side with left foot while continuing to turn body to the right.",
+    "footwork" : "WF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "1/4 to R",
+    "comments" : [ "Circle left hand clockwise over head over step 1 and 2." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight to right foot and turn body slightly to the left.",
+    "footwork" : "WF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "Slight left turn",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close left foot to right foot in left side position while continuing to turn body to normal position.",
+    "footwork" : "T",
+    "alignment" : "LSP",
+    "amount_of_turn" : "To normal position",
+    "comments" : [ "L hand to left side. Gradually lower to waist level." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Step right foot back without turning.",
+    "footwork" : "B",
+    "alignment" : "LSP",
+    "amount_of_turn" : "No turn",
+    "comments" : [ "Continue to circle left hand clockwise over step 4 and 5. Incline body slightly left." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Transfer weight to left foot.",
+    "footwork" : "WF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "Return to normal position",
+    "comments" : [ "Return body to normal position." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Close right foot to left foot in closed position and take required hold.",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "Finish",
+    "comments" : [ ]
+  }, {
+    "step_number" : 7,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Three forward walks circling man's back RLR ending in left side position.",
+    "footwork" : "WF",
+    "alignment" : "LSP",
+    "amount_of_turn" : "1/2 turn to the right over steps 1-3",
+    "comments" : [ "Ends in LSP with 1/2 turn to R over step 1-3." ]
+  }, {
+    "step_number" : 8,
+    "timing" : "",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Three forward walks circling man's back LRL ending in closed position.",
+    "footwork" : "WF",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "1/2 turn to R over steps 4-6",
+    "comments" : [ "Alternative finishing positions include ending to side, diagonally forward in Open CPP, or adopting R shadow position." ]
+  } ]
+}

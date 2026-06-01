@@ -1,0 +1,68 @@
+{
+  "name": "Reverse Pivot",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot?src=routine"
+  ],
+  "dance_type": "QUICKSTEP",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Backing LOD",
+  "ending_position": "Backing LOD",
+  "preceding_figure_names": [
+    "Chasse Reverse Turn",
+    "Closed Impetus",
+    "Natural Spin Turn",
+    "Quarter Turn to Right",
+    "Quick Open Reverse"
+  ],
+  "following_figure_names": [
+    "Chasse Reverse Turn",
+    "Progressive Chasse To Right",
+    "Double Reverse Spin",
+    "Cross Chasse",
+    "Zig-Zag, Back Lock And Running Finish",
+    "Quick Open Reverse",
+    "Closed Telemark",
+    "Cross Swivel",
+    "Tipsy To R (after a step fwd on LF)",
+    "Change of Direction"
+  ],
+  "notes": "If the Reverse Pivot is started backing DC the alignment for the Pivot (Man) would be \"to center, toe turned in\".\nNote also that this step is in CBMP owing to the body turning strongly to L as the RF foot slips back.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Backing LOD in CBMP, small step backwards",
+      "footwork": "B",
+      "alignment": "CBMP",
+      "amount_of_turn": "1/2 to L (Pivot)",
+      "comments": [
+        "Primary contact between man and lady is the inside of the lady's upper thighs: her right thigh to inside of his R leg; her left thigh to outside of his R leg.",
+        "Lady's L leg tracks Man's R leg when stepping this step.",
+        "LF steps in between Man's legs (Man is stepping his RF back and is turning, which makes room for Lady to step in between his feet), straight forward, do not veer to side.",
+        "Make sure keep body and head very left to Man. Keep left side strongly forward (positive), don't inch into Man's space.",
+        "Keep the volume in frame, don't make frame smaller. extend arm.",
+        "If the Reverse Pivot is started backing DC the alignment for the Pivot (Man) would be \"to center, toe turned in\".",
+        "Note also that this step is in CBMP owing to the body turning strongly to L as the RF foot slips back."
+      ]
+    },
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward LOD in CBMP, small step forward",
+      "footwork": "B",
+      "alignment": "CBMP",
+      "amount_of_turn": "1/2 to L (Pivot)",
+      "comments": [
+        "Make sure keep body and head very left to Man. Keep left side strongly forward (positive), don't inch into Man's space."
+      ]
+    }
+  ]
+}

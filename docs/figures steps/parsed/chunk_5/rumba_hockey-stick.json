@@ -1,0 +1,74 @@
+{
+  "name": "Hockey Stick",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/hockey-stick"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Fan Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twists,Closed Hip Twist,Curl,Fan,Natural Top,Open Hip Twist,Opening Out From Reverse Top,Spiral,Three Threes",
+  "following_figure_names": "Basic Movements,Shoulder To Shoulder Left Side,Alemana,Open Hip Twist,Curl,Three Threes,Three Alemanas,New York LSP (when Hockey Stick ends in Open CPP),Spot or Switch Turn To R (Lady to L) (when Hockey Stick ends in Open CPP)",
+  "notes": "Hockey Stick starts in Fan Position, may end in Open Position. Alternative finishing: Open CPP\nMan leads Lady to overturn towards end of 5, both taking 6 diag fwd in Open CPP. Lady turns an additional 1/4 L on RF using a loosely crossed spiral action.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward step",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "WF",
+      "alignment": "Facing",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close to RF",
+      "footwork": "F",
+      "alignment": "Closed",
+      "amount_of_turn": "No turn",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Cuban Cross behind LF",
+      "footwork": "B",
+      "alignment": "Diagonal",
+      "amount_of_turn": "1/8 to R",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward small step",
+      "footwork": "F",
+      "alignment": "Facing",
+      "amount_of_turn": "No turn",
+      "comments": []
+    }
+  ]
+}

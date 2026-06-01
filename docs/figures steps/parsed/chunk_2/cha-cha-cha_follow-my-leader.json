@@ -1,0 +1,18 @@
+{
+  "name": "Follow My Leader",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/follow-my-leader"
+  ],
+  "dance_type": "CHA_CHA_CHA",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "RF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Open Position",
+  "ending_position": "Open Position",
+  "preceding_figure_names": "Advanced Hip Twist, Aida, Chase, Closed Hip Twist, Cuban Break RF, Curl, Hockey Stick, Open Basic Movement, Open Hip Twist, Spiral, Split Cuban Break LF, Spot or Switch Turn To L (Lady to R), Three Cha Cha Chas Forward, Time Step RF, Turkish Towel",
+  "following_figure_names": "Alemana, Open Basic Movement (Open Basic; Or, 1,2 of Open Basic to Three Cha Cha Chas Back; Or 1-5 of Open Basic to Natural Top), Time Step LF, Open Hip Twist, Curl, Cuban Break LF, Split Cuban Break LF, Chase, Turkish Towel, Advanced Hip Twist, Hip Twist Spiral, Sweetheart",
+  "notes": "Steps 8 through 25 have a figure 8 pattern.\nWhen turning R, Man takes slightly smaller steps. Lady is following him and her circumference of circle is larger.\nWhen turning L, the roles are reversed, and Lady takes smaller steps.\nAlternative finishing position\nMan and Lady dance a fwd lock toward partner's R side on steps 28-30. Man turns body slightly R to invite Lady to his R side. Then, follow with Advanced Hip Twist or Hip Twist Spiral.",
+  "steps": []
+}

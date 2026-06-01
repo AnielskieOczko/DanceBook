@@ -1,0 +1,86 @@
+{
+  "name" : "Spiral Turns (Spiral, Curl and Rope Spinning)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/curl" ],
+  "dance_type" : "RUMBA",
+  "level" : "Silver",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Open Position",
+  "ending_position" : "Fan Position",
+  "preceding_figure_names" : "Advanced Hip Twists, Aida, Basic Movements, Closed Hip Twist, Curl, Hockey Stick, Open Hip Twist, Progressive Walks Forward, Spiral, Spot or Switch Turn to L (Lady to R)",
+  "following_figure_names" : "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas, Basic Movements, Open Hip Twist, Curl, Three Threes, New York LSP, Spot or Switch Turn to R (Lady to L), Underarm Turn to L, Reverse Top",
+  "notes" : "At \"1\", still need to settle into R hip. 2: LF fwd Fan finish. Settle hip. 3: RF fwd and slightly across, then turn to end RF back. RF forward, slightly cross feet, upper thighs tight, sharp left turn. Push LF after turn. 4 1: LF back in Fan Position. For Fan finish, L hip to side, (do not rotate L to open up), keep thighs very tightly closed. Then, at \"&\", rotate L hip to draw RF in sharply, then twist hip to R into next figure.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Forward",
+    "footwork" : "BF",
+    "alignment" : "Facing Wall",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight",
+    "footwork" : "WF",
+    "alignment" : "Facing Wall",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "4 1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close to RF",
+    "footwork" : "T",
+    "alignment" : "Facing Wall",
+    "amount_of_turn" : "0",
+    "comments" : [ "Continue with steps 4-6 of Spiral. Finish in Fan." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Back",
+    "footwork" : "BF",
+    "alignment" : "Facing Wall",
+    "amount_of_turn" : "0",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Back",
+    "footwork" : "BF",
+    "alignment" : "No turn",
+    "amount_of_turn" : "0",
+    "comments" : [ "Give it a moment to be \"tall\", stomach back, chest forward before settling. Then, really settle, R shoulder connect down to right hip, R arm stay rounded." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Forward",
+    "footwork" : "BF",
+    "alignment" : "Sway R",
+    "amount_of_turn" : "0",
+    "comments" : [ "RF fwd, slightly cross to L, let upper body turn L first, keep R arm same level (do not drop) and rounded." ]
+  }, {
+    "step_number" : 7,
+    "timing" : "4 1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Back in Fan Position",
+    "footwork" : "BF",
+    "alignment" : "Fan Position",
+    "amount_of_turn" : "0",
+    "comments" : [ "For Fan finish, L hip to side, (do not rotate L to open up), keep thighs very tightly closed. Then, at \"&\", rotate L hip to draw RF in sharply, then twist hip to R into next figure." ]
+  } ]
+}

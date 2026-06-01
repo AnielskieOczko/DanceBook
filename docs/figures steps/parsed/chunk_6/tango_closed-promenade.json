@@ -1,0 +1,140 @@
+{
+  "name": "Closed Promenade",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/tango/closed-promenade"
+  ],
+  "dance_type": "TANGO",
+  "level": "Newcomer",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Reverse Turn,Chase,Contra Check,Fallaway Four Step,Fallaway Promenade,Five Step,Four Step,Natural Promenade Turn,Natural Twist Turn,Open Finish,Open Promenade,Open Reverse Turn, Lady In Line,Open Reverse Turn, Lady Outside,Oversway,Progressive Link,Progressive Side Step Reverse Turn",
+  "following_figure_names": "Walk (LF),Progressive Side Step,Progressive Link,Back Corte,LF Rock,Open Reverse Turn, Lady Outside (when preceding figure ended DC),Open Reverse Turn, Lady In Line (when preceding figure ended DC),Progressive Side Step Reverse Turn (when preceding figure ended DC),Reverse Outside Swivel (when preceding figure ended DC),Basic Reverse Turn (when preceding figure ended DC),Fallaway Reverse and Slip Pivot (when preceding figure ended DC; or normal),Four Step,Outside Swivel,Four Step Change,Brush Tap,Fallaway Four Step,Oversway,Five Step,Contra Check",
+  "notes": "Man may turn square to the lady in step 3, to end backing DC. Footwork for man would then be IE BH and for the lady IE of foot.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side in PP",
+      "footwork": "H",
+      "alignment": "Along LOD, pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Man's first step needs to be side, not forward, i.e., he does not turn his left foot out to point the direction he is stepping."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "forward and across in PP and CBMP",
+      "footwork": "",
+      "alignment": "Along LOD, pointing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Be in sync with lady, flexing knee to start shifting weight (don't tilt body though), moving across the feet."
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "IE of foot",
+      "alignment": "pointing DW",
+      "amount_of_turn": "",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "closes to LF slightly back",
+      "footwork": "Whole foot",
+      "alignment": "Facing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Should really close the foot, R foot even with arch of L foot."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side in PP",
+      "footwork": "",
+      "alignment": "Along LOD, pointing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Timing is \"hold on 1, step on 2\": R knee moving forward, body weight shifting with hips. When foot can't hold anymore, lift and strike and place RF out strong."
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "forward and across in PP and CBMP",
+      "footwork": "",
+      "alignment": "Along LOD, pointing DC",
+      "amount_of_turn": "",
+      "comments": [
+        "Keep L hip \"behind\" Man's hip. Do not move head. In sync with Man's leg movement, track behind his R leg."
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "lift and place LF (outside edge, roll onto it)",
+      "footwork": "",
+      "alignment": "",
+      "amount_of_turn": "",
+      "comments": [
+        "Lift LF, straighten knee (same time with Man), and then place LF (outside edge, roll onto it)."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side and slightly back",
+      "footwork": "",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/4 turn to L between 2-3",
+      "comments": [
+        "Do not turn early. Do not step RF too big a step.",
+        "RF turned in. Two feet are in funny position now: RF BDW, LF DC. \"pigeon toe'ed\" position is mid point (can rock for practice). roll onto RF.",
+        "R hip should be higher. RF and center of gravity should not go too far pass. Do not overshoot weight. Body would be slanted to L do not put too much weight on RF, it would become too heavy.",
+        "Head sharp flip to L, keep the volume between 2 heads, extended right away (do not close with Man and then extend in 2 steps). It's very easy to get in front of Man during transition of steps. Be very aware to continue to stretch L during the steps. Head motion is generally in sync with hip movement.",
+        "Keep frame solid: don't lose R arm, R arm fwd to Man with tone, it doesn't go back, or becomes \"loose\". keep R elbow out, not down. This is the sharp, accent step."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "closes to RF slightly fwd",
+      "footwork": "Whole foot",
+      "alignment": "Backing DW",
+      "amount_of_turn": "",
+      "comments": [
+        "Do not slide foot. Left foot roll off and end on ball of front of LF, then lift and place LF close to RF (could have a very small gap), slightly forward.",
+        "Softer and smoother step, not the sharp accent.",
+        "Back to starting foot position."
+      ]
+    }
+  ]
+}

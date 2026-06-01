@@ -1,0 +1,230 @@
+{
+  "name": "Curved Feather",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Change Of Direction,Closed Telemark,Hover Telemark,Hover Telemark to PP,Natural Turn,Open Impetus,Outside Swivel,Reverse Wave,Three Step",
+  "following_figure_names": "Closed Impetus and Feather Finish,Basic Weave (At corner),Open Impetus",
+  "notes": "Gold Level figure; detailed description includes timing, footwork, alignment, and videos.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd",
+      "footwork": "F",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Start to turn R",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF diag fwd, preparing to step OP, L side leading",
+      "footwork": "T",
+      "alignment": "Facing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "R",
+        "CBM",
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing DC",
+      "amount_of_turn": "1.8 between 3-4",
+      "comments": [
+        "S",
+        "CBM",
+        "Start to rise e/o 4, NFR"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back R side leading, Curving toward LOD",
+      "footwork": "T",
+      "alignment": "-",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway (L)",
+        "",
+        "Continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": [
+        "Sway (L)",
+        "",
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF back",
+      "footwork": "",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway (S)",
+        "CBM",
+        "-"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back",
+      "footwork": "TH",
+      "alignment": "Backing LOD",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1, NFR"
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, R side leading",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(L)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/8 between 2-3",
+      "comments": [
+        "Sway(L)",
+        "CBM",
+        "Up",
+        "Lower e/o 3"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "HT",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/8 between 3-4",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Start to rise e/o 4"
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd L side leading, Curving towards LOD",
+      "footwork": "T",
+      "alignment": "-",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(R)",
+        "Continue to rise on 5"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "1/8 between 4-6",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Lower e/o 6"
+      ]
+    },
+    {
+      "step_number": 14,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF fwd",
+      "footwork": "H",
+      "alignment": "Facing LOD",
+      "amount_of_turn": "-",
+      "comments": [
+        "S",
+        "CBM",
+        "-"
+      ]
+    }
+  ]
+}

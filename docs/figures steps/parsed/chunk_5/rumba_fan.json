@@ -1,0 +1,84 @@
+{
+  "name": "Fan",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/rumba/fan"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Fan Position",
+  "preceding_figure_names": "Alemana, Basic Movements: Closed, Basic Movements: Open, Cuban Rock LF, Cuban Rocks RF, Cucarachas: LF, Cucarachas: RF, Fencing, Hand To Hand LSP, Hand To Hand RSP, Natural Opening Out Movement, Natural Top, New York LSP, New York RSP, Opening Out To Right And Left, Progressive Walks Back, Progressive Walks Forward, Progressive Walks Forward in LSP, Progressive Walks Forward in RSP, Progressive Walks Forward in Right Shadow Position, Reverse Top, Rope Spinning, Shoulder To Shoulder Left Side, Shoulder To Shoulder Right Side, Side Step To Right commenced with LF, Side Step To Right commenced with RF, Spot or Switch Turn to L (Lady to R), Spot or Switch Turn To R (Lady to L), Syncopated Cuban Rock LF, Syncopated Cuban Rocks RF, Three Alemanas, Three Threes, Underarm Turn To L, Underarm Turn To R",
+  "following_figure_names": "Alemana, Hockey Stick, Sliding Doors, Fencing, Three Alemanas",
+  "notes": "Amount of turn: Man may make 1/4 turn L over steps 2 & 3 and 1/8 over steps 5 & 6. Lady: 1/4 L over 2 &3, and 3/8 over 5 & 6. The figure 8 body action should be going on through out, no pause, stop and restart again. Body needs to be active at all times. It could be slowed down, but not stopped. Alternative timing: holding position on step 3 for count \"2\", then counting 4-6 \"& 3. 4 1\". At \"&\": continue to twist left side, which draws in R leg. R knee cross over L leg. RF closes to LF. On next \"2\": first there is weight transfer to RF, so hip need to do pendulum action to diagonally right. Build tone. switch weight onto RF. squeeze R side, L side body forward. On \"3&: delay stepping LF. twist R side to move LF fwd at end of \"&\". Note: Fan position is not a perfect \"L\" shape, but more like a \"V\". Man's last step should be diagonal.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Forward",
+      "footwork": "F",
+      "alignment": "Closed Position",
+      "amount_of_turn": "",
+      "comments": [
+        "Man can make 1/4 turn L over steps 2 & 3"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight",
+      "footwork": "T",
+      "alignment": "Diagonal Left",
+      "amount_of_turn": "1/8 to L",
+      "comments": [
+        "1/8 to L over 2 & 3"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Side and slightly back",
+      "footwork": "F",
+      "alignment": "Side",
+      "amount_of_turn": "",
+      "comments": [
+        "Part of Fan Position development"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Back",
+      "footwork": "B",
+      "alignment": "No turn",
+      "amount_of_turn": "",
+      "comments": [
+        "No turn"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Forward",
+      "footwork": "F",
+      "alignment": "Check walk diagonal",
+      "amount_of_turn": "",
+      "comments": [
+        "Twist R hip. Forward check walk on diagonal."
+      ]
+    }
+  ]
+}

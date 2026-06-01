@@ -1,0 +1,200 @@
+{
+"name": "Natural Zig-Zag from PP",
+  "urls": [
+    "http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp"
+  ],
+  "dance_type": "SLOW_FOXTROT",
+  "level": "Gold",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Promenade Position",
+  "ending_position": "Backing DW",
+  "preceding_figure_names": "Hover Telemark, Hover Telemark to PP, Open Impetus, Open Telemark, Natural Turn, Outside Swivel and Feather Ending, Outside Swivel",
+  "following_figure_names": "Three Step, Change Of Direction, Hover Telemark, Reverse Wave (normal; or if ended DC), Reverse Turn (if ended DC), Closed Telemark (if ended DC), Open Telemark and Feather Ending (if ended DC), Fallaway Reverse and Slip Pivot (if ended DC), Bounce Fallaway with Weave Ending (if ended DC), Open Telemark, Natural Turn, Outside Swivel and Feather Ending",
+  "notes": "Do not drop R side, ribs to Man.\nMan is doing swiveling through his feet. Lady changes from PP to Man's L side and then R side, OP.\nQ: RF diag fwd, preparing to step OP on L side | Facing DC | T | 1/8 between 1-2 | Sway(S) | Up \nUse glute, pick up the hip fwd, Swing hip fwd and up.\nTake head to L and keep head head through the rest of steps.\nDo not try making connection by arching the back.\nHave loose contact with Man, sliding from one side to another.\nQ: LF fwd in CBMP, OP on L side | Facing DC | T | Start to turn L | Sway(S) | CBM | Up\nDifferent alignment for Man and Lady on steps 3-4.\nQ: RF to side | Backing Wall | TH | 1/8 between 3-4, body turns less | Sway(L) | Up\nUse L glute to push. Swing R hip. Feather finish.\nQ: LF back in CBMP | Backing DW | TH | - | Sway(L) | Up. Lower e/o 5\nS: RF back | Backing DW | T | - | Sway(S) | CBM",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HF",
+      "alignment": "Facing DW",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "HT",
+        "Sway(S)",
+        "CBM",
+        "Rise e/o 1"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side",
+      "footwork": "T",
+      "alignment": "Backing center",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(S)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 3,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "back in CBMP",
+      "footwork": "T",
+      "alignment": "Backing center",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "Q",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "to side and slightly fwd",
+      "footwork": "T",
+      "alignment": "Pointing DW",
+      "amount_of_turn": "1/8 between 3-4, body turns less",
+      "comments": [
+        "Sway(R)",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "TH",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "fwd in CBMP, OP",
+      "footwork": "TH",
+      "alignment": "Facing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(R)",
+        "Up",
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "S",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "fwd",
+      "footwork": "H",
+      "alignment": "Facing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd and across in PP and CBMP",
+      "footwork": "HF",
+      "alignment": "Facing DC",
+      "amount_of_turn": "Start to turn R",
+      "comments": [
+        "Sway(S)",
+        "CBM (slight)",
+        "Rise e/o 1",
+        "Do not drop R side, ribs to Man."
+      ]
+    },
+    {
+      "step_number": 9,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "diag fwd, preparing to step OP on L side",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "1/8 between 1-2",
+      "comments": [
+        "Sway(S)",
+        "Up",
+        "Use glute, pick up the hip fwd, Swing hip fwd and up.",
+        "Take head to L and keep head head through the rest of steps.",
+        "Do not try making connection by arching the back.",
+        "Have loose contact with Man, sliding from one side to another."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "Q",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "fwd in CBMP, OP on L side",
+      "footwork": "T",
+      "alignment": "Facing DC",
+      "amount_of_turn": "Start to turn L",
+      "comments": [
+        "Sway(S)",
+        "CBM",
+        "Up"
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "to side",
+      "footwork": "TH",
+      "alignment": "Backing Wall",
+      "amount_of_turn": "1/8 between 3-4, body turns less",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "Use L glute to push. Swing R hip. Feather finish."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "TH",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "back in CBMP",
+      "footwork": "TH",
+      "alignment": "Backing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(L)",
+        "Up",
+        "Lower e/o 5"
+      ]
+    },
+    {
+      "step_number": 13,
+      "timing": "S",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "back",
+      "footwork": "T",
+      "alignment": "Backing DW",
+      "amount_of_turn": "-",
+      "comments": [
+        "Sway(S)",
+        "CBM"
+      ]
+    }
+  ]
+}

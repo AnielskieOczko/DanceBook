@@ -1,0 +1,167 @@
+{
+  "name": "Open Telemark",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing"
+  ],
+  "dance_type": "WALTZ",
+  "level": "Silver",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Back Whisk, Basic Weave, Contra Check, Fallaway Whisk, Open Impetus, Open Telemark, Outside Change, Turning Lock, Turning Lock to R, Weave From Promenade Position, Whisk",
+  "following_figure_names": "Closed Telemark, Open Telemark, Double Reverse Spin, Progressive Chasse To R, Reverse Turn, Drag Hesitation, Fallaway Reverse And Slip Pivot, Whisk",
+  "notes": "Wing can be used from other positions.\nLess turn can be made on Wing to end facing LOD.\nSee Closed Telemark for leading Lady to do heel turn.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Moves forward DC, starts to turn left, sway, CBM, rise",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "This is \"Open Telemark\"."
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "1/4",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Steps to side BDW, T, sway left, up",
+      "footwork": "B",
+      "alignment": "BDW",
+      "amount_of_turn": "1/4",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "1/2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Steps to side and slightly forward in PP, pointing DW, body facing wall, sway, up, lower",
+      "footwork": "F",
+      "alignment": "DW",
+      "amount_of_turn": "less",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Moves forward across in PP and CBMP, pointing to LOD, H, sway S",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "This is \"Wing\". See Open Impetus and Wing."
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Closes to RF without weight, pressure on T of RF flat, body turn on 5, sway S, slight rise on 5 and 6, NFR",
+      "footwork": "F",
+      "alignment": "towards alignment of step 6",
+      "amount_of_turn": "body turn on 5",
+      "comments": [
+        "No foot swivel, but body turn only to face LOD"
+      ]
+    },
+    {
+      "step_number": 6,
+      "timing": "1/8",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Closes to RF without weight, FDC, same as step 5, sway S",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "same as step 5",
+      "comments": [
+        "Foot swivel is used to end facing DC"
+      ]
+    },
+    {
+      "step_number": 7,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Steps back BDC, start to turn left, sway, CBM, rise slightly",
+      "footwork": "B",
+      "alignment": "BDC",
+      "amount_of_turn": "start to turn L",
+      "comments": [
+        "This is \"Open Telemark\". See \"Closed Telemark\" for leading Lady to do heel turn."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Closes to RF (Heel Turn), FLOD, HT, sway R, continue rise",
+      "footwork": "F",
+      "alignment": "FLOD",
+      "amount_of_turn": "3/8",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Diagonal forward and slightly to R in PP, R side leading, pointing LOD, slight body turn to L, sway S, up, lower",
+      "footwork": "F",
+      "alignment": "LOD",
+      "amount_of_turn": "slight",
+      "comments": []
+    },
+    {
+      "step_number": 10,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Moves forward in PP and CBMP, FDC, HT, sway S, CBM, start to rise",
+      "footwork": "F",
+      "alignment": "FDC",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "This is \"Wing\"."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "1/8",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Steps forward preparing to step OP on L side, facing Centre, T, sway L, continue to rise",
+      "footwork": "F",
+      "alignment": "Centre",
+      "amount_of_turn": "1/8",
+      "comments": [
+        "Right side leading. Head up and leftward."
+      ]
+    },
+    {
+      "step_number": 12,
+      "timing": "1/4",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Steps forward in CBMP, OP on L side, facing against LOD, continue to turn to BDC, sway L, up, lower",
+      "footwork": "F",
+      "alignment": "BDC",
+      "amount_of_turn": "1/4",
+      "comments": [
+        "No swivel on LF."
+      ]
+    }
+  ]
+}

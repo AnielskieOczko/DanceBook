@@ -1,0 +1,76 @@
+{
+  "name" : "Cucarachas (LF and RF)",
+  "urls" : [ "http://www.dancecentral.info/ballroom/international-style/rumba/cucarachas" ],
+  "dance_type" : "RUMBA",
+  "level" : "Newcomer",
+  "starting_foot_leader" : "LF",
+  "ending_foot_leader" : "RF",
+  "starting_foot_follower" : "RF",
+  "ending_foot_follower" : "LF",
+  "starting_position" : "Closed Position",
+  "ending_position" : "Closed Position",
+  "preceding_figure_names" : "Aida, Cucarachas, Fencing",
+  "following_figure_names" : "Spot or Switch Turn To R (Lady to L), Basic Movements: Open, Basic Movements: Closed, Aida",
+  "notes" : "Feet relative direction to each other: side, side and slightly fwd or back, fwd or diagonally fwd, back or diagonally back.\nGold level: A Press Line may be used by Man when dancing a fwd Cucaracha by allowing RF to swivel slightly to R as he steps a fwd LF in line with RF, on ball of foot with heel raised.\nL knee is flexed, R leg straight and RF flat.\nThere is no hip movement.\nThe Press Line may be used on 1 of Advanced, Continuous and Circular Hip Twists.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Step to side with part weight",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "Transfer weight",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "Close to RF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 4,
+    "timing" : "4",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Step to side with part weight",
+    "footwork" : "B",
+    "alignment" : "LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 5,
+    "timing" : "5",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "Transfer weight",
+    "footwork" : "F",
+    "alignment" : "LOD",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  }, {
+    "step_number" : 6,
+    "timing" : "6",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "Close to LF",
+    "footwork" : "T",
+    "alignment" : "Closed Position",
+    "amount_of_turn" : "N/A",
+    "comments" : [ ]
+  } ]
+}

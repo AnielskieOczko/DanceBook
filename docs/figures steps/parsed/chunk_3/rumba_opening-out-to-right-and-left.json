@@ -1,0 +1,159 @@
+{
+  "name": "Opening Out to Right and Left",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-to-right-and-left"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "LF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "RF",
+  "ending_foot_follower": "RF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Alemana, Natural Top, Rope Spinning, Three Alemanas",
+  "following_figure_names": "Fan, Basic Movements: Closed, Basic Movements: Open, Natural Opening Out Movement, Closed Hip Twist, Spiral (1/4 R on 1)",
+  "notes": "Man is dancing a LF Cucaracha and RF Cucaracha. Turn on step 1 and 4 are made at end of previous beat. An Extended Forward Walk may be used on steps 3 & 6. Variations (Silver & Gold): Man may place R hand on Lady's back on 6, release L hand hold. Lady: place L hand on Man's R shoulder and turn 1/4 R into step 1 of following figure to 90 degree. Normal hold is regained on step 3 of following figure. Man may lead lady fwd towards his R side on last step of preceding figure and then turn 1/4 R on RF keeping his feet together, at the same time leading Lady to turn R. Lady LF fwd in line with RF towards Man's R side, then turn 1/2 R on LF to end LF back at a 90 degree angle to Man. No turn on step 1 of the following Opening Out Movement.",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side, part weight, no turn",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Transfer weight to RF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Close LF to RF",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 4,
+      "timing": "2",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF to side, part weight",
+      "footwork": "B",
+      "alignment": "LOD",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "Transfer weight to LF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF",
+      "footwork": "T",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 7,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF back, at a 90\" angle to Man on his R side, 1/4 to R",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "1/4 R",
+      "comments": [
+        "Turn is started on \"&\", \"It may appear to be side step, but it really need to be back step, keep thighs tight together\"."
+      ]
+    },
+    {
+      "step_number": 8,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "Transfer weight fwd to LF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 9,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF fwd, then turn to end RF to side | 1/4 to L",
+      "footwork": "T",
+      "alignment": "LSP",
+      "amount_of_turn": "1/4 L",
+      "comments": [
+        "Lady places R hand on his L shoulder - no rush, just need arm to connect, delay putting Lady's R hand on Man's shoulder."
+      ]
+    },
+    {
+      "step_number": 10,
+      "timing": "2",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF back at a 90\" angle to Man on his L side | 1/4 to L",
+      "footwork": "B",
+      "alignment": "DW",
+      "amount_of_turn": "1/4 L",
+      "comments": [
+        "In advanced form, this step can be taken fwd in line with other foot, then turn 1/2 to end at the 90\" angle to Man. Settle and pressure into hand first, before stepping LF back."
+      ]
+    },
+    {
+      "step_number": 11,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "Transfer weight fwd to RF",
+      "footwork": "WF",
+      "alignment": "Closed Position",
+      "amount_of_turn": "0",
+      "comments": []
+    },
+    {
+      "step_number": 12,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "F",
+      "action": "F fwd, then turn to end LF to side | 1/4 to R",
+      "footwork": "T",
+      "alignment": "CPP",
+      "amount_of_turn": "1/4 R",
+      "comments": [
+        "In advanced form, this step can be taken fwd in line with other foot, then turn 1/2 to end at the 90\" angle to Man."
+      ]
+    }
+  ]
+}

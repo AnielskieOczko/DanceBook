@@ -1,0 +1,93 @@
+{
+  "name": "Natural Top",
+  "urls": [
+    "https://www.dancecentral.info/ballroom/international-style/rumba/natural-top"
+  ],
+  "dance_type": "RUMBA",
+  "level": "Bronze",
+  "starting_foot_leader": "RF",
+  "ending_foot_leader": "LF",
+  "starting_foot_follower": "LF",
+  "ending_foot_follower": "LF",
+  "starting_position": "Closed Position",
+  "ending_position": "Closed Position",
+  "preceding_figure_names": "Basic Movements: Closed, Basic Movements: Open, Progressive Walks Back, Underarm Turn To L",
+  "following_figure_names": "Basic Movements: Open, Basic Movements: Closed, Fan, Natural Opening Out Movement (last step, Man leads Lady towards his R side), Opening Out To Right And Left, Closed Hip Twist (last step, Man leads Lady towards his R side), Spiral (last step, Man leads Lady towards his R side), Rope Spinning (last step, Man leads Lady towards his R side), Hockey Stick (4-6 following step 6 of Natural Top), Advanced Hip Twists (continue to turn a further 1/8 (up to 3/8) R on step 9, Man taking last step fwd in line with LF towards Lady R side), Continuous Hip Twists (continue to turn a further 1/8 (up to 3/8) R on step 9, Man taking last step fwd in line with LF towards Lady R side), Circular Hip Twists (continue to turn a further 1/8 (up to 3/8) R on step 9, Man taking last step fwd in line with LF towards Lady R side)",
+  "notes": "Start in Closed Position. Circle imaginary spot in the center.\nBecause of the continuous turn, knees will not straighten fully on 1-8. so only a slight, natural hip movement is used.\nThree steps of Natural Top may be danced, 7-9.\nGold Variation:\nWhile dancing steps 4-5, lead Lady to turn L under raised L arm having release R hand hold.\nLady RF fwd and slightly across LF, turning 1/4 L on step 4 (count \"2*), then continue to turn L on RF and step to side on LF almost facing partner on step 5 (count \"3\").\nGet into normal hold and continue with 6-9 of Natural Top (Lady's turn between steps 4&5 depends on Man's turn.)",
+  "steps": [
+    {
+      "step_number": 1,
+      "timing": "1-8",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "RF behind LF (Cuban Cross) – up to 2 complete turns",
+      "footwork": "B",
+      "alignment": "DC",
+      "amount_of_turn": "up to 2 complete turns",
+      "comments": [
+        "up to 2 complete turns over 1 - 8"
+      ]
+    },
+    {
+      "step_number": 2,
+      "timing": "3",
+      "role": "LEADER",
+      "foot": "LF",
+      "action": "LF to side",
+      "footwork": "F",
+      "alignment": "Wall",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 3,
+      "timing": "4 1",
+      "role": "LEADER",
+      "foot": "RF",
+      "action": "Close RF to LF",
+      "footwork": "F",
+      "alignment": "no turn",
+      "amount_of_turn": "no turn",
+      "comments": [
+        "No turn"
+      ]
+    },
+    {
+      "step_number": 4,
+      "timing": "1-8",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side – up to 2 complete turns",
+      "footwork": "F",
+      "alignment": "DC",
+      "amount_of_turn": "up to 2 complete turns",
+      "comments": [
+        "up to 2 complete turns over 1 - 8"
+      ]
+    },
+    {
+      "step_number": 5,
+      "timing": "3",
+      "role": "FOLLOWER",
+      "foot": "RF",
+      "action": "RF in front of LF, toe turned out",
+      "footwork": "T",
+      "alignment": "Forward",
+      "amount_of_turn": "no turn",
+      "comments": []
+    },
+    {
+      "step_number": 6,
+      "timing": "4 1",
+      "role": "FOLLOWER",
+      "foot": "LF",
+      "action": "LF to side – no turn",
+      "footwork": "F",
+      "alignment": "no turn",
+      "amount_of_turn": "no turn",
+      "comments": [
+        "no turn"
+      ]
+    }
+  ]
+}
