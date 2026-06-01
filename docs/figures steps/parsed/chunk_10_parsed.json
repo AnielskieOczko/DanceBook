@@ -3807,6 +3807,141 @@
     "comments" : [ "Sway(S)", "CBM", "--" ]
   } ]
 }, {
+  "name" : "Natural Turn",
+  "urls" : [ "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-turn" ],
+  "dance_type" : "VIENNESE_WALTZ",
+  "level" : "Bronze",
+  "starting_foot_leader" : "RF",
+  "ending_foot_leader" : "LF",
+  "starting_foot_follower" : "LF",
+  "ending_foot_follower" : "RF",
+  "starting_position" : "Closed Position, facing DC",
+  "ending_position" : "Closed Position, facing DC",
+  "preceding_figure_names" : "Contra Check, LF Forward Change (Reverse To Natural), Natural Fleckerl, Natural Turn, RF Backward Change (Reverse To Natural)",
+  "following_figure_names" : "RF Forward Change (Natural to Reverse), Natural Turn, Natural Fleckerl, LF Backward Change (Natural to Reverse)",
+  "notes" : "Man may hold the preceding sway slightly at the beginning of steps 1 and 4.\nLady:\nSlight shaping toward inside of the turn is ok.\nThere is no feet crossing in Natural Turn. On beat '3', feet are closed.\nStrong effort is on 1; Count 2 is only partial effort, do not use strong effort and too strong on 2, don't want weight to pass the foot (which stays on ball of foot, heel up all the time).\nThe figure travels down one track, make sure to turn enough.\nWhen ready to use Change Step to switch to Reverse Turn, this first half of Natural Turn (123) has smaller movement.\nLady: small LF back, curved off track, small RF side step. Accent in shape.",
+  "steps" : [ {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF fwd, turning 1/8 to step RF forward along LOD.",
+    "footwork" : "HT",
+    "alignment" : "LOD",
+    "amount_of_turn" : "1/8 to R btwn preceding step and 1",
+    "comments" : [ "Use strong range of motion, guiding Lady to inside of turn.", "Center is aiming LOD.", "Body should not arrive too early, it will knock Lady off her balance. Body arrives behind foot.", "L leg swing ahead of body. Don't take head with L leg." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF to side.",
+    "footwork" : "T",
+    "alignment" : "Back Center",
+    "amount_of_turn" : "1/4 to R btwn 1 and 2",
+    "comments" : [ "L leg swing, keep diagonal line." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF closes to LF.",
+    "footwork" : "TH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/8 to R btwn 2 and 3",
+    "comments" : [ "Dissolve the sway at the end." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF back and slightly to side.",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R btwn 3 and 4",
+    "comments" : [ "After dissolving sway, use range of motion." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "LEADER",
+    "foot" : "RF",
+    "action" : "RF to side.",
+    "footwork" : "T",
+    "alignment" : "Pointing DC",
+    "amount_of_turn" : "3/8 to R btwn 4 and 5, body turns less",
+    "comments" : [ "Don't take body with RF, allow Lady to move." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "LEADER",
+    "foot" : "LF",
+    "action" : "LF closes to RF.",
+    "footwork" : "Flat",
+    "alignment" : "FDC",
+    "amount_of_turn" : "body completes turn",
+    "comments" : [ "Maintain the sway till ready to move on next count." ]
+  }, {
+    "step_number" : 1,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF back and slightly to side.",
+    "footwork" : "TH",
+    "alignment" : "BLOD",
+    "amount_of_turn" : "1/8 to R bwtn preceding step and 1",
+    "comments" : [ "End of previous step: release L leg quickly to get out of the way, to create space for Man to move.", "Use strong range of motion.", "Curve off track (LF turned in to R), smaller step but more curving, moving LOD", "For right turns, allow hips to turn, lower center travels faster than upper center,", "R side maintains the stretch, stay connected with Man and give arms to Man (comes from the back). Keep right side 'positive'. Don't rotate upper body off too quickly." ]
+  }, {
+    "step_number" : 2,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF to side.",
+    "footwork" : "T",
+    "alignment" : "PDC",
+    "amount_of_turn" : "3/8 to R btwn 1 and 2, body turns less",
+    "comments" : [ "Opening up hips (RF is turned out a bit), keep head on LF, don't take head to RF too quickly, allow Man to pass first.", "Gauge Man's step size, don't step too big and end in front of Man. Leg is first stretch, then bend the knees to draw LF in. Stay flat and left.", "Partial weight transfer onto RF, do not be too heavy on 2, less effort, don't overshoot the weight.", "A lot more flat than slow Waltz, do not pop up and rise, keep knees flexed." ]
+  }, {
+    "step_number" : 3,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF closes to RF.",
+    "footwork" : "Flat",
+    "alignment" : "FDC",
+    "amount_of_turn" : "body completes turn",
+    "comments" : [ "Do not pop up. R knee flexed. Use RF to invite and draw LF in. It helps to stay grounded.", "Slight shape to L, but not as much as slow Waltz.", "The second the feet close (the weight is on LF), it takes off to next step." ]
+  }, {
+    "step_number" : 4,
+    "timing" : "1",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF fwd.",
+    "footwork" : "HT",
+    "alignment" : "FLOD",
+    "amount_of_turn" : "1/8 to R btwn 3 and 4",
+    "comments" : [ "Center of body aiming and moving straight down LOD.", "RF (leading foot) really points fwd LOD, and then as weight is leaving LF, RF will turn. Do not step RF turned out. Do not under turn on this forward half of Natural Turn", "Big step, deliver and drive spine to RF. Drive more using leg and move bigger.", "Keep core engaged. Keep head left of the spine, don't shift to right and get into Man's space." ]
+  }, {
+    "step_number" : 5,
+    "timing" : "2",
+    "role" : "FOLLOWER",
+    "foot" : "LF",
+    "action" : "LF to side.",
+    "footwork" : "T",
+    "alignment" : "Backing Center",
+    "amount_of_turn" : "1/4 to R btwn 4 and 5",
+    "comments" : [ "Swing L leg and L hip forward, leg is stretched. Even though the L side is swinging fwd, but the movement power actually comes from the standing side (R side), not the swinging side.", "LF can be slightly turned in a bit. LF swivels, it will end LF to side BDC", "As weight is moving toward LF, L knee bends (strongly) and stay bent, do not rise. Imagine there is a ceiling above head and head stay flat under ceiling. L heel also stays up, do not lower L heel." ]
+  }, {
+    "step_number" : 6,
+    "timing" : "3",
+    "role" : "FOLLOWER",
+    "foot" : "RF",
+    "action" : "RF closes to LF.",
+    "footwork" : "TH",
+    "alignment" : "BDC",
+    "amount_of_turn" : "1/8 to R btwn 5 and 6",
+    "comments" : [ "Keep L knee bent, stay flat while drawing RF in.", "Maintain heads to L. Head never cross Man's middle tie line. Still keep R side positive, do not over rotate shoulder quickly which will peel R shoulder off Man.", "Quick release of L leg, get out of the way." ]
+  } ]
+}, {
   "name" : "Telemark (Closed Telemark)",
   "urls" : [ "https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine" ],
   "dance_type" : "WALTZ",

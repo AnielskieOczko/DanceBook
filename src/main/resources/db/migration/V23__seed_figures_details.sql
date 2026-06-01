@@ -97245,6 +97245,427 @@ VALUES (
     3
 );
 
+-- Figure: Natural Turn (Viennese Waltz)
+                INSERT INTO dance_figure (id, name, dance_type_id, predefined, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position, preceding_figure_names, following_figure_names, notes)
+                VALUES (
+                    gen_random_uuid(),
+                    'Natural Turn',
+                    (SELECT id FROM dance_type WHERE name = 'Viennese Waltz'),
+                    true,
+                    'RF',
+                    'LF',
+                    'LF',
+                    'RF',
+                    'Closed Position, facing DC',
+                    'Closed Position, facing DC',
+                    '["Contra Check","LF Forward Change (Reverse To Natural)","Natural Fleckerl","Natural Turn","RF Backward Change (Reverse To Natural)"]',
+                    '["RF Forward Change (Natural to Reverse)","Natural Turn","Natural Fleckerl","LF Backward Change (Natural to Reverse)"]',
+                    'Man may hold the preceding sway slightly at the beginning of steps 1 and 4.
+Lady:
+Slight shaping toward inside of the turn is ok.
+There is no feet crossing in Natural Turn. On beat ''3'', feet are closed.
+Strong effort is on 1; Count 2 is only partial effort, do not use strong effort and too strong on 2, don''t want weight to pass the foot (which stays on ball of foot, heel up all the time).
+The figure travels down one track, make sure to turn enough.
+When ready to use Change Step to switch to Reverse Turn, this first half of Natural Turn (123) has smaller movement.
+Lady: small LF back, curved off track, small RF side step. Accent in shape.'
+                )
+                ON CONFLICT (dance_type_id, name) DO UPDATE SET
+                    predefined = EXCLUDED.predefined,
+                    starting_foot_leader = EXCLUDED.starting_foot_leader,
+                    ending_foot_leader = EXCLUDED.ending_foot_leader,
+                    starting_foot_follower = EXCLUDED.starting_foot_follower,
+                    ending_foot_follower = EXCLUDED.ending_foot_follower,
+                    starting_position = EXCLUDED.starting_position,
+                    ending_position = EXCLUDED.ending_position,
+                    preceding_figure_names = EXCLUDED.preceding_figure_names,
+                    following_figure_names = EXCLUDED.following_figure_names,
+                    notes = EXCLUDED.notes;
+
+DELETE FROM dance_figure_link WHERE dance_figure_id = (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz'));
+DELETE FROM dance_figure_step WHERE dance_figure_id = (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz'));
+
+INSERT INTO dance_figure_link (id, dance_figure_id, url, title, type)
+VALUES (
+    'a2c55543-9148-3439-95a3-bfa2b6543d8e',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    'https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-turn',
+    'DanceCentral Reference',
+    'CRAWLED'
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '424aa263-0a14-3fbb-acd7-9bba6d84dcca',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    1,
+    '1',
+    'LEADER',
+    'RF',
+    'RF fwd, turning 1/8 to step RF forward along LOD.',
+    'HT',
+    'LOD',
+    '1/8 to R btwn preceding step and 1'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'ff817dc8-d641-3d0c-a06b-62dd87e7ef89',
+    '424aa263-0a14-3fbb-acd7-9bba6d84dcca',
+    'Use strong range of motion, guiding Lady to inside of turn.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '75917966-33a5-3f68-81f9-b128b0e32f9d',
+    '424aa263-0a14-3fbb-acd7-9bba6d84dcca',
+    'Center is aiming LOD.',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '329575dc-29d9-3207-877a-fe87ef379a0c',
+    '424aa263-0a14-3fbb-acd7-9bba6d84dcca',
+    'Body should not arrive too early, it will knock Lady off her balance. Body arrives behind foot.',
+    3
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'a47818d0-537c-3d23-8f12-5668e21972ac',
+    '424aa263-0a14-3fbb-acd7-9bba6d84dcca',
+    'L leg swing ahead of body. Don''t take head with L leg.',
+    4
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    'd82496f9-b560-3388-81b4-e2555ab723f6',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    2,
+    '2',
+    'LEADER',
+    'LF',
+    'LF to side.',
+    'T',
+    'Back Center',
+    '1/4 to R btwn 1 and 2'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '6e76bb41-5e80-3ed9-a68b-a172f4db7f05',
+    'd82496f9-b560-3388-81b4-e2555ab723f6',
+    'L leg swing, keep diagonal line.',
+    1
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    'dcb35201-b29c-379e-9d95-6bb2a9a82d35',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    3,
+    '3',
+    'LEADER',
+    'RF',
+    'RF closes to LF.',
+    'TH',
+    'BDC',
+    '1/8 to R btwn 2 and 3'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '3c952070-7130-3199-9741-a2986d1c10b8',
+    'dcb35201-b29c-379e-9d95-6bb2a9a82d35',
+    'Dissolve the sway at the end.',
+    1
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    'bad88350-fce4-3b60-89a4-87bb7905fa6f',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    4,
+    '1',
+    'LEADER',
+    'LF',
+    'LF back and slightly to side.',
+    'TH',
+    'BLOD',
+    '1/8 to R btwn 3 and 4'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '68881132-60ca-3beb-8d92-2dcef74c1746',
+    'bad88350-fce4-3b60-89a4-87bb7905fa6f',
+    'After dissolving sway, use range of motion.',
+    1
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '1da1239b-7635-3c68-97a2-8529bc0bdaa1',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    5,
+    '2',
+    'LEADER',
+    'RF',
+    'RF to side.',
+    'T',
+    'Pointing DC',
+    '3/8 to R btwn 4 and 5, body turns less'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '8373505c-8e99-31de-b387-e8c89e838e7c',
+    '1da1239b-7635-3c68-97a2-8529bc0bdaa1',
+    'Don''t take body with RF, allow Lady to move.',
+    1
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    'e0161faa-5a66-3d3f-b3f7-e2eb37d5e019',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    6,
+    '3',
+    'LEADER',
+    'LF',
+    'LF closes to RF.',
+    'Flat',
+    'FDC',
+    'body completes turn'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '83776a88-b6fe-392e-b6c5-20effc76bcb1',
+    'e0161faa-5a66-3d3f-b3f7-e2eb37d5e019',
+    'Maintain the sway till ready to move on next count.',
+    1
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    1,
+    '1',
+    'FOLLOWER',
+    'LF',
+    'LF back and slightly to side.',
+    'TH',
+    'BLOD',
+    '1/8 to R bwtn preceding step and 1'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'c8d2dad3-6343-3564-9cca-9da6eba13ba4',
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    'End of previous step: release L leg quickly to get out of the way, to create space for Man to move.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '6643c4a3-ca35-3542-a332-50826ab37f83',
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    'Use strong range of motion.',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '83ef5ad3-ef7b-3e11-ae22-2bc14392fd5e',
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    'Curve off track (LF turned in to R), smaller step but more curving, moving LOD',
+    3
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '6d289fab-0566-3509-97b4-8c59e95baa1f',
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    'For right turns, allow hips to turn, lower center travels faster than upper center,',
+    4
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '9b977fd6-1fa3-3fbb-802a-dfbfe1ef6671',
+    '1e5b1b7e-efbc-33b5-aa97-a56258ecdffb',
+    'R side maintains the stretch, stay connected with Man and give arms to Man (comes from the back). Keep right side ''positive''. Don''t rotate upper body off too quickly.',
+    5
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    'ac8fc9d9-3219-3c93-910e-fefa8bb61404',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    2,
+    '2',
+    'FOLLOWER',
+    'RF',
+    'RF to side.',
+    'T',
+    'PDC',
+    '3/8 to R btwn 1 and 2, body turns less'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '4bb03efb-b9bd-3ffb-b7f0-3515265bd2f4',
+    'ac8fc9d9-3219-3c93-910e-fefa8bb61404',
+    'Opening up hips (RF is turned out a bit), keep head on LF, don''t take head to RF too quickly, allow Man to pass first.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '781c70ac-1bc9-3e35-b066-3afd2205bee7',
+    'ac8fc9d9-3219-3c93-910e-fefa8bb61404',
+    'Gauge Man''s step size, don''t step too big and end in front of Man. Leg is first stretch, then bend the knees to draw LF in. Stay flat and left.',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'c0f95c60-c26a-325e-941f-d8965f69eee6',
+    'ac8fc9d9-3219-3c93-910e-fefa8bb61404',
+    'Partial weight transfer onto RF, do not be too heavy on 2, less effort, don''t overshoot the weight.',
+    3
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'e2e83910-1d24-3150-b94c-bb321cc18209',
+    'ac8fc9d9-3219-3c93-910e-fefa8bb61404',
+    'A lot more flat than slow Waltz, do not pop up and rise, keep knees flexed.',
+    4
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '8410a8d4-35c8-309c-b6c8-c989e4edb19c',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    3,
+    '3',
+    'FOLLOWER',
+    'LF',
+    'LF closes to RF.',
+    'Flat',
+    'FDC',
+    'body completes turn'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '0a46d6db-57b8-3f2a-9e9e-f6a7d8fddba4',
+    '8410a8d4-35c8-309c-b6c8-c989e4edb19c',
+    'Do not pop up. R knee flexed. Use RF to invite and draw LF in. It helps to stay grounded.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '2589ab9a-ad4c-3fef-be5c-fd1240fe1256',
+    '8410a8d4-35c8-309c-b6c8-c989e4edb19c',
+    'Slight shape to L, but not as much as slow Waltz.',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '0f1c2706-df65-3efc-a0a1-232be97fabef',
+    '8410a8d4-35c8-309c-b6c8-c989e4edb19c',
+    'The second the feet close (the weight is on LF), it takes off to next step.',
+    3
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '4e2a1ebe-11c0-30d3-8bf3-7fc2419d8d1a',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    4,
+    '1',
+    'FOLLOWER',
+    'RF',
+    'RF fwd.',
+    'HT',
+    'FLOD',
+    '1/8 to R btwn 3 and 4'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '8c96a48d-b6b7-34f9-9a8d-1e95a19d6d35',
+    '4e2a1ebe-11c0-30d3-8bf3-7fc2419d8d1a',
+    'Center of body aiming and moving straight down LOD.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '49e2440a-7cff-3391-8551-2beaa76c4d80',
+    '4e2a1ebe-11c0-30d3-8bf3-7fc2419d8d1a',
+    'RF (leading foot) really points fwd LOD, and then as weight is leaving LF, RF will turn. Do not step RF turned out. Do not under turn on this forward half of Natural Turn',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'ccfd3cbc-03c2-3482-ae59-1d3c3341c918',
+    '4e2a1ebe-11c0-30d3-8bf3-7fc2419d8d1a',
+    'Big step, deliver and drive spine to RF. Drive more using leg and move bigger.',
+    3
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '401fe62e-13a2-3fcb-8b22-309c4b515f7d',
+    '4e2a1ebe-11c0-30d3-8bf3-7fc2419d8d1a',
+    'Keep core engaged. Keep head left of the spine, don''t shift to right and get into Man''s space.',
+    4
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '725d572f-fba3-336e-aae9-ad8c8a9d4ef8',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    5,
+    '2',
+    'FOLLOWER',
+    'LF',
+    'LF to side.',
+    'T',
+    'Backing Center',
+    '1/4 to R btwn 4 and 5'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'a34b1610-151e-3629-834d-fa4e78e7216b',
+    '725d572f-fba3-336e-aae9-ad8c8a9d4ef8',
+    'Swing L leg and L hip forward, leg is stretched. Even though the L side is swinging fwd, but the movement power actually comes from the standing side (R side), not the swinging side.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '701f7765-86d9-32e9-911f-4648494da1ed',
+    '725d572f-fba3-336e-aae9-ad8c8a9d4ef8',
+    'LF can be slightly turned in a bit. LF swivels, it will end LF to side BDC',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '622f141a-2ad6-39c5-8912-debac73a3215',
+    '725d572f-fba3-336e-aae9-ad8c8a9d4ef8',
+    'As weight is moving toward LF, L knee bends (strongly) and stay bent, do not rise. Imagine there is a ceiling above head and head stay flat under ceiling. L heel also stays up, do not lower L heel.',
+    3
+);
+INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+VALUES (
+    '3eba836b-0458-3a39-bd24-746c5cb92e41',
+    (SELECT id FROM dance_figure WHERE name = 'Natural Turn' AND dance_type_id = (SELECT id FROM dance_type WHERE name = 'Viennese Waltz')),
+    6,
+    '3',
+    'FOLLOWER',
+    'RF',
+    'RF closes to LF.',
+    'TH',
+    'BDC',
+    '1/8 to R btwn 5 and 6'
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '6680d2f5-41de-37fd-b965-93f8ec8cb684',
+    '3eba836b-0458-3a39-bd24-746c5cb92e41',
+    'Keep L knee bent, stay flat while drawing RF in.',
+    1
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    '13de8ac9-ccf9-358f-b67a-ab84a3d4a5b0',
+    '3eba836b-0458-3a39-bd24-746c5cb92e41',
+    'Maintain heads to L. Head never cross Man''s middle tie line. Still keep R side positive, do not over rotate shoulder quickly which will peel R shoulder off Man.',
+    2
+);
+INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
+VALUES (
+    'b0de6fb8-5521-35ee-a9b0-c4fbe068c7e0',
+    '3eba836b-0458-3a39-bd24-746c5cb92e41',
+    'Quick release of L leg, get out of the way.',
+    3
+);
+
 -- Figure: Telemark (Closed Telemark) (Waltz)
                 INSERT INTO dance_figure (id, name, dance_type_id, predefined, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position, preceding_figure_names, following_figure_names, notes)
                 VALUES (
