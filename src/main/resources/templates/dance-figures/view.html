@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- Header Section with Title and Actions -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-outline-variant/30 gap-4">
+        <div>
+            <div class="flex flex-wrap items-center gap-3 mb-2">
+                <h1 class="text-3xl font-headline-lg text-on-surface" th:text="${danceFigure.name}">Figure Name</h1>
+                <span th:if="${danceFigure.predefined}" class="badge bg-outline-variant/30 text-outline border border-outline-variant/50">Syllabus Predefined</span>
+            </div>
+            <p class="text-on-surface-variant font-body-md" th:text="${danceFigure.danceType != null ? danceFigure.danceType.name : 'Unknown Style'}">Dance Style</p>
+        </div>
+        
+        <div class="flex items-center gap-3 flex-wrap">
+            <!-- Edit Button -->
+            <a th:href="@{/dance-figures/{id}/edit(id=${danceFigure.id})}" class="btn-primary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[20px]">edit</span> Edit Figure
+            </a>
+            
+            <!-- Delete Button (Only for custom figures) -->
+            <form th:if="${!danceFigure.predefined}" th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
+                  data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                <button type="submit" class="btn-danger flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[20px]">delete</span> Delete Figure
+                </button>
+            </form>
+            
+            <!-- Lock indicator for predefined figures -->
+            <div th:if="${danceFigure.predefined}" class="inline-flex items-center gap-1.5 px-4 py-2 border border-border bg-surface-container text-outline text-sm rounded-button cursor-not-allowed" title="System predefined syllabus figures cannot be deleted.">
+                <span class="material-symbols-outlined text-[20px]">lock</span> Predefined (Non-deletable)
+            </div>
+
+            <a href="/dance-figures" class="btn-outline">Back to Database</a>
+        </div>
+    </div>
+
+    <!-- Main View Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT COLUMN: Core Details, Positions & Steps Breakdown -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Card 1: Core Details -->
+            <div class="card p-8 space-y-4 bg-white">
+                <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">info</span> Core Details
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+                    <div>
+                        <span class="block text-xs font-semibold text-outline uppercase tracking-wider mb-1">Dance Style</span>
+                        <span class="font-medium text-on-surface" th:text="${danceFigure.danceType != null ? danceFigure.danceType.name : 'N/A'}">Cha Cha</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-outline uppercase tracking-wider mb-1">Minimum Level</span>
+                        <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase" th:text="${'Class ' + danceFigure.danceClass}">Class H</span>
+                        <span th:if="${danceFigure.danceClass == null}" class="text-on-surface-variant italic">None (Social)</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-outline uppercase tracking-wider mb-1">Alternative Timing</span>
+                        <span class="font-medium text-on-surface" th:text="${danceFigure.alternativeTiming ?: 'N/A'}">123&4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Positions & Footwork -->
+            <div class="card p-8 space-y-6 bg-white">
+                <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">accessibility_new</span> Positions &amp; Alignment
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                    <div>
+                        <span class="block text-xs font-semibold text-outline uppercase tracking-wider mb-1">Starting Position</span>
+                        <span class="font-medium text-on-surface" th:text="${danceFigure.startingPosition ?: 'N/A'}">Closed Position</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-outline uppercase tracking-wider mb-1">Ending Position</span>
+                        <span class="font-medium text-on-surface" th:text="${danceFigure.endingPosition ?: 'N/A'}">Open Position</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-4 text-sm">
+                    <!-- Leader Footwork -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px] text-primary">face</span> Leader Footwork
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Starting Foot:</span>
+                                <span class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootLeader ?: 'N/A'}">LF</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Ending Foot:</span>
+                                <span class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootLeader ?: 'N/A'}">RF</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Follower Footwork -->
+                    <div>
+                        <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px] text-primary">face_2</span> Follower Footwork
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Starting Foot:</span>
+                                <span class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootFollower ?: 'N/A'}">RF</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-on-surface-variant">Ending Foot:</span>
+                                <span class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootFollower ?: 'N/A'}">LF</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Steps Breakdown -->
+            <div class="card p-8 space-y-6 bg-white">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3 gap-3">
+                    <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-primary">list_alt</span> Step-by-Step Technical Syllabus
+                    </h2>
+                    
+                    <!-- Role Tab Selector -->
+                    <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs">
+                        <button type="button" id="leader-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-primary-container text-primary-container">
+                            Leader Steps
+                        </button>
+                        <button type="button" id="follower-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-transparent text-text-secondary hover:text-on-surface">
+                            Follower Steps
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LEADER STEPS TABLE -->
+                <div id="leader-steps-section" class="space-y-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
+                                    <th class="py-3 px-2 w-12 text-center">Step</th>
+                                    <th class="py-3 px-2 w-20">Timing</th>
+                                    <th class="py-3 px-2 w-20">Foot</th>
+                                    <th class="py-3 px-2">Action Description</th>
+                                    <th class="py-3 px-2 w-24">Footwork</th>
+                                    <th class="py-3 px-2 w-28">Alignment</th>
+                                    <th class="py-3 px-2 w-24">Turn</th>
+                                    <th class="py-3 px-2 min-w-[200px]">Technical Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="step : ${danceFigure.getLeaderSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
+                                    <td class="py-3 px-2 text-center font-semibold text-primary" th:text="${step.stepNumber}">1</td>
+                                    <td class="py-3 px-2 font-medium" th:text="${step.timing}">S</td>
+                                    <td class="py-3 px-2 uppercase font-medium" th:text="${step.foot}">LF</td>
+                                    <td class="py-3 px-2 text-on-surface" th:text="${step.action}">Step forward</td>
+                                    <td class="py-3 px-2 text-on-surface-variant font-mono text-xs uppercase" th:text="${step.footwork ?: '-'}">HT</td>
+                                    <td class="py-3 px-2 text-on-surface-variant" th:text="${step.alignment ?: '-'}">LOD</td>
+                                    <td class="py-3 px-2 text-on-surface-variant" th:text="${step.amountOfTurn ?: '-'}">None</td>
+                                    <td class="py-3 px-2 text-xs text-on-surface-variant">
+                                        <ul class="list-disc list-inside space-y-0.5">
+                                            <li th:each="c : ${step.comments}" th:text="${c.commentText}">Comment text</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(danceFigure.getLeaderSteps())}">
+                                    <td colspan="8" class="py-8 text-center text-on-surface-variant/50 italic">No Leader steps registered for this figure.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- FOLLOWER STEPS TABLE -->
+                <div id="follower-steps-section" class="space-y-4 hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
+                                    <th class="py-3 px-2 w-12 text-center">Step</th>
+                                    <th class="py-3 px-2 w-20">Timing</th>
+                                    <th class="py-3 px-2 w-20">Foot</th>
+                                    <th class="py-3 px-2">Action Description</th>
+                                    <th class="py-3 px-2 w-24">Footwork</th>
+                                    <th class="py-3 px-2 w-28">Alignment</th>
+                                    <th class="py-3 px-2 w-24">Turn</th>
+                                    <th class="py-3 px-2 min-w-[200px]">Technical Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="step : ${danceFigure.getFollowerSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
+                                    <td class="py-3 px-2 text-center font-semibold text-primary" th:text="${step.stepNumber}">1</td>
+                                    <td class="py-3 px-2 font-medium" th:text="${step.timing}">S</td>
+                                    <td class="py-3 px-2 uppercase font-medium" th:text="${step.foot}">RF</td>
+                                    <td class="py-3 px-2 text-on-surface" th:text="${step.action}">Step back</td>
+                                    <td class="py-3 px-2 text-on-surface-variant font-mono text-xs uppercase" th:text="${step.footwork ?: '-'}">T</td>
+                                    <td class="py-3 px-2 text-on-surface-variant" th:text="${step.alignment ?: '-'}">LOD</td>
+                                    <td class="py-3 px-2 text-on-surface-variant" th:text="${step.amountOfTurn ?: '-'}">None</td>
+                                    <td class="py-3 px-2 text-xs text-on-surface-variant">
+                                        <ul class="list-disc list-inside space-y-0.5">
+                                            <li th:each="c : ${step.comments}" th:text="${c.commentText}">Comment text</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(danceFigure.getFollowerSteps())}">
+                                    <td colspan="8" class="py-8 text-center text-on-surface-variant/50 italic">No Follower steps registered for this figure.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Connections, Notes, Study Materials -->
+        <div class="space-y-8">
+            
+            <!-- Card 4: Connections & Notes -->
+            <div class="card p-8 space-y-6 bg-white text-sm">
+                <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">link</span> Connections &amp; Notes
+                </h2>
+
+                <!-- Preceding Figures -->
+                <div class="space-y-2">
+                    <span class="block text-xs font-semibold text-outline uppercase tracking-wider">Preceding Figures</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span th:each="name : ${danceFigure.precedingFigureNames}">
+                            <a th:if="${figureNameMap[name] != null}" th:href="@{/dance-figures/{id}(id=${figureNameMap[name]})}" 
+                               th:text="${name}" class="chip chip-active font-medium">Figure</a>
+                            <span th:if="${figureNameMap[name] == null}" th:text="${name}" class="chip bg-surface-container text-on-surface-variant cursor-default">Figure</span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(danceFigure.precedingFigureNames)}" class="text-on-surface-variant/50 italic text-xs">No preceding figures registered.</span>
+                    </div>
+                </div>
+
+                <!-- Following Figures -->
+                <div class="space-y-2 border-t border-border pt-4">
+                    <span class="block text-xs font-semibold text-outline uppercase tracking-wider">Following Figures</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span th:each="name : ${danceFigure.followingFigureNames}">
+                            <a th:if="${figureNameMap[name] != null}" th:href="@{/dance-figures/{id}(id=${figureNameMap[name]})}" 
+                               th:text="${name}" class="chip chip-active font-medium">Figure</a>
+                            <span th:if="${figureNameMap[name] == null}" th:text="${name}" class="chip bg-surface-container text-on-surface-variant cursor-default">Figure</span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(danceFigure.followingFigureNames)}" class="text-on-surface-variant/50 italic text-xs">No following figures registered.</span>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="space-y-2 border-t border-border pt-4">
+                    <span class="block text-xs font-semibold text-outline uppercase tracking-wider">Director's Notes</span>
+                    <div class="text-on-surface font-body-md whitespace-pre-line leading-relaxed bg-surface-container-low p-4 rounded-md border border-border/40" th:text="${danceFigure.notes ?: 'No notes available for this figure.'}">
+                        Notes details.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Study Materials -->
+            <div class="card p-8 space-y-6 bg-white text-sm">
+                <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">smart_display</span> Videos &amp; Resources
+                </h2>
+                
+                <div class="space-y-4">
+                    <div th:each="link : ${danceFigure.links}" class="flex items-start gap-3 p-3 hover:bg-surface-container-low rounded-lg transition-colors border border-border/50">
+                        <span class="material-symbols-outlined text-primary mt-0.5 text-[22px]"
+                              th:text="${link.type == 'video' ? 'play_circle' : (link.type == 'syllabus' ? 'menu_book' : 'description')}">play_circle</span>
+                        <div class="flex-1 min-w-0">
+                            <a th:href="${link.url}" target="_blank" class="font-medium text-on-surface hover:text-primary transition-colors block truncate" th:text="${link.title ?: link.url}">Link Title</a>
+                            <span class="text-xs text-outline uppercase font-semibold tracking-wider" th:text="${link.type}">video</span>
+                        </div>
+                        <a th:href="${link.url}" target="_blank" class="text-outline hover:text-primary transition-colors mt-1">
+                            <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+                        </a>
+                    </div>
+                    <div th:if="${#lists.isEmpty(danceFigure.links)}" class="py-6 text-center text-on-surface-variant/50 italic text-xs">
+                        No external study materials registered for this figure.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Vanilla Javascript Tab Switching Logic -->
+    <script th:src="@{/js/dance-figure-view.js}"></script>
+
+</section>
+</html>

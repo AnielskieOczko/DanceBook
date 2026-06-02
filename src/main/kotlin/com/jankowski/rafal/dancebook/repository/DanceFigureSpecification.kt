@@ -14,7 +14,8 @@ object DanceFigureSpecification {
         typeIds: List<UUID>? = null,
         categoryIds: List<UUID>? = null,
         danceClass: DanceClass? = null,
-        nameSearch: String? = null
+        nameSearch: String? = null,
+        hasSteps: Boolean? = null
     ): Specification<DanceFigure> {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>()
@@ -33,6 +34,14 @@ object DanceFigureSpecification {
 
             if (!nameSearch.isNullOrBlank()) {
                 predicates.add(cb.like(cb.lower(root.get("name")), "%${nameSearch.lowercase()}%"))
+            }
+
+            hasSteps?.let {
+                if (it) {
+                    predicates.add(cb.isNotEmpty(root.get<Collection<*>>("steps")))
+                } else {
+                    predicates.add(cb.isEmpty(root.get<Collection<*>>("steps")))
+                }
             }
 
             cb.and(*predicates.toTypedArray())

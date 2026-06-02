@@ -1,6 +1,8 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
+import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
+import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -258,6 +260,91 @@ class DanceFigureServiceTest {
 
         verify(danceFigureRepository).delete(customFigure)
         verify(eventPublisher).publishEvent(any(DanceFigureDeletedEvent::class.java))
+    }
+
+    @Test
+    fun `should create dance figure with steps and links`() {
+        val danceTypeId = UUID.randomUUID()
+        val danceType = DanceType().apply {
+            id = danceTypeId
+            name = "Waltz"
+        }
+        val step1 = DanceFigureStepRequest(
+            timing = "S",
+            foot = "LF",
+            role = "LEADER",
+            action = "Forward",
+            commentsText = "Line 1\nLine 2"
+        )
+        val step2 = DanceFigureStepRequest(
+            timing = "Q",
+            foot = "RF",
+            role = "LEADER",
+            action = "Side"
+        )
+        val step3 = DanceFigureStepRequest(
+            timing = "S",
+            foot = "LF",
+            role = "FOLLOWER",
+            action = "Back"
+        )
+        val link1 = DanceFigureLinkRequest(
+            url = "https://example.com/video",
+            title = "Video Link",
+            type = "video"
+        )
+        val request = DanceFigureRequest(
+            name = "Technical Figure",
+            danceTypeId = danceTypeId,
+            danceClass = DanceClass.C,
+            startingPosition = "Closed",
+            endingPosition = "Promenade",
+            precedingFigureNames = listOf("Figure A"),
+            followingFigureNames = listOf("Figure B"),
+            steps = mutableListOf(step1, step2, step3),
+            links = mutableListOf(link1)
+        )
+
+        `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
+        `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(emptyList())
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+
+        val result = danceFigureService.create(request)
+
+        assertNotNull(result)
+        assertEquals("Technical Figure", result.name)
+        assertEquals(DanceClass.C, result.danceClass)
+        assertEquals("Closed", result.startingPosition)
+        assertEquals("Promenade", result.endingPosition)
+        assertEquals(listOf("Figure A"), result.precedingFigureNames)
+        assertEquals(listOf("Figure B"), result.followingFigureNames)
+        
+        // Assert Steps and indexing
+        assertEquals(3, result.steps.size)
+        
+        val resultLeaderSteps = result.getLeaderSteps()
+        assertEquals(2, resultLeaderSteps.size)
+        assertEquals(1, resultLeaderSteps[0].stepNumber)
+        assertEquals("LF", resultLeaderSteps[0].foot)
+        assertEquals(2, resultLeaderSteps[0].comments.size)
+        assertEquals("Line 1", resultLeaderSteps[0].comments[0].commentText)
+        assertEquals(0, resultLeaderSteps[0].comments[0].displayOrder)
+        assertEquals("Line 2", resultLeaderSteps[0].comments[1].commentText)
+        assertEquals(1, resultLeaderSteps[0].comments[1].displayOrder)
+
+        assertEquals(2, resultLeaderSteps[1].stepNumber)
+        assertEquals("RF", resultLeaderSteps[1].foot)
+
+        val resultFollowerSteps = result.getFollowerSteps()
+        assertEquals(1, resultFollowerSteps.size)
+        assertEquals(1, resultFollowerSteps[0].stepNumber)
+        assertEquals("LF", resultFollowerSteps[0].foot)
+        
+        // Assert Links
+        assertEquals(1, result.links.size)
+        assertEquals("https://example.com/video", result.links[0].url)
+        assertEquals("Video Link", result.links[0].title)
+        assertEquals("video", result.links[0].type)
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)

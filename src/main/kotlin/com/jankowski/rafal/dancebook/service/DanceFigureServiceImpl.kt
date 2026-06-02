@@ -3,6 +3,10 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.DanceFigureStep
+import com.jankowski.rafal.dancebook.model.DanceFigureStepComment
+import com.jankowski.rafal.dancebook.model.DanceFigureLink
 import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
@@ -33,14 +37,16 @@ class DanceFigureServiceImpl(
         categoryIds: List<UUID>?,
         danceClass: DanceClass?,
         nameSearch: String?,
-        sortBy: String?
+        sortBy: String?,
+        hasSteps: Boolean?
     ): List<DanceFigure> {
-        log.debug("Retrieving dance figures with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}", typeIds, categoryIds, danceClass, nameSearch, sortBy)
+        log.debug("Retrieving dance figures with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}, hasSteps={}", typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps)
         val spec = DanceFigureSpecification.withFilters(
             typeIds = typeIds,
             categoryIds = categoryIds,
             danceClass = danceClass,
-            nameSearch = nameSearch
+            nameSearch = nameSearch,
+            hasSteps = hasSteps
         )
 
         val sort = when (sortBy) {
@@ -81,12 +87,9 @@ class DanceFigureServiceImpl(
         }
 
         val danceFigure = DanceFigure().apply {
-            this.name = request.name
-            this.danceType = danceType
-            this.danceClass = request.danceClass
             this.predefined = false
-            this.alternativeTiming = request.alternativeTiming
         }
+        mapRequestToEntity(danceFigure, request, danceType)
         val saved = danceFigureRepository.save(danceFigure)
         eventPublisher.publishEvent(
             DanceFigureCreatedEvent(saved, appUserService.getCurrentUser())
@@ -106,16 +109,98 @@ class DanceFigureServiceImpl(
             throw IllegalArgumentException("A figure with the name '${request.name}' already exists for this dance.")
         }
 
-        danceFigure.name = request.name
-        danceFigure.danceType = danceType
-        danceFigure.danceClass = request.danceClass
-        danceFigure.alternativeTiming = request.alternativeTiming
+        mapRequestToEntity(danceFigure, request, danceType)
 
         val saved = danceFigureRepository.save(danceFigure)
         eventPublisher.publishEvent(
             DanceFigureUpdatedEvent(saved, appUserService.getCurrentUser())
         )
         return saved
+    }
+
+    private fun mapRequestToEntity(danceFigure: DanceFigure, request: DanceFigureRequest, danceType: DanceType) {
+        danceFigure.name = request.name
+        danceFigure.danceType = danceType
+        danceFigure.danceClass = request.danceClass
+        danceFigure.alternativeTiming = request.alternativeTiming
+        danceFigure.startingFootLeader = request.startingFootLeader
+        danceFigure.endingFootLeader = request.endingFootLeader
+        danceFigure.startingFootFollower = request.startingFootFollower
+        danceFigure.endingFootFollower = request.endingFootFollower
+        danceFigure.startingPosition = request.startingPosition
+        danceFigure.endingPosition = request.endingPosition
+        danceFigure.precedingFigureNames = request.precedingFigureNames
+        danceFigure.followingFigureNames = request.followingFigureNames
+        danceFigure.notes = request.notes
+
+        // Steps
+        danceFigure.steps.clear()
+        val leaderSteps = request.steps.filter { it.role == "LEADER" }
+        val followerSteps = request.steps.filter { it.role == "FOLLOWER" }
+
+        leaderSteps.forEachIndexed { index, stepReq ->
+            val step = DanceFigureStep().apply {
+                this.danceFigure = danceFigure
+                this.stepNumber = index + 1
+                this.timing = stepReq.timing
+                this.role = "LEADER"
+                this.foot = stepReq.foot
+                this.action = stepReq.action
+                this.footwork = stepReq.footwork
+                this.alignment = stepReq.alignment
+                this.amountOfTurn = stepReq.amountOfTurn
+            }
+            val comments = stepReq.commentsText?.lineSequence()
+                ?.map { it.trim() }
+                ?.filter { it.isNotEmpty() }
+                ?.mapIndexed { commentIndex, commentText ->
+                    DanceFigureStepComment().apply {
+                        this.danceFigureStep = step
+                        this.commentText = commentText
+                        this.displayOrder = commentIndex
+                    }
+                }?.toMutableList() ?: mutableListOf()
+            step.comments = comments
+            danceFigure.steps.add(step)
+        }
+
+        followerSteps.forEachIndexed { index, stepReq ->
+            val step = DanceFigureStep().apply {
+                this.danceFigure = danceFigure
+                this.stepNumber = index + 1
+                this.timing = stepReq.timing
+                this.role = "FOLLOWER"
+                this.foot = stepReq.foot
+                this.action = stepReq.action
+                this.footwork = stepReq.footwork
+                this.alignment = stepReq.alignment
+                this.amountOfTurn = stepReq.amountOfTurn
+            }
+            val comments = stepReq.commentsText?.lineSequence()
+                ?.map { it.trim() }
+                ?.filter { it.isNotEmpty() }
+                ?.mapIndexed { commentIndex, commentText ->
+                    DanceFigureStepComment().apply {
+                        this.danceFigureStep = step
+                        this.commentText = commentText
+                        this.displayOrder = commentIndex
+                    }
+                }?.toMutableList() ?: mutableListOf()
+            step.comments = comments
+            danceFigure.steps.add(step)
+        }
+
+        // Links
+        danceFigure.links.clear()
+        request.links.forEach { linkReq ->
+            val link = DanceFigureLink().apply {
+                this.danceFigure = danceFigure
+                this.url = linkReq.url
+                this.title = linkReq.title
+                this.type = linkReq.type
+            }
+            danceFigure.links.add(link)
+        }
     }
 
      @Transactional

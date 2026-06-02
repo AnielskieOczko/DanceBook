@@ -2,58 +2,351 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='dance-figures'" class="max-w-2xl mx-auto py-12">
+<section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-    <div class="mb-8 pb-6 border-b border-surface-variant">
+    <div class="mb-8 pb-6 border-b border-outline-variant/30">
         <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}">Create New Figure</h1>
         <p class="text-on-surface-variant font-body-md">Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.</p>
     </div>
 
     <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" th:object="${danceFigure}" method="post" 
-          class="card p-8 space-y-6">
+          id="figureForm" class="space-y-8">
 
-        <!-- Figure Name -->
-        <div>
-            <label for="name" class="form-label">Figure Name *</label>
-            <input id="name" type="text" th:field="*{name}" required 
-                   class="form-input"
-                   th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
-                   placeholder="e.g. Back Whisk, Double Reverse Spin...">
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
-        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT COLUMN: Core details & Steps Breakdown -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Section 1: Core Information -->
+                <div class="card p-8 space-y-6 bg-white">
+                    <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-primary">info</span> Core Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Figure Name -->
+                        <div>
+                            <label for="name" class="form-label">Figure Name *</label>
+                            <input id="name" type="text" th:field="*{name}" required 
+                                   class="form-input"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
+                                   placeholder="e.g. Back Whisk, Double Reverse Spin...">
+                            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
+                        </div>
 
-        <!-- Dance Style selection -->
-        <div>
-            <label for="danceTypeId" class="form-label">Dance Style *</label>
-            <select id="danceTypeId" th:field="*{danceTypeId}" required 
-                    class="form-select"
-                    th:classappend="${#fields.hasErrors('danceTypeId')} ? 'border-danger ring-1 ring-danger' : ''">
-                <option value="">-- Select Dance Style --</option>
-                <option th:each="dt : ${danceTypes}" th:value="${dt.id}" th:text="${dt.name}"></option>
-            </select>
-            <p th:if="${#fields.hasErrors('danceTypeId')}" th:errors="*{danceTypeId}" class="form-error"></p>
-        </div>
+                        <!-- Dance Style selection -->
+                        <div>
+                            <label for="danceTypeId" class="form-label">Dance Style *</label>
+                            <select id="danceTypeId" th:field="*{danceTypeId}" required 
+                                    class="form-select"
+                                    th:classappend="${#fields.hasErrors('danceTypeId')} ? 'border-danger ring-1 ring-danger' : ''">
+                                <option value="">-- Select Dance Style --</option>
+                                <option th:each="dt : ${danceTypes}" th:value="${dt.id}" th:text="${dt.name}"></option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('danceTypeId')}" th:errors="*{danceTypeId}" class="form-error"></p>
+                        </div>
 
-        <!-- Dancer Class selection -->
-        <div>
-            <label for="danceClass" class="form-label">Minimum Dancer Class (Optional)</label>
-            <select id="danceClass" th:field="*{danceClass}"
-                    class="form-select"
-                    th:classappend="${#fields.hasErrors('danceClass')} ? 'border-danger ring-1 ring-danger' : ''">
-                <option value="">None (Social/General)</option>
-                <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${'Class ' + dc}"></option>
-            </select>
-            <p th:if="${#fields.hasErrors('danceClass')}" th:errors="*{danceClass}" class="form-error"></p>
-        </div>
+                        <!-- Dancer Class selection -->
+                        <div>
+                            <label for="danceClass" class="form-label">Minimum Dancer Class (Optional)</label>
+                            <select id="danceClass" th:field="*{danceClass}"
+                                    class="form-select"
+                                    th:classappend="${#fields.hasErrors('danceClass')} ? 'border-danger ring-1 ring-danger' : ''">
+                                <option value="">None (Social/General)</option>
+                                <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${'Class ' + dc}"></option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('danceClass')}" th:errors="*{danceClass}" class="form-error"></p>
+                        </div>
 
-        <!-- Alternative Timing -->
-        <div>
-            <label for="alternativeTiming" class="form-label">Alternative Timing (Optional)</label>
-            <input id="alternativeTiming" type="text" th:field="*{alternativeTiming}"
-                   class="form-input"
-                   th:classappend="${#fields.hasErrors('alternativeTiming')} ? 'border-danger ring-1 ring-danger' : ''"
-                   placeholder="e.g. 12&3, SQQ, Q&Q...">
-            <p th:if="${#fields.hasErrors('alternativeTiming')}" th:errors="*{alternativeTiming}" class="form-error"></p>
+                        <!-- Alternative Timing -->
+                        <div>
+                            <label for="alternativeTiming" class="form-label">Alternative Timing (Optional)</label>
+                            <input id="alternativeTiming" type="text" th:field="*{alternativeTiming}"
+                                   class="form-input"
+                                   th:classappend="${#fields.hasErrors('alternativeTiming')} ? 'border-danger ring-1 ring-danger' : ''"
+                                   placeholder="e.g. 12&3, SQQ, Q&Q...">
+                            <p th:if="${#fields.hasErrors('alternativeTiming')}" th:errors="*{alternativeTiming}" class="form-error"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Positions & Footwork -->
+                <div class="card p-8 space-y-6 bg-white">
+                    <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-primary">accessibility_new</span> Positions &amp; Footwork
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="startingPosition" class="form-label">Starting Position</label>
+                            <input id="startingPosition" type="text" th:field="*{startingPosition}" class="form-input" placeholder="e.g. Closed Position">
+                        </div>
+                        <div>
+                            <label for="endingPosition" class="form-label">Ending Position</label>
+                            <input id="endingPosition" type="text" th:field="*{endingPosition}" class="form-input" placeholder="e.g. Promenade Position">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-4">
+                        <div>
+                            <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px] text-primary">face</span> Leader Footwork
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="startingFootLeader" class="form-label text-xs">Starting Foot (Leader)</label>
+                                    <input id="startingFootLeader" type="text" th:field="*{startingFootLeader}" class="form-input" placeholder="e.g. LF, RF">
+                                </div>
+                                <div>
+                                    <label for="endingFootLeader" class="form-label text-xs">Ending Foot (Leader)</label>
+                                    <input id="endingFootLeader" type="text" th:field="*{endingFootLeader}" class="form-input" placeholder="e.g. LF, RF">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[16px] text-primary">face_2</span> Follower Footwork
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="startingFootFollower" class="form-label text-xs">Starting Foot (Follower)</label>
+                                    <input id="startingFootFollower" type="text" th:field="*{startingFootFollower}" class="form-input" placeholder="e.g. LF, RF">
+                                </div>
+                                <div>
+                                    <label for="endingFootFollower" class="form-label text-xs">Ending Foot (Follower)</label>
+                                    <input id="endingFootFollower" type="text" th:field="*{endingFootFollower}" class="form-input" placeholder="e.g. LF, RF">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Steps Breakdown Table (Tabs + Rows) -->
+                <div class="card p-8 space-y-6 bg-white overflow-hidden">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3 gap-3">
+                        <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px] text-primary">list_alt</span> Steps Breakdown
+                        </h2>
+                        
+                        <!-- Role Tab Selector -->
+                        <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs">
+                            <button type="button" id="leader-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-primary-container text-primary-container">
+                                Leader Steps
+                            </button>
+                            <button type="button" id="follower-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-transparent text-text-secondary hover:text-on-surface">
+                                Follower Steps
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- LEADER STEPS TABLE -->
+                    <div id="leader-steps-section" class="space-y-4">
+                        <div class="overflow-x-auto min-h-[160px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
+                                        <th class="py-2 pr-2 w-12">#</th>
+                                        <th class="py-2 pr-2 w-20">Timing *</th>
+                                        <th class="py-2 pr-2 w-20">Foot *</th>
+                                        <th class="py-2 pr-2 min-w-[150px]">Action *</th>
+                                        <th class="py-2 pr-2 w-24">Footwork</th>
+                                        <th class="py-2 pr-2 w-24">Alignment</th>
+                                        <th class="py-2 pr-2 w-24">Turn</th>
+                                        <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                                        <th class="py-2 w-10 text-right"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leader-steps-tbody">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'LEADER'}" class="step-row border-b border-border" data-role="LEADER">
+                                        <td class="py-2 pr-2">
+                                            <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
+                                            <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="LEADER" />
+                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
+                                        </td>
+                                        <td class="py-2 text-right">
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="add-leader-step-btn" class="btn-outline btn-sm">
+                            <span class="material-symbols-outlined text-[16px]">add</span> Add Leader Step
+                        </button>
+                    </div>
+
+                    <!-- FOLLOWER STEPS TABLE -->
+                    <div id="follower-steps-section" class="space-y-4 hidden">
+                        <div class="overflow-x-auto min-h-[160px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
+                                        <th class="py-2 pr-2 w-12">#</th>
+                                        <th class="py-2 pr-2 w-20">Timing *</th>
+                                        <th class="py-2 pr-2 w-20">Foot *</th>
+                                        <th class="py-2 pr-2 min-w-[150px]">Action *</th>
+                                        <th class="py-2 pr-2 w-24">Footwork</th>
+                                        <th class="py-2 pr-2 w-24">Alignment</th>
+                                        <th class="py-2 pr-2 w-24">Turn</th>
+                                        <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                                        <th class="py-2 w-10 text-right"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="follower-steps-tbody">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'FOLLOWER'}" class="step-row border-b border-border" data-role="FOLLOWER">
+                                        <td class="py-2 pr-2">
+                                            <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
+                                            <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="FOLLOWER" />
+                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
+                                        </td>
+                                        <td class="py-2 pr-2">
+                                            <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
+                                        </td>
+                                        <td class="py-2 text-right">
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="add-follower-step-btn" class="btn-outline btn-sm">
+                            <span class="material-symbols-outlined text-[16px]">add</span> Add Follower Step
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Connections & Notes, External Links -->
+            <div class="space-y-8">
+                
+                <!-- Section 4: Connections & Notes -->
+                <div class="card p-8 space-y-6 bg-white">
+                    <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-primary">link</span> Connections &amp; Notes
+                    </h2>
+
+                    <!-- Preceding Figures -->
+                    <div>
+                        <label for="precedingFigureNames" class="form-label flex justify-between items-center">
+                            <span>Preceding Figures</span>
+                            <span class="text-xs text-text-secondary font-normal">(Cmd-click to select multiple)</span>
+                        </label>
+                        <select id="precedingFigureNames" th:field="*{precedingFigureNames}" multiple class="form-select min-h-[120px] text-xs">
+                            <option th:each="fig : ${availableFigures}" th:value="${fig.name}" th:text="${fig.name}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Following Figures -->
+                    <div>
+                        <label for="followingFigureNames" class="form-label flex justify-between items-center">
+                            <span>Following Figures</span>
+                            <span class="text-xs text-text-secondary font-normal">(Cmd-click to select multiple)</span>
+                        </label>
+                        <select id="followingFigureNames" th:field="*{followingFigureNames}" multiple class="form-select min-h-[120px] text-xs">
+                            <option th:each="fig : ${availableFigures}" th:value="${fig.name}" th:text="${fig.name}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Notes -->
+                    <div>
+                        <label for="notes" class="form-label">General Notes</label>
+                        <textarea id="notes" th:field="*{notes}" class="form-textarea text-xs" rows="5" placeholder="Add technical details, tips or specific instruction notes here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Section 5: External Links & Videos -->
+                <div class="card p-8 space-y-6 bg-white">
+                    <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-primary">smart_display</span> Videos &amp; Study Materials
+                    </h2>
+                    
+                    <div class="overflow-x-auto min-h-[100px]">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
+                                    <th class="py-2 pr-2">Title</th>
+                                    <th class="py-2 pr-2">URL *</th>
+                                    <th class="py-2 pr-2 w-28">Type</th>
+                                    <th class="py-2 w-8 text-right"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="links-tbody">
+                                <tr th:each="link, stat : *{links}" class="link-row border-b border-border">
+                                    <td class="py-2 pr-2">
+                                        <input type="hidden" th:name="'links[' + ${stat.index} + '].id'" th:value="${link.id}" />
+                                        <input type="text" th:name="'links[' + ${stat.index} + '].title'" th:value="${link.title}" class="form-input text-xs py-1.5" placeholder="e.g. Gold Syllabus Video" />
+                                    </td>
+                                    <td class="py-2 pr-2">
+                                        <input type="text" th:name="'links[' + ${stat.index} + '].url'" th:value="${link.url}" required class="form-input text-xs py-1.5" placeholder="https://..." />
+                                    </td>
+                                    <td class="py-2 pr-2">
+                                        <select th:name="'links[' + ${stat.index} + '].type'" class="form-select text-xs py-1.5 pr-8">
+                                            <option value="video" th:selected="${link.type == 'video'}">Video</option>
+                                            <option value="syllabus" th:selected="${link.type == 'syllabus'}">Syllabus</option>
+                                            <option value="other" th:selected="${link.type == 'other'}">Other</option>
+                                        </select>
+                                    </td>
+                                    <td class="py-2 text-right">
+                                        <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
+                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button type="button" id="add-link-btn" class="btn-outline btn-sm w-full">
+                        <span class="material-symbols-outlined text-[16px]">add</span> Add Resource Link
+                    </button>
+                </div>
+
+            </div>
+
         </div>
 
         <!-- Action buttons -->
@@ -62,6 +355,9 @@
             <button type="submit" class="btn-primary">Save Figure</button>
         </div>
     </form>
+
+    <!-- Vanilla Javascript Form Dynamics -->
+    <script th:src="@{/js/dance-figure-form.js}"></script>
 
 </section>
 </html>

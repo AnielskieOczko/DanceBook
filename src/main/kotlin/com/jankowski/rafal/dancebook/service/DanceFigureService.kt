@@ -11,7 +11,8 @@ interface DanceFigureService {
         categoryIds: List<UUID>? = null,
         danceClass: DanceClass? = null,
         nameSearch: String? = null,
-        sortBy: String? = null
+        sortBy: String? = null,
+        hasSteps: Boolean? = null
     ): List<DanceFigure>
     fun findById(id: UUID): DanceFigure
     fun findByDanceType(danceTypeId: UUID): List<DanceFigure>
