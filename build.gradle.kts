@@ -117,6 +117,15 @@ tasks.register<JavaExec>("generateFiguresSql") {
     mainClass.set("com.jankowski.rafal.dancebook.scripts.SqlGeneratorKt")
 }
 
+tasks.register<JavaExec>("generateReconciliationReport") {
+    group = "application"
+    description = "Generates a detailed reconciliation report matching standard figures with parsed JSON figures"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.GenerateReconciliationReportKt")
+}
+
 springBoot {
     mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
 }

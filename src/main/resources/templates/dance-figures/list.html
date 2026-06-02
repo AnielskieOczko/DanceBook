@@ -102,20 +102,35 @@
                     </div>
                 </div>
 
-                <!-- Column 3: Sorting -->
-                <div class="flex flex-col gap-1 mt-4">
-                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
-                    <select name="sortBy" id="filterSortBy" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
-                            th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}">Default (Style &amp; Name)</option>
-                        <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}">Name (A-Z)</option>
-                        <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}">Name (Z-A)</option>
-                        <option value="style_asc" th:selected="${selectedSortBy == 'style_asc'}">Style (A-Z)</option>
-                        <option value="style_desc" th:selected="${selectedSortBy == 'style_desc'}">Style (Z-A)</option>
-                        <option value="class_asc" th:selected="${selectedSortBy == 'class_asc'}">Class (H to S)</option>
-                        <option value="class_desc" th:selected="${selectedSortBy == 'class_desc'}">Class (S to H)</option>
-                    </select>
+                <!-- Column 3: Sorting & Steps -->
+                <div class="flex flex-col gap-4 mt-4">
+                    <!-- Sorting -->
+                    <div class="flex flex-col gap-1">
+                        <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
+                        <select name="sortBy" id="filterSortBy" 
+                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                            <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}">Default (Style &amp; Name)</option>
+                            <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}">Name (A-Z)</option>
+                            <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}">Name (Z-A)</option>
+                            <option value="style_asc" th:selected="${selectedSortBy == 'style_asc'}">Style (A-Z)</option>
+                            <option value="style_desc" th:selected="${selectedSortBy == 'style_desc'}">Style (Z-A)</option>
+                            <option value="class_asc" th:selected="${selectedSortBy == 'class_asc'}">Class (H to S)</option>
+                            <option value="class_desc" th:selected="${selectedSortBy == 'class_desc'}">Class (S to H)</option>
+                        </select>
+                    </div>
+
+                    <!-- Steps Filter -->
+                    <div class="flex flex-col gap-1">
+                        <label for="filterHasSteps" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Steps Syllabus</label>
+                        <select name="hasSteps" id="filterHasSteps" 
+                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
+                            <option value="" th:selected="${selectedHasSteps == null}">All Figures</option>
+                            <option value="true" th:selected="${selectedHasSteps == true}">With Steps Only</option>
+                            <option value="false" th:selected="${selectedHasSteps == false}">Without Steps Only</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </form>
@@ -141,7 +156,7 @@
                               imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
                      class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-row transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 min-h-[120px]">
                 
-                <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'Edit ' + ${f.name}">Edit Figure</span></a>
+                <a th:href="@{/dance-figures/{id}(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${f.name}">View Figure</span></a>
                 
                 <!-- Action Menu Dropdown -->
                 <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
@@ -192,7 +207,7 @@
             <article th:each="f : ${figures}"
                      class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
                 
-                <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'Edit ' + ${f.name}">Edit Figure</span></a>
+                <a th:href="@{/dance-figures/{id}(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${f.name}">View Figure</span></a>
                 
                 <div class="flex flex-col gap-1.5 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
                     <div class="flex items-center gap-2">

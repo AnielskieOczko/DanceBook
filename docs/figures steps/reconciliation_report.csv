@@ -1,0 +1,615 @@
+db_id,db_name,dance_style,db_level,is_updated,scraped_name,scraped_level,step_count,comment_count,url,parsed_file_path
+82771f2c-d7f1-47a2-bba7-da518fb32ea7,Advanced Hip Twist,Cha Cha,Silver/Gold,No,,,,,,
+68080492-79d3-4292-96f0-e11a0c1dfcbe,Aida,Cha Cha,Silver/Gold,No,,,,,,
+df28a744-c022-4d5a-933a-68ed1c50191f,Aida (4 Endings),Cha Cha,Silver/Gold,Yes,Aida,Silver,6,2,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/aida,docs/figures steps/parsed/chunk_2/cha-cha-cha_aida.json
+93f9555f-1215-44e9-87bf-068756520ec6,Alemana Development (R to R Hand Hold),Cha Cha,Newcomer/Bronze,No,,,,,,
+79229aa5-5611-4908-976d-fe6c81599e97,Chase,Cha Cha,Newcomer/Bronze,Yes,Chase,Silver,18,0,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/chase,docs/figures steps/parsed/chunk_2/cha-cha-cha_chase.json
+8df6f455-9243-404a-a044-ba1881a64c5b,Close Hip Twist Spiral,Cha Cha,Silver/Gold,No,,,,,,
+a9cf1c2f-3f4f-4c8a-8937-4c318fe184d8,Closed Basic (Closed Basic Movement),Cha Cha,Newcomer/Bronze,No,,,,,,
+bc656610-2f3e-47c9-b80d-b49d61d302dd,Closed Hip Twist,Cha Cha,Newcomer/Bronze,No,,,,,,
+41826717-4549-40a4-84d4-7099918f641d,Closed Hip Twist (Advanced),Cha Cha,Silver/Gold,Yes,Closed Hip Twist (Advanced),Bronze,9,12,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/closed-hip-twist,docs/figures steps/parsed/chunk_2/cha-cha-cha_closed-hip-twist.json
+26055cf4-59b5-43b9-aa54-adac634811f6,Closed Hip Twist (Basic),Cha Cha,Newcomer/Bronze,No,,,,,,
+32aa9660-1046-4693-aa7d-6453cac09bf8,Cross Basic,Cha Cha,Newcomer/Bronze,Yes,Cross Basic,Silver,6,10,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cross-basic,docs/figures steps/parsed/chunk_2/cha-cha-cha_cross-basic.json
+3fc6b346-bc73-4e9b-925d-601fc268af2c,Cross Basic Development (with Spiral),Cha Cha,Silver/Gold,No,,,,,,
+cd42d916-9ddc-4669-b25a-446fd546324d,"Cuban Breaks (LFoot, RFoot, Split)",Cha Cha,Newcomer/Bronze,Yes,"Cuban Breaks (LFoot, RFoot, Split)",Silver,4,0,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cuban-breaks,docs/figures steps/parsed/chunk_2/cha-cha-cha_cuban-breaks.json
+ef281070-0516-41fd-ab76-6511b890ed97,Cuban Rocks,Cha Cha,Newcomer/Bronze,No,,,,,,
+e5075f63-75c6-48c2-9cd8-2fec5c10f7d9,Fan,Cha Cha,Silver/Gold,Yes,Fan,Bronze,10,9,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/fan,docs/figures steps/parsed/chunk_2/cha-cha-cha_fan.json
+ef7c657c-7b3c-4d81-8ab7-4711f1d8546d,Fan Development,Cha Cha,Newcomer/Bronze,No,,,,,,
+a8e4b38c-7917-42e0-abcd-b13220908930,Follow My Leader,Cha Cha,Silver/Gold,Yes,Follow My Leader,Gold,0,0,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/follow-my-leader,docs/figures steps/parsed/chunk_2/cha-cha-cha_follow-my-leader.json
+46a16ee1-87d5-4d20-9340-b1ccc99f7cb5,Foot Changes,Cha Cha,Silver/Gold,Yes,Foot Changes,Gold,4,3,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/foot-changes,docs/figures steps/parsed/chunk_2/cha-cha-cha_foot-changes.json
+7465d11b-54f2-433c-927e-e4bde19fde29,Hand to Hand (To Right and Left SP),Cha Cha,Newcomer/Bronze,Yes,Hand to Hand (To Right and Left SP),Newcomer,6,0,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hand-to-hand,docs/figures steps/parsed/chunk_2/cha-cha-cha_hand-to-hand.json
+c5d36778-9097-4a00-a3d0-5af6aa35106f,Hockey Stick,Cha Cha,Newcomer/Bronze,Yes,Hockey Stick,Bronze,6,10,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hockey-stick,docs/figures steps/parsed/chunk_3/cha-cha-cha_hockey-stick.json
+96cddbdb-78b3-4ccf-b42e-9e34426f39e7,Natural Opening Out Movement (Opening Out to Right),Cha Cha,Newcomer/Bronze,Yes,Natural Opening Out Movement (Opening Out to Right),Bronze,6,2,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-opening-out-movement,docs/figures steps/parsed/chunk_1/cha-cha-cha_natural-opening-out-movement.json
+fbc8aaca-90fb-406e-9789-b50a1ec90e17,Natural Top Development (Underarm Turn),Cha Cha,Newcomer/Bronze,Yes,Natural Top Development (Underarm Turn),Bronze,5,10,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/natural-top,docs/figures steps/parsed/chunk_1/cha-cha-cha_natural-top.json
+451e1898-e21f-4d97-8ddf-8dab571510a9,New York (To LSP or RSP) Check from OCPP or OPP,Cha Cha,Newcomer/Bronze,Yes,New York (To LSP or RSP) Check from OCPP or OPP,Newcomer,6,43,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/new-york,docs/figures steps/parsed/chunk_1/cha-cha-cha_new-york.json
+8ca21825-55a3-4588-9058-0ee4580c3693,Open Basic (Open Basic Movement),Cha Cha,Newcomer/Bronze,No,,,,,,
+8bd5eb1b-e934-4f7a-931f-7d9e37b883c5,Open Hip Twist,Cha Cha,Newcomer/Bronze,Yes,Open Hip Twist,Silver,12,15,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/open-hip-twist,docs/figures steps/parsed/chunk_1/cha-cha-cha_open-hip-twist.json
+852b08d7-7c77-4b9e-af8a-51b43e5dd24d,Opening Out from Reverse Top,Cha Cha,Silver/Gold,Yes,Opening Out from Reverse Top,Silver,6,7,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/opening-out-from-reverse-top,docs/figures steps/parsed/chunk_1/cha-cha-cha_opening-out-from-reverse-top.json
+903bc7ca-d09e-42b5-a2c9-7e11c5de1f7e,Reverse Top,Cha Cha,Silver/Gold,Yes,Reverse Top,Silver,9,6,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/reverse-top,docs/figures steps/parsed/chunk_1/cha-cha-cha_reverse-top.json
+70a4f5d8-7715-4541-97dc-e79d99ad9685,Runaway Chasse,Cha Cha,Silver/Gold,No,,,,,,
+d438d4bc-d7b3-49f0-b28c-75999ccb326b,Shoulder to Shoulder (Left Side and Right Side) Development,Cha Cha,Newcomer/Bronze,Yes,Shoulder to Shoulder (Left Side and Right Side) Development,Newcomer,8,8,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/shoulder-to-shoulder,docs/figures steps/parsed/chunk_1/cha-cha-cha_shoulder-to-shoulder.json
+78dd0a8a-6944-47ee-a4e3-15ebd6b3d06c,Side Steps (To Left or Right),Cha Cha,Newcomer/Bronze,No,,,,,,
+9b35ed28-b008-4198-bffc-ed680149034f,"Spiral Turns (Spiral, Curl and Rope Spinning)",Cha Cha,Silver/Gold,Yes,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,8,3,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/spiral,docs/figures steps/parsed/chunk_1/cha-cha-cha_spiral.json
+3cd73960-e2a9-471b-95de-139dec91e84d,Spot Turns to L or R,Cha Cha,Silver/Gold,No,,,,,,
+94c0dd46-6ae3-4fab-b228-f87edb36b88e,Spot Turns to L or R (Including Switch and Underarm Turns) Developments,Cha Cha,Newcomer/Bronze,No,,,,,,
+e958e33c-775d-4f0b-8037-f099d4c22448,Sweetheart,Cha Cha,Silver/Gold,Yes,Sweetheart,Gold,18,15,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/sweetheart,docs/figures steps/parsed/chunk_1/cha-cha-cha_sweetheart.json
+1c46289d-2ab7-4807-b374-64f4028f6f1c,Syncopated Open Hip Twist,Cha Cha,Silver/Gold,No,,,,,,
+a741a0e9-e29b-4cfe-8eb8-2b1ae963cc87,The Cha Cha Cha Chasse and alternatives,Cha Cha,Silver/Gold,No,,,,,,
+429f1764-f421-43d4-a7e7-1be7946634fd,There and Back,Cha Cha,Newcomer/Bronze,Yes,There and Back,Newcomer,8,0,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/there-and-back,docs/figures steps/parsed/chunk_1/cha-cha-cha_there-and-back.json
+85752ac1-72de-4544-865f-ab4c910c8e79,Three Cha Cha Chas,Cha Cha,Newcomer/Bronze,Yes,Three Cha Cha Chas,Newcomer,16,19,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/three-cha-cha-chas,docs/figures steps/parsed/chunk_1/cha-cha-cha_three-cha-cha-chas.json
+3c35bab0-02ae-4815-8ffa-ef5912e5c56d,"Time Steps (Basic in Place, Side Basic)",Cha Cha,Newcomer/Bronze,Yes,"Time Steps (Basic in Place, Side Basic)",Newcomer,3,2,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/time-step,docs/figures steps/parsed/chunk_1/cha-cha-cha_time-step.json
+6ac50650-fe92-49a2-aa5e-71f934abd592,Turkish Towel,Cha Cha,Silver/Gold,Yes,Turkish Towel,Gold,22,13,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/turkish-towel,docs/figures steps/parsed/chunk_1/cha-cha-cha_turkish-towel.json
+2e07dc3e-ad07-4373-9d13-8764197b7eb3,Alternative Endings to The Extended Reverse Wave,Foxtrot,Silver/Gold,No,,,,,,
+0dd4af5d-8c1d-4720-82d2-fbd60119e874,Back Feather,Foxtrot,Silver/Gold,No,,,,,,
+8aa185b7-9bda-446f-b4c5-a09bf4a5e308,Back Whisk,Foxtrot,Silver/Gold,No,,,,,,
+1e11e1dd-55d2-46ac-982e-aa560648aceb,Bounce Fallaway with Weave Ending,Foxtrot,Silver/Gold,Yes,Bounce Fallaway with Weave Ending,Gold,11,14,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending,docs/figures steps/parsed/chunk_7/slow-foxtrot_bounce-fallaway-with-weave-ending.json
+3dca79c7-d0ff-4cf3-87b7-993174c9cf93,Change of Direction,Foxtrot,Silver/Gold,No,,,,,,
+e5ae6bc7-e495-4495-b9c7-146199daff30,Closed Impetus and Feather Finish,Foxtrot,Silver/Gold,No,,,,,,
+c048e8d3-bfe7-4732-a1bb-0ff5fe0545ee,Curved Feather,Foxtrot,Silver/Gold,Yes,Curved Feather,Gold,6,13,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-from-promenade-position,docs/figures steps/parsed/chunk_4/slow-foxtrot_curved-feather-from-promenade-position.json
+5412dea6-7676-4631-816e-380feb474dda,Curved Feather to Back Feather,Foxtrot,Silver/Gold,Yes,Curved Feather to Back Feather,Gold,7,22,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather,docs/figures steps/parsed/chunk_4/slow-foxtrot_curved-feather-to-back-feather.json
+a5c50dfe-c66b-4794-a66e-be35ba3121a1,Curved Three Step,Foxtrot,Silver/Gold,Yes,Curved Three Step,Gold,6,12,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-three-step,docs/figures steps/parsed/chunk_4/slow-foxtrot_curved-three-step.json
+b53d22c9-2e20-4dc1-b849-b543200b5da6,Double Reverse Spin,Foxtrot,Silver/Gold,No,,,,,,
+565dc226-13fe-4275-8b29-5229ddbb25a6,Double Top Spin,Foxtrot,Silver/Gold,No,,,,,,
+26d557eb-016b-4133-87bc-8feec043c36a,Extended Reverse Wave,Foxtrot,Silver/Gold,No,,,,,,
+36a37bc1-47c8-44c1-8344-f2bc920a37f2,Fallaway Reverse Slip Pivot,Foxtrot,Silver/Gold,Yes,Fallaway Reverse Slip Pivot,Gold,8,20,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot,docs/figures steps/parsed/chunk_4/slow-foxtrot_fallaway-reverse-and-slip-pivot.json
+75bcb04c-4099-4a82-8450-824092226084,Feather Step,Foxtrot,Silver/Gold,No,,,,,,
+96bc2b5e-62b3-402d-83e1-aeb45e2e13b3,Hover Cross,Foxtrot,Silver/Gold,Yes,Hover Cross,Silver,15,41,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross,docs/figures steps/parsed/chunk_4/slow-foxtrot_hover-cross.json
+7695efb9-0e19-446c-ba8c-2f4bc9a776a2,Hover Feather,Foxtrot,Silver/Gold,Yes,Hover Feather,Silver,4,4,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-feather,docs/figures steps/parsed/chunk_4/slow-foxtrot_hover-feather.json
+397dc89b-3783-4235-8fd3-493bf4627fca,Hover Telemark,Foxtrot,Silver/Gold,Yes,Hover Telemark,Silver,8,14,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark,docs/figures steps/parsed/chunk_4/slow-foxtrot_hover-telemark.json
+3b56f009-4af8-4651-aa03-59c0ec7cf71f,Impetus Turn (Open),Foxtrot,Silver/Gold,Yes,Impetus Turn (Open),Silver,8,8,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_open-impetus?src=routine.json
+65f3ba10-e4c8-4727-8590-28a6a64103a0,Natural Hover Telemark,Foxtrot,Silver/Gold,Yes,Natural Hover Telemark,Gold,14,36,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-hover-telemark,docs/figures steps/parsed/chunk_5/slow-foxtrot_natural-hover-telemark.json
+4a7ae42a-43eb-45a4-95fc-cc00673fba09,Natural Telemark,Foxtrot,Silver/Gold,Yes,Natural Telemark,Silver,6,0,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark,docs/figures steps/parsed/chunk_5/slow-foxtrot_natural-telemark.json
+6a227d4b-2ebb-48ce-8e7f-be1755c57279,Natural Turn,Foxtrot,Silver/Gold,No,,,,,,
+0ef4e259-e5f8-4f97-a4dc-ae4708f67d5d,Natural Twist Turn,Foxtrot,Silver/Gold,Yes,Natural Twist Turn,Gold,10,21,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn,docs/figures steps/parsed/chunk_5/slow-foxtrot_natural-twist-turn.json
+f859b31b-a41e-4e04-a008-a9632f4b9421,Natural Weave,Foxtrot,Silver/Gold,No,,,,,,
+4005b45c-6de2-4650-b529-005d79c869fc,Natural Zig-Zag from PP,Foxtrot,Silver/Gold,Yes,Natural Zig-Zag from PP,Gold,11,27,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp,docs/figures steps/parsed/chunk_5/slow-foxtrot_natural-zig-zag-from-pp.json
+69e36420-3f6c-4903-803d-45a27538350a,Open Telemark Feather Ending,Foxtrot,Silver/Gold,Yes,Open Telemark Feather Ending,Silver,14,1,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending,docs/figures steps/parsed/chunk_5/slow-foxtrot_open-telemark-and-feather-ending.json
+abfadcd7-f079-4ca3-b22f-8b1cce75b7f9,Open Telemark Natural Turn Outside Swivel Feather Ending,Foxtrot,Silver/Gold,Yes,Open Telemark Natural Turn Outside Swivel Feather Ending,Silver,22,45,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending,docs/figures steps/parsed/chunk_5/slow-foxtrot_open-telemark-natural-turn-to-outside-swivel-and-feather-ending.json
+c5f038bd-3df1-49ef-8a0d-967642a6e09c,Outside Change,Foxtrot,Silver/Gold,No,,,,,,
+577812e2-bc79-4085-953e-338d70816207,Outside Spin,Foxtrot,Silver/Gold,No,,,,,,
+74b738e4-8ee8-424e-81f3-82ec707e7ea2,Passing Natural Turn (from PP),Foxtrot,Silver/Gold,No,,,,,,
+28cf7391-e98b-4797-bdc6-43b6b42aca48,Quick Natural Weave,Foxtrot,Silver/Gold,No,,,,,,
+e96184d5-8ab8-4c05-bef7-e28029ab859b,Quick Open Reverse,Foxtrot,Silver/Gold,Yes,Quick Open Reverse,Silver,4,9,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/quick-open-reverse,docs/figures steps/parsed/chunk_4/slow-foxtrot_quick-open-reverse.json
+90f9989c-10ea-4187-a7a3-e27a7e9447e1,Reverse Pivot,Foxtrot,Silver/Gold,No,,,,,,
+a7ad9a39-e444-484d-8355-df4c96170c9a,Reverse Turn,Foxtrot,Silver/Gold,No,,,,,,
+c4479c80-8e0f-4957-bfd1-7948e48f222e,Reverse Wave,Foxtrot,Silver/Gold,Yes,Reverse Wave,Silver,1,1,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/reverse-wave,docs/figures steps/parsed/chunk_4/slow-foxtrot_reverse-wave.json
+abd4d323-6d7b-42c2-85a5-1bf91dbd46c6,Telemark (Closed),Foxtrot,Silver/Gold,Yes,Telemark (Closed),Silver,7,6,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/closedtelemark,docs/figures steps/parsed/chunk_4/slow-foxtrot_closedtelemark.json
+3c4b7fd7-b409-466c-b0f1-88ee6aded5d3,Three Step,Foxtrot,Silver/Gold,No,,,,,,
+11bfde2f-a2bf-4872-b654-9ccebe9f4692,Tipple Chasse,Foxtrot,Silver/Gold,No,,,,,,
+fc5f4fab-4f89-4277-98e3-ab8dfc757ae9,Top Spin,Foxtrot,Silver/Gold,Yes,Top Spin,Silver,9,11,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin,docs/figures steps/parsed/chunk_4/slow-foxtrot_top-spin.json
+97e8f20c-d30b-4656-a4a6-a76ad147cfc4,Weave (after 1-4 Reverse Wave),Foxtrot,Silver/Gold,No,,,,,,
+b49ea57b-b510-4719-9728-2a74f5488c36,Weave from PP (after Open Impetus),Foxtrot,Silver/Gold,Yes,Weave from PP (after Open Impetus),Silver,2,8,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp,docs/figures steps/parsed/chunk_4/slow-foxtrot_weave-from-pp.json
+0d934247-2e5e-4a3e-8da1-0024d48d090f,Whisk,Foxtrot,Silver/Gold,No,,,,,,
+8f3a2fdf-d312-4b02-b88a-392d650186a6,American Spin,Jive,Newcomer/Bronze,Yes,American Spin,Bronze,6,10,https://www.dancecentral.info/ballroom/international-style/jive/american-spin,docs/figures steps/parsed/chunk_2/jive_american-spin.json
+7129e42d-e72a-45d0-998b-32b776b7ac36,Ball Change,Jive,Newcomer/Bronze,No,,,,,,
+e80c8773-1308-41a2-849d-bfae32503077,Ball Change – with Flick or Hesitation,Jive,Newcomer/Bronze,No,,,,,,
+519062f3-76cb-4061-8e19-9a24cb0f2547,Basic in Fallaway (Fallaway Rock) Development,Jive,Newcomer/Bronze,Yes,Basic in Fallaway (Fallaway Rock) Development,Newcomer,8,2,https://www.dancecentral.info/ballroom/international-style/jive/fallaway-rock,docs/figures steps/parsed/chunk_2/jive_fallaway-rock.json
+6c32d152-0991-411c-a380-677a5da5cf59,Basic in Place,Jive,Newcomer/Bronze,Yes,Basic in Place,Newcomer,8,0,https://www.dancecentral.info/ballroom/international-style/jive/basic-in-place,docs/figures steps/parsed/chunk_2/jive_basic-in-place.json
+661e2cbf-466c-4794-8ad5-3909cb03c243,Break (Advanced Link),Jive,Silver/Gold,No,,,,,,
+9e774387-2b35-4eae-935e-d565afd94ba0,Catapult,Jive,Silver/Gold,Yes,Catapult,Gold,12,7,https://www.dancecentral.info/ballroom/international-style/jive/catapult,docs/figures steps/parsed/chunk_2/jive_catapult.json
+4c06d2f3-ee93-4e7a-a778-f876ea6d56cd,Change of Hands Behind Back,Jive,Newcomer/Bronze,Yes,Change of Hands Behind Back,Newcomer,6,3,https://www.dancecentral.info/ballroom/international-style/jive/change-of-hands-behind-back,docs/figures steps/parsed/chunk_2/jive_change-of-hands-behind-back.json
+3c0a2ea1-3eec-4384-89bb-f1e513e5ce3f,Change of Place L to R,Jive,Newcomer/Bronze,Yes,Change of Place L to R,Newcomer,6,0,https://www.dancecentral.info/ballroom/international-style/jive/change-of-places-left-to-right,docs/figures steps/parsed/chunk_2/jive_change-of-places-left-to-right.json
+5b8d4b32-9374-4b2d-8731-d728c639f492,Change of Place L to R Development,Jive,Silver/Gold,No,,,,,,
+9f5cf786-1d11-44ac-8531-66196e37e8aa,Change of Place R to L,Jive,Newcomer/Bronze,No,,,,,,
+6ebb0040-3644-4832-8385-c00a243196e1,Change of Place R to L Development,Jive,Silver/Gold,No,,,,,,
+969d4ae8-237c-460a-9049-969370abd734,Chicken Walks,Jive,Silver/Gold,No,,,,,,
+11791da3-a607-47a1-bd2b-54007f7de92a,Chugging,Jive,Silver/Gold,Yes,Chugging,Gold,7,6,https://www.dancecentral.info/ballroom/international-style/jive/chugging,docs/figures steps/parsed/chunk_2/jive_chugging.json
+e3159d8b-9f51-442c-be54-dd7c6df6f5dc,Curly Whip,Jive,Silver/Gold,Yes,Curly Whip,Gold,3,5,https://www.dancecentral.info/ballroom/international-style/jive/curly-whip,docs/figures steps/parsed/chunk_2/jive_curly-whip.json
+cf66060a-16cc-4569-9248-a83f8abc6077,Fallaway Throwaway Development,Jive,Newcomer/Bronze,No,,,,,,
+ad321ba7-2517-4b82-ac3f-b6903e2258e9,Fallaway Throwaway Overturned Fallaway Throwaway,Jive,Newcomer/Bronze,Yes,Fallaway Throwaway Overturned Fallaway Throwaway,Newcomer,10,8,https://www.dancecentral.info/ballroom/international-style/jive/fallaway-throwaway,docs/figures steps/parsed/chunk_2/jive_fallaway-throwaway.json
+fafca881-8343-4c57-b53a-f53ef30fc2e9,Fallaway Throwaway Overturned Fallaway Throwaway Development,Jive,Silver/Gold,No,,,,,,
+bd5ce50a-70d8-4c68-806b-977ce58601d4,Flicks into Break,Jive,Silver/Gold,No,,,,,,
+44a2ce0a-528e-4f14-9f65-8fc5ca3567a9,Hip Bump (Left Shoulder Shove),Jive,Newcomer/Bronze,Yes,Hip Bump (Left Shoulder Shove),Newcomer,6,7,https://www.dancecentral.info/ballroom/international-style/jive/hip-bump,docs/figures steps/parsed/chunk_3/jive_hip-bump.json
+f07d2501-9676-410d-aef5-77372ac03368,Link,Jive,Newcomer/Bronze,No,,,,,,
+06facb64-8bf4-4548-abf2-cd53a0982e8b,Link (Link Rock),Jive,Newcomer/Bronze,Yes,Link,Newcomer,6,4,https://www.dancecentral.info/ballroom/international-style/jive/link,docs/figures steps/parsed/chunk_3/jive_link.json
+5ab671f6-a22a-47f2-a10d-44fd40d57220,Miami Special,Jive,Silver/Gold,Yes,Miami Special,Silver,6,3,https://www.dancecentral.info/ballroom/international-style/jive/miami-special,docs/figures steps/parsed/chunk_3/jive_miami-special.json
+36269227-dd2e-4c06-ac44-4ed07f01df88,Mooch,Jive,Newcomer/Bronze,Yes,Mooch,Bronze,3,6,https://www.dancecentral.info/ballroom/international-style/jive/mooch,docs/figures steps/parsed/chunk_3/jive_mooch.json
+f6bc7f16-7d1e-4093-8478-67fa0e17aa9d,"Mooch Development (""Boppy"" Hops Flick Cross action)",Jive,Silver/Gold,No,,,,,,
+a00c5c46-fd10-4fa9-b860-b8c4e501a1b4,Promenade Walks (Slow and Quick) Development (Merengue),Jive,Newcomer/Bronze,No,,,,,,
+36d9375c-bada-448b-a5d7-44b8b0b7e339,Reverse Whip,Jive,Silver/Gold,Yes,Reverse Whip,Silver,10,3,https://www.dancecentral.info/ballroom/international-style/jive/reverse-whip,docs/figures steps/parsed/chunk_3/jive_reverse-whip.json
+e5b579be-0e11-4a42-aa46-36771125d2c3,Rolling of the Arm,Jive,Silver/Gold,Yes,Rolling of the Arm,Silver,5,8,https://www.dancecentral.info/ballroom/international-style/jive/rolling-off-the-arm,docs/figures steps/parsed/chunk_3/jive_rolling-off-the-arm.json
+13dd3758-dcd4-4e0d-bec9-161b877d62ea,Shoulder Spin,Jive,Silver/Gold,Yes,Shoulder Spin,Gold,14,7,https://www.dancecentral.info/ballroom/international-style/jive/shoulder-spin,docs/figures steps/parsed/chunk_3/jive_shoulder-spin.json
+939c9b1c-faff-4070-8fbc-7a712d6d4ac6,Simple Spin,Jive,Silver/Gold,Yes,Simple Spin,Silver,4,1,https://www.dancecentral.info/ballroom/international-style/jive/simple-spin,docs/figures steps/parsed/chunk_3/jive_simple-spin.json
+2809f087-7338-4a8d-82d6-32502ca8893a,Spanish Arms,Jive,Silver/Gold,Yes,Spanish Arms,Silver,7,10,https://www.dancecentral.info/ballroom/international-style/jive/spanish-arms,docs/figures steps/parsed/chunk_3/jive_spanish-arms.json
+4081c459-8c6b-4fbc-98ac-61a0f5154130,"Stalking Walks, Flicks and Break (Flicks into Break)",Jive,Silver/Gold,Yes,"Stalking Walks, Flicks and Break (Flicks into Break)",Gold,13,24,https://www.dancecentral.info/ballroom/international-style/jive/stalking-walks-flicks-and-break,docs/figures steps/parsed/chunk_3/jive_stalking-walks-flicks-and-break.json
+65edf14f-4700-4349-92e1-c9c4fd4e8458,Stop and Go,Jive,Newcomer/Bronze,Yes,Stop and Go,Bronze,16,6,https://www.dancecentral.info/ballroom/international-style/jive/stop-and-go,docs/figures steps/parsed/chunk_3/jive_stop-and-go.json
+c7f1a305-2dad-4d12-8ea9-9434498a69bd,The Laird Break,Jive,Silver/Gold,No,,,,,,
+4ce02a87-3815-4fae-9420-abe7fcf3d4e4,Toe Heel Swivels,Jive,Silver/Gold,Yes,Toe Heel Swivels,Gold,12,3,https://www.dancecentral.info/ballroom/international-style/jive/toe-heel-swivels,docs/figures steps/parsed/chunk_3/jive_toe-heel-swivels.json
+7e97ecb9-ce00-40fa-bb5e-3b8e56e96563,Whip Double Cross Whip,Jive,Newcomer/Bronze,Yes,Whip Double Cross Whip,Bronze,6,3,https://www.dancecentral.info/ballroom/international-style/jive/whip,docs/figures steps/parsed/chunk_3/jive_whip.json
+137dfe6f-740f-499c-befd-883b0e22cf38,Whip Throwaway,Jive,Newcomer/Bronze,Yes,Whip Throwaway,Bronze,6,0,https://www.dancecentral.info/ballroom/international-style/jive/whip-throwaway,docs/figures steps/parsed/chunk_3/jive_whip-throwaway.json
+f92f5b31-39e5-4c73-a059-d61ffe3e709f,Windmill,Jive,Silver/Gold,Yes,Windmill,Silver,6,3,https://www.dancecentral.info/ballroom/international-style/jive/windmill,docs/figures steps/parsed/chunk_3/jive_windmill.json
+831aadf7-c652-4d77-9354-ffc7e2cb8808,Additional „Endings” to Chasse Cape,Paso Doble,Silver/Gold,No,,,,,,
+77cc2baa-d966-4f23-af07-ab221fea2a52,Alternative Entries to PP,Paso Doble,Silver/Gold,No,,,,,,
+ba04ad5f-f667-42c6-a422-7af4074c0fe8,Appel,Paso Doble,Silver/Gold,No,,,,,,
+d89c8dd1-5e31-496a-aafc-6ea0b2e9fc10,Banderillas,Paso Doble,Silver/Gold,No,,,,,,
+503ebe16-8a31-4606-aced-9ac3ad2af4ef,Basic Movement,Paso Doble,Silver/Gold,No,,,,,,
+ca049c02-4d95-4c0f-a709-67b28a9d06be,Chasse Cape,Paso Doble,Silver/Gold,No,,,,,,
+f5913e00-b38e-47e0-9cc1-1bfd5fc6877f,Chasses to Right or Left,Paso Doble,Silver/Gold,No,,,,,,
+35de9a82-6797-423a-8191-17340d664d7b,"Coup de Pique (Couplet, Syncopated, alternative methods)",Paso Doble,Silver/Gold,No,,,,,,
+bf78633d-ca16-4413-a12c-ad44de4101ee,Deplacement (Attack),Paso Doble,Silver/Gold,No,,,,,,
+8f262219-e488-4d50-b865-831678dabd2d,Drag,Paso Doble,Silver/Gold,No,,,,,,
+35bb7b22-34ae-40eb-b9b6-1af9dc735b4a,Ecart (Fallaway Whisk),Paso Doble,Silver/Gold,No,,,,,,
+760b0cfd-dd64-4d7b-8d4b-5abcc8f5b3db,Endings to Syncopated Separation,Paso Doble,Silver/Gold,No,,,,,,
+8c8c3ca7-f4a1-4fe6-8654-5761737f5a2b,Fallaway Ending to Separation,Paso Doble,Silver/Gold,No,,,,,,
+99258964-532d-4615-bc38-e9eda6a5fa53,Fallaway Reverse (Turn),Paso Doble,Silver/Gold,No,,,,,,
+53d9ea51-818d-4be1-8c42-d04cb38a22fe,Flamenco Taps,Paso Doble,Silver/Gold,No,,,,,,
+906f26c7-7497-4cf8-9ade-feb2bb133f85,Fregolina (Farol),Paso Doble,Silver/Gold,No,,,,,,
+d2d8fdda-f8c2-4cc5-8c9f-ef90e2759635,Grand Circle,Paso Doble,Silver/Gold,No,,,,,,
+2f0a5b61-25bb-43f9-b1b1-8614567b5394,Huit (Cape),Paso Doble,Silver/Gold,No,,,,,,
+a85af1ea-8960-4093-85c6-ca8d962502b8,La Passe,Paso Doble,Silver/Gold,No,,,,,,
+2c16c0da-fc14-4c66-baf7-ba732d73f8cd,Left Foot Variation,Paso Doble,Silver/Gold,No,,,,,,
+c9cb1acd-4e26-4ebd-8953-6d570123a79c,Open Telemark,Paso Doble,Silver/Gold,No,,,,,,
+0ac1dd0a-68d4-4c7f-919c-127cc523e764,Promenade,Paso Doble,Silver/Gold,No,,,,,,
+b063a09c-9479-4c4f-a651-7e95f8410b2f,Promenade Link,Paso Doble,Silver/Gold,No,,,,,,
+1aedf05b-45ee-4302-af37-d8a7712633e6,Promenade and Counter Promenade (Promenades),Paso Doble,Silver/Gold,No,,,,,,
+75bb7cd4-f79f-4dea-a12d-dae4aaaa121e,Separation,Paso Doble,Silver/Gold,No,,,,,,
+5f5dd820-ab02-494f-9f15-d6e219be4a1a,Separation with Lady’s Caping Walks,Paso Doble,Silver/Gold,No,,,,,,
+1afc3652-40f0-4f49-9ee6-989fef7c8bbd,Separation with Lady’s Caping Walks (to Fallaway Whisk),Paso Doble,Silver/Gold,No,,,,,,
+d85ab268-61c8-4c6f-b8aa-98873a957587,Sixteen,Paso Doble,Silver/Gold,No,,,,,,
+19cbc2e3-0bd0-4fc0-a9b8-069398dde05a,Spanish Lines (in Inverted PP and Inverted CPP),Paso Doble,Silver/Gold,No,,,,,,
+efe7fb1a-4afd-40ee-9e36-6edfd7088025,Sur Place,Paso Doble,Silver/Gold,No,,,,,,
+99674383-45a0-48cb-a4a5-77f3c6d8b424,Syncopated Separation,Paso Doble,Silver/Gold,No,,,,,,
+4563d8f6-8bc2-4eb0-ad92-dafd28bec319,Travelling Spins from CPP,Paso Doble,Silver/Gold,No,,,,,,
+7c95b1c7-b310-402e-adf8-b510089e5c50,Travelling Spins from PP,Paso Doble,Silver/Gold,No,,,,,,
+2f66504c-ed0d-4e77-8623-a88da538d9ee,Twist Turn,Paso Doble,Silver/Gold,No,,,,,,
+e57c46a9-75ee-40b3-b818-28e27dfedee4,Twists,Paso Doble,Silver/Gold,No,,,,,,
+9ba654ec-a6de-4276-b4ce-c2973ae7a1f0,Back Whisk,Quickstep,Silver/Gold,No,,,,,,
+e5ec38e7-6973-4b14-b72b-6a040badf52e,Backward Lock Step (Back Lock),Quickstep,Newcomer/Bronze,Yes,Backward Lock Step (Back Lock),Bronze,5,5,http://www.dancecentral.info/ballroom/international-style/quickstep/back-lock,docs/figures steps/parsed/chunk_8/quickstep_back-lock.json
+cd65995c-5ea9-4391-8e1a-e57e18cd92ac,Change of Direction,Quickstep,Silver/Gold,Yes,Change of Direction,Bronze,8,0,https://www.dancecentral.info/ballroom/international-style/quickstep/change-of-direction,docs/figures steps/parsed/chunk_4/quickstep_change-of-direction.json
+0efaa4f0-80ed-41ce-8daa-8caad33408f6,Chasse Reverse Turn,Quickstep,Newcomer/Bronze,No,,,,,,
+efd986f1-9647-4dd1-843d-4e0b9ee7c6cb,Closed Impetus,Quickstep,Newcomer/Bronze,No,,,,,,
+a29ea33c-57d8-4ad9-ab96-e09aec4e544f,Closed Telemark,Quickstep,Silver/Gold,Yes,Closed Telemark,Silver,8,0,https://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark,docs/figures steps/parsed/chunk_4/quickstep_closed-telemark.json
+e61ea0d4-0651-49b7-abca-a89ee7f27ced,Cross Chasse,Quickstep,Silver/Gold,Yes,Cross Chasse,Bronze,10,23,https://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse,docs/figures steps/parsed/chunk_5/quickstep_cross-chasse.json
+ab2bfe33-fca2-4086-b377-c57fbeff3abf,Cross Swivel,Quickstep,Silver/Gold,Yes,Cross Swivel,Gold,6,12,https://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel,docs/figures steps/parsed/chunk_5/quickstep_cross-swivel.json
+f5899d47-f400-4fa2-b663-b7ea41a003c5,Curved Feather,Quickstep,Silver/Gold,No,,,,,,
+68671bb0-2a86-4e27-904b-13764dbdf021,Double Reverse Spin,Quickstep,Newcomer/Bronze,Yes,Double Reverse Spin,Bronze,7,33,https://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin,docs/figures steps/parsed/chunk_5/quickstep_double-reverse-spin.json
+ce25ddfd-01be-45e4-b1fc-c484bfe8cd4b,Fallaway Reverse and Slip Pivot,Quickstep,Silver/Gold,No,,,,,,
+52b0be62-8bc6-40e0-8a89-8d77c9f6ca38,Fish–Tail,Quickstep,Silver/Gold,Yes,Fish–Tail,Silver,10,9,https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail,docs/figures steps/parsed/chunk_5/quickstep_fishtail.json
+b472de32-5588-45d1-97e6-6ec08c4b29fd,Forward Lock (Step),Quickstep,Newcomer/Bronze,No,,,,,,
+8705778a-4263-4208-a38f-65ff2f59a077,Four Quick Run,Quickstep,Silver/Gold,Yes,Four Quick Run,Silver,14,4,https://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run,docs/figures steps/parsed/chunk_5/quickstep_four-quick-run.json
+7be8196d-d749-4a7a-b84f-bdf1973a4e44,Hover Corté,Quickstep,Silver/Gold,Yes,Hover Corté,Gold,8,12,https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte,docs/figures steps/parsed/chunk_5/quickstep_hover-corte.json
+2cebf941-8a09-4295-b463-df90086962ef,Natural Pivot Turn,Quickstep,Newcomer/Bronze,Yes,Natural Pivot Turn,Newcomer,4,4,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn,docs/figures steps/parsed/chunk_4/quickstep_natural-pivot-turn.json
+654f0d50-8576-44d1-b5d9-c703d7098254,Natural Spin Turn,Quickstep,Newcomer/Bronze,Yes,Natural Spin Turn,Newcomer,6,2,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn,docs/figures steps/parsed/chunk_4/quickstep_natural-spin-turn.json
+cb0deea1-741a-4b7f-a207-e1986f832753,Natural Turn (at a Corner),Quickstep,Newcomer/Bronze,Yes,Natural Turn (at a Corner),Newcomer,4,16,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn,docs/figures steps/parsed/chunk_4/quickstep_natural-turn.json
+0586d1e3-9711-407b-b583-ca933fb99d57,Natural Turn Back Lock Running Finish,Quickstep,Newcomer/Bronze,No,,,,,,
+019d16e3-f1fd-4f01-b65d-fce558f58a0c,Natural Turn with Hesitation,Quickstep,Newcomer/Bronze,Yes,Natural Turn with Hesitation,Newcomer,12,11,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation,docs/figures steps/parsed/chunk_4/quickstep_natural-turn-with-hesitation.json
+351079bb-d519-4882-96e9-8f76b447f7d3,Open Impetus,Quickstep,Silver/Gold,No,,,,,,
+df34be32-a394-4d9c-9e7e-44d75eed6311,Open Telemark,Quickstep,Silver/Gold,No,,,,,,
+40f4d1f9-33e9-40eb-bde3-e554c5191c77,Outside Change,Quickstep,Silver/Gold,No,,,,,,
+6604a93d-5493-4e5a-b2a7-b12782bb6718,Outside Spin,Quickstep,Silver/Gold,No,,,,,,
+d7a48376-b761-4d61-9177-2e408bb5fe44,Passing Natural Turn (from PP),Quickstep,Silver/Gold,Yes,Passing Natural Turn (from PP),Gold,6,2,https://www.dancecentral.info/ballroom/international-style/quickstep/passing-natural-turn,docs/figures steps/parsed/chunk_4/quickstep_passing-natural-turn.json
+ed50fc0e-2333-43b6-b7c0-f1e2c50e5da4,Progressive Chasse,Quickstep,Newcomer/Bronze,No,,,,,,
+a0daa5f5-0cc3-4074-a338-dfa4a8d82f68,Progressive Chasse to Right,Quickstep,Newcomer/Bronze,Yes,Progressive Chasse to Right,Bronze,10,24,https://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_10/quickstep_progressive-chasse-to-r?src=routine.json
+fa749a60-34b0-4825-bd62-d5bdbed4d824,Quarter Turn to Left (Heel Pivot),Quickstep,Newcomer/Bronze,No,,,,,,
+e7f456d3-8aef-40e9-a17c-e12ee539ed26,Quarter Turn to Right,Quickstep,Newcomer/Bronze,Yes,Quarter Turn to Right,Newcomer,8,6,https://www.dancecentral.info/ballroom/international-style/quickstep/quarter-turn-to-right,docs/figures steps/parsed/chunk_5/quickstep_quarter-turn-to-right.json
+fe60be4a-adca-4364-ad19-8933ce5684d6,Quick Open Reverse,Quickstep,Silver/Gold,Yes,Quick Open Reverse,Silver,8,6,https://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse,docs/figures steps/parsed/chunk_4/quickstep_quick-open-reverse.json
+7dca2c27-8ab2-478c-a18b-db3a50153143,Reverse Pivot,Quickstep,Newcomer/Bronze,Yes,Reverse Pivot,Bronze,1,1,http://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot?src=routine,docs/figures steps/parsed/chunk_8/quickstep_reverse-pivot?src=routine.json
+f6cb56dc-8834-4bf5-aa6c-cfcb33b0e341,Rumba Cross,Quickstep,Silver/Gold,Yes,Rumba Cross,Gold,6,15,https://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross,docs/figures steps/parsed/chunk_4/quickstep_rumba-cross.json
+6cf94305-c0f2-4fad-931f-a45e99e2afc6,Running Cross Chasse,Quickstep,Silver/Gold,No,,,,,,
+ab316082-e7e5-41ec-9852-d296bca702f2,Running Finish,Quickstep,Newcomer/Bronze,Yes,Running Finish,Bronze,8,2,http://www.dancecentral.info/ballroom/international-style/quickstep/running-finish,docs/figures steps/parsed/chunk_8/quickstep_running-finish.json
+359907aa-4601-4b58-b304-169ffc9c5bdf,Running Right Turn,Quickstep,Silver/Gold,Yes,Running Right Turn,Silver,18,63,https://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn,docs/figures steps/parsed/chunk_5/quickstep_running-right-turn.json
+5467d6a1-ff8f-4930-895b-b3b109972394,Running Spin Turn,Quickstep,Silver/Gold,No,,,,,,
+27ea6f5c-ecfa-4a33-9210-cb8fa74463a4,Six Quick Run,Quickstep,Silver/Gold,Yes,Six Quick Run,Gold,14,24,https://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run,docs/figures steps/parsed/chunk_5/quickstep_six-quick-run.json
+05bcb732-8549-4db2-9b76-34bbff35dc46,Tipple Chasse to Right (after 1-3 Nat. Turn at a Corner),Quickstep,Newcomer/Bronze,Yes,Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room),Bronze,8,6,http://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_8/quickstep_tipple-chasse-to-r?src=routine.json
+99dd13b9-9718-41ad-8744-494f563623b3,Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room),Quickstep,Newcomer/Bronze,Yes,Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room),Bronze,4,3,https://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r,docs/figures steps/parsed/chunk_5/quickstep_tipple-chasse-to-r.json
+be07d648-7e1f-45ab-be1b-e93cd23c1b53,Tipple Chasse to the Left,Quickstep,Silver/Gold,No,,,,,,
+3d1f47e4-00a8-454b-8305-dfdbe3835061,Tipsy Followed by 2-4 of Forward Lock Step,Quickstep,Silver/Gold,No,,,,,,
+ac661c32-c091-4c89-b6c7-bd208989d5d6,Tipsy to L,Quickstep,Silver/Gold,No,,,,,,
+f66ef9c1-fd90-4a55-bc66-294723595ec3,Tipsy to R,Quickstep,Silver/Gold,No,,,,,,
+fb7d4f1d-bc43-4bb5-9fb4-ba25ca6150d7,Turning Lock to Right,Quickstep,Silver/Gold,No,,,,,,
+98c9cfe5-026f-4b16-873d-e315e739cc75,Underturned Tipple Chasse to Right,Quickstep,Newcomer/Bronze,No,,,,,,
+81f62c46-76d4-4808-98b9-f2cd4d54d1e9,V-6 (after 1-3 of Nat. Turn),Quickstep,Silver/Gold,Yes,V-6 (after 1-3 of Nat. Turn),Silver,3,0,http://www.dancecentral.info/ballroom/international-style/quickstep/v6,docs/figures steps/parsed/chunk_8/quickstep_v6.json
+bc91249e-207b-4f2d-92de-a8b57843e652,Whisk,Quickstep,Silver/Gold,No,,,,,,
+57ad04d7-4831-4d9c-8827-00e0d7041480,Zig-Zag Back Lock Running Finish,Quickstep,Silver/Gold,Yes,Zig-Zag Back Lock Running Finish,Bronze,12,27,https://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish,docs/figures steps/parsed/chunk_5/quickstep_zig-zag-back-lock-and-running-finish.json
+7036c7f1-a2d9-4b8c-b673-0d24524951d3,Advanced Opening Out Movement,Rumba,Silver/Gold,No,,,,,,
+34d1628d-afd8-4a1c-9830-4e4d1f0161ef,Aida (4 Endings),Rumba,Silver/Gold,Yes,Aida (4 Endings),Silver,6,2,https://www.dancecentral.info/ballroom/international-style/rumba/aida,docs/figures steps/parsed/chunk_2/rumba_aida.json
+f5461740-466c-4509-9537-323faf345500,Alemana,Rumba,Silver/Gold,Yes,Alemana,Bronze,9,5,https://www.dancecentral.info/ballroom/international-style/rumba/alemana,docs/figures steps/parsed/chunk_2/rumba_alemana.json
+ff512c83-9ab7-4ce8-94f5-8d44325a23df,Alemana Development (R to R Hand Hold),Rumba,Silver/Gold,No,,,,,,
+e2a6d40f-47fc-4ab7-a71f-a56a8f15ac26,"Basic Movements (Closed, Open, In Place and Alternative)",Rumba,Silver/Gold,No,,,,,,
+5c828e99-a3b3-427f-a1ea-2e1fc91716d5,Closed Hip Twist,Rumba,Silver/Gold,Yes,Closed Hip Twist,Bronze,6,3,https://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist,docs/figures steps/parsed/chunk_2/rumba_closed-hip-twist.json
+a1a898c9-f142-4475-a76d-d2bdddbc7be0,Cuban Rocks,Rumba,Silver/Gold,Yes,Cuban Rocks,Newcomer,3,3,http://www.dancecentral.info/ballroom/international-style/rumba/cuban-rocks,docs/figures steps/parsed/chunk_5/rumba_cuban-rocks.json
+bc2c329b-6159-441f-af4c-b7e9fd9c8d1f,Cucarachas (LF and RF),Rumba,Silver/Gold,Yes,Cucarachas (LF and RF),Newcomer,12,12,https://www.dancecentral.info/ballroom/international-style/rumba/cucarachas,docs/figures steps/parsed/chunk_2/rumba_cucarachas.json
+a15c2cc8-7237-402b-9693-38925b08e5ea,Fan,Rumba,Silver/Gold,Yes,Fan,Bronze,5,5,http://www.dancecentral.info/ballroom/international-style/rumba/fan,docs/figures steps/parsed/chunk_5/rumba_fan.json
+15fc7c4e-cf31-4673-8137-3ae59008cc5a,Fan Development,Rumba,Silver/Gold,Yes,Fan Development,Bronze,10,11,https://www.dancecentral.info/ballroom/international-style/rumba/fan,docs/figures steps/parsed/chunk_3/rumba_fan.json
+10b855f3-b4a1-4f0b-b8ea-dcb5c1aa0ce7,Fencing,Rumba,Silver/Gold,Yes,Fencing,Gold,12,8,https://www.dancecentral.info/ballroom/international-style/rumba/fencing,docs/figures steps/parsed/chunk_3/rumba_fencing.json
+cdfb2215-1a1c-4760-bf07-9061b5eb6b83,Hand to Hand (To Right and Left SP),Rumba,Silver/Gold,Yes,Hand to Hand (To Right and Left SP),Newcomer,2,2,https://www.dancecentral.info/ballroom/international-style/rumba/hand-to-hand,docs/figures steps/parsed/chunk_3/rumba_hand-to-hand.json
+7bd31698-5b98-4287-ab0a-7da157898022,"Hip Twists (Advanced, Continuous and Circular)",Rumba,Silver/Gold,Yes,"Hip Twists (Advanced, Continuous and Circular)",Gold,12,19,https://www.dancecentral.info/ballroom/international-style/rumba/advanced-hip-twists,docs/figures steps/parsed/chunk_2/rumba_advanced-hip-twists.json
+aeb5342e-3065-459f-9b9b-d2f7ce5613ee,Hockey Stick,Rumba,Silver/Gold,Yes,Hockey Stick,Bronze,11,0,https://www.dancecentral.info/ballroom/international-style/rumba/hockey-stick,docs/figures steps/parsed/chunk_3/rumba_hockey-stick.json
+61431ede-4d2b-4681-93c5-08d649afd01e,Natural Opening Out Movement,Rumba,Silver/Gold,Yes,Natural Opening Out Movement,Bronze,6,4,https://www.dancecentral.info/ballroom/international-style/rumba/natural-opening-out-movement,docs/figures steps/parsed/chunk_3/rumba_natural-opening-out-movement.json
+bacbe2b9-ee98-44b6-971d-a3987eaeb1d4,Natural Top,Rumba,Silver/Gold,Yes,Natural Top,Bronze,6,4,https://www.dancecentral.info/ballroom/international-style/rumba/natural-top,docs/figures steps/parsed/chunk_3/rumba_natural-top.json
+44035242-be14-4184-9506-b371fb318dfa,New York (To LSP or RSP),Rumba,Silver/Gold,Yes,New York (To LSP or RSP),Newcomer,9,21,https://www.dancecentral.info/ballroom/international-style/rumba/new-york,docs/figures steps/parsed/chunk_3/rumba_new-york.json
+c3a2c87d-4963-460e-b92e-6b39ed116fe7,Open Hip Twist,Rumba,Silver/Gold,Yes,Open Hip Twist,Silver,6,6,https://www.dancecentral.info/ballroom/international-style/rumba/open-hip-twist,docs/figures steps/parsed/chunk_3/rumba_open-hip-twist.json
+09bed8ca-542f-4c61-b67d-7d299ea9e058,Opening Out from Reverse Top,Rumba,Silver/Gold,Yes,Opening Out from Reverse Top,Silver,6,0,https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top,docs/figures steps/parsed/chunk_3/rumba_opening-out-from-reverse-top.json
+281beedc-a829-428d-b399-c05991a1a45f,Opening Out to Right and Left,Rumba,Silver/Gold,Yes,Opening Out to Right and Left,Bronze,12,4,https://www.dancecentral.info/ballroom/international-style/rumba/opening-out-to-right-and-left,docs/figures steps/parsed/chunk_3/rumba_opening-out-to-right-and-left.json
+8f4a3d9f-4ebe-4bc7-8578-c3b1aa26c7a9,Progressive Walks Forward in Right Shadow Position (Kiki Walks),Rumba,Silver/Gold,No,,,,,,
+599ae6ef-5481-48be-8bd8-b9e0f5f8c02a,Progressive Walks Forward or Backward,Rumba,Silver/Gold,Yes,Progressive Walks Forward or Backward,Newcomer,6,1,https://www.dancecentral.info/ballroom/international-style/rumba/progressive-walks,docs/figures steps/parsed/chunk_2/rumba_progressive-walks.json
+db966259-5e28-42c4-af8c-b0718022a4d7,Reverse Top,Rumba,Silver/Gold,Yes,Reverse Top,Silver,4,1,https://www.dancecentral.info/ballroom/international-style/rumba/reverse-top,docs/figures steps/parsed/chunk_2/rumba_reverse-top.json
+5bfd0dc0-1f41-47b0-a6e6-d7d4749295f4,Runaway Alemana,Rumba,Silver/Gold,No,,,,,,
+fe267681-2e1b-4925-9a60-df09f27a2543,Shoulder to Shoulder (Left Side and Right Side) Development,Rumba,Silver/Gold,Yes,Shoulder to Shoulder (Left Side and Right Side) Development,Newcomer,9,9,https://www.dancecentral.info/ballroom/international-style/rumba/shoulder-to-shoulder,docs/figures steps/parsed/chunk_2/rumba_shoulder-to-shoulder.json
+79c2d603-aa71-4833-9119-b728bb926bb1,Side Steps (To Left or Right),Rumba,Silver/Gold,No,,,,,,
+5d083b06-95bc-48f2-b620-e8a165df3a32,Sliding Doors,Rumba,Silver/Gold,Yes,Sliding Doors,Gold,12,7,https://www.dancecentral.info/ballroom/international-style/rumba/sliding-doors,docs/figures steps/parsed/chunk_2/rumba_sliding-doors.json
+bd4d705e-4844-4be2-9d72-f6d8a9e79b3d,"Spiral Turns (Spiral, Curl and Rope Spinning)",Rumba,Silver/Gold,Yes,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,10,5,https://www.dancecentral.info/ballroom/international-style/rumba/curl,docs/figures steps/parsed/chunk_2/rumba_curl.json
+c80b3640-1509-4a43-8d68-ce4cd9fb4823,Spiral Turns Developments (Kiki Walks),Rumba,Silver/Gold,No,,,,,,
+5eb935d3-fa50-4f4a-b39f-65dfdc4675ad,Spot Turns to L or R,Rumba,Silver/Gold,Yes,Spot Turns to L or R,Newcomer,8,0,https://www.dancecentral.info/ballroom/international-style/rumba/spot-turns,docs/figures steps/parsed/chunk_2/rumba_spot-turns.json
+010561b8-78b8-48cf-a9c0-dfa9eb12a873,Syncopated Cuban Rocks,Rumba,Silver/Gold,No,,,,,,
+8dfb4393-d4e7-40d3-b1b8-d258d2d4d55a,Syncopated Open Hip Twist,Rumba,Silver/Gold,No,,,,,,
+610e8d8a-6157-4321-965d-9fa5b078f9e8,Three Alemanas,Rumba,Silver/Gold,Yes,Three Alemanas,Gold,6,11,https://www.dancecentral.info/ballroom/international-style/rumba/three-alemanas,docs/figures steps/parsed/chunk_2/rumba_three-alemanas.json
+2f37240e-04c2-4617-90a2-695746d37b82,Three Threes,Rumba,Silver/Gold,Yes,Three Threes,Gold,28,31,https://www.dancecentral.info/ballroom/international-style/rumba/three-threes,docs/figures steps/parsed/chunk_2/rumba_three-threes.json
+b77e5904-ef99-44e3-8307-316bf769a51b,Argentine Crosses,Samba,Silver/Gold,Yes,Argentine Crosses,Silver,10,0,https://www.dancecentral.info/ballroom/international-style/samba/argentine-crosses,docs/figures steps/parsed/chunk_2/samba_argentine-crosses.json
+f67dda2b-5b7e-4da1-8f2f-74d8b83d63e6,Bota Fogos To PP and CPP (Promenade Botafogos),Samba,Newcomer/Bronze,Yes,Bota Fogos To PP and CPP (Promenade Botafogos),Bronze,6,3,https://www.dancecentral.info/ballroom/international-style/samba/bota-fogos-to-promenade-and-counter-promenade,docs/figures steps/parsed/chunk_1/samba_bota-fogos-to-promenade-and-counter-promenade.json
+fe72e72c-463f-43cf-853e-d9205728ed73,Carioca Runs,Samba,Silver/Gold,No,,,,,,
+316b8f4b-a465-4536-9d67-d5d4014cf3b8,Closed Rocks (on RF and LF),Samba,Newcomer/Bronze,Yes,Closed Rocks (on RF and LF),Bronze,12,7,https://www.dancecentral.info/ballroom/international-style/samba/closed-rocks,docs/figures steps/parsed/chunk_1/samba_closed-rocks.json
+bc7f5305-2e97-4a01-ab91-4913c7c7a00e,Closed Volta,Samba,Silver/Gold,No,,,,,,
+c9ad1bcc-2d27-443e-a0f2-3e977b6bcfc4,Contra Bota Fogos,Samba,Silver/Gold,Yes,Contra Bota Fogos,Gold,4,9,https://www.dancecentral.info/ballroom/international-style/samba/contra-botafogos,docs/figures steps/parsed/chunk_1/samba_contra-botafogos.json
+5afde26b-0431-4a43-ab66-8f71fc7c74ea,Corta Jaca,Samba,Newcomer/Bronze,Yes,Corta Jaca,Bronze,14,9,https://www.dancecentral.info/ballroom/international-style/samba/corta-jaca,docs/figures steps/parsed/chunk_1/samba_corta-jaca.json
+101c2510-08ea-4ece-8b9c-ea814d817ee2,Criss Cross Bota Fogos (Shadow Bota fogos),Samba,Newcomer/Bronze,Yes,Criss Cross Bota Fogos (Shadow Bota fogos),Newcomer,3,4,https://www.dancecentral.info/ballroom/international-style/samba/criss-cross-bota-fogos-shadow-bota-fogos,docs/figures steps/parsed/chunk_1/samba_criss-cross-bota-fogos-shadow-bota-fogos.json
+3da97eb9-80a6-49e6-815a-2c5c81f1cade,Criss Cross Voltas (Travelling Voltas to R and L),Samba,Newcomer/Bronze,Yes,Criss Cross Voltas (Travelling Voltas to R and L),Bronze,4,10,https://www.dancecentral.info/ballroom/international-style/samba/criss-cross-voltas,docs/figures steps/parsed/chunk_1/samba_criss-cross-voltas.json
+e6bd3b84-25df-463d-8c67-df2e7a01396e,Cruzado Walks and Locks (in Shadow Position),Samba,Silver/Gold,Yes,Cruzado Walks and Locks (in Shadow Position),Gold,3,4,https://www.dancecentral.info/ballroom/international-style/samba/cruzados-walks-and-locks,docs/figures steps/parsed/chunk_1/samba_cruzados-walks-and-locks.json
+348f0596-7355-4670-b65b-6c9a0a8af67c,Drag,Samba,Silver/Gold,No,,,,,,
+1af6f80f-9fb7-4837-b649-331b66005130,Foot Changes,Samba,Newcomer/Bronze,Yes,Foot Changes,Bronze,4,1,https://www.dancecentral.info/ballroom/international-style/samba/foot-changes,docs/figures steps/parsed/chunk_1/samba_foot-changes.json
+d74be591-10a5-4706-97e3-50f7d7fa1acc,Maypole (Continuous Volta Spot Turn to R and L),Samba,Silver/Gold,Yes,Maypole (Continuous Volta Spot Turn to R and L),Silver,1,2,https://www.dancecentral.info/ballroom/international-style/samba/maypole,docs/figures steps/parsed/chunk_1/samba_maypole.json
+48c5166c-6113-43c6-9a94-bb8c49911d41,Natural Basic Movement (Alternative),Samba,Newcomer/Bronze,Yes,Natural Basic Movement (Alternative),Newcomer,8,6,https://www.dancecentral.info/ballroom/international-style/samba/basic-movements,docs/figures steps/parsed/chunk_2/samba_basic-movements.json
+0ac6f85d-242e-4e86-be81-95c6222977c0,Natural Roll,Samba,Silver/Gold,Yes,Natural Roll,Gold,6,2,https://www.dancecentral.info/ballroom/international-style/samba/natural-roll,docs/figures steps/parsed/chunk_1/samba_natural-roll.json
+b5e83d8c-71f3-4eb0-a06b-eb1483b3f2dd,Open Rocks (to R and L),Samba,Silver/Gold,Yes,Open Rocks (to R and L),Silver,8,0,https://www.dancecentral.info/ballroom/international-style/samba/open-rocks,docs/figures steps/parsed/chunk_1/samba_open-rocks.json
+756e8dcb-f838-4f7b-a2ee-b4711f74c609,Outside Basic Movement,Samba,Newcomer/Bronze,No,,,,,,
+f682a563-44d8-4151-8881-723b242be342,Plait,Samba,Silver/Gold,Yes,Plait,Silver,10,18,https://www.dancecentral.info/ballroom/international-style/samba/plait,docs/figures steps/parsed/chunk_1/samba_plait.json
+b63b881d-05ab-4e88-86d0-ab10a2823ac2,Progressive Basic Movement,Samba,Newcomer/Bronze,No,,,,,,
+a621e300-ca7a-447e-b2ba-2f40344ea6d1,Promenade and Counter Promenade Runs,Samba,Silver/Gold,Yes,Promenade and Counter Promenade Runs,Gold,18,0,https://www.dancecentral.info/ballroom/international-style/samba/promenade-and-counter-promenade-runs,docs/figures steps/parsed/chunk_1/samba_promenade-and-counter-promenade-runs.json
+4c49e898-e82b-4765-96d3-86cbb3d21701,Reverse Basic Movement,Samba,Newcomer/Bronze,No,,,,,,
+ad2efb2c-0190-4dd3-be91-160e70e18cdf,Reverse Roll,Samba,Silver/Gold,Yes,Reverse Roll,Gold,10,7,https://www.dancecentral.info/ballroom/international-style/samba/reverse-roll,docs/figures steps/parsed/chunk_1/samba_reverse-roll.json
+be872570-99c8-439c-8a0b-b9df0b576923,Reverse Turn,Samba,Newcomer/Bronze,Yes,Reverse Turn,Bronze,8,17,https://www.dancecentral.info/ballroom/international-style/samba/reverse-turn,docs/figures steps/parsed/chunk_1/samba_reverse-turn.json
+142b8aa4-7879-4edf-a699-c3e9ff1cc6f0,Rhythm Bounce (on LF and RF),Samba,Newcomer/Bronze,Yes,Rhythm Bounce (on LF and RF),Newcomer,1,13,https://www.dancecentral.info/ballroom/international-style/samba/rhythm-bounce,docs/figures steps/parsed/chunk_1/samba_rhythm-bounce.json
+2057921c-c1a0-4773-b640-49d2dba7d4aa,Rolling of the Arm,Samba,Silver/Gold,Yes,Rolling of the Arm,Silver,6,14,https://www.dancecentral.info/ballroom/international-style/samba/rolling-off-the-arm,docs/figures steps/parsed/chunk_1/samba_rolling-off-the-arm.json
+9a260b88-c148-471b-b2ff-9c369b896504,Roundabout (to R and L),Samba,Silver/Gold,Yes,Roundabout (to R and L),Gold,6,10,https://www.dancecentral.info/ballroom/international-style/samba/roundabout,docs/figures steps/parsed/chunk_1/samba_roundabout.json
+07930568-df3d-42da-822f-921a2fc852d1,Samba Locks,Samba,Silver/Gold,Yes,Samba Locks,Gold,6,4,https://www.dancecentral.info/ballroom/international-style/samba/samba-locks,docs/figures steps/parsed/chunk_1/samba_samba-locks.json
+1cb603ac-8343-4dcb-a7c5-7e68ca532af1,Samba Walks in PP Position (RF and LF) (Promenade Samba Walks),Samba,Newcomer/Bronze,Yes,Samba Walks in PP Position (RF and LF) (Promenade Samba Walks),Newcomer,3,0,https://www.dancecentral.info/ballroom/international-style/samba/samba-walks,docs/figures steps/parsed/chunk_1/samba_samba-walks.json
+71084ae0-ce69-4d0a-8dd6-5de864da42ab,Samba Walks in Right Shadow Position,Samba,Silver/Gold,No,,,,,,
+3835dc19-08d9-4b15-837e-1643633be0b2,Shadow Circular Volta (to R and L),Samba,Newcomer/Bronze,Yes,Shadow Circular Volta (to R and L),Silver,1,2,https://www.dancecentral.info/ballroom/international-style/samba/shadow-circular-volta,docs/figures steps/parsed/chunk_1/samba_shadow-circular-volta.json
+0e360264-6622-452a-8b6b-342e834300d8,Shadow Travelling Volta,Samba,Newcomer/Bronze,Yes,Shadow Travelling Volta,Bronze,1,0,https://www.dancecentral.info/ballroom/international-style/samba/shadow-travelling-volta,docs/figures steps/parsed/chunk_1/samba_shadow-travelling-volta.json
+14f44143-eba2-441d-80da-65857130eba4,Side Basic Movement,Samba,Newcomer/Bronze,No,,,,,,
+4b8cfe4b-8b97-4a38-a313-c4c391975358,Side Samba Chasse,Samba,Silver/Gold,No,,,,,,
+657cff0b-fbf5-42db-b14e-e750f3b7796c,Side Samba walk,Samba,Newcomer/Bronze,No,,,,,,
+b67b2ce1-721e-46a6-a783-95a64b5821f7,Simple Volta to R or L,Samba,Silver/Gold,No,,,,,,
+fe2fdec1-cda5-46c5-a884-f5e97df2a9a2,Solo Spot Volta,Samba,Newcomer/Bronze,No,,,,,,
+bf7e3678-72de-4100-8363-875879b28d32,Stationary Samba Walk,Samba,Newcomer/Bronze,No,,,,,,
+af643cd4-21fd-40b4-ba16-08c61bd76fd0,Three Step Turn,Samba,Silver/Gold,Yes,Three Step Turn,Gold,6,9,https://www.dancecentral.info/ballroom/international-style/samba/three-step-turn,docs/figures steps/parsed/chunk_1/samba_three-step-turn.json
+ac24b548-80e7-46fc-a4c9-c760441655ae,Travelling Bota Fogos Back,Samba,Newcomer/Bronze,Yes,Travelling Bota Fogos Back,Bronze,8,3,https://www.dancecentral.info/ballroom/international-style/samba/traveling-bota-fogos-back,docs/figures steps/parsed/chunk_1/samba_traveling-bota-fogos-back.json
+4cf56ad3-3e3c-4bad-98b9-6f87f5bd1000,Travelling Bota Fogos Forward,Samba,Newcomer/Bronze,Yes,Travelling Bota Fogos Forward,Newcomer,10,17,https://www.dancecentral.info/ballroom/international-style/samba/traveling-bota-fogos-forward,docs/figures steps/parsed/chunk_1/samba_traveling-bota-fogos-forward.json
+f7e015f1-7c04-49d0-880a-3b694ee44e30,Travelling Bota Fogos Forward in Right Shadow Position,Samba,Newcomer/Bronze,No,,,,,,
+4c6bb65d-e619-4872-b214-bcbd6ffa0388,Volta Movement (ogólnie),Samba,Silver/Gold,No,,,,,,
+cf422bcf-e0f9-46d6-a4d6-5144940aff97,Whisk to Right and Left Underarm Turn (Volta Spot Turn to R and L for Lady),Samba,Newcomer/Bronze,No,,,,,,
+4bd229c6-5b91-43f9-af35-c47847914f59,(Natural) Rock Turn,Tango,Silver/Gold,Yes,(Natural) Rock Turn,Newcomer,13,8,https://www.dancecentral.info/ballroom/international-style/tango/rock-turn,docs/figures steps/parsed/chunk_4/tango_rock-turn.json
+5a19a5ad-f3b4-43d1-bc4f-e4f3a52493da,Back Corté,Tango,Silver/Gold,Yes,Back Corté,Newcomer,8,3,https://www.dancecentral.info/ballroom/international-style/tango/back-corte,docs/figures steps/parsed/chunk_3/tango_back-corte.json
+9c68335f-939b-4128-be2d-3e15a71727c1,Back Open Promenade,Tango,Silver/Gold,No,,,,,,
+8be59416-8fb7-444b-958b-fb7e989e1a16,Back Whisk,Tango,Silver/Gold,No,,,,,,
+9766c285-f920-4881-b7f7-509441ae2607,Basic Reverse Turn,Tango,Silver/Gold,No,,,,,,
+507c193d-c791-496c-b0f0-6e81f5cfd2b0,Brush Tap,Tango,Silver/Gold,No,,,,,,
+be4c3e88-8292-4081-80dc-28fcad153d11,Chase,Tango,Silver/Gold,No,,,,,,
+4ed5901b-ab62-434c-9a80-3f14d2f0f1bf,Closed Promenade,Tango,Silver/Gold,Yes,Closed Promenade,Newcomer,7,6,https://www.dancecentral.info/ballroom/international-style/tango/closed-promenade,docs/figures steps/parsed/chunk_4/tango_closed-promenade.json
+ba93d6ed-fb9b-470a-81b4-64bfbace0e64,Contra Check,Tango,Silver/Gold,No,,,,,,
+8e74ec23-c765-4f62-85fe-37d3f1bc89fd,Drop (or Tilt) Oversway,Tango,Silver/Gold,No,,,,,,
+ba9765ac-0ec6-4ce1-94c7-4141911f3c87,Fallaway Four Step,Tango,Silver/Gold,No,,,,,,
+26b603fe-245f-4b07-8a5d-a1e6019de9c7,Fallaway Promenade,Tango,Silver/Gold,No,,,,,,
+568540a5-3e50-4eed-be31-c1a181e50c03,Fallaway Reverse and Slip Pivot,Tango,Silver/Gold,No,,,,,,
+58aaa3bb-df45-4152-907e-02d22d7cf503,Five Step,Tango,Silver/Gold,No,,,,,,
+43c460db-074d-43ef-82c5-093dab7f77a5,Four Step,Tango,Silver/Gold,No,,,,,,
+183575c7-3edb-438b-b33d-23d0004e5791,Four Step Change,Tango,Silver/Gold,No,,,,,,
+95d3aac6-3b7c-4581-8d8c-12a2f94292b5,Foxtrot Twist Turn in PP,Tango,Silver/Gold,No,,,,,,
+8830c725-25e5-4c81-8cea-3337d17c0d67,Mini Five Step,Tango,Silver/Gold,No,,,,,,
+bfd87abd-8cef-47db-a62e-91812b3a5e5e,Natural Promenade Turn,Tango,Silver/Gold,Yes,Natural Promenade Turn,Bronze,8,21,https://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn,docs/figures steps/parsed/chunk_4/tango_natural-promenade-turn.json
+d313cb50-c8ca-4d08-b7ca-4775424265dc,Natural Promenade Turn to Rock Turn,Tango,Silver/Gold,No,,,,,,
+eabda2e4-4182-4e0f-a36c-4d2cef930f27,Natural Twist Turn,Tango,Silver/Gold,Yes,Natural Twist Turn,Bronze,12,14,https://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn,docs/figures steps/parsed/chunk_4/tango_natural-twist-turn.json
+eaec58d3-436e-4f8c-b73f-a67dfb46f6f7,Open Finish,Tango,Silver/Gold,Yes,Open Finish,Newcomer,4,14,http://www.dancecentral.info/ballroom/international-style/tango/open-finish,docs/figures steps/parsed/chunk_6/tango_open-finish.json
+5ccd0994-e7d5-40a5-af11-474a1654c1be,Open Promenade,Tango,Silver/Gold,Yes,Open Promenade,Bronze,8,1,https://www.dancecentral.info/ballroom/international-style/tango/open-promenade,docs/figures steps/parsed/chunk_3/tango_open-promenade.json
+5b953bf2-45fc-401c-8432-4a2faa1ca42a,"Open Reverse, Lady Outside (Open Finish)",Tango,Silver/Gold,Yes,Open Finish,Newcomer,6,7,https://www.dancecentral.info/ballroom/international-style/tango/open-finish,docs/figures steps/parsed/chunk_4/tango_open-finish.json
+721e6c80-a1f4-4d0f-ab2b-70dba2e25361,"Open Reverse, Lady in Line (Closed Finish)",Tango,Silver/Gold,Yes,"Open Reverse, Lady in Line (Closed Finish)",Bronze,9,0,http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside?src=routine,docs/figures steps/parsed/chunk_6/tango_open-reverse-turn-lady-inside?src=routine.json
+aaa541af-c933-460f-947e-60b4718e500e,Open Telemark,Tango,Silver/Gold,No,,,,,,
+699a4c9c-a7c5-4486-bd28-e30340095558,Outside Spin,Tango,Silver/Gold,No,,,,,,
+65636486-f7db-4968-9224-0b6f0a39ca19,Outside Swivel,Tango,Silver/Gold,No,,,,,,
+878f326e-1ac7-40fa-8af3-7bcec2757b09,Outside Swivel (Turning Left) followed by steps 2 and 3 of Promenade Link (after Open Finish ended DW),Tango,Silver/Gold,No,,,,,,
+c812bfcb-5399-44f7-8ccf-358c77b6baa7,Outside Swivel (Turning Left) followed by steps 2 and 3 of Promenade Link (after Open Promenade),Tango,Silver/Gold,No,,,,,,
+8083ae65-440e-4444-906a-a87cff68feb3,Oversway,Tango,Silver/Gold,No,,,,,,
+018d1ac0-e0ce-4b0f-93b8-3993207cfc96,Passing Natural Turn,Tango,Silver/Gold,No,,,,,,
+8c1db409-1bb8-4ba5-b7f2-9bd1156b0f42,Progressive Link,Tango,Silver/Gold,Yes,Progressive Link,Newcomer,4,55,https://www.dancecentral.info/ballroom/international-style/tango/progressive-link,docs/figures steps/parsed/chunk_4/tango_progressive-link.json
+041269cd-b2cd-4573-86b4-3a0eeeece864,Progressive Side Step,Tango,Silver/Gold,Yes,Progressive Side Step,Newcomer,6,3,https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step,docs/figures steps/parsed/chunk_4/tango_progressive-side-step.json
+bff22bd2-b918-4b74-9ea0-1d206b4495b3,Progressive Side Step Reverse Turn,Tango,Silver/Gold,Yes,Progressive Side Step Reverse Turn,Bronze,4,5,https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn,docs/figures steps/parsed/chunk_4/tango_progressive-side-step-reverse-turn.json
+0840bd51-b94f-4bf1-804f-9f5b6d666e4d,Promenade Link,Tango,Silver/Gold,No,,,,,,
+492b48ad-c9e2-479e-bcc9-e7b638b1e39b,Reverse Pivot,Tango,Silver/Gold,No,,,,,,
+eb4d01a0-3aca-430c-b640-0098d3a5e92f,Rock on Left Foot,Tango,Silver/Gold,No,,,,,,
+3efc62b2-f1d5-4b58-8826-98722719c952,Rock on Right Foot,Tango,Silver/Gold,No,,,,,,
+117abb57-3ef5-4d97-9903-b2c51ec63c01,Syncopated Reverse Turn,Tango,Silver/Gold,No,,,,,,
+50b7e757-50fa-4294-80ae-6b183b80cd08,Whisk,Tango,Silver/Gold,No,,,,,,
+dd638b42-75ef-4f82-89ee-935f7180d065,Check from Reverse Fleckerl to Natural Fleckerl,Viennese Waltz,Silver/Gold,No,,,,,,
+8f067372-1613-4255-a1ef-22079f064e2c,Closed Changes (forwards and backwards),Viennese Waltz,Newcomer/Bronze,No,,,,,,
+e820e8fa-fad0-46b1-a909-371cf7472d4c,Contra Check,Viennese Waltz,Silver/Gold,Yes,Contra Check,Gold,3,6,https://www.dancecentral.info/ballroom/international-style/viennese-waltz/contra-check,docs/figures steps/parsed/chunk_4/viennese-waltz_contra-check.json
+5d8017bd-3466-46e4-94aa-ba2da0da2668,Natural Fleckerl,Viennese Waltz,Silver/Gold,Yes,Natural Fleckerl,Gold,6,2,https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-fleckerl,docs/figures steps/parsed/chunk_4/viennese-waltz_natural-fleckerl.json
+ddae8d21-cb85-4fea-b8bd-7ba69ae8e2f0,Natural Turn,Viennese Waltz,Newcomer/Bronze,Yes,Natural Turn,Bronze,12,31,https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-turn,docs/figures steps/parsed/chunk_10/viennese-waltz_natural-turn.json
+3bc3294a-e3a1-46e0-9337-bdb23693137b,Reverse Fleckerl,Viennese Waltz,Silver/Gold,Yes,Reverse Fleckerl,Silver,6,0,https://www.dancecentral.info/ballroom/international-style/viennese-waltz/reverse-fleckerl,docs/figures steps/parsed/chunk_4/viennese-waltz_reverse-fleckerl.json
+adbc07a2-7f2c-494b-9310-2c4c0abeca40,Reverse Turn,Viennese Waltz,Newcomer/Bronze,No,,,,,,
+6eed3f7a-ee52-4ee1-8e32-d47e648f713d,Back Whisk,Waltz,Newcomer/Bronze,No,,,,,,
+5c719d89-4076-4e78-895f-24170aa8ddad,Backward Lock Step (Back Lock),Waltz,Newcomer/Bronze,Yes,Backward Lock Step (Back Lock),Bronze,5,4,https://www.dancecentral.info/ballroom/international-style/quickstep/back-lock,docs/figures steps/parsed/chunk_4/quickstep_back-lock.json
+8d7f5ba6-45be-49d4-98a9-e8297063153f,Chasse from Promenade Position,Waltz,Newcomer/Bronze,No,,,,,,
+1593e5d3-e1b5-45b6-b060-b5c351cf7329,Closed Wing,Waltz,Silver/Gold,Yes,Closed Wing,Gold,6,7,https://www.dancecentral.info/ballroom/international-style/waltz/closed-wing,docs/figures steps/parsed/chunk_3/waltz_closed-wing.json
+9176e327-76ab-4510-84a3-eb1dbcc7af38,Contra Check,Waltz,Silver/Gold,Yes,Contra Check,Gold,6,19,https://www.dancecentral.info/ballroom/international-style/waltz/contra-check,docs/figures steps/parsed/chunk_3/waltz_contra-check.json
+de370b18-f0c6-4ae8-a0e9-9e1a66be0b60,Cross Hesitation after Open Impetus Turn,Waltz,Newcomer/Bronze,Yes,Cross Hesitation after Open Impetus Turn,Silver,6,4,http://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine,docs/figures steps/parsed/chunk_7/waltz_open-impetus-and-cross-hesitation?src=routine.json
+ac89eefb-31e1-4a46-a4ee-ae43990cfa79,Double Reverse Spin,Waltz,Newcomer/Bronze,Yes,Double Reverse Spin,Bronze,8,33,https://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin,docs/figures steps/parsed/chunk_3/waltz_double-reverse-spin.json
+85b4a9d1-de7c-48cd-b9e8-2946eefff888,Drag Hesitation,Waltz,Silver/Gold,No,,,,,,
+bf824d93-accf-4a52-8eb0-105fc507853a,Fallaway Natural Turn,Waltz,Silver/Gold,No,,,,,,
+566fa2b5-83a9-4ff5-aa46-0eb23de71270,Fallaway Reverse and Slip Pivot,Waltz,Silver/Gold,Yes,Fallaway Reverse and Slip Pivot,Gold,7,16,https://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot,docs/figures steps/parsed/chunk_3/waltz_fallaway-reverse-and-slip-pivot.json
+0e41cbf0-0cf4-46ca-83c5-e29d06c1af35,Fallaway Whisk,Waltz,Silver/Gold,No,,,,,,
+a8044017-a36c-40c6-ae88-dfa51b04412d,Forward Lock Step,Waltz,Silver/Gold,No,,,,,,
+85d01c70-75a1-474a-a7d8-147e39c3539d,Hesitation Change,Waltz,Newcomer/Bronze,No,,,,,,
+2b4f3fd6-f0b1-48bb-9fbc-04f099d8c0de,Hover Corté,Waltz,Silver/Gold,Yes,Hover Corté,Gold,6,3,https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte,docs/figures steps/parsed/chunk_3/waltz_hover-corte.json
+98f7810f-fd04-49fd-8370-42624f7a209e,Impetus Turn (Closed),Waltz,Newcomer/Bronze,No,,,,,,
+4e4fdcfc-c900-4b65-a4d5-12f1e3ccebc8,LF Closed Change,Waltz,Newcomer/Bronze,No,,,,,,
+598961c4-8ad9-4ce7-9526-a66859f72d45,Left Whisk,Waltz,Silver/Gold,Yes,Left Whisk,Gold,6,0,https://www.dancecentral.info/ballroom/international-style/waltz/left-whisk,docs/figures steps/parsed/chunk_3/waltz_left-whisk.json
+83b8b0d5-4785-422b-a50b-a98c9c8fa207,Natural Spin Turn,Waltz,Newcomer/Bronze,No,,,,,,
+8d3bfc10-56da-42aa-8ea3-003add632c01,Natural Turn,Waltz,Newcomer/Bronze,Yes,Natural Turn,Newcomer,13,21,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn?src=routine,docs/figures steps/parsed/chunk_10/quickstep_natural-turn?src=routine.json
+b0d0d656-4ba8-4bb0-8f5b-c1da99dd5ebc,Open Impetus Turn,Waltz,Newcomer/Bronze,Yes,Open Impetus Turn,Silver,6,14,https://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-wing,docs/figures steps/parsed/chunk_4/waltz_open-impetus-and-wing.json
+e84ad3dc-7cfc-4267-afb1-827b870d4e94,Open Telemark and Wing,Waltz,Silver/Gold,Yes,Open Telemark and Wing,Silver,10,13,http://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing,docs/figures steps/parsed/chunk_6/waltz_open-telemark-and-wing.json
+f141267b-38f6-4e8c-8064-400a7347a270,Open Telemark into Cross Hesitation,Waltz,Silver/Gold,Yes,Open Telemark into Cross Hesitation,Silver,6,7,https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation,docs/figures steps/parsed/chunk_4/waltz_open-telemark-and-cross-hesitation.json
+a06da90d-11a8-442e-b17d-9cc88d6c6016,Outside Change,Waltz,Newcomer/Bronze,No,,,,,,
+8a19af94-c5c3-41f1-be52-b2b5967b1cb4,Outside Spin,Waltz,Silver/Gold,No,,,,,,
+468b3f13-6107-43ef-b20f-066e47b72170,Passing Natural Turn,Waltz,Silver/Gold,No,,,,,,
+a4b06c96-a1e1-4c1f-999f-131c0e9d1f00,Progressive Chasse,Waltz,Silver/Gold,Yes,Progressive Chasse,Bronze,8,18,http://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_7/waltz_progressive-chasse-to-r?src=routine.json
+206de92a-9169-4c76-9d33-9f0b84519245,Progressive Chasse to Right,Waltz,Newcomer/Bronze,Yes,Progressive Chasse to Right,Bronze,7,13,https://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r,docs/figures steps/parsed/chunk_4/waltz_progressive-chasse-to-r.json
+28dade8b-3cda-445f-b62a-a67cf5cc45fd,Quick Natural Spin Turn,Waltz,Silver/Gold,No,,,,,,
+cc293dcb-b342-4850-840b-7214d756cf2a,Quick Natural Weave from PP (Running Weave),Waltz,Silver/Gold,No,,,,,,
+d32ef51e-f9f5-4ae9-8657-7abdbe991e8e,Quick Wing,Waltz,Silver/Gold,No,,,,,,
+8b897c4b-b8d7-4590-a337-5322f0247444,RF Closed Change,Waltz,Newcomer/Bronze,No,,,,,,
+a630fd08-0805-4bd0-be81-6aef3725126e,Reverse Corte,Waltz,Newcomer/Bronze,Yes,Reverse Corte,Bronze,3,3,https://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte,docs/figures steps/parsed/chunk_3/waltz_reverse-corte.json
+2d266348-f5e6-40b9-b9a7-c9ca38b42c57,Reverse Pivot,Waltz,Silver/Gold,Yes,Reverse Pivot,Bronze,1,11,https://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot,docs/figures steps/parsed/chunk_3/waltz_reverse-pivot.json
+40fb0d80-96e7-4c81-9ace-b74f1d9f63c4,Reverse Turn,Waltz,Newcomer/Bronze,No,,,,,,
+8b9daed7-c5d9-49f4-b5c4-95d5d318636f,Running Cross Chasse,Waltz,Silver/Gold,No,,,,,,
+357dfbd7-f64e-4c5f-9c87-2bc6039656b7,Running Finish,Waltz,Silver/Gold,Yes,Running Finish,Bronze,3,0,https://www.dancecentral.info/ballroom/international-style/quickstep/running-finish,docs/figures steps/parsed/chunk_5/quickstep_running-finish.json
+b7b06c8a-b56a-4ffc-b6fa-c108f0be58d8,Running Spin Turn,Waltz,Silver/Gold,Yes,Running Spin Turn,Gold,11,7,https://www.dancecentral.info/ballroom/international-style/quickstep/running-spin-turn,docs/figures steps/parsed/chunk_5/quickstep_running-spin-turn.json
+6082aae8-5469-4dfb-b466-190b3b23976c,Telemark (Closed Telemark),Waltz,Silver/Gold,Yes,Telemark (Closed Telemark),Silver,6,9,https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark,docs/figures steps/parsed/chunk_3/waltz_closed-telemark.json
+24470417-7bdf-4566-92a2-9500ec712014,Turning Lock,Waltz,Silver/Gold,Yes,Turning Lock,Silver,10,18,https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock,docs/figures steps/parsed/chunk_3/waltz_turning-lock.json
+8f2cb481-ea15-4d2c-8e18-0b09d251d1a4,Turning Lock to Right,Waltz,Silver/Gold,Yes,Turning Lock to Right,Gold,8,21,https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r,docs/figures steps/parsed/chunk_3/waltz_turning-lock-to-r.json
+c80dae97-7afd-4db5-a3b9-02acf459defc,Underturned Outside Spin,Waltz,Silver/Gold,No,,,,,,
+a84f4057-96cd-46d4-bdcd-6044dd41ea37,Weave from PP (after Open Impetus Turn),Waltz,Silver/Gold,Yes,Weave from PP (after Open Impetus Turn),Silver,6,22,https://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position,docs/figures steps/parsed/chunk_3/waltz_weave-from-promenade-position.json
+82bd6c4a-26ae-404a-bb75-77495ea2dde4,Weave from PP (after Whisk),Waltz,Silver/Gold,Yes,Weave from PP (after Open Impetus Turn),Silver,6,11,http://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position,docs/figures steps/parsed/chunk_6/waltz_weave-from-promenade-position.json
+a31a5526-599f-456b-a87a-4aa42aff3b14,Weave in Waltz Time,Waltz,Newcomer/Bronze,Yes,Weave in Waltz Time,Bronze,13,24,https://www.dancecentral.info/ballroom/international-style/waltz/basic-weave,docs/figures steps/parsed/chunk_3/waltz_basic-weave.json
+dbe88249-bc63-458c-99ea-dd3de69e1f28,Whisk,Waltz,Newcomer/Bronze,No,,,,,,
+03a1f09f-d59d-4096-95f4-0b8f27f6dbaf,Wing Following Open Impetus Turn,Waltz,Silver/Gold,No,,,,,,
+,,Cha Cha,,No,Alemana,Bronze,11,17,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/alemana,docs/figures steps/parsed/chunk_2/cha-cha-cha_alemana.json
+,,Cha Cha,,No,Cha Cha Cha Closed Basic,Newcomer,4,8,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/cha-cha-basic,docs/figures steps/parsed/chunk_2/cha-cha-cha_cha-cha-basic.json
+,,Cha Cha,,No,HipTwist Spiral,Gold,10,13,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/hip-twist-spiral,docs/figures steps/parsed/chunk_3/cha-cha-cha_hip-twist-spiral.json
+,,Cha Cha,,No,Open Hip Twist,Silver,8,24,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/advanced-hip-twist,docs/figures steps/parsed/chunk_2/cha-cha-cha_advanced-hip-twist.json
+,,Cha Cha,,No,RopeSpinning,Silver,5,10,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/rope-spinning,docs/figures steps/parsed/chunk_1/cha-cha-cha_rope-spinning.json
+,,Cha Cha,,No,Side Step to Left,Newcomer,6,4,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/side-step,docs/figures steps/parsed/chunk_1/cha-cha-cha_side-step.json
+,,Cha Cha,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,4,6,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/curl,docs/figures steps/parsed/chunk_2/cha-cha-cha_curl.json
+,,Cha Cha,,No,Spot or Switch Turn To L (Lady to R),Bronze,6,7,https://www.dancecentral.info/ballroom/international-style/cha-cha-cha/spot-turn,docs/figures steps/parsed/chunk_1/cha-cha-cha_spot-turn.json
+,,Foxtrot,,No,Bounce Fallaway with Weave Ending,Gold,12,33,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_bounce-fallaway-with-weave-ending?src=routine.json
+,,Foxtrot,,No,Bounce Fallaway with Weave Ending,Gold,12,15,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_bounce-fallaway-with-weave-ending?src=routine.json
+,,Foxtrot,,No,Curved Feather,Gold,14,43,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather,docs/figures steps/parsed/chunk_8/slow-foxtrot_curved-feather-to-back-feather.json
+,,Foxtrot,,No,Curved Feather to Back Feather,Gold,14,39,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_curved-feather-to-back-feather?src=routine.json
+,,Foxtrot,,No,Curved Feather to Back Feather,Gold,14,7,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/curved-feather-to-back-feather?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_curved-feather-to-back-feather?src=routine.json
+,,Foxtrot,,No,Fallaway Reverse Slip Pivot,Gold,8,8,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_fallaway-reverse-and-slip-pivot?src=routine.json
+,,Foxtrot,,No,Fallaway Reverse Slip Pivot,Gold,4,10,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/fallaway-reverse-and-slip-pivot?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_fallaway-reverse-and-slip-pivot?src=routine.json
+,,Foxtrot,,No,Foxtrot Fallaway with Weave Ending,Gold,13,29,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/bounce-fallaway-with-weave-ending,docs/figures steps/parsed/chunk_4/slow-foxtrot_bounce-fallaway-with-weave-ending.json
+,,Foxtrot,,No,Hover Cross,Silver,4,12,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross,docs/figures steps/parsed/chunk_7/slow-foxtrot_hover-cross.json
+,,Foxtrot,,No,Hover Cross,Silver,16,52,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_hover-cross?src=routine.json
+,,Foxtrot,,No,Hover Cross,Silver,8,13,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-cross?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_hover-cross?src=routine.json
+,,Foxtrot,,No,Hover Feather,Silver,5,10,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-feather,docs/figures steps/parsed/chunk_7/slow-foxtrot_hover-feather.json
+,,Foxtrot,,No,Hover Feather,Silver,6,14,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-feather?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_hover-feather?src=routine.json
+,,Foxtrot,,No,Hover Feather,Silver,5,17,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-feather?src=routine,docs/figures steps/parsed/chunk_9/slow-foxtrot_hover-feather?src=routine.json
+,,Foxtrot,,No,Hover Telemark,Silver,8,16,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_hover-telemark?src=routine.json
+,,Foxtrot,,No,Hover Telemark,Silver,8,33,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark,docs/figures steps/parsed/chunk_9/slow-foxtrot_hover-telemark.json
+,,Foxtrot,,No,Hover Telemark to PP,Silver,8,22,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark-to-pp,docs/figures steps/parsed/chunk_9/slow-foxtrot_hover-telemark-to-pp.json
+,,Foxtrot,,No,Hover Telemark to Promenade Position,Silver,8,0,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark-to-pp,docs/figures steps/parsed/chunk_5/slow-foxtrot_hover-telemark-to-pp.json
+,,Foxtrot,,No,Natural Hover Telemark,Gold,14,65,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-hover-telemark,docs/figures steps/parsed/chunk_7/slow-foxtrot_natural-hover-telemark.json
+,,Foxtrot,,No,Natural Hover Telemark,Silver,8,12,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/hover-telemark?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_hover-telemark?src=routine.json
+,,Foxtrot,,No,Natural Telemark,Silver,12,33,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_natural-telemark?src=routine.json
+,,Foxtrot,,No,Natural Telemark,Silver,12,29,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark,docs/figures steps/parsed/chunk_7/slow-foxtrot_natural-telemark.json
+,,Foxtrot,,No,Natural Telemark,Silver,2,6,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-telemark?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_natural-telemark?src=routine.json
+,,Foxtrot,,No,Natural Twist Turn,Gold,14,22,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_natural-twist-turn?src=routine.json
+,,Foxtrot,,No,Natural Twist Turn,Gold,13,54,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-twist-turn?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_natural-twist-turn?src=routine.json
+,,Foxtrot,,No,Natural Zig-Zag from PP,Gold,12,37,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp,docs/figures steps/parsed/chunk_7/slow-foxtrot_natural-zig-zag-from-pp.json
+,,Foxtrot,,No,Natural Zig-Zag from PP,Gold,12,7,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp?src=routine,docs/figures steps/parsed/chunk_9/slow-foxtrot_natural-zig-zag-from-pp?src=routine.json
+,,Foxtrot,,No,Natural Zig-Zag from PP,Gold,12,29,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/natural-zig-zag-from-pp?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_natural-zig-zag-from-pp?src=routine.json
+,,Foxtrot,,No,Open Telemark Feather Ending,Silver,10,0,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_open-telemark-and-feather-ending?src=routine.json
+,,Foxtrot,,No,Open Telemark Feather Ending,Silver,13,14,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending,docs/figures steps/parsed/chunk_8/slow-foxtrot_open-telemark-and-feather-ending.json
+,,Foxtrot,,No,Open Telemark Feather Ending,Silver,13,6,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-and-feather-ending?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_open-telemark-and-feather-ending?src=routine.json
+,,Foxtrot,,No,Open Telemark Natural Turn Outside Swivel Feather Ending,Silver,22,64,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine.json
+,,Foxtrot,,No,Open Telemark Natural Turn Outside Swivel Feather Ending,Silver,24,66,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending,docs/figures steps/parsed/chunk_8/slow-foxtrot_open-telemark-natural-turn-to-outside-swivel-and-feather-ending.json
+,,Foxtrot,,No,Open Telemark Natural Turn Outside Swivel Feather Ending,Silver,22,22,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine,docs/figures steps/parsed/chunk_9/slow-foxtrot_open-telemark-natural-turn-to-outside-swivel-and-feather-ending?src=routine.json
+,,Foxtrot,,No,Reverse Wave,Silver,18,24,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/reverse-wave?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_reverse-wave?src=routine.json
+,,Foxtrot,,No,Reverse Wave,Silver,12,25,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/reverse-wave,docs/figures steps/parsed/chunk_9/slow-foxtrot_reverse-wave.json
+,,Foxtrot,,No,Reverse Wave,Silver,11,8,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/reverse-wave?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_reverse-wave?src=routine.json
+,,Foxtrot,,No,Top Spin,Silver,10,25,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_top-spin?src=routine.json
+,,Foxtrot,,No,Top Spin,Silver,4,1,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin,docs/figures steps/parsed/chunk_8/slow-foxtrot_top-spin.json
+,,Foxtrot,,No,Top Spin,Silver,10,14,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/top-spin?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_top-spin?src=routine.json
+,,Foxtrot,,No,Tumble Turn,Gold,3,3,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/tumble-turn,docs/figures steps/parsed/chunk_4/slow-foxtrot_tumble-turn.json
+,,Foxtrot,,No,Weave from PP (after Open Impetus),Silver,6,10,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp?src=routine,docs/figures steps/parsed/chunk_7/slow-foxtrot_weave-from-pp?src=routine.json
+,,Foxtrot,,No,Weave from PP (after Open Impetus),Silver,16,49,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/weave-from-pp,docs/figures steps/parsed/chunk_8/slow-foxtrot_weave-from-pp.json
+,,Jive,,No,Change ofPlaces Right to Left,Newcomer,6,0,https://www.dancecentral.info/ballroom/international-style/jive/change-of-places-right-to-left,docs/figures steps/parsed/chunk_2/jive_change-of-places-right-to-left.json
+,,Jive,,No,Fishtail,Silver,14,22,https://www.dancecentral.info/ballroom/international-style/quickstep/fishtail?src=routine,docs/figures steps/parsed/chunk_10/quickstep_fishtail?src=routine.json
+,,Jive,,No,Natural Turn and Back Lock,Bronze,16,11,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-and-back-lock,docs/figures steps/parsed/chunk_4/quickstep_natural-turn-and-back-lock.json
+,,Jive,,No,RunningFinish,Bronze,8,2,https://www.dancecentral.info/ballroom/international-style/quickstep/running-finish?src=routine,docs/figures steps/parsed/chunk_10/quickstep_running-finish?src=routine.json
+,,Jive,,No,Walks,Bronze,18,5,https://www.dancecentral.info/ballroom/international-style/jive/walks,docs/figures steps/parsed/chunk_3/jive_walks.json
+,,Jive,,No,"Zig-Zag, Back Lock And Running Finish",Bronze,19,48,http://www.dancecentral.info/ballroom/international-style/quickstep/zig-zag-back-lock-and-running-finish,docs/figures steps/parsed/chunk_8/quickstep_zig-zag-back-lock-and-running-finish.json
+,,Quickstep,,No,Backward Lock Step (Back Lock),Bronze,5,3,http://www.dancecentral.info/ballroom/international-style/quickstep/back-lock?src=routine,docs/figures steps/parsed/chunk_9/quickstep_back-lock?src=routine.json
+,,Quickstep,,No,Backward Lock Step (Back Lock),Bronze,5,5,https://www.dancecentral.info/ballroom/international-style/quickstep/back-lock?src=routine,docs/figures steps/parsed/chunk_10/quickstep_back-lock?src=routine.json
+,,Quickstep,,No,Change of Direction,Bronze,2,1,http://www.dancecentral.info/ballroom/international-style/quickstep/change-of-direction,docs/figures steps/parsed/chunk_8/quickstep_change-of-direction.json
+,,Quickstep,,No,Closed Telemark,Silver,10,28,http://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark,docs/figures steps/parsed/chunk_8/quickstep_closed-telemark.json
+,,Quickstep,,No,Closed Telemark,Silver,8,10,http://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark?src=routine,docs/figures steps/parsed/chunk_9/quickstep_closed-telemark?src=routine.json
+,,Quickstep,,No,Closed Telemark,Silver,2,5,https://www.dancecentral.info/ballroom/international-style/quickstep/closed-telemark?src=routine,docs/figures steps/parsed/chunk_10/quickstep_closed-telemark?src=routine.json
+,,Quickstep,,No,Cross Chasse,Bronze,9,22,http://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse,docs/figures steps/parsed/chunk_8/quickstep_cross-chasse.json
+,,Quickstep,,No,Cross Chasse,Bronze,10,15,http://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse?src=routine,docs/figures steps/parsed/chunk_8/quickstep_cross-chasse?src=routine.json
+,,Quickstep,,No,Cross Chasse,Bronze,9,2,https://www.dancecentral.info/ballroom/international-style/quickstep/cross-chasse?src=routine,docs/figures steps/parsed/chunk_10/quickstep_cross-chasse?src=routine.json
+,,Quickstep,,No,Cross Swivel,Gold,6,2,http://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel?src=routine,docs/figures steps/parsed/chunk_8/quickstep_cross-swivel?src=routine.json
+,,Quickstep,,No,Cross Swivel,Gold,6,13,http://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel,docs/figures steps/parsed/chunk_8/quickstep_cross-swivel.json
+,,Quickstep,,No,Cross Swivel,Gold,6,13,https://www.dancecentral.info/ballroom/international-style/quickstep/cross-swivel?src=routine,docs/figures steps/parsed/chunk_10/quickstep_cross-swivel?src=routine.json
+,,Quickstep,,No,Double Reverse Spin,Bronze,7,21,http://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin?src=routine,docs/figures steps/parsed/chunk_8/quickstep_double-reverse-spin?src=routine.json
+,,Quickstep,,No,Double Reverse Spin,Bronze,7,23,https://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin?src=routine,docs/figures steps/parsed/chunk_10/quickstep_double-reverse-spin?src=routine.json
+,,Quickstep,,No,Fish–Tail,Silver,13,3,http://www.dancecentral.info/ballroom/international-style/quickstep/fishtail,docs/figures steps/parsed/chunk_8/quickstep_fishtail.json
+,,Quickstep,,No,Fish–Tail,Silver,14,4,http://www.dancecentral.info/ballroom/international-style/quickstep/fishtail?src=routine,docs/figures steps/parsed/chunk_9/quickstep_fishtail?src=routine.json
+,,Quickstep,,No,Four Quick Run,Silver,6,8,http://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run,docs/figures steps/parsed/chunk_8/quickstep_four-quick-run.json
+,,Quickstep,,No,Four Quick Run,Silver,14,18,http://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run?src=routine,docs/figures steps/parsed/chunk_9/quickstep_four-quick-run?src=routine.json
+,,Quickstep,,No,Four Quick Run,Silver,13,21,https://www.dancecentral.info/ballroom/international-style/quickstep/four-quick-run?src=routine,docs/figures steps/parsed/chunk_10/quickstep_four-quick-run?src=routine.json
+,,Quickstep,,No,Hover Corté,Gold,9,36,http://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine,docs/figures steps/parsed/chunk_8/quickstep_hover-corte?src=routine.json
+,,Quickstep,,No,Hover Corté,Gold,8,24,http://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte,docs/figures steps/parsed/chunk_8/quickstep_hover-corte.json
+,,Quickstep,,No,Hover Corté,Gold,8,29,https://www.dancecentral.info/ballroom/international-style/quickstep/hover-corte?src=routine,docs/figures steps/parsed/chunk_10/quickstep_hover-corte?src=routine.json
+,,Quickstep,,No,Natural Pivot Turn,Newcomer,8,20,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn,docs/figures steps/parsed/chunk_8/quickstep_natural-pivot-turn.json
+,,Quickstep,,No,Natural Pivot Turn,Newcomer,8,24,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn?src=routine,docs/figures steps/parsed/chunk_10/quickstep_natural-pivot-turn?src=routine.json
+,,Quickstep,,No,Natural Spin Turn,Newcomer,12,35,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn,docs/figures steps/parsed/chunk_8/quickstep_natural-spin-turn.json
+,,Quickstep,,No,Natural Spin Turn,Newcomer,12,30,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn?src=routine,docs/figures steps/parsed/chunk_9/quickstep_natural-spin-turn?src=routine.json
+,,Quickstep,,No,Natural Spin Turn,Newcomer,12,28,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-spin-turn?src=routine,docs/figures steps/parsed/chunk_10/quickstep_natural-spin-turn?src=routine.json
+,,Quickstep,,No,Natural Turn (at a Corner),Newcomer,12,0,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn?src=routine,docs/figures steps/parsed/chunk_8/quickstep_natural-turn?src=routine.json
+,,Quickstep,,No,Natural Turn (at a Corner),Newcomer,10,6,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn,docs/figures steps/parsed/chunk_8/quickstep_natural-turn.json
+,,Quickstep,,No,Natural Turn andBack Lock,Bronze,1,0,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-and-back-lock,docs/figures steps/parsed/chunk_8/quickstep_natural-turn-and-back-lock.json
+,,Quickstep,,No,Natural Turn andBack Lock,Bronze,8,17,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-and-back-lock?src=routine,docs/figures steps/parsed/chunk_8/quickstep_natural-turn-and-back-lock?src=routine.json
+,,Quickstep,,No,Natural Turn with Hesitation,Newcomer,12,20,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation,docs/figures steps/parsed/chunk_8/quickstep_natural-turn-with-hesitation.json
+,,Quickstep,,No,Natural Turn with Hesitation,Newcomer,12,4,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation?src=routine,docs/figures steps/parsed/chunk_10/quickstep_natural-turn-with-hesitation?src=routine.json
+,,Quickstep,,No,NaturalTurn and Back Lock,Bronze,7,13,https://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-and-back-lock?src=routine,docs/figures steps/parsed/chunk_10/quickstep_natural-turn-and-back-lock?src=routine.json
+,,Quickstep,,No,Quarter Turn to Right,Silver,16,6,https://www.dancecentral.info/ballroom/international-style/quickstep/v6,docs/figures steps/parsed/chunk_5/quickstep_v6.json
+,,Quickstep,,No,Quarter Turn to Right,Newcomer,8,7,http://www.dancecentral.info/ballroom/international-style/quickstep/quarter-turn-to-right,docs/figures steps/parsed/chunk_8/quickstep_quarter-turn-to-right.json
+,,Quickstep,,No,Quick Open Reverse,Silver,8,4,http://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse,docs/figures steps/parsed/chunk_8/quickstep_quick-open-reverse.json
+,,Quickstep,,No,Quick Open Reverse,Silver,10,27,http://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse?src=routine,docs/figures steps/parsed/chunk_9/quickstep_quick-open-reverse?src=routine.json
+,,Quickstep,,No,Quick Open Reverse,Silver,4,10,https://www.dancecentral.info/ballroom/international-style/quickstep/quick-open-reverse?src=routine,docs/figures steps/parsed/chunk_10/quickstep_quick-open-reverse?src=routine.json
+,,Quickstep,,No,QuickstepV6,Silver,16,25,https://www.dancecentral.info/ballroom/international-style/quickstep/v6?src=routine,docs/figures steps/parsed/chunk_10/quickstep_v6?src=routine.json
+,,Quickstep,,No,Reverse Pivot,Bronze,2,2,http://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot,docs/figures steps/parsed/chunk_8/quickstep_reverse-pivot.json
+,,Quickstep,,No,Reverse Pivot,Bronze,2,8,https://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot?src=routine,docs/figures steps/parsed/chunk_10/quickstep_reverse-pivot?src=routine.json
+,,Quickstep,,No,Rumba Cross,Gold,3,8,https://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross?src=routine,docs/figures steps/parsed/chunk_10/quickstep_rumba-cross?src=routine.json
+,,Quickstep,,No,Running Right Turn,Silver,17,52,http://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn,docs/figures steps/parsed/chunk_8/quickstep_running-right-turn.json
+,,Quickstep,,No,Running Right Turn,Silver,1,4,http://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn?src=routine,docs/figures steps/parsed/chunk_9/quickstep_running-right-turn?src=routine.json
+,,Quickstep,,No,Running Right Turn,Silver,1,6,https://www.dancecentral.info/ballroom/international-style/quickstep/running-right-turn?src=routine,docs/figures steps/parsed/chunk_10/quickstep_running-right-turn?src=routine.json
+,,Quickstep,,No,Six Quick Run,Gold,12,11,http://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run,docs/figures steps/parsed/chunk_8/quickstep_six-quick-run.json
+,,Quickstep,,No,Six Quick Run,Gold,14,8,https://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run?src=routine,docs/figures steps/parsed/chunk_10/quickstep_six-quick-run?src=routine.json
+,,Quickstep,,No,Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room),Bronze,8,0,http://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r,docs/figures steps/parsed/chunk_8/quickstep_tipple-chasse-to-r.json
+,,Quickstep,,No,Tipple Chasse to Right (after step 4 of a Back Lock) (along side of room),Bronze,16,7,https://www.dancecentral.info/ballroom/international-style/quickstep/tipple-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_10/quickstep_tipple-chasse-to-r?src=routine.json
+,,Quickstep,,No,Tipsy To Right and Left,Gold,6,8,https://www.dancecentral.info/ballroom/international-style/quickstep/tipsy-to-right-and-left,docs/figures steps/parsed/chunk_5/quickstep_tipsy-to-right-and-left.json
+,,Quickstep,,No,Tipsy to Right,Gold,6,8,http://www.dancecentral.info/ballroom/international-style/quickstep/tipsy-to-right-and-left?src=routine,docs/figures steps/parsed/chunk_9/quickstep_tipsy-to-right-and-left?src=routine.json
+,,Quickstep,,No,Tipsy to Right,Gold,6,13,https://www.dancecentral.info/ballroom/international-style/quickstep/tipsy-to-right-and-left?src=routine,docs/figures steps/parsed/chunk_10/quickstep_tipsy-to-right-and-left?src=routine.json
+,,Quickstep,,No,V-6 (after 1-3 of Nat. Turn),Silver,8,11,http://www.dancecentral.info/ballroom/international-style/quickstep/v6?src=routine,docs/figures steps/parsed/chunk_9/quickstep_v6?src=routine.json
+,,Rumba,,No,Advanced HipTwists,Gold,6,4,http://www.dancecentral.info/ballroom/international-style/rumba/advanced-hip-twists,docs/figures steps/parsed/chunk_5/rumba_advanced-hip-twists.json
+,,Rumba,,No,Alemana,Bronze,13,9,http://www.dancecentral.info/ballroom/international-style/rumba/alemana,docs/figures steps/parsed/chunk_5/rumba_alemana.json
+,,Rumba,,No,Closed Basic Movement,Newcomer,6,6,https://www.dancecentral.info/ballroom/international-style/rumba/basic-movements,docs/figures steps/parsed/chunk_2/rumba_basic-movements.json
+,,Rumba,,No,Closed Hip Twist,Bronze,10,18,http://www.dancecentral.info/ballroom/international-style/rumba/closed-hip-twist,docs/figures steps/parsed/chunk_5/rumba_closed-hip-twist.json
+,,Rumba,,No,ContinuousHip Twists,Gold,6,7,https://www.dancecentral.info/ballroom/international-style/rumba/continuous-hip-twists,docs/figures steps/parsed/chunk_2/rumba_continuous-hip-twists.json
+,,Rumba,,No,Cucarachas (LF and RF),Newcomer,6,0,http://www.dancecentral.info/ballroom/international-style/rumba/cucarachas,docs/figures steps/parsed/chunk_6/rumba_cucarachas.json
+,,Rumba,,No,Fencing,Gold,6,0,http://www.dancecentral.info/ballroom/international-style/rumba/fencing,docs/figures steps/parsed/chunk_6/rumba_fencing.json
+,,Rumba,,No,Hand To Hand RSP,Newcomer,6,7,http://www.dancecentral.info/ballroom/international-style/rumba/hand-to-hand,docs/figures steps/parsed/chunk_5/rumba_hand-to-hand.json
+,,Rumba,,No,"Hip Twists (Advanced, Continuous and Circular)",Gold,6,3,https://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists,docs/figures steps/parsed/chunk_2/rumba_circular-hip-twists.json
+,,Rumba,,No,"Hip Twists (Advanced, Continuous and Circular)",Gold,6,5,http://www.dancecentral.info/ballroom/international-style/rumba/continuous-hip-twists,docs/figures steps/parsed/chunk_5/rumba_continuous-hip-twists.json
+,,Rumba,,No,"Hip Twists (Advanced, Continuous and Circular)",Gold,2,4,http://www.dancecentral.info/ballroom/international-style/rumba/circular-hip-twists,docs/figures steps/parsed/chunk_5/rumba_circular-hip-twists.json
+,,Rumba,,No,Hockey Stick,Bronze,5,0,http://www.dancecentral.info/ballroom/international-style/rumba/hockey-stick,docs/figures steps/parsed/chunk_5/rumba_hockey-stick.json
+,,Rumba,,No,Natural Opening Out Movement,Bronze,10,4,http://www.dancecentral.info/ballroom/international-style/rumba/opening-out-to-right-and-left,docs/figures steps/parsed/chunk_6/rumba_opening-out-to-right-and-left.json
+,,Rumba,,No,Natural Opening Out Movement,Bronze,6,1,http://www.dancecentral.info/ballroom/international-style/rumba/natural-opening-out-movement,docs/figures steps/parsed/chunk_6/rumba_natural-opening-out-movement.json
+,,Rumba,,No,Natural Top,Bronze,8,7,http://www.dancecentral.info/ballroom/international-style/rumba/natural-top,docs/figures steps/parsed/chunk_6/rumba_natural-top.json
+,,Rumba,,No,New York (to LSP or RSP) Check from OCPP or OPP,Newcomer,6,6,http://www.dancecentral.info/ballroom/international-style/rumba/new-york,docs/figures steps/parsed/chunk_5/rumba_new-york.json
+,,Rumba,,No,Open Hip Twist,Silver,8,7,http://www.dancecentral.info/ballroom/international-style/rumba/open-hip-twist,docs/figures steps/parsed/chunk_5/rumba_open-hip-twist.json
+,,Rumba,,No,Opening Out from Reverse Top,Silver,6,0,http://www.dancecentral.info/ballroom/international-style/rumba/opening-out-from-reverse-top,docs/figures steps/parsed/chunk_5/rumba_opening-out-from-reverse-top.json
+,,Rumba,,No,Progressive Walks Forward,Newcomer,6,0,http://www.dancecentral.info/ballroom/international-style/rumba/progressive-walks,docs/figures steps/parsed/chunk_5/rumba_progressive-walks.json
+,,Rumba,,No,Rumba Closed Basic Movements,Newcomer,6,12,http://www.dancecentral.info/ballroom/international-style/rumba/basic-movements,docs/figures steps/parsed/chunk_5/rumba_basic-movements.json
+,,Rumba,,No,Rumba Cross,Gold,8,10,http://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross,docs/figures steps/parsed/chunk_8/quickstep_rumba-cross.json
+,,Rumba,,No,Rumba Cross,Gold,2,6,http://www.dancecentral.info/ballroom/international-style/quickstep/rumba-cross?src=routine,docs/figures steps/parsed/chunk_8/quickstep_rumba-cross?src=routine.json
+,,Rumba,,No,Shoulder to Shoulder (Left Side and Right Side) Development,Newcomer,2,7,http://www.dancecentral.info/ballroom/international-style/rumba/shoulder-to-shoulder,docs/figures steps/parsed/chunk_6/rumba_shoulder-to-shoulder.json
+,,Rumba,,No,Side Step toLeft,Newcomer,0,0,http://www.dancecentral.info/ballroom/international-style/rumba/side-steps,docs/figures steps/parsed/chunk_5/rumba_side-steps.json
+,,Rumba,,No,Sliding Doors,Gold,12,13,http://www.dancecentral.info/ballroom/international-style/rumba/sliding-doors,docs/figures steps/parsed/chunk_5/rumba_sliding-doors.json
+,,Rumba,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,8,3,https://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning,docs/figures steps/parsed/chunk_2/rumba_rope-spinning.json
+,,Rumba,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,4,4,https://www.dancecentral.info/ballroom/international-style/rumba/spiral,docs/figures steps/parsed/chunk_2/rumba_spiral.json
+,,Rumba,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,7,4,http://www.dancecentral.info/ballroom/international-style/rumba/curl,docs/figures steps/parsed/chunk_5/rumba_curl.json
+,,Rumba,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,8,6,http://www.dancecentral.info/ballroom/international-style/rumba/rope-spinning,docs/figures steps/parsed/chunk_5/rumba_rope-spinning.json
+,,Rumba,,No,"Spiral Turns (Spiral, Curl and Rope Spinning)",Silver,4,4,http://www.dancecentral.info/ballroom/international-style/rumba/spiral,docs/figures steps/parsed/chunk_5/rumba_spiral.json
+,,Rumba,,No,Spot Turns to L or R (Including Switch and Underarm Turns) Developments (CHA_CHA_CHA),Newcomer,6,6,http://www.dancecentral.info/ballroom/international-style/rumba/spot-turns,docs/figures steps/parsed/chunk_5/rumba_spot-turns.json
+,,Rumba,,No,Three Alemanas,Gold,9,7,http://www.dancecentral.info/ballroom/international-style/rumba/three-alemanas,docs/figures steps/parsed/chunk_6/rumba_three-alemanas.json
+,,Rumba,,No,Three Threes,Gold,15,0,http://www.dancecentral.info/ballroom/international-style/rumba/three-threes,docs/figures steps/parsed/chunk_5/rumba_three-threes.json
+,,Samba,,No,BackRocks,Silver,12,6,https://www.dancecentral.info/ballroom/international-style/samba/back-rocks,docs/figures steps/parsed/chunk_1/samba_back-rocks.json
+,,Samba,,No,Cuban Rocks,Newcomer,3,0,https://www.dancecentral.info/ballroom/international-style/rumba/cuban-rocks,docs/figures steps/parsed/chunk_2/rumba_cuban-rocks.json
+,,Samba,,No,Whisk to Left,Newcomer,2,2,https://www.dancecentral.info/ballroom/international-style/samba/whisk,docs/figures steps/parsed/chunk_1/samba_whisk.json
+,,Tango,,No,(Natural) Rock Turn,Newcomer,13,21,http://www.dancecentral.info/ballroom/international-style/tango/rock-turn,docs/figures steps/parsed/chunk_6/tango_rock-turn.json
+,,Tango,,No,(Natural) Rock Turn,Newcomer,14,24,http://www.dancecentral.info/ballroom/international-style/tango/rock-turn?src=routine,docs/figures steps/parsed/chunk_6/tango_rock-turn?src=routine.json
+,,Tango,,No,(Natural) Rock Turn,Newcomer,13,3,https://www.dancecentral.info/ballroom/international-style/tango/rock-turn?src=routine,docs/figures steps/parsed/chunk_9/tango_rock-turn?src=routine.json
+,,Tango,,No,Back Corté,Newcomer,8,12,http://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine,docs/figures steps/parsed/chunk_6/tango_back-corte?src=routine.json
+,,Tango,,No,Back Corté,Newcomer,8,3,http://www.dancecentral.info/ballroom/international-style/tango/back-corte,docs/figures steps/parsed/chunk_6/tango_back-corte.json
+,,Tango,,No,Back Corté,Newcomer,8,2,https://www.dancecentral.info/ballroom/international-style/tango/back-corte?src=routine,docs/figures steps/parsed/chunk_9/tango_back-corte?src=routine.json
+,,Tango,,No,Closed Promenade,Newcomer,8,20,http://www.dancecentral.info/ballroom/international-style/tango/closed-promenade?src=routine,docs/figures steps/parsed/chunk_6/tango_closed-promenade?src=routine.json
+,,Tango,,No,Closed Promenade,Newcomer,9,14,http://www.dancecentral.info/ballroom/international-style/tango/closed-promenade,docs/figures steps/parsed/chunk_6/tango_closed-promenade.json
+,,Tango,,No,Closed Promenade,Newcomer,8,14,https://www.dancecentral.info/ballroom/international-style/tango/closed-promenade?src=routine,docs/figures steps/parsed/chunk_9/tango_closed-promenade?src=routine.json
+,,Tango,,No,Natural Promenade Turn,Bronze,8,11,http://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn?src=routine,docs/figures steps/parsed/chunk_6/tango_natural-promenade-turn?src=routine.json
+,,Tango,,No,Natural Promenade Turn,Bronze,8,2,http://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn,docs/figures steps/parsed/chunk_6/tango_natural-promenade-turn.json
+,,Tango,,No,Natural Promenade Turn,Bronze,8,6,https://www.dancecentral.info/ballroom/international-style/tango/natural-promenade-turn?src=routine,docs/figures steps/parsed/chunk_9/tango_natural-promenade-turn?src=routine.json
+,,Tango,,No,Natural Twist Turn,Bronze,12,12,http://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn?src=routine,docs/figures steps/parsed/chunk_6/tango_natural-twist-turn?src=routine.json
+,,Tango,,No,Natural Twist Turn,Bronze,12,14,http://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn,docs/figures steps/parsed/chunk_6/tango_natural-twist-turn.json
+,,Tango,,No,Natural Twist Turn,Bronze,12,12,https://www.dancecentral.info/ballroom/international-style/tango/natural-twist-turn?src=routine,docs/figures steps/parsed/chunk_9/tango_natural-twist-turn?src=routine.json
+,,Tango,,No,Open Promenade,Bronze,4,4,http://www.dancecentral.info/ballroom/international-style/tango/open-promenade,docs/figures steps/parsed/chunk_7/tango_open-promenade.json
+,,Tango,,No,Open Promenade,Bronze,7,5,https://www.dancecentral.info/ballroom/international-style/tango/open-promenade?src=routine,docs/figures steps/parsed/chunk_9/tango_open-promenade?src=routine.json
+,,Tango,,No,Open Reverse Turn,Newcomer,8,1,https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside,docs/figures steps/parsed/chunk_3/tango_open-reverse-turn-lady-outside.json
+,,Tango,,No,Open Reverse Turn,Bronze,8,12,https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside,docs/figures steps/parsed/chunk_3/tango_open-reverse-turn-lady-inside.json
+,,Tango,,No,Open Reverse Turn,Bronze,9,5,http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside,docs/figures steps/parsed/chunk_6/tango_open-reverse-turn-lady-inside.json
+,,Tango,,No,Open Reverse Turn,Newcomer,9,2,http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside?src=routine,docs/figures steps/parsed/chunk_6/tango_open-reverse-turn-lady-outside?src=routine.json
+,,Tango,,No,Open Reverse Turn,Bronze,12,0,https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-inside?src=routine,docs/figures steps/parsed/chunk_9/tango_open-reverse-turn-lady-inside?src=routine.json
+,,Tango,,No,"Open Reverse, Lady Outside (Open Finish)",Newcomer,9,5,http://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside,docs/figures steps/parsed/chunk_6/tango_open-reverse-turn-lady-outside.json
+,,Tango,,No,"Open Reverse, Lady Outside (Open Finish)",Newcomer,10,0,https://www.dancecentral.info/ballroom/international-style/tango/open-reverse-turn-lady-outside?src=routine,docs/figures steps/parsed/chunk_9/tango_open-reverse-turn-lady-outside?src=routine.json
+,,Tango,,No,Progressive Link,Newcomer,4,58,http://www.dancecentral.info/ballroom/international-style/tango/progressive-link,docs/figures steps/parsed/chunk_6/tango_progressive-link.json
+,,Tango,,No,Progressive Link,Newcomer,4,19,http://www.dancecentral.info/ballroom/international-style/tango/progressive-link?src=routine,docs/figures steps/parsed/chunk_6/tango_progressive-link?src=routine.json
+,,Tango,,No,Progressive Link,Newcomer,5,15,https://www.dancecentral.info/ballroom/international-style/tango/progressive-link?src=routine,docs/figures steps/parsed/chunk_9/tango_progressive-link?src=routine.json
+,,Tango,,No,Progressive Side Step,Newcomer,6,5,http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step,docs/figures steps/parsed/chunk_6/tango_progressive-side-step.json
+,,Tango,,No,Progressive Side Step,Newcomer,6,8,http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step?src=routine,docs/figures steps/parsed/chunk_6/tango_progressive-side-step?src=routine.json
+,,Tango,,No,Progressive Side Step,Newcomer,6,3,https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step?src=routine,docs/figures steps/parsed/chunk_9/tango_progressive-side-step?src=routine.json
+,,Tango,,No,Progressive Side Step Reverse Turn,Bronze,17,3,http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn?src=routine,docs/figures steps/parsed/chunk_6/tango_progressive-side-step-reverse-turn?src=routine.json
+,,Tango,,No,Progressive Side Step Reverse Turn,Bronze,2,6,http://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn,docs/figures steps/parsed/chunk_7/tango_progressive-side-step-reverse-turn.json
+,,Tango,,No,Progressive Side Step Reverse Turn,Bronze,4,6,https://www.dancecentral.info/ballroom/international-style/tango/progressive-side-step-reverse-turn?src=routine,docs/figures steps/parsed/chunk_9/tango_progressive-side-step-reverse-turn?src=routine.json
+,,Tango,,No,Tango Walk,Newcomer,4,19,http://www.dancecentral.info/ballroom/international-style/tango/walk,docs/figures steps/parsed/chunk_6/tango_walk.json
+,,Tango,,No,Tango Walk,Newcomer,4,7,http://www.dancecentral.info/ballroom/international-style/tango/walk?src=routine,docs/figures steps/parsed/chunk_6/tango_walk?src=routine.json
+,,Tango,,No,Tango Walk,Newcomer,5,6,https://www.dancecentral.info/ballroom/international-style/tango/walk?src=routine,docs/figures steps/parsed/chunk_9/tango_walk?src=routine.json
+,,Viennese Waltz,,No,Natural Fleckerl,Gold,6,3,http://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-fleckerl,docs/figures steps/parsed/chunk_7/viennese-waltz_natural-fleckerl.json
+,,Viennese Waltz,,No,Reverse Fleckerl,Silver,6,2,http://www.dancecentral.info/ballroom/international-style/viennese-waltz/reverse-fleckerl,docs/figures steps/parsed/chunk_7/viennese-waltz_reverse-fleckerl.json
+,,Waltz,,No,Closed Wing,Gold,6,0,http://www.dancecentral.info/ballroom/international-style/waltz/closed-wing,docs/figures steps/parsed/chunk_6/waltz_closed-wing.json
+,,Waltz,,No,Contra Check,Gold,3,1,http://www.dancecentral.info/ballroom/international-style/waltz/contra-check,docs/figures steps/parsed/chunk_6/waltz_contra-check.json
+,,Waltz,,No,Contra Check,Gold,6,23,http://www.dancecentral.info/ballroom/international-style/waltz/contra-check?src=routine,docs/figures steps/parsed/chunk_7/waltz_contra-check?src=routine.json
+,,Waltz,,No,Contra Check,Gold,6,39,https://www.dancecentral.info/ballroom/international-style/waltz/contra-check?src=routine,docs/figures steps/parsed/chunk_9/waltz_contra-check?src=routine.json
+,,Waltz,,No,Cross Hesitation after Open Impetus Turn,Silver,6,12,https://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation?src=routine,docs/figures steps/parsed/chunk_9/waltz_open-impetus-and-cross-hesitation?src=routine.json
+,,Waltz,,No,Double Reverse Spin,Bronze,3,18,http://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin,docs/figures steps/parsed/chunk_6/waltz_double-reverse-spin.json
+,,Waltz,,No,Double Reverse Spin,Bronze,6,29,http://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin?src=routine,docs/figures steps/parsed/chunk_7/waltz_double-reverse-spin?src=routine.json
+,,Waltz,,No,Double Reverse Spin,Bronze,6,17,http://www.dancecentral.info/ballroom/international-style/quickstep/double-reverse-spin,docs/figures steps/parsed/chunk_8/quickstep_double-reverse-spin.json
+,,Waltz,,No,Double Reverse Spin,Bronze,6,18,https://www.dancecentral.info/ballroom/international-style/waltz/double-reverse-spin?src=routine,docs/figures steps/parsed/chunk_9/waltz_double-reverse-spin?src=routine.json
+,,Waltz,,No,Fallaway Reverse and Slip Pivot,Gold,8,7,http://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot,docs/figures steps/parsed/chunk_6/waltz_fallaway-reverse-and-slip-pivot.json
+,,Waltz,,No,Fallaway Reverse and Slip Pivot,Gold,8,17,http://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot?src=routine,docs/figures steps/parsed/chunk_7/waltz_fallaway-reverse-and-slip-pivot?src=routine.json
+,,Waltz,,No,Fallaway Reverse and Slip Pivot,Gold,8,7,https://www.dancecentral.info/ballroom/international-style/waltz/fallaway-reverse-and-slip-pivot?src=routine,docs/figures steps/parsed/chunk_9/waltz_fallaway-reverse-and-slip-pivot?src=routine.json
+,,Waltz,,No,Hover Corté,Gold,6,15,http://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine,docs/figures steps/parsed/chunk_7/waltz_hover-corte?src=routine.json
+,,Waltz,,No,Hover Corté,Gold,6,5,https://www.dancecentral.info/ballroom/international-style/waltz/hover-corte?src=routine,docs/figures steps/parsed/chunk_9/waltz_hover-corte?src=routine.json
+,,Waltz,,No,Left Whisk,Gold,3,0,http://www.dancecentral.info/ballroom/international-style/waltz/left-whisk,docs/figures steps/parsed/chunk_7/waltz_left-whisk.json
+,,Waltz,,No,Left Whisk,Gold,6,7,http://www.dancecentral.info/ballroom/international-style/waltz/left-whisk?src=routine,docs/figures steps/parsed/chunk_7/waltz_left-whisk?src=routine.json
+,,Waltz,,No,Left Whisk,Gold,6,23,https://www.dancecentral.info/ballroom/international-style/waltz/left-whisk?src=routine,docs/figures steps/parsed/chunk_9/waltz_left-whisk?src=routine.json
+,,Waltz,,No,Natural Pivot Turn,Newcomer,8,9,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-pivot-turn?src=routine,docs/figures steps/parsed/chunk_9/quickstep_natural-pivot-turn?src=routine.json
+,,Waltz,,No,Natural Turn with Hesitation,Newcomer,12,30,http://www.dancecentral.info/ballroom/international-style/quickstep/natural-turn-with-hesitation?src=routine,docs/figures steps/parsed/chunk_9/quickstep_natural-turn-with-hesitation?src=routine.json
+,,Waltz,,No,Open Impetus Turn,Silver,6,2,https://www.dancecentral.info/ballroom/international-style/waltz/open-impetus-and-cross-hesitation,docs/figures steps/parsed/chunk_4/waltz_open-impetus-and-cross-hesitation.json
+,,Waltz,,No,Open Impetus Turn,Silver,8,11,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus,docs/figures steps/parsed/chunk_5/slow-foxtrot_open-impetus.json
+,,Waltz,,No,Open Impetus Turn,Silver,8,7,http://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus,docs/figures steps/parsed/chunk_8/slow-foxtrot_open-impetus.json
+,,Waltz,,No,Open Impetus Turn,Silver,8,9,https://www.dancecentral.info/ballroom/international-style/slow-foxtrot/open-impetus?src=routine,docs/figures steps/parsed/chunk_10/slow-foxtrot_open-impetus?src=routine.json
+,,Waltz,,No,Open Telemark,Silver,12,8,https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing,docs/figures steps/parsed/chunk_4/waltz_open-telemark-and-wing.json
+,,Waltz,,No,Open Telemark and Wing,Silver,1,0,http://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing?src=routine,docs/figures steps/parsed/chunk_7/waltz_open-telemark-and-wing?src=routine.json
+,,Waltz,,No,Open Telemark and Wing,Silver,6,0,https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-wing?src=routine,docs/figures steps/parsed/chunk_9/waltz_open-telemark-and-wing?src=routine.json
+,,Waltz,,No,Open Telemark into Cross Hesitation,Silver,6,18,http://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation?src=routine,docs/figures steps/parsed/chunk_7/waltz_open-telemark-and-cross-hesitation?src=routine.json
+,,Waltz,,No,Open Telemark into Cross Hesitation,Silver,12,32,https://www.dancecentral.info/ballroom/international-style/waltz/open-telemark-and-cross-hesitation?src=routine,docs/figures steps/parsed/chunk_9/waltz_open-telemark-and-cross-hesitation?src=routine.json
+,,Waltz,,No,Progressive Chasse to Right,Bronze,10,9,https://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r,docs/figures steps/parsed/chunk_4/quickstep_progressive-chasse-to-r.json
+,,Waltz,,No,Progressive Chasse to Right,Bronze,8,6,http://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r,docs/figures steps/parsed/chunk_6/waltz_progressive-chasse-to-r.json
+,,Waltz,,No,Progressive Chasse to Right,Bronze,10,14,http://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_8/quickstep_progressive-chasse-to-r?src=routine.json
+,,Waltz,,No,Progressive Chasse to Right,Bronze,10,5,http://www.dancecentral.info/ballroom/international-style/quickstep/progressive-chasse-to-r,docs/figures steps/parsed/chunk_8/quickstep_progressive-chasse-to-r.json
+,,Waltz,,No,Progressive Chasse to Right,Bronze,8,25,https://www.dancecentral.info/ballroom/international-style/waltz/progressive-chasse-to-r?src=routine,docs/figures steps/parsed/chunk_9/waltz_progressive-chasse-to-r?src=routine.json
+,,Waltz,,No,Reverse Corte,Bronze,6,12,http://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte,docs/figures steps/parsed/chunk_7/waltz_reverse-corte.json
+,,Waltz,,No,Reverse Corte,Bronze,6,6,http://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte?src=routine,docs/figures steps/parsed/chunk_7/waltz_reverse-corte?src=routine.json
+,,Waltz,,No,Reverse Corte,Bronze,6,9,https://www.dancecentral.info/ballroom/international-style/waltz/reverse-corte?src=routine,docs/figures steps/parsed/chunk_9/waltz_reverse-corte?src=routine.json
+,,Waltz,,No,Reverse Pivot,Bronze,2,0,https://www.dancecentral.info/ballroom/international-style/quickstep/reverse-pivot,docs/figures steps/parsed/chunk_5/quickstep_reverse-pivot.json
+,,Waltz,,No,Reverse Pivot,Bronze,2,10,http://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot,docs/figures steps/parsed/chunk_6/waltz_reverse-pivot.json
+,,Waltz,,No,Reverse Pivot,Bronze,2,6,http://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot?src=routine,docs/figures steps/parsed/chunk_7/waltz_reverse-pivot?src=routine.json
+,,Waltz,,No,Reverse Pivot,Bronze,2,5,https://www.dancecentral.info/ballroom/international-style/waltz/reverse-pivot?src=routine,docs/figures steps/parsed/chunk_9/waltz_reverse-pivot?src=routine.json
+,,Waltz,,No,Running Finish,Bronze,8,7,http://www.dancecentral.info/ballroom/international-style/quickstep/running-finish?src=routine,docs/figures steps/parsed/chunk_8/quickstep_running-finish?src=routine.json
+,,Waltz,,No,Six Quick Run,Gold,13,19,http://www.dancecentral.info/ballroom/international-style/quickstep/six-quick-run?src=routine,docs/figures steps/parsed/chunk_8/quickstep_six-quick-run?src=routine.json
+,,Waltz,,No,Telemark (Closed Telemark),Silver,6,8,http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine,docs/figures steps/parsed/chunk_7/waltz_closed-telemark?src=routine.json
+,,Waltz,,No,Telemark (Closed Telemark),Silver,6,12,http://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark,docs/figures steps/parsed/chunk_7/waltz_closed-telemark.json
+,,Waltz,,No,Telemark (Closed Telemark),Silver,7,1,https://www.dancecentral.info/ballroom/international-style/waltz/closed-telemark?src=routine,docs/figures steps/parsed/chunk_10/waltz_closed-telemark?src=routine.json
+,,Waltz,,No,Tipsy to Right,Gold,6,16,http://www.dancecentral.info/ballroom/international-style/quickstep/tipsy-to-right-and-left,docs/figures steps/parsed/chunk_8/quickstep_tipsy-to-right-and-left.json
+,,Waltz,,No,Turning Lock,Gold,8,16,http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r,docs/figures steps/parsed/chunk_6/waltz_turning-lock-to-r.json
+,,Waltz,,No,Turning Lock,Gold,4,8,https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r?src=routine,docs/figures steps/parsed/chunk_9/waltz_turning-lock-to-r?src=routine.json
+,,Waltz,,No,Turning Lock to Right,Silver,8,20,http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock,docs/figures steps/parsed/chunk_6/waltz_turning-lock.json
+,,Waltz,,No,Turning Lock to Right,Silver,10,16,http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock?src=routine,docs/figures steps/parsed/chunk_7/waltz_turning-lock?src=routine.json
+,,Waltz,,No,Turning Lock to Right,Gold,8,17,http://www.dancecentral.info/ballroom/international-style/waltz/turning-lock-to-r?src=routine,docs/figures steps/parsed/chunk_7/waltz_turning-lock-to-r?src=routine.json
+,,Waltz,,No,Turning Lock to Right,Silver,9,2,https://www.dancecentral.info/ballroom/international-style/waltz/turning-lock?src=routine,docs/figures steps/parsed/chunk_9/waltz_turning-lock?src=routine.json
+,,Waltz,,No,Weave from PP (after Open Impetus Turn),Silver,6,11,http://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position?src=routine,docs/figures steps/parsed/chunk_7/waltz_weave-from-promenade-position?src=routine.json
+,,Waltz,,No,Weave from PP (after Open Impetus Turn),Silver,12,7,https://www.dancecentral.info/ballroom/international-style/waltz/weave-from-promenade-position?src=routine,docs/figures steps/parsed/chunk_9/waltz_weave-from-promenade-position?src=routine.json
+,,Waltz,,No,Weave in Waltz Time,Bronze,6,7,http://www.dancecentral.info/ballroom/international-style/waltz/basic-weave?src=routine,docs/figures steps/parsed/chunk_7/waltz_basic-weave?src=routine.json
+,,Waltz,,No,Weave in Waltz Time,Bronze,13,19,https://www.dancecentral.info/ballroom/international-style/waltz/basic-weave?src=routine,docs/figures steps/parsed/chunk_9/waltz_basic-weave?src=routine.json

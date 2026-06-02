@@ -13,6 +13,20 @@ data class DanceFigureRequest(
     val danceTypeId: UUID? = null,
 
     val danceClass: DanceClass? = null,
+    val alternativeTiming: String? = null,
 
-    val alternativeTiming: String? = null
+    val startingFootLeader: String? = null,
+    val endingFootLeader: String? = null,
+    val startingFootFollower: String? = null,
+    val endingFootFollower: String? = null,
+    val startingPosition: String? = null,
+    val endingPosition: String? = null,
+
+    val precedingFigureNames: List<String> = emptyList(),
+    val followingFigureNames: List<String> = emptyList(),
+
+    val notes: String? = null,
+
+    val steps: MutableList<DanceFigureStepRequest> = mutableListOf(),
+    val links: MutableList<DanceFigureLinkRequest> = mutableListOf()
 )
