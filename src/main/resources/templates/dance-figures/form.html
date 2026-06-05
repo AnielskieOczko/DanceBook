@@ -116,17 +116,17 @@
                 <!-- Partial Import Options -->
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold bg-surface-container px-3 py-2 rounded-lg border border-border/50">
                     <span class="text-outline">Sections:</span>
-                    <label class="flex items-center gap-1.5 cursor-pointer">
+                    <label for="import-section-metadata" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-metadata" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        Metadata
+                        <span>Metadata</span>
                     </label>
-                    <label class="flex items-center gap-1.5 cursor-pointer">
+                    <label for="import-section-steps" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-steps" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        Steps breakdown
+                        <span id="import-section-steps-text">Steps breakdown</span>
                     </label>
-                    <label class="flex items-center gap-1.5 cursor-pointer">
+                    <label for="import-section-links" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-links" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        Resource links
+                        <span id="import-section-links-text">Resource links</span>
                     </label>
                 </div>
             </div>

@@ -405,15 +405,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const followerCount = imported.steps?.filter(s => s.role === 'FOLLOWER').length || 0;
         const linksCount = imported.links?.length || 0;
 
-        document.querySelector('label[for="import-section-steps"]').innerHTML = `
-            <input type="checkbox" id="import-section-steps" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-            Steps breakdown (${leaderCount} L / ${followerCount} F)
-        `;
+        const metadataCheckbox = document.getElementById('import-section-metadata');
+        if (metadataCheckbox) metadataCheckbox.checked = true;
 
-        document.querySelector('label[for="import-section-links"]').innerHTML = `
-            <input type="checkbox" id="import-section-links" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-            Resource links (${linksCount})
-        `;
+        const stepsCheckbox = document.getElementById('import-section-steps');
+        if (stepsCheckbox) stepsCheckbox.checked = true;
+        const stepsText = document.getElementById('import-section-steps-text');
+        if (stepsText) {
+            stepsText.textContent = `Steps breakdown (${leaderCount} L / ${followerCount} F)`;
+        }
+
+        const linksCheckbox = document.getElementById('import-section-links');
+        if (linksCheckbox) linksCheckbox.checked = true;
+        const linksText = document.getElementById('import-section-links-text');
+        if (linksText) {
+            linksText.textContent = `Resource links (${linksCount})`;
+        }
 
         diffComparisonSection.classList.remove('hidden');
         diffComparisonSection.scrollIntoView({ behavior: 'smooth' });
