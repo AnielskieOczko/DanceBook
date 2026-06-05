@@ -32,8 +32,16 @@ class OpenRouterService(
 
         val cleanApiKey = properties.apiKey.trim().removeSurrounding("\"").removeSurrounding("'")
         if (cleanApiKey.isBlank()) {
+            log.error("OpenRouter API key is blank/empty!")
             throw IllegalStateException("OpenRouter API key is not configured.")
         }
+
+        val maskedKey = if (cleanApiKey.length > 12) {
+            "${cleanApiKey.take(7)}...${cleanApiKey.takeLast(5)}"
+        } else {
+            "too-short-or-invalid"
+        }
+        log.info("Ingested OpenRouter API key. Length: {}, Masked: {}", cleanApiKey.length, maskedKey)
 
         log.info("Calling OpenRouter LLM using model: {}", model)
 
