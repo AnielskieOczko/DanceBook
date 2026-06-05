@@ -30,7 +30,8 @@ class OpenRouterService(
             throw IllegalArgumentException("Requested model is not on the allowed list of free models: $model")
         }
 
-        if (properties.apiKey.isBlank()) {
+        val cleanApiKey = properties.apiKey.trim().removeSurrounding("\"").removeSurrounding("'")
+        if (cleanApiKey.isBlank()) {
             throw IllegalStateException("OpenRouter API key is not configured.")
         }
 
@@ -50,7 +51,7 @@ class OpenRouterService(
         val request = HttpRequest.newBuilder()
             .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${properties.apiKey}")
+            .header("Authorization", "Bearer $cleanApiKey")
             .header("HTTP-Referer", "https://github.com/apify/agent-skills")
             .header("X-Title", "DanceBook Figures Parser")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
