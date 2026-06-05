@@ -78,6 +78,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Collapsible Steps Preview Toggle
+    const toggleDiffStepsBtn = document.getElementById('toggle-diff-steps-btn');
+    const diffStepsPreviewContent = document.getElementById('diff-steps-preview-content');
+    const diffStepsArrow = document.getElementById('diff-steps-arrow');
+    if (toggleDiffStepsBtn && diffStepsPreviewContent && diffStepsArrow) {
+        toggleDiffStepsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isHidden = diffStepsPreviewContent.classList.contains('hidden');
+            if (isHidden) {
+                diffStepsPreviewContent.classList.remove('hidden');
+                diffStepsArrow.classList.add('rotate-180');
+            } else {
+                diffStepsPreviewContent.classList.add('hidden');
+                diffStepsArrow.classList.remove('rotate-180');
+            }
+        });
+    }
+
+    // Collapsible Links Preview Toggle
+    const toggleDiffLinksBtn = document.getElementById('toggle-diff-links-btn');
+    const diffLinksPreviewContent = document.getElementById('diff-links-preview-content');
+    const diffLinksArrow = document.getElementById('diff-links-arrow');
+    if (toggleDiffLinksBtn && diffLinksPreviewContent && diffLinksArrow) {
+        toggleDiffLinksBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isHidden = diffLinksPreviewContent.classList.contains('hidden');
+            if (isHidden) {
+                diffLinksPreviewContent.classList.remove('hidden');
+                diffLinksArrow.classList.add('rotate-180');
+            } else {
+                diffLinksPreviewContent.classList.add('hidden');
+                diffLinksArrow.classList.remove('rotate-180');
+            }
+        });
+    }
+
     // 3. Import Source Toggling (JSON vs URL)
     importJsonTabBtn.addEventListener('click', () => {
         switchSourceTab('JSON');
@@ -246,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleParseResponse(res) {
         setLoading(false);
+        console.log("Guided parse result:", res);
         if (!res.success) {
             const errorMsg = res.errors.join(", ") || "Failed to parse data.";
             showToast(errorMsg, "error");
@@ -420,6 +457,60 @@ document.addEventListener('DOMContentLoaded', () => {
         const linksText = document.getElementById('import-section-links-text');
         if (linksText) {
             linksText.textContent = `Resource links (${linksCount})`;
+        }
+
+        // Populate Steps Preview Collapsible
+        const stepsPreviewContainer = document.getElementById('diff-steps-preview-container');
+        const stepsPreviewTbody = document.getElementById('diff-steps-preview-tbody');
+        const stepsPreviewCount = document.getElementById('diff-steps-preview-count');
+        
+        if (stepsPreviewContainer && stepsPreviewTbody && stepsPreviewCount) {
+            stepsPreviewTbody.innerHTML = '';
+            const totalSteps = imported.steps?.length || 0;
+            if (totalSteps > 0) {
+                stepsPreviewCount.textContent = totalSteps;
+                stepsPreviewContainer.classList.remove('hidden');
+                
+                imported.steps.forEach(step => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-surface-container/10 border-b border-border/30';
+                    tr.innerHTML = `
+                        <td class="py-2 pr-2 font-semibold ${step.role === 'LEADER' ? 'text-primary' : 'text-secondary'}">${step.role}</td>
+                        <td class="py-2 pr-2 font-mono">${step.stepNumber}</td>
+                        <td class="py-2 pr-2 font-mono">${step.timing || ''}</td>
+                        <td class="py-2 pr-2">${step.foot || ''}</td>
+                        <td class="py-2 pr-2 whitespace-pre-wrap">${step.action || ''}</td>
+                        <td class="py-2 pr-2">${step.footwork || ''}</td>
+                        <td class="py-2 pr-2">${step.alignment || ''}</td>
+                        <td class="py-2 pr-2">${step.amountOfTurn || ''}</td>
+                    `;
+                    stepsPreviewTbody.appendChild(tr);
+                });
+            } else {
+                stepsPreviewContainer.classList.add('hidden');
+            }
+        }
+
+        // Populate Links Preview Collapsible
+        const linksPreviewContainer = document.getElementById('diff-links-preview-container');
+        const linksPreviewList = document.getElementById('diff-links-preview-list');
+        const linksPreviewCount = document.getElementById('diff-links-preview-count');
+        
+        if (linksPreviewContainer && linksPreviewList && linksPreviewCount) {
+            linksPreviewList.innerHTML = '';
+            const totalLinks = imported.links?.length || 0;
+            if (totalLinks > 0) {
+                linksPreviewCount.textContent = totalLinks;
+                linksPreviewContainer.classList.remove('hidden');
+                
+                imported.links.forEach(link => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="font-medium">${link.title || 'Reference Link'}:</span> <a href="${link.url}" target="_blank" class="text-primary hover:underline font-mono break-all">${link.url}</a> (${link.type || 'syllabus'})`;
+                    linksPreviewList.appendChild(li);
+                });
+            } else {
+                linksPreviewContainer.classList.add('hidden');
+            }
         }
 
         diffComparisonSection.classList.remove('hidden');

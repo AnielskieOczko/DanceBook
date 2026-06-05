@@ -148,6 +148,52 @@
                 </table>
             </div>
 
+            <!-- Steps Preview Collapsible -->
+            <div id="diff-steps-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
+                <button type="button" id="toggle-diff-steps-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-primary">list_alt</span>
+                        Preview Steps to Import (<span id="diff-steps-preview-count">0</span> steps)
+                    </span>
+                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-steps-arrow">expand_more</span>
+                </button>
+                <div id="diff-steps-preview-content" class="hidden mt-3 overflow-x-auto">
+                    <table class="w-full text-left text-[11px] border-collapse">
+                        <thead>
+                            <tr class="border-b border-border text-[10px] font-semibold uppercase text-outline">
+                                <th class="py-1.5 pr-2 w-16">Role</th>
+                                <th class="py-1.5 pr-2 w-8">#</th>
+                                <th class="py-1.5 pr-2 w-16">Timing</th>
+                                <th class="py-1.5 pr-2 w-16">Foot</th>
+                                <th class="py-1.5 pr-2 min-w-[150px]">Action</th>
+                                <th class="py-1.5 pr-2 w-20">Footwork</th>
+                                <th class="py-1.5 pr-2 w-20">Alignment</th>
+                                <th class="py-1.5 pr-2 w-20">Turn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="diff-steps-preview-tbody" class="divide-y divide-border/50">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Links Preview Collapsible -->
+            <div id="diff-links-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
+                <button type="button" id="toggle-diff-links-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-primary">link</span>
+                        Preview Resource Links to Import (<span id="diff-links-preview-count">0</span> links)
+                    </span>
+                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-links-arrow">expand_more</span>
+                </button>
+                <div id="diff-links-preview-content" class="hidden mt-3">
+                    <ul id="diff-links-preview-list" class="space-y-1.5 list-disc list-inside text-[11px] text-on-surface-variant">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+
             <!-- Diff Action Buttons -->
             <div class="flex justify-end gap-3 pt-4 border-t border-border">
                 <button type="button" id="discard-import-btn" class="btn-outline btn-sm">Discard</button>
