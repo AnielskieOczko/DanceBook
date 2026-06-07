@@ -28,11 +28,6 @@
                 </button>
             </form>
             
-            <!-- Lock indicator for predefined figures -->
-            <div th:if="${danceFigure.predefined}" class="inline-flex items-center gap-1.5 px-4 py-2 border border-border bg-surface-container text-outline text-sm rounded-button cursor-not-allowed" title="System predefined syllabus figures cannot be deleted.">
-                <span class="material-symbols-outlined text-[20px]">lock</span> Predefined (Non-deletable)
-            </div>
-
             <a href="/dance-figures" class="btn-outline">Back to Database</a>
         </div>
     </div>
@@ -255,7 +250,7 @@
 
                 <!-- Notes -->
                 <div class="space-y-2 border-t border-border pt-4">
-                    <span class="block text-xs font-semibold text-outline uppercase tracking-wider">Director's Notes</span>
+                    <span class="block text-xs font-semibold text-outline uppercase tracking-wider">Notes</span>
                     <div class="text-on-surface font-body-md whitespace-pre-line leading-relaxed bg-surface-container-low p-4 rounded-md border border-border/40" th:text="${danceFigure.notes ?: 'No notes available for this figure.'}">
                         Notes details.
                     </div>

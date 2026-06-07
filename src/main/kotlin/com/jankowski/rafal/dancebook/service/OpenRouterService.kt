@@ -51,7 +51,8 @@ class OpenRouterService(
                 mapOf("role" to "system", "content" to systemPrompt),
                 mapOf("role" to "user", "content" to userPrompt)
             ),
-            "response_format" to mapOf("type" to "json_object")
+            "response_format" to mapOf("type" to "json_object"),
+            "max_tokens" to 4096
         )
 
         val requestBody = objectMapper.writeValueAsString(payload)
