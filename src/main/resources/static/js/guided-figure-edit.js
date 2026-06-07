@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 diffLinksArrow.classList.remove('rotate-180');
             }
         });
+    }
     // Mobile Diff Tab Switcher Toggle
     if (diffMobileTabCurrent && diffMobileTabImported) {
         diffMobileTabCurrent.addEventListener('click', (e) => {
