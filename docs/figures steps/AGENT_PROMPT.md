@@ -56,11 +56,11 @@ Each figure in your output array must follow this structure:
 - If no match is found even after normalization (lowercase, stripping punctuation), use the name from the crawled text but flag it in your mind as a potential new entry.
 
 ### 2. Extraction Logic
-- **Steps & Comments**: Parse the "Leader" and "Follower" sections carefully. Any sub-bullets, indented lines, or extra remarks directly beneath a specific step must be parsed into the `comments` array for that step. Keep the comments concise and clear (maximum 2-3 short bullets per step).
+- **Steps & Comments**: Parse the step sections carefully. **Note that the raw text uses "Man" to refer to the "LEADER" role and "Lady" to refer to the "FOLLOWER" role.** Any sub-bullets, indented lines, or extra remarks directly beneath a specific step must be parsed into the `comments` array for that step. Keep the comments concise and clear (maximum 2-3 short bullets per step).
 - **Timing**: Extract the timing (e.g., "1 a 2", "S Q Q").
 - **Foot**: Determine which foot is moving based on the action description (look for keywords like "RF", "LF", "L foot", "Right foot").
 - **Metadata**: Extract `level` (Bronze/Silver/Gold), `starting_position`, and the lists of `preceding` and `following` figures.
-- **Notes**: Extract all general text, alternative endings, and notes that appear after the steps sections, and put it in the `notes` field at the figure level. Summarize the notes to keep them highly concise and readable (maximum 3-4 sentences/lines), preserving essential technical details.
+- **Notes**: Extract all general text, alternative endings, and notes that appear after the steps sections, and put it in the `notes` field at the figure level. Summarize the notes to keep them highly concise and readable (maximum 3-4 sentences/lines), preserving essential technical details. **DO NOT include the step descriptions or actions here; steps must only go in the `steps` array.**
 - **URLs**: Under `urls`, include the source URL from the crawled data. If there are other related links, include them too.
 
 
