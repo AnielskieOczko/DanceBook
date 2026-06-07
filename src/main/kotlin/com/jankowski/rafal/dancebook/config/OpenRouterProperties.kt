@@ -8,10 +8,12 @@ data class OpenRouterProperties(
     val defaultModel: String = "nvidia/nemotron-3-nano-30b-a3b:free",
     val allowedFreeModels: List<String> = listOf(
         "nvidia/nemotron-3-nano-30b-a3b:free",
-        "google/gemini-2.5-flash:free",
-        "meta-llama/llama-3-8b-instruct:free",
-        "mistralai/mistral-7b-instruct:free",
-        "qwen/qwen-2-7b-instruct:free"
+        "nvidia/nemotron-3.5-content-safety:free",
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "google/gemma-4-31b-it:free",
+        "google/gemma-4-26b-a4b-it:free",
+        "moonshotai/kimi-k2.6:free",
+        "z-ai/glm-4.5-air:free"
     ),
     val timeoutSeconds: Long = 120
 )
