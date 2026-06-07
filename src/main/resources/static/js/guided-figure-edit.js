@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const importSectionSteps = document.getElementById('import-section-steps');
     const importSectionLinks = document.getElementById('import-section-links');
 
+    const diffMobileTabCurrent = document.getElementById('diff-mobile-tab-current');
+    const diffMobileTabImported = document.getElementById('diff-mobile-tab-imported');
+
     if (!guidedEditPanel || !figureForm) return;
 
     let parsedResultData = null; // Stores currently loaded parsed data
@@ -112,6 +115,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 diffLinksArrow.classList.remove('rotate-180');
             }
         });
+    // Mobile Diff Tab Switcher Toggle
+    if (diffMobileTabCurrent && diffMobileTabImported) {
+        diffMobileTabCurrent.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchDiffMobileTab('CURRENT');
+        });
+
+        diffMobileTabImported.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchDiffMobileTab('IMPORTED');
+        });
+    }
+
+    function switchDiffMobileTab(tab) {
+        const currentCols = document.querySelectorAll('.js-col-current');
+        const importedCols = document.querySelectorAll('.js-col-imported');
+        
+        if (tab === 'CURRENT') {
+            currentCols.forEach(col => col.classList.remove('hidden'));
+            importedCols.forEach(col => col.classList.add('hidden'));
+            
+            diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
+        } else {
+            currentCols.forEach(col => col.classList.add('hidden'));
+            importedCols.forEach(col => col.classList.remove('hidden'));
+            
+            diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
+            diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+        }
     }
 
     // 3. Import Source Toggling (JSON vs URL)
@@ -378,17 +411,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Col 2: Field Name
             const tdLabel = document.createElement('td');
-            tdLabel.className = 'p-3 font-medium text-on-surface';
-            tdLabel.textContent = field.label;
+            tdLabel.className = 'p-3 font-medium text-on-surface flex items-center justify-between gap-2 md:table-cell';
+            tdLabel.innerHTML = `
+                <span>${field.label}</span>
+                ${isDifferent && !isProtected ? '<span class="badge badge-accent text-[9px] py-0.5 px-1.5 md:hidden">Changed</span>' : ''}
+            `;
 
             // Col 3: Current Form Value
             const tdCurrent = document.createElement('td');
-            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line';
+            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line js-col-current';
             tdCurrent.textContent = currentDisplay || '(empty)';
 
             // Col 4: Imported Value (Editable Input)
             const tdImported = document.createElement('td');
-            tdImported.className = 'p-3';
+            tdImported.className = 'p-3 js-col-imported hidden md:table-cell';
             
             let editableHtml = '';
             if (field.type === 'select_dance_type') {
@@ -653,6 +689,10 @@ document.addEventListener('DOMContentLoaded', () => {
         diffComparisonSection.classList.add('hidden');
         guidedJsonInput.value = '';
         guidedUrlInput.value = '';
+        
+        if (diffMobileTabCurrent && diffMobileTabImported) {
+            switchDiffMobileTab('CURRENT');
+        }
     }
 
     // 10. URL History LocalStorage Management

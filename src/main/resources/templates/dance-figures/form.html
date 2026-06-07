@@ -131,6 +131,16 @@
                 </div>
             </div>
 
+            <!-- Mobile-only Tab Switcher for Diff View -->
+            <div class="inline-flex md:hidden bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs w-full mb-3">
+                <button type="button" id="diff-mobile-tab-current" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                    👈 Show Current
+                </button>
+                <button type="button" id="diff-mobile-tab-imported" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
+                    👉 Show Imported
+                </button>
+            </div>
+
             <!-- Field Comparison Table -->
             <div class="overflow-x-auto rounded-lg border border-border">
                 <table class="w-full text-left border-collapse">
@@ -138,8 +148,8 @@
                         <tr class="bg-surface-container border-b border-border text-xs font-semibold text-on-surface">
                             <th class="p-3 w-12 text-center">Import</th>
                             <th class="p-3 w-36">Field</th>
-                            <th class="p-3">Current Form Value</th>
-                            <th class="p-3">Imported Value (Editable)</th>
+                            <th class="p-3 js-col-current block md:table-cell">Current Form Value</th>
+                            <th class="p-3 js-col-imported hidden md:table-cell">Imported Value (Editable)</th>
                         </tr>
                     </thead>
                     <tbody id="diff-table-body" class="text-xs divide-y divide-border">
@@ -338,7 +348,7 @@
                     <div id="leader-steps-section" class="space-y-4">
                         <div class="overflow-x-auto min-h-[160px]">
                             <table class="w-full text-left border-collapse">
-                                <thead>
+                                <thead class="hidden md:table-header-group">
                                     <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                         <th class="py-2 pr-2 w-12">#</th>
                                         <th class="py-2 pr-2 w-20">Timing *</th>
@@ -352,35 +362,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="leader-steps-tbody">
-                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'LEADER'}" class="step-row border-b border-border" data-role="LEADER">
-                                        <td class="py-2 pr-2">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'LEADER'}" class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row" data-role="LEADER">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                             <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                             <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="LEADER" />
-                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
+                                            <!-- Delete button on mobile -->
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
                                             <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                         </td>
-                                        <td class="py-2 text-right">
-                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
+                                            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
+                                                <span>Show Technical Details</span>
+                                                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                            </button>
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                 <span class="material-symbols-outlined text-[18px]">delete</span>
                                             </button>
                                         </td>
@@ -397,7 +422,7 @@
                     <div id="follower-steps-section" class="space-y-4 hidden">
                         <div class="overflow-x-auto min-h-[160px]">
                             <table class="w-full text-left border-collapse">
-                                <thead>
+                                <thead class="hidden md:table-header-group">
                                     <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                         <th class="py-2 pr-2 w-12">#</th>
                                         <th class="py-2 pr-2 w-20">Timing *</th>
@@ -411,35 +436,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="follower-steps-tbody">
-                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'FOLLOWER'}" class="step-row border-b border-border" data-role="FOLLOWER">
-                                        <td class="py-2 pr-2">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'FOLLOWER'}" class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row" data-role="FOLLOWER">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                             <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                             <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="FOLLOWER" />
-                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
+                                            <!-- Delete button on mobile -->
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
                                             <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                         </td>
-                                        <td class="py-2 text-right">
-                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
+                                            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
+                                                <span>Show Technical Details</span>
+                                                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                            </button>
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                 <span class="material-symbols-outlined text-[18px]">delete</span>
                                             </button>
                                         </td>
