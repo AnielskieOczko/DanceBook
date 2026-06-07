@@ -103,7 +103,7 @@ class GuidedFigureParseService(
         var llmResponse = ""
         return try {
             llmResponse = openRouterService.callLlm(systemPrompt, userPrompt, model)
-            log.debug("LLM Raw Response: {}", llmResponse)
+            log.info("LLM Raw Response: {}", llmResponse)
             val dto = objectMapper.readValue<SyllabusImporterService.AiParsedFigureDto>(llmResponse)
             val request = mapToRequest(dto, danceTypeId)
             
