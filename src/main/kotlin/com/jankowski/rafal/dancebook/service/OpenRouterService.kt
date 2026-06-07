@@ -69,6 +69,8 @@ class OpenRouterService(
 
         try {
             val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            log.info("OpenRouter API Response Status: {}, Body: {}", response.statusCode(), response.body())
+            
             if (response.statusCode() != 200) {
                 log.error("OpenRouter API call failed with status {}: {}", response.statusCode(), response.body())
                 throw RuntimeException("OpenRouter API returned error status: ${response.statusCode()}")
