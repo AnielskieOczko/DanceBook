@@ -100,8 +100,10 @@ class GuidedFigureParseService(
             "text" to extractedText
         ))
 
+        var llmResponse = ""
         return try {
-            val llmResponse = openRouterService.callLlm(systemPrompt, userPrompt, model)
+            llmResponse = openRouterService.callLlm(systemPrompt, userPrompt, model)
+            log.debug("LLM Raw Response: {}", llmResponse)
             val dto = objectMapper.readValue<SyllabusImporterService.AiParsedFigureDto>(llmResponse)
             val request = mapToRequest(dto, danceTypeId)
             
@@ -122,7 +124,7 @@ class GuidedFigureParseService(
 
             GuidedParseResult(success = true, request = finalRequest)
         } catch (e: Exception) {
-            log.error("Failed to parse URL content via LLM", e)
+            log.error("Failed to parse URL content via LLM. Raw response: {}", llmResponse, e)
             GuidedParseResult(
                 success = false,
                 errors = listOf("AI parsing failed: ${e.message}")
