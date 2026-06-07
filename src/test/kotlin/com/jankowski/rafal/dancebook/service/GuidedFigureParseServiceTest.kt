@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import java.util.UUID
+import java.io.File
 
 class GuidedFigureParseServiceTest {
 
@@ -107,26 +108,32 @@ class GuidedFigureParseServiceTest {
         `when`(danceTypeRepository.findAll()).thenReturn(listOf(waltzType))
         `when`(danceFigureRepository.findAll()).thenReturn(emptyList())
 
-        val mockLlmResponse = """
-            {
-              "name": "Natural Spin Turn",
-              "dance_type": "WALTZ",
-              "level": "Bronze",
-              "starting_foot_leader": "RF",
-              "ending_foot_leader": "LF",
-              "steps": [
+        val mockLlmResponse = OpenRouterResponse(
+            content = """
                 {
-                  "step_number": 1,
-                  "timing": "S",
-                  "role": "LEADER",
-                  "foot": "RF",
-                  "action": "Step forward"
+                  "name": "Natural Spin Turn",
+                  "dance_type": "WALTZ",
+                  "level": "Bronze",
+                  "starting_foot_leader": "RF",
+                  "ending_foot_leader": "LF",
+                  "steps": [
+                    {
+                      "step_number": 1,
+                      "timing": "S",
+                      "role": "LEADER",
+                      "foot": "RF",
+                      "action": "Step forward"
+                    }
+                  ]
                 }
-              ]
-            }
-        """.trimIndent()
+            """.trimIndent(),
+            promptTokens = 200,
+            completionTokens = 100,
+            totalTokens = 300,
+            reasoningTokens = 50
+        )
 
-        `when`(openRouterService.callLlm(anyString(), anyString(), eq(model))).thenReturn(mockLlmResponse)
+        `when`(openRouterService.callLlm(anyString(), anyString(), eq(model), any(), any(), any())).thenReturn(mockLlmResponse)
 
         val result = guidedFigureParseService.parseFromUrl(url, model, waltzType.id)
 
@@ -141,5 +148,73 @@ class GuidedFigureParseServiceTest {
         assertEquals(1, request.links.size)
         assertEquals(url, request.links[0].url)
         assertEquals("syllabus", request.links[0].type)
+    }
+
+    @Test
+    fun `should parse URL page text using LLM correctly when response is a JSON array`() {
+        val url = "https://www.dancecentral.info/ballroom/international-style/samba/corta-jaca"
+        val model = "nvidia/nemotron-3-nano-30b-a3b:free"
+        
+        doReturn("<html><body>Some raw crawled page body text</body></html>")
+            .`when`(guidedFigureParseService).fetchUrlContent(url)
+
+        val waltzType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        `when`(danceTypeRepository.findAll()).thenReturn(listOf(waltzType))
+        `when`(danceFigureRepository.findAll()).thenReturn(emptyList())
+
+        val mockLlmResponse = OpenRouterResponse(
+            content = """
+                [
+                  {
+                    "name": "Natural Spin Turn",
+                    "dance_type": "WALTZ",
+                    "level": "Bronze",
+                    "starting_foot_leader": "RF",
+                    "ending_foot_leader": "LF",
+                    "steps": [
+                      {
+                        "step_number": 1,
+                        "timing": "S",
+                        "role": "LEADER",
+                        "foot": "RF",
+                        "action": "Step forward"
+                      }
+                    ]
+                  }
+                ]
+            """.trimIndent(),
+            promptTokens = 250,
+            completionTokens = 120,
+            totalTokens = 370,
+            reasoningTokens = null
+        )
+
+        `when`(openRouterService.callLlm(anyString(), anyString(), eq(model), any(), any(), any())).thenReturn(mockLlmResponse)
+
+        val result = guidedFigureParseService.parseFromUrl(url, model, waltzType.id)
+
+        assertTrue(result.success)
+        assertNotNull(result.request)
+        val request = result.request!!
+        assertEquals("Natural Spin Turn", request.name)
+        assertEquals(waltzType.id, request.danceTypeId)
+        assertEquals(1, request.steps.size)
+        assertEquals(url, request.links[0].url)
+    }
+
+    @Test
+    fun testPrintUrlText() {
+        val url = "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-turn"
+        val htmlContent = GuidedFigureParseService(mock(OpenRouterService::class.java), mock(DanceFigureRepository::class.java), mock(DanceTypeRepository::class.java), objectMapper)
+            .fetchUrlContent(url)
+        val doc = org.jsoup.Jsoup.parse(htmlContent)
+        val cleanedText = doc.text()
+        val file = File("scratch/natural_turn_text.txt")
+        file.parentFile.mkdirs()
+        file.writeText(cleanedText)
+        println("DIAGNOSTIC Saved text to: ${file.absolutePath}")
     }
 }

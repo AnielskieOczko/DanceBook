@@ -9,5 +9,8 @@ data class GuidedParseJsonRequest(
 data class GuidedParseUrlRequest(
     val url: String,
     val model: String,
-    val danceTypeId: UUID? = null
+    val danceTypeId: UUID? = null,
+    val maxTokens: Int? = null,
+    val temperature: Double? = null,
+    val reasoningEffort: String? = null
 )

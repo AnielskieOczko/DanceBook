@@ -24,7 +24,15 @@ class OpenRouterService(
         return properties.allowedFreeModels
     }
 
-    fun callLlm(systemPrompt: String, userPrompt: String, requestedModel: String? = null): String {
+    @JvmOverloads
+    fun callLlm(
+        systemPrompt: String,
+        userPrompt: String,
+        requestedModel: String? = null,
+        maxTokens: Int? = null,
+        temperature: Double? = null,
+        reasoningEffort: String? = null
+    ): OpenRouterResponse {
         val model = requestedModel ?: properties.defaultModel
         if (!properties.allowedFreeModels.contains(model)) {
             throw IllegalArgumentException("Requested model is not on the allowed list of free models: $model")
@@ -45,15 +53,29 @@ class OpenRouterService(
 
         log.info("Calling OpenRouter LLM using model: {}", model)
 
-        val payload = mapOf(
+        val payload = mutableMapOf<String, Any>(
             "model" to model,
             "messages" to listOf(
                 mapOf("role" to "system", "content" to systemPrompt),
                 mapOf("role" to "user", "content" to userPrompt)
             ),
             "response_format" to mapOf("type" to "json_object"),
-            "max_tokens" to 4096
+            "max_tokens" to (maxTokens ?: 16384),
+            "temperature" to (temperature ?: 1.0)
         )
+
+        if (reasoningEffort != null && reasoningEffort != "default") {
+            if (reasoningEffort == "none") {
+                payload["reasoning"] = mapOf(
+                    "effort" to "none",
+                    "exclude" to true
+                )
+            } else {
+                payload["reasoning"] = mapOf(
+                    "effort" to reasoningEffort
+                )
+            }
+        }
 
         val requestBody = objectMapper.writeValueAsString(payload)
 
@@ -73,15 +95,39 @@ class OpenRouterService(
             
             if (response.statusCode() != 200) {
                 log.error("OpenRouter API call failed with status {}: {}", response.statusCode(), response.body())
-                throw RuntimeException("OpenRouter API returned error status: ${response.statusCode()}")
+                throw RuntimeException("OpenRouter API returned error status ${response.statusCode()}: ${response.body()}")
             }
 
             val responseNode = objectMapper.readTree(response.body())
-            val messageNode = responseNode.path("choices").get(0)?.path("message")
+            val choiceNode = responseNode.path("choices").get(0)
+                ?: throw RuntimeException("No choices in LLM response")
+            val finishReason = choiceNode.path("finish_reason")?.asText()
+            if (finishReason == "length") {
+                log.error("LLM response was truncated (finish_reason=length). The output exceeded max_tokens.")
+                throw RuntimeException("The AI model's response was truncated because it exceeded the maximum token limit (max_tokens). This usually happens when the dance figure text is extremely long, or the model spent too many tokens on 'thinking/reasoning'. Try selecting a different model, or if using a reasoning model, disabling/reducing its thinking budget.")
+            }
+            val messageNode = choiceNode.path("message")
             val content = messageNode?.path("content")?.asText()
                 ?: throw RuntimeException("Could not extract content from LLM response choice")
 
-            return cleanJsonContent(content)
+            val usageNode = responseNode.path("usage")
+            val promptTokens = usageNode.path("prompt_tokens").asInt(0)
+            val completionTokens = usageNode.path("completion_tokens").asInt(0)
+            val totalTokens = usageNode.path("total_tokens").asInt(0)
+            val reasoningTokens = if (usageNode.has("completion_tokens_details")) {
+                val reasoning = usageNode.path("completion_tokens_details").path("reasoning_tokens").asInt(0)
+                if (reasoning > 0) reasoning else null
+            } else {
+                null
+            }
+
+            return OpenRouterResponse(
+                content = cleanJsonContent(content),
+                promptTokens = promptTokens,
+                completionTokens = completionTokens,
+                totalTokens = totalTokens,
+                reasoningTokens = reasoningTokens
+            )
         } catch (e: Exception) {
             log.error("Failed to execute OpenRouter LLM call", e)
             throw e
@@ -89,16 +135,35 @@ class OpenRouterService(
     }
 
     private fun cleanJsonContent(content: String): String {
-        var trimmed = content.trim()
-        if (trimmed.startsWith("```")) {
-            val firstLineEnd = trimmed.indexOf('\n')
-            if (firstLineEnd != -1) {
-                trimmed = trimmed.substring(firstLineEnd).trim()
-            }
-            if (trimmed.endsWith("```")) {
-                trimmed = trimmed.substring(0, trimmed.length - 3).trim()
-            }
+        val trimmed = content.trim()
+        val firstBrace = trimmed.indexOf('{')
+        val firstBracket = trimmed.indexOf('[')
+        val startIndex = when {
+            firstBrace == -1 -> firstBracket
+            firstBracket == -1 -> firstBrace
+            else -> minOf(firstBrace, firstBracket)
         }
-        return trimmed
+        
+        if (startIndex == -1) {
+            return trimmed
+        }
+        
+        val lastBrace = trimmed.lastIndexOf('}')
+        val lastBracket = trimmed.lastIndexOf(']')
+        val endIndex = maxOf(lastBrace, lastBracket)
+        
+        if (endIndex == -1 || endIndex < startIndex) {
+            return trimmed
+        }
+        
+        return trimmed.substring(startIndex, endIndex + 1)
     }
 }
+
+data class OpenRouterResponse(
+    val content: String,
+    val promptTokens: Int,
+    val completionTokens: Int,
+    val totalTokens: Int,
+    val reasoningTokens: Int?
+)

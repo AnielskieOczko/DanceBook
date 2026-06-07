@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const guidedUrlHistory = document.getElementById('guided-url-history');
     const parseUrlBtn = document.getElementById('parse-url-btn');
 
+    // Advanced setting inputs
+    const guidedMaxTokens = document.getElementById('guided-max-tokens');
+    const guidedTemperature = document.getElementById('guided-temperature');
+    const guidedReasoningEffort = document.getElementById('guided-reasoning-effort');
+
     const importLoadingState = document.getElementById('import-loading-state');
     const diffComparisonSection = document.getElementById('diff-comparison-section');
     const diffTableBody = document.getElementById('diff-table-body');
@@ -34,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const diffMobileTabCurrent = document.getElementById('diff-mobile-tab-current');
     const diffMobileTabImported = document.getElementById('diff-mobile-tab-imported');
+
+    // Stats and Errors elements
+    const guidedErrorContainer = document.getElementById('guided-error-container');
+    const guidedErrorMessage = document.getElementById('guided-error-message');
+    const tokenStatsContainer = document.getElementById('token-stats-container');
+    const statPromptTokens = document.getElementById('stat-prompt-tokens');
+    const statCompletionTokens = document.getElementById('stat-completion-tokens');
+    const statReasoningTokens = document.getElementById('stat-reasoning-tokens');
+    const statTotalTokens = document.getElementById('stat-total-tokens');
 
     if (!guidedEditPanel || !figureForm) return;
 
@@ -134,14 +148,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const importedCols = document.querySelectorAll('.js-col-imported');
         
         if (tab === 'CURRENT') {
-            currentCols.forEach(col => col.classList.remove('hidden'));
-            importedCols.forEach(col => col.classList.add('hidden'));
+            currentCols.forEach(col => col.classList.remove('max-md:hidden'));
+            importedCols.forEach(col => col.classList.add('max-md:hidden'));
             
             diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
             diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
         } else {
-            currentCols.forEach(col => col.classList.add('hidden'));
-            importedCols.forEach(col => col.classList.remove('hidden'));
+            currentCols.forEach(col => col.classList.add('max-md:hidden'));
+            importedCols.forEach(col => col.classList.remove('max-md:hidden'));
             
             diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
             diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
@@ -261,12 +275,17 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => handleParseResponse(res))
         .catch(err => {
             console.error(err);
-            showToast("Server error validating JSON.", "error");
             setLoading(false);
+            const errorMsg = "Server error validating JSON: " + err.message;
+            showToast(errorMsg, "error");
+            if (guidedErrorContainer && guidedErrorMessage) {
+                guidedErrorMessage.textContent = errorMsg;
+                guidedErrorContainer.classList.remove('hidden');
+                guidedErrorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         });
     });
 
-    // 7. URL Parse Trigger
     parseUrlBtn.addEventListener('click', () => {
         const url = guidedUrlInput.value.trim();
         if (!url) {
@@ -277,6 +296,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const model = guidedModelSelect.value;
         const danceTypeId = document.getElementById('danceTypeId')?.value || null;
 
+        // Extract optional parameters
+        const maxTokensVal = guidedMaxTokens ? parseInt(guidedMaxTokens.value, 10) : null;
+        const tempVal = guidedTemperature ? parseFloat(guidedTemperature.value) : null;
+        const reasoningEffortVal = guidedReasoningEffort ? guidedReasoningEffort.value : 'default';
+
         setLoading(true);
         fetch('/api/dance-figures/guided-parse/url', {
             method: 'POST',
@@ -284,7 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({
                 url: url,
                 model: model,
-                danceTypeId: danceTypeId ? danceTypeId : null
+                danceTypeId: danceTypeId ? danceTypeId : null,
+                maxTokens: isNaN(maxTokensVal) ? null : maxTokensVal,
+                temperature: isNaN(tempVal) ? null : tempVal,
+                reasoningEffort: reasoningEffortVal
             })
         })
         .then(res => res.json())
@@ -296,8 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.error(err);
-            showToast("Server error calling AI agent to parse page.", "error");
             setLoading(false);
+            const errorMsg = "Server error calling AI agent to parse page: " + err.message;
+            showToast(errorMsg, "error");
+            if (guidedErrorContainer && guidedErrorMessage) {
+                guidedErrorMessage.textContent = errorMsg;
+                guidedErrorContainer.classList.remove('hidden');
+                guidedErrorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         });
     });
 
@@ -305,6 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isLoading) {
             importLoadingState.classList.remove('hidden');
             diffComparisonSection.classList.add('hidden');
+            if (guidedErrorContainer) guidedErrorContainer.classList.add('hidden');
+            if (tokenStatsContainer) tokenStatsContainer.classList.add('hidden');
             validateJsonBtn.disabled = true;
             parseUrlBtn.disabled = true;
         } else {
@@ -317,9 +352,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleParseResponse(res) {
         setLoading(false);
         console.log("Guided parse result:", res);
+
+        // Display usage statistics if available
+        if (res.usage && tokenStatsContainer) {
+            statPromptTokens.textContent = res.usage.promptTokens || 0;
+            statCompletionTokens.textContent = res.usage.completionTokens || 0;
+            statReasoningTokens.textContent = res.usage.reasoningTokens !== null ? res.usage.reasoningTokens : "N/A";
+            statTotalTokens.textContent = res.usage.totalTokens || 0;
+            tokenStatsContainer.classList.remove('hidden');
+        }
+
         if (!res.success) {
             const errorMsg = res.errors.join(", ") || "Failed to parse data.";
             showToast(errorMsg, "error");
+            if (guidedErrorContainer && guidedErrorMessage) {
+                guidedErrorMessage.textContent = errorMsg;
+                guidedErrorContainer.classList.remove('hidden');
+                guidedErrorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
             return;
         }
 
@@ -420,12 +470,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Col 3: Current Form Value
             const tdCurrent = document.createElement('td');
-            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line js-col-current';
+            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line js-col-current md:table-cell';
             tdCurrent.textContent = currentDisplay || '(empty)';
 
             // Col 4: Imported Value (Editable Input)
             const tdImported = document.createElement('td');
-            tdImported.className = 'p-3 js-col-imported hidden md:table-cell';
+            tdImported.className = 'p-3 js-col-imported max-md:hidden md:table-cell';
             
             let editableHtml = '';
             if (field.type === 'select_dance_type') {
@@ -691,6 +741,14 @@ document.addEventListener('DOMContentLoaded', () => {
         guidedJsonInput.value = '';
         guidedUrlInput.value = '';
         
+        if (guidedErrorContainer) guidedErrorContainer.classList.add('hidden');
+        if (tokenStatsContainer) tokenStatsContainer.classList.add('hidden');
+
+        // Reset advanced inputs
+        if (guidedMaxTokens) guidedMaxTokens.value = '16384';
+        if (guidedTemperature) guidedTemperature.value = '1.0';
+        if (guidedReasoningEffort) guidedReasoningEffort.value = 'default';
+
         if (diffMobileTabCurrent && diffMobileTabImported) {
             switchDiffMobileTab('CURRENT');
         }

@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
 import com.jankowski.rafal.dancebook.dto.GuidedParseResult
+import com.jankowski.rafal.dancebook.dto.LlmUsageStats
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceTypeRepository
@@ -47,8 +48,16 @@ class GuidedFigureParseService(
         }
     }
 
-    fun parseFromUrl(url: String, model: String, danceTypeId: UUID?): GuidedParseResult {
-        log.info("Starting guided parse from URL: {} using model: {}", url, model)
+    @JvmOverloads
+    fun parseFromUrl(
+        url: String,
+        model: String,
+        danceTypeId: UUID?,
+        maxTokens: Int? = null,
+        temperature: Double? = null,
+        reasoningEffort: String? = null
+    ): GuidedParseResult {
+        log.info("Starting guided parse from URL: {} using model: {}, maxTokens: {}, temp: {}, reasoning: {}", url, model, maxTokens, temperature, reasoningEffort)
         val htmlContent = try {
             fetchUrlContent(url)
         } catch (e: Exception) {
@@ -93,6 +102,8 @@ class GuidedFigureParseService(
             ## Authoritative Figure Names Reference
             Below is the complete list of standard figure names currently stored in the database, along with their respective dance styles. You MUST use these exact names when standardizing figures in your output (case-insensitive, ignoring minor formatting differences):
             $referenceFiguresText
+            
+            IMPORTANT: For this URL parsing request, you are parsing a single webpage. Please return exactly ONE JSON object matching the target schema directly (do NOT wrap it in a JSON array).
         """.trimIndent()
 
         val userPrompt = objectMapper.writeValueAsString(mapOf(
@@ -100,11 +111,26 @@ class GuidedFigureParseService(
             "text" to extractedText
         ))
 
-        var llmResponse = ""
+        var llmResponse: OpenRouterResponse? = null
         return try {
-            llmResponse = openRouterService.callLlm(systemPrompt, userPrompt, model)
-            log.info("LLM Raw Response: {}", llmResponse)
-            val dto = objectMapper.readValue<SyllabusImporterService.AiParsedFigureDto>(llmResponse)
+            llmResponse = openRouterService.callLlm(
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+                requestedModel = model,
+                maxTokens = maxTokens,
+                temperature = temperature,
+                reasoningEffort = reasoningEffort
+            )
+            log.info("LLM Raw Response: {}", llmResponse.content)
+            val jsonNode = objectMapper.readTree(llmResponse.content)
+            val dto = if (jsonNode.isArray) {
+                if (jsonNode.isEmpty) {
+                    throw RuntimeException("LLM returned an empty JSON array")
+                }
+                objectMapper.treeToValue(jsonNode.get(0), SyllabusImporterService.AiParsedFigureDto::class.java)
+            } else {
+                objectMapper.treeToValue(jsonNode, SyllabusImporterService.AiParsedFigureDto::class.java)
+            }
             val request = mapToRequest(dto, danceTypeId)
             
             // Ensure the source URL is included in the links list if not already present
@@ -122,12 +148,28 @@ class GuidedFigureParseService(
                 request
             }
 
-            GuidedParseResult(success = true, request = finalRequest)
+            val usageStats = LlmUsageStats(
+                promptTokens = llmResponse.promptTokens,
+                completionTokens = llmResponse.completionTokens,
+                totalTokens = llmResponse.totalTokens,
+                reasoningTokens = llmResponse.reasoningTokens
+            )
+
+            GuidedParseResult(success = true, request = finalRequest, usage = usageStats)
         } catch (e: Exception) {
-            log.error("Failed to parse URL content via LLM. Raw response: {}", llmResponse, e)
+            log.error("Failed to parse URL content via LLM. Raw response: {}", llmResponse?.content, e)
+            val usageStats = llmResponse?.let {
+                LlmUsageStats(
+                    promptTokens = it.promptTokens,
+                    completionTokens = it.completionTokens,
+                    totalTokens = it.totalTokens,
+                    reasoningTokens = it.reasoningTokens
+                )
+            }
             GuidedParseResult(
                 success = false,
-                errors = listOf("AI parsing failed: ${e.message}")
+                errors = listOf("AI parsing failed: ${e.message}"),
+                usage = usageStats
             )
         }
     }

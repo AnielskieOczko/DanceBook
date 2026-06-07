@@ -27,7 +27,14 @@ class GuidedFigureParseController(
 
     @PostMapping("/url")
     fun parseFromUrl(@RequestBody request: GuidedParseUrlRequest): ResponseEntity<GuidedParseResult> {
-        val result = guidedFigureParseService.parseFromUrl(request.url, request.model, request.danceTypeId)
+        val result = guidedFigureParseService.parseFromUrl(
+            url = request.url,
+            model = request.model,
+            danceTypeId = request.danceTypeId,
+            maxTokens = request.maxTokens,
+            temperature = request.temperature,
+            reasoningEffort = request.reasoningEffort
+        )
         return ResponseEntity.ok(result)
     }
 

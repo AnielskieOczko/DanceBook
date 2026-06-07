@@ -33,17 +33,26 @@
             
             <!-- Source tabs (JSON vs URL) -->
             <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/20 text-xs">
-                <button type="button" id="import-json-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                <button type="button" id="import-json-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
                     📋 Paste JSON
                 </button>
-                <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
+                <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
                     🔗 Parse URL
                 </button>
             </div>
         </div>
 
+        <!-- Error Display Box -->
+        <div id="guided-error-container" class="hidden bg-rose-50 border border-rose-200 text-rose-950 p-4 rounded-lg flex gap-3 text-xs">
+            <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">error</span>
+            <div class="space-y-1">
+                <h4 class="font-bold">AI Analysis Failed</h4>
+                <p id="guided-error-message"></p>
+            </div>
+        </div>
+
         <!-- JSON Paste Section -->
-        <div id="json-input-section" class="space-y-4">
+        <div id="json-input-section" class="space-y-4 hidden">
             <div>
                 <label for="guided-json-input" class="form-label">Figure JSON Data</label>
                 <textarea id="guided-json-input" rows="8" class="form-textarea w-full font-mono text-xs p-3 rounded-lg border-border" placeholder='{ "name": "Natural Turn", "dance_type": "WALTZ", ... }'></textarea>
@@ -66,7 +75,7 @@
         </div>
 
         <!-- URL Parse Section -->
-        <div id="url-input-section" class="hidden space-y-4">
+        <div id="url-input-section" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label for="guided-url-input" class="form-label">Dance Syllabus URL</label>
@@ -78,6 +87,42 @@
                         <option value="nvidia/nemotron-3-nano-30b-a3b:free">nvidia/nemotron-3-nano-30b-a3b:free (Default)</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- Advanced AI Parameters -->
+            <div class="border-t border-border/40 pt-4 mt-2">
+                <details class="group">
+                    <summary class="flex items-center gap-1.5 cursor-pointer list-none text-xs font-semibold text-primary select-none hover:underline">
+                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-90">chevron_right</span>
+                        ⚙️ Advanced AI Parameters
+                    </summary>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-surface-container/30 p-4 rounded-lg border border-border/50">
+                        <!-- Max Tokens -->
+                        <div>
+                            <label for="guided-max-tokens" class="form-label text-xs">Max Output Tokens</label>
+                            <input id="guided-max-tokens" type="number" min="1024" max="100000" step="1024" value="16384" class="form-input text-xs py-1.5" placeholder="e.g. 16384"/>
+                            <p class="text-[10px] text-outline mt-1">Caps output size (typically 4096 - 16384).</p>
+                        </div>
+                        <!-- Temperature -->
+                        <div>
+                            <label for="guided-temperature" class="form-label text-xs">Temperature (0.0 to 2.0)</label>
+                            <input id="guided-temperature" type="number" min="0.0" max="2.0" step="0.1" value="1.0" class="form-input text-xs py-1.5" placeholder="e.g. 1.0"/>
+                            <p class="text-[10px] text-outline mt-1">Higher is more variety; lower is focused/deterministic.</p>
+                        </div>
+                        <!-- Reasoning Effort -->
+                        <div>
+                            <label for="guided-reasoning-effort" class="form-label text-xs">Reasoning / Thinking Effort</label>
+                            <select id="guided-reasoning-effort" class="form-select text-xs py-1.5 pr-8">
+                                <option value="default">Model Default</option>
+                                <option value="none">Disabled (none / exclude)</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                            <p class="text-[10px] text-outline mt-1">Controls internal thinking effort for reasoning-enabled models.</p>
+                        </div>
+                    </div>
+                </details>
             </div>
 
             <!-- URL History and Action -->
@@ -93,6 +138,37 @@
                         <span class="material-symbols-outlined text-[18px]">auto_awesome</span> Analyze Page with AI
                     </button>
                 </div>
+            </div>
+
+            <!-- Token Usage Stats (Expandable) -->
+            <div id="token-stats-container" class="hidden mt-4 bg-surface-container p-4 rounded-lg border border-border">
+                <details class="group">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-semibold text-on-surface">
+                        <span class="flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px] text-primary">analytics</span>
+                            AI Token Usage Statistics
+                        </span>
+                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-border/50 pt-3">
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Prompt (Input)</span>
+                            <span id="stat-prompt-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Completion (Output)</span>
+                            <span id="stat-completion-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Reasoning (Thinking)</span>
+                            <span id="stat-reasoning-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Total Tokens</span>
+                            <span id="stat-total-tokens" class="text-sm font-semibold text-primary font-bold">0</span>
+                        </div>
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -148,8 +224,8 @@
                         <tr class="bg-surface-container border-b border-border text-xs font-semibold text-on-surface">
                             <th class="p-3 w-12 text-center">Import</th>
                             <th class="p-3 w-36">Field</th>
-                            <th class="p-3 js-col-current block md:table-cell">Current Form Value</th>
-                            <th class="p-3 js-col-imported hidden md:table-cell">Imported Value (Editable)</th>
+                            <th class="p-3 js-col-current md:table-cell">Current Form Value</th>
+                            <th class="p-3 js-col-imported max-md:hidden md:table-cell">Imported Value (Editable)</th>
                         </tr>
                     </thead>
                     <tbody id="diff-table-body" class="text-xs divide-y divide-border">
