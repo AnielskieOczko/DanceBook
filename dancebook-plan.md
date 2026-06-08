@@ -630,7 +630,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - [x] Print-friendly timeline layout (`@media print` support)
 - [x] CSP compatibility (no inline event handlers/scripts, unpkg.com whitelists)
 
-### Phase 13 — AI-Powered Dance Intelligence 🤖
+### Phase 13 — AI-Powered Dance Intelligence 🤖 (In Progress) ⏳
+- [x] **Guided Figure Import:** OpenRouter integration to parse raw webpage syllabus text and JSON directly into the edit form with comparison diff preview and advanced parameter controls (max tokens, temperature, reasoning effort)
 - [ ] Integration of **Spring AI** with Neon's `pgvector` extension
 - [ ] **Semantic Search (RAG):** Natural language discovery (e.g. "Suggest a romantic slow dance")
 - [ ] **Automated Tagging:** AI-driven categorization and difficulty assessment of new uploads
