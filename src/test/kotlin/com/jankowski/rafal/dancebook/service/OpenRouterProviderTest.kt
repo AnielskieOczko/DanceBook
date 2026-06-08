@@ -14,11 +14,11 @@ import org.mockito.Mockito.mock
 import java.net.http.HttpClient
 import java.net.http.HttpResponse
 
-class OpenRouterServiceTest {
+class OpenRouterProviderTest {
 
     private lateinit var properties: OpenRouterProperties
     private lateinit var httpClient: HttpClient
-    private lateinit var openRouterService: OpenRouterService
+    private lateinit var provider: OpenRouterProvider
     private val objectMapper = ObjectMapper().registerKotlinModule()
 
     @BeforeEach
@@ -29,23 +29,23 @@ class OpenRouterServiceTest {
             allowedFreeModels = listOf("nvidia/nemotron-3-nano-30b-a3b:free", "google/gemini-2.5-flash:free")
         )
         httpClient = mock(HttpClient::class.java)
-        openRouterService = OpenRouterService(properties, objectMapper, httpClient)
+        provider = OpenRouterProvider(properties, objectMapper, httpClient)
     }
 
     @Test
     fun `should fail if API key is blank`() {
         properties = OpenRouterProperties(apiKey = "")
-        openRouterService = OpenRouterService(properties, objectMapper, httpClient)
+        provider = OpenRouterProvider(properties, objectMapper, httpClient)
 
         assertThrows(IllegalStateException::class.java) {
-            openRouterService.callLlm("sys", "user")
+            provider.callLlm(LlmRequest("sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free"))
         }
     }
 
     @Test
     fun `should fail if requested model is not in allowed free list`() {
         assertThrows(IllegalArgumentException::class.java) {
-            openRouterService.callLlm("sys", "user", "expensive-model")
+            provider.callLlm(LlmRequest("sys", "user", "expensive-model"))
         }
     }
 
@@ -77,7 +77,7 @@ class OpenRouterServiceTest {
 
         `when`(httpClient.send(any(), any<HttpResponse.BodyHandler<String>>())).thenReturn(mockResponse)
 
-        val result = openRouterService.callLlm("sys", "user")
+        val result = provider.callLlm(LlmRequest("sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free"))
 
         assertEquals("{\n  \"name\": \"Test Figure\"\n}", result.content)
         assertEquals(100, result.promptTokens)
@@ -95,7 +95,7 @@ class OpenRouterServiceTest {
         `when`(httpClient.send(any(), any<HttpResponse.BodyHandler<String>>())).thenReturn(mockResponse)
 
         assertThrows(RuntimeException::class.java) {
-            openRouterService.callLlm("sys", "user")
+            provider.callLlm(LlmRequest("sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free"))
         }
     }
 
@@ -120,7 +120,7 @@ class OpenRouterServiceTest {
         `when`(httpClient.send(any(), any<HttpResponse.BodyHandler<String>>())).thenReturn(mockResponse)
 
         val exception = assertThrows(RuntimeException::class.java) {
-            openRouterService.callLlm("sys", "user")
+            provider.callLlm(LlmRequest("sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free"))
         }
         assertTrue(exception.message!!.contains("truncated"))
     }

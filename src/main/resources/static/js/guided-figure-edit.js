@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const guidedUrlInput = document.getElementById('guided-url-input');
     const guidedModelSelect = document.getElementById('guided-model-select');
+    const guidedProviderSelect = document.getElementById('guided-provider-select');
+    const reasoningEffortContainer = document.getElementById('reasoning-effort-container');
+    const thinkingBudgetContainer = document.getElementById('thinking-budget-container');
+    const guidedThinkingBudget = document.getElementById('guided-thinking-budget');
     const urlHistoryContainer = document.getElementById('url-history-container');
     const guidedUrlHistory = document.getElementById('guided-url-history');
     const parseUrlBtn = document.getElementById('parse-url-btn');
@@ -189,29 +193,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Fetch Allowed Models & Expected Schema
     let modelsLoaded = false;
+    let providerModels = {};
+
     function loadModels() {
         if (modelsLoaded) return;
         fetch('/api/dance-figures/guided-parse/models')
             .then(res => res.json())
             .then(models => {
-                guidedModelSelect.innerHTML = '';
-                models.forEach(model => {
-                    const option = document.createElement('option');
-                    option.value = model;
-                    option.textContent = model;
-                    // Default to Nemotron if present
-                    if (model.includes('nemotron')) {
-                        option.selected = true;
-                    }
-                    guidedModelSelect.appendChild(option);
-                });
+                providerModels = models;
+                updateModelSelect();
                 modelsLoaded = true;
             })
             .catch(err => {
-                console.error("Failed to load free OpenRouter models", err);
+                console.error("Failed to load AI models", err);
                 showToast("Failed to load models list from server.", "error");
             });
     }
+
+    function updateModelSelect() {
+        if (!guidedProviderSelect || !guidedModelSelect) return;
+        const provider = guidedProviderSelect.value;
+        const models = providerModels[provider] || [];
+        guidedModelSelect.innerHTML = '';
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model;
+            option.textContent = model;
+            if (provider === 'openrouter' && model.includes('nemotron')) {
+                option.selected = true;
+            } else if (provider === 'google-ai' && model.includes('gemini-2.5-flash')) {
+                option.selected = true;
+            } else if (provider === 'ollama' && model.includes('gemma4')) {
+                option.selected = true;
+            }
+            guidedModelSelect.appendChild(option);
+        });
+
+        if (provider === 'openrouter') {
+            reasoningEffortContainer?.classList.remove('hidden');
+            thinkingBudgetContainer?.classList.add('hidden');
+        } else if (provider === 'google-ai') {
+            reasoningEffortContainer?.classList.add('hidden');
+            thinkingBudgetContainer?.classList.remove('hidden');
+        } else {
+            reasoningEffortContainer?.classList.add('hidden');
+            thinkingBudgetContainer?.classList.add('hidden');
+        }
+    }
+
+    guidedProviderSelect?.addEventListener('change', updateModelSelect);
 
     let schemaLoaded = false;
     toggleSchemaBtn.addEventListener('click', (e) => {
@@ -293,13 +323,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const provider = guidedProviderSelect.value;
         const model = guidedModelSelect.value;
         const danceTypeId = document.getElementById('danceTypeId')?.value || null;
 
         // Extract optional parameters
         const maxTokensVal = guidedMaxTokens ? parseInt(guidedMaxTokens.value, 10) : null;
         const tempVal = guidedTemperature ? parseFloat(guidedTemperature.value) : null;
-        const reasoningEffortVal = guidedReasoningEffort ? guidedReasoningEffort.value : 'default';
+
+        const providerSettings = {};
+        if (provider === 'openrouter') {
+            providerSettings['reasoningEffort'] = guidedReasoningEffort ? guidedReasoningEffort.value : 'default';
+        } else if (provider === 'google-ai') {
+            providerSettings['thinkingBudget'] = guidedThinkingBudget ? parseInt(guidedThinkingBudget.value, 10) : 2048;
+        }
 
         setLoading(true);
         fetch('/api/dance-figures/guided-parse/url', {
@@ -307,11 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: getCsrfHeaders(),
             body: JSON.stringify({
                 url: url,
+                provider: provider,
                 model: model,
                 danceTypeId: danceTypeId ? danceTypeId : null,
                 maxTokens: isNaN(maxTokensVal) ? null : maxTokensVal,
                 temperature: isNaN(tempVal) ? null : tempVal,
-                reasoningEffort: reasoningEffortVal
+                providerSettings: providerSettings
             })
         })
         .then(res => res.json())

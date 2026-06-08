@@ -4,7 +4,7 @@ import com.jankowski.rafal.dancebook.dto.GuidedParseJsonRequest
 import com.jankowski.rafal.dancebook.dto.GuidedParseResult
 import com.jankowski.rafal.dancebook.dto.GuidedParseUrlRequest
 import com.jankowski.rafal.dancebook.service.GuidedFigureParseService
-import com.jankowski.rafal.dancebook.service.OpenRouterService
+import com.jankowski.rafal.dancebook.service.LlmProviderRouter
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/dance-figures/guided-parse")
 class GuidedFigureParseController(
     private val guidedFigureParseService: GuidedFigureParseService,
-    private val openRouterService: OpenRouterService
+    private val llmProviderRouter: LlmProviderRouter
 ) {
 
     @PostMapping("/json")
@@ -29,18 +29,19 @@ class GuidedFigureParseController(
     fun parseFromUrl(@RequestBody request: GuidedParseUrlRequest): ResponseEntity<GuidedParseResult> {
         val result = guidedFigureParseService.parseFromUrl(
             url = request.url,
+            provider = request.provider,
             model = request.model,
             danceTypeId = request.danceTypeId,
             maxTokens = request.maxTokens,
             temperature = request.temperature,
-            reasoningEffort = request.reasoningEffort
+            providerSettings = request.providerSettings
         )
         return ResponseEntity.ok(result)
     }
 
     @GetMapping("/models")
-    fun getModels(): ResponseEntity<List<String>> {
-        val models = openRouterService.getModels()
+    fun getModels(): ResponseEntity<Map<String, List<String>>> {
+        val models = llmProviderRouter.getAllModels()
         return ResponseEntity.ok(models)
     }
 
