@@ -28,20 +28,20 @@ Each figure in your output array must follow this structure:
   "ending_position": "e.g., Fan Position",
   "preceding_figure_names": "Comma separated list of names",
   "following_figure_names": "Comma separated list of names",
-  "notes": "Any alternative finishing positions, general notes, or details listed at the end of the figure text.",
+  "notes": "Summarized alternative finishing positions, general notes, or details listed at the end of the figure text (keep it concise, max 3-4 sentences).",
   "steps": [
     {
       "step_number": 1,
       "timing": "e.g., 1, a, 2, S, Q",
       "role": "LEADER | FOLLOWER",
       "foot": "LF | RF | TOGETHER",
-      "action": "Description of the movement",
+      "action": "Description of the movement. Keep it concise.",
       "footwork": "e.g., HF, BF, T",
       "alignment": "e.g., Facing Wall",
       "amount_of_turn": "e.g., 1/4 to R",
       "comments": [
-        "First nested comment/bullet detail under this step.",
-        "Second nested comment/bullet detail under this step."
+        "First nested comment (keep it concise, max 1-2 sentences).",
+        "Second nested comment (keep it concise, max 1-2 sentences)."
       ]
     }
   ]
@@ -56,11 +56,11 @@ Each figure in your output array must follow this structure:
 - If no match is found even after normalization (lowercase, stripping punctuation), use the name from the crawled text but flag it in your mind as a potential new entry.
 
 ### 2. Extraction Logic
-- **Steps & Comments**: Parse the "Leader" and "Follower" sections carefully. Any sub-bullets, indented lines, or extra remarks directly beneath a specific step must be parsed into the `comments` array for that step. Keep the comments exactly as written without losing key instructions or formatting.
+- **Steps & Comments**: Parse the step sections carefully. **Note that the raw text uses "Man" to refer to the "LEADER" role and "Lady" to refer to the "FOLLOWER" role.** Any sub-bullets, indented lines, or extra remarks directly beneath a specific step must be parsed into the `comments` array for that step. Keep the comments concise and clear (maximum 2-3 short bullets per step).
 - **Timing**: Extract the timing (e.g., "1 a 2", "S Q Q").
 - **Foot**: Determine which foot is moving based on the action description (look for keywords like "RF", "LF", "L foot", "Right foot").
 - **Metadata**: Extract `level` (Bronze/Silver/Gold), `starting_position`, and the lists of `preceding` and `following` figures.
-- **Notes**: Extract all general text, alternative endings, and notes that appear after the steps sections, and put it in the `notes` field at the figure level. Preserve newlines and hierarchy where applicable.
+- **Notes**: Extract all general text, alternative endings, and notes that appear after the steps sections, and put it in the `notes` field at the figure level. Summarize the notes to keep them highly concise and readable (maximum 3-4 sentences/lines), preserving essential technical details. **DO NOT include the step descriptions or actions here; steps must only go in the `steps` array.**
 - **URLs**: Under `urls`, include the source URL from the crawled data. If there are other related links, include them too.
 
 

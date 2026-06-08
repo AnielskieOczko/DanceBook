@@ -4,9 +4,290 @@
 
 <section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-    <div class="mb-8 pb-6 border-b border-outline-variant/30">
-        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}">Create New Figure</h1>
-        <p class="text-on-surface-variant font-body-md">Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.</p>
+    <div class="mb-8 pb-6 border-b border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}">Create New Figure</h1>
+            <p class="text-on-surface-variant font-body-md">Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.</p>
+        </div>
+        
+        <!-- Manual vs Guided Edit Tab Switcher -->
+        <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-sm h-fit self-start md:self-center">
+            <button type="button" id="manual-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                ✏️ Manual Edit
+            </button>
+            <button type="button" id="guided-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
+                🤖 Guided Edit
+            </button>
+        </div>
+    </div>
+
+    <!-- Guided Edit Panel (Hidden by Default) -->
+    <div id="guided-edit-panel" class="hidden space-y-6 mb-8 card p-8 bg-white border border-border shadow-sm rounded-xl">
+        <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">auto_awesome</span> Guided Figure Import
+                </h2>
+                <p class="text-xs text-on-surface-variant mt-1">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
+            </div>
+            
+            <!-- Source tabs (JSON vs URL) -->
+            <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/20 text-xs">
+                <button type="button" id="import-json-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
+                    📋 Paste JSON
+                </button>
+                <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                    🔗 Parse URL
+                </button>
+            </div>
+        </div>
+
+        <!-- Error Display Box -->
+        <div id="guided-error-container" class="hidden bg-rose-50 border border-rose-200 text-rose-950 p-4 rounded-lg flex gap-3 text-xs">
+            <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">error</span>
+            <div class="space-y-1">
+                <h4 class="font-bold">AI Analysis Failed</h4>
+                <p id="guided-error-message"></p>
+            </div>
+        </div>
+
+        <!-- JSON Paste Section -->
+        <div id="json-input-section" class="space-y-4 hidden">
+            <div>
+                <label for="guided-json-input" class="form-label">Figure JSON Data</label>
+                <textarea id="guided-json-input" rows="8" class="form-textarea w-full font-mono text-xs p-3 rounded-lg border-border" placeholder='{ "name": "Natural Turn", "dance_type": "WALTZ", ... }'></textarea>
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <button type="button" id="toggle-schema-btn" class="text-xs text-primary font-medium hover:underline flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">schema</span> Show Expected JSON Format
+                </button>
+                <button type="button" id="validate-json-btn" class="btn-primary btn-sm flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span> Validate &amp; Preview
+                </button>
+            </div>
+
+            <!-- Collapsible Expected JSON Schema -->
+            <div id="expected-schema-box" class="hidden bg-surface-container p-4 rounded-lg border border-border mt-3">
+                <h4 class="text-xs font-semibold text-on-surface mb-2">Expected JSON Schema:</h4>
+                <pre id="schema-display-pre" class="text-[10px] font-mono overflow-x-auto text-on-surface-variant max-h-60 p-2 bg-white rounded border border-border"></pre>
+            </div>
+        </div>
+
+        <!-- URL Parse Section -->
+        <div id="url-input-section" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="guided-url-input" class="form-label">Dance Syllabus URL</label>
+                    <input id="guided-url-input" type="url" class="form-input" placeholder="e.g. https://www.dancecentral.info/ballroom/international-style/..."/>
+                </div>
+                <div>
+                    <label for="guided-model-select" class="form-label">AI Parsing Model (Free Only)</label>
+                    <select id="guided-model-select" class="form-select">
+                        <option value="nvidia/nemotron-3-nano-30b-a3b:free">nvidia/nemotron-3-nano-30b-a3b:free (Default)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Advanced AI Parameters -->
+            <div class="border-t border-border/40 pt-4 mt-2">
+                <details class="group">
+                    <summary class="flex items-center gap-1.5 cursor-pointer list-none text-xs font-semibold text-primary select-none hover:underline">
+                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-90">chevron_right</span>
+                        ⚙️ Advanced AI Parameters
+                    </summary>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-surface-container/30 p-4 rounded-lg border border-border/50">
+                        <!-- Max Tokens -->
+                        <div>
+                            <label for="guided-max-tokens" class="form-label text-xs">Max Output Tokens</label>
+                            <input id="guided-max-tokens" type="number" min="1024" max="100000" step="1024" value="16384" class="form-input text-xs py-1.5" placeholder="e.g. 16384"/>
+                            <p class="text-[10px] text-outline mt-1">Caps output size (typically 4096 - 16384).</p>
+                        </div>
+                        <!-- Temperature -->
+                        <div>
+                            <label for="guided-temperature" class="form-label text-xs">Temperature (0.0 to 2.0)</label>
+                            <input id="guided-temperature" type="number" min="0.0" max="2.0" step="0.1" value="1.0" class="form-input text-xs py-1.5" placeholder="e.g. 1.0"/>
+                            <p class="text-[10px] text-outline mt-1">Higher is more variety; lower is focused/deterministic.</p>
+                        </div>
+                        <!-- Reasoning Effort -->
+                        <div>
+                            <label for="guided-reasoning-effort" class="form-label text-xs">Reasoning / Thinking Effort</label>
+                            <select id="guided-reasoning-effort" class="form-select text-xs py-1.5 pr-8">
+                                <option value="default">Model Default</option>
+                                <option value="none">Disabled (none / exclude)</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                            <p class="text-[10px] text-outline mt-1">Controls internal thinking effort for reasoning-enabled models.</p>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- URL History and Action -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-border/40 pt-4">
+                <div id="url-history-container" class="hidden flex items-center gap-2 w-full sm:max-w-md">
+                    <label for="guided-url-history" class="text-xs text-outline shrink-0">Recent URLs:</label>
+                    <select id="guided-url-history" class="form-select text-xs py-1.5 pr-8">
+                        <option value="">-- Select a recently used URL --</option>
+                    </select>
+                </div>
+                <div class="ml-auto">
+                    <button type="button" id="parse-url-btn" class="btn-primary btn-sm flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span> Analyze Page with AI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Token Usage Stats (Expandable) -->
+            <div id="token-stats-container" class="hidden mt-4 bg-surface-container p-4 rounded-lg border border-border">
+                <details class="group">
+                    <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-semibold text-on-surface">
+                        <span class="flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px] text-primary">analytics</span>
+                            AI Token Usage Statistics
+                        </span>
+                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-border/50 pt-3">
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Prompt (Input)</span>
+                            <span id="stat-prompt-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Completion (Output)</span>
+                            <span id="stat-completion-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Reasoning (Thinking)</span>
+                            <span id="stat-reasoning-tokens" class="text-sm font-semibold text-on-surface">0</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded border border-border/50">
+                            <span class="block text-outline text-[10px] uppercase font-bold">Total Tokens</span>
+                            <span id="stat-total-tokens" class="text-sm font-semibold text-primary font-bold">0</span>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- Loading overlay/status -->
+        <div id="import-loading-state" class="hidden flex flex-col items-center justify-center py-12 space-y-4 bg-surface-container/30 rounded-lg border border-border">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+            <div class="text-center">
+                <h3 class="text-sm font-semibold text-on-surface">AI is analyzing the page...</h3>
+                <p class="text-xs text-on-surface-variant mt-1">This typically takes 20-40 seconds. Jsoup is reading the page text, then LLM is parsing it.</p>
+            </div>
+        </div>
+
+        <!-- Diff Comparison View Panel -->
+        <div id="diff-comparison-section" class="hidden space-y-6 border-t border-border pt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2">
+                <div>
+                    <h3 class="text-lg font-semibold text-on-surface">🔍 Compare &amp; Match Imported Fields</h3>
+                    <p class="text-xs text-on-surface-variant">Review parsed details against current form values. Edit imported text directly in the right column if needed.</p>
+                </div>
+                
+                <!-- Partial Import Options -->
+                <div class="flex flex-wrap items-center gap-4 text-xs font-semibold bg-surface-container px-3 py-2 rounded-lg border border-border/50">
+                    <span class="text-outline">Sections:</span>
+                    <label for="import-section-metadata" class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" id="import-section-metadata" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
+                        <span>Metadata</span>
+                    </label>
+                    <label for="import-section-steps" class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" id="import-section-steps" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
+                        <span id="import-section-steps-text">Steps breakdown</span>
+                    </label>
+                    <label for="import-section-links" class="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox" id="import-section-links" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
+                        <span id="import-section-links-text">Resource links</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Mobile-only Tab Switcher for Diff View -->
+            <div class="inline-flex md:hidden bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs w-full mb-3">
+                <button type="button" id="diff-mobile-tab-current" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                    👈 Show Current
+                </button>
+                <button type="button" id="diff-mobile-tab-imported" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
+                    👉 Show Imported
+                </button>
+            </div>
+
+            <!-- Field Comparison Table -->
+            <div class="overflow-x-auto rounded-lg border border-border">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-surface-container border-b border-border text-xs font-semibold text-on-surface">
+                            <th class="p-3 w-12 text-center">Import</th>
+                            <th class="p-3 w-36">Field</th>
+                            <th class="p-3 js-col-current md:table-cell">Current Form Value</th>
+                            <th class="p-3 js-col-imported max-md:hidden md:table-cell">Imported Value (Editable)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diff-table-body" class="text-xs divide-y divide-border">
+                        <!-- Filled dynamically by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Steps Preview Collapsible -->
+            <div id="diff-steps-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
+                <button type="button" id="toggle-diff-steps-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-primary">list_alt</span>
+                        Preview Steps to Import (<span id="diff-steps-preview-count">0</span> steps)
+                    </span>
+                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-steps-arrow">expand_more</span>
+                </button>
+                <div id="diff-steps-preview-content" class="hidden mt-3 overflow-x-auto">
+                    <table class="w-full text-left text-[11px] border-collapse">
+                        <thead>
+                            <tr class="border-b border-border text-[10px] font-semibold uppercase text-outline">
+                                <th class="py-1.5 pr-2 w-16">Role</th>
+                                <th class="py-1.5 pr-2 w-8">#</th>
+                                <th class="py-1.5 pr-2 w-16">Timing</th>
+                                <th class="py-1.5 pr-2 w-16">Foot</th>
+                                <th class="py-1.5 pr-2 min-w-[150px]">Action</th>
+                                <th class="py-1.5 pr-2 w-20">Footwork</th>
+                                <th class="py-1.5 pr-2 w-20">Alignment</th>
+                                <th class="py-1.5 pr-2 w-20">Turn</th>
+                            </tr>
+                        </thead>
+                        <tbody id="diff-steps-preview-tbody" class="divide-y divide-border/50">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Links Preview Collapsible -->
+            <div id="diff-links-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
+                <button type="button" id="toggle-diff-links-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
+                    <span class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-primary">link</span>
+                        Preview Resource Links to Import (<span id="diff-links-preview-count">0</span> links)
+                    </span>
+                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-links-arrow">expand_more</span>
+                </button>
+                <div id="diff-links-preview-content" class="hidden mt-3">
+                    <ul id="diff-links-preview-list" class="space-y-1.5 list-disc list-inside text-[11px] text-on-surface-variant">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Diff Action Buttons -->
+            <div class="flex justify-end gap-3 pt-4 border-t border-border">
+                <button type="button" id="discard-import-btn" class="btn-outline btn-sm">Discard</button>
+                <button type="button" id="apply-import-btn" class="btn-primary btn-sm flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span> Apply to Form
+                </button>
+            </div>
+        </div>
     </div>
 
     <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" th:object="${danceFigure}" method="post" 
@@ -143,7 +424,7 @@
                     <div id="leader-steps-section" class="space-y-4">
                         <div class="overflow-x-auto min-h-[160px]">
                             <table class="w-full text-left border-collapse">
-                                <thead>
+                                <thead class="hidden md:table-header-group">
                                     <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                         <th class="py-2 pr-2 w-12">#</th>
                                         <th class="py-2 pr-2 w-20">Timing *</th>
@@ -157,35 +438,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="leader-steps-tbody">
-                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'LEADER'}" class="step-row border-b border-border" data-role="LEADER">
-                                        <td class="py-2 pr-2">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'LEADER'}" class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row" data-role="LEADER">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                             <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                             <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="LEADER" />
-                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
+                                            <!-- Delete button on mobile -->
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
                                             <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                         </td>
-                                        <td class="py-2 text-right">
-                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
+                                            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
+                                                <span>Show Technical Details</span>
+                                                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                            </button>
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                 <span class="material-symbols-outlined text-[18px]">delete</span>
                                             </button>
                                         </td>
@@ -202,7 +498,7 @@
                     <div id="follower-steps-section" class="space-y-4 hidden">
                         <div class="overflow-x-auto min-h-[160px]">
                             <table class="w-full text-left border-collapse">
-                                <thead>
+                                <thead class="hidden md:table-header-group">
                                     <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                         <th class="py-2 pr-2 w-12">#</th>
                                         <th class="py-2 pr-2 w-20">Timing *</th>
@@ -216,35 +512,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="follower-steps-tbody">
-                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'FOLLOWER'}" class="step-row border-b border-border" data-role="FOLLOWER">
-                                        <td class="py-2 pr-2">
+                                    <tr th:each="step, stat : *{steps}" th:if="${step.role == 'FOLLOWER'}" class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row" data-role="FOLLOWER">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                             <input type="hidden" class="step-id" th:name="'steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                             <input type="hidden" class="step-role" th:name="'steps[' + ${stat.index} + '].role'" value="FOLLOWER" />
-                                            <span class="step-number-display text-xs font-semibold text-outline" th:text="${step.stepNumber}">1</span>
+                                            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
+                                            <!-- Delete button on mobile -->
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-1 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
                                             <input type="text" th:name="'steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                         </td>
-                                        <td class="py-2 pr-2">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+                                            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
                                             <textarea th:name="'steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                         </td>
-                                        <td class="py-2 text-right">
-                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+                                        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
+                                            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
+                                                <span>Show Technical Details</span>
+                                                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                            </button>
+                                            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                 <span class="material-symbols-outlined text-[18px]">delete</span>
                                             </button>
                                         </td>
@@ -358,6 +669,7 @@
 
     <!-- Vanilla Javascript Form Dynamics -->
     <script th:src="@{/js/dance-figure-form.js}"></script>
+    <script th:src="@{/js/guided-figure-edit.js}"></script>
 
 </section>
 </html>

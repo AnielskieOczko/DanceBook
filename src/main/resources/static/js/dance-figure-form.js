@@ -86,6 +86,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(err => console.error("Could not fetch figures for dance style mapping", err));
         });
     }
+
+    // Toggle Mobile manual steps collapsible details
+    document.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('.js-toggle-mobile-fields');
+        if (toggleBtn) {
+            const row = toggleBtn.closest('.step-row');
+            if (row) {
+                const collapsedFields = row.querySelectorAll('.js-mobile-collapsed');
+                const isHidden = collapsedFields[0].classList.contains('hidden');
+                collapsedFields.forEach(field => {
+                    if (isHidden) {
+                        field.classList.remove('hidden');
+                    } else {
+                        field.classList.add('hidden');
+                    }
+                });
+                
+                const arrow = toggleBtn.querySelector('.js-mobile-arrow');
+                const label = toggleBtn.querySelector('span');
+                if (arrow && label) {
+                    if (isHidden) {
+                        arrow.classList.add('rotate-180');
+                        label.textContent = 'Hide Technical Details';
+                    } else {
+                        arrow.classList.remove('rotate-180');
+                        label.textContent = 'Show Technical Details';
+                    }
+                }
+            }
+        }
+    });
 });
 
 function switchRoleTab(role) {
@@ -160,38 +191,53 @@ function addStepRow(role) {
     const totalIndex = document.querySelectorAll('.step-row').length;
     
     const tr = document.createElement('tr');
-    tr.className = 'step-row border-b border-border';
+    tr.className = 'grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row';
     tr.setAttribute('data-role', role);
     
     tr.innerHTML = `
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
             <input type="hidden" class="step-id" name="steps[${totalIndex}].id" value="" />
             <input type="hidden" class="step-role" name="steps[${totalIndex}].role" value="${role}" />
-            <span class="step-number-display text-xs font-semibold text-outline">1</span>
+            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline before:content-['Step_'] md:before:content-none">1</span>
+            <!-- Delete button on mobile -->
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-1 md:table-cell py-1 md:py-2">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
             <input type="text" name="steps[${totalIndex}].timing" required class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-1 md:table-cell py-1 md:py-2">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
             <input type="text" name="steps[${totalIndex}].foot" required class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
             <input type="text" name="steps[${totalIndex}].action" required class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
             <input type="text" name="steps[${totalIndex}].footwork" class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
             <input type="text" name="steps[${totalIndex}].alignment" class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
             <input type="text" name="steps[${totalIndex}].amountOfTurn" class="form-input text-xs py-1.5" />
         </td>
-        <td class="py-2 pr-2">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
             <textarea name="steps[${totalIndex}].commentsText" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
         </td>
-        <td class="py-2 text-right">
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn">
+        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
+            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
+                <span>Show Technical Details</span>
+                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+            </button>
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                 <span class="material-symbols-outlined text-[18px]">delete</span>
             </button>
         </td>

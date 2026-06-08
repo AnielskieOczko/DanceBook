@@ -367,17 +367,28 @@ fun sanitizeUrlToFilename(url: String): String {
 }
 
 fun cleanJsonContent(content: String): String {
-    var trimmed = content.trim()
-    if (trimmed.startsWith("```")) {
-        val firstLineEnd = trimmed.indexOf('\n')
-        if (firstLineEnd != -1) {
-            trimmed = trimmed.substring(firstLineEnd).trim()
-        }
-        if (trimmed.endsWith("```")) {
-            trimmed = trimmed.substring(0, trimmed.length - 3).trim()
-        }
+    val trimmed = content.trim()
+    val firstBrace = trimmed.indexOf('{')
+    val firstBracket = trimmed.indexOf('[')
+    val startIndex = when {
+        firstBrace == -1 -> firstBracket
+        firstBracket == -1 -> firstBrace
+        else -> minOf(firstBrace, firstBracket)
     }
-    return trimmed
+    
+    if (startIndex == -1) {
+        return trimmed
+    }
+    
+    val lastBrace = trimmed.lastIndexOf('}')
+    val lastBracket = trimmed.lastIndexOf(']')
+    val endIndex = maxOf(lastBrace, lastBracket)
+    
+    if (endIndex == -1 || endIndex < startIndex) {
+        return trimmed
+    }
+    
+    return trimmed.substring(startIndex, endIndex + 1)
 }
 
 private data class CsvReferenceFigure(
