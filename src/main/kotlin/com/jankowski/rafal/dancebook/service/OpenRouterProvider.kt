@@ -11,29 +11,24 @@ import java.net.http.HttpResponse
 import java.time.Duration
 
 @Service
-class OpenRouterService(
+class OpenRouterProvider(
     private val properties: OpenRouterProperties,
     private val objectMapper: ObjectMapper,
     private val httpClient: HttpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(10))
         .build()
-) {
-    private val log = LoggerFactory.getLogger(OpenRouterService::class.java)
+) : LlmProvider {
 
-    fun getModels(): List<String> {
+    private val log = LoggerFactory.getLogger(OpenRouterProvider::class.java)
+
+    override val providerName: String = "openrouter"
+
+    override fun getModels(): List<String> {
         return properties.allowedFreeModels
     }
 
-    @JvmOverloads
-    fun callLlm(
-        systemPrompt: String,
-        userPrompt: String,
-        requestedModel: String? = null,
-        maxTokens: Int? = null,
-        temperature: Double? = null,
-        reasoningEffort: String? = null
-    ): OpenRouterResponse {
-        val model = requestedModel ?: properties.defaultModel
+    override fun callLlm(request: LlmRequest): LlmResponse {
+        val model = request.model
         if (!properties.allowedFreeModels.contains(model)) {
             throw IllegalArgumentException("Requested model is not on the allowed list of free models: $model")
         }
@@ -50,20 +45,20 @@ class OpenRouterService(
             "too-short-or-invalid"
         }
         log.info("Ingested OpenRouter API key. Length: {}, Masked: {}", cleanApiKey.length, maskedKey)
-
         log.info("Calling OpenRouter LLM using model: {}", model)
 
         val payload = mutableMapOf<String, Any>(
             "model" to model,
             "messages" to listOf(
-                mapOf("role" to "system", "content" to systemPrompt),
-                mapOf("role" to "user", "content" to userPrompt)
+                mapOf("role" to "system", "content" to request.systemPrompt),
+                mapOf("role" to "user", "content" to request.userPrompt)
             ),
             "response_format" to mapOf("type" to "json_object"),
-            "max_tokens" to (maxTokens ?: 16384),
-            "temperature" to (temperature ?: 1.0)
+            "max_tokens" to (request.maxTokens ?: 16384),
+            "temperature" to (request.temperature ?: 1.0)
         )
 
+        val reasoningEffort = request.extras["reasoningEffort"]?.toString()
         if (reasoningEffort != null && reasoningEffort != "default") {
             if (reasoningEffort == "none") {
                 payload["reasoning"] = mapOf(
@@ -79,7 +74,7 @@ class OpenRouterService(
 
         val requestBody = objectMapper.writeValueAsString(payload)
 
-        val request = HttpRequest.newBuilder()
+        val httpRequest = HttpRequest.newBuilder()
             .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer $cleanApiKey")
@@ -90,9 +85,9 @@ class OpenRouterService(
             .build()
 
         try {
-            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            val response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString())
             log.info("OpenRouter API Response Status: {}, Body: {}", response.statusCode(), response.body())
-            
+
             if (response.statusCode() != 200) {
                 log.error("OpenRouter API call failed with status {}: {}", response.statusCode(), response.body())
                 throw RuntimeException("OpenRouter API returned error status ${response.statusCode()}: ${response.body()}")
@@ -121,7 +116,7 @@ class OpenRouterService(
                 null
             }
 
-            return OpenRouterResponse(
+            return LlmResponse(
                 content = cleanJsonContent(content),
                 promptTokens = promptTokens,
                 completionTokens = completionTokens,
@@ -143,27 +138,19 @@ class OpenRouterService(
             firstBracket == -1 -> firstBrace
             else -> minOf(firstBrace, firstBracket)
         }
-        
+
         if (startIndex == -1) {
             return trimmed
         }
-        
+
         val lastBrace = trimmed.lastIndexOf('}')
         val lastBracket = trimmed.lastIndexOf(']')
         val endIndex = maxOf(lastBrace, lastBracket)
-        
+
         if (endIndex == -1 || endIndex < startIndex) {
             return trimmed
         }
-        
+
         return trimmed.substring(startIndex, endIndex + 1)
     }
 }
-
-data class OpenRouterResponse(
-    val content: String,
-    val promptTokens: Int,
-    val completionTokens: Int,
-    val totalTokens: Int,
-    val reasoningTokens: Int?
-)

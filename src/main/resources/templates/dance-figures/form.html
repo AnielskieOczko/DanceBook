@@ -76,13 +76,21 @@
 
         <!-- URL Parse Section -->
         <div id="url-input-section" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label for="guided-url-input" class="form-label">Dance Syllabus URL</label>
                     <input id="guided-url-input" type="url" class="form-input" placeholder="e.g. https://www.dancecentral.info/ballroom/international-style/..."/>
                 </div>
                 <div>
-                    <label for="guided-model-select" class="form-label">AI Parsing Model (Free Only)</label>
+                    <label for="guided-provider-select" class="form-label">AI Provider</label>
+                    <select id="guided-provider-select" class="form-select">
+                        <option value="openrouter" selected>OpenRouter (Free Tier)</option>
+                        <option value="google-ai">Google AI (Gemini Free)</option>
+                        <option value="ollama">Ollama Cloud (Gemma 4)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="guided-model-select" class="form-label">AI Parsing Model</label>
                     <select id="guided-model-select" class="form-select">
                         <option value="nvidia/nemotron-3-nano-30b-a3b:free">nvidia/nemotron-3-nano-30b-a3b:free (Default)</option>
                     </select>
@@ -109,8 +117,8 @@
                             <input id="guided-temperature" type="number" min="0.0" max="2.0" step="0.1" value="1.0" class="form-input text-xs py-1.5" placeholder="e.g. 1.0"/>
                             <p class="text-[10px] text-outline mt-1">Higher is more variety; lower is focused/deterministic.</p>
                         </div>
-                        <!-- Reasoning Effort -->
-                        <div>
+                        <!-- Reasoning Effort (OpenRouter specific) -->
+                        <div id="reasoning-effort-container">
                             <label for="guided-reasoning-effort" class="form-label text-xs">Reasoning / Thinking Effort</label>
                             <select id="guided-reasoning-effort" class="form-select text-xs py-1.5 pr-8">
                                 <option value="default">Model Default</option>
@@ -121,9 +129,16 @@
                             </select>
                             <p class="text-[10px] text-outline mt-1">Controls internal thinking effort for reasoning-enabled models.</p>
                         </div>
+                        <!-- Thinking Budget (Google AI specific) -->
+                        <div id="thinking-budget-container" class="hidden">
+                            <label for="guided-thinking-budget" class="form-label text-xs">Thinking Budget (tokens)</label>
+                            <input id="guided-thinking-budget" type="number" min="0" max="32768" step="1024" value="2048" class="form-input text-xs py-1.5" placeholder="e.g. 2048"/>
+                            <p class="text-[10px] text-outline mt-1">Set to 0 to disable thinking. Max 32768. Default 2048.</p>
+                        </div>
                     </div>
                 </details>
             </div>
+
 
             <!-- URL History and Action -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-border/40 pt-4">

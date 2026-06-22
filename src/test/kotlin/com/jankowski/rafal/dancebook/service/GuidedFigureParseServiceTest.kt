@@ -19,7 +19,7 @@ import java.io.File
 
 class GuidedFigureParseServiceTest {
 
-    private lateinit var openRouterService: OpenRouterService
+    private lateinit var llmProviderRouter: LlmProviderRouter
     private lateinit var danceFigureRepository: DanceFigureRepository
     private lateinit var danceTypeRepository: DanceTypeRepository
     private lateinit var guidedFigureParseService: GuidedFigureParseService
@@ -27,13 +27,13 @@ class GuidedFigureParseServiceTest {
 
     @BeforeEach
     fun setUp() {
-        openRouterService = mock(OpenRouterService::class.java)
+        llmProviderRouter = mock(LlmProviderRouter::class.java)
         danceFigureRepository = mock(DanceFigureRepository::class.java)
         danceTypeRepository = mock(DanceTypeRepository::class.java)
 
         guidedFigureParseService = spy(
             GuidedFigureParseService(
-                openRouterService,
+                llmProviderRouter,
                 danceFigureRepository,
                 danceTypeRepository,
                 objectMapper
@@ -108,7 +108,7 @@ class GuidedFigureParseServiceTest {
         `when`(danceTypeRepository.findAll()).thenReturn(listOf(waltzType))
         `when`(danceFigureRepository.findAll()).thenReturn(emptyList())
 
-        val mockLlmResponse = OpenRouterResponse(
+        val mockLlmResponse = LlmResponse(
             content = """
                 {
                   "name": "Natural Spin Turn",
@@ -133,9 +133,9 @@ class GuidedFigureParseServiceTest {
             reasoningTokens = 50
         )
 
-        `when`(openRouterService.callLlm(anyString(), anyString(), eq(model), any(), any(), any())).thenReturn(mockLlmResponse)
+        `when`(llmProviderRouter.callLlm(anyString(), anyKotlin(LlmRequest("", "", "")))).thenReturn(mockLlmResponse)
 
-        val result = guidedFigureParseService.parseFromUrl(url, model, waltzType.id)
+        val result = guidedFigureParseService.parseFromUrl(url, "openrouter", model, waltzType.id)
 
         assertTrue(result.success)
         assertNotNull(result.request)
@@ -165,7 +165,7 @@ class GuidedFigureParseServiceTest {
         `when`(danceTypeRepository.findAll()).thenReturn(listOf(waltzType))
         `when`(danceFigureRepository.findAll()).thenReturn(emptyList())
 
-        val mockLlmResponse = OpenRouterResponse(
+        val mockLlmResponse = LlmResponse(
             content = """
                 [
                   {
@@ -192,9 +192,9 @@ class GuidedFigureParseServiceTest {
             reasoningTokens = null
         )
 
-        `when`(openRouterService.callLlm(anyString(), anyString(), eq(model), any(), any(), any())).thenReturn(mockLlmResponse)
+        `when`(llmProviderRouter.callLlm(anyString(), anyKotlin(LlmRequest("", "", "")))).thenReturn(mockLlmResponse)
 
-        val result = guidedFigureParseService.parseFromUrl(url, model, waltzType.id)
+        val result = guidedFigureParseService.parseFromUrl(url, "openrouter", model, waltzType.id)
 
         assertTrue(result.success)
         assertNotNull(result.request)
@@ -208,7 +208,7 @@ class GuidedFigureParseServiceTest {
     @Test
     fun testPrintUrlText() {
         val url = "https://www.dancecentral.info/ballroom/international-style/viennese-waltz/natural-turn"
-        val htmlContent = GuidedFigureParseService(mock(OpenRouterService::class.java), mock(DanceFigureRepository::class.java), mock(DanceTypeRepository::class.java), objectMapper)
+        val htmlContent = GuidedFigureParseService(mock(LlmProviderRouter::class.java), mock(DanceFigureRepository::class.java), mock(DanceTypeRepository::class.java), objectMapper)
             .fetchUrlContent(url)
         val doc = org.jsoup.Jsoup.parse(htmlContent)
         val cleanedText = doc.text()
@@ -216,5 +216,10 @@ class GuidedFigureParseServiceTest {
         file.parentFile.mkdirs()
         file.writeText(cleanedText)
         println("DIAGNOSTIC Saved text to: ${file.absolutePath}")
+    }
+
+    private fun <T> anyKotlin(value: T): T {
+        any<T>()
+        return value
     }
 }

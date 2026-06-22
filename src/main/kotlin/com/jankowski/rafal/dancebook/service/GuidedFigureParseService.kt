@@ -23,7 +23,7 @@ import java.util.UUID
 
 @Service
 class GuidedFigureParseService(
-    private val openRouterService: OpenRouterService,
+    private val llmProviderRouter: LlmProviderRouter,
     private val danceFigureRepository: DanceFigureRepository,
     private val danceTypeRepository: DanceTypeRepository,
     private val objectMapper: ObjectMapper
@@ -51,13 +51,14 @@ class GuidedFigureParseService(
     @JvmOverloads
     fun parseFromUrl(
         url: String,
+        provider: String,
         model: String,
         danceTypeId: UUID?,
         maxTokens: Int? = null,
         temperature: Double? = null,
-        reasoningEffort: String? = null
+        providerSettings: Map<String, Any?> = emptyMap()
     ): GuidedParseResult {
-        log.info("Starting guided parse from URL: {} using model: {}, maxTokens: {}, temp: {}, reasoning: {}", url, model, maxTokens, temperature, reasoningEffort)
+        log.info("Starting guided parse from URL: {} using provider: {}, model: {}, maxTokens: {}, temp: {}, settings: {}", url, provider, model, maxTokens, temperature, providerSettings)
         val htmlContent = try {
             fetchUrlContent(url)
         } catch (e: Exception) {
@@ -111,15 +112,19 @@ class GuidedFigureParseService(
             "text" to extractedText
         ))
 
-        var llmResponse: OpenRouterResponse? = null
+        var llmResponse: LlmResponse? = null
         return try {
-            llmResponse = openRouterService.callLlm(
+            val llmRequest = LlmRequest(
                 systemPrompt = systemPrompt,
                 userPrompt = userPrompt,
-                requestedModel = model,
+                model = model,
                 maxTokens = maxTokens,
                 temperature = temperature,
-                reasoningEffort = reasoningEffort
+                extras = providerSettings
+            )
+            llmResponse = llmProviderRouter.callLlm(
+                provider = provider,
+                request = llmRequest
             )
             log.info("LLM Raw Response: {}", llmResponse.content)
             val jsonNode = objectMapper.readTree(llmResponse.content)
@@ -195,7 +200,7 @@ class GuidedFigureParseService(
 
         val danceClass = mapLevelToDanceClass(dto.level)
 
-        val steps = dto.steps?.mapIndexed { index, stepDto ->
+        val steps = dto.steps?.filterNotNull()?.mapIndexed { index, stepDto ->
             val sn = stepDto.step_number
             val parsedStepNum = when (sn) {
                 is Number -> sn.toInt()
@@ -211,14 +216,22 @@ class GuidedFigureParseService(
                 footwork = stepDto.footwork,
                 alignment = stepDto.alignment,
                 amountOfTurn = stepDto.amount_of_turn,
-                commentsText = stepDto.comments?.joinToString("\n")
+                commentsText = stepDto.comments?.filterNotNull()?.joinToString("\n")
             )
         }?.toMutableList() ?: mutableListOf()
 
         val links = mutableListOf<DanceFigureLinkRequest>()
         val urls = mutableListOf<String>()
-        if (dto.urls != null) urls.addAll(dto.urls)
-        if (dto.url != null && !urls.contains(dto.url)) urls.add(dto.url)
+        dto.urls?.forEach { u ->
+            val urlStr = u as String?
+            if (!urlStr.isNullOrBlank()) {
+                urls.add(urlStr)
+            }
+        }
+        val mainUrl = dto.url
+        if (mainUrl != null && mainUrl.isNotBlank() && !urls.contains(mainUrl)) {
+            urls.add(mainUrl)
+        }
 
         urls.forEach { url ->
             links.add(

@@ -5,7 +5,7 @@ import com.jankowski.rafal.dancebook.dto.GuidedParseJsonRequest
 import com.jankowski.rafal.dancebook.dto.GuidedParseResult
 import com.jankowski.rafal.dancebook.dto.GuidedParseUrlRequest
 import com.jankowski.rafal.dancebook.service.GuidedFigureParseService
-import com.jankowski.rafal.dancebook.service.OpenRouterService
+import com.jankowski.rafal.dancebook.service.LlmProviderRouter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -17,14 +17,14 @@ import java.util.UUID
 class GuidedFigureParseControllerTest {
 
     private lateinit var guidedFigureParseService: GuidedFigureParseService
-    private lateinit var openRouterService: OpenRouterService
+    private lateinit var llmProviderRouter: LlmProviderRouter
     private lateinit var controller: GuidedFigureParseController
 
     @BeforeEach
     fun setUp() {
         guidedFigureParseService = mock(GuidedFigureParseService::class.java)
-        openRouterService = mock(OpenRouterService::class.java)
-        controller = GuidedFigureParseController(guidedFigureParseService, openRouterService)
+        llmProviderRouter = mock(LlmProviderRouter::class.java)
+        controller = GuidedFigureParseController(guidedFigureParseService, llmProviderRouter)
     }
 
     @Test
@@ -47,9 +47,9 @@ class GuidedFigureParseControllerTest {
         val model = "nvidia/nemotron-3-nano-30b-a3b:free"
         val danceTypeId = UUID.randomUUID()
         val expectedResult = GuidedParseResult(success = true, request = DanceFigureRequest(name = "Test from URL"))
-        `when`(guidedFigureParseService.parseFromUrl(url, model, danceTypeId)).thenReturn(expectedResult)
+        `when`(guidedFigureParseService.parseFromUrl(url, "openrouter", model, danceTypeId, null, null, emptyMap())).thenReturn(expectedResult)
 
-        val response = controller.parseFromUrl(GuidedParseUrlRequest(url, model, danceTypeId))
+        val response = controller.parseFromUrl(GuidedParseUrlRequest(url = url, provider = "openrouter", model = model, danceTypeId = danceTypeId))
 
         assertEquals(200, response.statusCode.value())
         val body = response.body
@@ -59,8 +59,8 @@ class GuidedFigureParseControllerTest {
 
     @Test
     fun `should get allowed free models`() {
-        val models = listOf("model-1", "model-2")
-        `when`(openRouterService.getModels()).thenReturn(models)
+        val models = mapOf("openrouter" to listOf("model-1", "model-2"))
+        `when`(llmProviderRouter.getAllModels()).thenReturn(models)
 
         val response = controller.getModels()
 
