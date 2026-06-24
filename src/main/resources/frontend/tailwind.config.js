@@ -59,16 +59,16 @@ module.exports = {
 
         // Aliases for smooth transition of existing views
         "text-primary": "#1b1c1b",
-        "text-secondary": "#737877",
-        "border": "#e5e2e1",
+        "text-secondary": "#4b5251", // Increased contrast from #737877 for accessibility
+        "border": "#c8c4c2",         // Darkened from #e5e2e1 to clearly define card boundaries
         "primary-soft": "#1e2524",
         "primary-hover": "#414847",
         "surface-warm": "#f0edec",
         "secondary-hover": "#504530",
-        "accent": "#c1c8c6",
+        "accent": "#59605e",         // Darkened to ensure better visibility
         "danger": "#ba1a1a",
         "danger-soft": "#ffdad6",
-        "success": "#3C7969", 
+        "success": "#2e5d51",        // Slightly darkened for improved contrast
         "success-soft": "#e6e2dc"
       },
       borderRadius: {
@@ -89,27 +89,27 @@ module.exports = {
         "md": "24px",
         "lg": "48px",
         "xl": "80px",
-        "gutter": "24px",
-        "margin": "32px"
+        "gutter": "32px",            // Expanded gutter space to increase layout breathing room
+        "margin": "40px"             // Expanded margins
       },
       fontFamily: {
-        "display-lg": ["Manrope", "sans-serif"],
-        "headline-lg": ["Manrope", "sans-serif"],
-        "headline-md": ["Manrope", "sans-serif"],
-        "body-lg": ["Manrope", "sans-serif"],
-        "body-md": ["Manrope", "sans-serif"],
-        "label-sm": ["Manrope", "sans-serif"],
-        "heading": ["Manrope", "sans-serif"],
-        "body": ["Manrope", "sans-serif"]
+        "display-lg": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "headline-lg": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "headline-md": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "body-lg": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "body-md": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "label-sm": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "heading": ["Atkinson Hyperlegible", "Inter", "sans-serif"],
+        "body": ["Atkinson Hyperlegible", "Inter", "sans-serif"]
       },
       fontSize: {
-        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
-        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }],
-        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
-        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
-        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+        "display-lg": ["52px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "headline-lg": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "headline-md": ["28px", { "lineHeight": "1.4", "fontWeight": "600" }],
+        "body-lg": ["20px", { "lineHeight": "1.7", "fontWeight": "500" }],
+        "body-md": ["18px", { "lineHeight": "1.7", "fontWeight": "400" }],
+        "label-md": ["15px", { "lineHeight": "1.5", "letterSpacing": "0.05em", "fontWeight": "600" }],
+        "label-sm": ["13px", { "lineHeight": "1.5", "letterSpacing": "0.05em", "fontWeight": "600" }]
       },
       boxShadow: {
         'ambient': '0px 4px 20px rgba(45, 45, 45, 0.05)',

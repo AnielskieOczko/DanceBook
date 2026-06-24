@@ -4,7 +4,7 @@
  * All color values come from tailwind.config.js tokens.
  * ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -30,53 +30,58 @@
  * ──────────────────────────────────────────────── */
 @layer components {
 
+  /* ── Accessible Keyboard Focus ────────────────── */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 !important;
+  }
+
   /* ── Buttons ─────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-body font-medium
+    @apply inline-flex items-center justify-center gap-2 font-body font-semibold
            transition-all duration-200 ease-in-out cursor-pointer
-           focus:outline-none focus:ring-2 focus:ring-offset-2;
+           min-h-[48px] focus:outline-none;
   }
   .btn-sm {
-    @apply px-3 py-1.5 text-sm rounded-button;
+    @apply px-4 py-2 text-sm rounded-button min-h-[40px];
   }
   .btn-md {
-    @apply px-6 py-3 text-base rounded-button;
+    @apply px-6 py-3 text-base rounded-button min-h-[48px];
   }
   .btn-lg {
-    @apply px-6 py-3 text-base rounded-button;
+    @apply px-8 py-4 text-lg rounded-button min-h-[56px];
   }
   .btn-primary {
     @apply btn btn-md bg-primary-container text-on-primary-container
-           hover:bg-primary-fixed hover:text-on-primary-fixed focus:ring-primary active:scale-[0.98];
+           hover:bg-primary-fixed hover:text-on-primary-fixed active:scale-[0.98];
   }
   .btn-secondary {
     @apply btn btn-md bg-secondary text-white
-           hover:bg-secondary-hover focus:ring-secondary active:scale-[0.98];
+           hover:bg-secondary-hover active:scale-[0.98];
   }
   .btn-outline {
-    @apply btn btn-md bg-transparent border border-primary-container text-on-surface
-           hover:bg-surface-container-highest focus:ring-primary active:scale-[0.98];
+    @apply btn btn-md bg-transparent border-2 border-primary-container text-on-surface
+           hover:bg-surface-container-highest active:scale-[0.98];
   }
   .btn-danger {
     @apply btn btn-md bg-danger text-white
-           hover:bg-red-700 focus:ring-danger active:scale-[0.98];
+           hover:bg-red-700 active:scale-[0.98];
   }
   .btn-ghost {
     @apply btn btn-md bg-transparent text-text-secondary
-           hover:bg-surface-warm hover:text-text-primary focus:ring-primary;
+           hover:bg-surface-warm hover:text-text-primary;
   }
   .btn-icon {
-    @apply btn p-2 rounded-button text-text-secondary
+    @apply btn p-3 rounded-button text-text-secondary min-h-[48px] min-w-[48px]
            hover:bg-surface-warm hover:text-text-primary;
   }
 
   /* ── Cards ───────────────────────────────────── */
   .card {
-    @apply bg-surface rounded-card border border-border
+    @apply bg-surface rounded-card border-2 border-border
            transition-all duration-300;
   }
   .card-hover {
-    @apply card hover:shadow-ambient hover:-translate-y-[2px];
+    @apply card hover:shadow-ambient hover:-translate-y-[2px] hover:border-outline;
   }
   .card-interactive {
     @apply card-hover cursor-pointer;
@@ -84,98 +89,98 @@
 
   /* ── Badges ──────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-pill
-           text-xs font-medium whitespace-nowrap;
+    @apply inline-flex items-center px-3 py-1 rounded-pill
+           text-sm font-semibold whitespace-nowrap;
   }
   .badge-primary {
-    @apply badge bg-primary-soft text-on-surface;
+    @apply badge bg-primary-soft text-on-surface border border-border;
   }
   .badge-secondary {
-    @apply badge bg-surface-container-high text-on-surface;
+    @apply badge bg-surface-container-high text-on-surface border border-border;
   }
   .badge-accent {
     @apply badge bg-primary-fixed text-on-primary-fixed;
   }
   .badge-neutral {
-    @apply badge bg-surface-warm text-text-secondary;
+    @apply badge bg-surface-warm text-text-secondary border border-border;
   }
   .badge-danger {
-    @apply badge bg-danger-soft text-danger;
+    @apply badge bg-danger-soft text-danger border border-danger/20;
   }
   .badge-success {
-    @apply badge bg-success-soft text-success;
+    @apply badge bg-success-soft text-success border border-success/20;
   }
 
   /* ── Stat Card ───────────────────────────────── */
   .stat-card {
-    @apply card p-4 flex flex-col gap-2;
+    @apply card p-6 flex flex-col gap-3;
   }
   .stat-card-icon {
-    @apply w-10 h-10 rounded-full bg-surface-container flex items-center justify-center;
+    @apply w-12 h-12 rounded-full bg-surface-container flex items-center justify-center;
   }
   .stat-card-value {
-    @apply text-2xl font-heading font-bold text-text-primary;
+    @apply text-3xl font-heading font-bold text-text-primary;
   }
   .stat-card-label {
-    @apply text-sm text-text-secondary font-medium uppercase tracking-wider;
+    @apply text-sm text-text-secondary font-bold uppercase tracking-wider;
   }
 
   /* ── Form Elements ───────────────────────────── */
   .form-input {
-    @apply w-full px-3 py-2.5 bg-surface-container border border-transparent rounded-md
-           text-text-primary placeholder-text-secondary text-sm
-           focus:outline-none focus:ring-0 focus:border-primary-container
+    @apply w-full px-4 py-3 bg-surface-container border-2 border-border rounded-md
+           text-text-primary placeholder-text-secondary text-base min-h-[48px]
+           focus:outline-none focus:border-primary-container
            transition-colors duration-200;
   }
   .form-select {
     @apply form-input appearance-none bg-no-repeat bg-right pr-10 cursor-pointer;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2378716C' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5251' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-size: 1.25rem;
     background-position: right center;
   }
   .form-textarea {
-    @apply form-input resize-y min-h-[80px];
+    @apply form-input resize-y min-h-[100px];
   }
   .form-label {
-    @apply block text-sm font-medium text-text-primary mb-1.5;
+    @apply block text-base font-semibold text-text-primary mb-2;
   }
   .form-error {
-    @apply mt-1 text-sm text-danger;
+    @apply mt-2 text-base text-danger font-semibold;
   }
   .form-hint {
-    @apply mt-1 text-xs text-text-secondary;
+    @apply mt-2 text-sm text-text-secondary font-medium;
   }
 
   /* ── Chips ────────────────────────────────────── */
   .chip {
-    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill
-           text-sm font-medium cursor-pointer bg-surface-container text-on-surface
-           hover:bg-surface-container-high transition-all duration-200;
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-pill
+           text-base font-semibold cursor-pointer bg-surface-container text-on-surface border border-border
+           hover:bg-surface-container-high transition-all duration-200 min-h-[40px];
   }
   .chip-active {
-    @apply bg-primary-fixed text-on-primary-fixed;
+    @apply bg-primary-fixed text-on-primary-fixed border-primary-container;
   }
   .chip-group {
-    @apply flex flex-wrap gap-2;
+    @apply flex flex-wrap gap-3;
   }
 
   /* ── Avatar ──────────────────────────────────── */
   .avatar {
-    @apply w-9 h-9 rounded-full flex items-center justify-center
-           bg-surface-container-highest text-on-surface text-sm font-heading font-bold uppercase
-           flex-shrink-0;
+    @apply w-10 h-10 rounded-full flex items-center justify-center
+           bg-surface-container-highest text-on-surface text-base font-heading font-bold uppercase
+           flex-shrink-0 border-2 border-border;
   }
   .avatar-sm {
-    @apply w-7 h-7 text-xs;
+    @apply w-8 h-8 text-sm;
   }
   .avatar-lg {
-    @apply w-12 h-12 text-lg;
+    @apply w-14 h-14 text-xl;
   }
 
   /* ── Navigation ──────────────────────────────── */
   .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-button
-           text-sm font-medium text-text-secondary
+    @apply flex items-center gap-3 px-4 py-3 rounded-button
+           text-base font-semibold text-text-secondary min-h-[48px]
            hover:bg-primary-soft hover:text-primary
            transition-all duration-200;
   }
