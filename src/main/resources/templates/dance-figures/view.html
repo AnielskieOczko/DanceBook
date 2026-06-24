@@ -187,10 +187,10 @@
                 <!-- Role Tab Selector -->
                 <div class="inline-flex bg-surface-container-high p-1 rounded-lg border-2 border-border text-base">
                     <button type="button" id="leader-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm">
-                        <span class="material-symbols-outlined text-[20px]">face</span> Leader Steps
+                        <span class="material-symbols-outlined text-[20px]">face</span> Leader
                     </button>
                     <button type="button" id="follower-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface">
-                        <span class="material-symbols-outlined text-[20px]">face_2</span> Follower Steps
+                        <span class="material-symbols-outlined text-[20px]">face_2</span> Follower
                     </button>
                 </div>
             </div>
@@ -202,9 +202,9 @@
                         <thead>
                             <tr class="border-b-2 border-border text-sm font-bold uppercase tracking-wider text-outline">
                                 <th class="py-4 px-3 w-16 text-center">Step</th>
-                                <th class="py-4 px-3 w-24">Timing</th>
+                                <th class="py-4 px-3 w-28">Timing</th>
                                 <th class="py-4 px-3 w-28">Foot</th>
-                                <th class="py-4 px-3">Action Description</th>
+                                <th class="py-4 px-3">Action</th>
                                 <th class="py-4 px-3 w-28">Footwork</th>
                                 <th class="py-4 px-3 w-32">Alignment</th>
                                 <th class="py-4 px-3 w-28">Turn</th>
@@ -214,7 +214,12 @@
                         <tbody>
                             <tr th:each="step : ${danceFigure.getLeaderSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
                                 <td class="py-4 px-3 text-center font-bold text-lg text-primary" th:text="${step.stepNumber}">1</td>
-                                <td class="py-4 px-3 font-bold text-base" th:text="${step.timing}">S</td>
+                                <td class="py-4 px-3">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                        <span th:text="${step.timing}">S</span>
+                                    </span>
+                                </td>
                                 <td class="py-4 px-3">
                                     <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
                                         <span class="material-symbols-outlined text-[14px] scale-x-[-1] mr-0.5" style="font-variation-settings: 'FILL' 1;">footprint</span> L
@@ -225,7 +230,13 @@
                                     <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
                                 </td>
                                 <td class="py-4 px-3 text-base text-on-surface font-medium" th:text="${step.action}">Step forward</td>
-                                <td class="py-4 px-3 text-on-surface-variant font-mono text-base uppercase" th:text="${step.footwork ?: '-'}">HT</td>
+                                <td class="py-4 px-3">
+                                    <span th:if="${step.footwork != null && step.footwork != '' && step.footwork != '-'}" 
+                                          class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded text-on-surface uppercase" 
+                                          th:text="${step.footwork}">HT</span>
+                                    <span th:if="${step.footwork == null || step.footwork == '' || step.footwork == '-'}" 
+                                          class="text-outline-variant font-bold text-sm">-</span>
+                                </td>
                                 <td class="py-4 px-3 text-base text-on-surface" th:text="${step.alignment ?: '-'}">LOD</td>
                                 <td class="py-4 px-3 text-base text-on-surface" th:text="${step.amountOfTurn ?: '-'}">None</td>
                                 <td class="py-4 px-3 text-base text-on-surface-variant">
@@ -308,9 +319,9 @@
                         <thead>
                             <tr class="border-b-2 border-border text-sm font-bold uppercase tracking-wider text-outline">
                                 <th class="py-4 px-3 w-16 text-center">Step</th>
-                                <th class="py-4 px-3 w-24">Timing</th>
+                                <th class="py-4 px-3 w-28">Timing</th>
                                 <th class="py-4 px-3 w-28">Foot</th>
-                                <th class="py-4 px-3">Action Description</th>
+                                <th class="py-4 px-3">Action</th>
                                 <th class="py-4 px-3 w-28">Footwork</th>
                                 <th class="py-4 px-3 w-32">Alignment</th>
                                 <th class="py-4 px-3 w-28">Turn</th>
@@ -320,7 +331,12 @@
                         <tbody>
                             <tr th:each="step : ${danceFigure.getFollowerSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
                                 <td class="py-4 px-3 text-center font-bold text-lg text-primary" th:text="${step.stepNumber}">1</td>
-                                <td class="py-4 px-3 font-bold text-base" th:text="${step.timing}">S</td>
+                                <td class="py-4 px-3">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                        <span th:text="${step.timing}">S</span>
+                                    </span>
+                                </td>
                                 <td class="py-4 px-3">
                                     <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
                                         <span class="material-symbols-outlined text-[14px] scale-x-[-1] mr-0.5" style="font-variation-settings: 'FILL' 1;">footprint</span> L
@@ -331,7 +347,13 @@
                                     <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
                                 </td>
                                 <td class="py-4 px-3 text-base text-on-surface font-medium" th:text="${step.action}">Step back</td>
-                                <td class="py-4 px-3 text-on-surface-variant font-mono text-base uppercase" th:text="${step.footwork ?: '-'}">T</td>
+                                <td class="py-4 px-3">
+                                    <span th:if="${step.footwork != null && step.footwork != '' && step.footwork != '-'}" 
+                                          class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded text-on-surface uppercase" 
+                                          th:text="${step.footwork}">T</span>
+                                    <span th:if="${step.footwork == null || step.footwork == '' || step.footwork == '-'}" 
+                                          class="text-outline-variant font-bold text-sm">-</span>
+                                </td>
                                 <td class="py-4 px-3 text-base text-on-surface" th:text="${step.alignment ?: '-'}">LOD</td>
                                 <td class="py-4 px-3 text-base text-on-surface" th:text="${step.amountOfTurn ?: '-'}">None</td>
                                 <td class="py-4 px-3 text-base text-on-surface-variant">
