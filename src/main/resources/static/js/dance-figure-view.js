@@ -42,11 +42,11 @@ function switchRoleTab(role) {
 
     // Toggle active styling classes on buttons
     leaderBtn.className = isLeader 
-        ? 'px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-primary-container text-primary-container'
-        : 'px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-transparent text-text-secondary hover:text-on-surface';
+        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
     followerBtn.className = !isLeader 
-        ? 'px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-primary-container text-primary-container'
-        : 'px-4 py-1.5 rounded-md font-medium transition-all border-b-2 border-transparent text-text-secondary hover:text-on-surface';
+        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
 
     // Toggle visibility of step tables
     if (isLeader) {
