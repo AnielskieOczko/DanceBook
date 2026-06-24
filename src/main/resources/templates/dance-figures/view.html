@@ -89,10 +89,16 @@
                                 <span class="text-on-surface-variant">Starting Foot:</span>
                                 <div>
                                     <span th:if="${danceFigure.startingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                        </span> L
                                     </span>
                                     <span th:if="${danceFigure.startingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                        </span> R
                                     </span>
                                     <span th:if="${danceFigure.startingFootLeader != 'LF' && danceFigure.startingFootLeader != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootLeader ?: 'N/A'}">N/A</span>
                                 </div>
@@ -101,10 +107,16 @@
                                 <span class="text-on-surface-variant">Ending Foot:</span>
                                 <div>
                                     <span th:if="${danceFigure.endingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                        </span> L
                                     </span>
                                     <span th:if="${danceFigure.endingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                        </span> R
                                     </span>
                                     <span th:if="${danceFigure.endingFootLeader != 'LF' && danceFigure.endingFootLeader != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootLeader ?: 'N/A'}">N/A</span>
                                 </div>
@@ -121,10 +133,16 @@
                                 <span class="text-on-surface-variant">Starting Foot:</span>
                                 <div>
                                     <span th:if="${danceFigure.startingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                        </span> L
                                     </span>
                                     <span th:if="${danceFigure.startingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                        </span> R
                                     </span>
                                     <span th:if="${danceFigure.startingFootFollower != 'LF' && danceFigure.startingFootFollower != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootFollower ?: 'N/A'}">N/A</span>
                                 </div>
@@ -133,10 +151,16 @@
                                 <span class="text-on-surface-variant">Ending Foot:</span>
                                 <div>
                                     <span th:if="${danceFigure.endingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                        </span> L
                                     </span>
                                     <span th:if="${danceFigure.endingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                        <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                        <span class="inline-flex items-center gap-0.5 mr-1">
+                                            <span class="material-symbols-outlined text-[16px] scale-x-[-1] opacity-40" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                        </span> R
                                     </span>
                                     <span th:if="${danceFigure.endingFootFollower != 'LF' && danceFigure.endingFootFollower != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootFollower ?: 'N/A'}">N/A</span>
                                 </div>
@@ -186,10 +210,16 @@
                                     <td class="py-3 px-2 font-bold text-base" th:text="${step.timing}">S</td>
                                     <td class="py-3 px-2">
                                         <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[14px]">footprint</span> L
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            </span> L
                                         </span>
                                         <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[14px]">footprint</span> R
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            </span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
                                     </td>
@@ -227,10 +257,16 @@
                                         </span>
                                         <!-- Foot Badge -->
                                         <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            </span> L
                                         </span>
                                         <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            </span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border">
                                             <span class="material-symbols-outlined text-[16px]">footprint</span>
@@ -292,10 +328,16 @@
                                     <td class="py-3 px-2 font-bold text-base" th:text="${step.timing}">S</td>
                                     <td class="py-3 px-2">
                                         <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[14px]">footprint</span> L
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            </span> L
                                         </span>
                                         <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[14px]">footprint</span> R
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            </span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
                                     </td>
@@ -333,10 +375,16 @@
                                         </span>
                                         <!-- Foot Badge -->
                                         <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[16px]">footprint</span> L
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                            </span> L
                                         </span>
                                         <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
-                                            <span class="material-symbols-outlined text-[16px]">footprint</span> R
+                                            <span class="inline-flex items-center gap-0.5 mr-0.5">
+                                                <span class="material-symbols-outlined text-[14px] scale-x-[-1] opacity-30" style="font-variation-settings: 'FILL' 0;">footprint</span>
+                                                <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
+                                            </span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border">
                                             <span class="material-symbols-outlined text-[16px]">footprint</span>
