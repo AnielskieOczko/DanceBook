@@ -3,6 +3,8 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
+import com.jankowski.rafal.dancebook.dto.DanceFigureVariationRequest
+import com.jankowski.rafal.dancebook.model.DanceFigureVariation
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.service.DanceFigureService
@@ -135,21 +137,6 @@ class DanceFigureWebController(
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val danceFigure = danceFigureService.findById(id)
         
-        val stepsRequest = danceFigure.steps.map { step ->
-            DanceFigureStepRequest(
-                id = step.id,
-                stepNumber = step.stepNumber,
-                timing = step.timing,
-                role = step.role,
-                foot = step.foot,
-                action = step.action,
-                footwork = step.footwork,
-                alignment = step.alignment,
-                amountOfTurn = step.amountOfTurn,
-                commentsText = step.comments.sortedBy { it.displayOrder }.joinToString("\n") { it.commentText }
-            )
-        }.sortedBy { it.stepNumber }.toMutableList()
-
         val linksRequest = danceFigure.links.map { link ->
             DanceFigureLinkRequest(
                 id = link.id,
@@ -163,17 +150,9 @@ class DanceFigureWebController(
             name = danceFigure.name,
             danceTypeId = danceFigure.danceType?.id,
             danceClass = danceFigure.danceClass,
-            alternativeTiming = danceFigure.alternativeTiming,
-            startingFootLeader = danceFigure.startingFootLeader,
-            endingFootLeader = danceFigure.endingFootLeader,
-            startingFootFollower = danceFigure.startingFootFollower,
-            endingFootFollower = danceFigure.endingFootFollower,
-            startingPosition = danceFigure.startingPosition,
-            endingPosition = danceFigure.endingPosition,
             precedingFigureNames = danceFigure.precedingFigureNames,
             followingFigureNames = danceFigure.followingFigureNames,
             notes = danceFigure.notes,
-            steps = stepsRequest,
             links = linksRequest
         )
 
@@ -226,6 +205,117 @@ class DanceFigureWebController(
     fun deleteDanceFigure(@PathVariable id: UUID): String {
         danceFigureService.delete(id)
         return "redirect:/dance-figures"
+    }
+
+    @GetMapping("/{figureId}/variations/new")
+    fun showCreateVariationForm(
+        @PathVariable figureId: UUID,
+        model: Model
+    ): String {
+        val figure = danceFigureService.findById(figureId)
+        val request = DanceFigureVariationRequest(
+            name = "",
+            timing = ""
+        )
+        model.addAttribute("variation", request)
+        model.addAttribute("danceFigure", figure)
+        return "dance-figures/variation-form"
+    }
+
+    @PostMapping("/{figureId}/variations")
+    fun createVariation(
+        @PathVariable figureId: UUID,
+        @Valid @ModelAttribute("variation") request: DanceFigureVariationRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        val figure = danceFigureService.findById(figureId)
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("danceFigure", figure)
+            return "dance-figures/variation-form"
+        }
+        try {
+            danceFigureService.createVariation(figureId, request)
+        } catch (e: Exception) {
+            bindingResult.rejectValue("name", "error.variation", e.message ?: "Failed to create variation")
+            model.addAttribute("danceFigure", figure)
+            return "dance-figures/variation-form"
+        }
+        return "redirect:/dance-figures/${figureId}"
+    }
+
+    @GetMapping("/variations/{variationId}/edit")
+    fun showEditVariationForm(
+        @PathVariable variationId: UUID,
+        model: Model
+    ): String {
+        val variation = danceFigureService.findVariationById(variationId)
+        val figure = variation.danceFigure!!
+
+        val stepsRequest = variation.steps.map { step ->
+            DanceFigureStepRequest(
+                id = step.id,
+                stepNumber = step.stepNumber,
+                timing = step.timing,
+                role = step.role,
+                foot = step.foot,
+                action = step.action,
+                footwork = step.footwork,
+                alignment = step.alignment,
+                amountOfTurn = step.amountOfTurn,
+                commentsText = step.comments.sortedBy { it.displayOrder }.joinToString("\n") { it.commentText }
+            )
+        }.sortedBy { it.stepNumber }.toMutableList()
+
+        val request = DanceFigureVariationRequest(
+            id = variation.id,
+            name = variation.name,
+            timing = variation.timing,
+            isDefault = variation.isDefault,
+            startingFootLeader = variation.startingFootLeader,
+            endingFootLeader = variation.endingFootLeader,
+            startingFootFollower = variation.startingFootFollower,
+            endingFootFollower = variation.endingFootFollower,
+            startingPosition = variation.startingPosition,
+            endingPosition = variation.endingPosition,
+            steps = stepsRequest
+        )
+
+        model.addAttribute("variation", request)
+        model.addAttribute("danceFigure", figure)
+        return "dance-figures/variation-form"
+    }
+
+    @PostMapping("/variations/{variationId}")
+    fun updateVariation(
+        @PathVariable variationId: UUID,
+        @Valid @ModelAttribute("variation") request: DanceFigureVariationRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        val variation = danceFigureService.findVariationById(variationId)
+        val figure = variation.danceFigure!!
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("danceFigure", figure)
+            return "dance-figures/variation-form"
+        }
+        try {
+            danceFigureService.updateVariation(variationId, request)
+        } catch (e: Exception) {
+            bindingResult.rejectValue("name", "error.variation", e.message ?: "Failed to update variation")
+            model.addAttribute("danceFigure", figure)
+            return "dance-figures/variation-form"
+        }
+        return "redirect:/dance-figures/${figure.id}"
+    }
+
+    @PostMapping("/variations/{variationId}/delete")
+    fun deleteVariation(@PathVariable variationId: UUID): String {
+        val variation = danceFigureService.findVariationById(variationId)
+        val figureId = variation.danceFigure?.id ?: throw IllegalStateException("Variation is not linked to a figure")
+        danceFigureService.deleteVariation(variationId)
+        return "redirect:/dance-figures/$figureId"
     }
 
     @PostMapping("/inline")

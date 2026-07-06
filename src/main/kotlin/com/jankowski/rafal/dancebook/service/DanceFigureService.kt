@@ -5,6 +5,9 @@ import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.dto.DanceFigureVariationRequest
+import com.jankowski.rafal.dancebook.model.DanceFigureVariation
+
 interface DanceFigureService {
     fun findAll(
         typeIds: List<UUID>? = null,
@@ -19,5 +22,10 @@ interface DanceFigureService {
     fun create(request: DanceFigureRequest): DanceFigure
     fun update(id: UUID, request: DanceFigureRequest): DanceFigure
     fun delete(id: UUID)
+
+    fun findVariationById(variationId: UUID): DanceFigureVariation
+    fun createVariation(figureId: UUID, request: DanceFigureVariationRequest): DanceFigureVariation
+    fun updateVariation(variationId: UUID, request: DanceFigureVariationRequest): DanceFigureVariation
+    fun deleteVariation(variationId: UUID)
 }
 

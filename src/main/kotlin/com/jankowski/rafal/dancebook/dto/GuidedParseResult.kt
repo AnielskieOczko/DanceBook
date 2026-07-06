@@ -14,3 +14,11 @@ data class LlmUsageStats(
     val totalTokens: Int,
     val reasoningTokens: Int? = null
 )
+
+data class GuidedVariationParseResult(
+    val success: Boolean,
+    val request: DanceFigureVariationRequest? = null,
+    val errors: List<String> = emptyList(),
+    val warnings: List<String> = emptyList(),
+    val usage: LlmUsageStats? = null
+)

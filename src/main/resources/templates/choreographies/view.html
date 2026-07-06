@@ -162,9 +162,9 @@
                             <span th:if="${entry.danceFigure?.danceClass != null}"
                                   class="badge bg-secondary-container text-on-surface border border-outline-variant/30 text-[9px] font-semibold print-badge"
                                   th:text="${entry.danceFigure.danceClass.name()}">F</span>
-                            <span th:if="${entry.danceFigure?.alternativeTiming != null}"
+                            <span th:if="${entry.danceFigure?.defaultTiming != null}"
                                   class="text-[10px] text-text-secondary print:text-black"
-                                  th:text="'(' + ${entry.danceFigure.alternativeTiming} + ')'">(123)</span>
+                                  th:text="'(' + ${entry.danceFigure.defaultTiming} + ')'">(123)</span>
                         </div>
                         
                         <!-- Notes display -->

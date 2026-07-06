@@ -70,7 +70,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider block mb-1" th:text="${f.startTime + ' – ' + f.endTime}">0:00</span>
-                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.danceFigure != null && f.danceFigure.alternativeTiming != null ? f.name + ' [' + f.danceFigure.alternativeTiming + ']' : f.name}">Figure Name</h3>
+                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.danceFigure != null && f.danceFigure.defaultTiming != null ? f.name + ' [' + f.danceFigure.defaultTiming + ']' : f.name}">Figure Name</h3>
                         </div>
                         <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                             <button type="button" 
@@ -108,7 +108,7 @@
                         <div class="relative flex items-center gap-2">
                             <select name="danceFigureId" id="danceFigureId" required class="form-select flex-1 min-w-0">
                                 <option value="">Select a figure...</option>
-                                <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
+                                <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.defaultTiming != null ? ' [' + df.defaultTiming + ']' : '')}">
                                     Figure Name
                                 </option>
                             </select>

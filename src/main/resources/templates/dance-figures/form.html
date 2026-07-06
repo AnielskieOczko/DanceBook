@@ -356,7 +356,7 @@
                         </div>
 
                         <!-- Alternative Timing -->
-                        <div>
+                        <div class="hidden">
                             <label for="alternativeTiming" class="form-label">Alternative Timing (Optional)</label>
                             <input id="alternativeTiming" type="text" th:field="*{alternativeTiming}"
                                    class="form-input"
@@ -368,7 +368,7 @@
                 </div>
 
                 <!-- Section 2: Positions & Footwork -->
-                <div class="card p-8 space-y-6 bg-white">
+                <div class="card p-8 space-y-6 bg-white hidden">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined text-[20px] text-primary">accessibility_new</span> Positions &amp; Footwork
                     </h2>
@@ -472,7 +472,7 @@
         </div>
 
         <!-- MIDDLE SECTION: Step-by-Step Breakdown (Full Width) -->
-        <div class="w-full mb-8">
+        <div class="w-full mb-8 hidden">
             <!-- Section 3: Steps Breakdown Table (Tabs + Rows) -->
                 <div class="card p-8 space-y-6 bg-white overflow-hidden">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3 gap-3">

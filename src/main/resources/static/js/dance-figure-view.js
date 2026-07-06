@@ -1,12 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const leaderBtn = document.getElementById('leader-tab-btn');
-    const followerBtn = document.getElementById('follower-tab-btn');
-
-    if (leaderBtn && followerBtn) {
-        leaderBtn.addEventListener('click', () => switchRoleTab('LEADER'));
-        followerBtn.addEventListener('click', () => switchRoleTab('FOLLOWER'));
-    }
-
     // Toggle Mobile Timeline collapsible details
     document.addEventListener('click', (e) => {
         const toggleBtn = e.target.closest('.js-timeline-toggle');
@@ -28,25 +20,65 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // Switch variation tabs
+    document.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.js-var-tab');
+        if (tabBtn) {
+            const varId = tabBtn.getAttribute('data-id');
+            switchVariation(varId);
+        }
+    });
+
+    // Switch role tabs
+    document.addEventListener('click', (e) => {
+        const roleBtn = e.target.closest('.js-role-tab');
+        if (roleBtn) {
+            const role = roleBtn.getAttribute('data-role');
+            const varId = roleBtn.getAttribute('data-var-id');
+            switchRoleTab(role, varId);
+        }
+    });
 });
 
-function switchRoleTab(role) {
+function switchVariation(varId) {
+    // Hide all variation panels
+    document.querySelectorAll('.variation-panel').forEach(function(panel) {
+        panel.classList.add('hidden');
+    });
+    // Show active panel
+    const activePanel = document.getElementById('var-panel-' + varId);
+    if (activePanel) {
+        activePanel.classList.remove('hidden');
+    }
+
+    // Update tab styles
+    document.querySelectorAll('[id^="var-tab-"]').forEach(function(tab) {
+        tab.className = 'js-var-tab px-4 py-2 bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold rounded-lg transition-all duration-150 text-sm';
+    });
+    const activeTab = document.getElementById('var-tab-' + varId);
+    if (activeTab) {
+        activeTab.className = 'js-var-tab px-4 py-2 bg-primary text-white font-bold rounded-lg shadow-sm transition-all duration-150 text-sm';
+    }
+}
+
+function switchRoleTab(role, varId) {
     const isLeader = role === 'LEADER';
     
-    const leaderBtn = document.getElementById('leader-tab-btn');
-    const followerBtn = document.getElementById('follower-tab-btn');
-    const leaderSec = document.getElementById('leader-steps-section');
-    const followerSec = document.getElementById('follower-steps-section');
+    const leaderBtn = document.getElementById('leader-tab-btn-' + varId);
+    const followerBtn = document.getElementById('follower-tab-btn-' + varId);
+    const leaderSec = document.getElementById('leader-steps-section-' + varId);
+    const followerSec = document.getElementById('follower-steps-section-' + varId);
 
     if (!leaderBtn || !followerBtn || !leaderSec || !followerSec) return;
 
     // Toggle active styling classes on buttons
     leaderBtn.className = isLeader 
-        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
-        : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
+        ? 'js-role-tab flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        : 'js-role-tab flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
     followerBtn.className = !isLeader 
-        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
-        : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
+        ? 'js-role-tab flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        : 'js-role-tab flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
 
     // Toggle visibility of step tables
     if (isLeader) {

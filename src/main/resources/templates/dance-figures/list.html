@@ -194,7 +194,7 @@
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
                                 <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
                                 <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
-                                <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
+                                <span th:if="${f.defaultTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.defaultTiming}">Timing</span></span>
                             </div>
                         </div>
                     </div>
@@ -216,7 +216,7 @@
                     <div class="flex items-center gap-3 text-on-surface-variant">
                         <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
                         <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
-                        <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.alternativeTiming}">Timing</span></span>
+                        <span th:if="${f.defaultTiming != null}" class="flex items-center gap-1 text-label-sm"><span class="material-symbols-outlined text-[14px]">schedule</span> <span th:text="${f.defaultTiming}">Timing</span></span>
                     </div>
                 </div>
 

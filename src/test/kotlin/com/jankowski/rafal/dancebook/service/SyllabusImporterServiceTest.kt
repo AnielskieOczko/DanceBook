@@ -26,6 +26,18 @@ class SyllabusImporterServiceTest {
     @BeforeEach
     fun setUp() {
         danceFigureRepository = mock(DanceFigureRepository::class.java)
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer {
+            val figure = it.arguments[0] as DanceFigure
+            if (figure.id == null) {
+                figure.id = UUID.randomUUID()
+            }
+            figure.variations.forEach { varEnt ->
+                if (varEnt.id == null) {
+                    varEnt.id = UUID.randomUUID()
+                }
+            }
+            figure
+        }
         danceFigureStepRepository = mock(DanceFigureStepRepository::class.java)
         danceTypeRepository = mock(DanceTypeRepository::class.java)
         
@@ -86,13 +98,14 @@ class SyllabusImporterServiceTest {
         println("WARNINGS FOUND: " + result.warnings)
         assertEquals(0, result.warnings.size)
 
-        // Verify figure metadata was updated
-        assertEquals("RF", existingFigure.startingFootLeader)
-        assertEquals("LF", existingFigure.endingFootLeader) // last step is LF
-        assertEquals("LF", existingFigure.startingFootFollower)
-        assertEquals("RF", existingFigure.endingFootFollower)
-
-        assertEquals("Closed Position, facing Wall", existingFigure.startingPosition)
+        // Verify figure metadata was updated on default variation
+        val defaultVar = existingFigure.getDefaultVariation()
+        assertNotNull(defaultVar)
+        assertEquals("RF", defaultVar!!.startingFootLeader)
+        assertEquals("LF", defaultVar.endingFootLeader) // last step is LF
+        assertEquals("LF", defaultVar.startingFootFollower)
+        assertEquals("RF", defaultVar.endingFootFollower)
+        assertEquals("Closed Position, facing Wall", defaultVar.startingPosition)
         assertEquals(listOf("Natural Basic Movement"), existingFigure.precedingFigureNames)
         assertEquals(listOf("Whisk To Left"), existingFigure.followingFigureNames)
 
@@ -179,13 +192,15 @@ class SyllabusImporterServiceTest {
         assertEquals(0, result.skippedUnmatched)
         assertEquals(0, result.warnings.size)
 
-        // Verify figure metadata was updated
-        assertEquals("RF", existingFigure.startingFootLeader)
-        assertEquals("LF", existingFigure.endingFootLeader)
-        assertEquals("LF", existingFigure.startingFootFollower)
-        assertEquals("RF", existingFigure.endingFootFollower)
-        assertEquals("Closed Position, facing Wall", existingFigure.startingPosition)
-        assertEquals("Closed Position", existingFigure.endingPosition)
+        // Verify figure metadata was updated on default variation
+        val defaultVar = existingFigure.getDefaultVariation()
+        assertNotNull(defaultVar)
+        assertEquals("RF", defaultVar!!.startingFootLeader)
+        assertEquals("LF", defaultVar.endingFootLeader)
+        assertEquals("LF", defaultVar.startingFootFollower)
+        assertEquals("RF", defaultVar.endingFootFollower)
+        assertEquals("Closed Position, facing Wall", defaultVar.startingPosition)
+        assertEquals("Closed Position", defaultVar.endingPosition)
         assertEquals(listOf("Natural Basic Movement"), existingFigure.precedingFigureNames)
         assertEquals(listOf("Whisk To Left"), existingFigure.followingFigureNames)
         assertEquals("Leader turns 1/4 to L over 7-10\nSome other alternatives.", existingFigure.notes)

@@ -31,25 +31,28 @@ fun main() {
         .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     val sqlBuilder = StringBuilder()
 
-    sqlBuilder.append("-- Auto-generated seeding script for parsed figures metadata, steps, links, and comments\n")
+    sqlBuilder.append("-- Auto-generated seeding script for parsed figures metadata, variations, steps, links, and comments\n")
     sqlBuilder.append("-- Source of truth: docs/figures steps/parsed/chunk_*_parsed.json\n\n")
 
     // Clean up existing links and steps first in bulk for clean transaction re-entrancy
     sqlBuilder.append("-- 1. Bulk delete existing crawled steps and links to avoid key violations during re-inserts\n")
     sqlBuilder.append("DELETE FROM dance_figure_link WHERE type = 'CRAWLED';\n")
-    sqlBuilder.append("DELETE FROM dance_figure_step WHERE dance_figure_id IN (SELECT id FROM dance_figure WHERE predefined = true);\n\n")
+    sqlBuilder.append("DELETE FROM dance_figure_variation WHERE dance_figure_id IN (SELECT id FROM dance_figure WHERE predefined = true);\n\n")
 
     val figuresValues = mutableListOf<String>()
+    val variationsValues = mutableListOf<String>()
     val linksValues = mutableListOf<String>()
     val stepsValues = mutableListOf<String>()
     val commentsValues = mutableListOf<String>()
 
     val seenFigures = mutableSetOf<String>()
     val seenLinks = mutableSetOf<String>()
+    val seenVariations = mutableSetOf<String>()
     val seenSteps = mutableSetOf<String>()
     val seenComments = mutableSetOf<String>()
 
     var figuresCount = 0
+    var variationsCount = 0
     var stepsCount = 0
     var linksCount = 0
     var commentsCount = 0
@@ -89,12 +92,6 @@ fun main() {
                     $escapedName,
                     (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName),
                     true,
-                    ${escapeSql(record.starting_foot_leader)},
-                    ${escapeSql(record.ending_foot_leader)},
-                    ${escapeSql(record.starting_foot_follower)},
-                    ${escapeSql(record.ending_foot_follower)},
-                    ${escapeSql(record.starting_position)},
-                    ${escapeSql(record.ending_position)},
                     ${escapeSql(precedingNamesJson)},
                     ${escapeSql(followingNamesJson)},
                     ${escapeSql(record.notes)}
@@ -102,7 +99,97 @@ fun main() {
             """.trimIndent())
             figuresCount++
 
-            // 2. Collect links
+            // 2. Collect default variation
+            val variationKey = "${dbDanceTypeName}_${name}_variation_default"
+            if (!seenVariations.contains(variationKey)) {
+                seenVariations.add(variationKey)
+                val variationUuid = UUID.nameUUIDFromBytes(variationKey.toByteArray()).toString()
+                val timingString = record.steps?.filterNotNull()?.filter { it.role?.uppercase() == "LEADER" }?.joinToString("") { it.timing ?: "" }?.ifBlank { "Standard" } ?: "Standard"
+
+                variationsValues.add("""
+                    (
+                        '$variationUuid',
+                        (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName)),
+                        'Standard',
+                        ${escapeSql(timingString)},
+                        true,
+                        ${escapeSql(record.starting_foot_leader)},
+                        ${escapeSql(record.ending_foot_leader)},
+                        ${escapeSql(record.starting_foot_follower)},
+                        ${escapeSql(record.ending_foot_follower)},
+                        ${escapeSql(record.starting_position)},
+                        ${escapeSql(record.ending_position)}
+                    )
+                """.trimIndent())
+                variationsCount++
+
+                // 3. Collect steps and comments
+                if (record.steps != null) {
+                    for ((stepIndex, stepDto) in record.steps.withIndex()) {
+                        val sn = stepDto.step_number
+                        val stepNumber = when (sn) {
+                            is Number -> sn.toInt()
+                            is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: (stepIndex + 1)
+                            else -> stepIndex + 1
+                        }
+                        val rawRole = stepDto.role ?: ""
+                        val role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
+                        val stepKey = "${dbDanceTypeName}_${name}_${role}_${stepNumber}_$stepIndex"
+                        
+                        if (seenSteps.contains(stepKey)) continue
+                        seenSteps.add(stepKey)
+
+                        val stepUuid = UUID.nameUUIDFromBytes(stepKey.toByteArray()).toString()
+
+                        val rawTiming = stepDto.timing ?: ""
+                        val timing = if (rawTiming.length > 50) rawTiming.substring(0, 50) else rawTiming
+                        val rawFoot = stepDto.foot ?: ""
+                        val foot = if (rawFoot.length > 50) rawFoot.substring(0, 50) else rawFoot
+                        val rawFootwork = stepDto.footwork
+                        val footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
+
+                        stepsValues.add("""
+                            (
+                                '$stepUuid',
+                                '$variationUuid',
+                                $stepNumber,
+                                ${escapeSql(timing)},
+                                ${escapeSql(role)},
+                                ${escapeSql(foot)},
+                                ${escapeSql(stepDto.action)},
+                                ${escapeSql(footwork)},
+                                ${escapeSql(stepDto.alignment)},
+                                ${escapeSql(stepDto.amount_of_turn)}
+                            )
+                        """.trimIndent())
+                        stepsCount++
+
+                        if (stepDto.comments != null) {
+                            for ((commentIndex, commentText) in stepDto.comments.withIndex()) {
+                                if (commentText.isNotBlank()) {
+                                    val commentKey = "${stepKey}_comment_$commentIndex"
+                                    if (seenComments.contains(commentKey)) continue
+                                    seenComments.add(commentKey)
+
+                                    val commentUuid = UUID.nameUUIDFromBytes(commentKey.toByteArray()).toString()
+
+                                    commentsValues.add("""
+                                        (
+                                            '$commentUuid',
+                                            '$stepUuid',
+                                            ${escapeSql(commentText)},
+                                            ${commentIndex + 1}
+                                        )
+                                    """.trimIndent())
+                                    commentsCount++
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 4. Collect links
             val urls = mutableListOf<String>()
             if (record.urls != null) {
                 urls.addAll(record.urls)
@@ -129,71 +216,6 @@ fun main() {
                 """.trimIndent())
                 linksCount++
             }
-
-            // 3. Collect steps and comments
-            if (record.steps != null) {
-                for ((stepIndex, stepDto) in record.steps.withIndex()) {
-                    val sn = stepDto.step_number
-                    val stepNumber = when (sn) {
-                        is Number -> sn.toInt()
-                        is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: (stepIndex + 1)
-                        else -> stepIndex + 1
-                    }
-                    val rawRole = stepDto.role ?: ""
-                    val role = if (rawRole.length > 50) rawRole.substring(0, 50) else rawRole
-                    val stepKey = "${dbDanceTypeName}_${name}_${role}_${stepNumber}_$stepIndex"
-                    
-                    if (seenSteps.contains(stepKey)) continue
-                    seenSteps.add(stepKey)
-
-                    val stepUuid = UUID.nameUUIDFromBytes(stepKey.toByteArray()).toString()
-
-                    val rawTiming = stepDto.timing ?: ""
-                    val timing = if (rawTiming.length > 50) rawTiming.substring(0, 50) else rawTiming
-                    val rawFoot = stepDto.foot ?: ""
-                    val foot = if (rawFoot.length > 50) rawFoot.substring(0, 50) else rawFoot
-                    val rawFootwork = stepDto.footwork
-                    val footwork = if (rawFootwork != null && rawFootwork.length > 255) rawFootwork.substring(0, 255) else rawFootwork
-
-                    stepsValues.add("""
-                        (
-                            '$stepUuid',
-                            (SELECT id FROM dance_figure WHERE name = $escapedName AND dance_type_id = (SELECT id FROM dance_type WHERE name = $escapedDanceTypeName)),
-                            $stepNumber,
-                            ${escapeSql(timing)},
-                            ${escapeSql(role)},
-                            ${escapeSql(foot)},
-                            ${escapeSql(stepDto.action)},
-                            ${escapeSql(footwork)},
-                            ${escapeSql(stepDto.alignment)},
-                            ${escapeSql(stepDto.amount_of_turn)}
-                        )
-                    """.trimIndent())
-                    stepsCount++
-
-                    if (stepDto.comments != null) {
-                        for ((commentIndex, commentText) in stepDto.comments.withIndex()) {
-                            if (commentText.isNotBlank()) {
-                                val commentKey = "${stepKey}_comment_$commentIndex"
-                                if (seenComments.contains(commentKey)) continue
-                                seenComments.add(commentKey)
-
-                                val commentUuid = UUID.nameUUIDFromBytes(commentKey.toByteArray()).toString()
-
-                                commentsValues.add("""
-                                    (
-                                        '$commentUuid',
-                                        '$stepUuid',
-                                        ${escapeSql(commentText)},
-                                        ${commentIndex + 1}
-                                    )
-                                """.trimIndent())
-                                commentsCount++
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -201,26 +223,30 @@ fun main() {
     sqlBuilder.append("-- 2. Bulk insert / update figures\n")
     for (chunk in figuresValues.chunked(100)) {
         sqlBuilder.append("""
-            INSERT INTO dance_figure (id, name, dance_type_id, predefined, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position, preceding_figure_names, following_figure_names, notes)
+            INSERT INTO dance_figure (id, name, dance_type_id, predefined, preceding_figure_names, following_figure_names, notes)
             VALUES
         """.trimIndent()).append("\n")
         sqlBuilder.append(chunk.joinToString(",\n"))
         sqlBuilder.append("\nON CONFLICT (dance_type_id, name) DO UPDATE SET\n")
         sqlBuilder.append("""
             predefined = EXCLUDED.predefined,
-            starting_foot_leader = EXCLUDED.starting_foot_leader,
-            ending_foot_leader = EXCLUDED.ending_foot_leader,
-            starting_foot_follower = EXCLUDED.starting_foot_follower,
-            ending_foot_follower = EXCLUDED.ending_foot_follower,
-            starting_position = EXCLUDED.starting_position,
-            ending_position = EXCLUDED.ending_position,
             preceding_figure_names = EXCLUDED.preceding_figure_names,
             following_figure_names = EXCLUDED.following_figure_names,
             notes = EXCLUDED.notes;
         """.trimIndent()).append("\n\n")
     }
 
-    sqlBuilder.append("-- 3. Bulk insert links\n")
+    sqlBuilder.append("-- 3. Bulk insert variations\n")
+    for (chunk in variationsValues.chunked(100)) {
+        sqlBuilder.append("""
+            INSERT INTO dance_figure_variation (id, dance_figure_id, name, timing, is_default, starting_foot_leader, ending_foot_leader, starting_foot_follower, ending_foot_follower, starting_position, ending_position)
+            VALUES
+        """.trimIndent()).append("\n")
+        sqlBuilder.append(chunk.joinToString(",\n"))
+        sqlBuilder.append(";\n\n")
+    }
+
+    sqlBuilder.append("-- 4. Bulk insert links\n")
     for (chunk in linksValues.chunked(200)) {
         sqlBuilder.append("""
             INSERT INTO dance_figure_link (id, dance_figure_id, url, title, type)
@@ -230,17 +256,17 @@ fun main() {
         sqlBuilder.append(";\n\n")
     }
 
-    sqlBuilder.append("-- 4. Bulk insert steps\n")
+    sqlBuilder.append("-- 5. Bulk insert steps\n")
     for (chunk in stepsValues.chunked(200)) {
         sqlBuilder.append("""
-            INSERT INTO dance_figure_step (id, dance_figure_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
+            INSERT INTO dance_figure_step (id, dance_figure_variation_id, step_number, timing, role, foot, action, footwork, alignment, amount_of_turn)
             VALUES
         """.trimIndent()).append("\n")
         sqlBuilder.append(chunk.joinToString(",\n"))
         sqlBuilder.append(";\n\n")
     }
 
-    sqlBuilder.append("-- 5. Bulk insert comments\n")
+    sqlBuilder.append("-- 6. Bulk insert comments\n")
     for (chunk in commentsValues.chunked(200)) {
         sqlBuilder.append("""
             INSERT INTO dance_figure_step_comment (id, dance_figure_step_id, comment_text, display_order)
@@ -250,7 +276,7 @@ fun main() {
         sqlBuilder.append(";\n\n")
     }
 
-    val migrationFile = Paths.get("src/main/resources/db/migration/V24__seed_figures_details.sql").toFile()
+    val migrationFile = Paths.get("src/main/resources/db/migration/V25__seed_figures_details.sql").toFile()
     migrationFile.parentFile.mkdirs()
     migrationFile.writeText(sqlBuilder.toString())
 
@@ -258,6 +284,7 @@ fun main() {
     println("Output file: ${migrationFile.absolutePath}")
     println("Summary of generated records:")
     println("  - Figures: $figuresCount")
+    println("  - Variations: $variationsCount")
     println("  - Links: $linksCount")
     println("  - Steps: $stepsCount")
     println("  - Comments: $commentsCount")

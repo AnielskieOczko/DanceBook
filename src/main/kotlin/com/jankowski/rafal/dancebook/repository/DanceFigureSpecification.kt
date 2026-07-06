@@ -17,7 +17,7 @@ object DanceFigureSpecification {
         nameSearch: String? = null,
         hasSteps: Boolean? = null
     ): Specification<DanceFigure> {
-        return Specification { root, _, cb ->
+        return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
 
             if (!typeIds.isNullOrEmpty()) {
@@ -37,10 +37,14 @@ object DanceFigureSpecification {
             }
 
             hasSteps?.let {
+                val subquery = query!!.subquery(Long::class.java)
+                val subRoot = subquery.from(com.jankowski.rafal.dancebook.model.DanceFigureStep::class.java)
+                subquery.select(cb.count(subRoot))
+                subquery.where(cb.equal(subRoot.get<com.jankowski.rafal.dancebook.model.DanceFigureVariation>("danceFigureVariation").get<DanceFigure>("danceFigure"), root))
                 if (it) {
-                    predicates.add(cb.isNotEmpty(root.get<Collection<*>>("steps")))
+                    predicates.add(cb.gt(subquery, 0L))
                 } else {
-                    predicates.add(cb.isEmpty(root.get<Collection<*>>("steps")))
+                    predicates.add(cb.equal(subquery, 0L))
                 }
             }
 

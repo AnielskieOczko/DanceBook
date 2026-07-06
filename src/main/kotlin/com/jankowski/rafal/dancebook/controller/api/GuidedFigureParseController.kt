@@ -39,6 +39,25 @@ class GuidedFigureParseController(
         return ResponseEntity.ok(result)
     }
 
+    @PostMapping("/variation/json")
+    fun parseVariationFromJson(@RequestBody request: GuidedParseJsonRequest): ResponseEntity<com.jankowski.rafal.dancebook.dto.GuidedVariationParseResult> {
+        val result = guidedFigureParseService.parseVariationFromJson(request.json)
+        return ResponseEntity.ok(result)
+    }
+
+    @PostMapping("/variation/url")
+    fun parseVariationFromUrl(@RequestBody request: GuidedParseUrlRequest): ResponseEntity<com.jankowski.rafal.dancebook.dto.GuidedVariationParseResult> {
+        val result = guidedFigureParseService.parseVariationFromUrl(
+            url = request.url,
+            provider = request.provider,
+            model = request.model,
+            maxTokens = request.maxTokens,
+            temperature = request.temperature,
+            providerSettings = request.providerSettings
+        )
+        return ResponseEntity.ok(result)
+    }
+
     @GetMapping("/models")
     fun getModels(): ResponseEntity<Map<String, List<String>>> {
         val models = llmProviderRouter.getAllModels()

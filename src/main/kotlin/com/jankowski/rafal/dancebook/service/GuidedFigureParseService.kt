@@ -5,7 +5,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
+import com.jankowski.rafal.dancebook.dto.DanceFigureVariationRequest
 import com.jankowski.rafal.dancebook.dto.GuidedParseResult
+import com.jankowski.rafal.dancebook.dto.GuidedVariationParseResult
 import com.jankowski.rafal.dancebook.dto.LlmUsageStats
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
@@ -295,5 +297,171 @@ class GuidedFigureParseService(
             return field.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         }
         return emptyList()
+    }
+
+    fun parseVariationFromJson(jsonString: String): GuidedVariationParseResult {
+        return try {
+            val dto = objectMapper.readValue<SyllabusImporterService.AiParsedFigureDto>(jsonString)
+            val request = mapToVariationRequest(dto)
+            GuidedVariationParseResult(success = true, request = request)
+        } catch (e: Exception) {
+            log.error("Failed to parse variation from pasted JSON", e)
+            GuidedVariationParseResult(
+                success = false,
+                errors = listOf("Invalid JSON structure: ${e.message}")
+            )
+        }
+    }
+
+    @JvmOverloads
+    fun parseVariationFromUrl(
+        url: String,
+        provider: String,
+        model: String,
+        maxTokens: Int? = null,
+        temperature: Double? = null,
+        providerSettings: Map<String, Any?> = emptyMap()
+    ): GuidedVariationParseResult {
+        log.info("Starting guided variation parse from URL: {} using provider: {}, model: {}, maxTokens: {}, temp: {}, settings: {}", url, provider, model, maxTokens, temperature, providerSettings)
+        val htmlContent = try {
+            fetchUrlContent(url)
+        } catch (e: Exception) {
+            log.error("Failed to fetch content from URL: {}", url, e)
+            return GuidedVariationParseResult(
+                success = false,
+                errors = listOf("Failed to load webpage: ${e.message}")
+            )
+        }
+
+        val extractedText = try {
+            Jsoup.parse(htmlContent).text()
+        } catch (e: Exception) {
+            log.error("Failed to extract clean text using Jsoup from URL: {}", url, e)
+            return GuidedVariationParseResult(
+                success = false,
+                errors = listOf("Failed to parse webpage content: ${e.message}")
+            )
+        }
+
+        if (extractedText.isBlank()) {
+            return GuidedVariationParseResult(
+                success = false,
+                errors = listOf("Webpage text content is empty or unreadable.")
+            )
+        }
+
+        val baseSystemPrompt = try {
+            val promptFile = File("docs/figures steps/AGENT_PROMPT.md")
+            if (promptFile.exists()) promptFile.readText() else ""
+        } catch (e: Exception) {
+            log.warn("Could not load base agent prompt template", e)
+            ""
+        }
+
+        val existingFigures = danceFigureRepository.findAll()
+        val referenceFiguresText = existingFigures.joinToString("\n") { "- ${it.name} (${it.danceType?.name ?: "Unknown"})" }
+
+        val systemPrompt = """
+            $baseSystemPrompt
+            
+            ## Authoritative Figure Names Reference
+            Below is the complete list of standard figure names currently stored in the database, along with their respective dance styles. You MUST use these exact names when standardizing figures in your output (case-insensitive, ignoring minor formatting differences):
+            $referenceFiguresText
+            
+            IMPORTANT: For this URL parsing request, you are parsing a single webpage. Please return exactly ONE JSON object matching the target schema directly (do NOT wrap it in a JSON array).
+        """.trimIndent()
+
+        val userPrompt = objectMapper.writeValueAsString(mapOf(
+            "url" to url,
+            "text" to extractedText
+        ))
+
+        var llmResponse: LlmResponse? = null
+        return try {
+            val llmRequest = LlmRequest(
+                systemPrompt = systemPrompt,
+                userPrompt = userPrompt,
+                model = model,
+                maxTokens = maxTokens,
+                temperature = temperature,
+                extras = providerSettings
+            )
+            llmResponse = llmProviderRouter.callLlm(
+                provider = provider,
+                request = llmRequest
+            )
+            log.info("LLM Raw Response: {}", llmResponse.content)
+            val jsonNode = objectMapper.readTree(llmResponse.content)
+            val dto = if (jsonNode.isArray) {
+                if (jsonNode.isEmpty) {
+                    throw RuntimeException("LLM returned an empty JSON array")
+                }
+                objectMapper.treeToValue(jsonNode.get(0), SyllabusImporterService.AiParsedFigureDto::class.java)
+            } else {
+                objectMapper.treeToValue(jsonNode, SyllabusImporterService.AiParsedFigureDto::class.java)
+            }
+            val request = mapToVariationRequest(dto)
+
+            val usageStats = LlmUsageStats(
+                promptTokens = llmResponse.promptTokens,
+                completionTokens = llmResponse.completionTokens,
+                totalTokens = llmResponse.totalTokens,
+                reasoningTokens = llmResponse.reasoningTokens
+            )
+
+            GuidedVariationParseResult(success = true, request = request, usage = usageStats)
+        } catch (e: Exception) {
+            log.error("Failed to parse URL content via LLM. Raw response: {}", llmResponse?.content, e)
+            val usageStats = llmResponse?.let {
+                LlmUsageStats(
+                    promptTokens = it.promptTokens,
+                    completionTokens = it.completionTokens,
+                    totalTokens = it.totalTokens,
+                    reasoningTokens = it.reasoningTokens
+                )
+            }
+            GuidedVariationParseResult(
+                success = false,
+                errors = listOf("AI parsing failed: ${e.message}"),
+                usage = usageStats
+            )
+        }
+    }
+
+    private fun mapToVariationRequest(dto: SyllabusImporterService.AiParsedFigureDto): DanceFigureVariationRequest {
+        val steps = dto.steps?.filterNotNull()?.mapIndexed { index, stepDto ->
+            val sn = stepDto.step_number
+            val parsedStepNum = when (sn) {
+                is Number -> sn.toInt()
+                is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: (index + 1)
+                else -> index + 1
+            }
+            DanceFigureStepRequest(
+                stepNumber = parsedStepNum,
+                timing = stepDto.timing ?: "",
+                role = stepDto.role?.uppercase() ?: "LEADER",
+                foot = stepDto.foot?.uppercase() ?: "",
+                action = stepDto.action ?: "",
+                footwork = stepDto.footwork,
+                alignment = stepDto.alignment,
+                amountOfTurn = stepDto.amount_of_turn,
+                commentsText = stepDto.comments?.filterNotNull()?.joinToString("\n")
+            )
+        }?.toMutableList() ?: mutableListOf()
+
+        val timingString = steps.filter { it.role == "LEADER" }.joinToString("") { it.timing }.ifBlank { "Standard" }
+
+        return DanceFigureVariationRequest(
+            name = dto.name?.let { "Alternative for $it" } ?: "Alternative ($timingString)",
+            timing = timingString,
+            isDefault = false,
+            startingFootLeader = dto.starting_foot_leader,
+            endingFootLeader = dto.ending_foot_leader,
+            startingFootFollower = dto.starting_foot_follower,
+            endingFootFollower = dto.ending_foot_follower,
+            startingPosition = dto.starting_position,
+            endingPosition = dto.ending_position,
+            steps = steps
+        )
     }
 }

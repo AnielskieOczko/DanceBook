@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
 interface DanceFigureStepRepository : JpaRepository<DanceFigureStep, UUID> {
-    fun deleteByDanceFigureId(danceFigureId: UUID)
+    fun deleteByDanceFigureVariationId(danceFigureVariationId: UUID)
 }

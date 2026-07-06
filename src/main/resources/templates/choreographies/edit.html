@@ -133,9 +133,9 @@
                                                 <span th:if="${entry.danceFigure?.danceClass != null}"
                                                       class="badge bg-secondary-container text-on-surface text-[9px] font-semibold border border-outline-variant/30"
                                                       th:text="${entry.danceFigure.danceClass.name()}">F</span>
-                                                <span th:if="${entry.danceFigure?.alternativeTiming != null}"
+                                                <span th:if="${entry.danceFigure?.defaultTiming != null}"
                                                       class="badge bg-surface-warm text-text-secondary text-[9px]"
-                                                      th:text="${entry.danceFigure.alternativeTiming}">123</span>
+                                                      th:text="${entry.danceFigure.defaultTiming}">123</span>
                                             </div>
                                             <!-- Inline note input -->
                                             <div class="flex items-center gap-1.5 max-w-lg">
@@ -236,9 +236,9 @@
                                     <span th:if="${fig.danceClass != null}"
                                           class="badge bg-secondary-container text-on-surface text-[9px] border border-outline-variant/30 font-semibold"
                                           th:text="${fig.danceClass.name()}">F</span>
-                                    <span th:if="${fig.alternativeTiming != null}"
+                                    <span th:if="${fig.defaultTiming != null}"
                                           class="text-[10px] text-text-secondary"
-                                          th:text="'Timing: ' + ${fig.alternativeTiming}">123</span>
+                                          th:text="'Timing: ' + ${fig.defaultTiming}">123</span>
                                 </div>
                             </div>
 

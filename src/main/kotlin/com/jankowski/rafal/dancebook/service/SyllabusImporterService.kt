@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceFigureStep
 import com.jankowski.rafal.dancebook.model.DanceFigureLink
 import com.jankowski.rafal.dancebook.model.DanceFigureStepComment
+import com.jankowski.rafal.dancebook.model.DanceFigureVariation
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureStepRepository
 import com.jankowski.rafal.dancebook.repository.DanceTypeRepository
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
 import java.util.Locale
+import java.util.UUID
 
 @Service
 class SyllabusImporterService(
@@ -110,12 +112,24 @@ class SyllabusImporterService(
             }
 
             // 5. Update Figure attributes
-            matchedFigure.startingFootLeader = parsedData.startingFootLeader
-            matchedFigure.endingFootLeader = parsedData.endingFootLeader
-            matchedFigure.startingFootFollower = parsedData.startingFootFollower
-            matchedFigure.endingFootFollower = parsedData.endingFootFollower
-            matchedFigure.startingPosition = parsedData.startingPosition
-            matchedFigure.endingPosition = parsedData.endingPosition
+            var defaultVariation = matchedFigure.variations.find { it.isDefault }
+            if (defaultVariation == null) {
+                defaultVariation = DanceFigureVariation().apply {
+                    this.danceFigure = matchedFigure
+                    this.name = "Standard"
+                    this.isDefault = true
+                }
+                matchedFigure.variations.add(defaultVariation)
+            }
+
+            defaultVariation.startingFootLeader = parsedData.startingFootLeader
+            defaultVariation.endingFootLeader = parsedData.endingFootLeader
+            defaultVariation.startingFootFollower = parsedData.startingFootFollower
+            defaultVariation.endingFootFollower = parsedData.endingFootFollower
+            defaultVariation.startingPosition = parsedData.startingPosition
+            defaultVariation.endingPosition = parsedData.endingPosition
+            defaultVariation.timing = parsedData.steps.filter { it.role?.uppercase() == "LEADER" }.joinToString("") { it.timing ?: "" }.ifBlank { "Standard" }
+
             matchedFigure.precedingFigureNames = parsedData.precedingFigures
             matchedFigure.followingFigureNames = parsedData.followingFigures
 
@@ -130,15 +144,16 @@ class SyllabusImporterService(
                 matchedFigure.links.add(newLink)
             }
 
-            danceFigureRepository.save(matchedFigure)
+            val savedFigure = danceFigureRepository.save(matchedFigure)
+            val finalVariation = savedFigure.getDefaultVariation()!!
 
             // 6. Delete old steps and save new ones
-            danceFigureStepRepository.deleteByDanceFigureId(matchedFigure.id!!)
+            danceFigureStepRepository.deleteByDanceFigureVariationId(finalVariation.id!!)
             
             var stepNum = 1
             for (stepDto in parsedData.steps) {
                 val step = DanceFigureStep().apply {
-                    this.danceFigure = matchedFigure
+                    this.danceFigureVariation = finalVariation
                     this.stepNumber = stepNum++
                     
                     val rawTiming = stepDto.timing
@@ -575,12 +590,24 @@ class SyllabusImporterService(
             }
 
             // Update metadata
-            matchedFigure.startingFootLeader = record.starting_foot_leader
-            matchedFigure.endingFootLeader = record.ending_foot_leader
-            matchedFigure.startingFootFollower = record.starting_foot_follower
-            matchedFigure.endingFootFollower = record.ending_foot_follower
-            matchedFigure.startingPosition = record.starting_position
-            matchedFigure.endingPosition = record.ending_position
+            var defaultVariation = matchedFigure.variations.find { it.isDefault }
+            if (defaultVariation == null) {
+                defaultVariation = DanceFigureVariation().apply {
+                    this.danceFigure = matchedFigure
+                    this.name = "Standard"
+                    this.isDefault = true
+                }
+                matchedFigure.variations.add(defaultVariation)
+            }
+
+            defaultVariation.startingFootLeader = record.starting_foot_leader
+            defaultVariation.endingFootLeader = record.ending_foot_leader
+            defaultVariation.startingFootFollower = record.starting_foot_follower
+            defaultVariation.endingFootFollower = record.ending_foot_follower
+            defaultVariation.startingPosition = record.starting_position
+            defaultVariation.endingPosition = record.ending_position
+            defaultVariation.timing = record.steps?.filterNotNull()?.filter { it.role?.uppercase() == "LEADER" }?.joinToString("") { it.timing ?: "" }?.ifBlank { "Standard" } ?: "Standard"
+
             matchedFigure.precedingFigureNames = parseListOrStringField(record.preceding_figure_names)
             matchedFigure.followingFigureNames = parseListOrStringField(record.following_figure_names)
             matchedFigure.notes = record.notes
@@ -609,16 +636,16 @@ class SyllabusImporterService(
 
             val savedFigure = danceFigureRepository.save(matchedFigure) as DanceFigure?
             val finalFigure = savedFigure ?: matchedFigure
-            val figureId = finalFigure.id!!
+            val finalVariation = finalFigure.getDefaultVariation()!!
 
             // Delete old steps and save new ones
-            danceFigureStepRepository.deleteByDanceFigureId(figureId)
+            danceFigureStepRepository.deleteByDanceFigureVariationId(finalVariation.id!!)
 
             if (record.steps != null) {
                 var stepNum = 1
                 for (stepDto in record.steps) {
                     val step = DanceFigureStep().apply {
-                        this.danceFigure = finalFigure
+                        this.danceFigureVariation = finalVariation
                         val sn = stepDto.step_number
                         val parsedStepNum = when (sn) {
                             is Number -> sn.toInt()

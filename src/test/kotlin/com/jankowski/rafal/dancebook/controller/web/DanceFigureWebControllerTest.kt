@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureVariation
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
@@ -93,12 +94,18 @@ class DanceFigureWebControllerTest {
             name = "Back Whisk"
             this.danceType = danceType
             danceClass = DanceClass.H
-            alternativeTiming = "123&"
-            startingPosition = "Closed"
-            endingPosition = "Promenade"
             precedingFigureNames = listOf("Fig A")
             followingFigureNames = listOf("Fig B")
         }
+        val defaultVariation = DanceFigureVariation().apply {
+            this.danceFigure = danceFigure
+            this.name = "Standard"
+            this.isDefault = true
+            this.timing = "123&"
+            this.startingPosition = "Closed"
+            this.endingPosition = "Promenade"
+        }
+        danceFigure.variations.add(defaultVariation)
 
         `when`(danceFigureService.findById(figureId)).thenReturn(danceFigure)
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
@@ -114,9 +121,6 @@ class DanceFigureWebControllerTest {
         assertEquals("Back Whisk", request.name)
         assertEquals(danceType.id, request.danceTypeId)
         assertEquals(DanceClass.H, request.danceClass)
-        assertEquals("123&", request.alternativeTiming)
-        assertEquals("Closed", request.startingPosition)
-        assertEquals("Promenade", request.endingPosition)
         assertEquals(listOf("Fig A"), request.precedingFigureNames)
         assertEquals(listOf("Fig B"), request.followingFigureNames)
     }

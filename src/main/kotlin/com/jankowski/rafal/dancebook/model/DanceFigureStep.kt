@@ -12,8 +12,8 @@ class DanceFigureStep {
     var id: UUID? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dance_figure_id", nullable = false)
-    var danceFigure: DanceFigure? = null
+    @JoinColumn(name = "dance_figure_variation_id", nullable = false)
+    var danceFigureVariation: DanceFigureVariation? = null
 
     @Column(name = "step_number", nullable = false)
     var stepNumber: Int = 1

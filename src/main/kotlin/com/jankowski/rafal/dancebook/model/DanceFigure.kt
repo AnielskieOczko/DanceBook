@@ -35,27 +35,6 @@ class DanceFigure {
     @Column(nullable = false)
     var predefined: Boolean = false
 
-    @Column(name = "alternative_timing")
-    var alternativeTiming: String? = null
-
-    @Column(name = "starting_foot_leader")
-    var startingFootLeader: String? = null
-
-    @Column(name = "ending_foot_leader")
-    var endingFootLeader: String? = null
-
-    @Column(name = "starting_foot_follower")
-    var startingFootFollower: String? = null
-
-    @Column(name = "ending_foot_follower")
-    var endingFootFollower: String? = null
-
-    @Column(name = "starting_position")
-    var startingPosition: String? = null
-
-    @Column(name = "ending_position")
-    var endingPosition: String? = null
-
     @Column(name = "preceding_figure_names", columnDefinition = "TEXT")
     @jakarta.persistence.Convert(converter = StringListConverter::class)
     var precedingFigureNames: List<String> = emptyList()
@@ -65,7 +44,7 @@ class DanceFigure {
     var followingFigureNames: List<String> = emptyList()
 
     @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
-    var steps: MutableList<DanceFigureStep> = mutableListOf()
+    var variations: MutableList<DanceFigureVariation> = mutableListOf()
 
     @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
     var links: MutableList<DanceFigureLink> = mutableListOf()
@@ -73,11 +52,17 @@ class DanceFigure {
     @Column(columnDefinition = "TEXT")
     var notes: String? = null
 
-    fun getLeaderSteps(): List<DanceFigureStep> =
-        steps.filter { it.role == "LEADER" }.sortedBy { it.stepNumber }
+    fun getDefaultVariation(): DanceFigureVariation? =
+        variations.find { it.isDefault }
 
-    fun getFollowerSteps(): List<DanceFigureStep> =
-        steps.filter { it.role == "FOLLOWER" }.sortedBy { it.stepNumber }
+    val defaultTiming: String?
+        get() = getDefaultVariation()?.timing
+
+    val defaultStartingPosition: String?
+        get() = getDefaultVariation()?.startingPosition
+
+    val defaultEndingPosition: String?
+        get() = getDefaultVariation()?.endingPosition
 }
 
 

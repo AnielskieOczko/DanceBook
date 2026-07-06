@@ -6,11 +6,14 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureVariation
 import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
+import com.jankowski.rafal.dancebook.repository.DanceFigureVariationRepository
+import com.jankowski.rafal.dancebook.repository.DanceFigureStepRepository
 import jakarta.persistence.EntityNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -27,6 +30,8 @@ import java.util.UUID
 class DanceFigureServiceTest {
 
     private lateinit var danceFigureRepository: DanceFigureRepository
+    private lateinit var danceFigureVariationRepository: DanceFigureVariationRepository
+    private lateinit var danceFigureStepRepository: DanceFigureStepRepository
     private lateinit var danceTypeService: DanceTypeService
     private lateinit var eventPublisher: ApplicationEventPublisher
     private lateinit var appUserService: AppUserService
@@ -36,6 +41,8 @@ class DanceFigureServiceTest {
     @BeforeEach
     fun setUp() {
         danceFigureRepository = mock(DanceFigureRepository::class.java)
+        danceFigureVariationRepository = mock(DanceFigureVariationRepository::class.java)
+        danceFigureStepRepository = mock(DanceFigureStepRepository::class.java)
         danceTypeService = mock(DanceTypeService::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
         appUserService = mock(AppUserService::class.java)
@@ -48,6 +55,8 @@ class DanceFigureServiceTest {
 
         danceFigureService = DanceFigureServiceImpl(
             danceFigureRepository,
+            danceFigureVariationRepository,
+            danceFigureStepRepository,
             danceTypeService,
             eventPublisher,
             appUserService
@@ -133,22 +142,24 @@ class DanceFigureServiceTest {
         `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
         `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(emptyList())
 
-        val savedFigure = DanceFigure().apply {
-            id = UUID.randomUUID()
-            name = request.name
-            this.danceType = danceType
-            this.danceClass = request.danceClass
-            this.predefined = false
-            this.alternativeTiming = request.alternativeTiming
+
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer {
+            val figure = it.arguments[0] as DanceFigure
+            figure.id = UUID.randomUUID()
+            figure.variations.forEach { varEnt ->
+                if (varEnt.id == null) {
+                    varEnt.id = UUID.randomUUID()
+                }
+            }
+            figure
         }
-        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenReturn(savedFigure)
 
         val result = danceFigureService.create(request)
 
         assertNotNull(result)
         assertEquals("Back Whisk", result.name)
         assertEquals(DanceClass.H, result.danceClass)
-        assertEquals("123&", result.alternativeTiming)
+        assertEquals("Standard", result.getDefaultVariation()?.timing)
         assertEquals(false, result.predefined)
         verify(eventPublisher).publishEvent(any(DanceFigureCreatedEvent::class.java))
     }
@@ -166,27 +177,35 @@ class DanceFigureServiceTest {
             name = "Old Name"
             this.danceType = danceType
             this.danceClass = DanceClass.E
-            this.alternativeTiming = "123"
         }
 
         val request = DanceFigureRequest(
             name = "New Name",
             danceTypeId = danceTypeId,
-            danceClass = DanceClass.D,
-            alternativeTiming = "1&2"
+            danceClass = DanceClass.D
         )
 
         `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(existingFigure))
         `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
         `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(listOf(existingFigure))
-        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer {
+            val figure = it.arguments[0] as DanceFigure
+            if (figure.id == null) {
+                figure.id = UUID.randomUUID()
+            }
+            figure.variations.forEach { varEnt ->
+                if (varEnt.id == null) {
+                    varEnt.id = UUID.randomUUID()
+                }
+            }
+            figure
+        }
 
         val result = danceFigureService.update(figureId, request)
 
         assertNotNull(result)
         assertEquals("New Name", result.name)
         assertEquals(DanceClass.D, result.danceClass)
-        assertEquals("1&2", result.alternativeTiming)
         verify(eventPublisher).publishEvent(any(DanceFigureUpdatedEvent::class.java))
     }
 
@@ -307,22 +326,33 @@ class DanceFigureServiceTest {
 
         `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
         `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(emptyList())
-        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer {
+            val figure = it.arguments[0] as DanceFigure
+            if (figure.id == null) {
+                figure.id = UUID.randomUUID()
+            }
+            figure.variations.forEach { varEnt ->
+                if (varEnt.id == null) {
+                    varEnt.id = UUID.randomUUID()
+                }
+            }
+            figure
+        }
 
         val result = danceFigureService.create(request)
 
         assertNotNull(result)
         assertEquals("Technical Figure", result.name)
         assertEquals(DanceClass.C, result.danceClass)
-        assertEquals("Closed", result.startingPosition)
-        assertEquals("Promenade", result.endingPosition)
+        assertEquals("Closed", result.getDefaultVariation()?.startingPosition)
+        assertEquals("Promenade", result.getDefaultVariation()?.endingPosition)
         assertEquals(listOf("Figure A"), result.precedingFigureNames)
         assertEquals(listOf("Figure B"), result.followingFigureNames)
         
         // Assert Steps and indexing
-        assertEquals(3, result.steps.size)
+        assertEquals(3, result.getDefaultVariation()?.steps?.size)
         
-        val resultLeaderSteps = result.getLeaderSteps()
+        val resultLeaderSteps = result.getDefaultVariation()?.getLeaderSteps() ?: emptyList()
         assertEquals(2, resultLeaderSteps.size)
         assertEquals(1, resultLeaderSteps[0].stepNumber)
         assertEquals("LF", resultLeaderSteps[0].foot)
@@ -335,7 +365,7 @@ class DanceFigureServiceTest {
         assertEquals(2, resultLeaderSteps[1].stepNumber)
         assertEquals("RF", resultLeaderSteps[1].foot)
 
-        val resultFollowerSteps = result.getFollowerSteps()
+        val resultFollowerSteps = result.getDefaultVariation()?.getFollowerSteps() ?: emptyList()
         assertEquals(1, resultFollowerSteps.size)
         assertEquals(1, resultFollowerSteps[0].stepNumber)
         assertEquals("LF", resultFollowerSteps[0].foot)
