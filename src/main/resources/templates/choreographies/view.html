@@ -145,8 +145,8 @@
         <div th:id="${detailedView == true ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative pl-4 border-l-2 border-primary/20 space-y-6 print:border-l-0 print:pl-0">
             
             <div th:each="entry : ${entries}"
-                 class="relative print-card"
-                 th:classappend="${entry.entryType.name() == 'SECTION_LABEL' ? 'page-break' : 'figure-entry-row'}">
+                 class="relative"
+                 th:classappend="${(detailedView != true ? 'print-card ' : '') + (entry.entryType.name() == 'SECTION_LABEL' ? 'page-break' : 'figure-entry-row')}">
 
                 <!-- Timeline bullet point (only figures, no-print / print hidden) -->
                 <div th:if="${entry.entryType.name() == 'FIGURE'}"
@@ -230,7 +230,7 @@
                         </summary>
                         
                         <div class="mt-4 pl-2 sm:pl-7 space-y-4 border-l-2 border-surface-variant ml-2.5" th:classappend="${detailedView == true ? 'print:block print:border-black/20 print:pl-4' : ''}">
-                            <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1">
+                            <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1 print-card">
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
                                     <div class="flex items-center gap-2 shrink-0 w-28">
