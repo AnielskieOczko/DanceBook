@@ -142,15 +142,11 @@
 
     <!-- Timeline Fragment -->
     <th:block th:fragment="sequenceTimeline(entries, detailedView)">
-        <div th:id="${detailedView == true ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative pl-4 border-l-2 border-primary/20 space-y-6 print:border-l-0 print:pl-0">
+        <div th:id="${detailedView == true ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative space-y-0 print:space-y-0">
             
             <div th:each="entry : ${entries}"
                  class="relative"
                  th:classappend="${(detailedView != true ? 'print-card ' : '') + (entry.entryType.name() == 'SECTION_LABEL' ? 'page-break' : 'figure-entry-row')}">
-
-                <!-- Timeline bullet point (only figures, no-print / print hidden) -->
-                <div th:if="${entry.entryType.name() == 'FIGURE'}"
-                     class="absolute -left-[25px] top-1.5 w-4 h-4 rounded-full bg-primary border-4 border-white flex items-center justify-center shadow-sm shrink-0 print:hidden"></div>
 
                 <!-- Type 1: SECTION LABEL -->
                 <div th:if="${entry.entryType.name() == 'SECTION_LABEL'}"
@@ -163,14 +159,17 @@
 
                 <!-- Type 2: FIGURE -->
                 <div th:if="${entry.entryType.name() == 'FIGURE'}"
-                     th:with="indicatorClass=${entry.lineIndicator?.name() == 'SHORT_WALL' ? 'bg-amber-500/10 border border-amber-500/20 text-amber-800' :
-                                              entry.lineIndicator?.name() == 'LONG_WALL' ? 'bg-blue-500/10 border border-blue-500/20 text-blue-800' :
-                                              entry.lineIndicator?.name() == 'DIAGONAL' ? 'bg-purple-500/10 border border-purple-500/20 text-purple-800' :
-                                              entry.lineIndicator?.name() == 'CORNER' ? 'bg-rose-500/10 border border-rose-500/20 text-rose-800' : ''}"
-                     class="flex flex-col gap-2 p-4 hover:bg-surface-warm/30 rounded-lg transition-colors w-full">
+                     th:with="lineColorBg=${entry.lineIndicator?.name() == 'SHORT_WALL' ? 'bg-emerald-500' :
+                                              entry.lineIndicator?.name() == 'LONG_WALL' ? 'bg-blue-500' :
+                                              entry.lineIndicator?.name() == 'DIAGONAL' ? 'bg-purple-500' :
+                                              entry.lineIndicator?.name() == 'CORNER' ? 'bg-rose-500' : 'bg-neutral-300'}"
+                     class="relative flex flex-col gap-2 py-3 pl-5 pr-4 hover:bg-surface-warm/30 rounded-r-lg transition-colors w-full">
+                     
+                    <!-- Continuous Colored Timeline Line (LOD) -->
+                    <div th:if="${entry.lineIndicator != null}" class="absolute left-0 top-0 bottom-0 w-1.5 print:w-1" th:classappend="${lineColorBg}"></div>
                      
                     <!-- Figure Grid Header -->
-                    <div class="grid grid-cols-[1fr_auto] md:grid-cols-[200px_1fr_100px] lg:grid-cols-[220px_1fr_100px] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
                         <!-- Col 1: Name and number -->
                         <div class="col-start-1 row-start-1 flex items-center gap-2 flex-nowrap min-w-0 w-full">
                             <span class="figure-number-view font-bold text-on-surface text-base print:text-black shrink-0"></span>
@@ -178,7 +177,7 @@
                         </div>
                         
                         <!-- Sequence Shorthand (Mobile: Row 2, Desktop: Col 2) -->
-                        <div class="col-span-2 row-start-2 md:col-start-2 md:row-start-1 md:col-span-1 print:col-start-2 print:row-start-1 print:col-span-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
+                        <div class="col-start-1 row-start-2 md:col-start-2 md:row-start-1 print:col-start-2 print:row-start-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
                             <!-- Man Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
                                 <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Man:</span>
@@ -199,12 +198,6 @@
                                           th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Line indicator badge (Mobile: Row 1 Col 2, Desktop: Col 3) -->
-                        <div class="col-start-2 row-start-1 md:col-start-3 md:row-start-1 print:col-start-3 print:row-start-1 flex justify-end shrink-0 print:text-black w-[100px]">
-                            <span th:if="${entry.lineIndicator != null}" th:class="${indicatorClass}" class="badge text-[10px] px-2.5 py-1 rounded font-bold uppercase tracking-wider print-badge"
-                                  th:text="${#strings.replace(entry.lineIndicator.name(), '_', ' ')}">Short Wall</span>
                         </div>
                     </div>
                     
