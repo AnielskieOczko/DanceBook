@@ -30,7 +30,7 @@
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
-                               th:checked="${currentView == 'grid' || currentView == null}"
+                               th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">grid_view</span>
@@ -38,7 +38,7 @@
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
-                               th:checked="${currentView == 'list'}"
+                               th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">view_list</span>
@@ -116,7 +116,7 @@
         </div>
 
         <!-- 1. Grid (Cards) View -->
-        <div th:if="${!#lists.isEmpty(lists) && (currentView == 'grid' || currentView == null)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+        <div th:if="${!#lists.isEmpty(lists) && currentView == 'grid'}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
             <div th:each="list : ${lists}"
                  th:with="hasCustomImage=${list.imageFilename != null},
                           firstCatImage=${list.danceCategories.iterator().hasNext() ? list.danceCategories.iterator().next().imageFilename : null},
@@ -173,7 +173,7 @@
         </div>
 
         <!-- 2. Compact List View -->
-        <div th:if="${!#lists.isEmpty(lists) && currentView == 'list'}" class="flex flex-col gap-3">
+        <div th:if="${!#lists.isEmpty(lists) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
             <article th:each="list : ${lists}"
                      class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
                 <a th:href="@{/lists/{id}(id=${list.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${list.name}">View Collection</span></a>
