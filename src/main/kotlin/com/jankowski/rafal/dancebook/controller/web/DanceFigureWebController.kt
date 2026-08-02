@@ -39,7 +39,7 @@ class DanceFigureWebController(
         @RequestParam(required = false) nameSearch: String? = null,
         @RequestParam(required = false) sortBy: String? = null,
         @RequestParam(required = false) hasSteps: Boolean? = null,
-        @RequestParam(required = false, defaultValue = "grid") view: String = "grid",
+        @RequestParam(required = false, defaultValue = "list") view: String = "list",
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {

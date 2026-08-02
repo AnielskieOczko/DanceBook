@@ -40,7 +40,7 @@ class MaterialWebController(
         @RequestParam(required = false) categoryIds: List<UUID>?,
         @RequestParam(required = false) minRating: Short?,
         @RequestParam(required = false) nameSearch: String?,
-        @RequestParam(required = false, defaultValue = "grid") view: String,
+        @RequestParam(required = false, defaultValue = "list") view: String,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
         @PageableDefault(size = 100, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
