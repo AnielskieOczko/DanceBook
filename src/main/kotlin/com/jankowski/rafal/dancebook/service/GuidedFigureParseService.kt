@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.jankowski.rafal.dancebook.dto.DanceFigureStepSetRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
@@ -220,6 +221,44 @@ class GuidedFigureParseService(
             )
         }?.toMutableList() ?: mutableListOf()
 
+        val stepSets = dto.step_sets?.filterNotNull()?.map { setDto ->
+            val setSteps = setDto.steps?.filterNotNull()?.mapIndexed { index, stepDto ->
+                val sn = stepDto.step_number
+                val parsedStepNum = when (sn) {
+                    is Number -> sn.toInt()
+                    is String -> sn.substringBefore("&").substringBefore(" ").trim().toIntOrNull() ?: (index + 1)
+                    else -> index + 1
+                }
+                DanceFigureStepRequest(
+                    stepNumber = parsedStepNum,
+                    timing = stepDto.timing ?: "",
+                    role = stepDto.role?.uppercase() ?: "LEADER",
+                    foot = stepDto.foot?.uppercase() ?: "",
+                    action = stepDto.action ?: "",
+                    footwork = stepDto.footwork,
+                    alignment = stepDto.alignment,
+                    amountOfTurn = stepDto.amount_of_turn,
+                    commentsText = stepDto.comments?.filterNotNull()?.joinToString("\n")
+                )
+            }?.toMutableList() ?: mutableListOf()
+            DanceFigureStepSetRequest(
+                name = setDto.name ?: "Default",
+                isDefault = setDto.is_default ?: false,
+                steps = setSteps
+            )
+        }?.toMutableList() ?: mutableListOf()
+
+        // Fallback: If stepSets is empty but steps is not, wrap steps into a Default stepSet
+        if (stepSets.isEmpty() && steps.isNotEmpty()) {
+            stepSets.add(
+                DanceFigureStepSetRequest(
+                    name = "Default",
+                    isDefault = true,
+                    steps = steps
+                )
+            )
+        }
+
         val links = mutableListOf<DanceFigureLinkRequest>()
         val urls = mutableListOf<String>()
         dto.urls?.forEach { u ->
@@ -257,6 +296,7 @@ class GuidedFigureParseService(
             followingFigureNames = parseListOrStringField(dto.following_figure_names),
             notes = dto.notes,
             steps = steps,
+            stepSets = stepSets,
             links = links
         )
     }

@@ -28,5 +28,22 @@ data class DanceFigureRequest(
     val notes: String? = null,
 
     val steps: MutableList<DanceFigureStepRequest> = mutableListOf(),
+    val stepSets: MutableList<DanceFigureStepSetRequest> = mutableListOf(),
     val links: MutableList<DanceFigureLinkRequest> = mutableListOf()
-)
+) {
+    fun getEffectiveStepSets(): List<DanceFigureStepSetRequest> {
+        if (stepSets.isNotEmpty() && (stepSets.size > 1 || stepSets[0].steps.isNotEmpty() || stepSets[0].name != "Default")) {
+            return stepSets
+        }
+        if (steps.isNotEmpty()) {
+            return listOf(
+                DanceFigureStepSetRequest(
+                    name = "Default",
+                    isDefault = true,
+                    steps = steps
+                )
+            )
+        }
+        return stepSets
+    }
+}

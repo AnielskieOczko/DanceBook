@@ -44,6 +44,27 @@ Each figure in your output array must follow this structure:
         "Second nested comment (keep it concise, max 1-2 sentences)."
       ]
     }
+  ],
+  "step_sets": [
+    {
+      "name": "Default | Alternative Timing (e.g. QQSQQS)",
+      "is_default": true,
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "e.g., 1, a, 2, S, Q",
+          "role": "LEADER | FOLLOWER",
+          "foot": "LF | RF | TOGETHER",
+          "action": "Description of the movement. Keep it concise.",
+          "footwork": "e.g., HF, BF, T",
+          "alignment": "e.g., Facing Wall",
+          "amount_of_turn": "e.g., 1/4 to R",
+          "comments": [
+            "First nested comment."
+          ]
+        }
+      ]
+    }
   ]
 }
 ```
@@ -57,6 +78,7 @@ Each figure in your output array must follow this structure:
 
 ### 2. Extraction Logic
 - **Steps & Comments**: Parse the step sections carefully. **Note that the raw text uses "Man" to refer to the "LEADER" role and "Lady" to refer to the "FOLLOWER" role.** Any sub-bullets, indented lines, or extra remarks directly beneath a specific step must be parsed into the `comments` array for that step. Keep the comments concise and clear (maximum 2-3 short bullets per step).
+- **Step Sets / Combinations**: If the figure has multiple timings or step sequences (e.g., standard vs alternative timing in Tango or Samba), extract each timing/sequence as a separate step set in the `step_sets` array, marking the standard/first one as `is_default: true`. Otherwise, wrap the single parsed step sequence in a single step set named "Default".
 - **Timing**: Extract the timing (e.g., "1 a 2", "S Q Q").
 - **Foot**: Determine which foot is moving based on the action description (look for keywords like "RF", "LF", "L foot", "Right foot").
 - **Metadata**: Extract `level` (Bronze/Silver/Gold), `starting_position`, and the lists of `preceding` and `following` figures.

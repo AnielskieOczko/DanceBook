@@ -7,6 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
         followerBtn.addEventListener('click', () => switchRoleTab('FOLLOWER'));
     }
 
+    // Toggle active Step Set Group
+    const stepSetSelect = document.getElementById('step-set-select');
+    if (stepSetSelect) {
+        stepSetSelect.addEventListener('change', (e) => {
+            const selectedId = e.target.value;
+            document.querySelectorAll('.js-step-set-group').forEach(group => {
+                if (group.getAttribute('data-set-id') === selectedId) {
+                    group.classList.remove('hidden');
+                } else {
+                    group.classList.add('hidden');
+                }
+            });
+        });
+    }
+
     // Toggle Mobile Timeline collapsible details
     document.addEventListener('click', (e) => {
         const toggleBtn = e.target.closest('.js-timeline-toggle');
@@ -35,10 +50,8 @@ function switchRoleTab(role) {
     
     const leaderBtn = document.getElementById('leader-tab-btn');
     const followerBtn = document.getElementById('follower-tab-btn');
-    const leaderSec = document.getElementById('leader-steps-section');
-    const followerSec = document.getElementById('follower-steps-section');
 
-    if (!leaderBtn || !followerBtn || !leaderSec || !followerSec) return;
+    if (!leaderBtn || !followerBtn) return;
 
     // Toggle active styling classes on buttons
     leaderBtn.className = isLeader 
@@ -48,12 +61,19 @@ function switchRoleTab(role) {
         ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
         : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
 
-    // Toggle visibility of step tables
-    if (isLeader) {
-        leaderSec.classList.remove('hidden');
-        followerSec.classList.add('hidden');
-    } else {
-        leaderSec.classList.add('hidden');
-        followerSec.classList.remove('hidden');
-    }
+    // Toggle visibility of step tables for all groups
+    document.querySelectorAll('.leader-steps-section').forEach(sec => {
+        if (isLeader) {
+            sec.classList.remove('hidden');
+        } else {
+            sec.classList.add('hidden');
+        }
+    });
+    document.querySelectorAll('.follower-steps-section').forEach(sec => {
+        if (isLeader) {
+            sec.classList.add('hidden');
+        } else {
+            sec.classList.remove('hidden');
+        }
+    });
 }
