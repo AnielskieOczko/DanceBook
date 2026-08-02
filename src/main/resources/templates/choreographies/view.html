@@ -170,20 +170,15 @@
                      class="flex flex-col gap-2 p-4 hover:bg-surface-warm/30 rounded-lg transition-colors w-full">
                      
                     <!-- Figure Grid Header -->
-                    <div class="grid grid-cols-[1fr_auto] md:grid-cols-[200px_1fr_100px] lg:grid-cols-[220px_1fr_100px] gap-3 md:gap-4 items-start w-full">
+                    <div class="grid grid-cols-[1fr_auto] md:grid-cols-[200px_1fr_100px] lg:grid-cols-[220px_1fr_100px] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
                         <!-- Col 1: Name and number -->
-                        <div class="flex items-center gap-2 flex-wrap min-w-0 w-full">
+                        <div class="col-start-1 row-start-1 flex items-center gap-2 flex-nowrap min-w-0 w-full">
                             <span class="figure-number-view font-bold text-on-surface text-base print:text-black shrink-0"></span>
-                            <span class="font-bold text-on-surface text-base print:text-black shrink-0 truncate max-w-full" th:text="${entry.danceFigure?.name}">Natural Turn</span>
-                            
-                            <!-- Mobile only timing (old style) -->
-                            <span th:if="${entry.danceFigure?.alternativeTiming != null}"
-                                  class="text-[10px] text-text-secondary print:hidden md:hidden shrink-0"
-                                  th:text="'(' + ${entry.danceFigure.alternativeTiming} + ')'">(123)</span>
+                            <span class="font-bold text-on-surface text-base print:text-black truncate min-w-0" th:text="${entry.danceFigure?.name}">Natural Turn</span>
                         </div>
                         
-                        <!-- Col 2: Web View Step Sequence Shorthand (Hidden on mobile) -->
-                        <div class="hidden md:flex print:flex flex-col gap-1.5 min-w-0 overflow-hidden">
+                        <!-- Sequence Shorthand (Mobile: Row 2, Desktop: Col 2) -->
+                        <div class="col-span-2 row-start-2 md:col-start-2 md:row-start-1 md:col-span-1 print:col-start-2 print:row-start-1 print:col-span-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
                             <!-- Man Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
                                 <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Man:</span>
@@ -206,8 +201,8 @@
                             </div>
                         </div>
                         
-                        <!-- Col 3 (Web) / Col 2 (Mobile): Line indicator badge -->
-                        <div class="flex justify-end shrink-0 print:text-black w-[100px]">
+                        <!-- Line indicator badge (Mobile: Row 1 Col 2, Desktop: Col 3) -->
+                        <div class="col-start-2 row-start-1 md:col-start-3 md:row-start-1 print:col-start-3 print:row-start-1 flex justify-end shrink-0 print:text-black w-[100px]">
                             <span th:if="${entry.lineIndicator != null}" th:class="${indicatorClass}" class="badge text-[10px] px-2.5 py-1 rounded font-bold uppercase tracking-wider print-badge"
                                   th:text="${#strings.replace(entry.lineIndicator.name(), '_', ' ')}">Short Wall</span>
                         </div>
