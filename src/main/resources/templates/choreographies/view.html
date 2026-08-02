@@ -182,12 +182,14 @@
                                               entry.lineIndicator?.name() == 'LONG_WALL' ? 'bg-blue-500' :
                                               entry.lineIndicator?.name() == 'DIAGONAL' ? 'bg-purple-500' :
                                               entry.lineIndicator?.name() == 'CORNER' ? 'bg-rose-500' : 'bg-neutral-300'}"
-                     class="relative flex flex-col gap-2 py-3 pl-5 pr-4 hover:bg-surface-warm/30 rounded-r-lg transition-colors w-full">
+                     class="relative py-2 w-full group/row">
                      
                     <!-- Continuous Colored Timeline Line (LOD) -->
                     <div th:if="${entry.lineIndicator != null}" class="absolute left-0 top-0 bottom-0 w-1.5 print:w-1" th:classappend="${lineColorBg}"></div>
                      
-                    <!-- Figure Grid Header -->
+                    <!-- Floating Card -->
+                    <div class="ml-5 bg-white border border-border/60 shadow-sm rounded-xl p-4 transition-all hover:shadow-md hover:border-primary/20 flex flex-col gap-2 relative print:shadow-none print:border-black/20 print:ml-4 print:p-2 print:rounded-lg">
+                        <!-- Figure Grid Header -->
                     <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
                         <!-- Col 1: Name and number -->
                         <div class="col-start-1 row-start-1 flex items-center gap-2 flex-nowrap min-w-0 w-full">
@@ -287,6 +289,7 @@
                             </div>
                         </div>
                     </details>
+                    </div> <!-- End Floating Card -->
                 </div>
             </div>
         </div>
