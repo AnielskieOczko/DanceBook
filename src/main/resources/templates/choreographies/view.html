@@ -158,35 +158,30 @@
                             <span class="figure-number-view font-bold text-on-surface text-base print:text-black shrink-0"></span>
                             <span class="font-bold text-on-surface text-base print:text-black shrink-0" th:text="${entry.danceFigure?.name}">Natural Turn</span>
                             
-                            <!-- Badges -->
-                            <span th:if="${entry.danceFigure?.danceClass != null}"
-                                  class="badge bg-secondary-container text-on-surface border border-outline-variant/30 text-[9px] font-semibold print-badge shrink-0"
-                                  th:text="${entry.danceFigure.danceClass.name()}">F</span>
-                            
                             <!-- Mobile only timing (old style) -->
                             <span th:if="${entry.danceFigure?.alternativeTiming != null}"
                                   class="text-[10px] text-text-secondary print:text-black md:hidden shrink-0"
                                   th:text="'(' + ${entry.danceFigure.alternativeTiming} + ')'">(123)</span>
 
                             <!-- Web View Extended Info: Step Sequence Shorthand (Hidden on mobile) -->
-                            <div class="hidden md:flex flex-col ml-auto pl-4 border-l border-border/50 min-w-0">
+                            <div class="hidden md:flex flex-col ml-4 gap-1">
                                 <!-- Man Steps -->
-                                <div class="text-[11px] font-mono text-on-surface truncate flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
-                                    <span class="font-bold text-primary w-10 shrink-0 uppercase tracking-wider">Man:</span>
-                                    <span class="truncate">
-                                        <th:block th:each="step, iterStat : ${entry.danceFigure.getLeaderSteps()}">
-                                            <span th:text="${step.timing + ' ' + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}"></span><span th:if="${!iterStat.last}" class="text-outline-variant mx-1 font-sans">-&gt;</span>
-                                        </th:block>
-                                    </span>
+                                <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
+                                    <span class="text-[10px] font-bold text-primary w-10 shrink-0 uppercase tracking-wider text-right pr-2">Man:</span>
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <span th:each="step : ${entry.danceFigure.getLeaderSteps()}"
+                                              class="inline-flex items-center justify-center px-1.5 py-0.5 bg-surface-container border border-outline-variant/30 text-[10px] font-bold text-on-surface rounded font-mono"
+                                              th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
+                                    </div>
                                 </div>
                                 <!-- Lady Steps -->
-                                <div class="text-[11px] font-mono text-on-surface truncate flex items-center mt-1" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
-                                    <span class="font-bold text-secondary w-10 shrink-0 uppercase tracking-wider">Lady:</span>
-                                    <span class="truncate">
-                                        <th:block th:each="step, iterStat : ${entry.danceFigure.getFollowerSteps()}">
-                                            <span th:text="${step.timing + ' ' + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}"></span><span th:if="${!iterStat.last}" class="text-outline-variant mx-1 font-sans">-&gt;</span>
-                                        </th:block>
-                                    </span>
+                                <div class="flex items-center mt-1" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
+                                    <span class="text-[10px] font-bold text-secondary w-10 shrink-0 uppercase tracking-wider text-right pr-2">Lady:</span>
+                                    <div class="flex flex-wrap items-center gap-1">
+                                        <span th:each="step : ${entry.danceFigure.getFollowerSteps()}"
+                                              class="inline-flex items-center justify-center px-1.5 py-0.5 bg-surface-container border border-outline-variant/30 text-[10px] font-bold text-on-surface rounded font-mono"
+                                              th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
