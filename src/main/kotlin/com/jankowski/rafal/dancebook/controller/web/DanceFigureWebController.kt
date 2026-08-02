@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
+import com.jankowski.rafal.dancebook.dto.DanceFigureStepSetRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
@@ -135,20 +136,31 @@ class DanceFigureWebController(
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val danceFigure = danceFigureService.findById(id)
         
-        val stepsRequest = danceFigure.steps.map { step ->
-            DanceFigureStepRequest(
-                id = step.id,
-                stepNumber = step.stepNumber,
-                timing = step.timing,
-                role = step.role,
-                foot = step.foot,
-                action = step.action,
-                footwork = step.footwork,
-                alignment = step.alignment,
-                amountOfTurn = step.amountOfTurn,
-                commentsText = step.comments.sortedBy { it.displayOrder }.joinToString("\n") { it.commentText }
+        val stepSetsRequest = danceFigure.stepSets.map { set ->
+            DanceFigureStepSetRequest(
+                id = set.id,
+                name = set.name,
+                isDefault = set.isDefault,
+                steps = set.steps.map { step ->
+                    DanceFigureStepRequest(
+                        id = step.id,
+                        stepNumber = step.stepNumber,
+                        timing = step.timing,
+                        role = step.role,
+                        foot = step.foot,
+                        action = step.action,
+                        footwork = step.footwork,
+                        alignment = step.alignment,
+                        amountOfTurn = step.amountOfTurn,
+                        commentsText = step.comments.sortedBy { it.displayOrder }.joinToString("\n") { it.commentText }
+                    )
+                }.sortedBy { it.stepNumber }.toMutableList()
             )
-        }.sortedBy { it.stepNumber }.toMutableList()
+        }.toMutableList()
+
+        if (stepSetsRequest.isEmpty()) {
+            stepSetsRequest.add(DanceFigureStepSetRequest(name = "Default", isDefault = true))
+        }
 
         val linksRequest = danceFigure.links.map { link ->
             DanceFigureLinkRequest(
@@ -173,7 +185,8 @@ class DanceFigureWebController(
             precedingFigureNames = danceFigure.precedingFigureNames,
             followingFigureNames = danceFigure.followingFigureNames,
             notes = danceFigure.notes,
-            steps = stepsRequest,
+            steps = mutableListOf(),
+            stepSets = stepSetsRequest,
             links = linksRequest
         )
 

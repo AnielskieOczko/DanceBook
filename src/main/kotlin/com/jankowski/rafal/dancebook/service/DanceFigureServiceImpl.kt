@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.DanceFigureStepSet
 import com.jankowski.rafal.dancebook.model.DanceFigureStep
 import com.jankowski.rafal.dancebook.model.DanceFigureStepComment
 import com.jankowski.rafal.dancebook.model.DanceFigureLink
@@ -133,61 +134,74 @@ class DanceFigureServiceImpl(
         danceFigure.followingFigureNames = request.followingFigureNames
         danceFigure.notes = request.notes
 
-        // Steps
-        danceFigure.steps.clear()
-        val leaderSteps = request.steps.filter { it.role == "LEADER" }
-        val followerSteps = request.steps.filter { it.role == "FOLLOWER" }
+        // Step Sets
+        danceFigure.stepSets.clear()
+        val requestSets = request.getEffectiveStepSets()
+        val hasDefault = requestSets.any { it.isDefault }
 
-        leaderSteps.forEachIndexed { index, stepReq ->
-            val step = DanceFigureStep().apply {
+        requestSets.forEachIndexed { setIdx, setReq ->
+            val stepSet = DanceFigureStepSet().apply {
                 this.danceFigure = danceFigure
-                this.stepNumber = index + 1
-                this.timing = stepReq.timing
-                this.role = "LEADER"
-                this.foot = stepReq.foot
-                this.action = stepReq.action
-                this.footwork = stepReq.footwork
-                this.alignment = stepReq.alignment
-                this.amountOfTurn = stepReq.amountOfTurn
+                this.name = setReq.name
+                this.isDefault = if (hasDefault) setReq.isDefault else (setIdx == 0)
             }
-            val comments = stepReq.commentsText?.lineSequence()
-                ?.map { it.trim() }
-                ?.filter { it.isNotEmpty() }
-                ?.mapIndexed { commentIndex, commentText ->
-                    DanceFigureStepComment().apply {
-                        this.danceFigureStep = step
-                        this.commentText = commentText
-                        this.displayOrder = commentIndex
-                    }
-                }?.toMutableList() ?: mutableListOf()
-            step.comments = comments
-            danceFigure.steps.add(step)
-        }
 
-        followerSteps.forEachIndexed { index, stepReq ->
-            val step = DanceFigureStep().apply {
-                this.danceFigure = danceFigure
-                this.stepNumber = index + 1
-                this.timing = stepReq.timing
-                this.role = "FOLLOWER"
-                this.foot = stepReq.foot
-                this.action = stepReq.action
-                this.footwork = stepReq.footwork
-                this.alignment = stepReq.alignment
-                this.amountOfTurn = stepReq.amountOfTurn
+            val leaderSteps = setReq.steps.filter { it.role == "LEADER" }
+            val followerSteps = setReq.steps.filter { it.role == "FOLLOWER" }
+
+            leaderSteps.forEachIndexed { index, stepReq ->
+                val step = DanceFigureStep().apply {
+                    this.danceFigureStepSet = stepSet
+                    this.stepNumber = index + 1
+                    this.timing = stepReq.timing
+                    this.role = "LEADER"
+                    this.foot = stepReq.foot
+                    this.action = stepReq.action
+                    this.footwork = stepReq.footwork
+                    this.alignment = stepReq.alignment
+                    this.amountOfTurn = stepReq.amountOfTurn
+                }
+                val comments = stepReq.commentsText?.lineSequence()
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotEmpty() }
+                    ?.mapIndexed { commentIndex, commentText ->
+                        DanceFigureStepComment().apply {
+                            this.danceFigureStep = step
+                            this.commentText = commentText
+                            this.displayOrder = commentIndex
+                        }
+                    }?.toMutableList() ?: mutableListOf()
+                step.comments = comments
+                stepSet.steps.add(step)
             }
-            val comments = stepReq.commentsText?.lineSequence()
-                ?.map { it.trim() }
-                ?.filter { it.isNotEmpty() }
-                ?.mapIndexed { commentIndex, commentText ->
-                    DanceFigureStepComment().apply {
-                        this.danceFigureStep = step
-                        this.commentText = commentText
-                        this.displayOrder = commentIndex
-                    }
-                }?.toMutableList() ?: mutableListOf()
-            step.comments = comments
-            danceFigure.steps.add(step)
+
+            followerSteps.forEachIndexed { index, stepReq ->
+                val step = DanceFigureStep().apply {
+                    this.danceFigureStepSet = stepSet
+                    this.stepNumber = index + 1
+                    this.timing = stepReq.timing
+                    this.role = "FOLLOWER"
+                    this.foot = stepReq.foot
+                    this.action = stepReq.action
+                    this.footwork = stepReq.footwork
+                    this.alignment = stepReq.alignment
+                    this.amountOfTurn = stepReq.amountOfTurn
+                }
+                val comments = stepReq.commentsText?.lineSequence()
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotEmpty() }
+                    ?.mapIndexed { commentIndex, commentText ->
+                        DanceFigureStepComment().apply {
+                            this.danceFigureStep = step
+                            this.commentText = commentText
+                            this.displayOrder = commentIndex
+                        }
+                    }?.toMutableList() ?: mutableListOf()
+                step.comments = comments
+                stepSet.steps.add(step)
+            }
+
+            danceFigure.stepSets.add(stepSet)
         }
 
         // Links

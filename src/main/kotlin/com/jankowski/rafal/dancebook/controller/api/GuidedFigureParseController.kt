@@ -76,6 +76,27 @@ class GuidedFigureParseController(
         "Second detail comment."
       ]
     }
+  ],
+  "step_sets": [
+    {
+      "name": "e.g., Default, Alternative Timing",
+      "is_default": true,
+      "steps": [
+        {
+          "step_number": 1,
+          "timing": "e.g., 1, a, 2, S, Q",
+          "role": "LEADER | FOLLOWER",
+          "foot": "LF | RF | TOGETHER",
+          "action": "Description of the movement",
+          "footwork": "e.g., HF, BF, T",
+          "alignment": "e.g., Facing Wall",
+          "amount_of_turn": "e.g., 1/4 to R",
+          "comments": [
+             "First detail comment."
+          ]
+        }
+      ]
+    }
   ]
 }
         """.trimIndent()

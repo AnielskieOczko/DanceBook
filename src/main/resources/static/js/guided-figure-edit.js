@@ -701,40 +701,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Apply Steps breakdown if checked
-        if (importSteps && parsedResultData.steps && parsedResultData.steps.length > 0) {
-            // Clear existing steps rows
-            document.querySelectorAll('#leader-steps-tbody .step-row').forEach(row => row.remove());
-            document.querySelectorAll('#follower-steps-tbody .step-row').forEach(row => row.remove());
+        if (importSteps) {
+            const defaultPanel = Array.from(document.querySelectorAll('.js-step-set-panel')).find(p => {
+                const radio = p.querySelector('.js-set-default-radio');
+                return radio && radio.checked;
+            }) || document.querySelector('.js-step-set-panel');
 
-            // Add new steps rows dynamically using the addStepRow from dance-figure-form.js
-            parsedResultData.steps.forEach(step => {
-                const role = step.role.toUpperCase(); // "LEADER" or "FOLLOWER"
-                addStepRow(role);
+            if (defaultPanel) {
+                // Clear existing steps rows inside the default panel
+                defaultPanel.querySelectorAll('.step-row').forEach(row => row.remove());
 
-                // Find the newly appended row (last step-row inside tbody)
-                const tbody = document.getElementById(role.toLowerCase() + '-steps-tbody');
-                const lastRow = tbody.lastElementChild;
-
-                if (lastRow) {
-                    // Populate row inputs
-                    const timingInput = lastRow.querySelector('input[name$=".timing"]');
-                    const footInput = lastRow.querySelector('input[name$=".foot"]');
-                    const actionInput = lastRow.querySelector('input[name$=".action"]');
-                    const footworkInput = lastRow.querySelector('input[name$=".footwork"]');
-                    const alignmentInput = lastRow.querySelector('input[name$=".alignment"]');
-                    const amountOfTurnInput = lastRow.querySelector('input[name$=".amountOfTurn"]');
-                    const commentsTextarea = lastRow.querySelector('textarea[name$=".commentsText"]');
-
-                    if (timingInput) timingInput.value = step.timing || '';
-                    if (footInput) footInput.value = step.foot || '';
-                    if (actionInput) actionInput.value = step.action || '';
-                    if (footworkInput) footworkInput.value = step.footwork || '';
-                    if (alignmentInput) alignmentInput.value = step.alignment || '';
-                    if (amountOfTurnInput) amountOfTurnInput.value = step.amountOfTurn || '';
-                    if (commentsTextarea) commentsTextarea.value = step.commentsText || '';
+                let importedSteps = parsedResultData.steps || [];
+                if (parsedResultData.stepSets && parsedResultData.stepSets.length > 0) {
+                    const defaultSet = parsedResultData.stepSets.find(s => s.isDefault) || parsedResultData.stepSets[0];
+                    if (defaultSet && defaultSet.steps) {
+                        importedSteps = defaultSet.steps;
+                    }
                 }
-            });
-            reindexSteps();
+
+                if (importedSteps.length > 0) {
+                    importedSteps.forEach(step => {
+                        const role = step.role.toUpperCase(); // "LEADER" or "FOLLOWER"
+                        addStepRow(defaultPanel, role);
+
+                        const tbody = defaultPanel.querySelector(`.js-${role.toLowerCase()}-steps-tbody`);
+                        const lastRow = tbody ? tbody.lastElementChild : null;
+
+                        if (lastRow) {
+                            // Populate row inputs
+                            const timingInput = lastRow.querySelector('input[name$=".timing"]');
+                            const footInput = lastRow.querySelector('input[name$=".foot"]');
+                            const actionInput = lastRow.querySelector('input[name$=".action"]');
+                            const footworkInput = lastRow.querySelector('input[name$=".footwork"]');
+                            const alignmentInput = lastRow.querySelector('input[name$=".alignment"]');
+                            const amountOfTurnInput = lastRow.querySelector('input[name$=".amountOfTurn"]');
+                            const commentsTextarea = lastRow.querySelector('textarea[name$=".commentsText"]');
+
+                            if (timingInput) timingInput.value = step.timing || '';
+                            if (footInput) footInput.value = step.foot || '';
+                            if (actionInput) actionInput.value = step.action || '';
+                            if (footworkInput) footworkInput.value = step.footwork || '';
+                            if (alignmentInput) alignmentInput.value = step.alignment || '';
+                            if (amountOfTurnInput) amountOfTurnInput.value = step.amountOfTurn || '';
+                            if (commentsTextarea) commentsTextarea.value = step.commentsText || '';
+                        }
+                    });
+                }
+                reindexStepSets();
+            }
         }
 
         // Apply resource links if checked

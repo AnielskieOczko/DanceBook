@@ -65,13 +65,16 @@ class DanceFigure {
     var followingFigureNames: List<String> = emptyList()
 
     @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
-    var steps: MutableList<DanceFigureStep> = mutableListOf()
+    var stepSets: MutableList<DanceFigureStepSet> = mutableListOf()
 
     @jakarta.persistence.OneToMany(mappedBy = "danceFigure", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true)
     var links: MutableList<DanceFigureLink> = mutableListOf()
 
     @Column(columnDefinition = "TEXT")
     var notes: String? = null
+
+    val steps: List<DanceFigureStep>
+        get() = stepSets.find { it.isDefault }?.steps ?: stepSets.firstOrNull()?.steps ?: emptyList()
 
     fun getLeaderSteps(): List<DanceFigureStep> =
         steps.filter { it.role == "LEADER" }.sortedBy { it.stepNumber }

@@ -97,7 +97,9 @@ class SyllabusImporterServiceTest {
         assertEquals(listOf("Whisk To Left"), existingFigure.followingFigureNames)
 
         verify(danceFigureRepository).save(existingFigure)
-        verify(danceFigureStepRepository, times(4)).save(any(com.jankowski.rafal.dancebook.model.DanceFigureStep::class.java))
+        val defaultSet = existingFigure.stepSets.find { it.isDefault }
+        assertNotNull(defaultSet)
+        assertEquals(4, defaultSet!!.steps.size)
     }
 
     @Test
@@ -197,11 +199,9 @@ class SyllabusImporterServiceTest {
 
         verify(danceFigureRepository).save(existingFigure)
         
-        // Retrieve saved step argument and verify comments were populated
-        val stepCaptor = org.mockito.ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.DanceFigureStep::class.java)
-        verify(danceFigureStepRepository, times(2)).save(stepCaptor.capture())
-        
-        val capturedSteps = stepCaptor.allValues
+        val defaultSet = existingFigure.stepSets.find { it.isDefault }
+        assertNotNull(defaultSet)
+        val capturedSteps = defaultSet!!.steps
         val leaderStep = capturedSteps.find { it.role == "LEADER" }
         assertNotNull(leaderStep)
         assertEquals(2, leaderStep!!.comments.size)

@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureStepSet
 import com.jankowski.rafal.dancebook.model.DanceFigureStep
 import com.jankowski.rafal.dancebook.model.DanceFigureLink
 import com.jankowski.rafal.dancebook.model.DanceFigureStepComment
@@ -130,15 +131,20 @@ class SyllabusImporterService(
                 matchedFigure.links.add(newLink)
             }
 
-            danceFigureRepository.save(matchedFigure)
-
-            // 6. Delete old steps and save new ones
-            danceFigureStepRepository.deleteByDanceFigureId(matchedFigure.id!!)
+            // 6. Delete old default steps and save new ones
+            val defaultSet = matchedFigure.stepSets.find { it.isDefault }
+                ?: DanceFigureStepSet().apply {
+                    this.danceFigure = matchedFigure
+                    this.name = "Default"
+                    this.isDefault = true
+                    matchedFigure.stepSets.add(this)
+                }
+            defaultSet.steps.clear()
             
             var stepNum = 1
             for (stepDto in parsedData.steps) {
                 val step = DanceFigureStep().apply {
-                    this.danceFigure = matchedFigure
+                    this.danceFigureStepSet = defaultSet
                     this.stepNumber = stepNum++
                     
                     val rawTiming = stepDto.timing
@@ -154,15 +160,11 @@ class SyllabusImporterService(
                     this.alignment = stepDto.alignment
                     this.amountOfTurn = stepDto.amountOfTurn
                 }
-                try {
-                    danceFigureStepRepository.save(step)
-                } catch (e: Exception) {
-                    log.error("FAILED TO SAVE STEP: timing='${step.timing}' (len=${step.timing.length}), role='${step.role}' (len=${step.role.length}), foot='${step.foot}' (len=${step.foot.length}), footwork='${step.footwork}' (len=${step.footwork?.length}), action='${step.action}' (len=${step.action.length}), alignment='${step.alignment}' (len=${step.alignment?.length})", e)
-                    throw e
-                }
+                defaultSet.steps.add(step)
                 stepsCreated++
             }
 
+            danceFigureRepository.save(matchedFigure)
             figuresUpdated++
         }
 
@@ -607,18 +609,21 @@ class SyllabusImporterService(
                 }
             }
 
-            val savedFigure = danceFigureRepository.save(matchedFigure) as DanceFigure?
-            val finalFigure = savedFigure ?: matchedFigure
-            val figureId = finalFigure.id!!
-
-            // Delete old steps and save new ones
-            danceFigureStepRepository.deleteByDanceFigureId(figureId)
+            // Delete old steps and save new ones under Default step set
+            val defaultSet = matchedFigure.stepSets.find { it.isDefault }
+                ?: DanceFigureStepSet().apply {
+                    this.danceFigure = matchedFigure
+                    this.name = "Default"
+                    this.isDefault = true
+                    matchedFigure.stepSets.add(this)
+                }
+            defaultSet.steps.clear()
 
             if (record.steps != null) {
                 var stepNum = 1
                 for (stepDto in record.steps) {
                     val step = DanceFigureStep().apply {
-                        this.danceFigure = finalFigure
+                        this.danceFigureStepSet = defaultSet
                         val sn = stepDto.step_number
                         val parsedStepNum = when (sn) {
                             is Number -> sn.toInt()
@@ -656,16 +661,12 @@ class SyllabusImporterService(
                         }
                     }
 
-                    try {
-                        danceFigureStepRepository.save(step)
-                    } catch (e: Exception) {
-                        log.error("FAILED TO SAVE STEP: timing='${step.timing}', role='${step.role}', action='${step.action}'", e)
-                        throw e
-                    }
+                    defaultSet.steps.add(step)
                     stepsCreated++
                 }
             }
 
+            danceFigureRepository.save(matchedFigure)
             figuresUpdated++
         }
 
@@ -725,6 +726,12 @@ class SyllabusImporterService(
         val comments: List<String>? = null
     )
 
+    data class AiParsedStepSetDto(
+        val name: String? = null,
+        val is_default: Boolean? = null,
+        val steps: List<AiParsedStepDto>? = null
+    )
+
     data class AiParsedFigureDto(
         val name: String? = null,
         val urls: List<String>? = null,
@@ -740,7 +747,8 @@ class SyllabusImporterService(
         val preceding_figure_names: Any? = null,
         val following_figure_names: Any? = null,
         val notes: String? = null,
-        val steps: List<AiParsedStepDto>? = null
+        val steps: List<AiParsedStepDto>? = null,
+        val step_sets: List<AiParsedStepSetDto>? = null
     )
 }
 

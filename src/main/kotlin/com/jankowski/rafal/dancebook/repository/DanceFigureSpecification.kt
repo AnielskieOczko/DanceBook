@@ -38,9 +38,9 @@ object DanceFigureSpecification {
 
             hasSteps?.let {
                 if (it) {
-                    predicates.add(cb.isNotEmpty(root.get<Collection<*>>("steps")))
+                    predicates.add(cb.isNotEmpty(root.get<Collection<*>>("stepSets")))
                 } else {
-                    predicates.add(cb.isEmpty(root.get<Collection<*>>("steps")))
+                    predicates.add(cb.isEmpty(root.get<Collection<*>>("stepSets")))
                 }
             }
 
