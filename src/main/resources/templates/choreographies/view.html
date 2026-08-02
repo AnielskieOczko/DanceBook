@@ -141,7 +141,7 @@
 
     <!-- Timeline Fragment -->
     <th:block th:fragment="sequenceTimeline(entries, detailedView)">
-        <div th:id="${detailedView ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative pl-4 border-l-2 border-primary/20 space-y-6 print:border-l-0 print:pl-0">
+        <div th:id="${detailedView == true ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative pl-4 border-l-2 border-primary/20 space-y-6 print:border-l-0 print:pl-0">
             
             <div th:each="entry : ${entries}"
                  class="relative print-card"
@@ -220,15 +220,15 @@
 
                     <!-- Steps Details (Expandable per figure) -->
                     <details th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}" 
-                             th:attr="open=${detailedView ? 'open' : null}"
-                             th:classappend="${detailedView ? 'print:block' : 'print:hidden'}"
+                             th:attr="open=${detailedView == true ? 'open' : null}"
+                             th:classappend="${detailedView == true ? 'print:block' : 'print:hidden'}"
                              class="group mt-3">
-                        <summary class="cursor-pointer flex items-center gap-1.5 text-base font-bold text-primary hover:text-primary-focus select-none list-none [&::-webkit-details-marker]:hidden print:text-black" th:classappend="${detailedView ? 'print:hidden' : ''}">
+                        <summary class="cursor-pointer flex items-center gap-1.5 text-base font-bold text-primary hover:text-primary-focus select-none list-none [&::-webkit-details-marker]:hidden print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
                             <span class="material-symbols-outlined text-[20px] transition-transform duration-200 group-open:rotate-90 print:hidden">chevron_right</span>
                             Details
                         </summary>
                         
-                        <div class="mt-4 pl-2 sm:pl-7 space-y-4 border-l-2 border-surface-variant ml-2.5" th:classappend="${detailedView ? 'print:block print:border-black/20 print:pl-4' : ''}">
+                        <div class="mt-4 pl-2 sm:pl-7 space-y-4 border-l-2 border-surface-variant ml-2.5" th:classappend="${detailedView == true ? 'print:block print:border-black/20 print:pl-4' : ''}">
                             <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1">
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
@@ -253,13 +253,13 @@
                                         
                                         <!-- Technical details (if any) -->
                                         <details th:if="${!#lists.isEmpty(step.comments) || (!#strings.isEmpty(step.footwork) && step.footwork != '-') || (!#strings.isEmpty(step.alignment) && step.alignment != '-') || (!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0')}" 
-                                                 th:attr="open=${detailedView ? 'open' : null}"
+                                                 th:attr="open=${detailedView == true ? 'open' : null}"
                                                  class="group/tech mt-2 text-sm">
-                                            <summary class="cursor-pointer text-text-secondary hover:text-primary flex items-center gap-1 list-none [&::-webkit-details-marker]:hidden font-semibold print:text-black" th:classappend="${detailedView ? 'print:hidden' : ''}">
+                                            <summary class="cursor-pointer text-text-secondary hover:text-primary flex items-center gap-1 list-none [&::-webkit-details-marker]:hidden font-semibold print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
                                                 <span class="material-symbols-outlined text-[16px] transition-transform group-open/tech:rotate-90 print:hidden">arrow_right</span>
                                                 Technical details
                                             </summary>
-                                            <div class="pl-4 mt-2 space-y-1.5 text-text-secondary border-l border-border ml-1.5 py-1 print:text-black" th:classappend="${detailedView ? 'print:border-black/20' : ''}">
+                                            <div class="pl-4 mt-2 space-y-1.5 text-text-secondary border-l border-border ml-1.5 py-1 print:text-black" th:classappend="${detailedView == true ? 'print:border-black/20' : ''}">
                                                 <div th:if="${!#strings.isEmpty(step.footwork) && step.footwork != '-'}">
                                                     <span class="font-bold">Footwork:</span> <span th:text="${step.footwork}">HT</span>
                                                 </div>
