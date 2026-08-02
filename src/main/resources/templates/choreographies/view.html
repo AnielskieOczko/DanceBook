@@ -155,35 +155,39 @@
                     
                     <div class="space-y-1.5 flex-grow">
                         <div class="flex items-center gap-2 flex-wrap w-full">
-                            <span class="figure-number-view font-bold text-on-surface text-base print:text-black"></span>
-                            <span class="font-bold text-on-surface text-base print:text-black" th:text="${entry.danceFigure?.name}">Natural Turn</span>
+                            <span class="figure-number-view font-bold text-on-surface text-base print:text-black shrink-0"></span>
+                            <span class="font-bold text-on-surface text-base print:text-black shrink-0" th:text="${entry.danceFigure?.name}">Natural Turn</span>
                             
                             <!-- Badges -->
                             <span th:if="${entry.danceFigure?.danceClass != null}"
-                                  class="badge bg-secondary-container text-on-surface border border-outline-variant/30 text-[9px] font-semibold print-badge"
+                                  class="badge bg-secondary-container text-on-surface border border-outline-variant/30 text-[9px] font-semibold print-badge shrink-0"
                                   th:text="${entry.danceFigure.danceClass.name()}">F</span>
                             
                             <!-- Mobile only timing (old style) -->
                             <span th:if="${entry.danceFigure?.alternativeTiming != null}"
-                                  class="text-[10px] text-text-secondary print:text-black md:hidden"
+                                  class="text-[10px] text-text-secondary print:text-black md:hidden shrink-0"
                                   th:text="'(' + ${entry.danceFigure.alternativeTiming} + ')'">(123)</span>
 
-                            <!-- Web View Extended Info: Timing & Foot (Hidden on mobile) -->
-                            <div class="hidden md:flex items-center gap-2 ml-4">
-                                <span th:if="${entry.danceFigure?.alternativeTiming != null}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container text-on-surface border border-outline-variant/30 print-badge">
-                                    <span class="material-symbols-outlined text-[12px]">schedule</span>
-                                    <span th:text="${entry.danceFigure.alternativeTiming}">123</span>
-                                </span>
-                                
-                                <span th:if="${entry.danceFigure?.startingFootLeader != null && entry.danceFigure.startingFootLeader != ''}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-primary-fixed text-on-primary-fixed border border-border print-badge">
-                                    <span class="material-symbols-outlined text-[12px] scale-x-[-1]" style="font-variation-settings: 'FILL' 1;">footprint</span>
-                                    M: <span th:text="${entry.danceFigure.startingFootLeader}">LF</span>
-                                </span>
-                                
-                                <span th:if="${entry.danceFigure?.startingFootFollower != null && entry.danceFigure.startingFootFollower != ''}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-secondary-fixed text-on-secondary-fixed border border-border print-badge">
-                                    <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">footprint</span>
-                                    L: <span th:text="${entry.danceFigure.startingFootFollower}">RF</span>
-                                </span>
+                            <!-- Web View Extended Info: Step Sequence Shorthand (Hidden on mobile) -->
+                            <div class="hidden md:flex flex-col ml-auto pl-4 border-l border-border/50 min-w-0">
+                                <!-- Man Steps -->
+                                <div class="text-[11px] font-mono text-on-surface truncate flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
+                                    <span class="font-bold text-primary w-10 shrink-0 uppercase tracking-wider">Man:</span>
+                                    <span class="truncate">
+                                        <th:block th:each="step, iterStat : ${entry.danceFigure.getLeaderSteps()}">
+                                            <span th:text="${step.timing + ' ' + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}"></span><span th:if="${!iterStat.last}" class="text-outline-variant mx-1 font-sans">-&gt;</span>
+                                        </th:block>
+                                    </span>
+                                </div>
+                                <!-- Lady Steps -->
+                                <div class="text-[11px] font-mono text-on-surface truncate flex items-center mt-1" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
+                                    <span class="font-bold text-secondary w-10 shrink-0 uppercase tracking-wider">Lady:</span>
+                                    <span class="truncate">
+                                        <th:block th:each="step, iterStat : ${entry.danceFigure.getFollowerSteps()}">
+                                            <span th:text="${step.timing + ' ' + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}"></span><span th:if="${!iterStat.last}" class="text-outline-variant mx-1 font-sans">-&gt;</span>
+                                        </th:block>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         
