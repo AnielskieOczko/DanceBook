@@ -38,19 +38,19 @@
         </a>
 
         <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-8">
-            <a href="/" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'home' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Dashboard</a>
-            <a href="/materials" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'materials' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Library</a>
-            <a href="/dance-figures" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Figures</a>
-            <a href="/lists" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'lists' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Collections</a>
-            <a href="/choreographies" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'choreographies' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Choreographies</a>
-            <a href="/profile" class="font-body-md font-medium transition-all duration-200"
-               th:classappend="${activeNav == 'profile' ? 'text-on-surface opacity-100' : 'text-outline hover:text-on-surface opacity-70'}">Profile</a>
+        <nav class="hidden md:flex items-center gap-2">
+            <a href="/" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'home' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Dashboard</a>
+            <a href="/materials" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'materials' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Library</a>
+            <a href="/dance-figures" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'dance-figures' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Figures</a>
+            <a href="/lists" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'lists' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Collections</a>
+            <a href="/choreographies" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Choreographies</a>
+            <a href="/profile" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'profile' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Profile</a>
         </nav>
 
         <!-- Trailing Icons -->
