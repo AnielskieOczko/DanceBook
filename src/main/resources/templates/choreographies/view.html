@@ -114,9 +114,28 @@
                     <span class="block">Updated: <strong th:text="${#temporals.format(choreography.updatedAt, 'dd MMM yyyy')}">Date</strong></span>
                 </div>
             </div>
-            <p class="text-body-md text-text-secondary mt-3 italic whitespace-pre-line print:text-black" th:text="${choreography.description}">
-                Choreography details and style guidelines...
-            </p>
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-3">
+                <p class="text-body-md text-text-secondary italic whitespace-pre-line print:text-black" th:text="${choreography.description}">
+                    Choreography details and style guidelines...
+                </p>
+                
+                <!-- LOD Color Legend Badge -->
+                <details class="relative group inline-block no-print shrink-0" th:unless="${#lists.isEmpty(choreography.entries)}">
+                    <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-variant hover:bg-surface-warm text-on-surface-variant text-xs font-bold uppercase tracking-wider transition-colors select-none border border-outline-variant/30">
+                        <span class="material-symbols-outlined text-[16px]">palette</span>
+                        Color Guide
+                    </summary>
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-surface-container rounded-lg shadow-ambient border border-border p-3 z-50">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2 border-b border-border pb-1">Line of Dance</h4>
+                        <ul class="space-y-2 text-sm font-medium text-on-surface">
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-blue-500 shrink-0 border border-black/10"></span> Long Wall</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-emerald-500 shrink-0 border border-black/10"></span> Short Wall</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-purple-500 shrink-0 border border-black/10"></span> Diagonal</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-rose-500 shrink-0 border border-black/10"></span> Corner</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <!-- Empty state warning -->
