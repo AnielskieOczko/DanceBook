@@ -172,6 +172,63 @@
                             <span class="material-symbols-outlined text-[14px] print:hidden">notes</span>
                             <span th:text="${entry.notes}">Start from diagonal wall</span>
                         </div>
+
+                        <!-- Steps Details (Expandable per figure) -->
+                        <details th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}" class="group mt-3 print:hidden">
+                            <summary class="cursor-pointer flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-focus select-none list-none [&::-webkit-details-marker]:hidden">
+                                <span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-open:rotate-90">chevron_right</span>
+                                View Steps
+                            </summary>
+                            
+                            <div class="mt-3 pl-2 sm:pl-7 space-y-3 border-l-2 border-surface-variant ml-2.5">
+                                <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1">
+                                    <div class="flex items-start gap-3 flex-wrap sm:flex-nowrap">
+                                        <!-- Timing & Foot (Badges) -->
+                                        <div class="flex items-center gap-1.5 shrink-0 w-24">
+                                            <span class="inline-flex items-center gap-0.5 px-2 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0">
+                                                <span th:text="${step.timing}">S</span>
+                                            </span>
+                                            <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-0.5 px-2 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0">
+                                                L
+                                            </span>
+                                            <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-0.5 px-2 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border shrink-0">
+                                                R
+                                            </span>
+                                            <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-0.5 px-2 py-0.5 text-xs font-bold bg-surface-container text-on-surface rounded border border-border shrink-0" th:text="${step.foot}">
+                                                -
+                                            </span>
+                                        </div>
+                                        
+                                        <!-- Action & Expandable Comments -->
+                                        <div class="flex-grow min-w-[200px]">
+                                            <div class="text-sm font-medium text-on-surface leading-tight" th:text="${step.action}">Step</div>
+                                            
+                                            <!-- Technical details (if any) -->
+                                            <details th:if="${!#lists.isEmpty(step.comments) || (!#strings.isEmpty(step.footwork) && step.footwork != '-') || (!#strings.isEmpty(step.alignment) && step.alignment != '-') || (!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0')}" class="group/tech mt-1.5 text-xs">
+                                                <summary class="cursor-pointer text-text-secondary hover:text-primary flex items-center gap-1 list-none [&::-webkit-details-marker]:hidden font-semibold">
+                                                    <span class="material-symbols-outlined text-[14px] transition-transform group-open/tech:rotate-90">arrow_right</span>
+                                                    Technical details
+                                                </summary>
+                                                <div class="pl-4 mt-1 space-y-1 text-text-secondary border-l border-border ml-1.5 py-1">
+                                                    <div th:if="${!#strings.isEmpty(step.footwork) && step.footwork != '-'}">
+                                                        <span class="font-bold">Footwork:</span> <span th:text="${step.footwork}">HT</span>
+                                                    </div>
+                                                    <div th:if="${!#strings.isEmpty(step.alignment) && step.alignment != '-'}">
+                                                        <span class="font-bold">Alignment:</span> <span th:text="${step.alignment}">LOD</span>
+                                                    </div>
+                                                    <div th:if="${!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0'}">
+                                                        <span class="font-bold">Turn:</span> <span th:text="${step.amountOfTurn}">1/4 L</span>
+                                                    </div>
+                                                    <ul th:if="${!#lists.isEmpty(step.comments)}" class="list-disc pl-4 mt-1.5 space-y-1">
+                                                        <li th:each="c : ${step.comments}" th:text="${c.commentText}"></li>
+                                                    </ul>
+                                                </div>
+                                            </details>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
                     </div>
 
                     <!-- Line indicator badge -->
