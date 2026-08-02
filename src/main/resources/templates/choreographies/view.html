@@ -239,6 +239,14 @@
                         </summary>
                         
                         <div class="mt-4 pl-2 sm:pl-7 space-y-4 ml-2.5" th:classappend="${detailedView == true ? 'print:block print:pl-4' : ''}">
+                            <!-- Action button to open figure -->
+                            <div class="mb-2 print:hidden" th:if="${entry.danceFigure != null}">
+                                <a th:href="@{/dance-figures/{id}(id=${entry.danceFigure.id})}" class="text-xs font-bold text-primary hover:text-primary-focus flex items-center gap-1 w-fit transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                                    <span class="material-symbols-outlined text-[16px]">menu_book</span>
+                                    View Figure in Dictionary
+                                </a>
+                            </div>
+
                             <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1 print-card">
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
