@@ -238,7 +238,7 @@
                             Details
                         </summary>
                         
-                        <div class="mt-4 pl-2 sm:pl-7 space-y-4 border-l-2 border-surface-variant ml-2.5" th:classappend="${detailedView == true ? 'print:block print:border-black/20 print:pl-4' : ''}">
+                        <div class="mt-4 pl-2 sm:pl-7 space-y-4 ml-2.5" th:classappend="${detailedView == true ? 'print:block print:pl-4' : ''}">
                             <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1 print-card">
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
@@ -269,7 +269,7 @@
                                                 <span class="material-symbols-outlined text-[16px] transition-transform group-open/tech:rotate-90 print:hidden">arrow_right</span>
                                                 Technical details
                                             </summary>
-                                            <div class="pl-4 mt-2 space-y-1.5 text-text-secondary border-l border-border ml-1.5 py-1 print:text-black" th:classappend="${detailedView == true ? 'print:border-black/20' : ''}">
+                                            <div class="pl-4 mt-2 space-y-1.5 text-text-secondary ml-1.5 py-1 print:text-black">
                                                 <div th:if="${!#strings.isEmpty(step.footwork) && step.footwork != '-'}">
                                                     <span class="font-bold">Footwork:</span> <span th:text="${step.footwork}">HT</span>
                                                 </div>
