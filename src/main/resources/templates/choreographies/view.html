@@ -242,18 +242,22 @@
                             <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1 print-card">
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
-                                    <div class="flex items-center gap-2 shrink-0 w-28">
-                                        <span class="inline-flex items-center gap-0.5 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                    <div class="flex items-center gap-2 shrink-0 w-32">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">timer</span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-0.5 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
                                             L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-0.5 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border shrink-0 print-badge print:bg-secondary-fixed print:text-on-secondary-fixed">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border shrink-0 print-badge print:bg-secondary-fixed print:text-on-secondary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
                                             R
                                         </span>
-                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-0.5 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border shrink-0 print-badge print:bg-surface-container print:text-black" th:text="${step.foot}">
-                                            -
+                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border shrink-0 print-badge print:bg-surface-container print:text-black">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
+                                            <span th:text="${step.foot}">-</span>
                                         </span>
                                     </div>
                                     
