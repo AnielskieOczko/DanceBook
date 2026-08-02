@@ -59,6 +59,8 @@ class NavbarAdvice(
             path == "/" -> "home"
             path.startsWith("/materials") -> "materials"
             path.startsWith("/lists") -> "lists"
+            path.startsWith("/dance-figures") -> "dance-figures"
+            path.startsWith("/choreographies") -> "choreographies"
             path.startsWith("/dance-types") -> "dance-types"
             path.startsWith("/dance-categories") -> "dance-categories"
             path.startsWith("/admin") -> "admin"

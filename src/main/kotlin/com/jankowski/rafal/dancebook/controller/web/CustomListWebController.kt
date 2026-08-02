@@ -32,7 +32,7 @@ class CustomListWebController(
         @RequestParam(required = false) categoryIds: List<UUID>? = null,
         @RequestParam(required = false) nameSearch: String? = null,
         @RequestParam(required = false) sortBy: String? = null,
-        @RequestParam(required = false, defaultValue = "grid") view: String = "grid",
+        @RequestParam(required = false, defaultValue = "list") view: String = "list",
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {
@@ -76,7 +76,7 @@ class CustomListWebController(
     @GetMapping("/{id}")
     fun viewList(
         @PathVariable id: UUID, 
-        @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "grid") view: String,
+        @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "list") view: String,
         @org.springframework.web.bind.annotation.RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
         pageable: Pageable

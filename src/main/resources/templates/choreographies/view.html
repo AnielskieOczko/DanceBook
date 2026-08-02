@@ -37,7 +37,8 @@
             }
         }
         /* Custom counters for figure numbers in read-only view */
-        #sequence-timeline-view {
+        #sequence-timeline-view,
+        #sequence-timeline-detailed {
             counter-reset: figure-counter;
         }
         .figure-entry-row {
@@ -113,9 +114,28 @@
                     <span class="block">Updated: <strong th:text="${#temporals.format(choreography.updatedAt, 'dd MMM yyyy')}">Date</strong></span>
                 </div>
             </div>
-            <p class="text-body-md text-text-secondary mt-3 italic whitespace-pre-line print:text-black" th:text="${choreography.description}">
-                Choreography details and style guidelines...
-            </p>
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-3">
+                <p class="text-body-md text-text-secondary italic whitespace-pre-line print:text-black" th:text="${choreography.description}">
+                    Choreography details and style guidelines...
+                </p>
+                
+                <!-- LOD Color Legend Badge -->
+                <details id="lod-color-guide" class="relative group inline-block no-print shrink-0" th:unless="${#lists.isEmpty(choreography.entries)}">
+                    <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-variant hover:bg-surface-warm text-on-surface-variant text-xs font-bold uppercase tracking-wider transition-colors select-none border border-outline-variant/30">
+                        <span class="material-symbols-outlined text-[16px]">palette</span>
+                        Color Guide
+                    </summary>
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-surface-container rounded-lg shadow-ambient border border-border p-3 z-50">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2 border-b border-border pb-1">Line of Dance</h4>
+                        <ul class="space-y-2 text-sm font-medium text-on-surface">
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-blue-500 shrink-0 border border-black/10"></span> Long Wall</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-emerald-500 shrink-0 border border-black/10"></span> Short Wall</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-purple-500 shrink-0 border border-black/10"></span> Diagonal</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-rose-500 shrink-0 border border-black/10"></span> Corner</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <!-- Empty state warning -->
@@ -126,15 +146,26 @@
         </div>
 
         <!-- Routine Timeline Sequence -->
-        <div th:unless="${#lists.isEmpty(choreography.entries)}" id="sequence-timeline-view" class="relative pl-4 border-l-2 border-primary/20 space-y-6 print:border-l-0 print:pl-0">
-            
-            <div th:each="entry : ${choreography.entries}"
-                 class="relative print-card"
-                 th:classappend="${entry.entryType.name() == 'SECTION_LABEL' ? 'page-break' : 'figure-entry-row'}">
+        <div th:unless="${#lists.isEmpty(choreography.entries)}">
+            <!-- Compact Version (Screen + Print) -->
+            <div th:replace="~{:: sequenceTimeline(entries=${choreography.entries}, detailedView=${false})}"></div>
 
-                <!-- Timeline bullet point (only figures, no-print / print hidden) -->
-                <div th:if="${entry.entryType.name() == 'FIGURE'}"
-                     class="absolute -left-[25px] top-1.5 w-4 h-4 rounded-full bg-primary border-4 border-white flex items-center justify-center shadow-sm shrink-0 print:hidden"></div>
+            <!-- Detailed Version (Print Only) -->
+            <div class="hidden print:block" style="page-break-before: always;">
+                <h2 class="text-xl font-bold mb-6 text-black border-b border-black pb-2 text-center uppercase tracking-wider">Detailed Sequence Breakdown</h2>
+                <div th:replace="~{:: sequenceTimeline(entries=${choreography.entries}, detailedView=${true})}"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Timeline Fragment -->
+    <th:block th:fragment="sequenceTimeline(entries, detailedView)">
+        <div th:id="${detailedView == true ? 'sequence-timeline-detailed' : 'sequence-timeline-view'}" class="relative space-y-0 print:space-y-0">
+            
+            <div th:each="entry : ${entries}"
+                 class="relative"
+                 th:classappend="${(detailedView != true ? 'print-card ' : '') + (entry.entryType.name() == 'SECTION_LABEL' ? 'page-break' : 'figure-entry-row')}">
 
                 <!-- Type 1: SECTION LABEL -->
                 <div th:if="${entry.entryType.name() == 'SECTION_LABEL'}"
@@ -147,44 +178,134 @@
 
                 <!-- Type 2: FIGURE -->
                 <div th:if="${entry.entryType.name() == 'FIGURE'}"
-                     th:with="indicatorClass=${entry.lineIndicator?.name() == 'SHORT_WALL' ? 'bg-amber-500/10 border border-amber-500/20 text-amber-800' :
-                                              entry.lineIndicator?.name() == 'LONG_WALL' ? 'bg-blue-500/10 border border-blue-500/20 text-blue-800' :
-                                              entry.lineIndicator?.name() == 'DIAGONAL' ? 'bg-purple-500/10 border border-purple-500/20 text-purple-800' :
-                                              entry.lineIndicator?.name() == 'CORNER' ? 'bg-rose-500/10 border border-rose-500/20 text-rose-800' : ''}"
-                     class="flex items-start justify-between gap-4 p-4 hover:bg-surface-warm/30 rounded-lg transition-colors">
-                    
-                    <div class="space-y-1.5 flex-grow">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="figure-number-view font-bold text-on-surface text-base print:text-black"></span>
-                            <span class="font-bold text-on-surface text-base print:text-black" th:text="${entry.danceFigure?.name}">Natural Turn</span>
-                            
-                            <!-- Badges -->
-                            <span th:if="${entry.danceFigure?.danceClass != null}"
-                                  class="badge bg-secondary-container text-on-surface border border-outline-variant/30 text-[9px] font-semibold print-badge"
-                                  th:text="${entry.danceFigure.danceClass.name()}">F</span>
-                            <span th:if="${entry.danceFigure?.alternativeTiming != null}"
-                                  class="text-[10px] text-text-secondary print:text-black"
-                                  th:text="'(' + ${entry.danceFigure.alternativeTiming} + ')'">(123)</span>
+                     th:with="lineColorBg=${entry.lineIndicator?.name() == 'SHORT_WALL' ? 'bg-emerald-500' :
+                                              entry.lineIndicator?.name() == 'LONG_WALL' ? 'bg-blue-500' :
+                                              entry.lineIndicator?.name() == 'DIAGONAL' ? 'bg-purple-500' :
+                                              entry.lineIndicator?.name() == 'CORNER' ? 'bg-rose-500' : 'bg-neutral-300'}"
+                     class="relative py-2 w-full group/row">
+                     
+                    <!-- Continuous Colored Timeline Line (LOD) -->
+                    <div th:if="${entry.lineIndicator != null}" class="absolute left-0 top-0 bottom-0 w-1.5 print:w-1" th:classappend="${lineColorBg}"></div>
+                     
+                    <!-- Floating Card -->
+                    <div class="ml-5 bg-white border border-border/60 shadow-sm rounded-xl p-4 transition-all hover:shadow-md hover:border-primary/20 flex flex-col gap-2 relative print:shadow-none print:border-black/20 print:ml-4 print:p-2 print:rounded-lg">
+                        <!-- Figure Grid Header -->
+                    <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
+                        <!-- Col 1: Name and number -->
+                        <div class="col-start-1 row-start-1 flex items-center gap-2 flex-nowrap min-w-0 w-full">
+                            <span class="figure-number-view font-bold text-on-surface text-base print:text-black shrink-0"></span>
+                            <span class="font-bold text-on-surface text-base print:text-black truncate min-w-0" th:text="${entry.danceFigure?.name}">Natural Turn</span>
                         </div>
                         
-                        <!-- Notes display -->
-                        <div th:if="${entry.notes != null}" class="text-xs text-text-secondary italic flex items-center gap-1.5 print:text-black pl-1">
-                            <span class="material-symbols-outlined text-[14px] print:hidden">notes</span>
-                            <span th:text="${entry.notes}">Start from diagonal wall</span>
+                        <!-- Sequence Shorthand (Mobile: Row 2, Desktop: Col 2) -->
+                        <div class="col-start-1 row-start-2 md:col-start-2 md:row-start-1 print:col-start-2 print:row-start-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
+                            <!-- Man Steps -->
+                            <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
+                                <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Man:</span>
+                                <div class="flex flex-wrap items-center gap-1">
+                                    <span th:each="step : ${entry.danceFigure.getLeaderSteps()}"
+                                          th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded font-mono print-badge"
+                                          th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
+                                </div>
+                            </div>
+                            <!-- Lady Steps -->
+                            <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
+                                <span class="text-[10px] font-bold text-secondary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Lady:</span>
+                                <div class="flex flex-wrap items-center gap-1">
+                                    <span th:each="step : ${entry.danceFigure.getFollowerSteps()}"
+                                          th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded font-mono print-badge"
+                                          th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Line indicator badge -->
-                    <div th:if="${entry.lineIndicator != null}" class="shrink-0 print:text-black">
-                        <span th:class="${indicatorClass}" class="badge text-[10px] px-2.5 py-1 rounded font-bold uppercase tracking-wider print-badge"
-                              th:text="${#strings.replace(entry.lineIndicator.name(), '_', ' ')}">Short Wall</span>
+                    
+                    <!-- Notes display -->
+                    <div th:if="${entry.notes != null}" class="text-xs text-text-secondary italic flex items-center gap-1.5 print:text-black pl-1 mt-1">
+                        <span class="material-symbols-outlined text-[14px] print:hidden">notes</span>
+                        <span th:text="${entry.notes}">Start from diagonal wall</span>
                     </div>
 
+                    <!-- Steps Details (Expandable per figure) -->
+                    <details th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}" 
+                             th:attr="open=${detailedView == true ? 'open' : null}"
+                             th:classappend="${detailedView == true ? 'print:block' : 'print:hidden'}"
+                             class="group mt-3">
+                        <summary class="cursor-pointer flex items-center gap-1.5 text-base font-bold text-primary hover:text-primary-focus select-none list-none [&::-webkit-details-marker]:hidden print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
+                            <span class="material-symbols-outlined text-[20px] transition-transform duration-200 group-open:rotate-90 print:hidden">chevron_right</span>
+                            Details
+                        </summary>
+                        
+                        <div class="mt-4 pl-2 sm:pl-7 space-y-4 ml-2.5" th:classappend="${detailedView == true ? 'print:block print:pl-4' : ''}">
+                            <!-- Action button to open figure -->
+                            <div class="mb-2 print:hidden" th:if="${entry.danceFigure != null}">
+                                <a th:href="@{/dance-figures/{id}(id=${entry.danceFigure.id})}" class="text-xs font-bold text-primary hover:text-primary-focus flex items-center gap-1 w-fit transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+                                    <span class="material-symbols-outlined text-[16px]">menu_book</span>
+                                    View Figure in Syllabus
+                                </a>
+                            </div>
+
+                            <div th:each="step : ${entry.danceFigure.getLeaderSteps()}" class="py-1 print-card">
+                                <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
+                                    <!-- Timing & Foot (Badges) -->
+                                    <div class="flex items-center gap-2 shrink-0 w-32">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">timer</span>
+                                            <span th:text="${step.timing}">S</span>
+                                        </span>
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
+                                            L
+                                        </span>
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border shrink-0 print-badge print:bg-secondary-fixed print:text-on-secondary-fixed">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
+                                            R
+                                        </span>
+                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border shrink-0 print-badge print:bg-surface-container print:text-black">
+                                            <span class="material-symbols-outlined text-[14px]">footprint</span>
+                                            <span th:text="${step.foot}">-</span>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Action & Expandable Comments -->
+                                    <div class="flex-grow min-w-[200px]">
+                                        <div class="text-base font-medium text-on-surface leading-snug print:text-black" th:text="${step.action}">Step</div>
+                                        
+                                        <!-- Technical details (if any) -->
+                                        <details th:if="${!#lists.isEmpty(step.comments) || (!#strings.isEmpty(step.footwork) && step.footwork != '-') || (!#strings.isEmpty(step.alignment) && step.alignment != '-') || (!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0')}" 
+                                                 th:attr="open=${detailedView == true ? 'open' : null}"
+                                                 class="group/tech mt-2 text-sm">
+                                            <summary class="cursor-pointer text-text-secondary hover:text-primary flex items-center gap-1 list-none [&::-webkit-details-marker]:hidden font-semibold print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
+                                                <span class="material-symbols-outlined text-[16px] transition-transform group-open/tech:rotate-90 print:hidden">arrow_right</span>
+                                                Technical details
+                                            </summary>
+                                            <div class="pl-4 mt-2 space-y-1.5 text-text-secondary ml-1.5 py-1 print:text-black">
+                                                <div th:if="${!#strings.isEmpty(step.footwork) && step.footwork != '-'}">
+                                                    <span class="font-bold">Footwork:</span> <span th:text="${step.footwork}">HT</span>
+                                                </div>
+                                                <div th:if="${!#strings.isEmpty(step.alignment) && step.alignment != '-'}">
+                                                    <span class="font-bold">Alignment:</span> <span th:text="${step.alignment}">LOD</span>
+                                                </div>
+                                                <div th:if="${!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0'}">
+                                                    <span class="font-bold">Turn:</span> <span th:text="${step.amountOfTurn}">1/4 L</span>
+                                                </div>
+                                                <ul th:if="${!#lists.isEmpty(step.comments)}" class="list-disc pl-4 mt-2 space-y-1.5">
+                                                    <li th:each="c : ${step.comments}" th:text="${c.commentText}"></li>
+                                                </ul>
+                                            </div>
+                                        </details>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                    </div> <!-- End Floating Card -->
                 </div>
-
             </div>
-
         </div>
+    </th:block>
 
     </div>
 

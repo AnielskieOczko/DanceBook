@@ -18,17 +18,17 @@
             <form id="viewToggleForm" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="change from:input[type='radio']" hx-push-url="false">
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
-                        <input type="radio" name="view" value="grid" class="hidden peer"
-                               th:checked="${currentView == 'grid' || currentView == null}">
+                        <input type="radio" name="view" value="list" class="hidden peer"
+                               th:checked="${currentView == 'list' || currentView == null}">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                            <span class="material-symbols-outlined text-[18px]">view_list</span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
-                        <input type="radio" name="view" value="list" class="hidden peer"
-                               th:checked="${currentView == 'list'}">
+                        <input type="radio" name="view" value="grid" class="hidden peer"
+                               th:checked="${currentView == 'grid'}">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
                         </div>
                     </label>
                 </div>
@@ -50,7 +50,7 @@
         </div>
 
         <!-- 1. Grid (Cards) View -->
-        <div th:if="${!#lists.isEmpty(choreographies) && (currentView == 'grid' || currentView == null)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:if="${!#lists.isEmpty(choreographies) && currentView == 'grid'}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div th:each="choreo : ${choreographies}"
                  class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col justify-between p-5 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 transition-all duration-300 min-h-[180px]">
                 
@@ -117,7 +117,7 @@
         </div>
 
         <!-- 2. Compact List View -->
-        <div th:if="${!#lists.isEmpty(choreographies) && currentView == 'list'}" class="flex flex-col gap-3">
+        <div th:if="${!#lists.isEmpty(choreographies) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
             <div th:each="choreo : ${choreographies}"
                  class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-4 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 transition-all duration-300">
                 
