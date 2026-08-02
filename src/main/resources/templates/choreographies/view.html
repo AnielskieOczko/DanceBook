@@ -128,12 +128,12 @@
         <!-- Routine Timeline Sequence -->
         <div th:unless="${#lists.isEmpty(choreography.entries)}">
             <!-- Compact Version (Screen + Print) -->
-            <div th:replace="~{this :: sequenceTimeline(entries=${choreography.entries}, detailedView=false)}"></div>
+            <div th:replace="~{:: sequenceTimeline(entries=${choreography.entries}, detailedView=${false})}"></div>
 
             <!-- Detailed Version (Print Only) -->
             <div class="hidden print:block" style="page-break-before: always;">
                 <h2 class="text-xl font-bold mb-6 text-black border-b border-black pb-2 text-center uppercase tracking-wider">Detailed Sequence Breakdown</h2>
-                <div th:replace="~{this :: sequenceTimeline(entries=${choreography.entries}, detailedView=true)}"></div>
+                <div th:replace="~{:: sequenceTimeline(entries=${choreography.entries}, detailedView=${true})}"></div>
             </div>
         </div>
 
