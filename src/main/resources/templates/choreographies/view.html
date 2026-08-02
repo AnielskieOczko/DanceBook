@@ -120,7 +120,7 @@
                 </p>
                 
                 <!-- LOD Color Legend Badge -->
-                <details class="relative group inline-block no-print shrink-0" th:unless="${#lists.isEmpty(choreography.entries)}">
+                <details id="lod-color-guide" class="relative group inline-block no-print shrink-0" th:unless="${#lists.isEmpty(choreography.entries)}">
                     <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-variant hover:bg-surface-warm text-on-surface-variant text-xs font-bold uppercase tracking-wider transition-colors select-none border border-outline-variant/30">
                         <span class="material-symbols-outlined text-[16px]">palette</span>
                         Color Guide
