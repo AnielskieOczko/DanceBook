@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-lg">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl" th:text="${event.title}">Monday practice</h1>
+            <p class="page-subtitle">
+                <span th:text="${#temporals.format(event.startTime, 'EEEE, MMMM d yyyy · HH:mm')}">Thursday, September 10 2026 · 18:00</span>
+                <span> – </span>
+                <span th:text="${#temporals.format(event.endTime, 'HH:mm')}">20:00</span>
+            </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+            <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-primary">Edit</a>
+            <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                  data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+            <a href="/training-events" class="btn-outline">Back</a>
+        </div>
+    </div>
+
+    <div class="card p-8 space-y-6">
+        <h2 class="text-xl font-bold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px] text-primary">event</span>
+            Session details
+        </h2>
+
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+            <span th:each="segment : ${event.segments}" class="badge-secondary"
+                  th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+            <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
+            <span th:unless="${event.isAwaitingConfirmation}"
+                  th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
+                                    event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' : 'badge-neutral'}"
+                  th:text="${event.attendanceStatus}">PLANNED</span>
+            <span class="badge-neutral" th:text="${event.durationMinutes} + ' min'">120 min</span>
+        </div>
+
+        <!-- Confirm a past session that was never marked either way -->
+        <div th:if="${event.isAwaitingConfirmation}" class="flex items-center gap-3 pt-2">
+            <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post">
+                <input type="hidden" name="status" value="ATTENDED">
+                <button type="submit" class="btn-primary">I attended</button>
+            </form>
+            <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post">
+                <input type="hidden" name="status" value="SKIPPED">
+                <button type="submit" class="btn-outline">I skipped</button>
+            </form>
+        </div>
+
+        <div th:if="${event.description != null}">
+            <h3 class="form-label">Notes</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant whitespace-pre-line"
+               th:text="${event.description}">What we worked on.</p>
+        </div>
+
+        <div th:if="${event.material != null}">
+            <h3 class="form-label">Linked material</h3>
+            <a th:href="@{/materials/{id}(id=${event.material.id})}"
+               class="font-semibold text-primary hover:underline" th:text="${event.material.name}">Waltz basics</a>
+        </div>
+
+        <div th:if="${event.materialsUrl != null}">
+            <h3 class="form-label">External materials</h3>
+            <a th:href="${event.materialsUrl}" target="_blank" rel="noopener noreferrer"
+               class="font-semibold text-primary hover:underline break-all" th:text="${event.materialsUrl}">https://...</a>
+        </div>
+
+        <p class="font-label-sm text-label-sm text-outline pt-4 border-t border-border">
+            Added by <span th:text="${event.createdBy?.displayName}">Test User</span>
+            on <span th:text="${#temporals.format(event.createdAt, 'MMMM d yyyy')}">September 6 2026</span>
+        </p>
+    </div>
+</section>
+
+</html>

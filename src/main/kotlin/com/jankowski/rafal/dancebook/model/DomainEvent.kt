@@ -74,3 +74,29 @@ class DanceFigureDeletedEvent(
     actor: AppUser
 ) : DomainEvent(actor)
 
+
+class TrainingEventCreatedEvent(
+    val trainingEvent: TrainingEvent,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class TrainingEventUpdatedEvent(
+    val trainingEvent: TrainingEvent,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class TrainingEventDeletedEvent(
+    val trainingEventId: UUID,
+    val trainingEventTitle: String,
+    actor: AppUser
+) : DomainEvent(actor)
+
+/**
+ * One activity entry for a whole generated series. Targets the first occurrence rather
+ * than the series row so the feed's existing TRAINING_EVENT link handling still applies.
+ */
+class TrainingSeriesCreatedEvent(
+    val firstOccurrence: TrainingEvent,
+    val occurrenceCount: Int,
+    actor: AppUser
+) : DomainEvent(actor)

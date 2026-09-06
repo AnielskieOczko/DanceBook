@@ -14,6 +14,10 @@ import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
+import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
 import com.jankowski.rafal.dancebook.model.TargetType
 import com.jankowski.rafal.dancebook.repository.ActivityEventRepository
 import org.slf4j.LoggerFactory
@@ -142,6 +146,44 @@ class ActivityEventListener(
     fun onDanceFigureDeleted(event: DanceFigureDeletedEvent) {
         log.info("Recording DANCE_FIGURE_DELETED event for '{}'", event.danceFigureName)
         save(EventType.DANCE_FIGURE_DELETED, event.actor, TargetType.DANCE_FIGURE, event.danceFigureId, event.danceFigureName)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingEventCreated(event: TrainingEventCreatedEvent) {
+        log.info("Recording TRAINING_EVENT_CREATED event for '{}'", event.trainingEvent.title)
+        save(EventType.TRAINING_EVENT_CREATED, event.actor, TargetType.TRAINING_EVENT, event.trainingEvent.id, event.trainingEvent.title)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingEventUpdated(event: TrainingEventUpdatedEvent) {
+        log.info("Recording TRAINING_EVENT_UPDATED event for '{}'", event.trainingEvent.title)
+        save(EventType.TRAINING_EVENT_UPDATED, event.actor, TargetType.TRAINING_EVENT, event.trainingEvent.id, event.trainingEvent.title)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingEventDeleted(event: TrainingEventDeletedEvent) {
+        log.info("Recording TRAINING_EVENT_DELETED event for '{}'", event.trainingEventTitle)
+        save(EventType.TRAINING_EVENT_DELETED, event.actor, TargetType.TRAINING_EVENT, event.trainingEventId, event.trainingEventTitle)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingSeriesCreated(event: TrainingSeriesCreatedEvent) {
+        log.info(
+            "Recording TRAINING_SERIES_CREATED event for '{}' ({} occurrences)",
+            event.firstOccurrence.title, event.occurrenceCount
+        )
+        save(
+            eventType = EventType.TRAINING_SERIES_CREATED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = event.firstOccurrence.id,
+            targetName = event.firstOccurrence.title,
+            metadata = event.occurrenceCount.toString()
+        )
     }
 
     private fun save(

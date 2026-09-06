@@ -45,6 +45,9 @@ dependencies {
     implementation("com.google.apis:google-api-services-drive:v3-rev20250220-2.0.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.34.0")
 
+    // Google Calendar API (training calendar sync, same stored-refresh-token model)
+    implementation("com.google.apis:google-api-services-calendar:v3-rev20260517-2.0.0")
+
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")

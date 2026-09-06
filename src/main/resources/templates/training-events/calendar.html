@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="space-y-lg relative">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">Training</h1>
+            <p class="page-subtitle">Click a slot to add a session, or drag one to move it.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="/training-events" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">list</span>
+                Agenda
+            </a>
+            <a href="/training-events/new" class="btn-primary">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add Session
+            </a>
+        </div>
+    </div>
+
+    <!-- Legend; the same colours the API sends as hex -->
+    <div class="flex flex-wrap items-center gap-4 font-label-sm text-label-sm text-on-surface-variant">
+        <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full inline-block bg-[#1e2524]"></span> Planned
+        </span>
+        <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full inline-block bg-[#695d46]"></span> Needs confirmation
+        </span>
+        <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full inline-block bg-[#2e5d51]"></span> Attended
+        </span>
+        <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full inline-block bg-[#ba1a1a]"></span> Skipped
+        </span>
+        <span class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full inline-block bg-[#737877]"></span> Cancelled
+        </span>
+    </div>
+
+    <div class="card p-4 md:p-6 relative">
+        <div id="trainingCalendar"></div>
+
+        <!-- Quick-create popover; positioned over the calendar by the script -->
+        <div id="quickCreatePopover"
+             class="hidden absolute z-50 w-80 max-w-[calc(100vw-3rem)] bg-surface-container-lowest
+                    border border-border rounded-md shadow-ambient p-4"></div>
+    </div>
+
+    <p id="calendarError" class="hidden form-error"></p>
+
+    <!--
+      Loaded from unpkg because script-src allows that origin and nothing else external.
+      The v6 global build is required: the app has no bundler, and v6 injects its own CSS
+      through JS, which style-src 'unsafe-inline' permits without a CSP change.
+    -->
+    <script src="https://unpkg.com/fullcalendar@6.1.20/index.global.min.js"></script>
+    <script th:src="@{/js/training-calendar.js}"></script>
+
+</section>
+
+<!-- Quick-create card, served as a fragment when a slot is chosen -->
+<div th:fragment="quickCreateCard" th:remove="tag">
+    <form id="quickCreateForm" th:object="${trainingEvent}" method="post" action="/training-events"
+          class="space-y-3">
+        <div class="flex items-start justify-between gap-2">
+            <h3 class="font-headline-md text-lg font-semibold text-on-surface">New session</h3>
+            <button type="button" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+        </div>
+
+        <input type="text" th:field="*{title}" required class="form-input" placeholder="Add title" autofocus>
+
+        <input type="date" th:field="*{date}" required class="form-input">
+
+        <div class="grid grid-cols-2 gap-2">
+            <input type="time" th:field="*{startTime}" required class="form-input">
+            <input type="time" th:field="*{endTime}" required class="form-input">
+        </div>
+
+        <select th:field="*{repeat}" class="form-select">
+            <option value="NONE">Does not repeat</option>
+            <option value="WEEKLY" th:text="'Weekly on ' + ${quickCreateWeekday}">Weekly</option>
+        </select>
+
+        <div id="quickRepeatUntilRow" class="hidden">
+            <label class="form-label">Repeat until</label>
+            <input type="date" th:field="*{repeatUntil}" class="form-input">
+        </div>
+
+        <div class="flex items-center justify-between gap-2 pt-1">
+            <a th:href="@{/training-events/new}" class="btn-ghost px-0 min-h-0 text-label-md">More options</a>
+            <button type="submit" class="btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+
+</html>

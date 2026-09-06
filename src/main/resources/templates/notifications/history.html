@@ -13,8 +13,8 @@
             <div th:each="event : ${events}" class="relative pl-8">
                 <!-- Timeline Dot -->
                 <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
-                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container' :
-                                      event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' :
+                     th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' || event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'bg-primary-container' :
+                                      event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error' :
                                       event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' :
                                       event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container' : 'bg-surface-variant'}"></div>
 
@@ -22,8 +22,8 @@
                 <div class="flex items-start gap-3">
                     <!-- Icon -->
                     <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                         th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'bg-primary-container text-on-primary-container' :
-                                          event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error-container text-on-error-container' :
+                         th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' || event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'bg-primary-container text-on-primary-container' :
+                                          event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error-container text-on-error-container' :
                                           event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' :
                                           event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-variant text-on-surface-variant'}">
                         <span class="material-symbols-outlined text-[18px]"
@@ -37,7 +37,11 @@
                                         event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
                                         event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
                                         event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
-                                        event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' : 'unpublished'}">add_circle</span>
+                                        event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
+                                        event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
+                                        event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
+                                        event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
+                                        event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' : 'unpublished'}">add_circle</span>
                     </div>
 
                     <!-- Text -->
@@ -57,9 +61,13 @@
                                 <span th:case="'DANCE_FIGURE_CREATED'"> created figure </span>
                                 <span th:case="'DANCE_FIGURE_UPDATED'"> updated figure </span>
                                 <span th:case="'DANCE_FIGURE_DELETED'"> deleted figure </span>
+                                <span th:case="'TRAINING_EVENT_CREATED'"> scheduled training </span>
+                                <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
+                                <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
+                                <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
                             </span>
                             <!-- Link for Material / CustomList -->
-                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_')}"
+                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_')}"
                                th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
                                class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
                             <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
@@ -70,6 +78,12 @@
                                class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Natural Turn</a>
                             <span th:if="${event.eventType.name() == 'DANCE_FIGURE_DELETED'}"
                                   class="font-semibold truncate" th:text="${event.targetName}">Natural Turn</span>
+                            <!-- Link/Text for TrainingEvent -->
+                            <a th:if="${event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_EVENT_DELETED'}"
+                               th:href="@{/training-events/{id}(id=${event.targetId})}"
+                               class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
+                            <span th:if="${event.eventType.name() == 'TRAINING_EVENT_DELETED'}"
+                                  class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
                         </p>
                         <p class="font-label-sm text-label-sm text-outline mt-1"
                            th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
