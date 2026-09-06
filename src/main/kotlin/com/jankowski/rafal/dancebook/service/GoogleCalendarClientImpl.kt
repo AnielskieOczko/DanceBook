@@ -68,13 +68,13 @@ class GoogleCalendarClientImpl(
     private val zone: ZoneId
         get() = ZoneId.of(calendarProperties.timeZone)
 
-    override fun createEvent(event: TrainingEvent): String {
+    override fun createEvent(event: TrainingEvent): String = translating("create") {
         val created = calendar.events().insert(calendarId, event.toGoogleEvent()).execute()
         logger.info("Created calendar event {} for training event '{}'", created.id, event.title)
-        return created.id
+        created.id
     }
 
-    override fun updateEvent(googleEventId: String, event: TrainingEvent) {
+    override fun updateEvent(googleEventId: String, event: TrainingEvent) = translating("update") {
         calendar.events().update(calendarId, googleEventId, event.toGoogleEvent()).execute()
         logger.info("Updated calendar event {} for training event '{}'", googleEventId, event.title)
     }
@@ -90,9 +90,25 @@ class GoogleCalendarClientImpl(
                 logger.info("Calendar event {} was already deleted ({}), treating as success", googleEventId, e.statusCode)
                 return
             }
-            logger.error("Failed to delete calendar event {}: {}", googleEventId, e.message)
-            throw e
+            throw asSyncException("delete", e)
         }
+    }
+
+    private fun <T> translating(action: String, block: () -> T): T =
+        try {
+            block()
+        } catch (e: GoogleJsonResponseException) {
+            throw asSyncException(action, e)
+        }
+
+    /**
+     * GoogleJsonResponseException.message is the entire JSON error document, which is
+     * useless in a form field. Pull out the one-line reason and keep the rest in the log.
+     */
+    private fun asSyncException(action: String, e: GoogleJsonResponseException): CalendarSyncException {
+        val detail = e.details?.message ?: e.statusMessage ?: "unknown error"
+        logger.error("Calendar {} failed with {} {}", action, e.statusCode, detail, e)
+        return CalendarSyncException("Google Calendar $action failed (${e.statusCode}): $detail", e)
     }
 
     private fun TrainingEvent.toGoogleEvent(): Event = Event().apply {
