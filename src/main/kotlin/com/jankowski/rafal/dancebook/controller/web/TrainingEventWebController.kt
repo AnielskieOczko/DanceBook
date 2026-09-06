@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
+import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -24,6 +25,7 @@ import java.util.UUID
 @RequestMapping("/training-events")
 class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
+    private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService
 ) {
 
@@ -83,7 +85,13 @@ class TrainingEventWebController(
         }
 
         try {
-            trainingEventService.create(request)
+            // The Repeats control decides whether this is one session or a whole series,
+            // the way Google folds recurrence into the event editor.
+            if (request.isRepeating) {
+                trainingSeriesService.create(request)
+            } else {
+                trainingEventService.create(request)
+            }
         } catch (e: Exception) {
             log.error("Failed to create training event '{}'", request.title, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to create training event")
@@ -127,6 +135,7 @@ class TrainingEventWebController(
             )
         )
         model.addAttribute("trainingEventId", id)
+        model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
         return "training-events/form"
     }
@@ -145,7 +154,13 @@ class TrainingEventWebController(
         }
 
         try {
-            trainingEventService.update(id, request)
+            // "This and following" regenerates the rest of the series; "this event"
+            // detaches the occurrence and updates it alone.
+            if (request.editScope.equals("THIS_AND_FOLLOWING", ignoreCase = true)) {
+                trainingSeriesService.updateThisAndFollowing(id, request)
+            } else {
+                trainingEventService.update(id, request)
+            }
         } catch (e: Exception) {
             log.error("Failed to update training event {}", id, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to update training event")
@@ -180,8 +195,15 @@ class TrainingEventWebController(
     }
 
     @PostMapping("/{id}/delete")
-    fun deleteTrainingEvent(@PathVariable id: UUID): String {
-        trainingEventService.delete(id)
+    fun deleteTrainingEvent(
+        @PathVariable id: UUID,
+        @RequestParam(required = false) scope: String? = null
+    ): String {
+        if (scope.equals("THIS_AND_FOLLOWING", ignoreCase = true)) {
+            trainingSeriesService.deleteThisAndFollowing(id)
+        } else {
+            trainingEventService.delete(id)
+        }
         return "redirect:/training-events"
     }
 

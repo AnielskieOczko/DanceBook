@@ -17,6 +17,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
+import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
 import com.jankowski.rafal.dancebook.model.TargetType
 import com.jankowski.rafal.dancebook.repository.ActivityEventRepository
 import org.slf4j.LoggerFactory
@@ -166,6 +167,23 @@ class ActivityEventListener(
     fun onTrainingEventDeleted(event: TrainingEventDeletedEvent) {
         log.info("Recording TRAINING_EVENT_DELETED event for '{}'", event.trainingEventTitle)
         save(EventType.TRAINING_EVENT_DELETED, event.actor, TargetType.TRAINING_EVENT, event.trainingEventId, event.trainingEventTitle)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingSeriesCreated(event: TrainingSeriesCreatedEvent) {
+        log.info(
+            "Recording TRAINING_SERIES_CREATED event for '{}' ({} occurrences)",
+            event.firstOccurrence.title, event.occurrenceCount
+        )
+        save(
+            eventType = EventType.TRAINING_SERIES_CREATED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = event.firstOccurrence.id,
+            targetName = event.firstOccurrence.title,
+            metadata = event.occurrenceCount.toString()
+        )
     }
 
     private fun save(

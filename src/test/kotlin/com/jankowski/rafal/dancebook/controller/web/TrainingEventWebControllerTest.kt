@@ -8,12 +8,14 @@ import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
+import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
@@ -25,14 +27,16 @@ import java.util.UUID
 class TrainingEventWebControllerTest {
 
     private lateinit var trainingEventService: TrainingEventService
+    private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var controller: TrainingEventWebController
 
     @BeforeEach
     fun setUp() {
         trainingEventService = mock(TrainingEventService::class.java)
+        trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
-        controller = TrainingEventWebController(trainingEventService, danceCategoryService)
+        controller = TrainingEventWebController(trainingEventService, trainingSeriesService, danceCategoryService)
     }
 
     @Test
@@ -190,12 +194,80 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
+    fun `should route a repeating request to the series service`() {
+        val model = ConcurrentModel()
+        val request = TrainingEventRequest(
+            title = "Monday practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            repeat = "WEEKLY",
+            repeatUntil = LocalDate.of(2026, 12, 14)
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        val viewName = controller.createTrainingEvent(request, bindingResult, model)
+
+        assertEquals("redirect:/training-events", viewName)
+        verify(trainingSeriesService).create(request)
+        verify(trainingEventService, never()).create(request)
+    }
+
+    @Test
+    fun `should route a non-repeating request to the single event service`() {
+        val model = ConcurrentModel()
+        val request = TrainingEventRequest(
+            title = "One-off workshop",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0)
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        controller.createTrainingEvent(request, bindingResult, model)
+
+        verify(trainingEventService).create(request)
+        verify(trainingSeriesService, never()).create(request)
+    }
+
+    @Test
+    fun `should apply an edit to following occurrences when that scope is chosen`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val request = TrainingEventRequest(
+            title = "Monday practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(21, 0),
+            editScope = "THIS_AND_FOLLOWING"
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        controller.updateTrainingEvent(id, request, bindingResult, model)
+
+        verify(trainingSeriesService).updateThisAndFollowing(id, request)
+        verify(trainingEventService, never()).update(id, request)
+    }
+
+    @Test
+    fun `should delete following occurrences when that scope is requested`() {
+        val id = UUID.randomUUID()
+
+        val viewName = controller.deleteTrainingEvent(id, "THIS_AND_FOLLOWING")
+
+        assertEquals("redirect:/training-events", viewName)
+        verify(trainingSeriesService).deleteThisAndFollowing(id)
+        verify(trainingEventService, never()).delete(id)
+    }
+
+    @Test
     fun `should redirect to the list after deleting`() {
         val id = UUID.randomUUID()
 
-        val viewName = controller.deleteTrainingEvent(id)
+        val viewName = controller.deleteTrainingEvent(id, null)
 
         assertEquals("redirect:/training-events", viewName)
         verify(trainingEventService).delete(id)
+        verify(trainingSeriesService, never()).deleteThisAndFollowing(id)
     }
 }

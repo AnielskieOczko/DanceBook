@@ -55,6 +55,36 @@
             </div>
         </div>
 
+        <!-- Repeats: recurrence is a property of the event, as in Google's editor -->
+        <div th:if="${trainingEventId == null}">
+            <label for="repeat" class="form-label">Repeats</label>
+            <select id="repeat" th:field="*{repeat}" class="form-select">
+                <option value="NONE">Does not repeat</option>
+                <option value="WEEKLY">Weekly on this weekday</option>
+            </select>
+            <div id="repeatUntilRow" class="hidden mt-3">
+                <label for="repeatUntil" class="form-label">Repeat until *</label>
+                <input id="repeatUntil" type="date" th:field="*{repeatUntil}" class="form-input">
+                <p class="form-hint" id="repeatSummary">Sessions are created up front, at most 52.</p>
+            </div>
+        </div>
+
+        <!-- Which occurrences an edit applies to; the past is never rewritten -->
+        <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4">
+            <label class="form-label">This session repeats. Apply changes to</label>
+            <div class="space-y-2 mt-2">
+                <label class="flex items-center gap-3 font-body-md">
+                    <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
+                    <span>This event only</span>
+                </label>
+                <label class="flex items-center gap-3 font-body-md">
+                    <input type="radio" th:field="*{editScope}" value="THIS_AND_FOLLOWING">
+                    <span>This and following events</span>
+                </label>
+            </div>
+            <p class="form-hint mt-2">Sessions that already happened keep their times and attendance.</p>
+        </div>
+
         <!-- Style breakdown -->
         <div class="border-t border-border pt-6">
             <div class="flex items-center justify-between mb-2">

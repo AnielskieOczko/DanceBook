@@ -48,8 +48,24 @@ data class TrainingEventRequest(
     val materialsUrl: String? = null,
 
     @field:NotBlank
-    val attendanceStatus: String = "PLANNED"
+    val attendanceStatus: String = "PLANNED",
+
+    /** "NONE" or "WEEKLY" — the Repeats control, mirroring Google's event editor. */
+    val repeat: String = "NONE",
+
+    /** Last date the series may generate an occurrence on; required when repeating. */
+    @field:DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    val repeatUntil: LocalDate? = null,
+
+    /**
+     * Which occurrences an edit applies to: "THIS_EVENT" or "THIS_AND_FOLLOWING".
+     * Ignored when the event is not part of a series.
+     */
+    val editScope: String = "THIS_EVENT"
 ) {
+    val isRepeating: Boolean
+        get() = repeat.equals("WEEKLY", ignoreCase = true)
+
     /** The effective end date, applying the same-day default. */
     fun effectiveEndDate(): LocalDate? = endDate ?: date
 }

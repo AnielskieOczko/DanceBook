@@ -163,5 +163,64 @@
         });
     }
 
+    // ── Repeats ──────────────────────────────────────────────────────────────
+    const repeatSelect = document.getElementById('repeat');
+    const repeatUntilRow = document.getElementById('repeatUntilRow');
+    const repeatUntil = document.getElementById('repeatUntil');
+    const repeatSummary = document.getElementById('repeatSummary');
+
+    const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const MAX_OCCURRENCES = 52;
+
+    function chosenWeekday() {
+        if (!dateInput || !dateInput.value) return null;
+        const d = new Date(dateInput.value + 'T00:00');
+        return isNaN(d) ? null : WEEKDAYS[d.getDay()];
+    }
+
+    function refreshRepeat() {
+        if (!repeatSelect || !repeatUntilRow) return;
+        const repeating = repeatSelect.value === 'WEEKLY';
+        repeatUntilRow.classList.toggle('hidden', !repeating);
+        if (repeatUntil) repeatUntil.required = repeating;
+
+        // Name the weekday explicitly so "Weekly on this weekday" is never ambiguous.
+        const weekday = chosenWeekday();
+        const weeklyOption = repeatSelect.querySelector('option[value="WEEKLY"]');
+        if (weeklyOption) {
+            weeklyOption.textContent = weekday ? 'Weekly on ' + weekday : 'Weekly on this weekday';
+        }
+        if (!repeating) return;
+
+        if (repeatUntil && !repeatUntil.value && dateInput && dateInput.value) {
+            const start = new Date(dateInput.value + 'T00:00');
+            start.setDate(start.getDate() + 7 * 11);
+            repeatUntil.value = start.toISOString().slice(0, 10);
+        }
+        updateRepeatSummary();
+    }
+
+    function updateRepeatSummary() {
+        if (!repeatSummary || !dateInput || !dateInput.value || !repeatUntil || !repeatUntil.value) return;
+        const start = new Date(dateInput.value + 'T00:00');
+        const end = new Date(repeatUntil.value + 'T00:00');
+        const weeks = Math.floor((end - start) / (7 * 86400000)) + 1;
+
+        if (!isFinite(weeks) || weeks < 1) {
+            repeatSummary.textContent = 'The end date must not be before the first session.';
+            repeatSummary.classList.add('text-error');
+            return;
+        }
+        repeatSummary.textContent = weeks > MAX_OCCURRENCES
+            ? 'That is ' + weeks + ' sessions; the limit is ' + MAX_OCCURRENCES + '.'
+            : 'Creates ' + weeks + ' session' + (weeks === 1 ? '' : 's') + ' up front.';
+        repeatSummary.classList.toggle('text-error', weeks > MAX_OCCURRENCES);
+    }
+
+    if (repeatSelect) repeatSelect.addEventListener('change', refreshRepeat);
+    if (repeatUntil) repeatUntil.addEventListener('change', updateRepeatSummary);
+    if (dateInput) dateInput.addEventListener('change', refreshRepeat);
+
+    refreshRepeat();
     updateTotal();
 })();

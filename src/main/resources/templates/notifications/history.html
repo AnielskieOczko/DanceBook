@@ -40,7 +40,8 @@
                                         event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
                                         event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
                                         event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
-                                        event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' : 'unpublished'}">add_circle</span>
+                                        event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
+                                        event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' : 'unpublished'}">add_circle</span>
                     </div>
 
                     <!-- Text -->
@@ -63,6 +64,7 @@
                                 <span th:case="'TRAINING_EVENT_CREATED'"> scheduled training </span>
                                 <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
                                 <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
+                                <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
                             </span>
                             <!-- Link for Material / CustomList -->
                             <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_')}"

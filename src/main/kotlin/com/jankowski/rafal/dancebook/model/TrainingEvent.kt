@@ -51,6 +51,15 @@ class TrainingEvent {
     @Column(name = "attendance_status", nullable = false)
     var attendanceStatus: AttendanceStatus = AttendanceStatus.PLANNED
 
+    /**
+     * The repeating definition this occurrence came from, or null for a one-off — and also
+     * null once an occurrence has been edited on its own via "this event", which detaches
+     * it from the series.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "series_id")
+    var series: TrainingSeries? = null
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id", nullable = false)
     var createdBy: AppUser? = null
