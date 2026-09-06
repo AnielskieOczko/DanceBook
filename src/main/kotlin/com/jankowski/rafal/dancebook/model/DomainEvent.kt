@@ -74,3 +74,19 @@ class DanceFigureDeletedEvent(
     actor: AppUser
 ) : DomainEvent(actor)
 
+
+class TrainingEventCreatedEvent(
+    val trainingEvent: TrainingEvent,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class TrainingEventUpdatedEvent(
+    val trainingEvent: TrainingEvent,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class TrainingEventDeletedEvent(
+    val trainingEventId: UUID,
+    val trainingEventTitle: String,
+    actor: AppUser
+) : DomainEvent(actor)
