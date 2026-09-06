@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="max-w-3xl mx-auto">
+
+    <div class="page-header mb-6">
+        <h1 class="page-title text-3xl"
+            th:text="${trainingEventId == null ? 'Add Training Session' : 'Edit Training Session'}">Add Training Session</h1>
+        <p class="page-subtitle">Saved here and written through to your Google Calendar.</p>
+    </div>
+
+    <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
+          th:object="${trainingEvent}" method="post" class="card p-8 space-y-6">
+
+        <div>
+            <label for="title" class="form-label">Title *</label>
+            <input id="title" type="text" th:field="*{title}" required class="form-input"
+                   th:classappend="${#fields.hasErrors('title')} ? 'border-danger ring-1 ring-danger' : ''"
+                   placeholder="e.g. Monday practice, Standard camp...">
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="form-error"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <label for="startTime" class="form-label">Starts *</label>
+                <input id="startTime" type="datetime-local" th:field="*{startTime}" required class="form-input"
+                       th:classappend="${#fields.hasErrors('startTime')} ? 'border-danger ring-1 ring-danger' : ''">
+                <p th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="form-error"></p>
+            </div>
+            <div>
+                <label for="endTime" class="form-label">Ends *</label>
+                <input id="endTime" type="datetime-local" th:field="*{endTime}" required class="form-input"
+                       th:classappend="${#fields.hasErrors('endTime')} ? 'border-danger ring-1 ring-danger' : ''">
+                <p th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="form-error"></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <label for="eventType" class="form-label">Type *</label>
+                <select id="eventType" th:field="*{eventType}" class="form-select">
+                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}">TRAINING</option>
+                </select>
+            </div>
+            <div>
+                <label for="danceCategoryId" class="form-label">Style</label>
+                <select id="danceCategoryId" th:field="*{danceCategoryId}" class="form-select">
+                    <option value="">-- Not style-specific --</option>
+                    <option th:each="category : ${danceCategories}" th:value="${category.id}"
+                            th:text="${category.name}">Standard</option>
+                </select>
+                <p class="form-hint">Leave empty for competitions and camps.</p>
+            </div>
+        </div>
+
+        <div>
+            <label for="attendanceStatus" class="form-label">Attendance</label>
+            <select id="attendanceStatus" th:field="*{attendanceStatus}" class="form-select">
+                <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}">PLANNED</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="description" class="form-label">Notes</label>
+            <textarea id="description" th:field="*{description}" rows="4" class="form-textarea"
+                      placeholder="What did you work on?"></textarea>
+        </div>
+
+        <div>
+            <label for="materialsUrl" class="form-label">External materials link</label>
+            <input id="materialsUrl" type="url" th:field="*{materialsUrl}" class="form-input"
+                   placeholder="https://...">
+            <p class="form-hint">For links outside DanceBook.</p>
+        </div>
+
+        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">
+            <a href="/training-events" class="btn-outline">Cancel</a>
+            <button type="submit" class="btn-primary">Save Session</button>
+        </div>
+    </form>
+</section>
+
+</html>

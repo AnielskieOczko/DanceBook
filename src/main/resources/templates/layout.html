@@ -49,6 +49,8 @@
                th:classappend="${activeNav == 'lists' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Collections</a>
             <a href="/choreographies" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Choreographies</a>
+            <a href="/training-events" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'training-events' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Training</a>
             <a href="/profile" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'profile' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Profile</a>
         </nav>
@@ -104,7 +106,7 @@
 <!-- ═══════════════════════════════════════════════
      BOTTOM NAV BAR (Mobile Only)
      ═══════════════════════════════════════════════ -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-1 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
     <!-- Dashboard -->
     <a href="/" class="flex flex-col items-center justify-center transition-all duration-150"
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
@@ -135,6 +137,13 @@
         <span class="material-symbols-outlined" th:classappend="${activeNav == 'dance-figures' ? 'icon-filled' : ''}"
               th:style="${activeNav == 'dance-figures' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">accessibility_new</span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Figures</span>
+    </a>
+    <!-- Training -->
+    <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150"
+       th:classappend="${activeNav == 'training-events' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span class="material-symbols-outlined" th:classappend="${activeNav == 'training-events' ? 'icon-filled' : ''}"
+              th:style="${activeNav == 'training-events' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">calendar_month</span>
+        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Training</span>
     </a>
 </nav>
 
