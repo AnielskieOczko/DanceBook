@@ -19,6 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.ResponseEntity
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.TextStyle
+import java.util.Locale
 import java.util.UUID
 
 @Controller
@@ -31,6 +39,9 @@ class TrainingEventWebController(
 
     companion object {
         private val log = LoggerFactory.getLogger(TrainingEventWebController::class.java)
+
+        /** Evening default for a day clicked in month view; most training is after work. */
+        private const val DEFAULT_HOUR = 18
     }
 
     @GetMapping
@@ -65,6 +76,60 @@ class TrainingEventWebController(
             "training-events/list"
         }
     }
+
+    @GetMapping("/calendar")
+    fun showCalendar(model: Model): String {
+        model.addAttribute("pageTitle", "Training calendar")
+        return "training-events/calendar"
+    }
+
+    /**
+     * The quick-create card shown when a slot is clicked or dragged on the calendar,
+     * mirroring Google's in-place create rather than sending the user to a full page.
+     */
+    @GetMapping("/quick-create")
+    fun quickCreate(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) start: LocalDateTime,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: LocalDateTime,
+        model: Model
+    ): String {
+        // Clicking a day in month view selects the whole day, which would prefill
+        // midnight-to-midnight. Offer a plausible evening slot instead, the way Google
+        // does when you click a date rather than a time.
+        val allDaySelection = start.toLocalTime() == LocalTime.MIDNIGHT &&
+            Duration.between(start, end).toHours() >= 24
+        val slotStart = if (allDaySelection) start.toLocalDate().atTime(DEFAULT_HOUR, 0) else start
+        val slotEnd = if (allDaySelection) slotStart.plusHours(1) else end
+
+        model.addAttribute(
+            "trainingEvent",
+            TrainingEventRequest(
+                date = slotStart.toLocalDate(),
+                startTime = slotStart.toLocalTime(),
+                endTime = slotEnd.toLocalTime()
+            )
+        )
+        model.addAttribute("quickCreateWeekday", start.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH))
+        return "training-events/calendar :: quickCreateCard"
+    }
+
+    /** Drag or resize on the calendar; writes through to Google like any other move. */
+    @PostMapping("/{id}/reschedule")
+    @ResponseBody
+    fun reschedule(
+        @PathVariable id: UUID,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) start: LocalDateTime,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: LocalDateTime
+    ): ResponseEntity<Map<String, String>> =
+        try {
+            trainingEventService.reschedule(id, start, end)
+            ResponseEntity.ok(mapOf("status" to "ok"))
+        } catch (e: Exception) {
+            // The calendar reverts the drag on a non-2xx, so the message has to come back
+            // in the body for the page to explain why.
+            log.error("Failed to reschedule training event {}", id, e)
+            ResponseEntity.badRequest().body(mapOf("error" to (e.message ?: "Could not move this session")))
+        }
 
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {

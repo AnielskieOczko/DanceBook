@@ -21,6 +21,13 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      * Occurrences of a series at or after a cut-off, used by "this and following" to
      * regenerate the future while leaving completed sessions untouched.
      */
+    /** Sessions overlapping a window: they start before it ends and end after it starts. */
+    fun findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
+        createdBy: AppUser,
+        startBefore: LocalDateTime,
+        endAfter: LocalDateTime
+    ): List<TrainingEvent>
+
     fun findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
         series: TrainingSeries,
         startTime: LocalDateTime

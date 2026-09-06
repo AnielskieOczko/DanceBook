@@ -131,6 +131,37 @@ class TrainingEventServiceImpl(
         return trainingEventPersistence.applyUpdate(event, currentUser)
     }
 
+    override fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent {
+        val currentUser = appUserService.getCurrentUser()
+        val event = findById(id)
+        checkOwnership(event, currentUser)
+        require(end.isAfter(start)) { "End time must be after the start time" }
+
+        // Segments keep their durations; only the slot moves. A drag that shortens the
+        // session below its style total would leave the two inconsistent.
+        val segmentMinutes = event.segments.sumOf { it.durationMinutes }
+        val slotMinutes = java.time.Duration.between(start, end).toMinutes()
+        require(segmentMinutes <= slotMinutes) {
+            "The style breakdown adds up to $segmentMinutes minutes, which is longer " +
+            "than the $slotMinutes-minute session"
+        }
+
+        log.debug("User '{}' rescheduling training event '{}' to {}", currentUser.username, event.title, start)
+        event.startTime = start
+        event.endTime = end
+        event.updatedAt = LocalDateTime.now()
+
+        event.googleEventId?.let { calendarClient.updateEvent(it, event) }
+        return trainingEventPersistence.applyUpdate(event, currentUser)
+    }
+
+    override fun findInRange(from: LocalDateTime, to: LocalDateTime): List<TrainingEvent> {
+        val currentUser = appUserService.getCurrentUser()
+        return trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
+            currentUser, to, from
+        )
+    }
+
     override fun delete(id: UUID) {
         val currentUser = appUserService.getCurrentUser()
         val event = findById(id)

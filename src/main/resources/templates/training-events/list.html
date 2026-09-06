@@ -4,7 +4,22 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/components :: page-header('Training', ${#lists.size(events)} + ' sessions logged', '/training-events/new', 'Add Session', 'add', 'primary')}"></div>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">Training</h1>
+            <p class="page-subtitle" th:text="${#lists.size(events)} + ' sessions logged'">0 sessions logged</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="/training-events/calendar" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                Calendar
+            </a>
+            <a href="/training-events/new" class="btn-primary">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add Session
+            </a>
+        </div>
+    </div>
 
     <!-- Filters -->
     <div class="sticky top-[72px] bg-background z-40 -mx-6 px-6 py-3 border-b border-outline-variant/30">
