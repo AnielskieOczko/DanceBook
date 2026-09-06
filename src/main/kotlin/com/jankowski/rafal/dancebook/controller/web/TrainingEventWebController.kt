@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
+import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
@@ -108,10 +109,17 @@ class TrainingEventWebController(
             "trainingEvent",
             TrainingEventRequest(
                 title = event.title,
-                startTime = event.startTime,
-                endTime = event.endTime,
+                date = event.startTime.toLocalDate(),
+                startTime = event.startTime.toLocalTime(),
+                endTime = event.endTime.toLocalTime(),
+                endDate = event.endTime.toLocalDate(),
                 eventType = event.eventType.name,
-                danceCategoryId = event.danceCategory?.id,
+                segments = event.segments.map {
+                    TrainingEventSegmentRequest(
+                        categoryId = it.danceCategory?.id,
+                        durationMinutes = it.durationMinutes
+                    )
+                }.toMutableList(),
                 description = event.description,
                 materialId = event.material?.id,
                 materialsUrl = event.materialsUrl,

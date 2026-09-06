@@ -28,10 +28,13 @@ class TrainingEvent {
     @Column(name = "event_type", nullable = false)
     var eventType: TrainingEventType = TrainingEventType.TRAINING
 
-    /** Null means the session is not style-specific (competitions, camps). */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dance_category_id")
-    var danceCategory: DanceCategory? = null
+    /**
+     * How the session splits across dance styles. An empty list means the session is not
+     * style-specific (competitions, camps).
+     */
+    @OneToMany(mappedBy = "trainingEvent", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("sortOrder ASC")
+    var segments: MutableList<TrainingEventSegment> = mutableListOf()
 
     @Column(columnDefinition = "TEXT")
     var description: String? = null
@@ -66,7 +69,14 @@ class TrainingEvent {
     val isAwaitingConfirmation: Boolean
         get() = attendanceStatus == AttendanceStatus.PLANNED && endTime.isBefore(LocalDateTime.now())
 
-    /** Session length in minutes; the unit every phase-2 duration statistic sums. */
+    /**
+     * Wall-clock session length in minutes. This is "total time trained"; per-style time
+     * comes from [segments], which may sum to less when part of the session was a break.
+     */
     val durationMinutes: Long
         get() = java.time.Duration.between(startTime, endTime).toMinutes()
+
+    /** Distinct styles in segment order, for rendering badges. */
+    val danceCategories: List<DanceCategory>
+        get() = segments.mapNotNull { it.danceCategory }.distinctBy { it.id }
 }

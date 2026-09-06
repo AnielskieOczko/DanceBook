@@ -31,8 +31,8 @@
 
         <div class="flex flex-wrap items-center gap-2">
             <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
-            <span th:if="${event.danceCategory != null}" class="badge-secondary"
-                  th:text="${event.danceCategory.name}">Standard</span>
+            <span th:each="segment : ${event.segments}" class="badge-secondary"
+                  th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
             <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
             <span th:unless="${event.isAwaitingConfirmation}"
                   th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :

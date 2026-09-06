@@ -132,7 +132,10 @@ class GoogleCalendarClientImpl(
         val lines = mutableListOf<String>()
         event.description?.takeIf { it.isNotBlank() }?.let { lines.add(it) }
         lines.add("Type: ${event.eventType}")
-        event.danceCategory?.name?.let { lines.add("Style: $it") }
+        if (event.segments.isNotEmpty()) {
+            val styles = event.segments.joinToString(", ") { "${it.danceCategory?.name} ${it.durationMinutes}min" }
+            lines.add("Styles: $styles")
+        }
         event.materialsUrl?.takeIf { it.isNotBlank() }?.let { lines.add("Materials: $it") }
         return lines.joinToString("\n")
     }

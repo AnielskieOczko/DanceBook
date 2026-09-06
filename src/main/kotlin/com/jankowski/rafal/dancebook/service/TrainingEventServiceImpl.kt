@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
@@ -141,20 +142,52 @@ class TrainingEventServiceImpl(
     }
 
     private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest) {
-        val start = requireNotNull(request.startTime) { "Start time is required" }
-        val end = requireNotNull(request.endTime) { "End time is required" }
+        val date = requireNotNull(request.date) { "Date is required" }
+        val startTime = requireNotNull(request.startTime) { "Start time is required" }
+        val endTime = requireNotNull(request.endTime) { "End time is required" }
+
+        val start = LocalDateTime.of(date, startTime)
+        val end = LocalDateTime.of(request.effectiveEndDate() ?: date, endTime)
         require(end.isAfter(start)) { "End time must be after the start time" }
 
         event.title = request.title
         event.startTime = start
         event.endTime = end
         event.eventType = TrainingEventType.valueOf(request.eventType)
-        event.danceCategory = request.danceCategoryId?.let { danceCategoryService.findById(it) }
         event.description = request.description?.takeIf { it.isNotBlank() }
         event.material = request.materialId?.let { materialService.findById(it) }
         event.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         event.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)
         event.updatedAt = LocalDateTime.now()
+
+        applySegments(event, request)
+    }
+
+    /**
+     * Rebuilds the style breakdown in place. orphanRemoval on the collection means clearing
+     * and refilling the existing list deletes the rows that went away — replacing the list
+     * instance would detach them instead and trip Hibernate.
+     */
+    private fun applySegments(event: TrainingEvent, request: TrainingEventRequest) {
+        val requested = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+
+        val totalSegmentMinutes = requested.sumOf { it.durationMinutes ?: 0 }
+        val slotMinutes = java.time.Duration.between(event.startTime, event.endTime).toMinutes()
+        require(totalSegmentMinutes <= slotMinutes) {
+            "The style breakdown adds up to $totalSegmentMinutes minutes, which is longer " +
+            "than the $slotMinutes-minute session"
+        }
+
+        event.segments.clear()
+        requested.forEachIndexed { index, segmentRequest ->
+            val segment = TrainingEventSegment().apply {
+                trainingEvent = event
+                danceCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
+                durationMinutes = segmentRequest.durationMinutes!!
+                sortOrder = index
+            }
+            event.segments.add(segment)
+        }
     }
 
     private fun checkOwnership(event: TrainingEvent, currentUser: AppUser) {

@@ -11,32 +11,102 @@
     </div>
 
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
-          th:object="${trainingEvent}" method="post" class="card p-8 space-y-6">
+          th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm">
 
         <div>
             <label for="title" class="form-label">Title *</label>
-            <input id="title" type="text" th:field="*{title}" required class="form-input"
+            <input id="title" type="text" th:field="*{title}" required class="form-input text-body-lg"
                    th:classappend="${#fields.hasErrors('title')} ? 'border-danger ring-1 ring-danger' : ''"
                    placeholder="e.g. Monday practice, Standard camp...">
             <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="form-error"></p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- Date and times, laid out the way Google's editor does -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-                <label for="startTime" class="form-label">Starts *</label>
-                <input id="startTime" type="datetime-local" th:field="*{startTime}" required class="form-input"
+                <label for="date" class="form-label">Date *</label>
+                <input id="date" type="date" th:field="*{date}" required class="form-input"
+                       th:classappend="${#fields.hasErrors('date')} ? 'border-danger ring-1 ring-danger' : ''">
+                <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" class="form-error"></p>
+            </div>
+            <div>
+                <label for="startTime" class="form-label">From *</label>
+                <input id="startTime" type="time" th:field="*{startTime}" required class="form-input"
                        th:classappend="${#fields.hasErrors('startTime')} ? 'border-danger ring-1 ring-danger' : ''">
                 <p th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="form-error"></p>
             </div>
             <div>
-                <label for="endTime" class="form-label">Ends *</label>
-                <input id="endTime" type="datetime-local" th:field="*{endTime}" required class="form-input"
+                <label for="endTime" class="form-label">To *</label>
+                <input id="endTime" type="time" th:field="*{endTime}" required class="form-input"
                        th:classappend="${#fields.hasErrors('endTime')} ? 'border-danger ring-1 ring-danger' : ''">
                 <p th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="form-error"></p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+            <button type="button" id="toggleEndDate" class="btn-ghost px-0 min-h-0 text-label-md">
+                <span class="material-symbols-outlined text-[18px]">event_repeat</span>
+                Ends on a different day
+            </button>
+            <div id="endDateRow" class="hidden mt-2">
+                <label for="endDate" class="form-label">End date</label>
+                <input id="endDate" type="date" th:field="*{endDate}" class="form-input">
+                <p class="form-hint">For camps and competitions that run across days.</p>
+            </div>
+        </div>
+
+        <!-- Style breakdown -->
+        <div class="border-t border-border pt-6">
+            <div class="flex items-center justify-between mb-2">
+                <label class="form-label mb-0">Styles</label>
+                <span id="segmentTotal" class="font-label-sm text-label-sm text-on-surface-variant"></span>
+            </div>
+            <p class="form-hint mb-3">
+                Split the session by style, e.g. 1h Standard then 2h Latin. Leave empty for
+                sessions that are not style-specific.
+            </p>
+
+            <div id="segmentRows" class="space-y-3">
+                <div th:each="segment, iter : *{segments}" class="flex items-center gap-3" data-segment-row>
+                    <select th:field="*{segments[__${iter.index}__].categoryId}" class="form-select flex-1">
+                        <option value="">-- Select style --</option>
+                        <option th:each="category : ${danceCategories}" th:value="${category.id}"
+                                th:text="${category.name}">Standard</option>
+                    </select>
+                    <input type="number" min="0" step="5"
+                           th:field="*{segments[__${iter.index}__].durationMinutes}"
+                           class="form-input w-28" placeholder="min" data-segment-minutes>
+                    <span class="font-body-md text-on-surface-variant">min</span>
+                    <button type="button" class="btn-icon text-error" data-remove-segment title="Remove">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" id="addSegment" class="btn-outline mt-3">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add style
+            </button>
+
+            <!-- Template for a new row; kept in the DOM so Tailwind emits its classes -->
+            <template id="segmentRowTemplate">
+                <div class="flex items-center gap-3" data-segment-row>
+                    <select name="segments[INDEX].categoryId" class="form-select flex-1">
+                        <option value="">-- Select style --</option>
+                        <option th:each="category : ${danceCategories}" th:value="${category.id}"
+                                th:text="${category.name}">Standard</option>
+                    </select>
+                    <input type="number" min="0" step="5" name="segments[INDEX].durationMinutes"
+                           class="form-input w-28" placeholder="min" data-segment-minutes>
+                    <span class="font-body-md text-on-surface-variant">min</span>
+                    <button type="button" class="btn-icon text-error" data-remove-segment title="Remove">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-6">
             <div>
                 <label for="eventType" class="form-label">Type *</label>
                 <select id="eventType" th:field="*{eventType}" class="form-select">
@@ -44,21 +114,11 @@
                 </select>
             </div>
             <div>
-                <label for="danceCategoryId" class="form-label">Style</label>
-                <select id="danceCategoryId" th:field="*{danceCategoryId}" class="form-select">
-                    <option value="">-- Not style-specific --</option>
-                    <option th:each="category : ${danceCategories}" th:value="${category.id}"
-                            th:text="${category.name}">Standard</option>
+                <label for="attendanceStatus" class="form-label">Attendance</label>
+                <select id="attendanceStatus" th:field="*{attendanceStatus}" class="form-select">
+                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}">PLANNED</option>
                 </select>
-                <p class="form-hint">Leave empty for competitions and camps.</p>
             </div>
-        </div>
-
-        <div>
-            <label for="attendanceStatus" class="form-label">Attendance</label>
-            <select id="attendanceStatus" th:field="*{attendanceStatus}" class="form-select">
-                <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}">PLANNED</option>
-            </select>
         </div>
 
         <div>
@@ -79,6 +139,9 @@
             <button type="submit" class="btn-primary">Save Session</button>
         </div>
     </form>
+
+    <script th:src="@{/js/training-event-form.js}"></script>
+
 </section>
 
 </html>

@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -16,7 +17,9 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.UUID
 
 class TrainingEventWebControllerTest {
@@ -102,9 +105,14 @@ class TrainingEventWebControllerTest {
             startTime = LocalDateTime.of(2026, 9, 10, 18, 0)
             endTime = LocalDateTime.of(2026, 9, 10, 20, 0)
             eventType = TrainingEventType.CAMP
-            danceCategory = category
             attendanceStatus = AttendanceStatus.ATTENDED
         }
+        event.segments.add(TrainingEventSegment().apply {
+            trainingEvent = event
+            danceCategory = category
+            durationMinutes = 90
+            sortOrder = 0
+        })
         `when`(trainingEventService.findById(id)).thenReturn(event)
         `when`(danceCategoryService.findAll()).thenReturn(listOf(category))
 
@@ -114,9 +122,13 @@ class TrainingEventWebControllerTest {
         assertEquals(id, model["trainingEventId"])
         val request = model["trainingEvent"] as TrainingEventRequest
         assertEquals("Monday practice", request.title)
-        assertEquals(LocalDateTime.of(2026, 9, 10, 18, 0), request.startTime)
+        assertEquals(LocalDate.of(2026, 9, 10), request.date)
+        assertEquals(LocalTime.of(18, 0), request.startTime)
+        assertEquals(LocalTime.of(20, 0), request.endTime)
         assertEquals("CAMP", request.eventType)
-        assertEquals(category.id, request.danceCategoryId)
+        assertEquals(1, request.segments.size)
+        assertEquals(category.id, request.segments[0].categoryId)
+        assertEquals(90, request.segments[0].durationMinutes)
         assertEquals("ATTENDED", request.attendanceStatus)
     }
 
@@ -139,8 +151,9 @@ class TrainingEventWebControllerTest {
         val model = ConcurrentModel()
         val request = TrainingEventRequest(
             title = "Monday practice",
-            startTime = LocalDateTime.of(2026, 9, 10, 18, 0),
-            endTime = LocalDateTime.of(2026, 9, 10, 20, 0)
+            date = LocalDate.of(2026, 9, 10),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0)
         )
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
         `when`(trainingEventService.create(request)).thenThrow(RuntimeException("Google Calendar unavailable"))

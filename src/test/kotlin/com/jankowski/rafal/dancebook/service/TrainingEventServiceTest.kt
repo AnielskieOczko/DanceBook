@@ -1,6 +1,8 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
+import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
+import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.Role
@@ -20,7 +22,9 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Optional
 import java.util.UUID
 
@@ -208,14 +212,110 @@ class TrainingEventServiceTest {
 
     @Test
     fun `should reject an end time that is not after the start time`() {
-        val start = LocalDateTime.of(2026, 9, 10, 18, 0)
-        val request = validRequest().copy(startTime = start, endTime = start)
+        val request = validRequest().copy(startTime = LocalTime.of(18, 0), endTime = LocalTime.of(18, 0))
 
         assertThrows(IllegalArgumentException::class.java) {
             trainingEventService.create(request)
         }
 
         verifyNoInteractions(calendarClient)
+    }
+
+    @Test
+    fun `should span days when an end date is given`() {
+        val request = validRequest().copy(
+            endDate = LocalDate.of(2026, 9, 12),
+            endTime = LocalTime.of(16, 0)
+        )
+        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-camp")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val result = trainingEventService.create(request)
+
+        assertEquals(LocalDateTime.of(2026, 9, 10, 18, 0), result.startTime)
+        assertEquals(LocalDateTime.of(2026, 9, 12, 16, 0), result.endTime)
+    }
+
+    @Test
+    fun `should record a style breakdown in order`() {
+        val standard = category("Standard")
+        val latin = category("Latin")
+        `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
+        `when`(danceCategoryService.findById(latin.id!!)).thenReturn(latin)
+        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-mixed")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val result = trainingEventService.create(
+            validRequest(
+                segments = listOf(
+                    TrainingEventSegmentRequest(standard.id, 60),
+                    TrainingEventSegmentRequest(latin.id, 60)
+                )
+            )
+        )
+
+        assertEquals(2, result.segments.size)
+        assertEquals("Standard", result.segments[0].danceCategory?.name)
+        assertEquals(0, result.segments[0].sortOrder)
+        assertEquals("Latin", result.segments[1].danceCategory?.name)
+        assertEquals(1, result.segments[1].sortOrder)
+        assertEquals(listOf("Standard", "Latin"), result.danceCategories.map { it.name })
+    }
+
+    @Test
+    fun `should reject a style breakdown longer than the session`() {
+        val standard = category("Standard")
+        `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
+
+        // The slot is two hours; claiming three hours of Standard cannot be right.
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            trainingEventService.create(
+                validRequest(segments = listOf(TrainingEventSegmentRequest(standard.id, 180)))
+            )
+        }
+
+        assertTrue(exception.message!!.contains("180 minutes"))
+        assertTrue(exception.message!!.contains("120-minute"))
+        verifyNoInteractions(calendarClient)
+    }
+
+    @Test
+    fun `should allow a style breakdown shorter than the session to leave room for breaks`() {
+        val standard = category("Standard")
+        `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
+        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-break")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val result = trainingEventService.create(
+            validRequest(segments = listOf(TrainingEventSegmentRequest(standard.id, 90)))
+        )
+
+        assertEquals(1, result.segments.size)
+        assertEquals(120, result.durationMinutes.toInt())
+    }
+
+    @Test
+    fun `should skip incomplete style rows the user never filled in`() {
+        val standard = category("Standard")
+        `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
+        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-partial")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val result = trainingEventService.create(
+            validRequest(
+                segments = listOf(
+                    TrainingEventSegmentRequest(standard.id, 60),
+                    TrainingEventSegmentRequest(null, null),
+                    TrainingEventSegmentRequest(standard.id, 0)
+                )
+            )
+        )
+
+        assertEquals(1, result.segments.size)
     }
 
     @Test
@@ -250,11 +350,16 @@ class TrainingEventServiceTest {
         assertFalse(upcoming.isAwaitingConfirmation)
     }
 
-    private fun validRequest(title: String = "Monday practice") = TrainingEventRequest(
+    private fun validRequest(
+        title: String = "Monday practice",
+        segments: List<TrainingEventSegmentRequest> = emptyList()
+    ) = TrainingEventRequest(
         title = title,
-        startTime = LocalDateTime.of(2026, 9, 10, 18, 0),
-        endTime = LocalDateTime.of(2026, 9, 10, 20, 0),
+        date = LocalDate.of(2026, 9, 10),
+        startTime = LocalTime.of(18, 0),
+        endTime = LocalTime.of(20, 0),
         eventType = "TRAINING",
+        segments = segments.toMutableList(),
         attendanceStatus = "PLANNED"
     )
 
@@ -265,6 +370,11 @@ class TrainingEventServiceTest {
         endTime = LocalDateTime.of(2026, 9, 10, 20, 0)
         this.googleEventId = googleEventId
         createdBy = currentUser
+    }
+
+    private fun category(name: String) = DanceCategory().apply {
+        id = UUID.randomUUID()
+        this.name = name
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
