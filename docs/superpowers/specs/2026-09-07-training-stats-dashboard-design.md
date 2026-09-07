@@ -29,6 +29,11 @@ exactly once per load. The alternative, an HTMX fragment swap matching the list 
 filter idiom, would mean destroying and re-creating Chart.js instances on every swap; the
 lifecycle bugs are not worth saving a page load on a control used twice a session.
 
+A session belongs to a period when its `startTime` falls in the window. Last 30 days is
+`[today - 30 days, ∞)` and this year is the current calendar year *including its
+remaining months*, both left-bounded only — so the upcoming-sessions figure stays
+meaningful instead of reading zero on every period but all time.
+
 **Unconfirmed sessions are unknown, not absent.** A past session still marked `PLANNED`
 (`TrainingEvent.isAwaitingConfirmation`) neither counts against the attendance rate nor
 breaks the streak. The dashboard instead shows how many need confirming and links to
@@ -53,7 +58,7 @@ Definitions, since each number needs one somebody can check.
 | --- | --- |
 | Hours trained | `durationMinutes` summed over `ATTENDED` sessions in the period |
 | Session counts | Five disjoint buckets: upcoming (`PLANNED`, not yet ended), unconfirmed (`isAwaitingConfirmation`), attended, skipped, cancelled |
-| Attendance rate | `attended / (attended + skipped)`, whole percent. Cancelled and unconfirmed sessions are excluded; a zero denominator renders as `—`, never `0%` |
+| Attendance rate | `attended / (attended + skipped)`, whole percent. Cancelled and unconfirmed sessions are excluded; a zero denominator renders as `—`, never `0%`. Rounded half up |
 | Current streak | Decided sessions (attended or skipped) walked newest-first, counting attended until the first skip. Cancelled and unconfirmed sessions are stepped over without breaking it |
 | By dance category | Segment minutes grouped by `DanceCategory` across attended sessions, with a session counted once per category it touches |
 | By event type | Attended sessions grouped by `TrainingEventType`: wall-clock minutes and session count |
@@ -161,8 +166,10 @@ Mobile-first, in this order:
 1. Period selector — three links, the active one styled as such.
 2. KPI grid — two columns on mobile, four from `md`: hours trained, attendance rate,
    current streak (labelled "all time"), sessions attended.
-3. Unconfirmed nudge — rendered only when the count is non-zero, linking to the training
-   list filtered to `PLANNED`.
+3. Unconfirmed nudge — rendered only when `counts.unconfirmed` is non-zero, linking to the
+   training list filtered to `PLANNED`. It follows the selected period like everything
+   else on the page except the streak; since the page defaults to all time, nothing is
+   hidden unless the user deliberately narrows the window.
 4. Two `<canvas>` elements, each carrying its slices as JSON in a `data-slices`
    attribute, with a value list rendered beneath it in Thymeleaf.
 5. Empty state when the user has no events at all: no charts, a prompt to add a session.
