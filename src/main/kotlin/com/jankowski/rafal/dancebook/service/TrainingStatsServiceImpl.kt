@@ -44,7 +44,7 @@ class TrainingStatsServiceImpl(
             totalMinutesTrained = attended.sumOf { it.durationMinutes },
             counts = counts,
             attendanceRatePercent = attendanceRate(counts),
-            currentStreak = 0,
+            currentStreak = currentStreak(allEvents),
             byCategory = emptyList(),
             byEventType = emptyList()
         )
@@ -78,5 +78,28 @@ class TrainingStatsServiceImpl(
         val decided = counts.attended + counts.skipped
         if (decided == 0) return null
         return (counts.attended * 100.0 / decided).roundToInt()
+    }
+
+    /**
+     * Consecutive attended sessions counting back from the most recent.
+     *
+     * Walks the user's whole history rather than the selected period: a streak cut off at
+     * a window boundary would report a number that is not the user's streak. Cancelled
+     * sessions and sessions still awaiting confirmation are stepped over, because neither
+     * is evidence of a missed session; only a skip ends the run.
+     *
+     * Phase 4 (badges) reuses this walk, which is why it stands alone.
+     */
+    private fun currentStreak(allEvents: List<TrainingEvent>): Int {
+        var streak = 0
+        for (event in allEvents.sortedByDescending { it.startTime }) {
+            if (event.isAwaitingConfirmation) continue
+            when (event.attendanceStatus) {
+                AttendanceStatus.ATTENDED -> streak++
+                AttendanceStatus.SKIPPED -> return streak
+                else -> continue
+            }
+        }
+        return streak
     }
 }

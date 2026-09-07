@@ -184,4 +184,75 @@ class TrainingStatsServiceTest {
         assertEquals("3h 15m", formatMinutes(195))
         assertEquals("0m", formatMinutes(0))
     }
+
+    @Test
+    fun `the streak counts attended sessions back to the first skip`() {
+        given(
+            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            event(daysAgo = 2, status = AttendanceStatus.ATTENDED),
+            event(daysAgo = 3, status = AttendanceStatus.SKIPPED),
+            event(daysAgo = 4, status = AttendanceStatus.ATTENDED)
+        )
+
+        assertEquals(2, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
+    }
+
+    @Test
+    fun `cancelled and unconfirmed sessions do not break the streak`() {
+        given(
+            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            event(daysAgo = 2, status = AttendanceStatus.CANCELLED),
+            event(daysAgo = 3, status = AttendanceStatus.PLANNED),
+            event(daysAgo = 4, status = AttendanceStatus.ATTENDED)
+        )
+
+        assertEquals(2, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
+    }
+
+    @Test
+    fun `an upcoming session does not break the streak`() {
+        given(
+            event(daysAgo = -3, status = AttendanceStatus.PLANNED),
+            event(daysAgo = 1, status = AttendanceStatus.ATTENDED)
+        )
+
+        assertEquals(1, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
+    }
+
+    @Test
+    fun `the streak spans full history even when the period is narrowed`() {
+        given(
+            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            event(daysAgo = 100, status = AttendanceStatus.ATTENDED),
+            event(daysAgo = 200, status = AttendanceStatus.ATTENDED)
+        )
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.LAST_30_DAYS)
+
+        assertEquals(1, stats.counts.total)
+        assertEquals(3, stats.currentStreak)
+    }
+
+    @Test
+    fun `the streak is zero when the most recent decided session was skipped`() {
+        given(
+            event(daysAgo = 1, status = AttendanceStatus.SKIPPED),
+            event(daysAgo = 2, status = AttendanceStatus.ATTENDED)
+        )
+
+        assertEquals(0, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
+    }
+
+    @Test
+    fun `the this-year period excludes sessions from a previous year`() {
+        given(
+            event(daysAgo = 0, status = AttendanceStatus.ATTENDED, minutes = 60),
+            event(daysAgo = 400, status = AttendanceStatus.ATTENDED, minutes = 60)
+        )
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_YEAR)
+
+        assertEquals(1, stats.counts.total)
+        assertEquals(60L, stats.totalMinutesTrained)
+    }
 }
