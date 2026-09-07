@@ -51,6 +51,9 @@ object TrainingEventSpecification {
             }
 
             if (awaitingConfirmation == true) {
+                // Mirrors TrainingEvent.isAwaitingConfirmation, expressed in SQL because a
+                // Specification filters at the database rather than on loaded entities. A
+                // change to that rule needs the same change here.
                 predicates.add(cb.equal(root.get<AttendanceStatus>("attendanceStatus"), AttendanceStatus.PLANNED))
                 predicates.add(cb.lessThan(root.get("endTime"), LocalDateTime.now()))
             }

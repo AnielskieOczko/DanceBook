@@ -74,6 +74,10 @@ class TrainingEvent {
      * A past event still marked PLANNED was never confirmed either way. The status is
      * derived at read time rather than reconciled by a job, so nothing silently mutates
      * user records and the statistics in later phases read the same derivation.
+     *
+     * Mirrored in SQL by TrainingEventSpecification's `awaitingConfirmation` filter, which
+     * needs its own copy of this rule to run as a database predicate. A change here needs
+     * the same change there.
      */
     val isAwaitingConfirmation: Boolean
         get() = attendanceStatus == AttendanceStatus.PLANNED && endTime.isBefore(LocalDateTime.now())

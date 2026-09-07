@@ -22,8 +22,14 @@ enum class StatsPeriod(val label: String) {
         ALL_TIME -> null
     }
 
-    /** Membership is decided by the session's start, not its end. */
-    fun contains(startTime: LocalDateTime, today: LocalDate = LocalDate.now()): Boolean {
+    /**
+     * Membership is decided by the session's start, not its end.
+     *
+     * [today] has no default deliberately: a caller reducing many events must supply one
+     * `LocalDate.now()` up front and pass it to every call, or a render straddling midnight
+     * could judge some events against one day and the rest against the next.
+     */
+    fun contains(startTime: LocalDateTime, today: LocalDate): Boolean {
         val earliest = earliestDay(today) ?: return true
         return !startTime.toLocalDate().isBefore(earliest)
     }

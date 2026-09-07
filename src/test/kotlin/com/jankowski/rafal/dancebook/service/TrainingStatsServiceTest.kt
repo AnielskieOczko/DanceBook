@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.formatMinutes
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -349,7 +350,7 @@ class TrainingStatsServiceTest {
     }
 
     @Test
-    fun `every slice carries a colour`() {
+    fun `every slice carries a colour, and the unassigned slice always the palette's unassigned colour`() {
         val standard = category("Standard")
         given(
             event(
@@ -363,5 +364,24 @@ class TrainingStatsServiceTest {
         (stats.byCategory + stats.byEventType).forEach { slice ->
             assertTrue(slice.color.startsWith("#"), "slice ${slice.label} has no colour")
         }
+        val unassigned = stats.byCategory.first { it.label == "Unassigned" }
+        assertEquals(TrainingEventPalette.UNASSIGNED_COLOR, unassigned.color)
+    }
+
+    @Test
+    fun `event type minutes reconcile with the total minutes trained`() {
+        val standard = category("Standard")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 90,
+                type = TrainingEventType.TRAINING, segments = listOf(standard to 60)
+            ),
+            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
+            event(daysAgo = 3, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
+        )
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
+
+        assertEquals(stats.totalMinutesTrained, stats.byEventType.sumOf { it.minutes })
     }
 }
