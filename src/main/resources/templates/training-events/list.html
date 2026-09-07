@@ -21,45 +21,60 @@
         </div>
     </div>
 
-    <!-- Filters -->
+    <!-- Filters. Search stays out where it can be reached; the three selects would take the
+         whole screen on a phone, so they fold behind a toggle there and sit inline above it. -->
     <div class="sticky top-[72px] bg-background z-40 -mx-6 px-6 py-3 border-b border-outline-variant/30">
         <form id="filterForm" th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
               hx-trigger="submit, change from:select" hx-push-url="false"
-              class="flex flex-col sm:flex-row gap-3">
+              class="flex flex-col md:flex-row gap-3">
 
-            <input type="search" name="search" th:value="${search}" placeholder="Search sessions..."
-                   class="form-input flex-1"
-                   th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                   hx-include="#filterForm" hx-trigger="keyup changed delay:300ms">
+            <div class="flex items-center gap-2 md:flex-1">
+                <input type="search" name="search" th:value="${search}" placeholder="Search sessions..."
+                       class="form-input flex-1"
+                       th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
+                       hx-include="#filterForm" hx-trigger="keyup changed delay:300ms">
 
-            <select name="eventTypes" class="form-select sm:w-48"
-                    th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                    hx-include="#filterForm">
-                <option value="">All types</option>
-                <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}"
-                        th:selected="${selectedEventTypes != null && selectedEventTypes.contains(type)}">TRAINING</option>
-            </select>
+                <button type="button" class="js-toggle btn-outline md:hidden shrink-0 relative"
+                        data-toggle-target="#filterFields" aria-label="Show filters">
+                    <span class="material-symbols-outlined text-[20px]">tune</span>
+                    <span th:if="${activeFilterCount != null && activeFilterCount > 0}"
+                          th:text="${activeFilterCount}"
+                          class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full
+                                 bg-primary-container text-on-primary-container text-[11px] font-bold
+                                 flex items-center justify-center">1</span>
+                </button>
+            </div>
 
-            <select name="attendanceStatuses" class="form-select sm:w-48"
-                    th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                    hx-include="#filterForm">
-                <option value="">All statuses</option>
-                <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}"
-                        th:selected="${selectedStatuses != null && selectedStatuses.contains(status)}">PLANNED</option>
-            </select>
+            <div id="filterFields" class="hidden md:flex flex-col md:flex-row gap-3">
+                <select name="eventTypes" class="form-select md:w-48"
+                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
+                        hx-include="#filterForm">
+                    <option value="">All types</option>
+                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}"
+                            th:selected="${selectedEventTypes != null && selectedEventTypes.contains(type)}">TRAINING</option>
+                </select>
 
-            <select name="categoryIds" class="form-select sm:w-48"
-                    th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                    hx-include="#filterForm">
-                <option value="">All styles</option>
-                <option th:each="category : ${danceCategories}" th:value="${category.id}" th:text="${category.name}"
-                        th:selected="${selectedCategoryIds != null && selectedCategoryIds.contains(category.id)}">Standard</option>
-            </select>
+                <select name="attendanceStatuses" class="form-select md:w-48"
+                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
+                        hx-include="#filterForm">
+                    <option value="">All statuses</option>
+                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}"
+                            th:selected="${selectedStatuses != null && selectedStatuses.contains(status)}">PLANNED</option>
+                </select>
+
+                <select name="categoryIds" class="form-select md:w-48"
+                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
+                        hx-include="#filterForm">
+                    <option value="">All styles</option>
+                    <option th:each="category : ${danceCategories}" th:value="${category.id}" th:text="${category.name}"
+                            th:selected="${selectedCategoryIds != null && selectedCategoryIds.contains(category.id)}">Standard</option>
+                </select>
+            </div>
         </form>
     </div>
 
     <!-- Agenda list (HTMX swap target) -->
-    <div th:fragment="eventsList" id="events-list" class="space-y-gutter">
+    <div th:fragment="eventsList" id="events-list" class="space-y-lg">
 
         <div th:if="${events == null || events.isEmpty()}" class="empty-state">
             <span class="material-symbols-outlined empty-state-icon">calendar_month</span>
@@ -68,73 +83,106 @@
             <a href="/training-events/new" class="btn-primary mt-4">Add Session</a>
         </div>
 
-        <div th:each="event : ${events}" class="card p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+        <!-- A training log is read in months: how much was scheduled, how many hours it came to. -->
+        <div th:each="group : ${monthGroups}" class="space-y-gutter">
 
-            <!-- Date block -->
-            <div class="flex sm:flex-col items-center sm:items-center gap-2 sm:gap-0 sm:w-20 shrink-0">
-                <span class="font-display-lg text-2xl font-bold text-on-surface"
-                      th:text="${#temporals.format(event.startTime, 'd')}">10</span>
-                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant"
-                      th:text="${#temporals.format(event.startTime, 'MMM yyyy')}">Sep 2026</span>
-            </div>
-
-            <!-- Details -->
-            <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-center gap-2">
-                    <a th:href="@{/training-events/{id}(id=${event.id})}"
-                       class="font-headline-lg text-lg font-semibold text-on-surface hover:text-primary transition-colors truncate"
-                       th:text="${event.title}">Monday practice</a>
-
-                    <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
-
-                    <span th:each="segment : ${event.segments}" class="badge-secondary"
-                          th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
-
-                    <span th:if="${event.isAwaitingConfirmation}"
-                          class="badge-accent">Needs confirmation</span>
-
-                    <span th:unless="${event.isAwaitingConfirmation}"
-                          th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
-                                            event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' :
-                                            event.attendanceStatus.name() == 'CANCELLED' ? 'badge-neutral' : 'badge-neutral'}"
-                          th:text="${event.attendanceStatus}">PLANNED</span>
-                </div>
-
-                <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-                    <span th:text="${#temporals.format(event.startTime, 'EEEE, HH:mm')}">Thursday, 18:00</span>
-                    <span> – </span>
-                    <span th:text="${#temporals.format(event.endTime, 'HH:mm')}">20:00</span>
+            <div class="tc-month-heading">
+                <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${group.label}">September 2026</h2>
+                <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                    <span th:text="${group.sessionLabel}">6 sessions</span>
                     <span class="text-outline"> · </span>
-                    <span th:text="${event.durationMinutes} + ' min'">120 min</span>
+                    <span th:text="${group.totalLabel}">9h 30m</span>
                 </p>
             </div>
 
-            <!-- Actions -->
-            <div class="flex items-center gap-2 shrink-0">
-                <!-- One-tap confirmation for a past session still marked PLANNED -->
-                <form th:if="${event.isAwaitingConfirmation}"
-                      th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
-                      hx-target="#events-list" hx-swap="outerHTML">
-                    <input type="hidden" name="status" value="ATTENDED">
-                    <button type="submit" class="btn-primary">Attended</button>
-                </form>
-                <form th:if="${event.isAwaitingConfirmation}"
-                      th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
-                      hx-target="#events-list" hx-swap="outerHTML">
-                    <input type="hidden" name="status" value="SKIPPED">
-                    <button type="submit" class="btn-outline">Skipped</button>
-                </form>
+            <div th:each="row : ${group.rows}" th:with="event=${row.event}"
+                 class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
 
-                <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-icon" title="Edit">
-                    <span class="material-symbols-outlined text-[20px]">edit</span>
-                </a>
+                <!-- Date rail; the stripe and tint are the session's status. -->
+                <div class="tc-rail"
+                     th:style="'border-left-color:' + ${row.swatch.color} + ';background-color:' + ${row.swatch.tint}">
+                    <span class="tc-rail-day" th:text="${#temporals.format(event.startTime, 'd')}">10</span>
+                    <span class="tc-rail-weekday" th:text="${#temporals.format(event.startTime, 'EEE')}">Thu</span>
+                </div>
 
-                <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
-                      data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
-                    <button type="submit" class="btn-icon text-error" title="Delete">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                <div class="flex-1 min-w-0">
+                    <a th:href="@{/training-events/{id}(id=${event.id})}"
+                       class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface
+                              hover:text-primary transition-colors"
+                       th:text="${event.title}">Monday practice</a>
+
+                    <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
+                        <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
+                        <span class="text-outline"> · </span>
+                        <span th:text="${event.durationMinutes} + ' min'">120 min</span>
+                    </p>
+
+                    <div class="tc-badges mt-2">
+                        <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+
+                        <span th:each="segment : ${event.segments}" class="badge-secondary"
+                              th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+
+                        <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
+
+                        <span th:unless="${event.isAwaitingConfirmation}"
+                              th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
+                                                event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' :
+                                                event.attendanceStatus.name() == 'CANCELLED' ? 'badge-neutral' : 'badge-neutral'}"
+                              th:text="${event.attendanceStatus}">PLANNED</span>
+                    </div>
+
+                    <!-- One-tap confirmation for a past session still marked PLANNED. It sits in
+                         the body rather than the action column so a phone is not asked to fit
+                         four 48px controls on one row. -->
+                    <div th:if="${event.isAwaitingConfirmation}" class="flex flex-wrap gap-2 mt-3">
+                        <form th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
+                              hx-target="#events-list" hx-swap="outerHTML">
+                            <input type="hidden" name="status" value="ATTENDED">
+                            <button type="submit" class="btn-primary">Attended</button>
+                        </form>
+                        <form th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
+                              hx-target="#events-list" hx-swap="outerHTML">
+                            <input type="hidden" name="status" value="SKIPPED">
+                            <button type="submit" class="btn-outline">Skipped</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit and delete: inline on a pointer, behind an overflow menu on a phone. -->
+                <div class="hidden md:flex items-center gap-2 shrink-0">
+                    <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-icon" title="Edit">
+                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </a>
+                    <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                          data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
+                        <button type="submit" class="btn-icon text-error" title="Delete">
+                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="relative md:hidden shrink-0">
+                    <button type="button" class="js-menu-btn btn-icon" aria-label="More actions">
+                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
                     </button>
-                </form>
+                    <div class="js-menu-dropdown hidden absolute right-0 top-full mt-1 w-44 z-30 py-1
+                                rounded-md border border-outline-variant bg-surface-container-lowest shadow-ambient">
+                        <a th:href="@{/training-events/{id}/edit(id=${event.id})}"
+                           class="flex items-center gap-2 px-3 py-2 font-body-md text-[15px] text-on-surface hover:bg-surface-container">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                            Edit
+                        </a>
+                        <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                              data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
+                            <button type="submit"
+                                    class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container">
+                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

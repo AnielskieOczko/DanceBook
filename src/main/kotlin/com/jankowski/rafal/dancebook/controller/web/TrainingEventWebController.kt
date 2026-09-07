@@ -1,8 +1,10 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -25,6 +27,8 @@ import org.springframework.http.ResponseEntity
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import java.util.UUID
@@ -42,6 +46,8 @@ class TrainingEventWebController(
 
         /** Evening default for a day clicked in month view; most training is after work. */
         private const val DEFAULT_HOUR = 18
+
+        private val MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
     }
 
     @GetMapping
@@ -54,7 +60,7 @@ class TrainingEventWebController(
         model: Model
     ): String {
         val events = trainingEventService.findByCurrentUser(eventTypes, categoryIds, attendanceStatuses, search)
-        model.addAttribute("events", events)
+        populateEventsList(model, events)
         // ArrayList, not emptyList(): Kotlin's EmptyList is an internal object whose
         // members SpEL cannot reflect on, so contains(...) fails at template render time.
         model.addAttribute("selectedEventTypes", ArrayList(eventTypes ?: emptyList()))
@@ -68,6 +74,7 @@ class TrainingEventWebController(
             model.addAttribute("danceCategories", danceCategoryService.findAll())
             model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
             model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
+            model.addAttribute("activeFilterCount", activeFilterCount(eventTypes, categoryIds, attendanceStatuses))
         }
 
         return if (isHtmxRequest == true) {
@@ -80,6 +87,8 @@ class TrainingEventWebController(
     @GetMapping("/calendar")
     fun showCalendar(model: Model): String {
         model.addAttribute("pageTitle", "Training calendar")
+        // The legend and the JSON feed read the same palette, so the two can never drift.
+        model.addAttribute("statusLegend", TrainingEventPalette.LEGEND)
         return "training-events/calendar"
     }
 
@@ -255,7 +264,7 @@ class TrainingEventWebController(
             return "redirect:/training-events/$id"
         }
 
-        model.addAttribute("events", trainingEventService.findByCurrentUser())
+        populateEventsList(model, trainingEventService.findByCurrentUser())
         return "training-events/list :: eventsList"
     }
 
@@ -272,9 +281,72 @@ class TrainingEventWebController(
         return "redirect:/training-events"
     }
 
+    /**
+     * Everything the `eventsList` fragment needs. Every path that renders it -- the full page,
+     * the HTMX filter swap and the attendance swap -- goes through here; a path that only set
+     * `events` would render the fragment with no month headings at all.
+     */
+    private fun populateEventsList(model: Model, events: List<TrainingEvent>) {
+        model.addAttribute("events", events)
+        model.addAttribute("monthGroups", groupByMonth(events))
+    }
+
+    /** Drives the "Filters" badge on the collapsed mobile filter panel. */
+    private fun activeFilterCount(vararg selections: Collection<*>?): Int =
+        selections.count { !it.isNullOrEmpty() }
+
+    /**
+     * A training log is read in months: how many sessions, how many hours. Grouping happens
+     * here rather than in the template because Thymeleaf can only compare a row against its
+     * predecessor, which makes the totals awkward and the markup worse.
+     */
+    private fun groupByMonth(events: List<TrainingEvent>): List<TrainingMonthGroup> =
+        events.groupBy { YearMonth.from(it.startTime) }
+            .map { (month, monthEvents) ->
+                TrainingMonthGroup(
+                    label = month.format(MONTH_LABEL),
+                    rows = monthEvents.map { TrainingEventRow(it, TrainingEventPalette.swatchFor(it)) },
+                    totalMinutes = monthEvents.sumOf { it.durationMinutes }
+                )
+            }
+
     private fun populateFormOptions(model: Model) {
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
     }
+}
+
+/**
+ * A session as the agenda draws it. The swatch travels with the event so the template never
+ * has to re-derive a colour from a status, which is how the palette came to be duplicated.
+ */
+data class TrainingEventRow(
+    val event: TrainingEvent,
+    val swatch: TrainingEventPalette.Swatch
+)
+
+/**
+ * One month of the agenda, with the totals that make a training log worth grouping.
+ */
+data class TrainingMonthGroup(
+    val label: String,
+    val rows: List<TrainingEventRow>,
+    val totalMinutes: Long
+) {
+    val sessionCount: Int get() = rows.size
+
+    val sessionLabel: String get() = if (sessionCount == 1) "1 session" else "$sessionCount sessions"
+
+    /** "9h 30m", "45m", "3h" -- whichever parts are non-zero. */
+    val totalLabel: String
+        get() {
+            val hours = totalMinutes / 60
+            val minutes = totalMinutes % 60
+            return when {
+                hours == 0L -> "${minutes}m"
+                minutes == 0L -> "${hours}h"
+                else -> "${hours}h ${minutes}m"
+            }
+        }
 }

@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['../templates/**/*.html'],
+  // Scripts are scanned too: the calendar builds its chips and day agenda in JS, and a
+  // class name that appears only there would otherwise never be emitted into output.css.
+  content: ['../templates/**/*.html', '../static/js/**/*.js'],
   darkMode: "class",
   future: {
     hoverOnlyWhenSupported: true,

@@ -1,6 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.api
 
-import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,25 +14,17 @@ import java.time.format.DateTimeParseException
 /**
  * Feeds the FullCalendar view.
  *
- * Colours are sent as hex rather than class names on purpose: Tailwind's content globs
- * cover the templates directory only, so a class name a script puts on an element is
- * never emitted into output.css and would silently render unstyled.
+ * Colours are sent as hex rather than class names because FullCalendar owns the chip element
+ * and the palette has to reach it as inline style. A chip is drawn as a tinted fill behind a
+ * solid leading stripe, so the feed sends both: [CalendarEventResponse.backgroundColor] is the
+ * tint, [CalendarEventResponse.borderColor] the solid colour the renderer uses for the stripe.
+ * All five values live in [TrainingEventPalette], shared with the legend on the page.
  */
 @RestController
 @RequestMapping("/api/training-events")
 class TrainingCalendarApiController(
     private val trainingEventService: TrainingEventService
 ) {
-
-    private companion object {
-        // Noble Harmony tokens, resolved here because JS cannot reach Tailwind's palette.
-        const val COLOR_PLANNED = "#1e2524"      // primary-container
-        const val COLOR_ATTENDED = "#2e5d51"     // success
-        const val COLOR_SKIPPED = "#ba1a1a"      // danger
-        const val COLOR_CANCELLED = "#737877"    // outline
-        const val COLOR_UNCONFIRMED = "#695d46"  // secondary — wants attention
-        const val TEXT_COLOR = "#ffffff"
-    }
 
     @GetMapping("/calendar")
     fun calendarFeed(
@@ -43,13 +35,7 @@ class TrainingCalendarApiController(
             .map { it.toCalendarEvent() }
 
     private fun TrainingEvent.toCalendarEvent(): CalendarEventResponse {
-        val colour = when {
-            isAwaitingConfirmation -> COLOR_UNCONFIRMED
-            attendanceStatus == AttendanceStatus.ATTENDED -> COLOR_ATTENDED
-            attendanceStatus == AttendanceStatus.SKIPPED -> COLOR_SKIPPED
-            attendanceStatus == AttendanceStatus.CANCELLED -> COLOR_CANCELLED
-            else -> COLOR_PLANNED
-        }
+        val swatch = TrainingEventPalette.swatchFor(this)
 
         return CalendarEventResponse(
             id = id.toString(),
@@ -59,10 +45,12 @@ class TrainingCalendarApiController(
             start = startTime.toString(),
             end = endTime.toString(),
             url = "/training-events/$id",
-            backgroundColor = colour,
-            borderColor = colour,
-            textColor = TEXT_COLOR,
+            backgroundColor = swatch.tint,
+            borderColor = swatch.color,
+            textColor = TrainingEventPalette.TEXT_COLOR,
             extendedProps = CalendarEventProps(
+                status = swatch.key,
+                statusLabel = swatch.label,
                 attendanceStatus = attendanceStatus.name,
                 awaitingConfirmation = isAwaitingConfirmation,
                 eventType = eventType.name,
@@ -97,6 +85,9 @@ data class CalendarEventResponse(
 )
 
 data class CalendarEventProps(
+    /** Palette key the chip renderer styles on: planned, unconfirmed, attended, skipped, cancelled. */
+    val status: String,
+    val statusLabel: String,
     val attendanceStatus: String,
     val awaitingConfirmation: Boolean,
     val eventType: String,
