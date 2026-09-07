@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -254,5 +255,113 @@ class TrainingStatsServiceTest {
 
         assertEquals(1, stats.counts.total)
         assertEquals(60L, stats.totalMinutesTrained)
+    }
+
+    @Test
+    fun `category minutes come from segments of attended sessions`() {
+        val standard = category("Standard")
+        val latin = category("Latin")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
+                segments = listOf(standard to 60, latin to 60)
+            ),
+            event(
+                daysAgo = 2, status = AttendanceStatus.SKIPPED, minutes = 120,
+                segments = listOf(standard to 120)
+            )
+        )
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        assertEquals(listOf("Latin", "Standard"), byCategory.map { it.label })
+        assertEquals(60L, byCategory.first { it.label == "Standard" }.minutes)
+        assertEquals(60L, byCategory.first { it.label == "Latin" }.minutes)
+    }
+
+    @Test
+    fun `a session touching two categories counts once in each session count`() {
+        val standard = category("Standard")
+        val latin = category("Latin")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
+                segments = listOf(standard to 30, standard to 30, latin to 60)
+            )
+        )
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        assertEquals(1, byCategory.first { it.label == "Standard" }.sessionCount)
+        assertEquals(60L, byCategory.first { it.label == "Standard" }.minutes)
+        assertEquals(1, byCategory.first { it.label == "Latin" }.sessionCount)
+    }
+
+    @Test
+    fun `time not covered by segments becomes an unassigned slice`() {
+        val standard = category("Standard")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
+                segments = listOf(standard to 90)
+            ),
+            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 60)
+        )
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        val unassigned = byCategory.last()
+        assertEquals("Unassigned", unassigned.label)
+        assertEquals(90L, unassigned.minutes)
+        assertEquals(180L, byCategory.sumOf { it.minutes })
+    }
+
+    @Test
+    fun `no unassigned slice when segments fill every attended session`() {
+        val standard = category("Standard")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60,
+                segments = listOf(standard to 60)
+            )
+        )
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        assertEquals(listOf("Standard"), byCategory.map { it.label })
+    }
+
+    @Test
+    fun `event types are broken down by wall-clock minutes and session count`() {
+        given(
+            event(daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60, type = TrainingEventType.TRAINING),
+            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 90, type = TrainingEventType.TRAINING),
+            event(daysAgo = 3, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
+            event(daysAgo = 4, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
+        )
+
+        val byType = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byEventType
+
+        assertEquals(listOf("TRAINING", "CAMP"), byType.map { it.label })
+        assertEquals(150L, byType.first().minutes)
+        assertEquals(2, byType.first().sessionCount)
+        assertEquals(240L, byType.last().minutes)
+    }
+
+    @Test
+    fun `every slice carries a colour`() {
+        val standard = category("Standard")
+        given(
+            event(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
+                segments = listOf(standard to 60)
+            )
+        )
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
+
+        (stats.byCategory + stats.byEventType).forEach { slice ->
+            assertTrue(slice.color.startsWith("#"), "slice ${slice.label} has no colour")
+        }
     }
 }

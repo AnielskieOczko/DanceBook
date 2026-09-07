@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.BreakdownSlice
 import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
@@ -28,6 +29,8 @@ class TrainingStatsServiceImpl(
 
     companion object {
         private val log = LoggerFactory.getLogger(TrainingStatsServiceImpl::class.java)
+        /** Shown as its own slice, so the chart reconciles with the hours card. */
+        private const val UNASSIGNED_LABEL = "Unassigned"
     }
 
     override fun statsForCurrentUser(period: StatsPeriod): TrainingStats {
@@ -45,8 +48,8 @@ class TrainingStatsServiceImpl(
             counts = counts,
             attendanceRatePercent = attendanceRate(counts),
             currentStreak = currentStreak(allEvents),
-            byCategory = emptyList(),
-            byEventType = emptyList()
+            byCategory = categoryBreakdown(attended),
+            byEventType = eventTypeBreakdown(attended)
         )
     }
 
@@ -102,4 +105,63 @@ class TrainingStatsServiceImpl(
         }
         return streak
     }
+
+    /**
+     * Style time across attended sessions, with everything left over gathered into a
+     * trailing "Unassigned" slice.
+     *
+     * Segments are optional and may cover less than a session's wall clock -- warm-ups and
+     * breaks -- while competitions and camps usually carry none at all. Without the
+     * remainder slice the chart would total fewer hours than the card above it claims.
+     */
+    private fun categoryBreakdown(attended: List<TrainingEvent>): List<BreakdownSlice> {
+        val minutesByCategory = mutableMapOf<String, Long>()
+        val sessionsByCategory = mutableMapOf<String, Int>()
+
+        for (event in attended) {
+            val categoriesTouched = mutableSetOf<String>()
+            for (segment in event.segments) {
+                val name = segment.danceCategory?.name ?: continue
+                minutesByCategory.merge(name, segment.durationMinutes.toLong(), Long::plus)
+                categoriesTouched += name
+            }
+            categoriesTouched.forEach { sessionsByCategory.merge(it, 1, Int::plus) }
+        }
+
+        val slices = minutesByCategory.keys.sorted().mapIndexed { index, name ->
+            BreakdownSlice(
+                label = name,
+                minutes = minutesByCategory.getValue(name),
+                sessionCount = sessionsByCategory[name] ?: 0,
+                color = TrainingEventPalette.chartColor(index)
+            )
+        }
+
+        val unassigned = attended.sumOf { it.durationMinutes } - minutesByCategory.values.sum()
+        if (unassigned <= 0) return slices
+        return slices + BreakdownSlice(
+            label = UNASSIGNED_LABEL,
+            minutes = unassigned,
+            sessionCount = 0,
+            color = TrainingEventPalette.UNASSIGNED_COLOR
+        )
+    }
+
+    /**
+     * Attended sessions grouped by kind, in the enum's own order so the chart does not
+     * reshuffle as the data changes. Labels are the raw enum names, matching how the
+     * training list already renders an event's type.
+     */
+    private fun eventTypeBreakdown(attended: List<TrainingEvent>): List<BreakdownSlice> =
+        attended.groupBy { it.eventType }
+            .toList()
+            .sortedBy { (type, _) -> type.ordinal }
+            .mapIndexed { index, (type, events) ->
+                BreakdownSlice(
+                    label = type.name,
+                    minutes = events.sumOf { it.durationMinutes },
+                    sessionCount = events.size,
+                    color = TrainingEventPalette.chartColor(index)
+                )
+            }
 }
