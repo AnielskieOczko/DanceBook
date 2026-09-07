@@ -1,6 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -78,7 +78,10 @@ class TrainingEventWebController(
             model.addAttribute("danceCategories", danceCategoryService.findAll())
             model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
             model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
-            model.addAttribute("activeFilterCount", activeFilterCount(eventTypes, categoryIds, attendanceStatuses))
+            model.addAttribute(
+                "activeFilterCount",
+                activeFilterCount(eventTypes, categoryIds, attendanceStatuses, awaitingConfirmation = awaitingConfirmation)
+            )
         }
 
         return if (isHtmxRequest == true) {
@@ -296,8 +299,8 @@ class TrainingEventWebController(
     }
 
     /** Drives the "Filters" badge on the collapsed mobile filter panel. */
-    private fun activeFilterCount(vararg selections: Collection<*>?): Int =
-        selections.count { !it.isNullOrEmpty() }
+    private fun activeFilterCount(vararg selections: Collection<*>?, awaitingConfirmation: Boolean? = null): Int =
+        selections.count { !it.isNullOrEmpty() } + (if (awaitingConfirmation == true) 1 else 0)
 
     /**
      * A training log is read in months: how many sessions, how many hours. Grouping happens

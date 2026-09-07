@@ -1,4 +1,4 @@
-package com.jankowski.rafal.dancebook.controller
+package com.jankowski.rafal.dancebook.dto
 
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent

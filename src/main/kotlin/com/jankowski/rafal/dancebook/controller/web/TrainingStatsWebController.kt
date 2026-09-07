@@ -1,8 +1,8 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.service.TrainingStatsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

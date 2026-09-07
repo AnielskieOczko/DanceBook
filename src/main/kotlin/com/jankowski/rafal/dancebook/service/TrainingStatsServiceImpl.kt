@@ -1,9 +1,9 @@
 package com.jankowski.rafal.dancebook.service
 
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.BreakdownSlice
 import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 /**
@@ -38,7 +39,10 @@ class TrainingStatsServiceImpl(
         val allEvents = trainingEventRepository.findAllByCreatedBy(currentUser)
         log.debug("Computing {} training stats for user '{}'", period, currentUser.username)
 
-        val inPeriod = allEvents.filter { period.contains(it.startTime) }
+        // One "today" for the whole computation: a render straddling midnight must not
+        // judge some events against one day and the rest against the next.
+        val today = LocalDate.now()
+        val inPeriod = allEvents.filter { period.contains(it.startTime, today) }
         val attended = inPeriod.filter { it.attendanceStatus == AttendanceStatus.ATTENDED }
         val counts = countsOf(inPeriod)
 
@@ -137,6 +141,9 @@ class TrainingStatsServiceImpl(
             )
         }
 
+        // Negative is unreachable: TrainingEventServiceImpl (applySegments and reschedule)
+        // enforces at write time that segment minutes never exceed a session's wall clock,
+        // so this guard only ever discards the zero case.
         val unassigned = attended.sumOf { it.durationMinutes } - minutesByCategory.values.sum()
         if (unassigned <= 0) return slices
         return slices + BreakdownSlice(
