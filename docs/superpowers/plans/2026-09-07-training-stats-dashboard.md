@@ -478,7 +478,7 @@ class TrainingStatsServiceImpl(
 - [ ] **Step 7: Run the tests to verify they pass**
 
 Run: `./gradlew test --tests "com.jankowski.rafal.dancebook.service.TrainingStatsServiceTest"`
-Expected: PASS — all nine tests.
+Expected: PASS — all 8 tests.
 
 - [ ] **Step 8: Commit**
 
@@ -624,7 +624,7 @@ and add the private function below `countsOf`:
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `./gradlew test --tests "com.jankowski.rafal.dancebook.service.TrainingStatsServiceTest"`
-Expected: PASS — all fourteen tests.
+Expected: PASS — all 13 tests.
 
 - [ ] **Step 5: Commit**
 
@@ -903,7 +903,7 @@ Add the constant to the companion object:
 - [ ] **Step 5: Run the tests to verify they pass**
 
 Run: `./gradlew test --tests "com.jankowski.rafal.dancebook.service.TrainingStatsServiceTest"`
-Expected: PASS — all twenty tests.
+Expected: PASS — all 19 tests.
 
 - [ ] **Step 6: Commit**
 
@@ -1343,7 +1343,7 @@ The unit tests cover every statistic definition, but nothing so far proves the p
 - [ ] **Step 1: Run the full build**
 
 Run: `./gradlew build`
-Expected: BUILD SUCCESSFUL, twenty `TrainingStatsServiceTest` tests passing among the rest.
+Expected: BUILD SUCCESSFUL, 19 `TrainingStatsServiceTest` tests passing among the rest.
 
 - [ ] **Step 2: Start the dependencies and the app**
 
