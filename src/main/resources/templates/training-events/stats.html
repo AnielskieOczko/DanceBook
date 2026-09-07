@@ -77,7 +77,7 @@
         <!-- Nudge. Unconfirmed sessions are excluded from every figure above, so the way
              to make these numbers truer is to go and confirm them. -->
         <a th:if="${stats.counts.unconfirmed > 0}"
-           th:href="@{/training-events(attendanceStatuses='PLANNED')}"
+           th:href="@{/training-events(awaitingConfirmation=true)}"
            class="card p-4 flex items-center gap-4 hover:border-outline transition-colors">
             <span class="material-symbols-outlined text-secondary">help</span>
             <div>
@@ -106,6 +106,8 @@
                         <span class="text-text-secondary" th:text="${slice.durationLabel}">6h</span>
                     </li>
                 </ul>
+                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-text-secondary">
+                    No attended sessions in this period yet</p>
             </div>
 
             <div class="card p-6 space-y-4">
@@ -121,6 +123,8 @@
                               th:text="${slice.durationLabel} + ' · ' + ${slice.sessionCount} + ' sessions'">6h · 4 sessions</span>
                     </li>
                 </ul>
+                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-text-secondary">
+                    No attended sessions in this period yet</p>
             </div>
         </div>
     </div>

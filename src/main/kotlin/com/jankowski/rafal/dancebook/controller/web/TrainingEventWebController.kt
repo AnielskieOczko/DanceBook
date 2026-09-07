@@ -56,10 +56,13 @@ class TrainingEventWebController(
         @RequestParam(required = false) categoryIds: List<UUID>? = null,
         @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
         @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {
-        val events = trainingEventService.findByCurrentUser(eventTypes, categoryIds, attendanceStatuses, search)
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation
+        )
         populateEventsList(model, events)
         // ArrayList, not emptyList(): Kotlin's EmptyList is an internal object whose
         // members SpEL cannot reflect on, so contains(...) fails at template render time.
@@ -67,6 +70,7 @@ class TrainingEventWebController(
         model.addAttribute("selectedCategoryIds", ArrayList(categoryIds ?: emptyList()))
         model.addAttribute("selectedStatuses", ArrayList(attendanceStatuses ?: emptyList()))
         model.addAttribute("search", search)
+        model.addAttribute("selectedAwaitingConfirmation", awaitingConfirmation)
 
         // Filter dropdown data is only needed for the full page, never for a fragment swap.
         if (isHtmxRequest != true) {
