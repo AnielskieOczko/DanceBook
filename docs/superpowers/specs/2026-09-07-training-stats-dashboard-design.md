@@ -177,8 +177,9 @@ Mobile-first, in this order:
 The value list under each chart is simultaneously the legend, the screen-reader-accessible
 form of the chart, and the fallback when JavaScript does not run. Keeping it in the
 template also keeps its classes inside Tailwind's scan path — `tailwind.config.js` has
-`content: ['../templates/**/*.html']`, so classes assembled in `static/js/` are never
-emitted.
+`content: ['../templates/**/*.html', '../static/js/**/*.js']`, so a class has to appear
+literally in one of those files, template or script, to be emitted; a class assembled at
+runtime by string concatenation in either place still would not be.
 
 `list.html` and `calendar.html` each gain a link to the stats page beside the existing
 header button, so the three views reach one another.

@@ -17,7 +17,7 @@
 - **No Flyway migration in this plan.** `spring.jpa.hibernate.ddl-auto=validate` — but this feature adds no entity and no column. If you find yourself writing a migration, you have left the plan.
 - **No domain event.** `ActivityEventListener` records changes; reading a dashboard is not a change.
 - **CSP:** `SecurityConfig` allows `script-src 'self' https://unpkg.com` only. Chart.js must come from `unpkg.com`, and page JavaScript must live in an external file under `static/js/` — inline `<script>` bodies are blocked.
-- **Tailwind scan path:** `frontend/tailwind.config.js` has `content: ['../templates/**/*.html']`. Every utility class must appear literally in a template; classes assembled in JavaScript are never emitted into `output.css`.
+- **Tailwind scan path:** `frontend/tailwind.config.js` has `content: ['../templates/**/*.html', '../static/js/**/*.js']`. Every utility class must appear literally in a template or a script file; classes assembled at runtime by string concatenation in either place are never emitted into `output.css`.
 - **Colours:** Noble Harmony tokens only. Hex values for JavaScript are resolved in `TrainingEventPalette`, never in `.js` files.
 - **Test command:** `./gradlew test --tests "com.jankowski.rafal.dancebook.service.TrainingStatsServiceTest"`.
 - **Full build:** `./gradlew build` (compiles, runs tests, builds Tailwind CSS).
