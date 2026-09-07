@@ -28,6 +28,7 @@
            th:href="@{/training-events/stats(period=${option})}"
            class="chip"
            th:classappend="${option == stats.period} ? 'chip-active' : ''"
+           th:attr="aria-current=${option == stats.period} ? 'page' : null"
            th:text="${option.label}">All time</a>
     </div>
 
@@ -38,7 +39,11 @@
             <h2 class="empty-state-title"
                 th:text="${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'">
                 No sessions logged yet</h2>
-            <p class="empty-state-text">Log a training session and this page will start
+            <p class="empty-state-text"
+               th:text="${stats.period.name() == 'ALL_TIME'}
+                   ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
+                   : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'">
+                Log a training session and this page will start
                 keeping score: hours trained, how often you show up, and where your time goes.</p>
             <a href="/training-events/new" class="btn-primary">
                 <span class="material-symbols-outlined text-[20px]">add</span>
@@ -96,8 +101,8 @@
 
             <div class="card p-6 space-y-4">
                 <h2 class="text-lg font-heading font-medium text-text-primary">Time by style</h2>
-                <div class="relative h-64">
-                    <canvas id="category-chart" th:attr="data-slices=${categoryChartJson}"></canvas>
+                <div th:if="${!#lists.isEmpty(stats.byCategory)}" class="relative h-64">
+                    <canvas id="category-chart" aria-hidden="true" th:attr="data-slices=${categoryChartJson}"></canvas>
                 </div>
                 <ul class="space-y-2">
                     <li th:each="slice : ${stats.byCategory}" class="flex items-center gap-3 text-sm">
@@ -112,8 +117,8 @@
 
             <div class="card p-6 space-y-4">
                 <h2 class="text-lg font-heading font-medium text-text-primary">Time by session type</h2>
-                <div class="relative h-64">
-                    <canvas id="event-type-chart" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
+                <div th:if="${!#lists.isEmpty(stats.byEventType)}" class="relative h-64">
+                    <canvas id="event-type-chart" aria-hidden="true" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
                 </div>
                 <ul class="space-y-2">
                     <li th:each="slice : ${stats.byEventType}" class="flex items-center gap-3 text-sm">
