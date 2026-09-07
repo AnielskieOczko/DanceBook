@@ -60,7 +60,7 @@
         var slices = readSlices(canvas);
         if (slices.length === 0) return;
 
-        var gridColor = canvas.dataset.gridColor || '#e5e2e1';
+        var gridColor = canvas.dataset.gridColor;
 
         new Chart(canvas, {
             type: 'bar',
@@ -83,7 +83,9 @@
                             // server-side counterpart. Unlike slice durations (which come from
                             // durationLabel), these numbers cannot be pre-computed. This is the
                             // sole exception to the constraint that formatting lives server-side.
-                            callback: function (value) { return Math.round(value / 60) + 'h'; }
+                            callback: function (value) {
+                                return value >= 60 ? (value / 60) + 'h' : value + 'm';
+                            }
                         },
                         grid: { color: gridColor }
                     },
