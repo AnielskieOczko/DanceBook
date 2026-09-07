@@ -65,6 +65,9 @@ object TrainingEventPalette {
     /** Time inside an attended session that no segment claimed: present, but not a style. */
     const val UNASSIGNED_COLOR = "#c3c7c6" // outline-variant
 
+    /** Axis grid lines on the bar chart in the statistics dashboard. */
+    const val CHART_GRID_COLOR = "#e5e2e1" // surface-variant
+
     fun chartColor(index: Int): String = CHART_COLORS[index % CHART_COLORS.size]
 
     fun swatchFor(event: TrainingEvent): Swatch = when {

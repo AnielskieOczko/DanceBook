@@ -113,7 +113,7 @@
             <div class="card p-6 space-y-4">
                 <h2 class="text-lg font-heading font-medium text-text-primary">Time by session type</h2>
                 <div class="relative h-64">
-                    <canvas id="event-type-chart" th:attr="data-slices=${eventTypeChartJson}"></canvas>
+                    <canvas id="event-type-chart" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
                 </div>
                 <ul class="space-y-2">
                     <li th:each="slice : ${stats.byEventType}" class="flex items-center gap-3 text-sm">
