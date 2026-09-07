@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
@@ -269,5 +270,98 @@ class TrainingEventWebControllerTest {
         assertEquals("redirect:/training-events", viewName)
         verify(trainingEventService).delete(id)
         verify(trainingSeriesService, never()).deleteThisAndFollowing(id)
+    }
+
+    @Test
+    fun `should group the agenda by month with session counts and total hours`() {
+        val model = ConcurrentModel()
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null)).thenReturn(
+            listOf(
+                session(LocalDateTime.of(2026, 9, 14, 18, 0), 120),
+                session(LocalDateTime.of(2026, 9, 17, 19, 0), 90),
+                session(LocalDateTime.of(2026, 10, 1, 18, 0), 60)
+            )
+        )
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.listTrainingEvents(model = model)
+
+        @Suppress("UNCHECKED_CAST")
+        val groups = model["monthGroups"] as List<TrainingMonthGroup>
+        assertEquals(2, groups.size)
+        assertEquals("September 2026", groups[0].label)
+        assertEquals(2, groups[0].sessionCount)
+        assertEquals("3h 30m", groups[0].totalLabel)
+        assertEquals("1h", groups[1].totalLabel)
+    }
+
+    @Test
+    fun `should carry a status swatch on every agenda row so the template never derives one`() {
+        val model = ConcurrentModel()
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null)).thenReturn(
+            listOf(session(LocalDateTime.now().minusDays(2), 60))
+        )
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.listTrainingEvents(model = model)
+
+        @Suppress("UNCHECKED_CAST")
+        val groups = model["monthGroups"] as List<TrainingMonthGroup>
+        // A past session still marked PLANNED reads as needing confirmation, not as planned.
+        assertEquals("unconfirmed", groups[0].rows[0].swatch.key)
+    }
+
+    /**
+     * The fragment is the HTMX swap target for both the filters and the attendance buttons,
+     * so a path that only set `events` would swap in a list with no month headings at all.
+     */
+    @Test
+    fun `should group the agenda on the HTMX fragment branch too`() {
+        val model = ConcurrentModel()
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null)).thenReturn(
+            listOf(session(LocalDateTime.of(2026, 9, 14, 18, 0), 120))
+        )
+
+        controller.listTrainingEvents(isHtmxRequest = true, model = model)
+
+        @Suppress("UNCHECKED_CAST")
+        val groups = model["monthGroups"] as List<TrainingMonthGroup>
+        assertEquals("September 2026", groups[0].label)
+    }
+
+    @Test
+    fun `should group the agenda after an attendance confirmation swaps the list back`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        `when`(trainingEventService.findByCurrentUser()).thenReturn(
+            listOf(session(LocalDateTime.of(2026, 9, 14, 18, 0), 120))
+        )
+
+        val viewName = controller.updateAttendance(id, AttendanceStatus.ATTENDED, true, model)
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        @Suppress("UNCHECKED_CAST")
+        val groups = model["monthGroups"] as List<TrainingMonthGroup>
+        assertEquals(1, groups[0].sessionCount)
+    }
+
+    @Test
+    fun `should give the calendar page the same palette the feed colours events with`() {
+        val model = ConcurrentModel()
+
+        val viewName = controller.showCalendar(model)
+
+        assertEquals("training-events/calendar", viewName)
+        @Suppress("UNCHECKED_CAST")
+        val legend = model["statusLegend"] as List<TrainingEventPalette.Swatch>
+        assertEquals(5, legend.size)
+        assertEquals(legend.map { it.color }.distinct().size, legend.size)
+    }
+
+    private fun session(start: LocalDateTime, minutes: Long) = TrainingEvent().apply {
+        id = UUID.randomUUID()
+        title = "Monday practice"
+        startTime = start
+        endTime = start.plusMinutes(minutes)
     }
 }

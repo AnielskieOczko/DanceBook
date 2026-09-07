@@ -82,12 +82,29 @@ class TrainingCalendarApiControllerTest {
                 )
             )
 
-        val colours = controller.calendarFeed("2026-01-01T00:00:00", "2027-01-01T00:00:00")
-            .map { it.backgroundColor }
+        val feed = controller.calendarFeed("2026-01-01T00:00:00", "2027-01-01T00:00:00")
 
-        assertEquals(5, colours.distinct().size)
+        assertEquals(5, feed.map { it.backgroundColor }.distinct().size)
+        assertEquals(5, feed.map { it.extendedProps.status }.distinct().size)
         // A past PLANNED session gets its own colour rather than looking merely planned.
-        assertTrue(colours[0] != colours[1])
+        assertTrue(feed[0].backgroundColor != feed[1].backgroundColor)
+        assertEquals("planned", feed[0].extendedProps.status)
+        assertEquals("unconfirmed", feed[1].extendedProps.status)
+    }
+
+    @Test
+    fun `should send the stripe colour solid and the fill tinted`() {
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+            .thenReturn(listOf(event(AttendanceStatus.ATTENDED, LocalDateTime.now().minusDays(1))))
+
+        val chip = controller.calendarFeed("2026-01-01T00:00:00", "2027-01-01T00:00:00")[0]
+
+        // The chip is drawn as a solid stripe over a faint wash of the same colour, so the
+        // fill has to be the border colour plus an alpha rather than a second value.
+        assertEquals(chip.borderColor + "1a", chip.backgroundColor)
+        // Text sits on the tint, not on the solid colour, so it stays readable.
+        assertEquals("#1b1c1b", chip.textColor)
+        assertEquals("Attended", chip.extendedProps.statusLabel)
     }
 
     @Test

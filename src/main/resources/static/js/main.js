@@ -103,6 +103,20 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // 2b. Generic show/hide toggle: a button carrying data-toggle-target="#id" flips the
+    // `hidden` class on that element. Used by the collapsed filter panel on the training
+    // agenda, where a responsive `hidden md:flex` keeps the desktop layout untouched.
+    const toggleBtn = event.target.closest('.js-toggle');
+    if (toggleBtn) {
+        event.preventDefault();
+        const target = document.querySelector(toggleBtn.dataset.toggleTarget);
+        if (target) {
+            target.classList.toggle('hidden');
+            toggleBtn.setAttribute('aria-expanded', String(!target.classList.contains('hidden')));
+        }
+        return;
+    }
+
     // 3. 3-dot menu toggle handler
     const menuBtn = event.target.closest('.js-menu-btn');
     if (menuBtn) {
