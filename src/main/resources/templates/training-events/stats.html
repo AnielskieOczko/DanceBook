@@ -128,5 +128,10 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart.js comes from unpkg because script-src allows that origin and nothing else
+         external; a jsdelivr or cdnjs URL would be blocked with no visible error. -->
+    <script src="https://unpkg.com/chart.js@4.5.0/dist/chart.umd.js"></script>
+    <script th:src="@{/js/training-stats.js}"></script>
 </section>
 </html>
