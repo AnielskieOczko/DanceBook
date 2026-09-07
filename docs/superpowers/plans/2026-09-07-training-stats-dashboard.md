@@ -235,10 +235,11 @@ class TrainingStatsServiceTest {
             attendanceStatus = status
             eventType = type
             createdBy = currentUser
-            this.segments = segments.mapIndexed { index, (category, segmentMinutes) ->
+            // The back-reference to the parent event is left unset: nothing in the
+            // statistics service reads it, and setting it here would only be ceremony.
+            this.segments = segments.mapIndexed { index, (sliceCategory, segmentMinutes) ->
                 TrainingEventSegment().apply {
-                    trainingEvent = this@apply.let { _ -> null }
-                    danceCategory = category
+                    danceCategory = sliceCategory
                     durationMinutes = segmentMinutes
                     sortOrder = index
                 }
@@ -1209,9 +1210,16 @@ Create `static/js/training-stats.js`:
         }
     }
 
-    function tooltipLabel(context) {
-        var slice = context.chart.data.slices[context.dataIndex];
-        return ' ' + slice.label + ': ' + slice.durationLabel;
+    /**
+     * Chart.js hands the callback an index, not our slice. Closing over the array keeps
+     * the pre-formatted duration reachable without hanging a custom property off Chart's
+     * own data object, which it makes no promise to preserve.
+     */
+    function tooltipLabelFor(slices) {
+        return function (context) {
+            var slice = slices[context.dataIndex];
+            return ' ' + slice.label + ': ' + slice.durationLabel;
+        };
     }
 
     function drawCategoryChart(canvas) {
@@ -1221,7 +1229,6 @@ Create `static/js/training-stats.js`:
         new Chart(canvas, {
             type: 'doughnut',
             data: {
-                slices: slices,
                 labels: slices.map(function (slice) { return slice.label; }),
                 datasets: [{
                     data: slices.map(function (slice) { return slice.minutes; }),
@@ -1237,7 +1244,7 @@ Create `static/js/training-stats.js`:
                     // The template renders the legend as a list, which screen readers can
                     // reach and which survives JavaScript being switched off.
                     legend: { display: false },
-                    tooltip: { callbacks: { label: tooltipLabel } }
+                    tooltip: { callbacks: { label: tooltipLabelFor(slices) } }
                 }
             }
         });
@@ -1250,7 +1257,6 @@ Create `static/js/training-stats.js`:
         new Chart(canvas, {
             type: 'bar',
             data: {
-                slices: slices,
                 labels: slices.map(function (slice) { return slice.label; }),
                 datasets: [{
                     data: slices.map(function (slice) { return slice.minutes; }),
@@ -1275,7 +1281,7 @@ Create `static/js/training-stats.js`:
                 },
                 plugins: {
                     legend: { display: false },
-                    tooltip: { callbacks: { label: tooltipLabel } }
+                    tooltip: { callbacks: { label: tooltipLabelFor(slices) } }
                 }
             }
         });
