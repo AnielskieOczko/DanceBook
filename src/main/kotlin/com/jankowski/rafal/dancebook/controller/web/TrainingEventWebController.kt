@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
+import com.jankowski.rafal.dancebook.dto.groupByMonth
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -27,8 +28,6 @@ import org.springframework.http.ResponseEntity
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import java.util.UUID
@@ -46,8 +45,6 @@ class TrainingEventWebController(
 
         /** Evening default for a day clicked in month view; most training is after work. */
         private const val DEFAULT_HOUR = 18
-
-        private val MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
     }
 
     @GetMapping
@@ -307,53 +304,9 @@ class TrainingEventWebController(
      * here rather than in the template because Thymeleaf can only compare a row against its
      * predecessor, which makes the totals awkward and the markup worse.
      */
-    private fun groupByMonth(events: List<TrainingEvent>): List<TrainingMonthGroup> =
-        events.groupBy { YearMonth.from(it.startTime) }
-            .map { (month, monthEvents) ->
-                TrainingMonthGroup(
-                    label = month.format(MONTH_LABEL),
-                    rows = monthEvents.map { TrainingEventRow(it, TrainingEventPalette.swatchFor(it)) },
-                    totalMinutes = monthEvents.sumOf { it.durationMinutes }
-                )
-            }
-
     private fun populateFormOptions(model: Model) {
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
     }
-}
-
-/**
- * A session as the agenda draws it. The swatch travels with the event so the template never
- * has to re-derive a colour from a status, which is how the palette came to be duplicated.
- */
-data class TrainingEventRow(
-    val event: TrainingEvent,
-    val swatch: TrainingEventPalette.Swatch
-)
-
-/**
- * One month of the agenda, with the totals that make a training log worth grouping.
- */
-data class TrainingMonthGroup(
-    val label: String,
-    val rows: List<TrainingEventRow>,
-    val totalMinutes: Long
-) {
-    val sessionCount: Int get() = rows.size
-
-    val sessionLabel: String get() = if (sessionCount == 1) "1 session" else "$sessionCount sessions"
-
-    /** "9h 30m", "45m", "3h" -- whichever parts are non-zero. */
-    val totalLabel: String
-        get() {
-            val hours = totalMinutes / 60
-            val minutes = totalMinutes % 60
-            return when {
-                hours == 0L -> "${minutes}m"
-                minutes == 0L -> "${hours}h"
-                else -> "${hours}h ${minutes}m"
-            }
-        }
 }

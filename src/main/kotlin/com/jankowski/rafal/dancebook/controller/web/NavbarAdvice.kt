@@ -61,6 +61,9 @@ class NavbarAdvice(
             path.startsWith("/lists") -> "lists"
             path.startsWith("/dance-figures") -> "dance-figures"
             path.startsWith("/choreographies") -> "choreographies"
+            // Ahead of the /training-events branch: the timeline is its own top-level nav entry,
+            // and `when` takes the first match.
+            path.startsWith("/training-events/timeline") -> "training-timeline"
             path.startsWith("/training-events") -> "training-events"
             path.startsWith("/dance-types") -> "dance-types"
             path.startsWith("/dance-categories") -> "dance-categories"

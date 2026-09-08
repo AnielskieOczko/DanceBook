@@ -391,6 +391,41 @@
   .tc-rail-weekday {
     @apply mt-1 text-[11px] font-semibold text-on-surface-variant;
   }
+
+  /* ── Training timeline ────────────────────────── */
+  /* A rule down the left with a node per session, so the eye can follow the sequence rather
+     than re-reading dates. The rule is narrow on a phone: the cards need the width more. */
+  .tc-timeline {
+    @apply relative space-y-gutter pl-6 sm:pl-8;
+  }
+  .tc-timeline::before {
+    @apply absolute inset-y-0 left-[7px] sm:left-[11px] w-px bg-outline-variant;
+    content: '';
+  }
+  .tc-timeline-item {
+    @apply relative;
+  }
+  /* Sits on the rule, filled with the session's own status colour. */
+  .tc-timeline-node {
+    @apply absolute -left-6 sm:-left-8 top-6 h-3.5 w-3.5 rounded-full border-2 bg-surface;
+  }
+  /* Nothing has happened yet, so the node is hollow rather than filled. */
+  .tc-timeline-node-future {
+    @apply bg-background;
+  }
+  /* Upcoming sessions read as provisional: a dashed edge, and they recede until hovered. */
+  .tc-timeline-upcoming {
+    @apply border-dashed opacity-80 transition-opacity hover:opacity-100;
+  }
+  /* Where the present sits in the scroll. */
+  .tc-timeline-today {
+    @apply relative -ml-6 sm:-ml-8 mb-gutter flex items-center gap-3 font-label-sm text-label-sm
+           font-bold uppercase tracking-wider text-primary;
+  }
+  .tc-timeline-today::after {
+    @apply h-px flex-1 bg-primary/40;
+    content: '';
+  }
 }
 
 /* ────────────────────────────────────────────────
