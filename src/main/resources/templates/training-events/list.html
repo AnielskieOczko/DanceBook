@@ -10,6 +10,10 @@
             <p class="page-subtitle" th:text="${#lists.size(events)} + ' sessions logged'">0 sessions logged</p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
+            <a href="/training-events/stats" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                Stats
+            </a>
             <a href="/training-events/calendar" class="btn-outline">
                 <span class="material-symbols-outlined text-[20px]">calendar_month</span>
                 Calendar
@@ -27,6 +31,10 @@
         <form id="filterForm" th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
               hx-trigger="submit, change from:select" hx-push-url="false"
               class="flex flex-col md:flex-row gap-3">
+
+            <!-- Carries the stats-page nudge's filter through every hx-include on this form,
+                 so typing in the search box or changing a select does not silently drop it. -->
+            <input type="hidden" name="awaitingConfirmation" th:if="${selectedAwaitingConfirmation}" value="true">
 
             <div class="flex items-center gap-2 md:flex-1">
                 <input type="search" name="search" th:value="${search}" placeholder="Search sessions..."

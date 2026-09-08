@@ -1,6 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -56,10 +56,13 @@ class TrainingEventWebController(
         @RequestParam(required = false) categoryIds: List<UUID>? = null,
         @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
         @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {
-        val events = trainingEventService.findByCurrentUser(eventTypes, categoryIds, attendanceStatuses, search)
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation
+        )
         populateEventsList(model, events)
         // ArrayList, not emptyList(): Kotlin's EmptyList is an internal object whose
         // members SpEL cannot reflect on, so contains(...) fails at template render time.
@@ -67,6 +70,7 @@ class TrainingEventWebController(
         model.addAttribute("selectedCategoryIds", ArrayList(categoryIds ?: emptyList()))
         model.addAttribute("selectedStatuses", ArrayList(attendanceStatuses ?: emptyList()))
         model.addAttribute("search", search)
+        model.addAttribute("selectedAwaitingConfirmation", awaitingConfirmation)
 
         // Filter dropdown data is only needed for the full page, never for a fragment swap.
         if (isHtmxRequest != true) {
@@ -74,7 +78,10 @@ class TrainingEventWebController(
             model.addAttribute("danceCategories", danceCategoryService.findAll())
             model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
             model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
-            model.addAttribute("activeFilterCount", activeFilterCount(eventTypes, categoryIds, attendanceStatuses))
+            model.addAttribute(
+                "activeFilterCount",
+                activeFilterCount(eventTypes, categoryIds, attendanceStatuses, awaitingConfirmation = awaitingConfirmation)
+            )
         }
 
         return if (isHtmxRequest == true) {
@@ -292,8 +299,8 @@ class TrainingEventWebController(
     }
 
     /** Drives the "Filters" badge on the collapsed mobile filter panel. */
-    private fun activeFilterCount(vararg selections: Collection<*>?): Int =
-        selections.count { !it.isNullOrEmpty() }
+    private fun activeFilterCount(vararg selections: Collection<*>?, awaitingConfirmation: Boolean? = null): Int =
+        selections.count { !it.isNullOrEmpty() } + (if (awaitingConfirmation == true) 1 else 0)
 
     /**
      * A training log is read in months: how many sessions, how many hours. Grouping happens

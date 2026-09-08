@@ -1,4 +1,4 @@
-package com.jankowski.rafal.dancebook.controller
+package com.jankowski.rafal.dancebook.dto
 
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -44,6 +44,31 @@ object TrainingEventPalette {
 
     /** Legend order, read left to right as a session's likely life: planned first, gone last. */
     val LEGEND: List<Swatch> = listOf(PLANNED, UNCONFIRMED, ATTENDED, SKIPPED, CANCELLED)
+
+    /**
+     * Slice colours for the statistics charts, cycled by the slice's sorted position so a
+     * dance style keeps one colour across renders and across both charts.
+     *
+     * They live here for the same reason the status colours do: neither JavaScript nor a
+     * script-applied class name can reach Tailwind's palette at runtime, so the tokens are
+     * resolved server-side in one place.
+     */
+    private val CHART_COLORS = listOf(
+        "#2e5d51", // success
+        "#695d46", // secondary
+        "#1e2524", // primary-container
+        "#968881", // on-tertiary-container
+        "#504530", // on-secondary-fixed-variant
+        "#4f453f"  // on-tertiary-fixed-variant
+    )
+
+    /** Time inside an attended session that no segment claimed: present, but not a style. */
+    const val UNASSIGNED_COLOR = "#c3c7c6" // outline-variant
+
+    /** Axis grid lines on the bar chart in the statistics dashboard. */
+    const val CHART_GRID_COLOR = "#e5e2e1" // surface-variant
+
+    fun chartColor(index: Int): String = CHART_COLORS[index % CHART_COLORS.size]
 
     fun swatchFor(event: TrainingEvent): Swatch = when {
         event.isAwaitingConfirmation -> UNCONFIRMED

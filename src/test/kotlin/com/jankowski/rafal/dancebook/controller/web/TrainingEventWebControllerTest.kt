@@ -1,6 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory

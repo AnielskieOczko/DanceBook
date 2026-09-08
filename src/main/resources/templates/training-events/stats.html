@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="space-y-lg">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">Training stats</h1>
+            <p class="page-subtitle" th:text="${stats.period.label}">All time</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="/training-events" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">list</span>
+                List
+            </a>
+            <a href="/training-events/calendar" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                Calendar
+            </a>
+        </div>
+    </div>
+
+    <!-- Period selector. Plain links, so the charts initialise once per page load
+         instead of having to be destroyed and rebuilt on an HTMX swap. -->
+    <div class="chip-group">
+        <a th:each="option : ${periods}"
+           th:href="@{/training-events/stats(period=${option})}"
+           class="chip"
+           th:classappend="${option == stats.period} ? 'chip-active' : ''"
+           th:attr="aria-current=${option == stats.period} ? 'page' : null"
+           th:text="${option.label}">All time</a>
+    </div>
+
+    <!-- Empty state: no sessions to summarise. -->
+    <div th:if="${stats.counts.total == 0}" class="card">
+        <div class="empty-state">
+            <span class="material-symbols-outlined empty-state-icon">monitoring</span>
+            <h2 class="empty-state-title"
+                th:text="${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'">
+                No sessions logged yet</h2>
+            <p class="empty-state-text"
+               th:text="${stats.period.name() == 'ALL_TIME'}
+                   ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
+                   : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'">
+                Log a training session and this page will start
+                keeping score: hours trained, how often you show up, and where your time goes.</p>
+            <a href="/training-events/new" class="btn-primary">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+                Add Session
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${stats.counts.total > 0}" class="space-y-lg">
+
+        <!-- KPI cards. Two up on a phone, four across from md. -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+            <div class="stat-card">
+                <p class="stat-card-label">Hours trained</p>
+                <p class="stat-card-value" th:text="${stats.totalTrainedLabel}">12h 30m</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-card-label">Attendance</p>
+                <p class="stat-card-value"
+                   th:text="${stats.attendanceRatePercent != null} ? ${stats.attendanceRatePercent} + '%' : '—'">75%</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-card-label">Streak</p>
+                <p class="stat-card-value" th:text="${stats.currentStreak}">4</p>
+                <p class="text-sm text-text-secondary">consecutive, all time</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-card-label">Attended</p>
+                <p class="stat-card-value" th:text="${stats.counts.attended}">18</p>
+                <p class="text-sm text-text-secondary"
+                   th:text="${stats.counts.skipped} + ' skipped · ' + ${stats.counts.upcoming} + ' upcoming'">
+                    2 skipped · 3 upcoming</p>
+            </div>
+        </div>
+
+        <!-- Nudge. Unconfirmed sessions are excluded from every figure above, so the way
+             to make these numbers truer is to go and confirm them. -->
+        <a th:if="${stats.counts.unconfirmed > 0}"
+           th:href="@{/training-events(awaitingConfirmation=true)}"
+           class="card p-4 flex items-center gap-4 hover:border-outline transition-colors">
+            <span class="material-symbols-outlined text-secondary">help</span>
+            <div>
+                <p class="font-semibold text-text-primary"
+                   th:text="${stats.counts.unconfirmed} + ' past sessions need confirming'">
+                    3 past sessions need confirming</p>
+                <p class="text-sm text-text-secondary">They count towards nothing above until
+                    you mark them attended or skipped.</p>
+            </div>
+        </a>
+
+        <!-- Charts. Each canvas carries its own slices; training-stats.js reads them and
+             owns no data or colours of its own. The list beneath is the legend, the
+             accessible form of the chart, and what you see when JavaScript does not run. -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+
+            <div class="card p-6 space-y-4">
+                <h2 class="text-lg font-heading font-medium text-text-primary">Time by style</h2>
+                <div th:if="${!#lists.isEmpty(stats.byCategory)}" class="relative h-64">
+                    <canvas id="category-chart" aria-hidden="true" th:attr="data-slices=${categoryChartJson}"></canvas>
+                </div>
+                <ul class="space-y-2">
+                    <li th:each="slice : ${stats.byCategory}" class="flex items-center gap-3 text-sm">
+                        <span class="w-3 h-3 rounded-full shrink-0" th:style="'background-color:' + ${slice.color}"></span>
+                        <span class="text-text-primary flex-1" th:text="${slice.label}">Standard</span>
+                        <span class="text-text-secondary" th:text="${slice.durationLabel}">6h</span>
+                    </li>
+                </ul>
+                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-text-secondary">
+                    No attended sessions in this period yet</p>
+            </div>
+
+            <div class="card p-6 space-y-4">
+                <h2 class="text-lg font-heading font-medium text-text-primary">Time by session type</h2>
+                <div th:if="${!#lists.isEmpty(stats.byEventType)}" class="relative h-64">
+                    <canvas id="event-type-chart" aria-hidden="true" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
+                </div>
+                <ul class="space-y-2">
+                    <li th:each="slice : ${stats.byEventType}" class="flex items-center gap-3 text-sm">
+                        <span class="w-3 h-3 rounded-full shrink-0" th:style="'background-color:' + ${slice.color}"></span>
+                        <span class="text-text-primary flex-1" th:text="${slice.label}">TRAINING</span>
+                        <span class="text-text-secondary"
+                              th:text="${slice.durationLabel} + ' · ' + ${slice.sessionCount} + ' sessions'">6h · 4 sessions</span>
+                    </li>
+                </ul>
+                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-text-secondary">
+                    No attended sessions in this period yet</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js comes from unpkg because script-src allows that origin and nothing else
+         external; a jsdelivr or cdnjs URL would be blocked with no visible error. -->
+    <script src="https://unpkg.com/chart.js@4.5.0/dist/chart.umd.js"></script>
+    <script th:src="@{/js/training-stats.js}"></script>
+</section>
+</html>

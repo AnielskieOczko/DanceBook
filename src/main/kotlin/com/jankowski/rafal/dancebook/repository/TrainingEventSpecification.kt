@@ -9,6 +9,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import jakarta.persistence.criteria.JoinType
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
+import java.time.LocalDateTime
 import java.util.UUID
 
 object TrainingEventSpecification {
@@ -18,7 +19,8 @@ object TrainingEventSpecification {
         eventTypes: List<TrainingEventType>? = null,
         categoryIds: List<UUID>? = null,
         attendanceStatuses: List<AttendanceStatus>? = null,
-        titleSearch: String? = null
+        titleSearch: String? = null,
+        awaitingConfirmation: Boolean? = null
     ): Specification<TrainingEvent> {
         return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
@@ -46,6 +48,14 @@ object TrainingEventSpecification {
 
             if (!titleSearch.isNullOrBlank()) {
                 predicates.add(cb.like(cb.lower(root.get("title")), "%${titleSearch.lowercase()}%"))
+            }
+
+            if (awaitingConfirmation == true) {
+                // Mirrors TrainingEvent.isAwaitingConfirmation, expressed in SQL because a
+                // Specification filters at the database rather than on loaded entities. A
+                // change to that rule needs the same change here.
+                predicates.add(cb.equal(root.get<AttendanceStatus>("attendanceStatus"), AttendanceStatus.PLANNED))
+                predicates.add(cb.lessThan(root.get("endTime"), LocalDateTime.now()))
             }
 
             cb.and(*predicates.toTypedArray())

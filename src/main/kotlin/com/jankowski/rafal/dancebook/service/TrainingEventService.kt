@@ -13,7 +13,8 @@ interface TrainingEventService {
         eventTypes: List<TrainingEventType>? = null,
         categoryIds: List<UUID>? = null,
         attendanceStatuses: List<AttendanceStatus>? = null,
-        titleSearch: String? = null
+        titleSearch: String? = null,
+        awaitingConfirmation: Boolean? = null
     ): List<TrainingEvent>
 
     fun findById(id: UUID): TrainingEvent

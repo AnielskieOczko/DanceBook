@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.repository
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.stereotype.Repository
@@ -32,4 +33,14 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
         series: TrainingSeries,
         startTime: LocalDateTime
     ): List<TrainingEvent>
+
+    /**
+     * Every session the user owns, with segments and their categories already loaded.
+     *
+     * The statistics page needs full history (the streak ignores the selected period) and
+     * walks every segment, so the entity graph is what keeps this from issuing a query
+     * per session.
+     */
+    @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
+    fun findAllByCreatedBy(createdBy: AppUser): List<TrainingEvent>
 }

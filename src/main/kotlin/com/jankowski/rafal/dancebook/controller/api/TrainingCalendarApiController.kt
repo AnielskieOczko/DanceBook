@@ -1,6 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.api
 
-import com.jankowski.rafal.dancebook.controller.TrainingEventPalette
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import org.springframework.web.bind.annotation.GetMapping
