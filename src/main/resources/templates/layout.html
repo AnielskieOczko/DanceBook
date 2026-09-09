@@ -51,6 +51,8 @@
                th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Choreographies</a>
             <a href="/training-events" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'training-events' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Training</a>
+            <a href="/training-events/timeline" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
+               th:classappend="${activeNav == 'training-timeline' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Timeline</a>
             <a href="/profile" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'profile' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Profile</a>
         </nav>

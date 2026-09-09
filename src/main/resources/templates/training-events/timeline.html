@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-timeline'" class="space-y-lg">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">Timeline</h1>
+            <p class="page-subtitle">Your training in order — what is coming, and everything behind it.</p>
+        </div>
+        <!-- The way back to the rest of the training pages. On a phone this cluster is the only
+             way here and away again: the bottom nav stays at six items on purpose. -->
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="/training-events" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">list</span>
+                Agenda
+            </a>
+            <a href="/training-events/stats" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                Stats
+            </a>
+            <a href="/training-events/calendar" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                Calendar
+            </a>
+        </div>
+    </div>
+
+    <!-- The swap target is the fragment itself, so a window can replace the "load more" control
+         with the sessions it fetched plus the next control. -->
+    <div th:fragment="timelinePage" class="space-y-lg">
+
+        <div th:if="${timeline.isEmpty and timeline.isFirstPage}" class="empty-state">
+            <span class="material-symbols-outlined empty-state-icon">timeline</span>
+            <h3 class="empty-state-title">No training logged yet</h3>
+            <p class="empty-state-text">Once you log a session it will show up here, newest first.</p>
+            <a href="/training-events/new" class="btn-primary mt-4">Add Session</a>
+        </div>
+
+        <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
+
+            <!-- Suppressed when this window continues the month already on screen, so an
+                 appended page does not repeat a heading halfway down the timeline. -->
+            <div th:unless="${monthStat.first and month.label == continuedMonth}" class="tc-month-heading">
+                <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
+                <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                    <span th:text="${month.sessionLabel}">6 sessions</span>
+                    <span class="text-outline"> · </span>
+                    <span th:text="${month.totalLabel}">9h 30m</span>
+                </p>
+            </div>
+
+            <!-- The connecting rule runs down the month; each session hangs a node off it. -->
+            <div class="tc-timeline">
+                <div th:each="entry : ${month.entries}" th:with="event=${entry.event}">
+
+                    <!-- Where the present sits. Drawn above the first session that is no longer
+                         ahead of us, and only on the first window. -->
+                    <div th:if="${entry.startsTodayBoundary}" class="tc-timeline-today">
+                        <span>Today</span>
+                    </div>
+
+                    <div class="tc-timeline-item">
+                        <span class="tc-timeline-node"
+                              th:classappend="${entry.isFuture} ? 'tc-timeline-node-future' : ''"
+                              th:style="'border-color:' + ${entry.swatch.color} + ';background-color:' + ${entry.swatch.tint}"
+                              aria-hidden="true"></span>
+
+                        <div class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4"
+                             th:classappend="${entry.isFuture} ? 'tc-timeline-upcoming' : ''">
+
+                            <!-- Date rail; the stripe and tint are the session's status. -->
+                            <div class="tc-rail"
+                                 th:style="'border-left-color:' + ${entry.swatch.color} + ';background-color:' + ${entry.swatch.tint}">
+                                <span class="tc-rail-day" th:text="${#temporals.format(event.startTime, 'd')}">10</span>
+                                <span class="tc-rail-weekday" th:text="${#temporals.format(event.startTime, 'EEE')}">Thu</span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <a th:href="@{/training-events/{id}(id=${event.id})}"
+                                   class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface
+                                          hover:text-primary transition-colors"
+                                   th:text="${event.title}">Monday practice</a>
+
+                                <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
+                                    <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
+                                    <span class="text-outline"> · </span>
+                                    <span th:text="${event.durationMinutes} + ' min'">120 min</span>
+                                </p>
+
+                                <div class="tc-badges mt-2">
+                                    <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+
+                                    <span th:each="segment : ${event.segments}" class="badge-secondary"
+                                          th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+
+                                    <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
+
+                                    <span th:unless="${event.isAwaitingConfirmation}"
+                                          th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
+                                                            event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' : 'badge-neutral'}"
+                                          th:text="${entry.swatch.label}">Attended</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- An explicit control rather than a scroll trigger: the user asked for older history,
+             so they should be the one to ask. Replaces itself with the window it fetches. -->
+        <div th:if="${timeline.hasMore}" class="flex justify-center pt-2">
+            <button type="button" class="btn-outline"
+                    th:hx-get="@{/training-events/timeline(page=${timeline.nextPage},lastMonth=${timeline.lastMonthLabel})}"
+                    hx-target="this" hx-swap="outerHTML" hx-push-url="false">
+                <span class="material-symbols-outlined text-[20px]">history</span>
+                Load older sessions
+            </button>
+        </div>
+    </div>
+</section>
+</html>
