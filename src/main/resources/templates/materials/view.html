@@ -61,7 +61,7 @@
                 </div>
 
                 <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div th:each="f : ${figures}" class="p-4 border border-surface-variant rounded-lg bg-surface flex gap-4 items-center hover:shadow-ambient hover:-translate-y-[2px] transition-all cursor-pointer group">
+                    <div th:each="f : ${figures}" class="p-4 border border-surface-variant rounded-lg bg-surface flex gap-4 items-center hover:shadow-ambient hover:translate-y-[-2px] transition-all cursor-pointer group">
                         <div class="w-16 h-16 rounded bg-surface-container overflow-hidden shrink-0 relative flex items-center justify-center">
                             <span class="material-symbols-outlined text-outline/30 group-hover:text-primary/50 transition-colors">accessibility_new</span>
                             <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

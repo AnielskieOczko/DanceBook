@@ -12,7 +12,7 @@
         
         <!-- Manual vs Guided Edit Tab Switcher -->
         <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-sm h-fit self-start md:self-center">
-            <button type="button" id="manual-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+            <button type="button" id="manual-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
                 ✏️ Manual Edit
             </button>
             <button type="button" id="guided-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Guided Edit Panel (Hidden by Default) -->
-    <div id="guided-edit-panel" class="hidden space-y-6 mb-8 card p-8 bg-white border border-border shadow-sm rounded-xl">
+    <div id="guided-edit-panel" class="hidden space-y-6 mb-8 card p-8 bg-white border border-border shadow-xs rounded-xl">
         <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
@@ -36,7 +36,7 @@
                 <button type="button" id="import-json-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
                     📋 Paste JSON
                 </button>
-                <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
                     🔗 Parse URL
                 </button>
             </div>
@@ -224,7 +224,7 @@
 
             <!-- Mobile-only Tab Switcher for Diff View -->
             <div class="inline-flex md:hidden bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs w-full mb-3">
-                <button type="button" id="diff-mobile-tab-current" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold">
+                <button type="button" id="diff-mobile-tab-current" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
                     👈 Show Current
                 </button>
                 <button type="button" id="diff-mobile-tab-imported" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
@@ -529,7 +529,7 @@
                         <div class="flex items-center justify-between border-b border-border/40 pb-2">
                             <span class="text-sm font-bold text-outline uppercase">Steps List</span>
                             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
-                                <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm" data-role="LEADER">
+                                <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
                                     <span class="material-symbols-outlined text-[18px]">face</span> Leader
                                 </button>
                                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
@@ -557,7 +557,7 @@
                                     </thead>
                                     <tbody class="js-leader-steps-tbody">
                                         <tr th:each="step, stat : ${set.steps}" th:if="${step.role == 'LEADER'}" 
-                                            class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn" 
+                                            class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-xs md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn" 
                                             data-role="LEADER">
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
@@ -632,7 +632,7 @@
                                     </thead>
                                     <tbody class="js-follower-steps-tbody">
                                         <tr th:each="step, stat : ${set.steps}" th:if="${step.role == 'FOLLOWER'}" 
-                                            class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn" 
+                                            class="grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-xs md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn" 
                                             data-role="FOLLOWER">
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />

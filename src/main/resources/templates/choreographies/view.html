@@ -173,7 +173,7 @@
                     <h3 class="text-xs uppercase tracking-widest font-bold text-primary font-heading shrink-0 bg-white pr-4 print:text-black" th:text="${entry.sectionLabel}">
                         Opening Sequence
                     </h3>
-                    <div class="h-px bg-border flex-grow print:border-neutral-300"></div>
+                    <div class="h-px bg-border grow print:border-neutral-300"></div>
                 </div>
 
                 <!-- Type 2: FIGURE -->
@@ -188,7 +188,7 @@
                     <div th:if="${entry.lineIndicator != null}" class="absolute left-0 top-0 bottom-0 w-1.5 print:w-1" th:classappend="${lineColorBg}"></div>
                      
                     <!-- Floating Card -->
-                    <div class="ml-5 bg-white border border-border/60 shadow-sm rounded-xl p-4 transition-all hover:shadow-md hover:border-primary/20 flex flex-col gap-2 relative print:shadow-none print:border-black/20 print:ml-4 print:p-2 print:rounded-lg">
+                    <div class="ml-5 bg-white border border-border/60 shadow-xs rounded-xl p-4 transition-all hover:shadow-md hover:border-primary/20 flex flex-col gap-2 relative print:shadow-none print:border-black/20 print:ml-4 print:p-2 print:rounded-lg">
                         <!-- Figure Grid Header -->
                     <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr] gap-y-2 gap-x-3 md:gap-4 items-center md:items-start w-full">
                         <!-- Col 1: Name and number -->
@@ -270,7 +270,7 @@
                                     </div>
                                     
                                     <!-- Action & Expandable Comments -->
-                                    <div class="flex-grow min-w-[200px]">
+                                    <div class="grow min-w-[200px]">
                                         <div class="text-base font-medium text-on-surface leading-snug print:text-black" th:text="${step.action}">Step</div>
                                         
                                         <!-- Technical details (if any) -->

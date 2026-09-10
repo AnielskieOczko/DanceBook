@@ -186,7 +186,7 @@
                 
                 <!-- Role Tab Selector -->
                 <div class="inline-flex bg-surface-container-high p-1 rounded-lg border-2 border-border text-base">
-                    <button type="button" id="leader-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm">
+                    <button type="button" id="leader-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs">
                         <span class="material-symbols-outlined text-[20px]">face</span> Leader
                     </button>
                     <button type="button" id="follower-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface">
@@ -199,7 +199,7 @@
             <div class="mb-4" th:if="${#lists.size(danceFigure.stepSets) > 1}">
                 <label for="step-set-select" class="block text-sm font-bold text-outline uppercase mb-2">Step Combination</label>
                 <div class="relative min-w-[240px] max-w-xs">
-                    <select id="step-set-select" class="w-full bg-surface border border-border text-on-surface rounded-lg px-3 py-2 font-semibold text-sm appearance-none cursor-pointer pr-10 focus:outline-none focus:border-primary">
+                    <select id="step-set-select" class="w-full bg-surface border border-border text-on-surface rounded-lg px-3 py-2 font-semibold text-sm appearance-none cursor-pointer pr-10 focus:outline-hidden focus:border-primary">
                         <option th:each="set : ${danceFigure.stepSets}" th:value="${set.id}" th:text="${set.name + (set.isDefault ? ' (Default)' : '')}">Default</option>
                     </select>
                     <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
@@ -274,10 +274,10 @@
                     <div class="block md:hidden mt-4 relative border-l-2 border-primary/20 ml-3 pl-6 space-y-6">
                         <div th:each="step : ${set.getLeaderSteps()}" class="relative step-timeline-item">
                             <!-- Dot Indicator -->
-                            <div class="absolute -left-[36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
+                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
                             
                             <!-- Timeline Header -->
-                            <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-none js-timeline-toggle">
+                            <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-hidden js-timeline-toggle">
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2.5 mb-2">
                                         <!-- Timing Badge -->
@@ -399,10 +399,10 @@
                     <div class="block md:hidden mt-4 relative border-l-2 border-primary/20 ml-3 pl-6 space-y-6">
                         <div th:each="step : ${set.getFollowerSteps()}" class="relative step-timeline-item">
                             <!-- Dot Indicator -->
-                            <div class="absolute -left-[36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
+                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
                             
                             <!-- Timeline Header -->
-                            <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-none js-timeline-toggle">
+                            <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-hidden js-timeline-toggle">
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2.5 mb-2">
                                         <!-- Timing Badge -->

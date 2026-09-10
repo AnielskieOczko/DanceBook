@@ -67,7 +67,7 @@
                 <div th:if="${recentEvents != null && !recentEvents.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
                     <div th:each="event : ${recentEvents}" class="relative pl-8">
                         <!-- Timeline Dot -->
-                        <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
+                        <div class="absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
                              th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' : 'bg-primary-container'}"></div>
 
                         <!-- Event Content -->

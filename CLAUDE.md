@@ -28,7 +28,7 @@ directory, so run them from the repo root.
 ## Stack
 
 Kotlin 1.9 / Java 21 · Spring Boot 3.5 (Web MVC, Data JPA, Security, Thymeleaf) ·
-PostgreSQL + Flyway · Thymeleaf + HTMX 2 + Tailwind 3 · Gradle Kotlin DSL.
+PostgreSQL + Flyway · Thymeleaf + HTMX 2 + Tailwind 4 · Gradle Kotlin DSL.
 Deployed to Google Cloud Run via `.github/workflows/deploy.yml`.
 
 ## Architecture
@@ -104,15 +104,25 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
 
 - **Schema changes require a Flyway migration.** `spring.jpa.hibernate.ddl-auto=validate`,
   so an entity field with no matching column fails at startup. Add
-  `src/main/resources/db/migration/V<next>__description.sql` (currently at V24).
+  `src/main/resources/db/migration/V<next>__description.sql` (currently at V27).
   `config/FlywayConfig.kt` runs `repair()` before `migrate()` on every boot.
-- **Tailwind only scans templates.** `frontend/tailwind.config.js` has
-  `content: ['../templates/**/*.html']` — classes generated in `static/js/*.js` are
-  **not** emitted. Put dynamically-applied classes in a template or safelist them.
+- **Tailwind 4, configured in CSS.** There is no `tailwind.config.js`. The frontend
+  project lives at `src/main/resources/frontend/`, and all configuration is in
+  `input.css`: `@theme` holds the tokens, `@source` declares the scan paths
+  (`../templates/**/*.html` **and** `../static/js/**/*.js` — scripts are scanned too),
+  and components are declared with `@utility`. The CLI is `@tailwindcss/cli`.
   `static/css/output.css` is generated and gitignored; never edit it by hand.
-- **Colors come from the "Noble Harmony" token set** in `tailwind.config.js`
+  Use `./gradlew buildTailwindWatch` while iterating on CSS.
+- **Class names must appear literally in a scanned file.** A class assembled by string
+  concatenation (`'badge-' + status`) is never emitted, and fails *silently* — the
+  attribute renders, the CSS is simply absent. v4 has no `safelist`; the escape hatch is
+  `@source inline(...)`.
+- **Colors come from the "Noble Harmony" token set** in `input.css`'s `@theme`
   (`surface`, `on-surface`, `primary`, `outline-variant`, …). Use those tokens rather
-  than raw Tailwind palette values.
+  than raw Tailwind palette values. Because they are real CSS custom properties,
+  JavaScript can read them at runtime via `getComputedStyle`.
+- **jsoup 1.18.3 is already a dependency** (used for scraping in
+  `GuidedFigureParseService`). Reach for it before adding another HTML library.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
   the policy allowlists only `unpkg.com` (HTMX, SortableJS), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.

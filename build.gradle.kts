@@ -91,11 +91,23 @@ tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwind") {
     group = "build"
     description = "Builds the Tailwind task"
     dependsOn(tasks.named("npmInstall"))
-    command.set("tailwindcss")
+    command.set("@tailwindcss/cli")
     args.set(listOf(
         "-i", "./input.css",
         "-o", "../static/css/output.css",
         "--minify"
+    ))
+}
+
+tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwindWatch") {
+    group = "build"
+    description = "Rebuilds Tailwind CSS on every change; run alongside bootRun while working on the UI"
+    dependsOn(tasks.named("npmInstall"))
+    command.set("@tailwindcss/cli")
+    args.set(listOf(
+        "-i", "./input.css",
+        "-o", "../static/css/output.css",
+        "--watch"
     ))
 }
 

@@ -5,14 +5,14 @@
 <section th:with="activeNav=''" class="space-y-xl">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline')}"></div>
+    <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline-solid')}"></div>
 
     <!-- Timeline -->
     <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
         <div th:if="${events != null && !events.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
             <div th:each="event : ${events}" class="relative pl-8">
                 <!-- Timeline Dot -->
-                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
+                <div class="absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
                      th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' || event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'bg-primary-container' :
                                       event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error' :
                                       event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container' :

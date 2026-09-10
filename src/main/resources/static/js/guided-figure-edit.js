@@ -72,14 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
             figureForm.classList.remove('hidden');
             guidedEditPanel.classList.add('hidden');
             
-            manualEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            manualEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
             guidedEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
         } else {
             figureForm.classList.add('hidden');
             guidedEditPanel.classList.remove('hidden');
             
             manualEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
-            guidedEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            guidedEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
             
             // Auto-load models and history if not loaded
             loadModels();
@@ -155,14 +155,14 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCols.forEach(col => col.classList.remove('max-md:hidden'));
             importedCols.forEach(col => col.classList.add('max-md:hidden'));
             
-            diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
             diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
         } else {
             currentCols.forEach(col => col.classList.add('max-md:hidden'));
             importedCols.forEach(col => col.classList.remove('max-md:hidden'));
             
             diffMobileTabCurrent.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
-            diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            diffMobileTabImported.className = 'flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
         }
     }
 
@@ -180,14 +180,14 @@ document.addEventListener('DOMContentLoaded', () => {
             jsonInputSection.classList.remove('hidden');
             urlInputSection.classList.add('hidden');
             
-            importJsonTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            importJsonTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
             importUrlTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
         } else {
             jsonInputSection.classList.add('hidden');
             urlInputSection.classList.remove('hidden');
             
             importJsonTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
-            importUrlTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-sm text-primary font-semibold';
+            importUrlTabBtn.className = 'px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
         }
     }
 
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!container) {
             container = document.createElement('div');
             container.id = 'toast-container';
-            container.className = 'fixed bottom-5 right-5 z-[9999] flex flex-col gap-2 max-w-sm w-full';
+            container.className = 'fixed bottom-5 right-5 z-9999 flex flex-col gap-2 max-w-sm w-full';
             document.body.appendChild(container);
         }
 
@@ -888,13 +888,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let icon = 'info';
 
         if (type === 'success') {
-            typeClasses = 'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-25px';
+            typeClasses = 'bg-emerald-50 border-emerald-200 text-emerald-900';
             icon = 'check_circle';
         } else if (type === 'error') {
-            typeClasses = 'bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-950 dark:text-rose-25px';
+            typeClasses = 'bg-rose-50 border-rose-200 text-rose-900';
             icon = 'error';
         } else if (type === 'warning') {
-            typeClasses = 'bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-950 dark:text-amber-25px';
+            typeClasses = 'bg-amber-50 border-amber-200 text-amber-900';
             icon = 'warning';
         }
 

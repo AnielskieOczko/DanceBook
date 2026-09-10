@@ -228,7 +228,7 @@ function switchPanelRole(panel, role) {
     panel.querySelectorAll('.js-panel-role-btn').forEach(btn => {
         const btnRole = btn.getAttribute('data-role');
         if (btnRole === role) {
-            btn.className = 'js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm';
+            btn.className = 'js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs';
         } else {
             btn.className = 'js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
         }
@@ -356,7 +356,7 @@ function addStepSet() {
         <div class="flex items-center justify-between border-b border-border/40 pb-2">
             <span class="text-sm font-bold text-outline uppercase">Steps List</span>
             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
-                <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm" data-role="LEADER">
+                <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
                     <span class="material-symbols-outlined text-[18px]">face</span> Leader
                 </button>
                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
@@ -464,7 +464,7 @@ function addStepRow(panel, role) {
     if (!tbody) return;
 
     const tr = document.createElement('tr');
-    tr.className = 'grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-sm md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn';
+    tr.className = 'grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-xs md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn';
     tr.setAttribute('data-role', role);
     
     // Default placeholders inside names; reindexStepSets will replace them

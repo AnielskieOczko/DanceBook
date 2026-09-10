@@ -55,10 +55,10 @@ function switchRoleTab(role) {
 
     // Toggle active styling classes on buttons
     leaderBtn.className = isLeader 
-        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs'
         : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
     followerBtn.className = !isLeader 
-        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-sm'
+        ? 'flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs'
         : 'flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
 
     // Toggle visibility of step tables for all groups

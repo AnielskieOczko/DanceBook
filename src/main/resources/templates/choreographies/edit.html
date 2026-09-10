@@ -60,7 +60,7 @@
         
         <!-- Left 2 Columns: Choreography sequence list -->
         <div class="lg:col-span-2 space-y-6">
-            <div class="bg-surface rounded-card border border-border p-6 shadow-sm">
+            <div class="bg-surface rounded-card border border-border p-6 shadow-xs">
                 <h2 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">route</span>
                     Routine Sequence
@@ -100,7 +100,7 @@
                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
                                                hx-trigger="change"
                                                hx-target="#sequence-timeline-container"
-                                               class="bg-surface-warm font-heading font-semibold text-xs uppercase tracking-wider text-center text-primary px-3 py-1.5 rounded border border-transparent focus:border-primary-container focus:bg-white outline-none w-48 sm:w-64" />
+                                               class="bg-surface-warm font-heading font-semibold text-xs uppercase tracking-wider text-center text-primary px-3 py-1.5 rounded border border-transparent focus:border-primary-container focus:bg-white outline-hidden w-48 sm:w-64" />
                                         
                                         <button type="button"
                                                 th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
@@ -119,7 +119,7 @@
                                                               entry.lineIndicator?.name() == 'DIAGONAL' ? 'border-l-4 border-purple-500' :
                                                               entry.lineIndicator?.name() == 'CORNER' ? 'border-l-4 border-rose-500' : 'border-l border-border'}"
                                      th:classappend="${indicatorClass}"
-                                     class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow group/card">
+                                     class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-lg shadow-xs border hover:shadow-md transition-shadow group/card">
                                     
                                     <div class="flex items-start gap-3 flex-1 min-w-0">
                                         <!-- Drag handle -->
@@ -145,7 +145,7 @@
                                                        th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
                                                        hx-trigger="change"
                                                        hx-target="#sequence-timeline-container"
-                                                       class="bg-transparent text-xs text-text-secondary placeholder:text-outline w-full border-b border-transparent focus:border-outline-variant/30 py-0.5 outline-none" />
+                                                       class="bg-transparent text-xs text-text-secondary placeholder:text-outline w-full border-b border-transparent focus:border-outline-variant/30 py-0.5 outline-hidden" />
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +199,7 @@
 
         <!-- Right 1 Column: Figure Picker -->
         <div class="space-y-6">
-            <div class="bg-surface rounded-card border border-border p-6 shadow-sm sticky top-[96px]">
+            <div class="bg-surface rounded-card border border-border p-6 shadow-xs sticky top-[96px]">
                 <h2 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary">accessibility_new</span>
                     Figure Selector
@@ -210,7 +210,7 @@
                 <div class="relative group mb-6">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
                     <input type="text" name="query"
-                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2.5 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2.5 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
                            placeholder="Search figures..."
                            th:hx-get="@{/choreographies/{id}/figures-search(id=${choreography.id})}"
                            hx-trigger="keyup changed delay:250ms"
