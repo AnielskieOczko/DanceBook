@@ -211,15 +211,33 @@ class TrainingEventServiceImpl(
             "than the $slotMinutes-minute session"
         }
 
-        event.segments.clear()
+        // Rewrite the surviving rows in place rather than clearing and refilling. Hibernate
+        // flushes the child INSERTs before the orphan DELETEs, so a refill that hands a new
+        // row a sortOrder the outgoing row still holds trips
+        // unique_training_event_segment_sort_order mid-flush.
         requested.forEachIndexed { index, segmentRequest ->
-            val segment = TrainingEventSegment().apply {
-                trainingEvent = event
-                danceCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
-                durationMinutes = segmentRequest.durationMinutes!!
-                sortOrder = index
+            val requestedCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
+            val requestedMinutes = segmentRequest.durationMinutes!!
+            if (index < event.segments.size) {
+                event.segments[index].apply {
+                    danceCategory = requestedCategory
+                    durationMinutes = requestedMinutes
+                    sortOrder = index
+                }
+            } else {
+                event.segments.add(TrainingEventSegment().apply {
+                    trainingEvent = event
+                    danceCategory = requestedCategory
+                    durationMinutes = requestedMinutes
+                    sortOrder = index
+                })
             }
-            event.segments.add(segment)
+        }
+
+        // Whatever is left over is genuinely gone. These hold the highest sortOrders, so
+        // removing them can never collide with a row added above.
+        while (event.segments.size > requested.size) {
+            event.segments.removeAt(event.segments.size - 1)
         }
     }
 

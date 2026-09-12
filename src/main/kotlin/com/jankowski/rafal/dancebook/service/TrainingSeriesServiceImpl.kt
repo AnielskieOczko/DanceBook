@@ -235,14 +235,30 @@ class TrainingSeriesServiceImpl(
         series.createdBy = series.createdBy ?: actor
         series.updatedAt = LocalDateTime.now()
 
-        series.segments.clear()
+        // Rewritten in place rather than cleared and refilled, for the same reason as
+        // TrainingEventServiceImpl.applySegments: Hibernate flushes the child INSERTs before
+        // the orphan DELETEs, so reusing a sortOrder the outgoing row still holds trips
+        // unique_training_series_segment_sort_order mid-flush.
         requestedSegments.forEachIndexed { index, segmentRequest ->
-            series.segments.add(TrainingSeriesSegment().apply {
-                trainingSeries = series
-                danceCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
-                durationMinutes = segmentRequest.durationMinutes!!
-                sortOrder = index
-            })
+            val requestedCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
+            val requestedMinutes = segmentRequest.durationMinutes!!
+            if (index < series.segments.size) {
+                series.segments[index].apply {
+                    danceCategory = requestedCategory
+                    durationMinutes = requestedMinutes
+                    sortOrder = index
+                }
+            } else {
+                series.segments.add(TrainingSeriesSegment().apply {
+                    trainingSeries = series
+                    danceCategory = requestedCategory
+                    durationMinutes = requestedMinutes
+                    sortOrder = index
+                })
+            }
+        }
+        while (series.segments.size > requestedSegments.size) {
+            series.segments.removeAt(series.segments.size - 1)
         }
         return series
     }

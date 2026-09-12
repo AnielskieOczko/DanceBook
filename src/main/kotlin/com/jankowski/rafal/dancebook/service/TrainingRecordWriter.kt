@@ -101,21 +101,39 @@ class TrainingRecordWriter(
     /**
      * Rebuilds the snapshot of the style breakdown in place.
      *
-     * orphanRemoval on the collection means clearing and refilling the existing list deletes
-     * the rows that went away — the same reason `TrainingEventServiceImpl.applySegments`
-     * refills rather than replaces the list instance.
+     * Surviving rows are rewritten in place rather than cleared and refilled, for the same
+     * reason as `TrainingEventServiceImpl.applySegments`: Hibernate flushes the child INSERTs
+     * before the orphan DELETEs, so handing a new row a sortOrder the outgoing row still holds
+     * trips unique_training_record_segment_sort_order mid-flush.
+     *
+     * Segments whose category is gone are dropped, and the survivors renumbered from zero, so
+     * the stored sortOrders stay contiguous.
      */
     private fun applySegments(record: TrainingRecord, event: TrainingEvent) {
-        record.segments.clear()
-        event.segments.forEachIndexed { index, source ->
-            val category = source.danceCategory ?: return@forEachIndexed
-            record.segments.add(TrainingRecordSegment().apply {
-                trainingRecord = record
-                danceCategory = category
-                categoryName = category.name
-                durationMinutes = source.durationMinutes
-                sortOrder = index
-            })
+        val sources = event.segments.filter { it.danceCategory != null }
+
+        sources.forEachIndexed { index, source ->
+            val category = source.danceCategory!!
+            if (index < record.segments.size) {
+                record.segments[index].apply {
+                    danceCategory = category
+                    categoryName = category.name
+                    durationMinutes = source.durationMinutes
+                    sortOrder = index
+                }
+            } else {
+                record.segments.add(TrainingRecordSegment().apply {
+                    trainingRecord = record
+                    danceCategory = category
+                    categoryName = category.name
+                    durationMinutes = source.durationMinutes
+                    sortOrder = index
+                })
+            }
+        }
+
+        while (record.segments.size > sources.size) {
+            record.segments.removeAt(record.segments.size - 1)
         }
     }
 }
