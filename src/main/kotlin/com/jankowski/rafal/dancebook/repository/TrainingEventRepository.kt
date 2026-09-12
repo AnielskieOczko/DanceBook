@@ -36,16 +36,6 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     ): List<TrainingEvent>
 
     /**
-     * Every session the user owns, with segments and their categories already loaded.
-     *
-     * The statistics page needs full history (the streak ignores the selected period) and
-     * walks every segment, so the entity graph is what keeps this from issuing a query
-     * per session.
-     */
-    @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
-    fun findAllByCreatedBy(createdBy: AppUser): List<TrainingEvent>
-
-    /**
      * One window of the user's history, newest first — future sessions, then today, then the past.
      *
      * Carries no entity graph on purpose. Hibernate cannot paginate a collection fetch in SQL and

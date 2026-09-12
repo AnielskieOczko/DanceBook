@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="space-y-lg">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="page-header mb-0">
+            <h1 class="page-title text-3xl">Training history</h1>
+            <p class="page-subtitle">Every session you confirmed — kept even after its calendar entry is gone.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <a href="/training-events" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">list</span>
+                Agenda
+            </a>
+            <a href="/training-events/timeline" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">timeline</span>
+                Timeline
+            </a>
+            <a href="/training-events/stats" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                Stats
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${history.isEmpty}" class="empty-state">
+        <span class="material-symbols-outlined empty-state-icon">history</span>
+        <h3 class="empty-state-title">No confirmed training yet</h3>
+        <p class="empty-state-text">
+            Mark a session attended or skipped and it is recorded here for good — deleting the
+            session afterwards will not take it away.
+        </p>
+        <a href="/training-events" class="btn-primary mt-4">Go to sessions</a>
+    </div>
+
+    <!-- Shown only when there is something to explain: an orphaned row is the one row on this
+         page that cannot be corrected from the calendar, so it needs a sentence. -->
+    <div th:if="${history.orphanedCount > 0}"
+         class="card p-4 flex items-start gap-3 font-body-md text-[14px] text-on-surface-variant">
+        <span class="material-symbols-outlined text-[20px] text-secondary shrink-0" aria-hidden="true">info</span>
+        <p>
+            <span th:text="${history.orphanedExplanation}">This session has been deleted from your calendar.</span>
+            The record stays, so your hours and streak stand. If you marked it by mistake, remove
+            the record here.
+        </p>
+    </div>
+
+    <div th:each="month : ${history.months}" class="space-y-gutter">
+
+        <div class="tc-month-heading">
+            <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
+            <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                <span th:text="${month.sessionLabel}">6 sessions</span>
+                <span class="text-outline"> · </span>
+                <span th:text="${month.totalLabel}">9h 30m</span> trained
+            </p>
+        </div>
+
+        <div class="space-y-3">
+            <div th:each="row : ${month.rows}" th:with="record=${row.record}"
+                 class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
+
+                <!-- Date rail; the stripe and tint are the recorded outcome. -->
+                <div class="tc-rail"
+                     th:style="'border-left-color:' + ${row.swatch.color} + ';background-color:' + ${row.swatch.tint}">
+                    <span class="tc-rail-day" th:text="${#temporals.format(record.occurredAt, 'd')}">10</span>
+                    <span class="tc-rail-weekday" th:text="${#temporals.format(record.occurredAt, 'EEE')}">Thu</span>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <!-- A linked record still has a session to open; an orphaned one has nothing
+                         to link to, so it is plain text rather than a link that 404s. -->
+                    <a th:unless="${row.isOrphaned}"
+                       th:href="@{/training-events/{id}(id=${record.trainingEventId})}"
+                       class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface
+                              hover:text-primary transition-colors"
+                       th:text="${record.title}">Monday practice</a>
+                    <p th:if="${row.isOrphaned}"
+                       class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface"
+                       th:text="${record.title}">Monday practice</p>
+
+                    <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
+                        <span th:text="${#temporals.format(record.occurredAt, 'HH:mm')}">18:00</span>
+                        <span class="text-outline"> · </span>
+                        <span th:text="${record.durationMinutes} + ' min'">120 min</span>
+                    </p>
+
+                    <div class="tc-badges mt-2">
+                        <span class="badge-primary" th:text="${record.eventType}">TRAINING</span>
+
+                        <span th:each="segment : ${record.segments}" class="badge-secondary"
+                              th:text="${segment.label} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+
+                        <span th:classappend="${record.outcome.name() == 'ATTENDED' ? 'badge-success' : 'badge-danger'}"
+                              th:text="${row.swatch.label}">Attended</span>
+
+                        <span th:if="${row.isOrphaned}" class="badge-neutral">Session deleted</span>
+                    </div>
+                </div>
+
+                <!-- Only orphaned records are removable here. While the session exists, the way
+                     to correct a mis-mark is to change its attendance, which rewrites this row. -->
+                <form th:if="${row.isOrphaned}"
+                      th:action="@{/training-events/history/{id}/delete(id=${record.id})}" method="post"
+                      class="shrink-0"
+                      data-confirm="Remove this training record? Your hours and attendance rate will be recalculated without it.">
+                    <button type="submit" class="btn-outline" th:aria-label="'Remove record: ' + ${record.title}">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

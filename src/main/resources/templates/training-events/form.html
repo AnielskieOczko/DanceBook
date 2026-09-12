@@ -71,6 +71,10 @@
 
         <!-- Which occurrences an edit applies to; the past is never rewritten -->
         <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4">
+            <!-- The Repeats block above is create-only, so on an edit this is the only thing
+                 carrying the series' end date back. Regenerating the following occurrences
+                 needs a horizon to work to; without it the save is rejected outright. -->
+            <input type="hidden" th:field="*{repeatUntil}">
             <label class="form-label">This session repeats. Apply changes to</label>
             <div class="space-y-2 mt-2">
                 <label class="flex items-center gap-3 font-body-md">

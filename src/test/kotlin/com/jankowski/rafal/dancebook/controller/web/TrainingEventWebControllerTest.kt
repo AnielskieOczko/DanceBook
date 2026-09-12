@@ -8,11 +8,13 @@ import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -364,5 +366,87 @@ class TrainingEventWebControllerTest {
         title = "Monday practice"
         startTime = start
         endTime = start.plusMinutes(minutes)
+    }
+
+    /** One occurrence of a weekly series that runs until [endsOn]. */
+    private fun seriesOccurrence(endsOn: LocalDate): TrainingEvent {
+        val parent = TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+            dayOfWeek = java.time.DayOfWeek.MONDAY
+            startTime = LocalTime.of(18, 0)
+            endTime = LocalTime.of(20, 0)
+            startsOn = LocalDate.of(2026, 3, 2)
+            this.endsOn = endsOn
+        }
+        return TrainingEvent().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+            startTime = LocalDateTime.of(2026, 3, 2, 18, 0)
+            endTime = LocalDateTime.of(2026, 3, 2, 20, 0)
+            series = parent
+        }
+    }
+
+    @Test
+    fun `should carry the series repeat end date onto the edit form`() {
+        val model = ConcurrentModel()
+        val endsOn = LocalDate.of(2026, 6, 29)
+        val event = seriesOccurrence(endsOn)
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.showEditForm(event.id!!, model)
+
+        val request = model["trainingEvent"] as TrainingEventRequest
+        assertEquals(
+            endsOn, request.repeatUntil,
+            "without the series' own horizon, applying an edit to every occurrence fails " +
+            "with 'A repeat end date is required'"
+        )
+        assertEquals(true, model["isSeriesOccurrence"])
+    }
+
+    @Test
+    fun `should keep the series scope selector when an update fails`() {
+        val model = ConcurrentModel()
+        val event = seriesOccurrence(LocalDate.of(2026, 6, 29))
+        val request = TrainingEventRequest(
+            title = "Renamed",
+            date = LocalDate.of(2026, 3, 2),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            editScope = "THIS_AND_FOLLOWING"
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(trainingSeriesService.updateThisAndFollowing(event.id!!, request))
+            .thenThrow(IllegalArgumentException("A repeat end date is required"))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val viewName = controller.updateTrainingEvent(event.id!!, request, bindingResult, model)
+
+        assertEquals("training-events/form", viewName)
+        assertEquals(
+            true, model["isSeriesOccurrence"],
+            "otherwise the 'apply changes to' selector disappears and the retry silently " +
+            "edits a single occurrence instead of the series"
+        )
+        assertTrue(bindingResult.hasErrors())
+    }
+
+    @Test
+    fun `should keep the series scope selector when validation fails`() {
+        val model = ConcurrentModel()
+        val event = seriesOccurrence(LocalDate.of(2026, 6, 29))
+        val request = TrainingEventRequest(editScope = "THIS_AND_FOLLOWING")
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+        bindingResult.rejectValue("title", "NotBlank")
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.updateTrainingEvent(event.id!!, request, bindingResult, model)
+
+        assertEquals(true, model["isSeriesOccurrence"])
     }
 }

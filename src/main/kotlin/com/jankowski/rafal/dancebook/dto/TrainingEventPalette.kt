@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.dto
 
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingOutcome
 
 /**
  * The one place a training session's status becomes a colour.
@@ -76,5 +77,16 @@ object TrainingEventPalette {
         event.attendanceStatus == AttendanceStatus.SKIPPED -> SKIPPED
         event.attendanceStatus == AttendanceStatus.CANCELLED -> CANCELLED
         else -> PLANNED
+    }
+
+    /**
+     * The colour of a recorded outcome.
+     *
+     * An orphaned record has no session left to ask, so it cannot go through the event
+     * overload — but it must still come out the same colour the session had.
+     */
+    fun swatchFor(outcome: TrainingOutcome): Swatch = when (outcome) {
+        TrainingOutcome.ATTENDED -> ATTENDED
+        TrainingOutcome.SKIPPED -> SKIPPED
     }
 }
