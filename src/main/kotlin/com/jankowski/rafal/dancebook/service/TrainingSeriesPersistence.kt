@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class TrainingSeriesPersistence(
     private val trainingSeriesRepository: TrainingSeriesRepository,
     private val trainingEventRepository: TrainingEventRepository,
+    private val trainingRecordWriter: TrainingRecordWriter,
     private val eventPublisher: ApplicationEventPublisher
 ) {
 
@@ -31,6 +32,8 @@ class TrainingSeriesPersistence(
      */
     @Transactional
     fun insertSeries(series: TrainingSeries, occurrences: List<TrainingEvent>, actor: AppUser): List<TrainingEvent> {
+        // No records to write: every generated occurrence starts PLANNED, and an unconfirmed
+        // session is not history. They get records when the user confirms them one by one.
         val savedSeries = trainingSeriesRepository.save(series)
         occurrences.forEach { it.series = savedSeries }
         val saved = trainingEventRepository.saveAll(occurrences)
@@ -47,6 +50,9 @@ class TrainingSeriesPersistence(
         added: List<TrainingEvent>
     ): List<TrainingEvent> {
         trainingSeriesRepository.save(series)
+        // "This and following" can cut across sessions the user already confirmed. Their
+        // records outlive the regeneration rather than vanishing with the old occurrences.
+        trainingRecordWriter.orphan(removed.mapNotNull { it.id })
         trainingEventRepository.deleteAll(removed)
         added.forEach { it.series = series }
         return trainingEventRepository.saveAll(added)
@@ -54,6 +60,7 @@ class TrainingSeriesPersistence(
 
     @Transactional
     fun removeOccurrences(occurrences: List<TrainingEvent>) {
+        trainingRecordWriter.orphan(occurrences.mapNotNull { it.id })
         trainingEventRepository.deleteAll(occurrences)
     }
 }
