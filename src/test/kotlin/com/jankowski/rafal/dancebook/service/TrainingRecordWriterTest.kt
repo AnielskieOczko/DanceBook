@@ -186,6 +186,23 @@ class TrainingRecordWriterTest {
     }
 
     @Test
+    fun `an orphaned record is not deleted even when the event is no longer confirmed`() {
+        val source = event(AttendanceStatus.PLANNED, title = "Late edit")
+        val existing = TrainingRecord().apply {
+            trainingEventId = source.id
+            title = "As recorded"
+            orphanedAt = LocalDateTime.now()
+        }
+        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+
+        writer.sync(source)
+
+        verify(trainingRecordRepository, never()).delete(any(TrainingRecord::class.java))
+        verify(trainingRecordRepository, never()).save(any(TrainingRecord::class.java))
+        assertEquals("As recorded", existing.title)
+    }
+
+    @Test
     fun `deleting sessions orphans their records instead of removing them`() {
         val first = UUID.randomUUID()
         val second = UUID.randomUUID()
@@ -198,6 +215,8 @@ class TrainingRecordWriterTest {
         writer.orphan(listOf(first, second))
 
         verify(trainingRecordRepository).saveAll(records)
+        verify(trainingRecordRepository, never()).delete(any(TrainingRecord::class.java))
+        verify(trainingRecordRepository, never()).deleteAll(anyCollection())
         records.forEach { assertNotNull(it.orphanedAt) }
         assertTrue(records.all { it.isOrphaned })
     }

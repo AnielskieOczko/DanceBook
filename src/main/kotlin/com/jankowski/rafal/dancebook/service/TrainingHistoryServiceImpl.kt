@@ -64,6 +64,16 @@ class TrainingHistoryServiceImpl(
         return TrainingHistory(months)
     }
 
+    /**
+     * Deliberately publishes no domain event, unlike every other mutating service method in
+     * this codebase. `EventType`/`TargetType` in `model/ActivityEvent.kt` have no concept of
+     * a training record, so logging this would mean growing the activity feed's vocabulary
+     * for an action that is not first-class: removing a mis-marked record is a correction, the
+     * same way editing a session's attendance back to planned removes its record without an
+     * event of its own. The user-visible action that actually created this orphan — deleting
+     * the session — already published `TrainingEventDeletedEvent` at that time, so the feed
+     * already has an entry for it.
+     */
     @Transactional
     override fun deleteOrphanedRecord(recordId: UUID) {
         val currentUser = appUserService.getCurrentUser()

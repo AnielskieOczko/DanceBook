@@ -44,4 +44,16 @@ data class TrainingHistory(
 
     /** Drives the page's explanation of what an orphaned row is; zero hides it. */
     val orphanedCount: Int get() = months.sumOf { month -> month.rows.count { it.isOrphaned } }
+
+    /**
+     * The explainer card's opening clause, agreeing in number with [orphanedCount] the same
+     * way [TrainingHistoryMonth.sessionLabel] agrees with its session count: one deleted
+     * session is "this session", not "1 of these sessions".
+     */
+    val orphanedExplanation: String
+        get() = if (orphanedCount == 1) {
+            "This session has been deleted from your calendar."
+        } else {
+            "$orphanedCount of these sessions have been deleted from your calendar."
+        }
 }

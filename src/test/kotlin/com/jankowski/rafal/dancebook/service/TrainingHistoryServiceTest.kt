@@ -120,6 +120,21 @@ class TrainingHistoryServiceTest {
         assertTrue(history.months.single().rows.first().isOrphaned)
         assertFalse(history.months.single().rows.last().isOrphaned)
         assertEquals(1, history.orphanedCount)
+        assertEquals("This session has been deleted from your calendar.", history.orphanedExplanation)
+    }
+
+    @Test
+    fun `the orphan explainer agrees in number with more than one deleted session`() {
+        given(
+            record(LocalDateTime.of(2026, 9, 10, 18, 0), orphaned = true),
+            record(LocalDateTime.of(2026, 9, 3, 18, 0), orphaned = true),
+            record(LocalDateTime.of(2026, 8, 27, 18, 0))
+        )
+
+        val history = trainingHistoryService.historyForCurrentUser()
+
+        assertEquals(2, history.orphanedCount)
+        assertEquals("2 of these sessions have been deleted from your calendar.", history.orphanedExplanation)
     }
 
     @Test

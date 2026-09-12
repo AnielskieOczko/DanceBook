@@ -34,14 +34,24 @@ class TrainingRecordWriter(
      * not, and marking a session back to either removes the record — that is a correction of
      * a mis-mark, not a piece of history.
      *
-     * An orphaned record is left alone: its session is gone, so anything arriving here for it
-     * would be a write against something that no longer exists.
+     * The orphaned check runs before the outcome branch, deliberately, and not the other way
+     * round: an orphaned record's session is gone, so anything arriving here for it would be
+     * a write against something that no longer exists. Checking outcome first would mean an
+     * event that is no longer confirmed could delete a frozen row — the exact thing this
+     * table exists to prevent. An orphaned record is never touched again, whatever the event
+     * says.
      */
     fun sync(event: TrainingEvent) {
         val eventId = requireNotNull(event.id) {
             "A training event must be saved before its record can be written"
         }
         val existing = trainingRecordRepository.findByTrainingEventId(eventId)
+
+        if (existing != null && existing.isOrphaned) {
+            log.warn("Training record for session {} is orphaned; leaving it frozen", eventId)
+            return
+        }
+
         val outcome = TrainingOutcome.from(event.attendanceStatus)
 
         if (outcome == null) {
@@ -49,11 +59,6 @@ class TrainingRecordWriter(
                 log.debug("Session {} is no longer confirmed; removing its training record", eventId)
                 trainingRecordRepository.delete(it)
             }
-            return
-        }
-
-        if (existing != null && existing.isOrphaned) {
-            log.warn("Training record for session {} is orphaned; leaving it frozen", eventId)
             return
         }
 

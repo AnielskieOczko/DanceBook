@@ -144,10 +144,13 @@ class TrainingStatsServiceImpl(
      */
     private data class CategoryKey(val id: UUID?, val label: String)
 
-    private fun keyOf(segment: TrainingRecordSegment): CategoryKey {
-        val live = segment.danceCategory
-        return if (live != null) CategoryKey(live.id, live.name) else CategoryKey(null, segment.categoryName)
-    }
+    /**
+     * Reuses [TrainingRecordSegment.label] rather than re-deriving "which name wins" here:
+     * that property is already exactly this rule (`danceCategory?.name ?: categoryName`), and
+     * a second hand-written copy of it could drift from the first.
+     */
+    private fun keyOf(segment: TrainingRecordSegment): CategoryKey =
+        CategoryKey(segment.danceCategory?.id, segment.label)
 
     /**
      * Style time across attended sessions, with everything left over gathered into a trailing

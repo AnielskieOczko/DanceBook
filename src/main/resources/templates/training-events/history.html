@@ -41,9 +41,9 @@
          class="card p-4 flex items-start gap-3 font-body-md text-[14px] text-on-surface-variant">
         <span class="material-symbols-outlined text-[20px] text-secondary shrink-0" aria-hidden="true">info</span>
         <p>
-            <span th:text="${history.orphanedCount}">1</span>
-            of these sessions has been deleted from your calendar. The record stays, so your hours
-            and streak stand. If you marked it by mistake, remove the record here.
+            <span th:text="${history.orphanedExplanation}">This session has been deleted from your calendar.</span>
+            The record stays, so your hours and streak stand. If you marked it by mistake, remove
+            the record here.
         </p>
     </div>
 
