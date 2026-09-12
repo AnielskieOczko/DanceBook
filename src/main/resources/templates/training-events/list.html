@@ -9,7 +9,11 @@
             <h1 class="page-title text-3xl">Training</h1>
             <p class="page-subtitle" th:text="${#lists.size(events)} + ' sessions logged'">0 sessions logged</p>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <a href="/training-events/history" class="btn-outline">
+                <span class="material-symbols-outlined text-[20px]">history</span>
+                History
+            </a>
             <a href="/training-events/timeline" class="btn-outline">
                 <span class="material-symbols-outlined text-[20px]">timeline</span>
                 Timeline
