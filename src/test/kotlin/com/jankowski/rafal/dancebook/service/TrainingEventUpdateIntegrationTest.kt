@@ -51,6 +51,7 @@ class TrainingEventUpdateIntegrationTest {
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var entityManagerFactory: EntityManagerFactory
     @Autowired private lateinit var trainingRecordRepository: TrainingRecordRepository
+    @Autowired private lateinit var trainingSeriesService: TrainingSeriesService
 
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
@@ -71,7 +72,9 @@ class TrainingEventUpdateIntegrationTest {
             predefined = false
         })
         `when`(appUserService.getCurrentUser()).thenReturn(owner)
-        `when`(calendarClient.createEvent(anyNotNull())).thenReturn("google-${UUID.randomUUID()}")
+        // A fresh id per call, like the real API: thenReturn would hand every occurrence of a
+        // series the same google_event_id and trip its unique constraint.
+        `when`(calendarClient.createEvent(anyNotNull())).thenAnswer { "google-${UUID.randomUUID()}" }
     }
 
     /**
@@ -179,4 +182,27 @@ class TrainingEventUpdateIntegrationTest {
     }
 
     private fun reload(id: UUID) = trainingEventRepository.findAllByIdIn(listOf(id)).single()
+
+    @Test
+    fun `applying an edit to every occurrence renames the whole series`() {
+        val seriesRequest = request("weekly practice").copy(
+            repeat = "WEEKLY",
+            // Four Mondays: 2, 9, 16 and 23 March 2026.
+            repeatUntil = LocalDate.of(2026, 3, 23)
+        )
+        val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        assertEquals(4, trainingEventRepository.findAll().count { it.title == "weekly practice" })
+
+        // Exactly what the edit form now posts: the series' own horizon travels back with the
+        // edit, which is what the regeneration needs and what used to be missing.
+        val edit = request("weekly practice renamed").copy(
+            editScope = "THIS_AND_FOLLOWING",
+            repeatUntil = LocalDate.of(2026, 3, 23)
+        )
+        inOpenSession { trainingSeriesService.updateThisAndFollowing(first.id!!, edit) }
+
+        val titles = trainingEventRepository.findAll().map { it.title }
+        assertEquals(0, titles.count { it == "weekly practice" }, "no occurrence keeps the old title")
+        assertEquals(4, titles.count { it == "weekly practice renamed" }, "every occurrence is renamed")
+    }
 }

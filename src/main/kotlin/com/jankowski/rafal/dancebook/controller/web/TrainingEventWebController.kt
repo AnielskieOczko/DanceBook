@@ -209,7 +209,11 @@ class TrainingEventWebController(
                 description = event.description,
                 materialId = event.material?.id,
                 materialsUrl = event.materialsUrl,
-                attendanceStatus = event.attendanceStatus.name
+                attendanceStatus = event.attendanceStatus.name,
+                // The series keeps its existing horizon when an edit is applied to every
+                // occurrence. Without it the regeneration has no end date to work to and
+                // rejects the save with "A repeat end date is required".
+                repeatUntil = event.series?.endsOn
             )
         )
         model.addAttribute("trainingEventId", id)
@@ -226,9 +230,7 @@ class TrainingEventWebController(
         model: Model
     ): String {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("trainingEventId", id)
-            populateFormOptions(model)
-            return "training-events/form"
+            return redisplayEditForm(model, id)
         }
 
         try {
@@ -242,12 +244,24 @@ class TrainingEventWebController(
         } catch (e: Exception) {
             log.error("Failed to update training event {}", id, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to update training event")
-            model.addAttribute("trainingEventId", id)
-            populateFormOptions(model)
-            return "training-events/form"
+            return redisplayEditForm(model, id)
         }
 
         return "redirect:/training-events"
+    }
+
+    /**
+     * Re-renders the edit form after a failed save.
+     *
+     * `isSeriesOccurrence` has to be restored here, not just on the initial GET: without it the
+     * "apply changes to" selector disappears from the redisplayed form, so the user's retry
+     * posts no edit scope at all and silently updates one occurrence instead of the series.
+     */
+    private fun redisplayEditForm(model: Model, id: UUID): String {
+        model.addAttribute("trainingEventId", id)
+        model.addAttribute("isSeriesOccurrence", trainingEventService.findById(id).series != null)
+        populateFormOptions(model)
+        return "training-events/form"
     }
 
     /**
