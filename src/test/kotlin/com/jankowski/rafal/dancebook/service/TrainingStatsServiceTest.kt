@@ -7,9 +7,12 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
-import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.model.TrainingOutcome
+import com.jankowski.rafal.dancebook.model.TrainingRecord
+import com.jankowski.rafal.dancebook.model.TrainingRecordSegment
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,9 +23,16 @@ import org.mockito.Mockito.mock
 import java.time.LocalDateTime
 import java.util.UUID
 
+/**
+ * The dashboard is deliberately hybrid: history figures come from training records, schedule
+ * figures from calendar events. The fixture below mirrors that — a confirmed session produces
+ * both an event and its record, exactly as the write path does — so every one of these
+ * assertions still describes a real state of the database.
+ */
 class TrainingStatsServiceTest {
 
     private lateinit var trainingEventRepository: TrainingEventRepository
+    private lateinit var trainingRecordRepository: TrainingRecordRepository
     private lateinit var appUserService: AppUserService
     private lateinit var trainingStatsService: TrainingStatsServiceImpl
     private lateinit var currentUser: AppUser
@@ -30,6 +40,7 @@ class TrainingStatsServiceTest {
     @BeforeEach
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
+        trainingRecordRepository = mock(TrainingRecordRepository::class.java)
         appUserService = mock(AppUserService::class.java)
 
         currentUser = AppUser().apply {
@@ -39,37 +50,88 @@ class TrainingStatsServiceTest {
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
 
-        trainingStatsService = TrainingStatsServiceImpl(trainingEventRepository, appUserService)
+        trainingStatsService = TrainingStatsServiceImpl(
+            trainingEventRepository, trainingRecordRepository, appUserService
+        )
     }
+
+    /**
+     * One session as the database actually holds it: a calendar row, plus a record when the
+     * session has been confirmed. [record] alone models an orphaned record — a session that
+     * was deleted after being confirmed.
+     */
+    private class Session(val event: TrainingEvent?, val record: TrainingRecord?)
 
     /**
      * @param daysAgo negative values put the session in the future.
      */
-    private fun event(
+    private fun session(
         daysAgo: Long,
         status: AttendanceStatus,
         minutes: Long = 60,
         type: TrainingEventType = TrainingEventType.TRAINING,
         segments: List<Pair<DanceCategory, Int>> = emptyList()
-    ): TrainingEvent {
+    ): Session {
         val start = LocalDateTime.now().minusDays(daysAgo)
-        return TrainingEvent().apply {
+        val event = TrainingEvent().apply {
             id = UUID.randomUUID()
             startTime = start
             endTime = start.plusMinutes(minutes)
             attendanceStatus = status
             eventType = type
             createdBy = currentUser
-            // The back-reference to the parent event is left unset: nothing in the
-            // statistics service reads it, and setting it here would only be ceremony.
-            this.segments = segments.mapIndexed { index, (sliceCategory, segmentMinutes) ->
-                TrainingEventSegment().apply {
-                    danceCategory = sliceCategory
-                    durationMinutes = segmentMinutes
-                    sortOrder = index
-                }
-            }.toMutableList()
         }
+        val outcome = TrainingOutcome.from(status)
+        val record = outcome?.let { confirmed ->
+            recordOf(event.id!!, start, minutes, confirmed, type, segments)
+        }
+        return Session(event, record)
+    }
+
+    /** A record whose session has been deleted: history with no schedule entry behind it. */
+    private fun orphanedSession(
+        daysAgo: Long,
+        status: AttendanceStatus,
+        minutes: Long = 60,
+        type: TrainingEventType = TrainingEventType.TRAINING,
+        segments: List<Pair<DanceCategory, Int>> = emptyList()
+    ): Session {
+        val start = LocalDateTime.now().minusDays(daysAgo)
+        val outcome = requireNotNull(TrainingOutcome.from(status)) {
+            "Only a confirmed session can leave an orphaned record behind"
+        }
+        val record = recordOf(UUID.randomUUID(), start, minutes, outcome, type, segments).apply {
+            orphanedAt = LocalDateTime.now()
+        }
+        return Session(event = null, record = record)
+    }
+
+    private fun recordOf(
+        eventId: UUID,
+        start: LocalDateTime,
+        minutes: Long,
+        outcome: TrainingOutcome,
+        type: TrainingEventType,
+        segments: List<Pair<DanceCategory, Int>>
+    ) = TrainingRecord().apply {
+        id = UUID.randomUUID()
+        trainingEventId = eventId
+        occurredAt = start
+        durationMinutes = minutes.toInt()
+        this.outcome = outcome
+        title = "Session"
+        eventType = type
+        createdBy = currentUser
+        // The back-reference to the parent record is left unset: nothing in the statistics
+        // service reads it, and setting it here would only be ceremony.
+        this.segments = segments.mapIndexed { index, (sliceCategory, sliceMinutes) ->
+            TrainingRecordSegment().apply {
+                danceCategory = sliceCategory
+                categoryName = sliceCategory.name
+                durationMinutes = sliceMinutes
+                sortOrder = index
+            }
+        }.toMutableList()
     }
 
     private fun category(name: String) = DanceCategory().apply {
@@ -77,17 +139,20 @@ class TrainingStatsServiceTest {
         this.name = name
     }
 
-    private fun given(vararg events: TrainingEvent) {
-        `when`(trainingEventRepository.findAllByCreatedBy(currentUser)).thenReturn(events.toList())
+    private fun given(vararg sessions: Session) {
+        `when`(trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser))
+            .thenReturn(sessions.mapNotNull { it.event })
+        `when`(trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser))
+            .thenReturn(sessions.mapNotNull { it.record }.sortedByDescending { it.occurredAt })
     }
 
     @Test
     fun `hours count attended sessions only`() {
         given(
-            event(daysAgo = 3, status = AttendanceStatus.ATTENDED, minutes = 90),
-            event(daysAgo = 4, status = AttendanceStatus.SKIPPED, minutes = 60),
-            event(daysAgo = 5, status = AttendanceStatus.CANCELLED, minutes = 60),
-            event(daysAgo = -2, status = AttendanceStatus.PLANNED, minutes = 60)
+            session(daysAgo = 3, status = AttendanceStatus.ATTENDED, minutes = 90),
+            session(daysAgo = 4, status = AttendanceStatus.SKIPPED, minutes = 60),
+            session(daysAgo = 5, status = AttendanceStatus.CANCELLED, minutes = 60),
+            session(daysAgo = -2, status = AttendanceStatus.PLANNED, minutes = 60)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
@@ -99,11 +164,11 @@ class TrainingStatsServiceTest {
     @Test
     fun `every session lands in exactly one count bucket`() {
         given(
-            event(daysAgo = -2, status = AttendanceStatus.PLANNED),
-            event(daysAgo = 2, status = AttendanceStatus.PLANNED),
-            event(daysAgo = 3, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 4, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 5, status = AttendanceStatus.CANCELLED)
+            session(daysAgo = -2, status = AttendanceStatus.PLANNED),
+            session(daysAgo = 2, status = AttendanceStatus.PLANNED),
+            session(daysAgo = 3, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 4, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 5, status = AttendanceStatus.CANCELLED)
         )
 
         val counts = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).counts
@@ -119,12 +184,12 @@ class TrainingStatsServiceTest {
     @Test
     fun `attendance rate ignores cancelled and unconfirmed sessions`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 3, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 4, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 5, status = AttendanceStatus.CANCELLED),
-            event(daysAgo = 6, status = AttendanceStatus.PLANNED)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 3, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 4, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 5, status = AttendanceStatus.CANCELLED),
+            session(daysAgo = 6, status = AttendanceStatus.PLANNED)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
@@ -135,8 +200,8 @@ class TrainingStatsServiceTest {
     @Test
     fun `attendance rate is null when nothing has been decided`() {
         given(
-            event(daysAgo = -1, status = AttendanceStatus.PLANNED),
-            event(daysAgo = 5, status = AttendanceStatus.CANCELLED)
+            session(daysAgo = -1, status = AttendanceStatus.PLANNED),
+            session(daysAgo = 5, status = AttendanceStatus.CANCELLED)
         )
 
         assertNull(trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).attendanceRatePercent)
@@ -145,14 +210,14 @@ class TrainingStatsServiceTest {
     @Test
     fun `attendance rate rounds half up`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 3, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 4, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 5, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 6, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 7, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 8, status = AttendanceStatus.SKIPPED)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 3, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 4, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 5, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 6, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 7, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 8, status = AttendanceStatus.SKIPPED)
         )
 
         // 5/8 = 62.5% exactly, which must round up rather than down.
@@ -162,8 +227,8 @@ class TrainingStatsServiceTest {
     @Test
     fun `the period excludes sessions that start before its earliest day`() {
         given(
-            event(daysAgo = 10, status = AttendanceStatus.ATTENDED, minutes = 60),
-            event(daysAgo = 100, status = AttendanceStatus.ATTENDED, minutes = 60)
+            session(daysAgo = 10, status = AttendanceStatus.ATTENDED, minutes = 60),
+            session(daysAgo = 100, status = AttendanceStatus.ATTENDED, minutes = 60)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.LAST_30_DAYS)
@@ -174,7 +239,7 @@ class TrainingStatsServiceTest {
 
     @Test
     fun `a narrowed period still counts upcoming sessions`() {
-        given(event(daysAgo = -5, status = AttendanceStatus.PLANNED))
+        given(session(daysAgo = -5, status = AttendanceStatus.PLANNED))
 
         assertEquals(1, trainingStatsService.statsForCurrentUser(StatsPeriod.LAST_30_DAYS).counts.upcoming)
     }
@@ -190,10 +255,10 @@ class TrainingStatsServiceTest {
     @Test
     fun `the streak counts attended sessions back to the first skip`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 3, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 4, status = AttendanceStatus.ATTENDED)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 3, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 4, status = AttendanceStatus.ATTENDED)
         )
 
         assertEquals(2, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
@@ -202,10 +267,10 @@ class TrainingStatsServiceTest {
     @Test
     fun `cancelled and unconfirmed sessions do not break the streak`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 2, status = AttendanceStatus.CANCELLED),
-            event(daysAgo = 3, status = AttendanceStatus.PLANNED),
-            event(daysAgo = 4, status = AttendanceStatus.ATTENDED)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 2, status = AttendanceStatus.CANCELLED),
+            session(daysAgo = 3, status = AttendanceStatus.PLANNED),
+            session(daysAgo = 4, status = AttendanceStatus.ATTENDED)
         )
 
         assertEquals(2, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
@@ -214,8 +279,8 @@ class TrainingStatsServiceTest {
     @Test
     fun `an upcoming session does not break the streak`() {
         given(
-            event(daysAgo = -3, status = AttendanceStatus.PLANNED),
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED)
+            session(daysAgo = -3, status = AttendanceStatus.PLANNED),
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED)
         )
 
         assertEquals(1, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
@@ -224,9 +289,9 @@ class TrainingStatsServiceTest {
     @Test
     fun `the streak spans full history even when the period is narrowed`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 100, status = AttendanceStatus.ATTENDED),
-            event(daysAgo = 200, status = AttendanceStatus.ATTENDED)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 100, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 200, status = AttendanceStatus.ATTENDED)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.LAST_30_DAYS)
@@ -238,8 +303,8 @@ class TrainingStatsServiceTest {
     @Test
     fun `the streak is zero when the most recent decided session was skipped`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.SKIPPED),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED)
+            session(daysAgo = 1, status = AttendanceStatus.SKIPPED),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED)
         )
 
         assertEquals(0, trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).currentStreak)
@@ -248,8 +313,8 @@ class TrainingStatsServiceTest {
     @Test
     fun `the this-year period excludes sessions from a previous year`() {
         given(
-            event(daysAgo = 0, status = AttendanceStatus.ATTENDED, minutes = 60),
-            event(daysAgo = 400, status = AttendanceStatus.ATTENDED, minutes = 60)
+            session(daysAgo = 0, status = AttendanceStatus.ATTENDED, minutes = 60),
+            session(daysAgo = 400, status = AttendanceStatus.ATTENDED, minutes = 60)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_YEAR)
@@ -263,11 +328,11 @@ class TrainingStatsServiceTest {
         val standard = category("Standard")
         val latin = category("Latin")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
                 segments = listOf(standard to 60, latin to 60)
             ),
-            event(
+            session(
                 daysAgo = 2, status = AttendanceStatus.SKIPPED, minutes = 120,
                 segments = listOf(standard to 120)
             )
@@ -285,7 +350,7 @@ class TrainingStatsServiceTest {
         val standard = category("Standard")
         val latin = category("Latin")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
                 segments = listOf(standard to 30, standard to 30, latin to 60)
             )
@@ -302,11 +367,11 @@ class TrainingStatsServiceTest {
     fun `time not covered by segments becomes an unassigned slice`() {
         val standard = category("Standard")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
                 segments = listOf(standard to 90)
             ),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 60)
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 60)
         )
 
         val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
@@ -321,7 +386,7 @@ class TrainingStatsServiceTest {
     fun `no unassigned slice when segments fill every attended session`() {
         val standard = category("Standard")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60,
                 segments = listOf(standard to 60)
             )
@@ -335,10 +400,10 @@ class TrainingStatsServiceTest {
     @Test
     fun `event types are broken down by wall-clock minutes and session count`() {
         given(
-            event(daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60, type = TrainingEventType.TRAINING),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 90, type = TrainingEventType.TRAINING),
-            event(daysAgo = 3, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
-            event(daysAgo = 4, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60, type = TrainingEventType.TRAINING),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 90, type = TrainingEventType.TRAINING),
+            session(daysAgo = 3, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
+            session(daysAgo = 4, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
         )
 
         val byType = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byEventType
@@ -353,7 +418,7 @@ class TrainingStatsServiceTest {
     fun `every slice carries a colour, and the unassigned slice always the palette's unassigned colour`() {
         val standard = category("Standard")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 120,
                 segments = listOf(standard to 60)
             )
@@ -372,16 +437,75 @@ class TrainingStatsServiceTest {
     fun `event type minutes reconcile with the total minutes trained`() {
         val standard = category("Standard")
         given(
-            event(
+            session(
                 daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 90,
                 type = TrainingEventType.TRAINING, segments = listOf(standard to 60)
             ),
-            event(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
-            event(daysAgo = 3, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 240, type = TrainingEventType.CAMP),
+            session(daysAgo = 3, status = AttendanceStatus.SKIPPED, minutes = 60, type = TrainingEventType.WORKSHOP)
         )
 
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
 
         assertEquals(stats.totalMinutesTrained, stats.byEventType.sumOf { it.minutes })
+    }
+
+    @Test
+    fun `deleting a confirmed session leaves its hours and its streak standing`() {
+        val standard = category("Standard")
+        given(
+            orphanedSession(
+                daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 90,
+                segments = listOf(standard to 90)
+            ),
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60)
+        )
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
+
+        assertEquals(150L, stats.totalMinutesTrained)
+        assertEquals(2, stats.counts.attended)
+        assertEquals(2, stats.currentStreak)
+        assertEquals(90L, stats.byCategory.first { it.label == "Standard" }.minutes)
+    }
+
+    @Test
+    fun `renaming a category relabels its history instead of splitting it in two`() {
+        val standard = category("Standard")
+        given(
+            session(
+                daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60,
+                segments = listOf(standard to 60)
+            ),
+            session(
+                daysAgo = 2, status = AttendanceStatus.ATTENDED, minutes = 60,
+                segments = listOf(standard to 60)
+            )
+        )
+        // Renamed after the older session was recorded: the slices must still be one style.
+        standard.name = "Ballroom"
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        assertEquals(listOf("Ballroom"), byCategory.map { it.label })
+        assertEquals(120L, byCategory.single().minutes)
+        assertEquals(2, byCategory.single().sessionCount)
+    }
+
+    @Test
+    fun `a deleted category keeps the name it had when the session was recorded`() {
+        val standard = category("Standard")
+        val session = session(
+            daysAgo = 1, status = AttendanceStatus.ATTENDED, minutes = 60,
+            segments = listOf(standard to 60)
+        )
+        // Deleting the category nulls the link, which is what ON DELETE SET NULL leaves behind.
+        session.record!!.segments.forEach { it.danceCategory = null }
+        given(session)
+
+        val byCategory = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME).byCategory
+
+        assertEquals(listOf("Standard"), byCategory.map { it.label })
+        assertEquals(60L, byCategory.single().minutes)
     }
 }
