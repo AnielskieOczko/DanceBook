@@ -5,8 +5,11 @@
 ALTER TABLE training_record ADD COLUMN calendar_id   UUID;
 ALTER TABLE training_record ADD COLUMN calendar_name VARCHAR(255);
 
--- Statistics and history filter on this.
-CREATE INDEX idx_training_record_calendar ON training_record(calendar_id);
+-- Composite, matching the query shape the scoped statistics and history reads use:
+-- filter by owner and calendar, order by when it happened. Mirrors
+-- idx_training_record_created_by_occurred, which does the same for the unscoped reads.
+CREATE INDEX idx_training_record_created_by_calendar_occurred
+    ON training_record(created_by_id, calendar_id, occurred_at DESC);
 
 -- Backfill from each record's session, where that session still exists. Unlike V29's backfill
 -- this needs no environment variable, so it belongs in the migration rather than a startup
