@@ -24,9 +24,16 @@ class ActiveCalendarController(
 
     @PostMapping
     fun setActiveCalendar(@RequestParam calendarId: String): ResponseEntity<Void> {
-        activeCalendarService.setActive(
-            if (calendarId == "ALL") null else UUID.fromString(calendarId)
-        )
+        // The select only ever posts "ALL" or a real id, but this is a plain endpoint any
+        // authenticated client can hit, so bad input is a 400 rather than a 500.
+        val selected = if (calendarId == "ALL") {
+            null
+        } else {
+            runCatching { UUID.fromString(calendarId) }.getOrElse {
+                return ResponseEntity.badRequest().build()
+            }
+        }
+        activeCalendarService.setActive(selected)
         return ResponseEntity.noContent().header("HX-Refresh", "true").build()
     }
 }

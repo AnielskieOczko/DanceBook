@@ -205,7 +205,6 @@ class TrainingEventWebController(
                 endTime = event.endTime.toLocalTime(),
                 endDate = event.endTime.toLocalDate(),
                 eventType = event.eventType.name,
-                calendarId = event.calendar?.id,
                 segments = event.segments.map {
                     TrainingEventSegmentRequest(
                         categoryId = it.danceCategory?.id,

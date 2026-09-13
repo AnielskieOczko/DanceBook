@@ -159,7 +159,9 @@ class TrainingEventWebControllerTest {
         assertEquals(LocalTime.of(18, 0), request.startTime)
         assertEquals(LocalTime.of(20, 0), request.endTime)
         assertEquals("CAMP", request.eventType)
-        assertEquals(ownCal.id, request.calendarId)
+        // The edit form carries no calendar: a session cannot be moved between calendars,
+        // so the request deliberately no longer prefills one.
+        assertNull(request.calendarId)
         assertEquals(1, request.segments.size)
         assertEquals(category.id, request.segments[0].categoryId)
         assertEquals(90, request.segments[0].durationMinutes)
