@@ -546,6 +546,10 @@ class TrainingEventServiceTest {
 
         verify(trainingEventRepository)
             .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
+        verify(trainingEventRepository, never())
+            .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                eq(currentUser), any(UUID::class.java), eq(to), eq(from)
+            )
     }
 
     private fun validRequest(

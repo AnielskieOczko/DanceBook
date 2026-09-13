@@ -94,7 +94,17 @@ class ActiveCalendarServiceTest {
         val disabledUsed = calendar("Retired", isEnabled = false)
         `when`(trainingCalendarService.findAll()).thenReturn(listOf(enabled, disabledUsed))
         `when`(trainingEventRepository.calendarIdsInUse()).thenReturn(listOf(disabledUsed.id!!))
-
         assertEquals(listOf(enabled.id, disabledUsed.id), service.selectable().map { it.id })
+    }
+
+    @Test
+    fun `a stale calendar id in session falls back to the default calendar`() {
+        val staleId = UUID.randomUUID()
+        val default = calendar("Primary")
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(staleId.toString())
+        `when`(trainingCalendarService.findById(staleId)).thenReturn(null)
+        `when`(trainingCalendarService.findDefault()).thenReturn(default)
+
+        assertEquals(default.id, service.active()?.id)
     }
 }
