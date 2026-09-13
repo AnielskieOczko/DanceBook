@@ -248,6 +248,25 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
+    fun `should keep the active calendar when swapping the list after an attendance post`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = UUID.randomUUID()
+            googleCalendarId = "club@group.calendar.google.com"
+            displayName = "Club"
+        }
+        `when`(activeCalendarService.active()).thenReturn(calendar)
+        `when`(trainingEventService.findByCurrentUser(calendarId = calendar.id)).thenReturn(emptyList())
+
+        controller.updateAttendance(id, AttendanceStatus.ATTENDED, true, model)
+
+        // The swap replaces the whole agenda fragment, so it must stay scoped to the
+        // calendar the user is looking at rather than reverting to every calendar.
+        verify(trainingEventService).findByCurrentUser(calendarId = calendar.id)
+    }
+
+    @Test
     fun `should route a repeating request to the series service`() {
         val model = ConcurrentModel()
         val request = TrainingEventRequest(

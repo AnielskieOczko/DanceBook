@@ -305,7 +305,13 @@ class TrainingEventWebController(
             return "redirect:/training-events/$id"
         }
 
-        populateEventsList(model, trainingEventService.findByCurrentUser())
+        // This swaps the whole #events-list fragment the user is looking at, so it has to
+        // honour the active calendar — otherwise confirming attendance on a scoped agenda
+        // silently reverts it to every calendar.
+        populateEventsList(
+            model,
+            trainingEventService.findByCurrentUser(calendarId = activeCalendarService.active()?.id)
+        )
         return "training-events/list :: eventsList"
     }
 
