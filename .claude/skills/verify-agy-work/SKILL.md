@@ -30,9 +30,9 @@ invocation rather than reviewing an empty change.
 cd ../DanceBook-agy-<N> && ./gradlew build
 ```
 
-This step is **mandatory, not a double-check**: agy cannot run the full build while
-sandboxed (Testcontainers needs the Docker socket), so nobody has run it until you do.
-Read the output; a failure is a fix round, not a judgement call.
+agy is expected to have run this itself and fixed its own failures. Run it anyway — it
+reports `SUCCESS` for runs that did nothing, so its claim is not evidence. A failure here
+means it stopped early, and that is a fix round, not a judgement call.
 
 Prefer `./gradlew test --tests "*TheNewTest*"` first for a fast signal, then the full
 build before opening the PR.
@@ -61,14 +61,15 @@ then **resume the same conversation** — this reuses the cached context instead
 ~31k tokens of onboarding:
 
 ```bash
-cd ../DanceBook-agy-<N> && agy --sandbox --add-dir "$PWD" \
+cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
     --conversation <conversation_id> --output-format json --print-timeout 45m \
     -p='Read .agy-review.md and address every numbered item. Re-run ./gradlew build until it passes.' \
     > .agy-run.json 2>&1
 ```
 
 `--add-dir` is required on resumes too — without it agy edits a scratch directory and
-reports success against files it never touched.
+reports success against files it never touched. Record quota before and after with
+`python3 .claude/skills/delegate-to-agy/usage.py`.
 
 Background it, then re-validate with `delegate-to-agy/validate-run.py` and return to step 1.
 
