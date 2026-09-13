@@ -62,11 +62,21 @@ gh issue view <N> --json number,title,body,labels --jq '{number,title,labels:[.l
 Require the `ready-for-agent` label and an `## Implementation plan` section, and stop if
 either is missing. A vague issue produces a bad diff and burns quota.
 
-### 2. Isolate
+### 2. Isolate — a clone, not a worktree
 
 ```bash
-git worktree add ../DanceBook-agy-<N> -b agy/issue-<N> main
+git clone -q . ../DanceBook-agy-<N>
+git -C ../DanceBook-agy-<N> checkout -q -b agy/issue-<N> origin/main
 ```
+
+**Do not use `git worktree`.** A worktree's `.git` is a *file* pointing into the main
+repo's `.git/worktrees/…`, which lives outside the sandboxed workspace; reaching it makes
+agy escalate to `unsandboxed`, which headless auto-denies, and the run dies having written
+nothing. A clone's `.git` is a real directory inside the workspace, and works.
+
+Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove`. (If a worktree was
+ever registered at that path, `git worktree prune` will not clear it while the directory
+exists; delete `.git/worktrees/DanceBook-agy-<N>` by hand.)
 
 ### 3. Brief
 
@@ -84,12 +94,22 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ```bash
 cd ../DanceBook-agy-<N> && agy --sandbox --add-dir "$PWD" \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
-    -p='Read .agy-task.md and implement it fully, following the Agent delegation contract in AGENTS.md. Run ./gradlew build until it passes. Then summarise what you changed.' \
+    -p='Read .agy-task.md and implement it fully, following the Agent delegation contract in AGENTS.md. Do not run the full build. Then summarise what you changed.' \
     > .agy-run.json 2>&1
 ```
 
-Gradle works under the sandbox with its default `~/.gradle`; no `GRADLE_USER_HOME`
-override is needed. Use `-medium` for mechanical work, `-high` for real logic.
+Use `-medium` for mechanical work, `-high` for real logic.
+
+**agy cannot run this project's full `./gradlew build` while sandboxed.** `build` runs the
+`@Testcontainers` integration tests, which need the Docker socket — outside the sandbox by
+definition — so the run escalates to `unsandboxed` and is denied. No permission rule fixes
+this without granting the very escape the sandbox exists to prevent.
+
+So ask agy for the code, not the build: drop "run ./gradlew build" from the prompt and let
+`verify-agy-work` build it. Narrow unit-test-only commands such as
+`./gradlew test --tests "*FooTest*"` may work, but treat that as unproven per project.
+The consequence is a slower fix loop — build errors round-trip through Claude instead of
+agy self-correcting — which is the price of the sandbox requirement.
 
 ### 5. Validate — do not trust `status`
 
@@ -111,7 +131,7 @@ agy --sandbox --add-dir "$PWD" --conversation <conversation_id> --output-format 
 
 ### 6. Report
 
-Give the user tokens and wall-clock from the validator, `git -C ../DanceBook-agy-<N> diff --stat`,
+Give the user tokens and wall-clock from the validator, `git -C ../DanceBook-agy-<N> status --short` (agy makes no commits, so its work shows as untracked/modified files),
 and agy's summary. **Confirm the diff is non-empty** — an empty diff with a cheerful
 summary means `--add-dir` was missing or ineffective. Then hand off to `verify-agy-work`,
 and keep the `conversation_id` for fix rounds.

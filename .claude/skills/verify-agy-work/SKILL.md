@@ -11,9 +11,12 @@ diff is *correct and idiomatic for this codebase*, not merely whether it compile
 ## 1. Read the diff
 
 ```bash
-git -C ../DanceBook-agy-<N> diff main...HEAD
-git -C ../DanceBook-agy-<N> diff --stat main...HEAD
+git -C ../DanceBook-agy-<N> status --short
+git -C ../DanceBook-agy-<N> diff
 ```
+
+agy is told not to use git, so its work appears as **uncommitted and untracked files**,
+not as commits. Read new files directly; `diff main...HEAD` will show nothing.
 
 Read the actual diff. The agent's own summary is a claim, not evidence.
 
@@ -27,9 +30,12 @@ invocation rather than reviewing an empty change.
 cd ../DanceBook-agy-<N> && ./gradlew build
 ```
 
-**Never** accept "the build passes" from the run summary — agy reports `SUCCESS` even for
-runs that did nothing. Run it and read the output. If it fails, that is a fix round, not a
-judgement call.
+This step is **mandatory, not a double-check**: agy cannot run the full build while
+sandboxed (Testcontainers needs the Docker socket), so nobody has run it until you do.
+Read the output; a failure is a fix round, not a judgement call.
+
+Prefer `./gradlew test --tests "*TheNewTest*"` first for a fast signal, then the full
+build before opening the PR.
 
 ## 3. Review against the codebase's real rules
 
@@ -84,4 +90,7 @@ look at closely. Then:
 gh issue edit <N> --remove-label ready-for-agent --add-label ready-for-human
 ```
 
-Leave the worktree in place until the PR merges, then `git worktree remove ../DanceBook-agy-<N>`.
+The workspace is a clone, so bring the work back yourself: branch off `main` in the main
+repo, copy the changed files across, commit, push and open the PR. Re-run the tests on
+that branch before pushing — you are verifying the code in its real destination, not the
+throwaway clone. Then `rm -rf ../DanceBook-agy-<N>`.
