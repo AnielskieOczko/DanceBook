@@ -41,7 +41,16 @@ src/main/resources/static/css/output.css
 *-service-account*.json
 
 ### AI Agents ###
-.agents/
+# Ignore the agent customization root, but track the permission rules so they
+# travel with the repo into per-issue worktrees (agy reads .agents/settings.json).
+.agents/*
+!.agents/settings.json
+
+# Per-run scratch written into an agy worktree (task brief, run result, review notes).
+.agy-task.md
+.agy-run.json
+.agy-review.md
+.agy-probe.json
 .gradle-home/
 
 ### OS Specific ###

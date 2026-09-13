@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "command(./gradlew)",
+      "command(git)"
+    ],
+    "deny": [
+      "unsandboxed(*)",
+      "command(rm -rf)",
+      "command(gh)",
+      "write_file(.git/)",
+      "write_file(AGENTS.md)",
+      "write_file(CLAUDE.md)",
+      "write_file(src/main/resources/static/css/output.css)"
+    ]
+  }
+}
