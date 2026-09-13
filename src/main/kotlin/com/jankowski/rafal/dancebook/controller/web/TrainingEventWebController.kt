@@ -153,8 +153,7 @@ class TrainingEventWebController(
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         populateFormOptions(model)
-        val defaultId = model.getAttribute("defaultCalendarId") as? UUID
-        model.addAttribute("trainingEvent", TrainingEventRequest(calendarId = defaultId))
+        model.addAttribute("trainingEvent", TrainingEventRequest())
         return "training-events/form"
     }
 
@@ -170,12 +169,13 @@ class TrainingEventWebController(
         }
 
         try {
-            // The Repeats control decides whether this is one session or a whole series,
-            // the way Google folds recurrence into the event editor.
-            if (request.isRepeating) {
-                trainingSeriesService.create(request)
+            // The form no longer carries a calendar; a new session goes to the one the user is
+            // currently looking at, or the default under "All calendars".
+            val scopedRequest = request.copy(calendarId = activeCalendarService.creationTarget().id)
+            if (scopedRequest.isRepeating) {
+                trainingSeriesService.create(scopedRequest)
             } else {
-                trainingEventService.create(request)
+                trainingEventService.create(scopedRequest)
             }
         } catch (e: Exception) {
             log.error("Failed to create training event '{}'", request.title, e)
@@ -275,15 +275,6 @@ class TrainingEventWebController(
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
-        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
-        val eventCal = event.calendar
-        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
-            model.addAttribute("calendars", calendars + eventCal)
-        }
-        val request = model.getAttribute("trainingEvent") as? TrainingEventRequest
-        if (request != null && request.calendarId == null && eventCal?.id != null) {
-            model.addAttribute("trainingEvent", request.copy(calendarId = eventCal.id))
-        }
         return "training-events/form"
     }
 
@@ -348,9 +339,6 @@ class TrainingEventWebController(
      * predecessor, which makes the totals awkward and the markup worse.
      */
     private fun populateFormOptions(model: Model) {
-        val enabledCalendars = trainingCalendarService.findAllEnabled()
-        model.addAttribute("calendars", enabledCalendars)
-        model.addAttribute("defaultCalendarId", enabledCalendars.firstOrNull { it.isDefault }?.id ?: trainingCalendarService.findDefault()?.id)
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())

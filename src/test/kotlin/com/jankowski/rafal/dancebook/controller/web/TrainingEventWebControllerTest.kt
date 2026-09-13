@@ -39,6 +39,7 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var controller: TrainingEventWebController
+    private lateinit var defaultCal: TrainingCalendar
 
     @BeforeEach
     fun setUp() {
@@ -47,6 +48,13 @@ class TrainingEventWebControllerTest {
         danceCategoryService = mock(DanceCategoryService::class.java)
         trainingCalendarService = mock(TrainingCalendarService::class.java)
         activeCalendarService = mock(ActiveCalendarService::class.java)
+        defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default"
+            isDefault = true
+            enabled = true
+        }
+        `when`(activeCalendarService.creationTarget()).thenReturn(defaultCal)
         controller = TrainingEventWebController(
             trainingEventService,
             trainingSeriesService,
@@ -163,31 +171,17 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
-    fun `showCreateForm populates enabled calendars and preselects default calendar`() {
+    fun `showCreateForm populates form options and sets up empty request`() {
         val model = ConcurrentModel()
-        val cal1 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal 1"
-            isDefault = true
-            enabled = true
-        }
-        val cal2 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal 2"
-            isDefault = false
-            enabled = true
-        }
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal1, cal2))
-        `when`(trainingCalendarService.findDefault()).thenReturn(cal1)
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
         val viewName = controller.showCreateForm(model)
 
         assertEquals("training-events/form", viewName)
-        assertEquals(listOf(cal1, cal2), model["calendars"])
-        assertEquals(cal1.id, model["defaultCalendarId"])
+        assertNull(model["calendars"])
+        assertNull(model["defaultCalendarId"])
         val request = model["trainingEvent"] as TrainingEventRequest
-        assertEquals(cal1.id, request.calendarId)
+        assertNull(request.calendarId)
     }
 
     @Test
@@ -213,8 +207,9 @@ class TrainingEventWebControllerTest {
             startTime = LocalTime.of(18, 0),
             endTime = LocalTime.of(20, 0)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
-        `when`(trainingEventService.create(request)).thenThrow(RuntimeException("Google Calendar unavailable"))
+        `when`(trainingEventService.create(scopedRequest)).thenThrow(RuntimeException("Google Calendar unavailable"))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
         val viewName = controller.createTrainingEvent(request, bindingResult, model)
@@ -277,13 +272,14 @@ class TrainingEventWebControllerTest {
             repeat = "WEEKLY",
             repeatUntil = LocalDate.of(2026, 12, 14)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
 
         val viewName = controller.createTrainingEvent(request, bindingResult, model)
 
         assertEquals("redirect:/training-events", viewName)
-        verify(trainingSeriesService).create(request)
-        verify(trainingEventService, never()).create(request)
+        verify(trainingSeriesService).create(scopedRequest)
+        verify(trainingEventService, never()).create(scopedRequest)
     }
 
     @Test
@@ -295,12 +291,13 @@ class TrainingEventWebControllerTest {
             startTime = LocalTime.of(18, 0),
             endTime = LocalTime.of(20, 0)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
 
         controller.createTrainingEvent(request, bindingResult, model)
 
-        verify(trainingEventService).create(request)
-        verify(trainingSeriesService, never()).create(request)
+        verify(trainingEventService).create(scopedRequest)
+        verify(trainingSeriesService, never()).create(scopedRequest)
     }
 
     @Test

@@ -140,27 +140,12 @@
             </template>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 border-t border-border pt-6"
-             th:classappend="${calendars != null && calendars.size() > 1} ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-6">
             <div>
                 <label for="eventType" class="form-label">Type *</label>
                 <select id="eventType" th:field="*{eventType}" class="form-select">
                     <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}">TRAINING</option>
                 </select>
-            </div>
-            <div th:if="${calendars != null && calendars.size() > 1}">
-                <label for="calendarId" class="form-label">Calendar</label>
-                <select id="calendarId" th:field="*{calendarId}" class="form-select"
-                        th:disabled="${trainingEventId != null}">
-                    <option th:each="cal : ${calendars}"
-                            th:value="${cal.id}"
-                            th:text="${cal.displayName}">
-                        Calendar
-                    </option>
-                </select>
-                <p th:if="${trainingEventId != null}" class="form-hint mt-1 text-xs text-text-secondary">
-                    Cannot be moved between calendars.
-                </p>
             </div>
             <div>
                 <label for="attendanceStatus" class="form-label">Attendance</label>

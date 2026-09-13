@@ -26,7 +26,8 @@
             </a>
             <!-- On a phone the floating + creates on the selected day, so this would be a second
                  create button competing with it for a very narrow header. -->
-            <a href="/training-events/new" class="btn-primary hidden md:inline-flex">
+            <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">
                 <span class="material-symbols-outlined text-[20px]">add</span>
                 Add Session
             </a>

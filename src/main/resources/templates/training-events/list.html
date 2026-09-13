@@ -27,7 +27,8 @@
                 <span class="material-symbols-outlined text-[20px]">calendar_month</span>
                 Calendar
             </a>
-            <a href="/training-events/new" class="btn-primary">
+            <a href="/training-events/new" class="btn-primary"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">
                 <span class="material-symbols-outlined text-[20px]">add</span>
                 Add Session
             </a>
@@ -97,7 +98,8 @@
             <span class="material-symbols-outlined empty-state-icon">calendar_month</span>
             <h3 class="empty-state-title">No training sessions yet</h3>
             <p class="empty-state-text">Log your first session and it will appear here and in your Google Calendar.</p>
-            <a href="/training-events/new" class="btn-primary mt-4">Add Session</a>
+            <a href="/training-events/new" class="btn-primary mt-4"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">Add Session</a>
         </div>
 
         <!-- A training log is read in months: how much was scheduled, how many hours it came to. -->
