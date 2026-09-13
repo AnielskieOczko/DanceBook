@@ -10,7 +10,6 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
-import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.validation.Valid
@@ -41,7 +40,6 @@ class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
     private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService,
-    private val trainingCalendarService: TrainingCalendarService,
     private val activeCalendarService: ActiveCalendarService
 ) {
 
@@ -227,11 +225,6 @@ class TrainingEventWebController(
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
-        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
-        val eventCal = event.calendar
-        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
-            model.addAttribute("calendars", calendars + eventCal)
-        }
         return "training-events/form"
     }
 

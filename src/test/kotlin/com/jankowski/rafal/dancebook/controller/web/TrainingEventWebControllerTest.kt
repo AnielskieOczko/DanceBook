@@ -11,8 +11,8 @@ import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
-import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -24,6 +24,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
 import java.time.LocalDate
@@ -36,7 +37,6 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingEventService: TrainingEventService
     private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
-    private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var controller: TrainingEventWebController
     private lateinit var defaultCal: TrainingCalendar
@@ -46,7 +46,6 @@ class TrainingEventWebControllerTest {
         trainingEventService = mock(TrainingEventService::class.java)
         trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
-        trainingCalendarService = mock(TrainingCalendarService::class.java)
         activeCalendarService = mock(ActiveCalendarService::class.java)
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
@@ -59,7 +58,6 @@ class TrainingEventWebControllerTest {
             trainingEventService,
             trainingSeriesService,
             danceCategoryService,
-            trainingCalendarService,
             activeCalendarService
         )
     }
@@ -149,8 +147,6 @@ class TrainingEventWebControllerTest {
             sortOrder = 0
         })
         `when`(trainingEventService.findById(id)).thenReturn(event)
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(ownCal))
-        `when`(trainingCalendarService.findDefault()).thenReturn(ownCal)
         `when`(danceCategoryService.findAll()).thenReturn(listOf(category))
 
         val viewName = controller.showEditForm(id, model)
@@ -259,6 +255,29 @@ class TrainingEventWebControllerTest {
         // The swap replaces the whole agenda fragment, so it must stay scoped to the
         // calendar the user is looking at rather than reverting to every calendar.
         verify(trainingEventService).findByCurrentUser(calendarId = calendar.id)
+    }
+
+    @Test
+    fun `creating with a disabled calendar active redisplays the form with an error rather than failing`() {
+        val model = ConcurrentModel()
+        val request = TrainingEventRequest(
+            title = "Evening practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(20, 30)
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.creationTarget()).thenThrow(
+            CalendarSyncException("Retired is disabled — choose another calendar to create a session.")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
+        // The create controls are hidden in this state, but the URL is still reachable, so the
+        // refusal has to surface as a form error rather than propagate out of the handler.
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        verifyNoInteractions(trainingEventService)
     }
 
     @Test

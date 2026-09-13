@@ -40,7 +40,8 @@
             <span class="material-symbols-outlined empty-state-icon">timeline</span>
             <h3 class="empty-state-title">No training logged yet</h3>
             <p class="empty-state-text">Once you log a session it will show up here, newest first.</p>
-            <a href="/training-events/new" class="btn-primary mt-4">Add Session</a>
+            <a href="/training-events/new" class="btn-primary mt-4"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">Add Session</a>
         </div>
 
         <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">

@@ -83,6 +83,7 @@
     <p id="calendarError" class="hidden form-error"></p>
 
     <button id="quickCreateFab" type="button" class="tc-fab md:hidden"
+            th:if="${activeCalendar == null || activeCalendar.enabled}"
             aria-label="Add a session on the selected day">
         <span class="material-symbols-outlined text-[26px]">add</span>
     </button>
