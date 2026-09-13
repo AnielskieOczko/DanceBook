@@ -74,4 +74,43 @@ class TrainingCalendarBootstrapIntegrationTest {
         assertNotNull(reloaded.calendar)
         assertEquals(defaultCal.id, reloaded.calendar?.id)
     }
+
+    /**
+     * The real upgrade path, and the one that broke in production: a database that already
+     * holds training events and has no calendar row yet. The bootstrap saves a new calendar
+     * and backfills inside one transaction, so the backfill must flush the pending INSERT
+     * before its bulk UPDATE or Postgres rejects the foreign key against a row it cannot
+     * see yet.
+     */
+    @Test
+    fun `bootstrap backfills existing events when the calendar row does not exist yet`() {
+        // Return to the pre-V29 state: events present, no calendar configured.
+        trainingEventRepository.findAll().forEach { it.calendar = null; trainingEventRepository.save(it) }
+        trainingCalendarRepository.deleteAll()
+        assertEquals(0, trainingCalendarRepository.count())
+
+        val user = appUserRepository.save(AppUser().apply {
+            username = "upgrade-${UUID.randomUUID().toString().take(8)}"
+            displayName = "Upgrade Tester"
+            password = "x"
+            role = Role.USER
+        })
+        val legacyEvent = trainingEventRepository.save(TrainingEvent().apply {
+            title = "Pre-upgrade Event"
+            startTime = LocalDateTime.now()
+            endTime = LocalDateTime.now().plusHours(1)
+            createdBy = user
+            calendar = null
+        })
+
+        trainingCalendarService.bootstrapDefaultCalendar()
+
+        val calendars = trainingCalendarRepository.findAll()
+        assertEquals(1, calendars.size)
+        assertTrue(calendars.first().isDefault)
+
+        val reloaded = trainingEventRepository.findById(legacyEvent.id!!).get()
+        assertNotNull(reloaded.calendar)
+        assertEquals(calendars.first().id, reloaded.calendar?.id)
+    }
 }

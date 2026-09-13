@@ -54,7 +54,15 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
 
-    @Modifying
+    /**
+     * Points every event with no calendar at [calendar]. Used by the startup backfill.
+     *
+     * `flushAutomatically` is load-bearing: the bootstrap saves a brand new calendar and
+     * backfills in the same transaction, so without a flush the INSERT is still pending in
+     * the persistence context while this bulk UPDATE goes to the database as raw SQL —
+     * and Postgres rejects the FK against a row it cannot see yet.
+     */
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update TrainingEvent e set e.calendar = :calendar where e.calendar is null")
     fun assignMissingCalendar(calendar: TrainingCalendar): Int
 }
