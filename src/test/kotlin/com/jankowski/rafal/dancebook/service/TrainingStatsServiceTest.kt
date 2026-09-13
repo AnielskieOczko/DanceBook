@@ -20,6 +20,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
+import org.springframework.data.jpa.domain.Specification
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -508,4 +511,24 @@ class TrainingStatsServiceTest {
         assertEquals(listOf("Standard"), byCategory.map { it.label })
         assertEquals(60L, byCategory.single().minutes)
     }
+
+    @Test
+    fun `scopes to one calendar when one is active`() {
+        val calendarId = UUID.randomUUID()
+        val dummySpec = Specification<TrainingEvent> { _, _, _ -> null }
+        `when`(trainingRecordRepository.findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId))
+            .thenReturn(emptyList())
+        `when`(trainingEventRepository.findAll(any(Specification::class.java) ?: dummySpec))
+            .thenReturn(emptyList())
+
+        trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME, calendarId)
+
+        verify(trainingRecordRepository).findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
+        verify(trainingRecordRepository, never()).findAllByCreatedByOrderByOccurredAtDesc(currentUser)
+        verify(trainingEventRepository).findAll(any(Specification::class.java) ?: dummySpec)
+        verify(trainingEventRepository, never()).findAllByCreatedByOrderByStartTimeDesc(currentUser)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> any(type: Class<*>): T? = org.mockito.Mockito.any(type) as? T
 }

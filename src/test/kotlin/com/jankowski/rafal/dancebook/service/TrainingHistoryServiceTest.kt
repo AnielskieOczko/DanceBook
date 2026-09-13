@@ -179,4 +179,16 @@ class TrainingHistoryServiceTest {
         }
         verify(trainingRecordRepository, never()).delete(theirs)
     }
+
+    @Test
+    fun `scopes to one calendar when one is active`() {
+        val calendarId = UUID.randomUUID()
+        `when`(trainingRecordRepository.findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId))
+            .thenReturn(emptyList())
+
+        trainingHistoryService.historyForCurrentUser(calendarId)
+
+        verify(trainingRecordRepository).findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
+        verify(trainingRecordRepository, never()).findAllByCreatedByOrderByOccurredAtDesc(currentUser)
+    }
 }

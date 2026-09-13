@@ -19,6 +19,7 @@ import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.nullable
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
@@ -76,7 +77,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `renders the timeline with month headings, palette colours and the today marker`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
             timeline(
                 month(
                     "September 2026",
@@ -98,7 +99,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `renders only the fragment for an HTMX request`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
             timeline(month("August 2026", entry(daysAgo = 40, status = AttendanceStatus.ATTENDED)))
         )
 
@@ -113,7 +114,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `suppresses the first month heading when it continues the month already on screen`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
             timeline(month("August 2026", entry(daysAgo = 40, status = AttendanceStatus.ATTENDED)))
         )
 
@@ -130,7 +131,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `offers the next window only when there is more history behind this one`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
             timeline(
                 month("September 2026", entry(daysAgo = 1, status = AttendanceStatus.ATTENDED)),
                 hasMore = true,
@@ -149,7 +150,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `hides the next-window control at the end of the history`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
             timeline(month("September 2026", entry(daysAgo = 1, status = AttendanceStatus.ATTENDED)))
         )
 
@@ -160,7 +161,7 @@ class TrainingTimelineViewRenderingTest {
 
     @Test
     fun `shows the empty state when there is no training history at all`() {
-        `when`(trainingTimelineService.timelineForCurrentUser(anyInt())).thenReturn(timeline())
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(timeline())
 
         mockMvc.perform(get("/training-events/timeline").with(csrf()))
             .andExpect(status().isOk)

@@ -55,6 +55,13 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      */
     fun findAllByCreatedByOrderByStartTimeDesc(createdBy: AppUser, pageable: Pageable): List<TrainingEvent>
 
+    /** The same paged probe, scoped to one calendar. */
+    fun findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
+        createdBy: AppUser,
+        calendarId: UUID,
+        pageable: Pageable
+    ): List<TrainingEvent>
+
     /**
      * The second half of that two-step fetch: the same sessions again, with segments and their
      * categories attached. An `IN` query has no inherent order, so the caller re-sorts.

@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.model.TrainingOutcome
 import com.jankowski.rafal.dancebook.model.TrainingRecord
 import com.jankowski.rafal.dancebook.model.TrainingRecordSegment
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
 import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -47,10 +48,21 @@ class TrainingStatsServiceImpl(
         private const val UNASSIGNED_LABEL = "Unassigned"
     }
 
-    override fun statsForCurrentUser(period: StatsPeriod): TrainingStats {
+    override fun statsForCurrentUser(period: StatsPeriod, calendarId: UUID?): TrainingStats {
         val currentUser = appUserService.getCurrentUser()
-        val allRecords = trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser)
-        val allEvents = trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser)
+        val allRecords = if (calendarId == null) {
+            trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser)
+        } else {
+            trainingRecordRepository
+                .findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
+        }
+        val allEvents = if (calendarId == null) {
+            trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser)
+        } else {
+            trainingEventRepository.findAll(
+                TrainingEventSpecification.withFilters(createdBy = currentUser, calendarId = calendarId)
+            )
+        }
         log.debug("Computing {} training stats for user '{}'", period, currentUser.username)
 
         // One "today" for the whole computation: a render straddling midnight must not judge
