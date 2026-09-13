@@ -54,6 +54,10 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
 
+    /** Calendar ids that at least one session points at; drives which calendars stay selectable. */
+    @Query("select distinct e.calendar.id from TrainingEvent e where e.calendar is not null")
+    fun calendarIdsInUse(): List<UUID>
+
     /**
      * Points every event with no calendar at [calendar]. Used by the startup backfill.
      *
