@@ -37,16 +37,26 @@ should also be done by probing, not by reasoning about what ought to work.
 
 ```json
 "permissions": {
-  "allow": ["command(*)", "read_file(*)", "write_file(/Volumes/my-data/Developer/Projects/DanceBook-agy-*/)"],
+  "allow": ["command(*)", "read_file(*)", "write_file(./)"],
   "deny": ["command(rm -rf /*)", "command(sudo *)", "command(gh *)", "command(git push *)"]
 }
 ```
 
 Headless mode cannot prompt, so anything not allowed is auto-denied and the run does
-nothing. Path-scoped `write_file` is genuinely enforced (verified: a write to `$HOME` was
-refused). **`command(*)` is the hole** — agy can shell-write anywhere the user can, so
-treat these rules as a speed bump, not containment. Narrowing commands helps little:
-Gradle runs arbitrary build code and git runs hooks.
+nothing.
+
+`write_file(./)` is deliberately **relative**: agy resolves relative permission paths
+against the repository root of the attached workspace, so one rule covers every clone on
+every machine — no absolute paths to edit. Verified: it permits nested writes like
+`src/test/kotlin/.../Foo.kt` and refuses `$HOME`.
+
+**`command(*)` is the hole.** agy can shell-write anywhere the user can, which defeats the
+`write_file` scope, so treat these rules as a speed bump rather than containment. Narrowing
+commands helps little: Gradle runs arbitrary build code and git runs hooks. The settings
+that look like they would fix this — `outsideWorkspaceFileAccessPolicy: "deny"` and
+`disableToolCallExecutionOutsideWorkspace: true` — were tested and had **no observable
+effect**; don't set them and assume you are protected. The real control remains the
+disposable clone plus two reviews.
 
 **This file is global to the machine**, so these rules apply to every agy session in every
 project, not just DanceBook. Project-scoped permissions were tried in `.agents/settings.json`
