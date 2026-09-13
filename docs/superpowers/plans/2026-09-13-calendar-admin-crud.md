@@ -21,6 +21,48 @@
 - **Google is never called when deleting a calendar.** The Google calendar and its events are not ours to destroy; we remove our mirror only.
 - Run `./gradlew build` before every commit. Docker must be running for Testcontainers tests.
 
+## What executing plan A taught (read before dispatching anything)
+
+Plan A ran through this same workflow. These cost real time; none are hypothetical.
+
+**Write out complete code, never "follow the existing pattern".** Plan A's one task that said
+"create it in the style of the repository tests" burned ~36 minutes and ~800k tokens across two
+failed runs, because no such pattern existed to copy. The tasks carrying literal code went
+through first time. If a step cannot be written as code, work out the answer before dispatching.
+
+**This project has no `@DataJpaTest`.** Database tests are `@SpringBootTest` + `@Testcontainers`
++ `@ServiceConnection` (see `TrainingCalendarBootstrapIntegrationTest`); migration tests drive
+Flyway directly with no Spring context (`migration/TrainingRecordBackfillTest`). Plan B's Task 3
+integration test must use the former.
+
+**MockMvc rendering tests need `.with(csrf())`** — `layout.html` evaluates `${_csrf.token}` on
+every page, so a request without it throws during render.
+
+**Two Kotlin traps that will not compile**, both hit in plan A: a default value may not be
+repeated on an overriding function (it lives on the interface only), and a parameter cannot be
+redeclared in its own scope, so `val request = request.copy(...)` is invalid — name the local
+something else.
+
+**Adding a constructor dependency breaks every test that builds that class directly.** Each time
+plan A injected a service into a controller, the matching `*ControllerTest` and any `@WebMvcTest`
+slice needed updating in the same task. Expect that for `AdminCalendarController` in Tasks 2 and 3,
+and list it in the task rather than discovering it at build time.
+
+**`@WebMvcTest` slices auto-detect `@ControllerAdvice` regardless of their `controllers` filter**,
+so `TrainingCalendarContextAdvice` now forces an `ActiveCalendarService` mock into slices that
+never mention it.
+
+**The delegated agent (`agy`) failed five times on network errors during plan A**, sometimes after
+writing correct files, sometimes writing nothing. Check the clone's tree before discarding a
+failed run — partial work that is in scope and correct is worth keeping; partial work that has
+drifted into another task's files is not. Watch for it inventing workarounds to dodge test
+breakage: it once wrote an inline anonymous default-argument service, which compiled, passed, and
+would have silently disabled the feature.
+
+**Verify the build yourself.** `./gradlew build` reports SUCCESS with everything `UP-TO-DATE` if
+outputs are reused, which proves nothing — use `clean build`, or check the test-result XML counts.
+
+
 ---
 
 ### Task 1: Shared confirm dialog
@@ -130,7 +172,9 @@ Create `src/main/resources/templates/fragments/confirm.html`. Every class here i
 </html>
 ```
 
-Check that `btn-danger` exists in `src/main/resources/frontend/input.css`; if it does not, use the class the app already uses for destructive buttons and keep this fragment consistent with it.
+`btn-danger` is confirmed present (`src/main/resources/frontend/input.css:65`) and already used
+in `admin/dashboard.html`, `lists/view.html` and `dance-figures/view.html`, so no substitution is
+needed.
 
 - [ ] **Step 6: Write the dismiss handler**
 
@@ -153,10 +197,11 @@ document.addEventListener('keydown', function (event) {
 });
 ```
 
-Register it in `layout.html` alongside the existing `main.js` script tag:
+Register it in `layout.html` directly after the existing `main.js` tag (line 24), matching that
+tag's shape — `main.js` carries no `defer`, so do not add one here:
 
 ```html
-<script th:src="@{/js/confirm-dialog.js}" defer></script>
+<script th:src="@{/js/confirm-dialog.js}"></script>
 ```
 
 - [ ] **Step 7: Build and commit**
@@ -183,11 +228,8 @@ git commit -m "feat: add a server-rendered confirm dialog fragment"
 - Test: `src/test/kotlin/com/jankowski/rafal/dancebook/controller/web/AdminCalendarControllerTest.kt`
 
 **Interfaces:**
-- Consumes: `TrainingEventRepository.calendarIdsInUse()` — **defined in Task 2 of the calendar-view-context plan.** If that plan has not run, add it here instead:
-  ```kotlin
-  @Query("select distinct e.calendar.id from TrainingEvent e where e.calendar is not null")
-  fun calendarIdsInUse(): List<UUID>
-  ```
+- Consumes: `TrainingEventRepository.calendarIdsInUse()` — **already on `main`**, added by the
+  calendar-view-context plan (PR #60, merged). Do not re-add it.
   Also `GoogleCalendarClient.verifyCalendar(calendarId: String): String` (already exists).
 - Produces: `TrainingCalendarService.rename(id: UUID, displayName: String): TrainingCalendar`, `changeGoogleCalendarId(id: UUID, googleCalendarId: String): TrainingCalendar`, and `hasSessions(id: UUID): Boolean` (used by Step 6 so the template can disable the Google-ID input without the controller touching a repository).
 
