@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import com.jankowski.rafal.dancebook.repository.DanceCategoryRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.orm.jpa.EntityManagerHolder
+import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.support.TransactionSynchronizationManager
 import jakarta.persistence.EntityManagerFactory
 import org.testcontainers.containers.PostgreSQLContainer
@@ -37,6 +39,7 @@ import java.util.UUID
  */
 @SpringBootTest
 @Testcontainers
+@TestPropertySource(properties = ["google.calendar.calendar-id=integration-test-calendar"])
 class TrainingEventUpdateIntegrationTest {
 
     companion object {
@@ -74,17 +77,12 @@ class TrainingEventUpdateIntegrationTest {
         `when`(appUserService.getCurrentUser()).thenReturn(owner)
         // A fresh id per call, like the real API: thenReturn would hand every occurrence of a
         // series the same google_event_id and trip its unique constraint.
-        `when`(calendarClient.createEvent(anyNotNull())).thenAnswer { "google-${UUID.randomUUID()}" }
+        `when`(calendarClient.createEvent(any(""), any(TrainingEvent()))).thenAnswer { "google-${UUID.randomUUID()}" }
     }
 
-    /**
-     * Mockito's matchers return null, which Kotlin rejects for a non-null parameter. Declaring
-     * the return as a generic `T` sidesteps the call-site null check the platform type triggers.
-     */
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> anyNotNull(): T {
-        any<T>()
-        return null as T
+    private fun <T> any(dummy: T): T {
+        org.mockito.ArgumentMatchers.any<T>()
+        return dummy
     }
 
     private fun request(

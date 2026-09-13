@@ -33,12 +33,11 @@ class GoogleCalendarClientImpl(
         val clientSecret = calendarProperties.clientSecret.trim()
         val refreshToken = calendarProperties.refreshToken.trim()
 
-        if (clientId.isBlank() || clientSecret.isBlank() || refreshToken.isBlank() || calendarId.isBlank()) {
+        if (clientId.isBlank() || clientSecret.isBlank() || refreshToken.isBlank()) {
             val missing = mutableListOf<String>()
             if (clientId.isBlank()) missing.add("GOOGLE_CLIENT_ID")
             if (clientSecret.isBlank()) missing.add("GOOGLE_CLIENT_SECRET")
             if (refreshToken.isBlank()) missing.add("GOOGLE_CALENDAR_REFRESH_TOKEN")
-            if (calendarId.isBlank()) missing.add("GOOGLE_CALENDAR_ID")
 
             val errorMsg = "CRITICAL: Missing required Google Calendar properties: ${missing.joinToString()}. " +
                            "Check your Environment Variables / GitHub Secrets!"
@@ -62,24 +61,28 @@ class GoogleCalendarClientImpl(
             .build()
     }
 
-    private val calendarId: String
-        get() = calendarProperties.calendarId.trim()
-
     private val zone: ZoneId
         get() = ZoneId.of(calendarProperties.timeZone)
 
-    override fun createEvent(event: TrainingEvent): String = translating("create") {
-        val created = calendar.events().insert(calendarId, event.toGoogleEvent()).execute()
-        logger.info("Created calendar event {} for training event '{}'", created.id, event.title)
-        created.id
+    override fun createEvent(calendarId: String, event: TrainingEvent): String {
+        require(calendarId.isNotBlank()) { "calendarId must not be blank" }
+        return translating("create") {
+            val created = calendar.events().insert(calendarId, event.toGoogleEvent()).execute()
+            logger.info("Created calendar event {} for training event '{}'", created.id, event.title)
+            created.id
+        }
     }
 
-    override fun updateEvent(googleEventId: String, event: TrainingEvent) = translating("update") {
-        calendar.events().update(calendarId, googleEventId, event.toGoogleEvent()).execute()
-        logger.info("Updated calendar event {} for training event '{}'", googleEventId, event.title)
+    override fun updateEvent(calendarId: String, googleEventId: String, event: TrainingEvent) {
+        require(calendarId.isNotBlank()) { "calendarId must not be blank" }
+        translating("update") {
+            calendar.events().update(calendarId, googleEventId, event.toGoogleEvent()).execute()
+            logger.info("Updated calendar event {} for training event '{}'", googleEventId, event.title)
+        }
     }
 
-    override fun deleteEvent(googleEventId: String) {
+    override fun deleteEvent(calendarId: String, googleEventId: String) {
+        require(calendarId.isNotBlank()) { "calendarId must not be blank" }
         try {
             calendar.events().delete(calendarId, googleEventId).execute()
             logger.info("Deleted calendar event {}", googleEventId)

@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -27,6 +28,7 @@ class TrainingEventServiceImpl(
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingEventPersistence: TrainingEventPersistence,
     private val calendarClient: GoogleCalendarClient,
+    private val trainingCalendarService: TrainingCalendarService,
     private val appUserService: AppUserService,
     private val danceCategoryService: DanceCategoryService,
     private val materialService: MaterialService
@@ -74,7 +76,9 @@ class TrainingEventServiceImpl(
         }
         applyRequest(event, request)
 
-        val googleEventId = calendarClient.createEvent(event)
+        val cal = trainingCalendarService.requireDefault()
+        event.calendar = cal
+        val googleEventId = calendarClient.createEvent(cal.googleCalendarId, event)
         event.googleEventId = googleEventId
 
         return try {
@@ -83,7 +87,7 @@ class TrainingEventServiceImpl(
             // The calendar event exists but the local row does not. Roll the calendar back
             // so we don't leave an orphan the app can never see or manage again.
             log.error("Local write failed after creating calendar event {} — compensating", googleEventId, e)
-            runCatching { calendarClient.deleteEvent(googleEventId) }
+            runCatching { calendarClient.deleteEvent(cal.googleCalendarId, googleEventId) }
                 .onFailure { log.error("Compensating delete failed for {}; orphan calendar event left behind", googleEventId, it) }
             throw e
         }
@@ -97,13 +101,14 @@ class TrainingEventServiceImpl(
         log.debug("User '{}' updating training event '{}'", currentUser.username, event.title)
         applyRequest(event, request)
 
+        val cal = calendarOf(event)
         val googleEventId = event.googleEventId
         if (googleEventId != null) {
-            calendarClient.updateEvent(googleEventId, event)
+            calendarClient.updateEvent(cal.googleCalendarId, googleEventId, event)
         } else {
             // Only reachable if a previous create was interrupted between the two writes.
             log.warn("Training event {} has no google event id; creating one now", id)
-            event.googleEventId = calendarClient.createEvent(event)
+            event.googleEventId = calendarClient.createEvent(cal.googleCalendarId, event)
         }
 
         return try {
@@ -153,7 +158,8 @@ class TrainingEventServiceImpl(
         event.endTime = end
         event.updatedAt = LocalDateTime.now()
 
-        event.googleEventId?.let { calendarClient.updateEvent(it, event) }
+        val cal = calendarOf(event)
+        event.googleEventId?.let { calendarClient.updateEvent(cal.googleCalendarId, it, event) }
         return trainingEventPersistence.applyUpdate(event, currentUser)
     }
 
@@ -170,9 +176,23 @@ class TrainingEventServiceImpl(
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' deleting training event '{}'", currentUser.username, event.title)
-        event.googleEventId?.let { calendarClient.deleteEvent(it) }
+        val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+        if (event.googleEventId != null) {
+            if (googleCalId != null) {
+                calendarClient.deleteEvent(googleCalId, event.googleEventId!!)
+            } else {
+                log.error("Cannot delete calendar event {}: no calendar resolved; skipping Google delete and removing local row", event.googleEventId)
+            }
+        }
         trainingEventPersistence.remove(event, currentUser)
     }
+
+    /**
+     * An existing session is written to its own calendar; a row that predates the backfill
+     * adopts the default and records it, so the next write is unambiguous.
+     */
+    private fun calendarOf(event: TrainingEvent): TrainingCalendar =
+        (event.calendar ?: trainingCalendarService.requireDefault()).also { event.calendar = it }
 
     private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest) {
         val date = requireNotNull(request.date) { "Date is required" }

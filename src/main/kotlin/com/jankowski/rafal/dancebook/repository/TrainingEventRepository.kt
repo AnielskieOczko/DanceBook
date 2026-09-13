@@ -1,12 +1,15 @@
 package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.Optional
@@ -50,4 +53,8 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      */
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
+
+    @Modifying
+    @Query("update TrainingEvent e set e.calendar = :calendar where e.calendar is null")
+    fun assignMissingCalendar(calendar: TrainingCalendar): Int
 }

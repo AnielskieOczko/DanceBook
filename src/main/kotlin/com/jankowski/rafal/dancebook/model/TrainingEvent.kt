@@ -60,6 +60,14 @@ class TrainingEvent {
     @JoinColumn(name = "series_id")
     var series: TrainingSeries? = null
 
+    /**
+     * The calendar this session belongs to, or null if the row predates the backfill;
+     * the first write adopts the default and records it.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "calendar_id")
+    var calendar: TrainingCalendar? = null
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id", nullable = false)
     var createdBy: AppUser? = null

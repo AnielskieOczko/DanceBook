@@ -4,12 +4,13 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -29,17 +30,20 @@ class TrainingSeriesServiceTest {
     private lateinit var trainingEventRepository: TrainingEventRepository
     private lateinit var trainingSeriesPersistence: TrainingSeriesPersistence
     private lateinit var calendarClient: GoogleCalendarClient
+    private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var appUserService: AppUserService
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var materialService: MaterialService
     private lateinit var service: TrainingSeriesServiceImpl
     private lateinit var currentUser: AppUser
+    private lateinit var defaultCalendar: TrainingCalendar
 
     @BeforeEach
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
         trainingSeriesPersistence = mock(TrainingSeriesPersistence::class.java)
         calendarClient = mock(GoogleCalendarClient::class.java)
+        trainingCalendarService = mock(TrainingCalendarService::class.java)
         appUserService = mock(AppUserService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
         materialService = mock(MaterialService::class.java)
@@ -50,10 +54,20 @@ class TrainingSeriesServiceTest {
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
 
+        defaultCalendar = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            googleCalendarId = "default-cal@group.calendar.google.com"
+            displayName = "Default Calendar"
+            isDefault = true
+        }
+        `when`(trainingCalendarService.requireDefault()).thenReturn(defaultCalendar)
+        `when`(trainingCalendarService.findDefault()).thenReturn(defaultCalendar)
+
         service = TrainingSeriesServiceImpl(
             trainingEventRepository,
             trainingSeriesPersistence,
             calendarClient,
+            trainingCalendarService,
             appUserService,
             danceCategoryService,
             materialService
@@ -64,7 +78,7 @@ class TrainingSeriesServiceTest {
     fun `should generate one occurrence per matching weekday`() {
         // 2026-09-14 is a Monday; through 2026-10-05 inclusive that is four Mondays.
         var counter = 0
-        `when`(calendarClient.createEvent(any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
             .thenAnswer { "google-" + (counter++) }
 
         val captured = mutableListOf<TrainingEvent>()
@@ -100,7 +114,7 @@ class TrainingSeriesServiceTest {
     fun `should copy the style template onto every occurrence`() {
         val standard = category("Standard")
         `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
-        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-1")
+        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))).thenReturn("google-1")
 
         val captured = mutableListOf<TrainingEvent>()
         `when`(
@@ -150,7 +164,7 @@ class TrainingSeriesServiceTest {
     fun `should remove already-created calendar events when generation fails part way`() {
         // Two succeed, the third fails: both survivors must be cleaned up so no
         // half-built series is left behind in Google Calendar.
-        `when`(calendarClient.createEvent(any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-1")
             .thenReturn("google-2")
             .thenThrow(CalendarSyncException("Google Calendar create failed (500): boom"))
@@ -159,8 +173,8 @@ class TrainingSeriesServiceTest {
             service.create(weeklyRequest(until = LocalDate.of(2026, 9, 28)))
         }
 
-        verify(calendarClient).deleteEvent("google-1")
-        verify(calendarClient).deleteEvent("google-2")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-2")
         verifyNoInteractions(trainingSeriesPersistence)
     }
 
@@ -174,7 +188,7 @@ class TrainingSeriesServiceTest {
                 series, LocalDate.of(2026, 9, 21).atStartOfDay()
             )
         ).thenReturn(listOf(edited))
-        `when`(calendarClient.createEvent(any(TrainingEvent::class.java))).thenReturn("google-new")
+        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))).thenReturn("google-new")
         `when`(
             trainingSeriesPersistence.replaceOccurrences(
                 any(TrainingSeries::class.java), anyList(), anyList()
@@ -191,7 +205,7 @@ class TrainingSeriesServiceTest {
         verify(trainingEventRepository).findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
             series, LocalDate.of(2026, 9, 21).atStartOfDay()
         )
-        verify(calendarClient).deleteEvent("google-old")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-old")
     }
 
     @Test
@@ -209,7 +223,7 @@ class TrainingSeriesServiceTest {
         }
 
         assertEquals("This session is not part of a repeating series", exception.message)
-        verify(calendarClient, never()).deleteEvent(org.mockito.Mockito.anyString())
+        verify(calendarClient, never()).deleteEvent(org.mockito.Mockito.anyString(), org.mockito.Mockito.anyString())
     }
 
     @Test
@@ -253,6 +267,7 @@ class TrainingSeriesServiceTest {
         startTime = LocalDateTime.of(date, series.startTime)
         endTime = LocalDateTime.of(date, series.endTime)
         googleEventId = "google-old"
+        calendar = defaultCalendar
         createdBy = currentUser
         this.series = series
     }
@@ -265,4 +280,6 @@ class TrainingSeriesServiceTest {
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
 
     private fun <T> anyList(): List<T> = org.mockito.Mockito.anyList()
+
+    private fun <T> eq(value: T): T = org.mockito.Mockito.eq(value) ?: value
 }

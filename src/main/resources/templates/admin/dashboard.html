@@ -190,6 +190,26 @@
         </div>
     </div>
 
+    <!-- Training Calendars (Lazy Loaded) -->
+    <div class="card mb-8 overflow-hidden">
+        <div class="px-6 py-4 border-b border-border bg-surface-warm flex justify-between items-center">
+            <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Training Calendars
+            </h2>
+            <button hx-get="/admin/calendars/form" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-primary btn-sm">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Calendar
+            </button>
+        </div>
+        <div hx-get="/admin/calendars" hx-trigger="load" hx-swap="outerHTML" id="calendarsSection">
+            <div class="p-6 flex items-center space-x-2 text-text-secondary">
+                <svg class="animate-spin h-5 w-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span>Fetching training calendars...</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Users Section -->
     <div class="card mb-8 overflow-hidden" th:fragment="usersSection" id="usersSection">
         <div class="px-6 py-4 border-b border-border bg-surface-warm flex justify-between items-center">
@@ -454,6 +474,81 @@
     <div th:fragment="importFailure" th:if="${importError != null}" class="p-4 rounded-button bg-danger-soft border border-danger/30 mt-2">
         <h3 class="font-heading font-semibold text-danger mb-2">Import Failed</h3>
         <p class="text-text-primary text-sm" th:text="${importError}">Error details</p>
+    </div>
+
+    <div th:fragment="calendarsSection" id="calendarsSection">
+        <div th:if="${calendarError != null}" class="px-6 pt-4 pb-2">
+            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${calendarError}">Error</div>
+        </div>
+
+        <div id="addCalendarFormContainer">
+            <th:block th:if="${showAddForm}">
+                <div th:replace="~{admin/dashboard :: addCalendarForm}"></div>
+            </th:block>
+        </div>
+
+        <div th:if="${calendars != null && !calendars.isEmpty()}" class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-cell text-left">Display Name</th>
+                        <th class="table-cell text-left">Google ID</th>
+                        <th class="table-cell text-left">Last Synced</th>
+                        <th class="table-cell text-left">Default</th>
+                        <th class="table-cell text-right">Enabled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cal : ${calendars}" class="table-row">
+                        <td class="table-cell font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
+                        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-xs" th:text="${cal.googleCalendarId}">cal-id</td>
+                        <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
+                        <td class="table-cell">
+                            <span th:if="${cal.isDefault}" class="badge-primary inline-flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                Default
+                            </span>
+                            <button th:if="${!cal.isDefault}" type="button"
+                                    th:hx-post="@{/admin/calendars/{id}/default(id=${cal.id})}"
+                                    hx-target="#calendarsSection" hx-swap="outerHTML"
+                                    class="btn-outline btn-sm">
+                                Make Default
+                            </button>
+                        </td>
+                        <td class="table-cell text-right">
+                            <button type="button"
+                                    th:hx-post="@{/admin/calendars/{id}/enabled(id=${cal.id}, enabled=${!cal.enabled})}"
+                                    hx-target="#calendarsSection" hx-swap="outerHTML"
+                                    th:class="${cal.enabled} ? 'badge-success cursor-pointer hover:opacity-80 transition' : 'badge-neutral cursor-pointer hover:opacity-80 transition'"
+                                    th:text="${cal.enabled ? 'Enabled' : 'Disabled'}">
+                                Enabled
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${calendars == null || calendars.isEmpty()}" class="p-6 text-center text-text-secondary">
+            No calendars configured. Add one to start creating sessions.
+        </div>
+    </div>
+
+    <div th:fragment="addCalendarForm" class="p-6 border-b border-border bg-surface-warm">
+        <div th:if="${calendarError != null}" class="p-3 mb-4 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${calendarError}">Error</div>
+        <form hx-post="/admin/calendars" hx-target="#calendarsSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="form-label">Display Name</label>
+                <input type="text" name="displayName" required class="form-input" placeholder="e.g. Training Calendar">
+            </div>
+            <div>
+                <label class="form-label">Google Calendar ID</label>
+                <input type="text" name="googleCalendarId" required class="form-input font-mono" placeholder="e.g. user@group.calendar.google.com">
+            </div>
+            <div class="md:col-span-2 flex justify-end gap-2">
+                <button type="button" hx-get="/admin/calendars/form/cancel" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm">Cancel</button>
+                <button type="submit" class="btn-primary btn-sm">Add Calendar</button>
+            </div>
+        </form>
     </div>
 </th:block>
 
