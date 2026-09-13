@@ -109,7 +109,8 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
 
 - **Schema changes require a Flyway migration.** `spring.jpa.hibernate.ddl-auto=validate`,
   so an entity field with no matching column fails at startup. Add
-  `src/main/resources/db/migration/V<next>__description.sql` (currently at V24).
+  `src/main/resources/db/migration/V<next>__description.sql` — check that directory for the
+  highest version rather than trusting a number written here, which goes stale every release.
   `config/FlywayConfig.kt` runs `repair()` before `migrate()` on every boot.
 - **Tailwind only scans templates.** `frontend/tailwind.config.js` has
   `content: ['../templates/**/*.html']` — classes generated in `static/js/*.js` are
@@ -134,6 +135,19 @@ repositories and a mocked `ApplicationEventPublisher`. Integration tests use
 `@ServiceConnection` (`service/SyllabusImporterIntegrationTest.kt`) — these need Docker
 running and the env vars above. `src/test/resources/application-test.properties` holds
 dummy datasource values.
+
+**There is no `@DataJpaTest` in this project.** Anything that needs a real database — a
+repository query, a Specification predicate, a migration — uses the `@SpringBootTest` +
+`@Testcontainers` + `@ServiceConnection` shape above. Do not introduce a `@DataJpaTest`
+slice; there is no existing one to model it on.
+
+Migrations get their own tests under `test/.../migration/`, driving Flyway directly against a
+Testcontainers Postgres with no Spring context at all, so they need none of the app's env
+vars (`migration/TrainingRecordBackfillTest.kt` is the pattern). Migrate to the version
+before yours, insert rows, migrate to yours, assert.
+
+MockMvc rendering tests must use `.with(csrf())` — `layout.html` evaluates `${_csrf.token}`
+on every page, so a request without it throws during render rather than failing an assertion.
 
 ## Repo conventions
 
