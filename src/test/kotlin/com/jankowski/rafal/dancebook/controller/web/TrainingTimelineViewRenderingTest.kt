@@ -9,6 +9,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingTimelineMonth
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -65,6 +66,7 @@ class TrainingTimelineViewRenderingTest {
     private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var trainingTimelineService: TrainingTimelineService
+    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService

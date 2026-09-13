@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.BreakdownSlice
 import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingStats
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -58,6 +59,7 @@ class TrainingStatsViewRenderingTest {
     private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var trainingStatsService: TrainingStatsService
+    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService

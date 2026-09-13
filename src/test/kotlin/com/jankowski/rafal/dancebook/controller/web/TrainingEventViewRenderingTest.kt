@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -81,6 +82,7 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var trainingSeriesService: TrainingSeriesService
     @MockBean private lateinit var danceCategoryService: DanceCategoryService
     @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
+    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService
@@ -269,5 +271,26 @@ class TrainingEventViewRenderingTest {
         assertTrue(html.contains("disabled"))
         assertTrue(html.contains("Cannot be moved between calendars."))
         assertTrue(html.contains("value=\"${cal2.id}\" selected=\"selected\""))
+    }
+
+    @Test
+    fun `the calendar selector is hidden with one calendar and shown with two`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club))
+        `when`(activeCalendarService.active()).thenReturn(club)
+
+        var html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        assertFalse(html.contains("id=\"activeCalendar\""))
+
+        val home = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Home"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, home))
+
+        html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        assertTrue(html.contains("id=\"activeCalendar\""))
+        assertTrue(html.contains("All calendars"))
     }
 }

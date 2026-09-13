@@ -9,6 +9,7 @@
             <h1 class="page-title text-3xl">Timeline</h1>
             <p class="page-subtitle">Your training in order — what is coming, and everything behind it.</p>
         </div>
+        <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
         <!-- The way back to the rest of the training pages. On a phone this cluster is the only
              way here and away again: the bottom nav stays at six items on purpose. -->
         <div class="flex flex-wrap items-center gap-2 shrink-0">

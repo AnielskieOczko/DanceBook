@@ -9,6 +9,7 @@
             <h1 class="page-title text-3xl">Training history</h1>
             <p class="page-subtitle">Every session you confirmed — kept even after its calendar entry is gone.</p>
         </div>
+        <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
             <a href="/training-events" class="btn-outline">
                 <span class="material-symbols-outlined text-[20px]">list</span>
