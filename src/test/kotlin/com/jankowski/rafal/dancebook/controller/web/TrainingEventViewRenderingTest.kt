@@ -39,8 +39,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import java.time.LocalDateTime
 import java.util.UUID
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.jsoup.Jsoup
 
 /**
  * Renders the training templates for real.
@@ -221,5 +223,59 @@ class TrainingEventViewRenderingTest {
             .andReturn().response.contentAsString
         assertTrue(html.contains("id=\"activeCalendar\""))
         assertTrue(html.contains("All calendars"))
+    }
+
+    @Test
+    fun `calendar selector marks a specific calendar as selected when active`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        val home = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Home"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, home))
+        `when`(activeCalendarService.active()).thenReturn(club)
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val selected = doc.select("#activeCalendar option[selected]")
+        assertEquals(1, selected.size)
+        assertEquals(club.id.toString(), selected.attr("value"))
+        assertEquals("Club", selected.text())
+    }
+
+    @Test
+    fun `calendar selector marks All calendars as selected when no calendar is active`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        val home = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Home"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, home))
+        `when`(activeCalendarService.active()).thenReturn(null)
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val selected = doc.select("#activeCalendar option[selected]")
+        assertEquals(1, selected.size)
+        assertEquals("ALL", selected.attr("value"))
+        assertEquals("All calendars", selected.text())
+    }
+
+    @Test
+    fun `calendar selector marks a disabled calendar as selected with disabled label when active`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        val retired = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Retired"; enabled = false }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, retired))
+        `when`(activeCalendarService.active()).thenReturn(retired)
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val selected = doc.select("#activeCalendar option[selected]")
+        assertEquals(1, selected.size)
+        assertEquals(retired.id.toString(), selected.attr("value"))
+        assertEquals("Retired (disabled)", selected.text())
     }
 }
