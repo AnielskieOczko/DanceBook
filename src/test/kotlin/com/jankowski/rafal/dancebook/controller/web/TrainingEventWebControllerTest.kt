@@ -5,11 +5,13 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingMonthGroup
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,6 +35,7 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingEventService: TrainingEventService
     private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
+    private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var controller: TrainingEventWebController
 
     @BeforeEach
@@ -40,7 +43,13 @@ class TrainingEventWebControllerTest {
         trainingEventService = mock(TrainingEventService::class.java)
         trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
-        controller = TrainingEventWebController(trainingEventService, trainingSeriesService, danceCategoryService)
+        trainingCalendarService = mock(TrainingCalendarService::class.java)
+        controller = TrainingEventWebController(
+            trainingEventService,
+            trainingSeriesService,
+            danceCategoryService,
+            trainingCalendarService
+        )
     }
 
     @Test
@@ -115,6 +124,12 @@ class TrainingEventWebControllerTest {
             eventType = TrainingEventType.CAMP
             attendanceStatus = AttendanceStatus.ATTENDED
         }
+        val ownCal = TrainingCalendar().apply {
+            this.id = UUID.randomUUID()
+            displayName = "Own Calendar"
+            enabled = true
+        }
+        event.calendar = ownCal
         event.segments.add(TrainingEventSegment().apply {
             trainingEvent = event
             danceCategory = category
@@ -122,6 +137,8 @@ class TrainingEventWebControllerTest {
             sortOrder = 0
         })
         `when`(trainingEventService.findById(id)).thenReturn(event)
+        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(ownCal))
+        `when`(trainingCalendarService.findDefault()).thenReturn(ownCal)
         `when`(danceCategoryService.findAll()).thenReturn(listOf(category))
 
         val viewName = controller.showEditForm(id, model)
@@ -134,10 +151,39 @@ class TrainingEventWebControllerTest {
         assertEquals(LocalTime.of(18, 0), request.startTime)
         assertEquals(LocalTime.of(20, 0), request.endTime)
         assertEquals("CAMP", request.eventType)
+        assertEquals(ownCal.id, request.calendarId)
         assertEquals(1, request.segments.size)
         assertEquals(category.id, request.segments[0].categoryId)
         assertEquals(90, request.segments[0].durationMinutes)
         assertEquals("ATTENDED", request.attendanceStatus)
+    }
+
+    @Test
+    fun `showCreateForm populates enabled calendars and preselects default calendar`() {
+        val model = ConcurrentModel()
+        val cal1 = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Cal 1"
+            isDefault = true
+            enabled = true
+        }
+        val cal2 = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Cal 2"
+            isDefault = false
+            enabled = true
+        }
+        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal1, cal2))
+        `when`(trainingCalendarService.findDefault()).thenReturn(cal1)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val viewName = controller.showCreateForm(model)
+
+        assertEquals("training-events/form", viewName)
+        assertEquals(listOf(cal1, cal2), model["calendars"])
+        assertEquals(cal1.id, model["defaultCalendarId"])
+        val request = model["trainingEvent"] as TrainingEventRequest
+        assertEquals(cal1.id, request.calendarId)
     }
 
     @Test

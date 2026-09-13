@@ -1,12 +1,15 @@
 package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.Optional
@@ -50,4 +53,16 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      */
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
+
+    /**
+     * Points every event with no calendar at [calendar]. Used by the startup backfill.
+     *
+     * `flushAutomatically` is load-bearing: the bootstrap saves a brand new calendar and
+     * backfills in the same transaction, so without a flush the INSERT is still pending in
+     * the persistence context while this bulk UPDATE goes to the database as raw SQL —
+     * and Postgres rejects the FK against a row it cannot see yet.
+     */
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("update TrainingEvent e set e.calendar = :calendar where e.calendar is null")
+    fun assignMissingCalendar(calendar: TrainingCalendar): Int
 }

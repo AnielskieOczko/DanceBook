@@ -38,6 +38,8 @@ data class TrainingEventRequest(
     @field:NotBlank
     val eventType: String = "TRAINING",
 
+    val calendarId: UUID? = null,
+
     /** Style breakdown; empty means the session is not style-specific. */
     val segments: MutableList<TrainingEventSegmentRequest> = mutableListOf(),
 

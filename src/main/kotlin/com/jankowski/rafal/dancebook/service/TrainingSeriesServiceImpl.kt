@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -30,6 +31,7 @@ class TrainingSeriesServiceImpl(
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingSeriesPersistence: TrainingSeriesPersistence,
     private val calendarClient: GoogleCalendarClient,
+    private val trainingCalendarService: TrainingCalendarService,
     private val appUserService: AppUserService,
     private val danceCategoryService: DanceCategoryService,
     private val materialService: MaterialService
@@ -55,7 +57,8 @@ class TrainingSeriesServiceImpl(
             currentUser.username, series.title, dates.size
         )
 
-        val occurrences = createOccurrences(series, dates, currentUser)
+        val calendar = resolveCalendar(request.calendarId)
+        val occurrences = createOccurrences(series, dates, currentUser, calendar)
         return trainingSeriesPersistence.insertSeries(series, occurrences, currentUser).first()
     }
 
@@ -76,14 +79,20 @@ class TrainingSeriesServiceImpl(
         series.startsOn = cutOff
         val dates = occurrenceDates(cutOff, series.endsOn, series)
 
-        val replacements = createOccurrences(series, dates, currentUser)
+        val calendar = occurrence.calendar ?: trainingCalendarService.requireDefault()
+        val replacements = createOccurrences(series, dates, currentUser, calendar)
 
         // Only remove the old calendar events once the new ones exist, so a failure
         // mid-way leaves the original series intact rather than a gap.
         future.forEach { old ->
             old.googleEventId?.let { id ->
-                runCatching { calendarClient.deleteEvent(id) }
-                    .onFailure { log.error("Could not remove superseded calendar event {}", id, it) }
+                val googleCalId = old.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+                if (googleCalId != null) {
+                    runCatching { calendarClient.deleteEvent(googleCalId, id) }
+                        .onFailure { log.error("Could not remove superseded calendar event {}", id, it) }
+                } else {
+                    log.error("Could not remove superseded calendar event {}: no calendar resolved", id)
+                }
             }
         }
 
@@ -106,7 +115,14 @@ class TrainingSeriesServiceImpl(
         log.debug("Deleting {} occurrences of series '{}' from {}", future.size, series.title, cutOff)
 
         future.forEach { event ->
-            event.googleEventId?.let { calendarClient.deleteEvent(it) }
+            event.googleEventId?.let { id ->
+                val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+                if (googleCalId != null) {
+                    calendarClient.deleteEvent(googleCalId, id)
+                } else {
+                    log.error("Cannot delete calendar event {}: no calendar resolved; skipping Google delete", id)
+                }
+            }
         }
         trainingSeriesPersistence.removeOccurrences(future)
     }
@@ -118,13 +134,15 @@ class TrainingSeriesServiceImpl(
     private fun createOccurrences(
         series: TrainingSeries,
         dates: List<LocalDate>,
-        actor: AppUser
+        actor: AppUser,
+        calendar: TrainingCalendar
     ): List<TrainingEvent> {
         val created = mutableListOf<TrainingEvent>()
         try {
             dates.forEach { date ->
                 val event = occurrenceFor(series, date, actor)
-                event.googleEventId = calendarClient.createEvent(event)
+                event.calendar = calendar
+                event.googleEventId = calendarClient.createEvent(calendar.googleCalendarId, event)
                 created.add(event)
             }
         } catch (e: Exception) {
@@ -134,7 +152,7 @@ class TrainingSeriesServiceImpl(
             )
             created.forEach { event ->
                 event.googleEventId?.let { id ->
-                    runCatching { calendarClient.deleteEvent(id) }
+                    runCatching { calendarClient.deleteEvent(calendar.googleCalendarId, id) }
                         .onFailure { log.error("Compensating delete failed for {}; orphan calendar event", id, it) }
                 }
             }
@@ -272,5 +290,16 @@ class TrainingSeriesServiceImpl(
         if (event.createdBy?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw IllegalStateException("You don't have permission to modify this training event")
         }
+    }
+
+    private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
+        val cal = if (calendarId != null) {
+            trainingCalendarService.findById(calendarId)
+                ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+        } else {
+            trainingCalendarService.requireDefault()
+        }
+        require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
+        return cal
     }
 }
