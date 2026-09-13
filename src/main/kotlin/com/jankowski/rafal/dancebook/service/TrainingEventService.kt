@@ -30,7 +30,11 @@ interface TrainingEventService {
     fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent
 
     /** Sessions overlapping the given window, for the calendar view. */
-    fun findInRange(from: LocalDateTime, to: LocalDateTime): List<TrainingEvent>
+    fun findInRange(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        calendarId: UUID? = null
+    ): List<TrainingEvent>
 
     fun delete(id: UUID)
 }

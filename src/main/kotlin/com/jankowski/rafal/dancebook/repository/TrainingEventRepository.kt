@@ -33,6 +33,14 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
         endAfter: LocalDateTime
     ): List<TrainingEvent>
 
+    /** The same window, scoped to one calendar. */
+    fun findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+        createdBy: AppUser,
+        calendarId: UUID,
+        startBefore: LocalDateTime,
+        endAfter: LocalDateTime
+    ): List<TrainingEvent>
+
     fun findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
         series: TrainingSeries,
         startTime: LocalDateTime

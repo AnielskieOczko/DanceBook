@@ -165,11 +165,23 @@ class TrainingEventServiceImpl(
         return trainingEventPersistence.applyUpdate(event, currentUser)
     }
 
-    override fun findInRange(from: LocalDateTime, to: LocalDateTime): List<TrainingEvent> {
+    override fun findInRange(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        calendarId: UUID?
+    ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
-        return trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
-            currentUser, to, from
-        )
+        // Null means "All calendars", which keeps the original unscoped query.
+        return if (calendarId == null) {
+            trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
+                currentUser, to, from
+            )
+        } else {
+            trainingEventRepository
+                .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                    currentUser, calendarId, to, from
+                )
+        }
     }
 
     override fun delete(id: UUID) {
