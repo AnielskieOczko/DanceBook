@@ -1,12 +1,18 @@
 ---
 name: delegate-to-agy
-description: Use when handing a fully-specified GitHub issue to Google Antigravity (agy) for implementation - sets up a disposable clone, briefs the agent, runs it in the background, and validates that the run actually did work. Trigger on "delegate issue N to agy", "have agy implement N", or /delegate-to-agy.
+description: Use when handing implementation work to Google Antigravity (agy) - writes a short specification, opens it as a GitHub issue, sets up a disposable clone, runs the agent in the background, and publishes the plan it wrote back to the issue. Trigger on "delegate issue N to agy", "have agy implement N", or /delegate-to-agy.
 ---
 
 # Delegate an issue to Antigravity (`agy`)
 
-Claude does the expensive thinking; `agy` (Gemini 3.8 Flash) does the typing. This skill
-covers the handoff only — verification is `verify-agy-work`.
+Claude writes the **specification**; `agy` (Gemini 3.8 Flash) works out the implementation
+and writes the code. This skill covers spec-writing and the handoff — verification is
+`verify-agy-work`.
+
+**The division of labour is the point.** Exploring the codebase to decide which files to
+touch is the expensive part, and it now belongs to agy, on the Google subscription. A spec
+that already names the files and the edits has moved that cost back onto Claude and left
+agy transcribing — which is the failure this workflow was rebuilt to stop.
 
 Every flag and rule below was established by probing the real CLI. Changing any of them
 should also be done by probing, not by reasoning about what ought to work.
@@ -24,7 +30,7 @@ should also be done by probing, not by reasoning about what ought to work.
 - **Never `--dangerously-skip-permissions`.** Keep grants explicit in `permissions.allow`
   so the deny list still applies.
 - **Never `--mode plan`** headlessly — it blocks forever waiting for an approval prompt
-  that cannot appear.
+  that cannot appear. agy plans inside a normal run instead, by writing `.agy-plan.md`.
 - **Never pass `--effort` alongside an effort-suffixed `--model`.** They conflict and the
   run exits immediately with `status:"ERROR"`. Effort lives in the model id:
   `gemini-3.8-flash-low` / `-medium` / `-high`.
@@ -50,6 +56,11 @@ against the repository root of the attached workspace, so one rule covers every 
 every machine — no absolute paths to edit. Verified: it permits nested writes like
 `src/test/kotlin/.../Foo.kt` and refuses `$HOME`.
 
+**Keep `command(gh *)` denied.** agy's plan reaches the issue because Claude posts the
+file it wrote (step 6), not because agy has tracker access. Granting `gh` would give every
+agy session on this machine the ability to close issues and edit pull requests, to save a
+single `gh issue comment` that costs Claude nothing.
+
 **`command(*)` is the hole.** agy can shell-write anywhere the user can, which defeats the
 `write_file` scope, so treat these rules as a speed bump rather than containment. Narrowing
 commands helps little: Gradle runs arbitrary build code and git runs hooks. The settings
@@ -70,6 +81,66 @@ removing one took a trivial run from 430s to 10s.
 
 ## Steps
 
+### 0. Write the specification
+
+Skip only if the issue already exists and is spec-shaped.
+
+A spec says **what must be true when the work is done**, and why. It does not say which
+files to edit. Sections:
+
+```markdown
+## Why
+The problem, as a user-visible symptom. What is wrong or missing today.
+
+## What to build
+The behaviour. What someone can do afterwards that they cannot do now.
+
+## Acceptance criteria
+- [ ] Statements a reviewer can tick by using the app or reading a test name.
+
+## Out of scope
+The adjacent things deliberately not in this issue, so agy does not wander into them.
+
+## Decisions for the implementer
+Ambiguities you already know about, with the constraint that bounds each one — agy picks
+a reading and records it. Not answers; guardrails.
+```
+
+Aim for ~40 lines.
+
+**Budget your own exploration.** One targeted look at an unfamiliar area is fine. Tracing
+call paths, opening every collaborator, and collecting line numbers is not — that is the
+scan being moved to Gemini, and doing it anyway defeats the delegation even if the spec
+you write from it *looks* restrained.
+
+**Reject your own draft** if it contains any of:
+
+- a code block, or the signature of a method you want created
+- a line number, or a `File.kt L146`-style reference
+- a file-by-file list of edits
+- a `### Step 1 / 2 / 3` breakdown of the implementation
+- the tests you want written, spelled out as assertions
+
+The test is whether agy could reasonably choose differently after reading the code. If it
+could, you have described an outcome; if it could not, you have written the implementation.
+
+**Naming existing code is not prescribing an implementation.** A bug report has to say
+what is broken, and a coverage issue has to say what is untested — naming the method or
+the page whose behaviour must hold is the *subject* of the criterion, not a direction to
+edit that file. The line is between "this branch must be covered" (a spec) and "add
+`findAllByEnabledTrue()` to the repository" (a plan). Naming one or two landmark files so
+agy starts in the right neighbourhood is fine for the same reason.
+
+**Issue #58 is the worked example of what not to write**: 48 lines that specified the
+implementation down to `form.html` L146 and the exact repository method to add. Everything
+agy did on it, Claude had already done.
+
+Write the spec to `.agy-spec.md` in the main repo, then:
+
+```bash
+gh issue create --title "..." --body-file .agy-spec.md --label ready-for-agent
+```
+
 ### 1. Preflight
 
 ```bash
@@ -77,12 +148,13 @@ gh issue view <N> --json number,title,body,labels --jq '{number,title,labels:[.l
 python3 .claude/skills/delegate-to-agy/usage.py
 ```
 
+Require the `ready-for-agent` label and acceptance criteria, and stop if either is
+missing. Also stop if the body *prescribes an implementation* — an inherited issue written
+under the old workflow should be rewritten as a spec first, not handed over as-is.
+
 The `/usage` slash command works headlessly and **costs zero tokens**. Record the Gemini
 weekly and 5-hour remaining fractions before and after the run — the difference is the
 real price of the issue, and the only honest input to "can Pro sustain this".
-
-Require the `ready-for-agent` label and an `## Implementation plan` section, and stop if
-either is missing. A vague issue produces a bad diff and burns quota.
 
 ### 2. Isolate — a clone, not a worktree
 
@@ -100,15 +172,18 @@ Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove`. (If a wor
 ever registered at that path, `git worktree prune` will not clear it while the directory
 exists; delete `.git/worktrees/DanceBook-agy-<N>` by hand.)
 
-### 3. Brief
+### 3. Brief — a pointer, not a restatement
 
-Write `.agy-task.md` in the worktree: issue title and number, the goal in your own words,
-the `## Implementation plan` steps verbatim, and the definition of done. Don't restate the
-rules in `AGENTS.md` (agy reads it) — point at its *Agent delegation contract* section.
+`.agy-task.md` is the issue and nothing more. Build it without reading it into context:
 
-Tell it **not to commit, push, or open PRs** — Claude owns version control, and
-`command(gh *)` and `command(git push *)` are denied anyway. Read-only git (`status`,
-`diff`, `log`) is fine and useful to it.
+```bash
+gh issue view <N> --json number,title,body \
+  --jq '"# Issue #\(.number): \(.title)\n\n\(.body)"' > ../DanceBook-agy-<N>/.agy-task.md
+```
+
+Then append two lines by hand: follow the *Agent delegation contract* in `AGENTS.md`, and
+version control is handled outside the session. Nothing else — no plan, no file list, no
+restatement of rules agy already reads in `AGENTS.md`.
 
 These scratch files are already in `.gitignore`, so they stay out of the diff.
 
@@ -117,11 +192,12 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ```bash
 cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
-    -p='Read .agy-task.md and implement it fully, following the Agent delegation contract in AGENTS.md. Run ./gradlew build and fix any failures yourself until it passes. Then summarise what you changed.' \
+    -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Run ./gradlew build and fix any failures yourself until it passes. Then summarise what you changed.' \
     > .agy-run.json 2>&1
 ```
 
-Use `-medium` for mechanical work, `-high` for real logic.
+**Default to `-high`.** agy is doing the thinking now, not the typing; `-medium` is for
+genuinely mechanical issues where the shape of the change is not in question.
 
 **Insist that agy runs `./gradlew build` and fixes its own failures until green.** This is
 the whole point: every compile error it resolves itself is a Claude round-trip that never
@@ -132,11 +208,15 @@ the first run.
 
 ```bash
 python3 .claude/skills/delegate-to-agy/validate-run.py ../DanceBook-agy-<N>/.agy-run.json
+test -s ../DanceBook-agy-<N>/.agy-plan.md || echo "NO PLAN - agy skipped the work loop"
 ```
 
 `agy` returns exit 0 and `status:"SUCCESS"` for timeouts, flag errors and fully-denied
 runs alike. The validator checks non-empty `response`, `num_turns > 0` and absent
 `denied_actions`, and prints the token spend.
+
+**A missing `.agy-plan.md` is a red flag even when the diff looks plausible.** It means agy
+did not follow the work loop, so nothing else it was told to do is safe to assume either.
 
 If it reports denied tools, add the action to `permissions.allow`, then resume the *same*
 conversation instead of re-paying the onboarding cost:
@@ -146,9 +226,20 @@ agy --add-dir "$PWD" --conversation <conversation_id> --output-format json \
     --print-timeout 45m -p='Continue where you left off.' > .agy-run.json 2>&1
 ```
 
-### 6. Report
+### 6. Publish agy's plan to the issue
+
+```bash
+gh issue comment <N> --body-file ../DanceBook-agy-<N>/.agy-plan.md
+```
+
+**Do not read the plan into context here.** `--body-file` moves it at zero token cost, and
+it gets read exactly once — during verification, where the judgement happens. Posting it
+gives the human reviewer agy's reasoning next to the diff, and leaves a record on the issue
+of how the spec was interpreted.
+
+### 7. Report
 
 Give the user tokens and wall-clock from the validator, `git -C ../DanceBook-agy-<N> status --short` (agy makes no commits, so its work shows as untracked/modified files),
-and agy's summary. **Confirm the diff is non-empty** — an empty diff with a cheerful
-summary means `--add-dir` was missing or ineffective. Then hand off to `verify-agy-work`,
-and keep the `conversation_id` for fix rounds.
+the link to the plan comment, and agy's summary. **Confirm the diff is non-empty** — an
+empty diff with a cheerful summary means `--add-dir` was missing or ineffective. Then hand
+off to `verify-agy-work`, and keep the `conversation_id` for fix rounds.
