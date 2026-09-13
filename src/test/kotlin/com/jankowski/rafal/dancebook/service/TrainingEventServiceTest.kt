@@ -511,6 +511,43 @@ class TrainingEventServiceTest {
         verifyNoInteractions(trainingEventPersistence)
     }
 
+    @Test
+    fun `findInRange scopes to a calendar when one is active`() {
+        val calendarId = UUID.randomUUID()
+        val from = LocalDateTime.now()
+        val to = from.plusDays(7)
+        `when`(
+            trainingEventRepository
+                .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                    currentUser, calendarId, to, from
+                )
+        ).thenReturn(emptyList())
+
+        trainingEventService.findInRange(from, to, calendarId)
+
+        verify(trainingEventRepository)
+            .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                currentUser, calendarId, to, from
+            )
+        verify(trainingEventRepository, never())
+            .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
+    }
+
+    @Test
+    fun `findInRange stays unscoped under All calendars`() {
+        val from = LocalDateTime.now()
+        val to = from.plusDays(7)
+        `when`(
+            trainingEventRepository
+                .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
+        ).thenReturn(emptyList())
+
+        trainingEventService.findInRange(from, to, null)
+
+        verify(trainingEventRepository)
+            .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
+    }
+
     private fun validRequest(
         title: String = "Monday practice",
         segments: List<TrainingEventSegmentRequest> = emptyList(),

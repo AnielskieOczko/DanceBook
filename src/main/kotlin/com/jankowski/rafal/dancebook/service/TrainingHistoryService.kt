@@ -6,7 +6,7 @@ import java.util.UUID
 /** The signed-in user's confirmed training, and the one correction it allows. */
 interface TrainingHistoryService {
 
-    fun historyForCurrentUser(): TrainingHistory
+    fun historyForCurrentUser(calendarId: UUID? = null): TrainingHistory
 
     /**
      * Removes a record whose calendar session no longer exists.

@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.UUID
 
 /**
  * The training history as one scroll: what is coming, then today, then everything behind it.
@@ -33,16 +34,19 @@ class TrainingTimelineServiceImpl(
         const val PAGE_SIZE = 25
     }
 
-    override fun timelineForCurrentUser(page: Int): TrainingTimeline {
+    override fun timelineForCurrentUser(page: Int, calendarId: UUID?): TrainingTimeline {
         val currentUser = appUserService.getCurrentUser()
         log.debug("Building training timeline page {} for user '{}'", page, currentUser.username)
 
         // One row beyond the window: if it comes back, there is another window behind this one.
         // Cheaper and simpler than a second count query, and the extra row is never rendered.
-        val probed = trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(
-            currentUser,
-            PageRequest.of(page, PAGE_SIZE + 1)
-        )
+        val pageable = PageRequest.of(page, PAGE_SIZE + 1)
+        val probed = if (calendarId == null) {
+            trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser, pageable)
+        } else {
+            trainingEventRepository
+                .findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(currentUser, calendarId, pageable)
+        }
         val hasMore = probed.size > PAGE_SIZE
         val window = probed.take(PAGE_SIZE)
 

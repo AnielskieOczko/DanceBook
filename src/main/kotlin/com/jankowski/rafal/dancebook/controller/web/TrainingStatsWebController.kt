@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingStatsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/training-events/stats")
 class TrainingStatsWebController(
     private val trainingStatsService: TrainingStatsService,
+    private val activeCalendarService: ActiveCalendarService,
     private val objectMapper: ObjectMapper
 ) {
 
@@ -31,7 +33,7 @@ class TrainingStatsWebController(
         @RequestParam(defaultValue = "ALL_TIME") period: StatsPeriod,
         model: Model
     ): String {
-        val stats = trainingStatsService.statsForCurrentUser(period)
+        val stats = trainingStatsService.statsForCurrentUser(period, activeCalendarService.active()?.id)
 
         model.addAttribute("pageTitle", "Training stats")
         model.addAttribute("stats", stats)

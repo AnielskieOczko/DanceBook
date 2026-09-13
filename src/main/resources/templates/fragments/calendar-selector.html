@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="calendarSelector"
+     th:if="${selectableCalendars != null && selectableCalendars.size() > 1}"
+     class="flex items-center gap-2">
+    <label for="activeCalendar" class="form-label mb-0">Calendar</label>
+    <select id="activeCalendar" name="calendarId" class="form-select"
+            hx-post="/training-events/active-calendar" hx-trigger="change">
+        <option value="ALL" th:selected="${activeCalendar == null}">All calendars</option>
+        <option th:each="cal : ${selectableCalendars}"
+                th:value="${cal.id}"
+                th:selected="${activeCalendar != null && activeCalendar.id == cal.id}"
+                th:text="${cal.enabled} ? ${cal.displayName} : ${cal.displayName} + ' (disabled)'">
+            Calendar
+        </option>
+    </select>
+</div>
+
+</body>
+</html>

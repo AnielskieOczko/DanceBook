@@ -9,6 +9,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingOutcome
 import com.jankowski.rafal.dancebook.model.TrainingRecord
 import com.jankowski.rafal.dancebook.model.TrainingRecordSegment
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -66,6 +67,7 @@ class TrainingHistoryViewRenderingTest {
     private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var trainingHistoryService: TrainingHistoryService
+    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService

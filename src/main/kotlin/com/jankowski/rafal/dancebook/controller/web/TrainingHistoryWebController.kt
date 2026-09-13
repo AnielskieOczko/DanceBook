@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingHistoryService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -20,13 +21,14 @@ import java.util.UUID
 @Controller
 @RequestMapping("/training-events/history")
 class TrainingHistoryWebController(
-    private val trainingHistoryService: TrainingHistoryService
+    private val trainingHistoryService: TrainingHistoryService,
+    private val activeCalendarService: ActiveCalendarService
 ) {
 
     @GetMapping
     fun showHistory(model: Model): String {
         model.addAttribute("pageTitle", "Training history")
-        model.addAttribute("history", trainingHistoryService.historyForCurrentUser())
+        model.addAttribute("history", trainingHistoryService.historyForCurrentUser(activeCalendarService.active()?.id))
         return "training-events/history"
     }
 

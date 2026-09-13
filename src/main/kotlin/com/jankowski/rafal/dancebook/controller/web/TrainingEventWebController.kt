@@ -8,8 +8,8 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
-import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.validation.Valid
@@ -40,7 +40,7 @@ class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
     private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService,
-    private val trainingCalendarService: TrainingCalendarService
+    private val activeCalendarService: ActiveCalendarService
 ) {
 
     companion object {
@@ -61,7 +61,8 @@ class TrainingEventWebController(
         model: Model
     ): String {
         val events = trainingEventService.findByCurrentUser(
-            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation
+            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation,
+            activeCalendarService.active()?.id
         )
         populateEventsList(model, events)
         // ArrayList, not emptyList(): Kotlin's EmptyList is an internal object whose
@@ -150,8 +151,7 @@ class TrainingEventWebController(
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         populateFormOptions(model)
-        val defaultId = model.getAttribute("defaultCalendarId") as? UUID
-        model.addAttribute("trainingEvent", TrainingEventRequest(calendarId = defaultId))
+        model.addAttribute("trainingEvent", TrainingEventRequest())
         return "training-events/form"
     }
 
@@ -167,12 +167,13 @@ class TrainingEventWebController(
         }
 
         try {
-            // The Repeats control decides whether this is one session or a whole series,
-            // the way Google folds recurrence into the event editor.
-            if (request.isRepeating) {
-                trainingSeriesService.create(request)
+            // The form no longer carries a calendar; a new session goes to the one the user is
+            // currently looking at, or the default under "All calendars".
+            val scopedRequest = request.copy(calendarId = activeCalendarService.creationTarget().id)
+            if (scopedRequest.isRepeating) {
+                trainingSeriesService.create(scopedRequest)
             } else {
-                trainingEventService.create(request)
+                trainingEventService.create(scopedRequest)
             }
         } catch (e: Exception) {
             log.error("Failed to create training event '{}'", request.title, e)
@@ -204,7 +205,6 @@ class TrainingEventWebController(
                 endTime = event.endTime.toLocalTime(),
                 endDate = event.endTime.toLocalDate(),
                 eventType = event.eventType.name,
-                calendarId = event.calendar?.id,
                 segments = event.segments.map {
                     TrainingEventSegmentRequest(
                         categoryId = it.danceCategory?.id,
@@ -224,11 +224,6 @@ class TrainingEventWebController(
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
-        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
-        val eventCal = event.calendar
-        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
-            model.addAttribute("calendars", calendars + eventCal)
-        }
         return "training-events/form"
     }
 
@@ -272,15 +267,6 @@ class TrainingEventWebController(
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
-        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
-        val eventCal = event.calendar
-        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
-            model.addAttribute("calendars", calendars + eventCal)
-        }
-        val request = model.getAttribute("trainingEvent") as? TrainingEventRequest
-        if (request != null && request.calendarId == null && eventCal?.id != null) {
-            model.addAttribute("trainingEvent", request.copy(calendarId = eventCal.id))
-        }
         return "training-events/form"
     }
 
@@ -302,7 +288,13 @@ class TrainingEventWebController(
             return "redirect:/training-events/$id"
         }
 
-        populateEventsList(model, trainingEventService.findByCurrentUser())
+        // This swaps the whole #events-list fragment the user is looking at, so it has to
+        // honour the active calendar — otherwise confirming attendance on a scoped agenda
+        // silently reverts it to every calendar.
+        populateEventsList(
+            model,
+            trainingEventService.findByCurrentUser(calendarId = activeCalendarService.active()?.id)
+        )
         return "training-events/list :: eventsList"
     }
 
@@ -339,9 +331,6 @@ class TrainingEventWebController(
      * predecessor, which makes the totals awkward and the markup worse.
      */
     private fun populateFormOptions(model: Model) {
-        val enabledCalendars = trainingCalendarService.findAllEnabled()
-        model.addAttribute("calendars", enabledCalendars)
-        model.addAttribute("defaultCalendarId", enabledCalendars.firstOrNull { it.isDefault }?.id ?: trainingCalendarService.findDefault()?.id)
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())

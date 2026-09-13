@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.controller.api
 
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,7 +24,8 @@ import java.time.format.DateTimeParseException
 @RestController
 @RequestMapping("/api/training-events")
 class TrainingCalendarApiController(
-    private val trainingEventService: TrainingEventService
+    private val trainingEventService: TrainingEventService,
+    private val activeCalendarService: ActiveCalendarService
 ) {
 
     @GetMapping("/calendar")
@@ -31,8 +33,9 @@ class TrainingCalendarApiController(
         @RequestParam start: String,
         @RequestParam end: String
     ): List<CalendarEventResponse> =
-        trainingEventService.findInRange(parseFlexible(start), parseFlexible(end))
-            .map { it.toCalendarEvent() }
+        trainingEventService.findInRange(
+            parseFlexible(start), parseFlexible(end), activeCalendarService.active()?.id
+        ).map { it.toCalendarEvent() }
 
     private fun TrainingEvent.toCalendarEvent(): CalendarEventResponse {
         val swatch = TrainingEventPalette.swatchFor(this)

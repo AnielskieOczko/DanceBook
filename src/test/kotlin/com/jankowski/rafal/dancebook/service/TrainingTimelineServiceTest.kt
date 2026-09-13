@@ -14,8 +14,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyCollection
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
 import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 import java.util.UUID
@@ -217,6 +220,32 @@ class TrainingTimelineServiceTest {
             .months.single().entries.single()
 
         assertEquals("skipped", entry.swatch.key)
+    }
+
+    @Test
+    fun `scopes to one calendar when one is active`() {
+        val calendarId = UUID.randomUUID()
+        `when`(
+            trainingEventRepository.findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
+                any(AppUser::class.java) ?: currentUser,
+                eq(calendarId) ?: calendarId,
+                any(Pageable::class.java) ?: Pageable.unpaged()
+            )
+        ).thenReturn(emptyList())
+
+        trainingTimelineService.timelineForCurrentUser(page = 0, calendarId = calendarId)
+
+        verify(trainingEventRepository)
+            .findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
+                any(AppUser::class.java) ?: currentUser,
+                eq(calendarId) ?: calendarId,
+                any(Pageable::class.java) ?: Pageable.unpaged()
+            )
+        verify(trainingEventRepository, never())
+            .findAllByCreatedByOrderByStartTimeDesc(
+                any(AppUser::class.java) ?: currentUser,
+                any(Pageable::class.java) ?: Pageable.unpaged()
+            )
     }
 
     /**

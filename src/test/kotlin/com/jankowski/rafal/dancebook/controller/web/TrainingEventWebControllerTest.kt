@@ -10,8 +10,9 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
-import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,6 +24,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
 import java.time.LocalDate
@@ -35,20 +37,28 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingEventService: TrainingEventService
     private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
-    private lateinit var trainingCalendarService: TrainingCalendarService
+    private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var controller: TrainingEventWebController
+    private lateinit var defaultCal: TrainingCalendar
 
     @BeforeEach
     fun setUp() {
         trainingEventService = mock(TrainingEventService::class.java)
         trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
-        trainingCalendarService = mock(TrainingCalendarService::class.java)
+        activeCalendarService = mock(ActiveCalendarService::class.java)
+        defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default"
+            isDefault = true
+            enabled = true
+        }
+        `when`(activeCalendarService.creationTarget()).thenReturn(defaultCal)
         controller = TrainingEventWebController(
             trainingEventService,
             trainingSeriesService,
             danceCategoryService,
-            trainingCalendarService
+            activeCalendarService
         )
     }
 
@@ -137,8 +147,6 @@ class TrainingEventWebControllerTest {
             sortOrder = 0
         })
         `when`(trainingEventService.findById(id)).thenReturn(event)
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(ownCal))
-        `when`(trainingCalendarService.findDefault()).thenReturn(ownCal)
         `when`(danceCategoryService.findAll()).thenReturn(listOf(category))
 
         val viewName = controller.showEditForm(id, model)
@@ -151,7 +159,9 @@ class TrainingEventWebControllerTest {
         assertEquals(LocalTime.of(18, 0), request.startTime)
         assertEquals(LocalTime.of(20, 0), request.endTime)
         assertEquals("CAMP", request.eventType)
-        assertEquals(ownCal.id, request.calendarId)
+        // The edit form carries no calendar: a session cannot be moved between calendars,
+        // so the request deliberately no longer prefills one.
+        assertNull(request.calendarId)
         assertEquals(1, request.segments.size)
         assertEquals(category.id, request.segments[0].categoryId)
         assertEquals(90, request.segments[0].durationMinutes)
@@ -159,31 +169,17 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
-    fun `showCreateForm populates enabled calendars and preselects default calendar`() {
+    fun `showCreateForm populates form options and sets up empty request`() {
         val model = ConcurrentModel()
-        val cal1 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal 1"
-            isDefault = true
-            enabled = true
-        }
-        val cal2 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal 2"
-            isDefault = false
-            enabled = true
-        }
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal1, cal2))
-        `when`(trainingCalendarService.findDefault()).thenReturn(cal1)
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
         val viewName = controller.showCreateForm(model)
 
         assertEquals("training-events/form", viewName)
-        assertEquals(listOf(cal1, cal2), model["calendars"])
-        assertEquals(cal1.id, model["defaultCalendarId"])
+        assertNull(model["calendars"])
+        assertNull(model["defaultCalendarId"])
         val request = model["trainingEvent"] as TrainingEventRequest
-        assertEquals(cal1.id, request.calendarId)
+        assertNull(request.calendarId)
     }
 
     @Test
@@ -209,8 +205,9 @@ class TrainingEventWebControllerTest {
             startTime = LocalTime.of(18, 0),
             endTime = LocalTime.of(20, 0)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
-        `when`(trainingEventService.create(request)).thenThrow(RuntimeException("Google Calendar unavailable"))
+        `when`(trainingEventService.create(scopedRequest)).thenThrow(RuntimeException("Google Calendar unavailable"))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
         val viewName = controller.createTrainingEvent(request, bindingResult, model)
@@ -244,6 +241,48 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
+    fun `should keep the active calendar when swapping the list after an attendance post`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = UUID.randomUUID()
+            googleCalendarId = "club@group.calendar.google.com"
+            displayName = "Club"
+        }
+        `when`(activeCalendarService.active()).thenReturn(calendar)
+        `when`(trainingEventService.findByCurrentUser(calendarId = calendar.id)).thenReturn(emptyList())
+
+        controller.updateAttendance(id, AttendanceStatus.ATTENDED, true, model)
+
+        // The swap replaces the whole agenda fragment, so it must stay scoped to the
+        // calendar the user is looking at rather than reverting to every calendar.
+        verify(trainingEventService).findByCurrentUser(calendarId = calendar.id)
+    }
+
+    @Test
+    fun `creating with a disabled calendar active redisplays the form with an error rather than failing`() {
+        val model = ConcurrentModel()
+        val request = TrainingEventRequest(
+            title = "Evening practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(20, 30)
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.creationTarget()).thenThrow(
+            CalendarSyncException("Retired is disabled — choose another calendar to create a session.")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
+        // The create controls are hidden in this state, but the URL is still reachable, so the
+        // refusal has to surface as a form error rather than propagate out of the handler.
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        verifyNoInteractions(trainingEventService)
+    }
+
+    @Test
     fun `should route a repeating request to the series service`() {
         val model = ConcurrentModel()
         val request = TrainingEventRequest(
@@ -254,13 +293,14 @@ class TrainingEventWebControllerTest {
             repeat = "WEEKLY",
             repeatUntil = LocalDate.of(2026, 12, 14)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
 
         val viewName = controller.createTrainingEvent(request, bindingResult, model)
 
         assertEquals("redirect:/training-events", viewName)
-        verify(trainingSeriesService).create(request)
-        verify(trainingEventService, never()).create(request)
+        verify(trainingSeriesService).create(scopedRequest)
+        verify(trainingEventService, never()).create(scopedRequest)
     }
 
     @Test
@@ -272,12 +312,13 @@ class TrainingEventWebControllerTest {
             startTime = LocalTime.of(18, 0),
             endTime = LocalTime.of(20, 0)
         )
+        val scopedRequest = request.copy(calendarId = defaultCal.id)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
 
         controller.createTrainingEvent(request, bindingResult, model)
 
-        verify(trainingEventService).create(request)
-        verify(trainingSeriesService, never()).create(request)
+        verify(trainingEventService).create(scopedRequest)
+        verify(trainingSeriesService, never()).create(scopedRequest)
     }
 
     @Test

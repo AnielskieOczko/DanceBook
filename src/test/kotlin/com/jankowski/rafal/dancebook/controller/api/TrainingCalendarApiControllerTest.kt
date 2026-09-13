@@ -4,12 +4,14 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -19,17 +21,19 @@ import java.util.UUID
 class TrainingCalendarApiControllerTest {
 
     private lateinit var trainingEventService: TrainingEventService
+    private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var controller: TrainingCalendarApiController
 
     @BeforeEach
     fun setUp() {
         trainingEventService = mock(TrainingEventService::class.java)
-        controller = TrainingCalendarApiController(trainingEventService)
+        activeCalendarService = mock(ActiveCalendarService::class.java)
+        controller = TrainingCalendarApiController(trainingEventService, activeCalendarService)
     }
 
     @Test
     fun `should accept the window as an offset ISO string and strip the offset`() {
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(emptyList())
 
         controller.calendarFeed("2026-09-01T00:00:00+02:00", "2026-10-01T00:00:00+02:00")
@@ -38,26 +42,28 @@ class TrainingCalendarApiControllerTest {
         // the calendar renders in local time, so converting here would shift the window.
         verify(trainingEventService).findInRange(
             LocalDateTime.of(2026, 9, 1, 0, 0),
-            LocalDateTime.of(2026, 10, 1, 0, 0)
+            LocalDateTime.of(2026, 10, 1, 0, 0),
+            null
         )
     }
 
     @Test
     fun `should accept the window as a plain local ISO string`() {
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(emptyList())
 
         controller.calendarFeed("2026-09-01T00:00:00", "2026-10-01T00:00:00")
 
         verify(trainingEventService).findInRange(
             LocalDateTime.of(2026, 9, 1, 0, 0),
-            LocalDateTime.of(2026, 10, 1, 0, 0)
+            LocalDateTime.of(2026, 10, 1, 0, 0),
+            null
         )
     }
 
     @Test
     fun `should emit times without an offset so the calendar does not shift them`() {
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(listOf(event(AttendanceStatus.PLANNED, LocalDateTime.of(2026, 9, 14, 18, 0))))
 
         val result = controller.calendarFeed("2026-09-01T00:00:00", "2026-10-01T00:00:00")
@@ -71,7 +77,7 @@ class TrainingCalendarApiControllerTest {
     fun `should colour each attendance state distinctly`() {
         val past = LocalDateTime.now().minusDays(3)
         val future = LocalDateTime.now().plusDays(3)
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(
                 listOf(
                     event(AttendanceStatus.PLANNED, future),
@@ -94,7 +100,7 @@ class TrainingCalendarApiControllerTest {
 
     @Test
     fun `should send the stripe colour solid and the fill tinted`() {
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(listOf(event(AttendanceStatus.ATTENDED, LocalDateTime.now().minusDays(1))))
 
         val chip = controller.calendarFeed("2026-01-01T00:00:00", "2027-01-01T00:00:00")[0]
@@ -118,7 +124,7 @@ class TrainingCalendarApiControllerTest {
                 sortOrder = 0
             })
         }
-        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java)))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
             .thenReturn(listOf(event))
 
         val result = controller.calendarFeed("2026-09-01T00:00:00", "2026-10-01T00:00:00")

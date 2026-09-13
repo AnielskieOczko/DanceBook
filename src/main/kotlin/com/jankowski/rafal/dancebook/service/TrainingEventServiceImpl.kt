@@ -43,7 +43,8 @@ class TrainingEventServiceImpl(
         categoryIds: List<UUID>?,
         attendanceStatuses: List<AttendanceStatus>?,
         titleSearch: String?,
-        awaitingConfirmation: Boolean?
+        awaitingConfirmation: Boolean?,
+        calendarId: UUID?
     ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
         log.debug("Retrieving training events for user '{}'", currentUser.username)
@@ -54,7 +55,8 @@ class TrainingEventServiceImpl(
             categoryIds = categoryIds,
             attendanceStatuses = attendanceStatuses,
             titleSearch = titleSearch,
-            awaitingConfirmation = awaitingConfirmation
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = calendarId
         )
         return trainingEventRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "startTime"))
     }
@@ -163,11 +165,23 @@ class TrainingEventServiceImpl(
         return trainingEventPersistence.applyUpdate(event, currentUser)
     }
 
-    override fun findInRange(from: LocalDateTime, to: LocalDateTime): List<TrainingEvent> {
+    override fun findInRange(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        calendarId: UUID?
+    ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
-        return trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
-            currentUser, to, from
-        )
+        // Null means "All calendars", which keeps the original unscoped query.
+        return if (calendarId == null) {
+            trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
+                currentUser, to, from
+            )
+        } else {
+            trainingEventRepository
+                .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                    currentUser, calendarId, to, from
+                )
+        }
     }
 
     override fun delete(id: UUID) {

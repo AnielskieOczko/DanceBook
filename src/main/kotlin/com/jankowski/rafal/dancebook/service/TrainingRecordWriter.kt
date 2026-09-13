@@ -72,6 +72,8 @@ class TrainingRecordWriter(
         record.outcome = outcome
         record.title = event.title
         record.eventType = event.eventType
+        record.calendarId = event.calendar?.id
+        record.calendarName = event.calendar?.displayName
         record.updatedAt = LocalDateTime.now()
         applySegments(record, event)
 

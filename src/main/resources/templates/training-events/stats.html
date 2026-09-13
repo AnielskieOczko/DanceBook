@@ -9,6 +9,7 @@
             <h1 class="page-title text-3xl">Training stats</h1>
             <p class="page-subtitle" th:text="${stats.period.label}">All time</p>
         </div>
+        <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
             <a href="/training-events/history" class="btn-outline">
                 <span class="material-symbols-outlined text-[20px]">history</span>
@@ -53,7 +54,8 @@
                    : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'">
                 Log a training session and this page will start
                 keeping score: hours trained, how often you show up, and where your time goes.</p>
-            <a href="/training-events/new" class="btn-primary">
+            <a href="/training-events/new" class="btn-primary"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">
                 <span class="material-symbols-outlined text-[20px]">add</span>
                 Add Session
             </a>

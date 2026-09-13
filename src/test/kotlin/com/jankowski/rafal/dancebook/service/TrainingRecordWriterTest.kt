@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -243,5 +244,23 @@ class TrainingRecordWriterTest {
         writer.orphan(emptyList())
 
         verify(trainingRecordRepository, never()).findAllByTrainingEventIdIn(anyCollection())
+    }
+
+    @Test
+    fun `sync copies the session's calendar onto the record`() {
+        val calendar = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            googleCalendarId = "club@group.calendar.google.com"
+            displayName = "Club Training"
+        }
+        val event = event(AttendanceStatus.ATTENDED).apply { this.calendar = calendar }
+        `when`(trainingRecordRepository.findByTrainingEventId(event.id!!)).thenReturn(null)
+
+        writer.sync(event)
+
+        val saved = ArgumentCaptor.forClass(TrainingRecord::class.java)
+        verify(trainingRecordRepository).save(saved.capture())
+        assertEquals(calendar.id, saved.value.calendarId)
+        assertEquals("Club Training", saved.value.calendarName)
     }
 }

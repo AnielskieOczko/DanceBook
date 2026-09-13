@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -81,6 +82,7 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var trainingSeriesService: TrainingSeriesService
     @MockBean private lateinit var danceCategoryService: DanceCategoryService
     @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
+    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService
@@ -192,82 +194,32 @@ class TrainingEventViewRenderingTest {
     }
 
     @Test
-    fun `should not render calendar picker on create form when only one calendar exists`() {
-        val cal = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Single Calendar"
-            isDefault = true
-            enabled = true
-        }
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal))
-        `when`(trainingCalendarService.findDefault()).thenReturn(cal)
-        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
-
+    fun `the create form no longer offers a calendar picker`() {
         val html = mockMvc.perform(get("/training-events/new").with(csrf()))
             .andExpect(status().isOk)
-            .andExpect(view().name("training-events/form"))
             .andReturn().response.contentAsString
 
         assertFalse(html.contains("id=\"calendarId\""))
     }
 
     @Test
-    fun `should render calendar picker on create form when multiple calendars exist`() {
-        val cal1 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal A"
-            isDefault = true
-            enabled = true
-        }
-        val cal2 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal B"
-            isDefault = false
-            enabled = true
-        }
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal1, cal2))
-        `when`(trainingCalendarService.findDefault()).thenReturn(cal1)
-        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+    fun `the calendar selector is hidden with one calendar and shown with two`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club))
+        `when`(activeCalendarService.active()).thenReturn(club)
 
-        val html = mockMvc.perform(get("/training-events/new").with(csrf()))
+        var html = mockMvc.perform(get("/training-events").with(csrf()))
             .andExpect(status().isOk)
-            .andExpect(view().name("training-events/form"))
             .andReturn().response.contentAsString
+        assertFalse(html.contains("id=\"activeCalendar\""))
 
-        assertTrue(html.contains("id=\"calendarId\""))
-        assertTrue(html.contains("Cal A"))
-        assertTrue(html.contains("Cal B"))
-        assertTrue(html.contains("value=\"${cal1.id}\" selected=\"selected\""))
-    }
+        val home = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Home"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, home))
 
-    @Test
-    fun `should render calendar picker disabled on edit form with multiple calendars`() {
-        val cal1 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal A"
-            isDefault = true
-            enabled = true
-        }
-        val cal2 = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            displayName = "Cal B"
-            isDefault = false
-            enabled = true
-        }
-        val event = attendedSession().apply { calendar = cal2 }
-        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
-        `when`(trainingCalendarService.findAllEnabled()).thenReturn(listOf(cal1, cal2))
-        `when`(trainingCalendarService.findDefault()).thenReturn(cal1)
-        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
-
-        val html = mockMvc.perform(get("/training-events/${event.id}/edit").with(csrf()))
+        html = mockMvc.perform(get("/training-events").with(csrf()))
             .andExpect(status().isOk)
-            .andExpect(view().name("training-events/form"))
             .andReturn().response.contentAsString
-
-        assertTrue(html.contains("id=\"calendarId\""))
-        assertTrue(html.contains("disabled"))
-        assertTrue(html.contains("Cannot be moved between calendars."))
-        assertTrue(html.contains("value=\"${cal2.id}\" selected=\"selected\""))
+        assertTrue(html.contains("id=\"activeCalendar\""))
+        assertTrue(html.contains("All calendars"))
     }
 }

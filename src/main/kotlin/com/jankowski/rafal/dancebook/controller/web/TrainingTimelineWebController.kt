@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 @RequestMapping("/training-events/timeline")
 class TrainingTimelineWebController(
-    private val trainingTimelineService: TrainingTimelineService
+    private val trainingTimelineService: TrainingTimelineService,
+    private val activeCalendarService: ActiveCalendarService
 ) {
 
     @GetMapping
@@ -32,7 +34,9 @@ class TrainingTimelineWebController(
         model: Model
     ): String {
         // A negative page would page backwards off the end of the history.
-        val timeline = trainingTimelineService.timelineForCurrentUser(page.coerceAtLeast(0))
+        val timeline = trainingTimelineService.timelineForCurrentUser(
+            page.coerceAtLeast(0), activeCalendarService.active()?.id
+        )
 
         model.addAttribute("timeline", timeline)
         // The month already on screen when this window was requested. The first heading is

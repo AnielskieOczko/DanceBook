@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.repository
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -20,7 +21,8 @@ object TrainingEventSpecification {
         categoryIds: List<UUID>? = null,
         attendanceStatuses: List<AttendanceStatus>? = null,
         titleSearch: String? = null,
-        awaitingConfirmation: Boolean? = null
+        awaitingConfirmation: Boolean? = null,
+        calendarId: UUID? = null
     ): Specification<TrainingEvent> {
         return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
@@ -56,6 +58,12 @@ object TrainingEventSpecification {
                 // change to that rule needs the same change here.
                 predicates.add(cb.equal(root.get<AttendanceStatus>("attendanceStatus"), AttendanceStatus.PLANNED))
                 predicates.add(cb.lessThan(root.get("endTime"), LocalDateTime.now()))
+            }
+
+            if (calendarId != null) {
+                // Null means "All calendars" and adds no predicate at all, so the common case
+                // keeps its existing query plan.
+                predicates.add(cb.equal(root.get<TrainingCalendar>("calendar").get<UUID>("id"), calendarId))
             }
 
             cb.and(*predicates.toTypedArray())

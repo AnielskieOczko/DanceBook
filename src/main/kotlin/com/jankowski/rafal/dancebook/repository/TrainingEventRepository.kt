@@ -33,6 +33,14 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
         endAfter: LocalDateTime
     ): List<TrainingEvent>
 
+    /** The same window, scoped to one calendar. */
+    fun findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+        createdBy: AppUser,
+        calendarId: UUID,
+        startBefore: LocalDateTime,
+        endAfter: LocalDateTime
+    ): List<TrainingEvent>
+
     fun findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
         series: TrainingSeries,
         startTime: LocalDateTime
@@ -47,12 +55,23 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      */
     fun findAllByCreatedByOrderByStartTimeDesc(createdBy: AppUser, pageable: Pageable): List<TrainingEvent>
 
+    /** The same paged probe, scoped to one calendar. */
+    fun findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
+        createdBy: AppUser,
+        calendarId: UUID,
+        pageable: Pageable
+    ): List<TrainingEvent>
+
     /**
      * The second half of that two-step fetch: the same sessions again, with segments and their
      * categories attached. An `IN` query has no inherent order, so the caller re-sorts.
      */
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
+
+    /** Calendar ids that at least one session points at; drives which calendars stay selectable. */
+    @Query("select distinct e.calendar.id from TrainingEvent e where e.calendar is not null")
+    fun calendarIdsInUse(): List<UUID>
 
     /**
      * Points every event with no calendar at [calendar]. Used by the startup backfill.

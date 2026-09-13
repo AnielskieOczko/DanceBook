@@ -41,9 +41,14 @@ class TrainingHistoryServiceImpl(
         private val MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
     }
 
-    override fun historyForCurrentUser(): TrainingHistory {
+    override fun historyForCurrentUser(calendarId: UUID?): TrainingHistory {
         val currentUser = appUserService.getCurrentUser()
-        val records = trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser)
+        val records = if (calendarId == null) {
+            trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser)
+        } else {
+            trainingRecordRepository
+                .findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
+        }
         log.debug("Building training history of {} records for user '{}'", records.size, currentUser.username)
 
         // groupBy keeps insertion order, and the records arrive newest first, so the months
