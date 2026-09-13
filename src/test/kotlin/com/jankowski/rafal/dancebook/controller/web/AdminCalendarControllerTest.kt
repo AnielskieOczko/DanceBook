@@ -2,6 +2,8 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import com.jankowski.rafal.dancebook.service.CalendarSyncException
+import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -16,12 +18,14 @@ import java.util.UUID
 class AdminCalendarControllerTest {
 
     private lateinit var trainingCalendarService: TrainingCalendarService
+    private lateinit var googleCalendarClient: GoogleCalendarClient
     private lateinit var controller: AdminCalendarController
 
     @BeforeEach
     fun setUp() {
         trainingCalendarService = mock(TrainingCalendarService::class.java)
-        controller = AdminCalendarController(trainingCalendarService)
+        googleCalendarClient = mock(GoogleCalendarClient::class.java)
+        controller = AdminCalendarController(trainingCalendarService, googleCalendarClient)
     }
 
     @Test
@@ -50,17 +54,39 @@ class AdminCalendarControllerTest {
     }
 
     @Test
-    fun `add successfully delegates to service and returns calendarsSection`() {
+    fun `add successfully verifies, saves enabled calendar and returns calendarsSection`() {
         val model = ConcurrentModel()
         val request = TrainingCalendarRequest("cal@google.com", "Calendar")
         val bindingResult = BeanPropertyBindingResult(request, "request")
         val calendars = listOf(TrainingCalendar())
+        `when`(googleCalendarClient.verifyCalendar("cal@google.com")).thenReturn("Calendar Summary")
         `when`(trainingCalendarService.findAll()).thenReturn(calendars)
 
         val view = controller.add(request, bindingResult, model)
 
         assertEquals("admin/dashboard :: calendarsSection", view)
-        verify(trainingCalendarService).add(request)
+        verify(googleCalendarClient).verifyCalendar("cal@google.com")
+        verify(trainingCalendarService).add(request, enabled = true)
+        assertEquals(calendars, model["calendars"])
+        assertEquals("Connected — \"Calendar Summary\"", model["calendarSuccess"])
+    }
+
+    @Test
+    fun `add saves calendar disabled when verification fails and surfaces reason`() {
+        val model = ConcurrentModel()
+        val request = TrainingCalendarRequest("unshared@google.com", "Unshared")
+        val bindingResult = BeanPropertyBindingResult(request, "request")
+        val calendars = listOf(TrainingCalendar())
+        `when`(googleCalendarClient.verifyCalendar("unshared@google.com")).thenThrow(
+            CalendarSyncException("Google Calendar verify failed (403): not shared with this app's Google account")
+        )
+        `when`(trainingCalendarService.findAll()).thenReturn(calendars)
+
+        val view = controller.add(request, bindingResult, model)
+
+        assertEquals("admin/dashboard :: calendarsSection", view)
+        verify(trainingCalendarService).add(request, enabled = false)
+        assertEquals("Google Calendar verify failed (403): not shared with this app's Google account", model["calendarError"])
         assertEquals(calendars, model["calendars"])
     }
 
@@ -69,7 +95,8 @@ class AdminCalendarControllerTest {
         val model = ConcurrentModel()
         val request = TrainingCalendarRequest("dup@google.com", "Duplicate")
         val bindingResult = BeanPropertyBindingResult(request, "request")
-        `when`(trainingCalendarService.add(request)).thenThrow(
+        `when`(googleCalendarClient.verifyCalendar("dup@google.com")).thenReturn("Duplicate")
+        `when`(trainingCalendarService.add(request, enabled = true)).thenThrow(
             IllegalArgumentException("A calendar with Google Calendar ID 'dup@google.com' already exists.")
         )
         val calendars = listOf(TrainingCalendar())
@@ -80,6 +107,50 @@ class AdminCalendarControllerTest {
         assertEquals("admin/dashboard :: calendarsSection", view)
         assertEquals("A calendar with Google Calendar ID 'dup@google.com' already exists.", model["calendarError"])
         assertEquals(true, model["showAddForm"])
+        assertEquals(calendars, model["calendars"])
+    }
+
+    @Test
+    fun `verify endpoint returns calendarsSection and reports success`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "cal@google.com"
+            displayName = "My Calendar"
+        }
+        `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
+        `when`(googleCalendarClient.verifyCalendar("cal@google.com")).thenReturn("My Calendar Google Summary")
+        val calendars = listOf(calendar)
+        `when`(trainingCalendarService.findAll()).thenReturn(calendars)
+
+        val view = controller.verify(id, model)
+
+        assertEquals("admin/dashboard :: calendarsSection", view)
+        assertEquals("Connected — \"My Calendar Google Summary\"", model["calendarSuccess"])
+        assertEquals(calendars, model["calendars"])
+    }
+
+    @Test
+    fun `verify endpoint returns calendarsSection and reports failure`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "missing@google.com"
+            displayName = "Missing Calendar"
+        }
+        `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
+        `when`(googleCalendarClient.verifyCalendar("missing@google.com")).thenThrow(
+            CalendarSyncException("Google Calendar verify failed (404): no such calendar")
+        )
+        val calendars = listOf(calendar)
+        `when`(trainingCalendarService.findAll()).thenReturn(calendars)
+
+        val view = controller.verify(id, model)
+
+        assertEquals("admin/dashboard :: calendarsSection", view)
+        assertEquals("Google Calendar verify failed (404): no such calendar", model["calendarError"])
         assertEquals(calendars, model["calendars"])
     }
 

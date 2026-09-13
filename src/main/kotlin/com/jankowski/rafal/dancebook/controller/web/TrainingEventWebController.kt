@@ -5,9 +5,11 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.dto.groupByMonth
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.validation.Valid
@@ -37,7 +39,8 @@ import java.util.UUID
 class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
     private val trainingSeriesService: TrainingSeriesService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val trainingCalendarService: TrainingCalendarService
 ) {
 
     companion object {
@@ -146,8 +149,9 @@ class TrainingEventWebController(
 
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
-        model.addAttribute("trainingEvent", TrainingEventRequest())
         populateFormOptions(model)
+        val defaultId = model.getAttribute("defaultCalendarId") as? UUID
+        model.addAttribute("trainingEvent", TrainingEventRequest(calendarId = defaultId))
         return "training-events/form"
     }
 
@@ -200,6 +204,7 @@ class TrainingEventWebController(
                 endTime = event.endTime.toLocalTime(),
                 endDate = event.endTime.toLocalDate(),
                 eventType = event.eventType.name,
+                calendarId = event.calendar?.id,
                 segments = event.segments.map {
                     TrainingEventSegmentRequest(
                         categoryId = it.danceCategory?.id,
@@ -219,6 +224,11 @@ class TrainingEventWebController(
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
+        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
+        val eventCal = event.calendar
+        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
+            model.addAttribute("calendars", calendars + eventCal)
+        }
         return "training-events/form"
     }
 
@@ -258,9 +268,19 @@ class TrainingEventWebController(
      * posts no edit scope at all and silently updates one occurrence instead of the series.
      */
     private fun redisplayEditForm(model: Model, id: UUID): String {
+        val event = trainingEventService.findById(id)
         model.addAttribute("trainingEventId", id)
-        model.addAttribute("isSeriesOccurrence", trainingEventService.findById(id).series != null)
+        model.addAttribute("isSeriesOccurrence", event.series != null)
         populateFormOptions(model)
+        val calendars = model.getAttribute("calendars") as? List<TrainingCalendar> ?: emptyList()
+        val eventCal = event.calendar
+        if (eventCal != null && calendars.none { it.id == eventCal.id }) {
+            model.addAttribute("calendars", calendars + eventCal)
+        }
+        val request = model.getAttribute("trainingEvent") as? TrainingEventRequest
+        if (request != null && request.calendarId == null && eventCal?.id != null) {
+            model.addAttribute("trainingEvent", request.copy(calendarId = eventCal.id))
+        }
         return "training-events/form"
     }
 
@@ -319,6 +339,9 @@ class TrainingEventWebController(
      * predecessor, which makes the totals awkward and the markup worse.
      */
     private fun populateFormOptions(model: Model) {
+        val enabledCalendars = trainingCalendarService.findAllEnabled()
+        model.addAttribute("calendars", enabledCalendars)
+        model.addAttribute("defaultCalendarId", enabledCalendars.firstOrNull { it.isDefault }?.id ?: trainingCalendarService.findDefault()?.id)
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())

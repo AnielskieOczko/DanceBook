@@ -15,4 +15,7 @@ interface GoogleCalendarClient {
 
     /** Deletes the calendar event. An already-deleted event (404/410) is not an error. */
     fun deleteEvent(calendarId: String, googleEventId: String)
+
+    /** Verifies the calendar is reachable and returns Google's own summary for the calendar. */
+    fun verifyCalendar(calendarId: String): String
 }

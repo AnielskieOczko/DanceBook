@@ -150,6 +150,32 @@ class TrainingCalendarServiceTest {
     }
 
     @Test
+    fun `add with enabled false saves a disabled and non-default calendar even if first`() {
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("disabled@group.calendar.google.com")).thenReturn(null)
+        `when`(trainingCalendarRepository.count()).thenReturn(0L)
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar())))
+            .thenAnswer { it.getArgument<TrainingCalendar>(0).apply { id = UUID.randomUUID() } }
+
+        val calendar = service.add(TrainingCalendarRequest("disabled@group.calendar.google.com", "Disabled"), enabled = false)
+        assertFalse(calendar.enabled)
+        assertFalse(calendar.isDefault)
+    }
+
+    @Test
+    fun `findAllEnabled returns enabled calendars in order`() {
+        val enabledList = listOf(
+            TrainingCalendar().apply { displayName = "Cal A"; enabled = true },
+            TrainingCalendar().apply { displayName = "Cal B"; enabled = true }
+        )
+        `when`(trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc()).thenReturn(enabledList)
+
+        val result = service.findAllEnabled()
+
+        assertEquals(enabledList, result)
+        verify(trainingCalendarRepository).findAllByEnabledTrueOrderByDisplayNameAsc()
+    }
+
+    @Test
     fun `setDefault clears before it sets and enables the calendar`() {
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {

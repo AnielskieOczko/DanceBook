@@ -97,6 +97,15 @@ class GoogleCalendarClientImpl(
         }
     }
 
+    override fun verifyCalendar(calendarId: String): String {
+        require(calendarId.isNotBlank()) { "calendarId must not be blank" }
+        return translating("verify") {
+            val summary = calendar.calendars().get(calendarId).execute().summary
+            logger.info("Verified calendar {} ('{}')", calendarId, summary)
+            summary ?: calendarId
+        }
+    }
+
     private fun <T> translating(action: String, block: () -> T): T =
         try {
             block()
@@ -109,7 +118,11 @@ class GoogleCalendarClientImpl(
      * useless in a form field. Pull out the one-line reason and keep the rest in the log.
      */
     private fun asSyncException(action: String, e: GoogleJsonResponseException): CalendarSyncException {
-        val detail = e.details?.message ?: e.statusMessage ?: "unknown error"
+        val detail = when (e.statusCode) {
+            404 -> "no such calendar"
+            403 -> "not shared with this app's Google account"
+            else -> e.details?.message ?: e.statusMessage ?: "unknown error"
+        }
         logger.error("Calendar {} failed with {} {}", action, e.statusCode, detail, e)
         return CalendarSyncException("Google Calendar $action failed (${e.statusCode}): $detail", e)
     }

@@ -76,7 +76,7 @@ class TrainingEventServiceImpl(
         }
         applyRequest(event, request)
 
-        val cal = trainingCalendarService.requireDefault()
+        val cal = resolveCalendar(request.calendarId)
         event.calendar = cal
         val googleEventId = calendarClient.createEvent(cal.googleCalendarId, event)
         event.googleEventId = googleEventId
@@ -193,6 +193,17 @@ class TrainingEventServiceImpl(
      */
     private fun calendarOf(event: TrainingEvent): TrainingCalendar =
         (event.calendar ?: trainingCalendarService.requireDefault()).also { event.calendar = it }
+
+    private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
+        val cal = if (calendarId != null) {
+            trainingCalendarService.findById(calendarId)
+                ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+        } else {
+            trainingCalendarService.requireDefault()
+        }
+        require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
+        return cal
+    }
 
     private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest) {
         val date = requireNotNull(request.date) { "Date is required" }

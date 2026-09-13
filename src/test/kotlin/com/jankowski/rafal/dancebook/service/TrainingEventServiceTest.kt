@@ -451,15 +451,77 @@ class TrainingEventServiceTest {
         verifyNoInteractions(trainingEventPersistence)
     }
 
+    @Test
+    fun `creating with explicit calendarId uses that calendar, not the default`() {
+        val customCalId = UUID.randomUUID()
+        val customCalendar = TrainingCalendar().apply {
+            id = customCalId
+            googleCalendarId = "custom-cal@group.calendar.google.com"
+            displayName = "Custom Calendar"
+            enabled = true
+        }
+        `when`(trainingCalendarService.findById(customCalId)).thenReturn(customCalendar)
+        `when`(calendarClient.createEvent(eq(customCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+            .thenReturn("google-custom")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val request = validRequest(calendarId = customCalId)
+        val result = trainingEventService.create(request)
+
+        assertEquals(customCalendar, result.calendar)
+        assertEquals("google-custom", result.googleEventId)
+        verify(calendarClient).createEvent(eq("custom-cal@group.calendar.google.com"), any(TrainingEvent::class.java))
+        verify(calendarClient, never()).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+    }
+
+    @Test
+    fun `creating with null calendarId uses the default calendar`() {
+        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+            .thenReturn("google-def")
+        `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val request = validRequest(calendarId = null)
+        val result = trainingEventService.create(request)
+
+        assertEquals(defaultCalendar, result.calendar)
+        verify(trainingCalendarService).requireDefault()
+        verify(calendarClient).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+    }
+
+    @Test
+    fun `creating with disabled calendar is rejected`() {
+        val disabledCalId = UUID.randomUUID()
+        val disabledCalendar = TrainingCalendar().apply {
+            id = disabledCalId
+            googleCalendarId = "disabled-cal@group.calendar.google.com"
+            displayName = "Disabled Calendar"
+            enabled = false
+        }
+        `when`(trainingCalendarService.findById(disabledCalId)).thenReturn(disabledCalendar)
+
+        val request = validRequest(calendarId = disabledCalId)
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            trainingEventService.create(request)
+        }
+
+        assertTrue(exception.message!!.contains("is disabled"))
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
     private fun validRequest(
         title: String = "Monday practice",
-        segments: List<TrainingEventSegmentRequest> = emptyList()
+        segments: List<TrainingEventSegmentRequest> = emptyList(),
+        calendarId: UUID? = null
     ) = TrainingEventRequest(
         title = title,
         date = LocalDate.of(2026, 9, 10),
         startTime = LocalTime.of(18, 0),
         endTime = LocalTime.of(20, 0),
         eventType = "TRAINING",
+        calendarId = calendarId,
         segments = segments.toMutableList(),
         attendanceStatus = "PLANNED"
     )

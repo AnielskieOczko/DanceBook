@@ -240,12 +240,74 @@ class TrainingSeriesServiceTest {
         verifyNoInteractions(trainingSeriesPersistence)
     }
 
-    private fun weeklyRequest(until: LocalDate) = TrainingEventRequest(
+    @Test
+    fun `creating series with explicit calendarId assigns chosen calendar to every occurrence`() {
+        val customCalId = UUID.randomUUID()
+        val customCal = TrainingCalendar().apply {
+            id = customCalId
+            googleCalendarId = "custom-series-cal@group.calendar.google.com"
+            displayName = "Custom Series Calendar"
+            enabled = true
+        }
+        `when`(trainingCalendarService.findById(customCalId)).thenReturn(customCal)
+
+        var counter = 0
+        `when`(calendarClient.createEvent(eq(customCal.googleCalendarId), any(TrainingEvent::class.java)))
+            .thenAnswer { "google-" + (counter++) }
+
+        val captured = mutableListOf<TrainingEvent>()
+        `when`(
+            trainingSeriesPersistence.insertSeries(
+                any(TrainingSeries::class.java),
+                anyList(),
+                any(AppUser::class.java)
+            )
+        ).thenAnswer {
+            val list = it.getArgument<List<TrainingEvent>>(1)
+            captured.addAll(list)
+            list
+        }
+
+        val request = weeklyRequest(until = LocalDate.of(2026, 9, 28), calendarId = customCalId)
+        val first = service.create(request)
+
+        assertEquals(3, captured.size)
+        captured.forEach { assertEquals(customCal, it.calendar) }
+        assertEquals(customCal, first.calendar)
+        verify(calendarClient, org.mockito.Mockito.times(3))
+            .createEvent(eq(customCal.googleCalendarId), any(TrainingEvent::class.java))
+        verify(calendarClient, never())
+            .createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+    }
+
+    @Test
+    fun `creating series with disabled calendar is rejected`() {
+        val disabledCalId = UUID.randomUUID()
+        val disabledCal = TrainingCalendar().apply {
+            id = disabledCalId
+            googleCalendarId = "disabled-series-cal@group.calendar.google.com"
+            displayName = "Disabled Calendar"
+            enabled = false
+        }
+        `when`(trainingCalendarService.findById(disabledCalId)).thenReturn(disabledCal)
+
+        val request = weeklyRequest(until = LocalDate.of(2026, 9, 28), calendarId = disabledCalId)
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            service.create(request)
+        }
+
+        assertTrue(exception.message!!.contains("is disabled"))
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingSeriesPersistence)
+    }
+
+    private fun weeklyRequest(until: LocalDate, calendarId: UUID? = null) = TrainingEventRequest(
         title = "Monday practice",
         date = LocalDate.of(2026, 9, 14),
         startTime = LocalTime.of(18, 0),
         endTime = LocalTime.of(20, 0),
         eventType = "TRAINING",
+        calendarId = calendarId,
         repeat = "WEEKLY",
         repeatUntil = until
     )

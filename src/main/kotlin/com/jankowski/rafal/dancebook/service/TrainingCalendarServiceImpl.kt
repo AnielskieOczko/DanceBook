@@ -25,6 +25,9 @@ class TrainingCalendarServiceImpl(
     override fun findAll(): List<TrainingCalendar> =
         trainingCalendarRepository.findAllByOrderByDisplayNameAsc()
 
+    override fun findAllEnabled(): List<TrainingCalendar> =
+        trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc()
+
     override fun findById(id: UUID): TrainingCalendar? =
         trainingCalendarRepository.findById(id).orElse(null)
 
@@ -37,7 +40,7 @@ class TrainingCalendarServiceImpl(
         )
 
     @Transactional
-    override fun add(request: TrainingCalendarRequest): TrainingCalendar {
+    override fun add(request: TrainingCalendarRequest, enabled: Boolean): TrainingCalendar {
         val trimmedGoogleId = request.googleCalendarId.trim()
         if (trainingCalendarRepository.findByGoogleCalendarId(trimmedGoogleId) != null) {
             throw IllegalArgumentException("A calendar with Google Calendar ID '$trimmedGoogleId' already exists.")
@@ -46,8 +49,8 @@ class TrainingCalendarServiceImpl(
         val calendar = TrainingCalendar().apply {
             googleCalendarId = trimmedGoogleId
             displayName = request.displayName.trim()
-            isDefault = isFirst
-            enabled = true
+            isDefault = isFirst && enabled
+            this.enabled = enabled
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
         }

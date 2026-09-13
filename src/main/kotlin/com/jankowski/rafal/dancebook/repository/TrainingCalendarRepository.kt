@@ -16,6 +16,8 @@ interface TrainingCalendarRepository : JpaRepository<TrainingCalendar, UUID> {
 
     fun findAllByOrderByDisplayNameAsc(): List<TrainingCalendar>
 
+    fun findAllByEnabledTrueOrderByDisplayNameAsc(): List<TrainingCalendar>
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update TrainingCalendar c set c.isDefault = false where c.id != :id")
     fun clearDefaultExcept(id: UUID): Int

@@ -57,7 +57,7 @@ class TrainingSeriesServiceImpl(
             currentUser.username, series.title, dates.size
         )
 
-        val calendar = trainingCalendarService.requireDefault()
+        val calendar = resolveCalendar(request.calendarId)
         val occurrences = createOccurrences(series, dates, currentUser, calendar)
         return trainingSeriesPersistence.insertSeries(series, occurrences, currentUser).first()
     }
@@ -290,5 +290,16 @@ class TrainingSeriesServiceImpl(
         if (event.createdBy?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw IllegalStateException("You don't have permission to modify this training event")
         }
+    }
+
+    private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
+        val cal = if (calendarId != null) {
+            trainingCalendarService.findById(calendarId)
+                ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+        } else {
+            trainingCalendarService.requireDefault()
+        }
+        require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
+        return cal
     }
 }

@@ -477,8 +477,11 @@
     </div>
 
     <div th:fragment="calendarsSection" id="calendarsSection">
+        <div th:if="${calendarSuccess != null}" class="px-6 pt-4 pb-2">
+            <div class="p-3 text-sm text-success bg-success-soft rounded-button font-medium border border-success/30" th:text="${calendarSuccess}">Success</div>
+        </div>
         <div th:if="${calendarError != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${calendarError}">Error</div>
+            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium border border-danger/30" th:text="${calendarError}">Error</div>
         </div>
 
         <div id="addCalendarFormContainer">
@@ -495,7 +498,8 @@
                         <th class="table-cell text-left">Google ID</th>
                         <th class="table-cell text-left">Last Synced</th>
                         <th class="table-cell text-left">Default</th>
-                        <th class="table-cell text-right">Enabled</th>
+                        <th class="table-cell text-left">Enabled</th>
+                        <th class="table-cell text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -515,13 +519,21 @@
                                 Make Default
                             </button>
                         </td>
-                        <td class="table-cell text-right">
+                        <td class="table-cell">
                             <button type="button"
                                     th:hx-post="@{/admin/calendars/{id}/enabled(id=${cal.id}, enabled=${!cal.enabled})}"
                                     hx-target="#calendarsSection" hx-swap="outerHTML"
                                     th:class="${cal.enabled} ? 'badge-success cursor-pointer hover:opacity-80 transition' : 'badge-neutral cursor-pointer hover:opacity-80 transition'"
                                     th:text="${cal.enabled ? 'Enabled' : 'Disabled'}">
                                 Enabled
+                            </button>
+                        </td>
+                        <td class="table-cell text-right">
+                            <button type="button"
+                                    th:hx-post="@{/admin/calendars/{id}/verify(id=${cal.id})}"
+                                    hx-target="#calendarsSection" hx-swap="outerHTML"
+                                    class="btn-outline btn-sm">
+                                Verify
                             </button>
                         </td>
                     </tr>
@@ -542,7 +554,10 @@
             </div>
             <div>
                 <label class="form-label">Google Calendar ID</label>
-                <input type="text" name="googleCalendarId" required class="form-input font-mono" placeholder="e.g. user@group.calendar.google.com">
+                <input type="text" name="googleCalendarId" required class="form-input font-mono" placeholder="e.g. c_...&#64;group.calendar.google.com">
+                <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
+                    Google Calendar &rarr; the calendar's &#8942; &rarr; Settings and sharing &rarr; Integrate calendar &rarr; Calendar ID (e.g. <code class="font-mono text-xs">c_...&#64;group.calendar.google.com</code>). Must be shared with the account owning <code class="font-mono text-xs">GOOGLE_REFRESH_TOKEN</code> with permission &ldquo;Make changes to events&rdquo;.
+                </p>
             </div>
             <div class="md:col-span-2 flex justify-end gap-2">
                 <button type="button" hx-get="/admin/calendars/form/cancel" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm">Cancel</button>

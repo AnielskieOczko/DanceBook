@@ -8,13 +8,15 @@ interface TrainingCalendarService {
 
     fun findAll(): List<TrainingCalendar>
 
+    fun findAllEnabled(): List<TrainingCalendar>
+
     fun findById(id: UUID): TrainingCalendar?
 
     fun findDefault(): TrainingCalendar?
 
     fun requireDefault(): TrainingCalendar
 
-    fun add(request: TrainingCalendarRequest): TrainingCalendar
+    fun add(request: TrainingCalendarRequest, enabled: Boolean = true): TrainingCalendar
 
     fun setDefault(id: UUID): TrainingCalendar
 
