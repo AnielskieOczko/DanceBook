@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -40,7 +41,8 @@ class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
     private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService,
-    private val trainingCalendarService: TrainingCalendarService
+    private val trainingCalendarService: TrainingCalendarService,
+    private val activeCalendarService: ActiveCalendarService
 ) {
 
     companion object {
@@ -61,7 +63,8 @@ class TrainingEventWebController(
         model: Model
     ): String {
         val events = trainingEventService.findByCurrentUser(
-            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation
+            eventTypes, categoryIds, attendanceStatuses, search, awaitingConfirmation,
+            activeCalendarService.active()?.id
         )
         populateEventsList(model, events)
         // ArrayList, not emptyList(): Kotlin's EmptyList is an internal object whose

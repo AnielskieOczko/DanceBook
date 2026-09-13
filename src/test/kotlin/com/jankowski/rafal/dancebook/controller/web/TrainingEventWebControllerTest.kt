@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
+import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -36,6 +37,7 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var trainingCalendarService: TrainingCalendarService
+    private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var controller: TrainingEventWebController
 
     @BeforeEach
@@ -44,11 +46,13 @@ class TrainingEventWebControllerTest {
         trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
         trainingCalendarService = mock(TrainingCalendarService::class.java)
+        activeCalendarService = mock(ActiveCalendarService::class.java)
         controller = TrainingEventWebController(
             trainingEventService,
             trainingSeriesService,
             danceCategoryService,
-            trainingCalendarService
+            trainingCalendarService,
+            activeCalendarService
         )
     }
 

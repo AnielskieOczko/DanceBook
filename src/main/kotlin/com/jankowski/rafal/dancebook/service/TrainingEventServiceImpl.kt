@@ -43,7 +43,8 @@ class TrainingEventServiceImpl(
         categoryIds: List<UUID>?,
         attendanceStatuses: List<AttendanceStatus>?,
         titleSearch: String?,
-        awaitingConfirmation: Boolean?
+        awaitingConfirmation: Boolean?,
+        calendarId: UUID?
     ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
         log.debug("Retrieving training events for user '{}'", currentUser.username)
@@ -54,7 +55,8 @@ class TrainingEventServiceImpl(
             categoryIds = categoryIds,
             attendanceStatuses = attendanceStatuses,
             titleSearch = titleSearch,
-            awaitingConfirmation = awaitingConfirmation
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = calendarId
         )
         return trainingEventRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "startTime"))
     }
