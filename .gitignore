@@ -41,10 +41,7 @@ src/main/resources/static/css/output.css
 *-service-account*.json
 
 ### AI Agents ###
-# Ignore the agent customization root, but track the permission rules so they
-# travel with the repo into per-issue worktrees (agy reads .agents/settings.json).
-.agents/*
-!.agents/settings.json
+.agents/
 
 # Per-run scratch written into an agy worktree (task brief, run result, review notes).
 .agy-task.md

@@ -181,6 +181,9 @@ autonomous agent. If you are that agent, this section is binding.
 - `static/css/output.css` — generated, gitignored.
 - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md` — onboarding is set by a human.
 - Production migrations. Let Flyway run through the application.
+- `git`. Version control is handled outside your session — branches, commits and pull
+  requests are not yours to make. Just leave the working tree in the state you want
+  reviewed.
 
 **Reporting back**
 

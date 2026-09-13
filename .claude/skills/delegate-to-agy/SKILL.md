@@ -8,23 +8,48 @@ description: Use when handing a fully-specified GitHub issue to Google Antigravi
 Claude does the expensive thinking; `agy` (Gemini 3.8 Flash) does the typing. This skill
 covers the handoff only — verification is `verify-agy-work`.
 
-**Why this shape:** every `agy` invocation re-pays ~31k tokens of fixed harness overhead
-against a Google AI Pro quota that refreshes every 5h up to a weekly ceiling. So: one run
-per issue, never one run per step, and resume conversations instead of starting fresh.
+Every flag and rule below was established by probing the real CLI. Changing any of them
+should also be done by probing, not by reasoning about what ought to work.
 
 ## Non-negotiables
 
-- **Always `--sandbox`.** The user requires it.
-- **Never `--dangerously-skip-permissions`.** It auto-approves the agent's own request to
-  bypass the sandbox, silently voiding it (antigravity-cli issue #36). The two flags
-  together are worse than neither, because they look safe.
+- **Always `--add-dir <worktree-abs-path>`.** Without it agy never attaches to the project:
+  it silently works inside `~/.gemini/antigravity-cli/scratch`, writes files there, and
+  reports success. This is the single worst failure mode — a green run, an empty diff.
+- **Always `--sandbox`.** The user requires it. Verified to block writes to `$HOME` and to
+  sibling directories (`operation not permitted`) while leaving the workspace, `~/.gradle`
+  and `/tmp` writable. `/tmp` is allowed by the macOS profile, so never use it as a canary.
+- **Never `--dangerously-skip-permissions`.** agy escalates some operations by requesting
+  the `unsandboxed` permission; headless mode auto-denies it, and that denial *is* the
+  sandbox guarantee. This flag auto-approves it (antigravity-cli#36), silently voiding the
+  sandbox.
 - **Never `--mode plan`** headlessly — it blocks forever waiting for an approval prompt
   that cannot appear.
-- **Always background the run** (`run_in_background: true`). Real runs take tens of
-  minutes; a trivial prompt took 7 minutes.
-- **Write `-p='…'` last.** A bare `-p` swallows the next flag as its prompt.
 - **Never pass `--effort` alongside an effort-suffixed `--model`.** They conflict and the
-  run exits immediately with `status:"ERROR"`.
+  run exits immediately with `status:"ERROR"`. Effort lives in the model id:
+  `gemini-3.8-flash-low` / `-medium` / `-high`.
+- **Write `-p='…'` last.** A bare `-p` swallows the next flag as its prompt.
+- **Background the run** (`run_in_background: true`) for anything real.
+
+## Prerequisites (once)
+
+`~/.gemini/antigravity-cli/settings.json` needs:
+
+```json
+"permissions": { "allow": ["command(*)", "write_file(*)", "read_file(*)"], "deny": [] }
+```
+
+Headless mode cannot prompt, so anything not allowed here is auto-denied and the run does
+nothing. These rules are broad on purpose — **`--sandbox` is the control, not the
+allowlist.** Note this is global scope: it also suppresses prompting for non-sandboxed agy
+sessions elsewhere. Project-scoped permissions were tried in `.agents/settings.json` and
+are *not* read by the CLI.
+
+The worktree's parent must be in `trustedWorkspaces` (`/Volumes/my-data/Developer/Projects`
+covers every `../DanceBook-agy-<N>`).
+
+Keep `agy mcp list` clean. A dead MCP server blocks startup for minutes on *every* run —
+removing one took a trivial run from 430s to 10s.
 
 ## Steps
 
@@ -34,11 +59,8 @@ per issue, never one run per step, and resume conversations instead of starting 
 gh issue view <N> --json number,title,body,labels --jq '{number,title,labels:[.labels[].name],body}'
 ```
 
-Require both, and stop with a clear message if either is missing:
-- the label `ready-for-agent`
-- an `## Implementation plan` section in the body
-
-A vague issue produces a bad diff and burns quota. Send it back to planning instead.
+Require the `ready-for-agent` label and an `## Implementation plan` section, and stop if
+either is missing. A vague issue produces a bad diff and burns quota.
 
 ### 2. Isolate
 
@@ -46,46 +68,28 @@ A vague issue produces a bad diff and burns quota. Send it back to planning inst
 git worktree add ../DanceBook-agy-<N> -b agy/issue-<N> main
 ```
 
-The worktree is also the sandbox boundary — `--sandbox` confines writes to the workspace.
-
-**Then confirm the permission rules came along:**
-
-```bash
-test -f ../DanceBook-agy-<N>/.agents/settings.json \
-  || { mkdir -p ../DanceBook-agy-<N>/.agents && cp .agents/settings.json ../DanceBook-agy-<N>/.agents/; }
-```
-
-`.agents/` is gitignored except for `settings.json`, so the rules travel with the branch
-*once committed*. Until then the worktree starts without them and every tool call is
-auto-denied — a failure that looks exactly like a model problem but isn't.
-
 ### 3. Brief
 
-Write `.agy-task.md` in the worktree containing: the issue title and number, the goal in
-your own words, the `## Implementation plan` steps verbatim, and the definition of done.
-Do not restate the rules already in `AGENTS.md` (`agy` reads it automatically) — point at
-its *Agent delegation contract* section instead.
+Write `.agy-task.md` in the worktree: issue title and number, the goal in your own words,
+the `## Implementation plan` steps verbatim, and the definition of done. Don't restate the
+rules in `AGENTS.md` (agy reads it) — point at its *Agent delegation contract* section.
 
-These scratch files (`.agy-task.md`, `.agy-run.json`, `.agy-review.md`) are already in
-`.gitignore`, so they stay out of the diff.
+Tell it explicitly **not to use git**: agy requests `unsandboxed` for git operations, which
+headless auto-denies. Claude owns every git operation in this workflow.
 
-### 4. Run — background, sandboxed
+These scratch files are already in `.gitignore`, so they stay out of the diff.
+
+### 4. Run — background, sandboxed, attached
 
 ```bash
-cd ../DanceBook-agy-<N> && GRADLE_USER_HOME=$PWD/.gradle-home \
-agy --sandbox --model gemini-3.8-flash-high \
-    --output-format json --print-timeout 45m \
+cd ../DanceBook-agy-<N> && agy --sandbox --add-dir "$PWD" \
+    --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
     -p='Read .agy-task.md and implement it fully, following the Agent delegation contract in AGENTS.md. Run ./gradlew build until it passes. Then summarise what you changed.' \
     > .agy-run.json 2>&1
 ```
 
-`GRADLE_USER_HOME` must point inside the worktree — Gradle's default `~/.gradle` is
-outside the sandbox boundary and the build will fail without it.
-
-Reasoning effort is encoded in the model id, not a separate flag: `gemini-3.8-flash-low`
-/ `-medium` / `-high`. **Passing both `--model gemini-3.8-flash-high` and `--effort` is a
-hard error** (`conflicts with --effort`) and the run dies before doing anything. Use
-`-medium` for mechanical work; keep `-high` for anything with real logic.
+Gradle works under the sandbox with its default `~/.gradle`; no `GRADLE_USER_HOME`
+override is needed. Use `-medium` for mechanical work, `-high` for real logic.
 
 ### 5. Validate — do not trust `status`
 
@@ -93,22 +97,21 @@ hard error** (`conflicts with --effort`) and the run dies before doing anything.
 python3 .claude/skills/delegate-to-agy/validate-run.py ../DanceBook-agy-<N>/.agy-run.json
 ```
 
-`agy` returns exit 0 and `status:"SUCCESS"` even when it timed out or had every tool
-auto-denied. The validator checks what actually matters (non-empty `response`,
-`num_turns > 0`, no `denied_actions`) and prints the token spend.
+`agy` returns exit 0 and `status:"SUCCESS"` for timeouts, flag errors and fully-denied
+runs alike. The validator checks non-empty `response`, `num_turns > 0` and absent
+`denied_actions`, and prints the token spend.
 
-If it reports **auto-denied tools**, add the specific command to `permissions.allow` in
-`~/.gemini/antigravity-cli/settings.json`, then resume the *same* conversation rather than
-paying the onboarding cost again:
+If it reports denied tools, add the action to `permissions.allow`, then resume the *same*
+conversation instead of re-paying the onboarding cost:
 
 ```bash
-agy --sandbox --conversation <conversation_id> --output-format json \
+agy --sandbox --add-dir "$PWD" --conversation <conversation_id> --output-format json \
     --print-timeout 45m -p='Continue where you left off.' > .agy-run.json 2>&1
 ```
 
 ### 6. Report
 
-Give the user: tokens and wall-clock from the validator, `git -C ../DanceBook-agy-<N> diff --stat`,
-and agy's own summary. Then hand off to `verify-agy-work`.
-
-Record the run's `conversation_id` — Phase 2 needs it for fix rounds.
+Give the user tokens and wall-clock from the validator, `git -C ../DanceBook-agy-<N> diff --stat`,
+and agy's summary. **Confirm the diff is non-empty** — an empty diff with a cheerful
+summary means `--add-dir` was missing or ineffective. Then hand off to `verify-agy-work`,
+and keep the `conversation_id` for fix rounds.

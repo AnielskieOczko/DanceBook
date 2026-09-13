@@ -17,6 +17,10 @@ git -C ../DanceBook-agy-<N> diff --stat main...HEAD
 
 Read the actual diff. The agent's own summary is a claim, not evidence.
 
+**An empty diff means `--add-dir` was missing or ineffective** — agy worked in a
+scratch directory and its summary describes files it never touched. Stop and fix the
+invocation rather than reviewing an empty change.
+
 ## 2. Build it yourself
 
 ```bash
@@ -51,11 +55,14 @@ then **resume the same conversation** — this reuses the cached context instead
 ~31k tokens of onboarding:
 
 ```bash
-cd ../DanceBook-agy-<N> && GRADLE_USER_HOME=$PWD/.gradle-home \
-agy --sandbox --conversation <conversation_id> --output-format json --print-timeout 45m \
+cd ../DanceBook-agy-<N> && agy --sandbox --add-dir "$PWD" \
+    --conversation <conversation_id> --output-format json --print-timeout 45m \
     -p='Read .agy-review.md and address every numbered item. Re-run ./gradlew build until it passes.' \
     > .agy-run.json 2>&1
 ```
+
+`--add-dir` is required on resumes too — without it agy edits a scratch directory and
+reports success against files it never touched.
 
 Background it, then re-validate with `delegate-to-agy/validate-run.py` and return to step 1.
 
