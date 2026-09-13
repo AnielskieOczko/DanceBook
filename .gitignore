@@ -42,6 +42,12 @@ src/main/resources/static/css/output.css
 
 ### AI Agents ###
 .agents/
+
+# Per-run scratch written into an agy worktree (task brief, run result, review notes).
+.agy-task.md
+.agy-run.json
+.agy-review.md
+.agy-probe.json
 .gradle-home/
 
 ### OS Specific ###
