@@ -70,6 +70,17 @@ class TrainingRecord {
     @Column(name = "event_type", nullable = false)
     var eventType: TrainingEventType = TrainingEventType.TRAINING
 
+    /**
+     * The calendar the session lived in, copied at write time. Null for a record orphaned
+     * before V30, whose calendar can no longer be recovered.
+     */
+    @Column(name = "calendar_id")
+    var calendarId: UUID? = null
+
+    /** Denormalised like [title], so history stays readable after the calendar is deleted. */
+    @Column(name = "calendar_name")
+    var calendarName: String? = null
+
     @OneToMany(mappedBy = "trainingRecord", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("sortOrder ASC")
     var segments: MutableList<TrainingRecordSegment> = mutableListOf()

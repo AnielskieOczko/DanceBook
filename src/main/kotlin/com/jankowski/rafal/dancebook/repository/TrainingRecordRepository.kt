@@ -26,4 +26,10 @@ interface TrainingRecordRepository : JpaRepository<TrainingRecord, UUID> {
      */
     @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
     fun findAllByCreatedByOrderByOccurredAtDesc(createdBy: AppUser): List<TrainingRecord>
+
+    /** The same listing scoped to one calendar. Records with a null calendar are excluded. */
+    fun findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(
+        createdBy: AppUser,
+        calendarId: UUID
+    ): List<TrainingRecord>
 }
