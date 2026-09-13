@@ -190,3 +190,7 @@ autonomous agent. If you are that agent, this section is binding.
 End by summarising what changed and why, listing the files touched, and stating the
 outcome of `./gradlew build` verbatim. If you could not finish, say exactly what is
 incomplete rather than implying the work is done.
+
+Write it as a plain report for a reviewer, not as a lesson. No tutorials, no comparisons
+to other frameworks, no intuition-building asides, and **never end with a question or a
+comprehension check** — nobody is reading the run live to answer it.
