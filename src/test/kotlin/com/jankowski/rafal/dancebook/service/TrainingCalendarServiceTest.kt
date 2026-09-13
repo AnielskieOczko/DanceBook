@@ -2,7 +2,9 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.config.GoogleCalendarProperties
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingCalendarRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,6 +27,7 @@ class TrainingCalendarServiceTest {
 
     private lateinit var trainingCalendarRepository: TrainingCalendarRepository
     private lateinit var trainingEventRepository: TrainingEventRepository
+    private lateinit var trainingEventPersistence: TrainingEventPersistence
     private lateinit var calendarProperties: GoogleCalendarProperties
     private lateinit var service: TrainingCalendarServiceImpl
 
@@ -32,10 +35,12 @@ class TrainingCalendarServiceTest {
     fun setUp() {
         trainingCalendarRepository = mock(TrainingCalendarRepository::class.java)
         trainingEventRepository = mock(TrainingEventRepository::class.java)
+        trainingEventPersistence = mock(TrainingEventPersistence::class.java)
         calendarProperties = GoogleCalendarProperties(calendarId = "seed-cal@group.calendar.google.com")
         service = TrainingCalendarServiceImpl(
             trainingCalendarRepository,
             trainingEventRepository,
+            trainingEventPersistence,
             calendarProperties
         )
     }
@@ -84,6 +89,7 @@ class TrainingCalendarServiceTest {
         val blankService = TrainingCalendarServiceImpl(
             trainingCalendarRepository,
             trainingEventRepository,
+            trainingEventPersistence,
             blankProperties
         )
 
@@ -197,7 +203,7 @@ class TrainingCalendarServiceTest {
     }
 
     @Test
-    fun `disabling the only default is rejected`() {
+    fun `disabling the default calendar is refused when another exists`() {
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {
             this.id = id
@@ -205,6 +211,7 @@ class TrainingCalendarServiceTest {
             enabled = true
         }
         `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.count()).thenReturn(2L)
 
         val exception = assertThrows(IllegalStateException::class.java) {
             service.setEnabled(id, false)
@@ -212,6 +219,25 @@ class TrainingCalendarServiceTest {
 
         assertEquals("Make another calendar the default before disabling this one.", exception.message)
         verify(trainingCalendarRepository, never()).save(any(TrainingCalendar()))
+    }
+
+    @Test
+    fun `disabling the default calendar is allowed and clears default when it is the only calendar`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            isDefault = true
+            enabled = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.count()).thenReturn(1L)
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar()))).thenAnswer { it.getArgument(0) }
+
+        val updated = service.setEnabled(id, false)
+
+        assertFalse(updated.enabled)
+        assertFalse(updated.isDefault)
+        verify(trainingCalendarRepository).save(calendar)
     }
 
     @Test
@@ -226,6 +252,229 @@ class TrainingCalendarServiceTest {
             "No default training calendar is configured. Add one under Admin → Training calendars before creating a session.",
             exception.message
         )
+    }
+
+    @Test
+    fun `update renames calendar while keeping Google ID untouched`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "cal@google.com"
+            displayName = "Old Name"
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar()))).thenAnswer { it.getArgument(0) }
+
+        val request = TrainingCalendarRequest("cal@google.com", "New Name")
+        val updated = service.update(id, request)
+
+        assertEquals("New Name", updated.displayName)
+        assertEquals("cal@google.com", updated.googleCalendarId)
+        verify(trainingCalendarRepository).save(calendar)
+    }
+
+    @Test
+    fun `update changes Google ID when calendar owns no sessions`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Calendar"
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(0L)
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("new@google.com")).thenReturn(null)
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar()))).thenAnswer { it.getArgument(0) }
+
+        val request = TrainingCalendarRequest("new@google.com", "Calendar")
+        val updated = service.update(id, request, enabled = true)
+
+        assertEquals("new@google.com", updated.googleCalendarId)
+        assertTrue(updated.enabled)
+    }
+
+    @Test
+    fun `update rejects Google ID change when calendar owns sessions`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Calendar"
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(3L)
+
+        val request = TrainingCalendarRequest("new@google.com", "Calendar")
+        val ex = assertThrows(IllegalStateException::class.java) {
+            service.update(id, request)
+        }
+
+        assertTrue(ex.message!!.contains("A calendar's Google ID may only be changed while it owns no sessions."))
+        verify(trainingCalendarRepository, never()).save(any(TrainingCalendar()))
+    }
+
+    @Test
+    fun `update rejects duplicate Google ID`() {
+        val id = UUID.randomUUID()
+        val otherId = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Calendar"
+        }
+        val other = TrainingCalendar().apply {
+            this.id = otherId
+            googleCalendarId = "dup@google.com"
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(0L)
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("dup@google.com")).thenReturn(other)
+
+        val request = TrainingCalendarRequest("dup@google.com", "Calendar")
+        val ex = assertThrows(IllegalArgumentException::class.java) {
+            service.update(id, request)
+        }
+
+        assertTrue(ex.message!!.contains("already exists"))
+        verify(trainingCalendarRepository, never()).save(any(TrainingCalendar()))
+    }
+
+    @Test
+    fun `update with enabled false saves calendar disabled`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Calendar"
+            enabled = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(0L)
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("new@google.com")).thenReturn(null)
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar()))).thenAnswer { it.getArgument(0) }
+
+        val request = TrainingCalendarRequest("new@google.com", "Calendar")
+        val updated = service.update(id, request, enabled = false)
+
+        assertFalse(updated.enabled)
+    }
+
+    @Test
+    fun `update with enabled false on default calendar refuses when another exists`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Default Calendar"
+            isDefault = true
+            enabled = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(0L)
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("new@google.com")).thenReturn(null)
+        `when`(trainingCalendarRepository.count()).thenReturn(2L)
+
+        val request = TrainingCalendarRequest("new@google.com", "Default Calendar")
+        val ex = assertThrows(IllegalStateException::class.java) {
+            service.update(id, request, enabled = false)
+        }
+
+        assertEquals("Make another calendar the default before disabling this one.", ex.message)
+        verify(trainingCalendarRepository, never()).save(any(TrainingCalendar()))
+    }
+
+    @Test
+    fun `update with enabled false on default calendar saves disabled and clears default when it is the only calendar`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            googleCalendarId = "old@google.com"
+            displayName = "Only Default Calendar"
+            isDefault = true
+            enabled = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(0L)
+        `when`(trainingCalendarRepository.findByGoogleCalendarId("new@google.com")).thenReturn(null)
+        `when`(trainingCalendarRepository.count()).thenReturn(1L)
+        `when`(trainingCalendarRepository.save(any(TrainingCalendar()))).thenAnswer { it.getArgument(0) }
+
+        val request = TrainingCalendarRequest("new@google.com", "Only Default Calendar")
+        val updated = service.update(id, request, enabled = false)
+
+        assertEquals("new@google.com", updated.googleCalendarId)
+        assertFalse(updated.enabled)
+        assertFalse(updated.isDefault)
+        verify(trainingCalendarRepository).save(calendar)
+    }
+
+    @Test
+    fun `delete refuses to delete default calendar when another exists`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            isDefault = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.count()).thenReturn(2L)
+
+        val actor = AppUser()
+        val ex = assertThrows(IllegalStateException::class.java) {
+            service.delete(id, actor)
+        }
+
+        assertEquals("Make another calendar the default before deleting this one.", ex.message)
+        verify(trainingCalendarRepository, never()).delete(any(TrainingCalendar()))
+    }
+
+    @Test
+    fun `delete removes calendar and its sessions through persistence without calling Google`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            isDefault = false
+        }
+        val event1 = TrainingEvent().apply { this.id = UUID.randomUUID(); title = "Event 1" }
+        val event2 = TrainingEvent().apply { this.id = UUID.randomUUID(); title = "Event 2" }
+
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.count()).thenReturn(2L)
+        `when`(trainingEventRepository.findAllByCalendarId(id)).thenReturn(listOf(event1, event2))
+
+        val actor = AppUser()
+        service.delete(id, actor)
+
+        verify(trainingEventPersistence).remove(event1, actor)
+        verify(trainingEventPersistence).remove(event2, actor)
+        verify(trainingCalendarRepository).delete(calendar)
+    }
+
+    @Test
+    fun `delete allows deleting the last remaining calendar`() {
+        val id = UUID.randomUUID()
+        val calendar = TrainingCalendar().apply {
+            this.id = id
+            isDefault = true
+        }
+        `when`(trainingCalendarRepository.findById(id)).thenReturn(Optional.of(calendar))
+        `when`(trainingCalendarRepository.count()).thenReturn(1L)
+        `when`(trainingEventRepository.findAllByCalendarId(id)).thenReturn(emptyList())
+
+        val actor = AppUser()
+        service.delete(id, actor)
+
+        verify(trainingCalendarRepository).delete(calendar)
+    }
+
+    @Test
+    fun `countSessions delegates to repository`() {
+        val id = UUID.randomUUID()
+        `when`(trainingEventRepository.countByCalendarId(id)).thenReturn(5L)
+
+        val count = service.countSessions(id)
+
+        assertEquals(5L, count)
+        verify(trainingEventRepository).countByCalendarId(id)
     }
 
     private fun <T> any(dummy: T): T {

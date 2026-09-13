@@ -25,6 +25,12 @@ document.addEventListener('htmx:afterRequest', function(event) {
             }, 50);
         }
     }
+    if (target && target.closest('#confirmModalContainer')) {
+        if (event.detail.successful) {
+            const container = document.getElementById('confirmModalContainer');
+            if (container) container.innerHTML = '';
+        }
+    }
 });
 
 /**
@@ -157,6 +163,27 @@ document.addEventListener('click', function(event) {
         event.preventDefault();
         const modal = document.getElementById('deleteConfirmModal');
         if (modal) modal.style.display = 'none';
+        return;
+    }
+
+    // 6b. Shared confirm dialog close button
+    const closeModalBtn = event.target.closest('.js-close-modal');
+    if (closeModalBtn) {
+        event.preventDefault();
+        const container = document.getElementById('confirmModalContainer');
+        if (container) container.innerHTML = '';
+        const modal = closeModalBtn.closest('.js-modal');
+        if (modal) modal.classList.add('hidden');
+        return;
+    }
+
+    // 6c. Modal backdrop click handler
+    if (event.target.classList.contains('js-modal-backdrop')) {
+        event.preventDefault();
+        const container = document.getElementById('confirmModalContainer');
+        if (container) container.innerHTML = '';
+        const modal = event.target.closest('.js-modal');
+        if (modal) modal.classList.add('hidden');
         return;
     }
 
@@ -412,3 +439,17 @@ document.addEventListener('change', function(event) {
         updateStyleFilters();
     }
 }, true);
+
+// Close modals on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const container = document.getElementById('confirmModalContainer');
+        if (container && container.innerHTML.trim() !== '') {
+            container.innerHTML = '';
+        }
+        document.querySelectorAll('.js-modal').forEach(m => m.classList.add('hidden'));
+        const deleteModal = document.getElementById('deleteConfirmModal');
+        if (deleteModal) deleteModal.style.display = 'none';
+    }
+});
+

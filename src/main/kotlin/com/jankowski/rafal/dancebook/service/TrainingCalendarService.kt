@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import java.util.UUID
 
@@ -17,6 +18,12 @@ interface TrainingCalendarService {
     fun requireDefault(): TrainingCalendar
 
     fun add(request: TrainingCalendarRequest, enabled: Boolean = true): TrainingCalendar
+
+    fun update(id: UUID, request: TrainingCalendarRequest, enabled: Boolean? = null): TrainingCalendar
+
+    fun delete(id: UUID, actor: AppUser)
+
+    fun countSessions(id: UUID): Long
 
     fun setDefault(id: UUID): TrainingCalendar
 

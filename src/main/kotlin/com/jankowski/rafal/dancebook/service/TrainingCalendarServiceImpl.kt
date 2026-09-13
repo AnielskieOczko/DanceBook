@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.config.GoogleCalendarProperties
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.repository.TrainingCalendarRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
@@ -15,6 +16,7 @@ import java.util.UUID
 class TrainingCalendarServiceImpl(
     private val trainingCalendarRepository: TrainingCalendarRepository,
     private val trainingEventRepository: TrainingEventRepository,
+    private val trainingEventPersistence: TrainingEventPersistence,
     private val calendarProperties: GoogleCalendarProperties
 ) : TrainingCalendarService {
 
@@ -57,6 +59,64 @@ class TrainingCalendarServiceImpl(
         return trainingCalendarRepository.save(calendar)
     }
 
+    override fun countSessions(id: UUID): Long =
+        trainingEventRepository.countByCalendarId(id)
+
+    @Transactional
+    override fun update(id: UUID, request: TrainingCalendarRequest, enabled: Boolean?): TrainingCalendar {
+        val calendar = trainingCalendarRepository.findById(id).orElseThrow {
+            IllegalArgumentException("Training calendar with id $id not found")
+        }
+        val trimmedDisplayName = request.displayName.trim()
+        if (trimmedDisplayName.isNotBlank()) {
+            calendar.displayName = trimmedDisplayName
+        }
+
+        val trimmedGoogleId = request.googleCalendarId.trim()
+        if (trimmedGoogleId.isNotBlank() && trimmedGoogleId != calendar.googleCalendarId) {
+            val sessionCount = trainingEventRepository.countByCalendarId(id)
+            if (sessionCount > 0) {
+                throw IllegalStateException("A calendar's Google ID may only be changed while it owns no sessions.")
+            }
+            val existing = trainingCalendarRepository.findByGoogleCalendarId(trimmedGoogleId)
+            if (existing != null && existing.id != id) {
+                throw IllegalArgumentException("A calendar with Google Calendar ID '$trimmedGoogleId' already exists.")
+            }
+            calendar.googleCalendarId = trimmedGoogleId
+        }
+
+        if (enabled != null) {
+            if (!enabled && calendar.isDefault) {
+                val totalCalendars = trainingCalendarRepository.count()
+                if (totalCalendars > 1) {
+                    throw IllegalStateException("Make another calendar the default before disabling this one.")
+                }
+                calendar.isDefault = false
+            }
+            calendar.enabled = enabled
+        }
+
+        calendar.updatedAt = LocalDateTime.now()
+        return trainingCalendarRepository.save(calendar)
+    }
+
+    @Transactional
+    override fun delete(id: UUID, actor: AppUser) {
+        val calendar = trainingCalendarRepository.findById(id).orElseThrow {
+            IllegalArgumentException("Training calendar with id $id not found")
+        }
+        val totalCalendars = trainingCalendarRepository.count()
+        if (calendar.isDefault && totalCalendars > 1) {
+            throw IllegalStateException("Make another calendar the default before deleting this one.")
+        }
+
+        val events = trainingEventRepository.findAllByCalendarId(id)
+        events.forEach { event ->
+            trainingEventPersistence.remove(event, actor)
+        }
+        trainingCalendarRepository.delete(calendar)
+    }
+
     @Transactional
     override fun setDefault(id: UUID): TrainingCalendar {
         val calendar = trainingCalendarRepository.findById(id).orElseThrow {
@@ -75,7 +135,11 @@ class TrainingCalendarServiceImpl(
             IllegalArgumentException("Training calendar with id $id not found")
         }
         if (!enabled && calendar.isDefault) {
-            throw IllegalStateException("Make another calendar the default before disabling this one.")
+            val totalCalendars = trainingCalendarRepository.count()
+            if (totalCalendars > 1) {
+                throw IllegalStateException("Make another calendar the default before disabling this one.")
+            }
+            calendar.isDefault = false
         }
         calendar.enabled = enabled
         calendar.updatedAt = LocalDateTime.now()

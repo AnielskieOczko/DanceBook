@@ -503,40 +503,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="cal : ${calendars}" class="table-row">
-                        <td class="table-cell font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
-                        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-xs" th:text="${cal.googleCalendarId}">cal-id</td>
-                        <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
-                        <td class="table-cell">
-                            <span th:if="${cal.isDefault}" class="badge-primary inline-flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                Default
-                            </span>
-                            <button th:if="${!cal.isDefault}" type="button"
-                                    th:hx-post="@{/admin/calendars/{id}/default(id=${cal.id})}"
-                                    hx-target="#calendarsSection" hx-swap="outerHTML"
-                                    class="btn-outline btn-sm">
-                                Make Default
-                            </button>
-                        </td>
-                        <td class="table-cell">
-                            <button type="button"
-                                    th:hx-post="@{/admin/calendars/{id}/enabled(id=${cal.id}, enabled=${!cal.enabled})}"
-                                    hx-target="#calendarsSection" hx-swap="outerHTML"
-                                    th:class="${cal.enabled} ? 'badge-success cursor-pointer hover:opacity-80 transition' : 'badge-neutral cursor-pointer hover:opacity-80 transition'"
-                                    th:text="${cal.enabled ? 'Enabled' : 'Disabled'}">
-                                Enabled
-                            </button>
-                        </td>
-                        <td class="table-cell text-right">
-                            <button type="button"
-                                    th:hx-post="@{/admin/calendars/{id}/verify(id=${cal.id})}"
-                                    hx-target="#calendarsSection" hx-swap="outerHTML"
-                                    class="btn-outline btn-sm">
-                                Verify
-                            </button>
-                        </td>
-                    </tr>
+                    <th:block th:each="cal : ${calendars}">
+                        <tr th:replace="~{admin/dashboard :: calendarRow}"></tr>
+                    </th:block>
                 </tbody>
             </table>
         </div>
@@ -544,6 +513,97 @@
             No calendars configured. Add one to start creating sessions.
         </div>
     </div>
+
+    <tr th:fragment="calendarRow" th:id="'calendar-row-' + ${cal.id}" class="table-row">
+        <td class="table-cell font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
+        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-xs" th:text="${cal.googleCalendarId}">cal-id</td>
+        <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
+        <td class="table-cell">
+            <span th:if="${cal.isDefault}" class="badge-primary inline-flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Default
+            </span>
+            <button th:if="${!cal.isDefault}" type="button"
+                    th:hx-post="@{/admin/calendars/{id}/default(id=${cal.id})}"
+                    hx-target="#calendarsSection" hx-swap="outerHTML"
+                    class="btn-outline btn-sm">
+                Make Default
+            </button>
+        </td>
+        <td class="table-cell">
+            <button type="button"
+                    th:hx-post="@{/admin/calendars/{id}/enabled(id=${cal.id}, enabled=${!cal.enabled})}"
+                    hx-target="#calendarsSection" hx-swap="outerHTML"
+                    th:class="${cal.enabled} ? 'badge-success cursor-pointer hover:opacity-80 transition' : 'badge-neutral cursor-pointer hover:opacity-80 transition'"
+                    th:text="${cal.enabled ? 'Enabled' : 'Disabled'}">
+                Enabled
+            </button>
+        </td>
+        <td class="table-cell text-right">
+            <div class="inline-flex items-center gap-1 justify-end">
+                <button type="button"
+                        th:hx-post="@{/admin/calendars/{id}/verify(id=${cal.id})}"
+                        hx-target="#calendarsSection" hx-swap="outerHTML"
+                        class="btn-outline btn-sm">
+                    Verify
+                </button>
+                <button type="button"
+                        th:hx-get="@{/admin/calendars/{id}/edit(id=${cal.id})}"
+                        hx-target="closest tr" hx-swap="outerHTML"
+                        class="btn-outline btn-sm">
+                    Edit
+                </button>
+                <button th:if="${cal.isDefault && (calendars == null || calendars.size() > 1)}"
+                        type="button"
+                        th:hx-post="@{/admin/calendars/{id}/delete(id=${cal.id})}"
+                        hx-target="#calendarsSection" hx-swap="outerHTML"
+                        class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
+                    Delete
+                </button>
+                <button th:unless="${cal.isDefault && (calendars == null || calendars.size() > 1)}"
+                        type="button"
+                        th:hx-get="@{/admin/calendars/{id}/delete-dialog(id=${cal.id})}"
+                        hx-target="#confirmModalContainer" hx-swap="innerHTML"
+                        class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
+                    Delete
+                </button>
+            </div>
+        </td>
+    </tr>
+
+    <tr th:fragment="editCalendarRow" th:id="'calendar-row-' + ${calendar.id}" class="bg-surface-warm">
+        <td colspan="6" class="p-4">
+            <form th:hx-post="@{/admin/calendars/{id}(id=${calendar.id})}" hx-target="#calendarsSection" hx-swap="outerHTML" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label text-xs">Display Name</label>
+                        <input type="text" name="displayName" th:value="${calendar.displayName}" required class="form-input text-sm">
+                    </div>
+                    <div>
+                        <label class="form-label text-xs">Google Calendar ID</label>
+                        <th:block th:if="${sessionCount > 0}">
+                            <input type="text" th:value="${calendar.googleCalendarId}" disabled class="form-input text-sm font-mono opacity-60 bg-surface-container cursor-not-allowed">
+                            <input type="hidden" name="googleCalendarId" th:value="${calendar.googleCalendarId}">
+                            <p class="text-xs text-text-secondary mt-1.5 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">lock</span>
+                                Google Calendar ID cannot be changed while calendar owns <span th:text="${sessionCount}">0</span> session(s).
+                            </p>
+                        </th:block>
+                        <th:block th:if="${sessionCount == 0}">
+                            <input type="text" name="googleCalendarId" th:value="${calendar.googleCalendarId}" required class="form-input text-sm font-mono">
+                            <p class="text-xs text-text-secondary mt-1.5">
+                                Google Calendar ID can be updated because this calendar owns no sessions.
+                            </p>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" th:hx-get="@{/admin/calendars/{id}/cancel(id=${calendar.id})}" hx-target="closest tr" hx-swap="outerHTML" class="btn-outline btn-sm">Cancel</button>
+                    <button type="submit" class="btn-primary btn-sm">Save Changes</button>
+                </div>
+            </form>
+        </td>
+    </tr>
 
     <div th:fragment="addCalendarForm" class="p-6 border-b border-border bg-surface-warm">
         <div th:if="${calendarError != null}" class="p-3 mb-4 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${calendarError}">Error</div>

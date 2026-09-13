@@ -73,6 +73,12 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     @Query("select distinct e.calendar.id from TrainingEvent e where e.calendar is not null")
     fun calendarIdsInUse(): List<UUID>
 
+    /** Number of sessions belonging to a specific calendar. */
+    fun countByCalendarId(calendarId: UUID): Long
+
+    /** All sessions belonging to a specific calendar. */
+    fun findAllByCalendarId(calendarId: UUID): List<TrainingEvent>
+
     /**
      * Points every event with no calendar at [calendar]. Used by the startup backfill.
      *
@@ -85,3 +91,4 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     @Query("update TrainingEvent e set e.calendar = :calendar where e.calendar is null")
     fun assignMissingCalendar(calendar: TrainingCalendar): Int
 }
+
