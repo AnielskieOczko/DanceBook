@@ -168,10 +168,48 @@ Project-specific agent rules and skills live in `.agents/rules/` and `.agents/sk
 Implementation work on an issue labelled `ready-for-agent` may be delegated to an
 autonomous agent. If you are that agent, this section is binding.
 
+**The issue you are given is a specification, not a plan.** It states what must be true
+when you are done, not which files to edit. Working out the *how* — which files, which
+layers, which tests — is your job, and the codebase is the source of truth for it. Do not
+wait to be told where the code lives; go and find it.
+
+### The work loop
+
+1. **Orient.** Read `.agy-task.md` and this file. Find the nearest existing feature that
+   already does something similar and read it end to end, then copy its shape rather than
+   inventing one. The pattern map below is your starting point.
+2. **Plan.** Write `.agy-plan.md` *before you edit anything*: the files you will add or
+   change and why, the tests you will write, and any ambiguity in the spec together with
+   the reading you chose. Keep it under ~40 lines of prose and bullets, with **no code
+   snippets** — a human reviewer reads this file, nothing executes it.
+3. **Implement.** Write the change and its tests together.
+4. **Verify.** Run `./gradlew build` until it passes, fixing your own failures. Resolving
+   your own compile errors is the entire reason the work was delegated to you.
+5. **Report.** See *Reporting back* below.
+
+### When the spec is ambiguous
+
+It will be, in places. Pick the reading most consistent with the existing code, implement
+it, and record the choice under a `## Decisions` heading in `.agy-plan.md`. Do not stop to
+ask — nobody is reading the run live, so a question ends the run without an answer.
+
+### Pattern map — where to find the shape to copy
+
+- CRUD service with domain events → `service/TrainingEventServiceImpl.kt`
+- HTMX list/filter page → `controller/web/DanceFigureWebController.kt` plus
+  `templates/dance-figures/list.html`
+- Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
+- Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
+  `service/TrainingEventServiceTest.kt`
+- Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
+  `test/.../migration/TrainingRecordBackfillTest.kt`
+- Integration test against a real Postgres → `service/TrainingEventUpdateIntegrationTest.kt`
+
 **Definition of done**
 
 - `./gradlew build` passes. This is the only acceptance signal; do not report success
   without it, and do not describe a build as passing that you have not actually run.
+- `.agy-plan.md` exists and matches what you actually did.
 - The change is confined to the branch/worktree you were given.
 
 **Rules that produce broken builds or invisible features when ignored**
@@ -198,6 +236,8 @@ autonomous agent. If you are that agent, this section is binding.
 - `git`. Version control is handled outside your session — branches, commits and pull
   requests are not yours to make. Just leave the working tree in the state you want
   reviewed.
+- `gh` and the issue tracker. Your plan is published to the issue on your behalf; you do
+  not need access, and you do not have it.
 
 **Reporting back**
 

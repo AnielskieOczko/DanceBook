@@ -43,8 +43,11 @@ src/main/resources/static/css/output.css
 ### AI Agents ###
 .agents/
 
-# Per-run scratch written into an agy worktree (task brief, run result, review notes).
+# Per-run scratch written into an agy worktree (spec, task brief, agy's own plan,
+# run result, review notes).
+.agy-spec.md
 .agy-task.md
+.agy-plan.md
 .agy-run.json
 .agy-review.md
 .agy-probe.json
