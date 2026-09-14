@@ -205,6 +205,49 @@ class TrainingEventViewRenderingTest {
     }
 
     @Test
+    fun `create form names the target calendar when a specific calendar is active`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club Training"; enabled = true }
+        `when`(activeCalendarService.creationTarget()).thenReturn(club)
+
+        val html = mockMvc.perform(get("/training-events/new").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        assertTrue(html.contains("Target calendar"))
+        assertTrue(html.contains("Club Training"))
+        assertTrue(html.contains("name=\"calendarId\""))
+    }
+
+    @Test
+    fun `create form names default calendar as target when All calendars is active`() {
+        val defaultCal = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Primary Calendar"; enabled = true }
+        `when`(activeCalendarService.creationTarget()).thenReturn(defaultCal)
+
+        val html = mockMvc.perform(get("/training-events/new").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        assertTrue(html.contains("Target calendar"))
+        assertTrue(html.contains("Primary Calendar"))
+        assertTrue(html.contains("name=\"calendarId\""))
+    }
+
+    @Test
+    fun `edit form names the owning calendar in read-only mode`() {
+        val ownCal = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club Training"; enabled = true }
+        val event = attendedSession().apply { calendar = ownCal }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events/${event.id}/edit").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        assertTrue(html.contains("Club Training"))
+        assertTrue(html.contains("Cannot be moved between calendars"))
+    }
+
+    @Test
     fun `the calendar selector is hidden with one calendar and shown with two`() {
         val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
         `when`(activeCalendarService.selectable()).thenReturn(listOf(club))

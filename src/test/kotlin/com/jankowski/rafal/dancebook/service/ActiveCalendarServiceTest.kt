@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
@@ -106,5 +107,115 @@ class ActiveCalendarServiceTest {
         `when`(trainingCalendarService.findDefault()).thenReturn(default)
 
         assertEquals(default.id, service.active()?.id)
+    }
+
+    @Test
+    fun `validateCreationTarget under All calendars refuses null calendarId`() {
+        `when`(session.getAttribute("activeCalendarId")).thenReturn("ALL")
+
+        val error = assertThrows(CalendarSyncException::class.java) {
+            service.validateCreationTarget(null)
+        }
+        assertEquals(
+            "No target calendar specified — choose a calendar to create a session.",
+            error.message
+        )
+    }
+
+    @Test
+    fun `validateCreationTarget under All calendars refuses calendar that does not exist`() {
+        val missingId = UUID.randomUUID()
+        `when`(session.getAttribute("activeCalendarId")).thenReturn("ALL")
+        `when`(trainingCalendarService.findById(missingId)).thenReturn(null)
+
+        val error = assertThrows(IllegalArgumentException::class.java) {
+            service.validateCreationTarget(missingId)
+        }
+        assertTrue(error.message!!.contains("not found"))
+    }
+
+    @Test
+    fun `validateCreationTarget under All calendars refuses disabled calendar`() {
+        val disabled = calendar("Retired", isEnabled = false)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn("ALL")
+        `when`(trainingCalendarService.findById(disabled.id!!)).thenReturn(disabled)
+
+        val error = assertThrows(CalendarSyncException::class.java) {
+            service.validateCreationTarget(disabled.id)
+        }
+        assertEquals(
+            "Retired is disabled — choose another calendar to create a session.",
+            error.message
+        )
+    }
+
+    @Test
+    fun `validateCreationTarget under All calendars accepts enabled calendar`() {
+        val enabled = calendar("Club", isEnabled = true)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn("ALL")
+        `when`(trainingCalendarService.findById(enabled.id!!)).thenReturn(enabled)
+
+        assertEquals(enabled.id, service.validateCreationTarget(enabled.id).id)
+    }
+
+    @Test
+    fun `validateCreationTarget under specific active calendar refuses when active calendar is disabled`() {
+        val disabled = calendar("Retired", isEnabled = false)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(disabled.id.toString())
+        `when`(trainingCalendarService.findById(disabled.id!!)).thenReturn(disabled)
+
+        val error = assertThrows(CalendarSyncException::class.java) {
+            service.validateCreationTarget(disabled.id)
+        }
+        assertEquals(
+            "Retired is disabled — choose another calendar to create a session.",
+            error.message
+        )
+    }
+
+    @Test
+    fun `validateCreationTarget under specific active calendar refuses different calendarId`() {
+        val club = calendar("Club", isEnabled = true)
+        val other = calendar("Home", isEnabled = true)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(club.id.toString())
+        `when`(trainingCalendarService.findById(club.id!!)).thenReturn(club)
+        `when`(trainingCalendarService.findById(other.id!!)).thenReturn(other)
+
+        val error = assertThrows(IllegalArgumentException::class.java) {
+            service.validateCreationTarget(other.id)
+        }
+        assertTrue(error.message!!.contains("active calendar is 'Club'"))
+    }
+
+    @Test
+    fun `validateCreationTarget under specific active calendar refuses non-existent calendarId`() {
+        val club = calendar("Club", isEnabled = true)
+        val missingId = UUID.randomUUID()
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(club.id.toString())
+        `when`(trainingCalendarService.findById(club.id!!)).thenReturn(club)
+        `when`(trainingCalendarService.findById(missingId)).thenReturn(null)
+
+        val error = assertThrows(IllegalArgumentException::class.java) {
+            service.validateCreationTarget(missingId)
+        }
+        assertTrue(error.message!!.contains("not found"))
+    }
+
+    @Test
+    fun `validateCreationTarget under specific active calendar accepts matching calendarId`() {
+        val club = calendar("Club", isEnabled = true)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(club.id.toString())
+        `when`(trainingCalendarService.findById(club.id!!)).thenReturn(club)
+
+        assertEquals(club.id, service.validateCreationTarget(club.id).id)
+    }
+
+    @Test
+    fun `validateCreationTarget under specific active calendar allows null calendarId and resolves to active`() {
+        val club = calendar("Club", isEnabled = true)
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(club.id.toString())
+        `when`(trainingCalendarService.findById(club.id!!)).thenReturn(club)
+
+        assertEquals(club.id, service.validateCreationTarget(null).id)
     }
 }

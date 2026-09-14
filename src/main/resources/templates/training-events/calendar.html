@@ -114,11 +114,18 @@
     <form id="quickCreateForm" th:object="${trainingEvent}" method="post" th:action="@{/training-events}"
           class="space-y-3">
         <div class="flex items-start justify-between gap-2">
-            <h3 class="font-headline-md text-lg font-semibold text-on-surface">New session</h3>
+            <div>
+                <h3 class="font-headline-md text-lg font-semibold text-on-surface">New session</h3>
+                <p class="form-hint mt-0.5" th:if="${targetCalendar != null}">
+                    Calendar: <span class="font-medium text-on-surface" th:text="${targetCalendar.displayName}">Club</span>
+                </p>
+            </div>
             <button type="button" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close">
                 <span class="material-symbols-outlined text-[20px]">close</span>
             </button>
         </div>
+
+        <input type="hidden" name="calendarId" th:value="${targetCalendar?.id}">
 
         <input type="text" th:field="*{title}" required class="form-input" placeholder="Add title" autofocus>
 

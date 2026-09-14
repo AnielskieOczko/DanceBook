@@ -13,6 +13,7 @@ import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,7 +21,9 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
@@ -38,6 +41,7 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingSeriesService: TrainingSeriesService
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var activeCalendarService: ActiveCalendarService
+    private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var controller: TrainingEventWebController
     private lateinit var defaultCal: TrainingCalendar
 
@@ -47,18 +51,22 @@ class TrainingEventWebControllerTest {
         trainingSeriesService = mock(TrainingSeriesService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
         activeCalendarService = mock(ActiveCalendarService::class.java)
+        trainingCalendarService = mock(TrainingCalendarService::class.java)
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Default"
             isDefault = true
             enabled = true
         }
+        `when`(trainingCalendarService.findDefault()).thenReturn(defaultCal)
         `when`(activeCalendarService.creationTarget()).thenReturn(defaultCal)
+        `when`(activeCalendarService.validateCreationTarget(any())).thenReturn(defaultCal)
         controller = TrainingEventWebController(
             trainingEventService,
             trainingSeriesService,
             danceCategoryService,
-            activeCalendarService
+            activeCalendarService,
+            trainingCalendarService
         )
     }
 
@@ -169,7 +177,7 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
-    fun `showCreateForm populates form options and sets up empty request`() {
+    fun `showCreateForm populates form options and names target calendar on request`() {
         val model = ConcurrentModel()
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -178,6 +186,43 @@ class TrainingEventWebControllerTest {
         assertEquals("training-events/form", viewName)
         assertNull(model["calendars"])
         assertNull(model["defaultCalendarId"])
+        assertEquals(defaultCal, model["targetCalendar"])
+        val request = model["trainingEvent"] as TrainingEventRequest
+        assertEquals(defaultCal.id, request.calendarId)
+    }
+
+    @Test
+    fun `showCreateForm names active calendar when specific calendar is active`() {
+        val model = ConcurrentModel()
+        val club = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Club Training"
+            enabled = true
+        }
+        `when`(activeCalendarService.creationTarget()).thenReturn(club)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val viewName = controller.showCreateForm(model)
+
+        assertEquals("training-events/form", viewName)
+        assertEquals(club, model["targetCalendar"])
+        val request = model["trainingEvent"] as TrainingEventRequest
+        assertEquals(club.id, request.calendarId)
+    }
+
+    @Test
+    fun `showCreateForm records error when active calendar is disabled`() {
+        val model = ConcurrentModel()
+        `when`(activeCalendarService.creationTarget()).thenThrow(
+            CalendarSyncException("Retired is disabled — choose another calendar to create a session.")
+        )
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val viewName = controller.showCreateForm(model)
+
+        assertEquals("training-events/form", viewName)
+        assertEquals("Retired is disabled — choose another calendar to create a session.", model["calendarError"])
+        assertNull(model["targetCalendar"])
         val request = model["trainingEvent"] as TrainingEventRequest
         assertNull(request.calendarId)
     }
@@ -269,14 +314,107 @@ class TrainingEventWebControllerTest {
             endTime = LocalTime.of(20, 30)
         )
         val binding = BeanPropertyBindingResult(request, "trainingEvent")
-        `when`(activeCalendarService.creationTarget()).thenThrow(
-            CalendarSyncException("Retired is disabled — choose another calendar to create a session.")
-        )
+        doThrow(CalendarSyncException("Retired is disabled — choose another calendar to create a session."))
+            .`when`(activeCalendarService).validateCreationTarget(any())
+        doThrow(CalendarSyncException("Retired is disabled — choose another calendar to create a session."))
+            .`when`(activeCalendarService).creationTarget()
 
         val view = controller.createTrainingEvent(request, binding, model)
 
         // The create controls are hidden in this state, but the URL is still reachable, so the
         // refusal has to surface as a form error rather than propagate out of the handler.
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        verifyNoInteractions(trainingEventService)
+    }
+
+    @Test
+    fun `createTrainingEvent refuses create when no calendarId is supplied and All calendars is active`() {
+        val model = ConcurrentModel()
+        val request = TrainingEventRequest(
+            title = "Practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            calendarId = null
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.validateCreationTarget(null)).thenThrow(
+            CalendarSyncException("No target calendar specified — choose a calendar to create a session.")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        assertEquals("No target calendar specified — choose a calendar to create a session.", binding.getFieldError("title")?.defaultMessage)
+        verifyNoInteractions(trainingEventService)
+    }
+
+    @Test
+    fun `createTrainingEvent refuses create when calendarId does not exist`() {
+        val model = ConcurrentModel()
+        val missingId = UUID.randomUUID()
+        val request = TrainingEventRequest(
+            title = "Practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            calendarId = missingId
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.validateCreationTarget(missingId)).thenThrow(
+            IllegalArgumentException("Training calendar with id $missingId not found")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        verifyNoInteractions(trainingEventService)
+    }
+
+    @Test
+    fun `createTrainingEvent refuses create when calendarId is disabled`() {
+        val model = ConcurrentModel()
+        val disabledId = UUID.randomUUID()
+        val request = TrainingEventRequest(
+            title = "Practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            calendarId = disabledId
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.validateCreationTarget(disabledId)).thenThrow(
+            CalendarSyncException("Retired is disabled — choose another calendar to create a session.")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
+        assertEquals("training-events/form", view)
+        assertTrue(binding.hasFieldErrors("title"))
+        verifyNoInteractions(trainingEventService)
+    }
+
+    @Test
+    fun `createTrainingEvent refuses create when specific calendar is active and submission names a different calendar`() {
+        val model = ConcurrentModel()
+        val otherId = UUID.randomUUID()
+        val request = TrainingEventRequest(
+            title = "Practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            calendarId = otherId
+        )
+        val binding = BeanPropertyBindingResult(request, "trainingEvent")
+        `when`(activeCalendarService.validateCreationTarget(otherId)).thenThrow(
+            IllegalArgumentException("Cannot create session in 'Other': active calendar is 'Default'.")
+        )
+
+        val view = controller.createTrainingEvent(request, binding, model)
+
         assertEquals("training-events/form", view)
         assertTrue(binding.hasFieldErrors("title"))
         verifyNoInteractions(trainingEventService)
