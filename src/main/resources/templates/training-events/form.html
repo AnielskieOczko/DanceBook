@@ -13,6 +13,34 @@
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
           th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm">
 
+        <!-- Target / Owning Calendar Statement -->
+        <div th:if="${calendarError}" class="p-4 rounded-md bg-error/10 border border-error text-error text-body-md"
+             th:text="${calendarError}">
+            This calendar is disabled.
+        </div>
+
+        <div th:if="${targetCalendar != null}"
+             class="bg-surface-container rounded-md p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-[22px]">calendar_today</span>
+                <div>
+                    <span class="text-label-sm font-label-sm uppercase tracking-wide text-on-surface-variant block"
+                          th:text="${trainingEventId == null ? 'Target calendar' : 'Calendar'}">
+                        Target calendar
+                    </span>
+                    <span class="font-body-md font-semibold text-on-surface"
+                          th:text="${targetCalendar.displayName}">
+                        Default Calendar
+                    </span>
+                </div>
+            </div>
+            <span th:if="${trainingEventId != null}" class="text-label-sm text-on-surface-variant">
+                Cannot be moved between calendars
+            </span>
+        </div>
+        <input th:if="${trainingEventId == null}" type="hidden" name="calendarId"
+               th:value="${targetCalendar?.id}">
+
         <div>
             <label for="title" class="form-label">Title *</label>
             <input id="title" type="text" th:field="*{title}" required class="form-input text-body-lg"

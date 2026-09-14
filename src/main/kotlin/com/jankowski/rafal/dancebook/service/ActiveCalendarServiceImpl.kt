@@ -47,4 +47,46 @@ class ActiveCalendarServiceImpl(
         }
         return active
     }
+
+    override fun validateCreationTarget(calendarId: UUID?): TrainingCalendar {
+        val active = active()
+        if (active != null) {
+            if (!active.enabled) {
+                throw CalendarSyncException(
+                    "${active.displayName} is disabled — choose another calendar to create a session."
+                )
+            }
+            if (calendarId != null) {
+                val target = trainingCalendarService.findById(calendarId)
+                    ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+                if (!target.enabled) {
+                    throw CalendarSyncException(
+                        "${target.displayName} is disabled — choose another calendar to create a session."
+                    )
+                }
+                if (target.id != active.id) {
+                    throw IllegalArgumentException(
+                        "Cannot create session in '${target.displayName}': active calendar is '${active.displayName}'."
+                    )
+                }
+                return target
+            }
+            return active
+        }
+
+        // Under "All calendars":
+        if (calendarId == null) {
+            throw CalendarSyncException(
+                "No target calendar specified — choose a calendar to create a session."
+            )
+        }
+        val target = trainingCalendarService.findById(calendarId)
+            ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+        if (!target.enabled) {
+            throw CalendarSyncException(
+                "${target.displayName} is disabled — choose another calendar to create a session."
+            )
+        }
+        return target
+    }
 }

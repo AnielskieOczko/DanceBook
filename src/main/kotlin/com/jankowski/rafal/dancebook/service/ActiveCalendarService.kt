@@ -25,4 +25,18 @@ interface ActiveCalendarService {
      * Throws [CalendarSyncException] when the active calendar is disabled.
      */
     fun creationTarget(): TrainingCalendar
+
+    /**
+     * Validates that a session can be created in the target calendar under the current active
+     * calendar context.
+     *
+     * - Under a specific active calendar: the calendar must be enabled, and the submission must
+     *   not target a different calendar.
+     * - Under "All calendars": a target calendar must be specified (not null), must exist, and must
+     *   be enabled.
+     *
+     * Throws [CalendarSyncException] if a calendar is disabled or unspecified under "All".
+     * Throws [IllegalArgumentException] if a calendar does not exist or does not match the active context.
+     */
+    fun validateCreationTarget(calendarId: UUID?): TrainingCalendar
 }

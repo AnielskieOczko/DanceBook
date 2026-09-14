@@ -9,7 +9,9 @@ import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.validation.Valid
@@ -40,7 +42,8 @@ class TrainingEventWebController(
     private val trainingEventService: TrainingEventService,
     private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService,
-    private val activeCalendarService: ActiveCalendarService
+    private val activeCalendarService: ActiveCalendarService,
+    private val trainingCalendarService: TrainingCalendarService
 ) {
 
     companion object {
@@ -118,12 +121,15 @@ class TrainingEventWebController(
         val slotStart = if (allDaySelection) start.toLocalDate().atTime(DEFAULT_HOUR, 0) else start
         val slotEnd = if (allDaySelection) slotStart.plusHours(1) else end
 
+        val targetCalendar = runCatching { activeCalendarService.creationTarget() }.getOrNull()
+        model.addAttribute("targetCalendar", targetCalendar)
         model.addAttribute(
             "trainingEvent",
             TrainingEventRequest(
                 date = slotStart.toLocalDate(),
                 startTime = slotStart.toLocalTime(),
-                endTime = slotEnd.toLocalTime()
+                endTime = slotEnd.toLocalTime(),
+                calendarId = targetCalendar?.id
             )
         )
         model.addAttribute("quickCreateWeekday", start.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH))
@@ -151,7 +157,14 @@ class TrainingEventWebController(
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         populateFormOptions(model)
-        model.addAttribute("trainingEvent", TrainingEventRequest())
+        val targetCalendar = try {
+            activeCalendarService.creationTarget()
+        } catch (e: CalendarSyncException) {
+            model.addAttribute("calendarError", e.message)
+            null
+        }
+        model.addAttribute("targetCalendar", targetCalendar)
+        model.addAttribute("trainingEvent", TrainingEventRequest(calendarId = targetCalendar?.id))
         return "training-events/form"
     }
 
@@ -163,13 +176,13 @@ class TrainingEventWebController(
     ): String {
         if (bindingResult.hasErrors()) {
             populateFormOptions(model)
+            model.addAttribute("targetCalendar", runCatching { activeCalendarService.creationTarget() }.getOrNull())
             return "training-events/form"
         }
 
         try {
-            // The form no longer carries a calendar; a new session goes to the one the user is
-            // currently looking at, or the default under "All calendars".
-            val scopedRequest = request.copy(calendarId = activeCalendarService.creationTarget().id)
+            val targetCalendar = activeCalendarService.validateCreationTarget(request.calendarId)
+            val scopedRequest = request.copy(calendarId = targetCalendar.id)
             if (scopedRequest.isRepeating) {
                 trainingSeriesService.create(scopedRequest)
             } else {
@@ -179,6 +192,7 @@ class TrainingEventWebController(
             log.error("Failed to create training event '{}'", request.title, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to create training event")
             populateFormOptions(model)
+            model.addAttribute("targetCalendar", runCatching { activeCalendarService.creationTarget() }.getOrNull())
             return "training-events/form"
         }
 
@@ -223,6 +237,7 @@ class TrainingEventWebController(
         )
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
+        model.addAttribute("targetCalendar", event.calendar ?: trainingCalendarService.findDefault())
         populateFormOptions(model)
         return "training-events/form"
     }
@@ -266,6 +281,7 @@ class TrainingEventWebController(
         val event = trainingEventService.findById(id)
         model.addAttribute("trainingEventId", id)
         model.addAttribute("isSeriesOccurrence", event.series != null)
+        model.addAttribute("targetCalendar", event.calendar ?: trainingCalendarService.findDefault())
         populateFormOptions(model)
         return "training-events/form"
     }
