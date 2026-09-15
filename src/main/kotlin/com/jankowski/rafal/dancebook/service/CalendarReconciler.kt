@@ -31,6 +31,8 @@ class CalendarReconciler(
     private val appUserService: AppUserService
 ) {
 
+    internal var nowProvider: () -> LocalDateTime = { LocalDateTime.now() }
+
     companion object {
         private val log = LoggerFactory.getLogger(CalendarReconciler::class.java)
     }
@@ -125,6 +127,51 @@ class CalendarReconciler(
                         log.debug("Ignoring cancellation for unknown Google event {}", change.googleEventId)
                     }
                 }
+            }
+        }
+
+        // Rule 5: Infer deletions on a complete full sync window
+        val calendarId = calendar.id
+        val windowStart = changeSet.windowStart
+        if (changeSet.isCompleteWindow && windowStart != null && calendarId != null) {
+            val returnedGoogleIds = changeSet.changes.map { it.googleEventId }.toSet()
+            val now = nowProvider()
+            val graceCutoff = now.minusMinutes(1)
+
+            val localEvents = trainingEventRepository.findAllByCalendarId(calendarId)
+            for (event in localEvents) {
+                val googleId = event.googleEventId
+                // Condition 1: Must belong to this calendar
+                if (event.calendar?.id != calendarId) {
+                    continue
+                }
+                // Condition 2: Must have a google_event_id
+                if (googleId.isNullOrBlank()) {
+                    continue
+                }
+                // Condition 3: Start time inside the fetched window
+                if (event.startTime.isBefore(windowStart)) {
+                    continue
+                }
+                // Condition 5: Google did not return it
+                if (googleId in returnedGoogleIds) {
+                    continue
+                }
+                // Grace period: exclude rows created or updated in the last minute
+                if (!event.createdAt.isBefore(graceCutoff) || !event.updatedAt.isBefore(graceCutoff)) {
+                    log.debug(
+                        "Skipping deletion of event {} within grace period (created={}, updated={})",
+                        event.id, event.createdAt, event.updatedAt
+                    )
+                    continue
+                }
+
+                log.info(
+                    "Inferring deletion for event {} ('{}', googleId={}) absent from complete window on calendar '{}'",
+                    event.id, event.title, googleId, calendar.displayName
+                )
+                trainingEventPersistence.remove(event, rootAdmin)
+                deleted++
             }
         }
 
