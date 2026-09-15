@@ -27,7 +27,15 @@ interface CalendarSyncService {
     fun syncAll(): SyncReport
 
     /**
+     * Synchronizes all enabled training calendars with Google Calendar if the configured
+     * interval has elapsed since the last sync run. Returns null if throttled or if another
+     * sync run is currently in progress.
+     */
+    fun syncIfDue(): SyncReport?
+
+    /**
      * Synchronizes a single calendar by its ID.
      */
     fun syncCalendar(calendarId: UUID): CalendarSyncOutcome
 }
+

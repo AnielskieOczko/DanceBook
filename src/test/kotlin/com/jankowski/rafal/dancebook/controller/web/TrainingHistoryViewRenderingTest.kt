@@ -12,6 +12,7 @@ import com.jankowski.rafal.dancebook.model.TrainingRecordSegment
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingHistoryService
@@ -74,6 +75,7 @@ class TrainingHistoryViewRenderingTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
+    @MockBean private lateinit var calendarSyncService: CalendarSyncService
 
     private fun record(
         title: String,

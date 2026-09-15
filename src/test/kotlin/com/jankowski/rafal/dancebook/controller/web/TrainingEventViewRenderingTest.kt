@@ -343,4 +343,77 @@ class TrainingEventViewRenderingTest {
         val syncForm = doc.select("form[action*='/training-events/sync']")
         assertTrue(syncForm.isEmpty(), "Sync now must not be wrapped in a native form")
     }
+
+    @Test
+    fun `visiting training events triggers syncIfDue through interceptor`() {
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+
+        org.mockito.Mockito.verify(calendarSyncService).syncIfDue()
+    }
+
+    @Test
+    fun `sync failure during page view still renders the page with 200 OK`() {
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+        `when`(calendarSyncService.syncIfDue()).thenThrow(com.jankowski.rafal.dancebook.service.CalendarSyncException("Google API 500 error"))
+
+        mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("training-events/list"))
+    }
+
+    @Test
+    fun `calendar selector surfaces lastSyncedAt timestamp`() {
+        val calWithSync = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Synced Calendar"
+            isDefault = true
+            enabled = true
+            lastSyncedAt = LocalDateTime.of(2026, 9, 15, 14, 45)
+        }
+        `when`(activeCalendarService.active()).thenReturn(calWithSync)
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(calWithSync))
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val syncText = doc.select(".text-text-secondary:contains(Synced 14:45)")
+        assertEquals(1, syncText.size, "Should display formatted lastSyncedAt time")
+    }
+
+    @Test
+    fun `calendar selector surfaces Never synced when lastSyncedAt is null`() {
+        val calWithoutSync = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Unsynced Calendar"
+            isDefault = true
+            enabled = true
+            lastSyncedAt = null
+        }
+        `when`(activeCalendarService.active()).thenReturn(calWithoutSync)
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(calWithoutSync))
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val syncText = doc.select(".text-text-secondary:contains(Never synced)")
+        assertEquals(1, syncText.size, "Should display Never synced when null")
+    }
 }
+

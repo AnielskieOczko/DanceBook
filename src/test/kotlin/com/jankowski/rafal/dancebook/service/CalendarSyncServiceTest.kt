@@ -11,30 +11,56 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.UUID
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class CalendarSyncServiceTest {
 
     private lateinit var trainingCalendarRepository: TrainingCalendarRepository
     private lateinit var googleCalendarClient: GoogleCalendarClient
     private lateinit var calendarReconciler: CalendarReconciler
+    private lateinit var systemSettingService: SystemSettingService
+    private lateinit var testClock: MutableClock
     private lateinit var syncService: CalendarSyncServiceImpl
 
     private lateinit var cal1: TrainingCalendar
     private lateinit var cal2: TrainingCalendar
+
+    class MutableClock(var currentInstant: Instant, private val zone: ZoneId = ZoneOffset.UTC) : Clock() {
+        override fun getZone(): ZoneId = zone
+        override fun withZone(zone: ZoneId?): Clock = MutableClock(currentInstant, zone ?: this.zone)
+        override fun instant(): Instant = currentInstant
+        fun advance(duration: Duration) {
+            currentInstant = currentInstant.plus(duration)
+        }
+    }
 
     @BeforeEach
     fun setUp() {
         trainingCalendarRepository = mock(TrainingCalendarRepository::class.java)
         googleCalendarClient = mock(GoogleCalendarClient::class.java)
         calendarReconciler = mock(CalendarReconciler::class.java)
+        systemSettingService = mock(SystemSettingService::class.java)
+        testClock = MutableClock(Instant.parse("2026-09-15T12:00:00Z"))
+
+        `when`(systemSettingService.getIntSetting("calendar_sync_interval_seconds", 60)).thenReturn(60)
 
         syncService = CalendarSyncServiceImpl(
             trainingCalendarRepository,
             googleCalendarClient,
-            calendarReconciler
+            calendarReconciler,
+            systemSettingService,
+            testClock
         )
 
         cal1 = TrainingCalendar().apply {
@@ -203,5 +229,158 @@ class CalendarSyncServiceTest {
         assertTrue(report.outcomes.isEmpty())
         verifyNoInteractions(googleCalendarClient)
         verifyNoInteractions(calendarReconciler)
+    }
+
+    @Test
+    fun `syncIfDue runs when interval has elapsed and does not when it has not`() {
+        `when`(trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc())
+            .thenReturn(listOf(cal1))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-2",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-1")).thenReturn(changeSet)
+        `when`(calendarReconciler.reconcile(cal1, changeSet)).thenReturn(ReconcileResult(updated = 1))
+
+        // First call: never synced before, so it runs
+        val report1 = syncService.syncIfDue()
+        assertNotNull(report1)
+        assertEquals(1, report1?.outcomes?.size)
+        verify(googleCalendarClient, times(1)).listChanges("club@google.com", "token-club-1")
+
+        // 30 seconds later (< 60s default): throttled, returns null, no client call
+        testClock.advance(Duration.ofSeconds(30))
+        val report2 = syncService.syncIfDue()
+        assertNull(report2)
+        verify(googleCalendarClient, times(1)).listChanges("club@google.com", "token-club-1")
+
+        // 31 seconds later (total 61s > 60s): runs again
+        testClock.advance(Duration.ofSeconds(31))
+        cal1.syncToken = "token-club-2"
+        val changeSet3 = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-3",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-2")).thenReturn(changeSet3)
+        `when`(calendarReconciler.reconcile(cal1, changeSet3)).thenReturn(ReconcileResult())
+
+        val report3 = syncService.syncIfDue()
+        assertNotNull(report3)
+        verify(googleCalendarClient, times(1)).listChanges("club@google.com", "token-club-2")
+    }
+
+    @Test
+    fun `Sync now bypasses the throttle and resets the interval timer`() {
+        `when`(trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc())
+            .thenReturn(listOf(cal1))
+
+        val changeSet1 = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-2",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-1")).thenReturn(changeSet1)
+        `when`(calendarReconciler.reconcile(cal1, changeSet1)).thenReturn(ReconcileResult())
+
+        // Initial syncIfDue runs
+        val report1 = syncService.syncIfDue()
+        assertNotNull(report1)
+
+        // Only 5 seconds pass (throttle is 60s)
+        testClock.advance(Duration.ofSeconds(5))
+        assertNull(syncService.syncIfDue())
+
+        // Sync now bypasses throttle!
+        cal1.syncToken = "token-club-2"
+        val changeSet2 = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-3",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-2")).thenReturn(changeSet2)
+        `when`(calendarReconciler.reconcile(cal1, changeSet2)).thenReturn(ReconcileResult())
+
+        val reportSyncNow = syncService.syncAll()
+        assertFalse(reportSyncNow.hasFailures)
+        verify(googleCalendarClient).listChanges("club@google.com", "token-club-2")
+
+        // 10 seconds after "Sync now": syncIfDue is throttled because "Sync now" reset the timer
+        testClock.advance(Duration.ofSeconds(10))
+        assertNull(syncService.syncIfDue())
+
+        // 51 seconds later (total 61s after "Sync now"): syncIfDue runs again
+        testClock.advance(Duration.ofSeconds(51))
+        cal1.syncToken = "token-club-3"
+        val changeSet3 = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-4",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-3")).thenReturn(changeSet3)
+        `when`(calendarReconciler.reconcile(cal1, changeSet3)).thenReturn(ReconcileResult())
+
+        assertNotNull(syncService.syncIfDue())
+    }
+
+    @Test
+    fun `HTMX fragment burst triggers at most one sync run`() {
+        `when`(trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc())
+            .thenReturn(listOf(cal1))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "token-club-2",
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = null
+        )
+        `when`(googleCalendarClient.listChanges("club@google.com", "token-club-1")).thenAnswer {
+            // Simulate work during sync call to allow race condition / burst testing
+            Thread.sleep(50)
+            changeSet
+        }
+        `when`(calendarReconciler.reconcile(cal1, changeSet)).thenReturn(ReconcileResult())
+
+        val threadCount = 5
+        val executor = Executors.newFixedThreadPool(threadCount)
+        val startLatch = CountDownLatch(1)
+        val doneLatch = CountDownLatch(threadCount)
+        val results = mutableListOf<SyncReport?>()
+
+        for (i in 0 until threadCount) {
+            executor.submit {
+                startLatch.await()
+                try {
+                    val res = syncService.syncIfDue()
+                    synchronized(results) {
+                        results.add(res)
+                    }
+                } finally {
+                    doneLatch.countDown()
+                }
+            }
+        }
+
+        startLatch.countDown()
+        assertTrue(doneLatch.await(5, TimeUnit.SECONDS))
+        executor.shutdown()
+
+        // Exactly one thread should have executed sync, others returned null
+        val executedRuns = results.filterNotNull()
+        assertEquals(1, executedRuns.size, "Burst should trigger exactly 1 sync run")
+        verify(googleCalendarClient, times(1)).listChanges("club@google.com", "token-club-1")
     }
 }
