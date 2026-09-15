@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.SystemSettingService
@@ -73,6 +74,7 @@ class ConfirmDialogRenderingTest {
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
     @MockBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
+    @MockBean private lateinit var calendarSyncService: CalendarSyncService
 
     @org.junit.jupiter.api.BeforeEach
     fun setUp() {

@@ -22,6 +22,9 @@
         <span class="material-symbols-outlined text-[18px]">sync</span>
         <span>Sync now</span>
     </button>
+    <span class="text-xs text-text-secondary whitespace-nowrap"
+          th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
+          th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
 </div>
 
 </body>

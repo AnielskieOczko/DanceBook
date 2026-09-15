@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
+import java.time.LocalDateTime
 
 /**
  * Supplies the active-calendar context to the training pages.
@@ -29,4 +30,17 @@ class TrainingCalendarContextAdvice(
 
     @ModelAttribute("selectableCalendars")
     fun selectableCalendars(): List<TrainingCalendar> = activeCalendarService.selectable()
+
+    @ModelAttribute("lastSyncedAt")
+    fun lastSyncedAt(): LocalDateTime? {
+        val active = activeCalendarService.active()
+        return if (active != null) {
+            active.lastSyncedAt
+        } else {
+            activeCalendarService.selectable()
+                .filter { it.enabled }
+                .mapNotNull { it.lastSyncedAt }
+                .maxOrNull()
+        }
+    }
 }

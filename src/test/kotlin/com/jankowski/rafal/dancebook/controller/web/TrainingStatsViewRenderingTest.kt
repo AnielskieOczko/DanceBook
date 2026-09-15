@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingStatsService
@@ -66,6 +67,7 @@ class TrainingStatsViewRenderingTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
+    @MockBean private lateinit var calendarSyncService: CalendarSyncService
 
     private fun statsWith(
         period: StatsPeriod,
