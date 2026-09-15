@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
@@ -85,6 +86,7 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var danceCategoryService: DanceCategoryService
     @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
     @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockBean private lateinit var calendarSyncService: CalendarSyncService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService
@@ -320,5 +322,25 @@ class TrainingEventViewRenderingTest {
         assertEquals(1, selected.size)
         assertEquals(retired.id.toString(), selected.attr("value"))
         assertEquals("Retired (disabled)", selected.text())
+    }
+
+    @Test
+    fun `should render the Sync now button as pure HTMX button without a native form wrapper`() {
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val syncButton = doc.select("button[hx-post='/training-events/sync']")
+        assertEquals(1, syncButton.size, "Sync now button should be present with hx-post")
+        assertEquals("button", syncButton.attr("type"), "Button should have type=button")
+        assertTrue(syncButton.text().contains("Sync now"), "Button should display Sync now")
+
+        val syncForm = doc.select("form[action*='/training-events/sync']")
+        assertTrue(syncForm.isEmpty(), "Sync now must not be wrapped in a native form")
     }
 }

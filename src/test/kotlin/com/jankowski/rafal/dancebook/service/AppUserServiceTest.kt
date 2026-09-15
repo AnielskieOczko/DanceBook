@@ -4,8 +4,10 @@ import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
+import jakarta.persistence.EntityNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -106,5 +108,30 @@ class AppUserServiceTest {
         val updatedUser = appUserService.updateUser(userId, request)
 
         assertEquals(Role.USER, updatedUser.role)
+    }
+
+    @Test
+    fun `getRootAdmin returns configured root admin user`() {
+        val rootUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = rootAdminUsername
+            role = Role.ADMIN
+        }
+        `when`(appUserRepository.findByUsername(rootAdminUsername)).thenReturn(rootUser)
+
+        val result = appUserService.getRootAdmin()
+
+        assertEquals(rootUser, result)
+    }
+
+    @Test
+    fun `getRootAdmin throws EntityNotFoundException when configured root admin is absent`() {
+        `when`(appUserRepository.findByUsername(rootAdminUsername)).thenReturn(null)
+
+        val exception = assertThrows(EntityNotFoundException::class.java) {
+            appUserService.getRootAdmin()
+        }
+
+        assertTrue(exception.message!!.contains("'$rootAdminUsername' not found"))
     }
 }

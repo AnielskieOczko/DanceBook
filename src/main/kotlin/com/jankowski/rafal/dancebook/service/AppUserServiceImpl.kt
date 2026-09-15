@@ -84,6 +84,11 @@ class AppUserServiceImpl(
         } ?: throw EntityNotFoundException("User not found in underlying database")
     }
 
+    override fun getRootAdmin(): AppUser {
+        return appUserRepository.findByUsername(rootAdminUsername)
+            ?: throw EntityNotFoundException("Root administrator account '$rootAdminUsername' not found")
+    }
+
     override fun createUser(request: UserCreateRequest): AppUser {
         log.debug("Creating new user with username {}", request.username)
         
