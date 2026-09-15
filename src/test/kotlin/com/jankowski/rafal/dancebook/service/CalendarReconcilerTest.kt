@@ -367,4 +367,278 @@ class CalendarReconcilerTest {
         assertEquals(0, resultCancel.deleted)
         verify(trainingEventPersistence, never()).remove(existing, rootAdmin)
     }
+
+    // --- Rule 5: Infer deletions on full resync ---
+
+    @Test
+    fun `Rule 5 - an event outside the fetched window is not deleted`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val oldEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "old-google-id"
+            title = "Older than 1 year"
+            startTime = windowStart.minusDays(1)
+            endTime = windowStart.minusDays(1).plusHours(1)
+            createdAt = fixedNow.minusDays(400)
+            updatedAt = fixedNow.minusDays(400)
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!)).thenReturn(listOf(oldEvent))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        verify(trainingEventPersistence, never()).remove(oldEvent, rootAdmin)
+    }
+
+    @Test
+    fun `Rule 5 - an incomplete fetch deletes nothing at all`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val event = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "absent-google-id"
+            title = "Absent Event"
+            startTime = fixedNow.minusMonths(2)
+            endTime = fixedNow.minusMonths(2).plusHours(1)
+            createdAt = fixedNow.minusDays(10)
+            updatedAt = fixedNow.minusDays(10)
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!)).thenReturn(listOf(event))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = null,
+            fullResyncRequired = false,
+            isCompleteWindow = false,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        verify(trainingEventPersistence, never()).remove(event, rootAdmin)
+        verify(trainingEventRepository, never()).findAllByCalendarId(targetCalendar.id!!)
+    }
+
+    @Test
+    fun `Rule 5 - another calendar's events are never considered`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val otherEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "other-cal-google-id"
+            title = "Other Calendar Event"
+            startTime = fixedNow.minusMonths(2)
+            endTime = fixedNow.minusMonths(2).plusHours(1)
+            createdAt = fixedNow.minusDays(10)
+            updatedAt = fixedNow.minusDays(10)
+            calendar = otherCalendar
+        }
+
+        // findAllByCalendarId for targetCalendar returns empty list
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!)).thenReturn(emptyList())
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        verify(trainingEventPersistence, never()).remove(otherEvent, rootAdmin)
+    }
+
+    @Test
+    fun `Rule 5 - a just-created or just-updated event inside the grace period survives`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val justCreated = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "just-created-google-id"
+            title = "Just Created Event"
+            startTime = fixedNow.minusMonths(1)
+            endTime = fixedNow.minusMonths(1).plusHours(1)
+            createdAt = fixedNow.minusSeconds(30) // 30s ago
+            updatedAt = fixedNow.minusSeconds(30)
+            calendar = targetCalendar
+        }
+
+        val justUpdated = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "just-updated-google-id"
+            title = "Just Updated Event"
+            startTime = fixedNow.minusMonths(2)
+            endTime = fixedNow.minusMonths(2).plusHours(1)
+            createdAt = fixedNow.minusDays(5)
+            updatedAt = fixedNow.minusSeconds(15) // 15s ago
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!))
+            .thenReturn(listOf(justCreated, justUpdated))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        verify(trainingEventPersistence, never()).remove(justCreated, rootAdmin)
+        verify(trainingEventPersistence, never()).remove(justUpdated, rootAdmin)
+    }
+
+    @Test
+    fun `Rule 5 - an event with no google_event_id is never deleted`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val nullGoogleIdEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = null
+            title = "Failed Create Event"
+            startTime = fixedNow.minusMonths(1)
+            endTime = fixedNow.minusMonths(1).plusHours(1)
+            createdAt = fixedNow.minusDays(5)
+            updatedAt = fixedNow.minusDays(5)
+            calendar = targetCalendar
+        }
+
+        val blankGoogleIdEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "   "
+            title = "Blank Google Id Event"
+            startTime = fixedNow.minusMonths(1)
+            endTime = fixedNow.minusMonths(1).plusHours(1)
+            createdAt = fixedNow.minusDays(5)
+            updatedAt = fixedNow.minusDays(5)
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!))
+            .thenReturn(listOf(nullGoogleIdEvent, blankGoogleIdEvent))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        verify(trainingEventPersistence, never()).remove(nullGoogleIdEvent, rootAdmin)
+        verify(trainingEventPersistence, never()).remove(blankGoogleIdEvent, rootAdmin)
+    }
+
+    @Test
+    fun `Rule 5 - an event genuinely absent from a complete window is deleted`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val absentEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "absent-from-google"
+            title = "Deleted From Google Remotely"
+            startTime = fixedNow.minusMonths(3)
+            endTime = fixedNow.minusMonths(3).plusHours(1)
+            createdAt = fixedNow.minusDays(10)
+            updatedAt = fixedNow.minusDays(10)
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!))
+            .thenReturn(listOf(absentEvent))
+
+        val changeSet = CalendarChangeSet(
+            changes = emptyList(),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(1, result.deleted)
+        verify(trainingEventPersistence).remove(absentEvent, rootAdmin)
+    }
+
+    @Test
+    fun `Rule 5 - an event returned by Google in changeSet is not deleted as absent`() {
+        val fixedNow = LocalDateTime.of(2026, 9, 15, 12, 0)
+        reconciler.nowProvider = { fixedNow }
+        val windowStart = fixedNow.minusYears(1)
+
+        val presentEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            googleEventId = "present-in-google"
+            title = "Present Event"
+            startTime = fixedNow.minusMonths(3)
+            endTime = fixedNow.minusMonths(3).plusHours(1)
+            createdAt = fixedNow.minusDays(10)
+            updatedAt = fixedNow.minusDays(10)
+            calendar = targetCalendar
+        }
+
+        `when`(trainingEventRepository.findByGoogleEventId("present-in-google"))
+            .thenReturn(Optional.of(presentEvent))
+        `when`(trainingEventRepository.findAllByCalendarId(targetCalendar.id!!))
+            .thenReturn(listOf(presentEvent))
+
+        val changeSet = CalendarChangeSet(
+            changes = listOf(
+                CalendarChange.Upserted(
+                    googleEventId = "present-in-google",
+                    title = "Present Event",
+                    start = presentEvent.startTime,
+                    end = presentEvent.endTime,
+                    description = null
+                )
+            ),
+            nextSyncToken = "new-token",
+            fullResyncRequired = false,
+            isCompleteWindow = true,
+            windowStart = windowStart
+        )
+
+        val result = reconciler.reconcile(targetCalendar, changeSet)
+
+        assertEquals(0, result.deleted)
+        assertEquals(1, result.skippedNoOp)
+        verify(trainingEventPersistence, never()).remove(presentEvent, rootAdmin)
+    }
 }

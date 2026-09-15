@@ -162,7 +162,7 @@ class CalendarSyncServiceTest {
     }
 
     @Test
-    fun `expired token triggers full resync clearing stored token and adopting without deleting`() {
+    fun `expired token triggers full resync clearing stored token and delegating full change set to reconciler`() {
         `when`(trainingCalendarRepository.findAllByEnabledTrueOrderByDisplayNameAsc())
             .thenReturn(listOf(cal1))
 
