@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -43,7 +45,8 @@ class TrainingEventWebController(
     private val trainingSeriesService: TrainingSeriesService,
     private val danceCategoryService: DanceCategoryService,
     private val activeCalendarService: ActiveCalendarService,
-    private val trainingCalendarService: TrainingCalendarService
+    private val trainingCalendarService: TrainingCalendarService,
+    private val calendarSyncService: CalendarSyncService
 ) {
 
     companion object {
@@ -51,6 +54,19 @@ class TrainingEventWebController(
 
         /** Evening default for a day clicked in month view; most training is after work. */
         private const val DEFAULT_HOUR = 18
+    }
+
+    @PostMapping("/sync")
+    fun syncNow(
+        @RequestHeader(value = "HX-Request", required = false) isHtmx: Boolean? = null
+    ): ResponseEntity<Any> {
+        val report = calendarSyncService.syncAll()
+        if (report.hasFailures) {
+            val error = report.failureMessages.joinToString("; ")
+            log.error("Sync now completed with failures: {}", error)
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(mapOf("error" to error))
+        }
+        return ResponseEntity.noContent().header("HX-Refresh", "true").build()
     }
 
     @GetMapping

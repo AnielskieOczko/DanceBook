@@ -13,6 +13,8 @@ import com.jankowski.rafal.dancebook.config.GoogleCalendarProperties
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
@@ -104,6 +106,105 @@ class GoogleCalendarClientImpl(
             logger.info("Verified calendar {} ('{}')", calendarId, summary)
             summary ?: calendarId
         }
+    }
+
+    override fun listChanges(calendarId: String, syncToken: String?): CalendarChangeSet {
+        require(calendarId.isNotBlank()) { "calendarId must not be blank" }
+        return try {
+            val changes = mutableListOf<CalendarChange>()
+            var pageToken: String? = null
+            var nextSyncToken: String? = null
+            val isFullSync = syncToken.isNullOrBlank()
+            val windowStart = if (isFullSync) LocalDateTime.now().minusYears(1) else null
+
+            var drainCompleted = false
+            do {
+                val listRequest = calendar.events().list(calendarId).apply {
+                    singleEvents = true
+                    if (isFullSync) {
+                        timeMin = DateTime(Date.from(windowStart!!.atZone(zone).toInstant()))
+                    } else {
+                        this.syncToken = syncToken
+                    }
+                    if (pageToken != null) {
+                        this.pageToken = pageToken
+                    }
+                }
+                val response = listRequest.execute()
+                response.items?.forEach { event ->
+                    toCalendarChange(event)?.let { changes.add(it) }
+                }
+                pageToken = response.nextPageToken
+                nextSyncToken = response.nextSyncToken
+                if (pageToken == null && !nextSyncToken.isNullOrBlank()) {
+                    drainCompleted = true
+                }
+            } while (pageToken != null)
+
+            val isCompleteWindow = isWindowComplete(isFullSync, drainCompleted)
+
+            CalendarChangeSet(
+                changes = changes,
+                nextSyncToken = nextSyncToken,
+                fullResyncRequired = false,
+                isCompleteWindow = isCompleteWindow,
+                windowStart = windowStart
+            )
+        } catch (e: GoogleJsonResponseException) {
+            if (e.statusCode == 410) {
+                logger.info("Calendar {} sync token expired (410 Gone), full resync required", calendarId)
+                CalendarChangeSet(
+                    changes = emptyList(),
+                    nextSyncToken = null,
+                    fullResyncRequired = true,
+                    isCompleteWindow = false,
+                    windowStart = null
+                )
+            } else {
+                throw asSyncException("list changes for", e)
+            }
+        }
+    }
+
+    internal fun isWindowComplete(isFullSync: Boolean, drainCompleted: Boolean): Boolean =
+        isFullSync && drainCompleted
+
+    internal fun toCalendarChange(event: Event): CalendarChange? {
+        val eventId = event.id ?: return null
+
+        if (event.status == "cancelled") {
+            return CalendarChange.Cancelled(eventId)
+        }
+
+        val start = parseEventDateTime(event.start) ?: return null
+        val end = parseEventDateTime(event.end) ?: start.plusHours(1)
+        val adjustedEnd = if (!end.isAfter(start)) {
+            if (event.start?.dateTime == null) start.plusDays(1) else start.plusHours(1)
+        } else {
+            end
+        }
+
+        return CalendarChange.Upserted(
+            googleEventId = eventId,
+            title = event.summary ?: "",
+            start = start,
+            end = adjustedEnd,
+            description = event.description
+        )
+    }
+
+    private fun parseEventDateTime(eventDateTime: EventDateTime?): LocalDateTime? {
+        if (eventDateTime == null) return null
+        if (eventDateTime.dateTime != null) {
+            return Instant.ofEpochMilli(eventDateTime.dateTime.value)
+                .atZone(zone)
+                .toLocalDateTime()
+        }
+        if (eventDateTime.date != null) {
+            val dateStr = eventDateTime.date.toStringRfc3339().substring(0, 10)
+            return LocalDate.parse(dateStr).atStartOfDay()
+        }
+        return null
     }
 
     private fun <T> translating(action: String, block: () -> T): T =

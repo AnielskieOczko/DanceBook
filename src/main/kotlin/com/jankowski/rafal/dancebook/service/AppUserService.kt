@@ -11,6 +11,7 @@ interface AppUserService {
     fun findById(id: UUID): AppUser
     fun findByUsername(username: String): AppUser
     fun getCurrentUser(): AppUser
+    fun getRootAdmin(): AppUser
     fun createUser(request: UserCreateRequest): AppUser
     fun changePassword(userId: UUID, request: PasswordChangeRequest)
     fun updateUser(id: UUID, request: UserUpdateRequest): AppUser

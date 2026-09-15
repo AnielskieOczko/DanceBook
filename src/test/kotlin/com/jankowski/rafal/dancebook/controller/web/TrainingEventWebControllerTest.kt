@@ -12,7 +12,10 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.CalendarSyncException
+import com.jankowski.rafal.dancebook.service.CalendarSyncOutcome
+import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.SyncReport
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
@@ -28,6 +31,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
+import org.springframework.http.HttpStatus
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
 import java.time.LocalDate
@@ -42,6 +46,7 @@ class TrainingEventWebControllerTest {
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var trainingCalendarService: TrainingCalendarService
+    private lateinit var calendarSyncService: CalendarSyncService
     private lateinit var controller: TrainingEventWebController
     private lateinit var defaultCal: TrainingCalendar
 
@@ -52,6 +57,7 @@ class TrainingEventWebControllerTest {
         danceCategoryService = mock(DanceCategoryService::class.java)
         activeCalendarService = mock(ActiveCalendarService::class.java)
         trainingCalendarService = mock(TrainingCalendarService::class.java)
+        calendarSyncService = mock(CalendarSyncService::class.java)
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Default"
@@ -66,7 +72,8 @@ class TrainingEventWebControllerTest {
             trainingSeriesService,
             danceCategoryService,
             activeCalendarService,
-            trainingCalendarService
+            trainingCalendarService,
+            calendarSyncService
         )
     }
 
@@ -673,5 +680,28 @@ class TrainingEventWebControllerTest {
         controller.updateTrainingEvent(event.id!!, request, bindingResult, model)
 
         assertEquals(true, model["isSeriesOccurrence"])
+    }
+
+    @Test
+    fun `syncNow returns refresh header on success`() {
+        `when`(calendarSyncService.syncAll()).thenReturn(SyncReport(emptyList()))
+
+        val response = controller.syncNow(isHtmx = true)
+
+        assertEquals(HttpStatus.NO_CONTENT, response.statusCode)
+        assertEquals("true", response.headers.getFirst("HX-Refresh"))
+    }
+
+    @Test
+    fun `syncNow reports failure with 502 when sync fails`() {
+        val cal = TrainingCalendar().apply { displayName = "Club" }
+        val outcome = CalendarSyncOutcome(calendar = cal, success = false, errorMessage = "Google API timeout")
+        `when`(calendarSyncService.syncAll()).thenReturn(SyncReport(listOf(outcome)))
+
+        val response = controller.syncNow(isHtmx = true)
+
+        assertEquals(HttpStatus.BAD_GATEWAY, response.statusCode)
+        val body = response.body as? Map<*, *>
+        assertEquals("Google API timeout", body?.get("error"))
     }
 }

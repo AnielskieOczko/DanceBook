@@ -18,4 +18,34 @@ interface GoogleCalendarClient {
 
     /** Verifies the calendar is reachable and returns Google's own summary for the calendar. */
     fun verifyCalendar(calendarId: String): String
+
+    /**
+     * Lists changes on the given calendar since [syncToken], or performs a full listing if [syncToken] is null.
+     */
+    fun listChanges(calendarId: String, syncToken: String?): CalendarChangeSet
 }
+
+sealed class CalendarChange {
+    abstract val googleEventId: String
+
+    data class Upserted(
+        override val googleEventId: String,
+        val title: String,
+        val start: java.time.LocalDateTime,
+        val end: java.time.LocalDateTime,
+        val description: String?
+    ) : CalendarChange()
+
+    data class Cancelled(override val googleEventId: String) : CalendarChange()
+}
+
+data class CalendarChangeSet(
+    val changes: List<CalendarChange>,
+    /** Null when a full resync is required; the caller must clear its stored token. */
+    val nextSyncToken: String?,
+    val fullResyncRequired: Boolean,
+    /** True only for a completed full sync: the window below was fetched in full. */
+    val isCompleteWindow: Boolean,
+    /** The window a full sync covered, for scoping deletions. Null on an incremental sync. */
+    val windowStart: java.time.LocalDateTime?
+)
