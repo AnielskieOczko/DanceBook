@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -118,6 +119,35 @@ class TrainingEventPersistenceTest {
 
         assertTrue(updated.isEmpty())
         verifyNoInteractions(trainingRecordWriter)
+        verifyNoInteractions(eventPublisher)
+    }
+
+    @Test
+    fun `bulk removing sessions orphans their records, deletes rows, and publishes a single bulk event`() {
+        val event1 = event()
+        val event2 = event()
+        val events = listOf(event1, event2)
+
+        val removedCount = persistence.bulkRemove(events, actor)
+
+        assertEquals(2, removedCount)
+        val order: InOrder = inOrder(trainingRecordWriter, trainingEventRepository)
+        order.verify(trainingRecordWriter).orphan(listOf(event1.id!!, event2.id!!))
+        order.verify(trainingEventRepository).deleteAll(events)
+
+        val captor = ArgumentCaptor.forClass(TrainingBulkDeletedEvent::class.java)
+        verify(eventPublisher).publishEvent(captor.capture())
+        assertEquals(2, captor.value.count)
+        assertEquals(actor, captor.value.actor)
+    }
+
+    @Test
+    fun `bulk removing empty list does nothing`() {
+        val removed = persistence.bulkRemove(emptyList(), actor)
+
+        assertEquals(0, removed)
+        verifyNoInteractions(trainingRecordWriter)
+        verifyNoInteractions(trainingEventRepository)
         verifyNoInteractions(eventPublisher)
     }
 }

@@ -146,6 +146,8 @@ class TrainingEventViewRenderingTest {
             .andExpect(content().string(org.hamcrest.Matchers.containsString("bulkActionBar")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Mark Attended")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Mark Skipped")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Delete")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("bulk-delete-dialog")))
     }
 
     @Test
@@ -165,6 +167,47 @@ class TrainingEventViewRenderingTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Marked 1 session as attended.")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("js-dismiss-banner")))
+    }
+
+    @Test
+    fun `should render confirm dialog for bulk delete with count and Google Calendar warning`() {
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+
+        mockMvc.perform(
+            post("/training-events/bulk-delete-dialog")
+                .param("sessionIds", id1.toString(), id2.toString())
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Delete Sessions")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("2 training sessions will be deleted")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("removed from Google Calendar")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("2 selected")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Delete 2 Sessions")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("value=\"$id1\"")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("value=\"$id2\"")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("hx-target=\"#events-list\"")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("hx-include=\"#filterForm\"")))
+    }
+
+    @Test
+    fun `should render bulk feedback banner following a bulk delete over HTMX`() {
+        val session1 = attendedSession()
+        `when`(trainingEventService.bulkDelete(listOf(session1.id!!)))
+            .thenReturn(com.jankowski.rafal.dancebook.dto.BulkDeleteResult(deletedCount = 1, failedCount = 0))
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/training-events/bulk-delete")
+                .header("HX-Request", "true")
+                .param("sessionIds", session1.id.toString())
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Deleted 1 session.")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("js-dismiss-banner")))
     }
 

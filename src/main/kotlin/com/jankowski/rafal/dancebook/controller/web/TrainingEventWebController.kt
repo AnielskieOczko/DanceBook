@@ -367,6 +367,90 @@ class TrainingEventWebController(
         return "training-events/list :: eventsList"
     }
 
+    /**
+     * Renders the shared confirmation dialog for a bulk delete selection, stating how many
+     * sessions will be deleted and that they are removed from Google Calendar too.
+     */
+    @PostMapping("/bulk-delete-dialog")
+    fun bulkDeleteDialog(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        model: Model
+    ): String {
+        val ids = sessionIds ?: emptyList()
+        val count = ids.size
+
+        if (count > TrainingEventService.MAX_BULK_ACTION) {
+            model.addAttribute("dialogTitle", "Cannot Delete Sessions")
+            model.addAttribute(
+                "dialogMessage",
+                TrainingEventService.bulkCapRefusal(count, "delete")
+            )
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        if (count == 0) {
+            model.addAttribute("dialogTitle", "No Sessions Selected")
+            model.addAttribute("dialogMessage", "Please select at least one session to delete.")
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        val message = when (count) {
+            1 -> "1 training session will be deleted and removed from Google Calendar. Any recorded training history will be preserved as orphaned records."
+            else -> "$count training sessions will be deleted and removed from Google Calendar. Any recorded training history will be preserved as orphaned records."
+        }
+
+        model.addAttribute("dialogTitle", if (count == 1) "Delete Session" else "Delete Sessions")
+        model.addAttribute("dialogMessage", message)
+        model.addAttribute("selectedCount", count)
+        model.addAttribute("confirmLabel", if (count == 1) "Delete Session" else "Delete $count Sessions")
+        model.addAttribute("confirmUrl", "/training-events/bulk-delete")
+        model.addAttribute("hxTarget", "#events-list")
+        model.addAttribute("hxSwap", "outerHTML")
+        model.addAttribute("hxInclude", "#filterForm")
+        model.addAttribute("sessionIds", ids)
+        return "fragments/confirm-dialog :: confirmModal"
+    }
+
+    /**
+     * Bulk deletion across a selection of sessions. Removes sessions from Google Calendar
+     * and local database, and swaps the agenda list back with active filters preserved,
+     * displaying feedback on how many were deleted.
+     */
+    @PostMapping("/bulk-delete")
+    fun bulkDelete(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        @RequestParam(required = false) eventTypes: List<TrainingEventType>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
+        @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val result = trainingEventService.bulkDelete(sessionIds ?: emptyList())
+
+        if (isHtmxRequest != true) {
+            return "redirect:/training-events"
+        }
+
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes = eventTypes,
+            categoryIds = categoryIds,
+            attendanceStatuses = attendanceStatuses,
+            titleSearch = search,
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = activeCalendarService.active()?.id
+        )
+        populateEventsList(model, events)
+        model.addAttribute("bulkMessage", result.message)
+
+        return "training-events/list :: eventsList"
+    }
+
     @PostMapping("/{id}/delete")
     fun deleteTrainingEvent(
         @PathVariable id: UUID,

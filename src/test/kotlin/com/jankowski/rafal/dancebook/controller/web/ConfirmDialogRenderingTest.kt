@@ -46,6 +46,22 @@ class NonAdminSampleDialogController {
         model.addAttribute("cancelLabel", "Keep Collection")
         return "fragments/confirm-dialog :: confirmModal"
     }
+
+    @GetMapping("/test/bulk-confirm-dialog")
+    fun bulkDialog(model: Model): String {
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+        model.addAttribute("dialogTitle", "Delete Sessions")
+        model.addAttribute("dialogMessage", "This will delete 2 sessions.")
+        model.addAttribute("confirmLabel", "Delete 2 Sessions")
+        model.addAttribute("confirmUrl", "/training-events/bulk-delete")
+        model.addAttribute("hxTarget", "#events-list")
+        model.addAttribute("hxSwap", "outerHTML")
+        model.addAttribute("hxInclude", "#filterForm")
+        model.addAttribute("selectedCount", 2)
+        model.addAttribute("sessionIds", listOf(id1, id2))
+        return "fragments/confirm-dialog :: confirmModal"
+    }
 }
 
 @WebMvcTest(
@@ -120,5 +136,15 @@ class ConfirmDialogRenderingTest {
             .andExpect(content().string(containsString("Delete Calendar")))
             .andExpect(content().string(containsString("action=\"/admin/calendars/$id/delete\"")))
             .andExpect(content().string(not(containsString("onclick="))))
+    }
+
+    @Test
+    fun `confirm dialog carries selection and hx-include when specified`() {
+        mockMvc.perform(get("/test/bulk-confirm-dialog").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Delete Sessions")))
+            .andExpect(content().string(containsString("2 selected")))
+            .andExpect(content().string(containsString("hx-include=\"#filterForm\"")))
+            .andExpect(content().string(containsString("name=\"sessionIds\"")))
     }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
+import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
@@ -646,6 +647,124 @@ class TrainingEventServiceTest {
         assertEquals(0, result.updatedCount)
         assertEquals(0, result.futureSkippedCount)
         verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    @Test
+    fun `bulkDelete deletes sessions from Google Calendar and calls bulkRemove on persistence`() {
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-2")
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("Deleted 2 sessions.", result.message)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-2")
+        verify(trainingEventPersistence).bulkRemove(listOf(event1, event2), currentUser)
+    }
+
+    @Test
+    fun `bulkDelete handles partial failure when Google Calendar delete fails for one session`() {
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-fail")
+        val event3 = existingEvent("google-3")
+        val ids = listOf(event1.id!!, event2.id!!, event3.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2, event3))
+        doThrow(RuntimeException("Google API 500 error")).`when`(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(1, result.failedCount)
+        assertEquals("Deleted 2 sessions (1 session could not be deleted).", result.message)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-3")
+        verify(trainingEventPersistence).bulkRemove(listOf(event1, event3), currentUser)
+    }
+
+    @Test
+    fun `bulkDelete refuses selection larger than the cap`() {
+        val ids = (1..51).map { UUID.randomUUID() }
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(0, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("Cannot delete 51 sessions at once: maximum is 50.", result.message)
+        verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    @Test
+    fun `bulkDelete never deletes sessions belonging to another user`() {
+        val otherUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "other"
+        }
+        val foreignEvent = existingEvent("google-foreign").apply { createdBy = otherUser }
+        val ownEvent = existingEvent("google-own")
+        val ids = listOf(foreignEvent.id!!, ownEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignEvent, ownEvent))
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(1, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("Deleted 1 session.", result.message)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-own")
+        verify(calendarClient, never()).deleteEvent(defaultCalendar.googleCalendarId, "google-foreign")
+        verify(trainingEventPersistence).bulkRemove(listOf(ownEvent), currentUser)
+    }
+
+    @Test
+    fun `bulkDelete allows admin to delete sessions belonging to another user`() {
+        currentUser.role = Role.ADMIN
+        val otherUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "other"
+        }
+        val foreignEvent = existingEvent("google-foreign").apply { createdBy = otherUser }
+        val ids = listOf(foreignEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignEvent))
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(1, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-foreign")
+        verify(trainingEventPersistence).bulkRemove(listOf(foreignEvent), currentUser)
+    }
+
+    @Test
+    fun `bulkDelete deletes sessions that do not have a googleEventId`() {
+        val localEvent = existingEvent(null)
+        val ids = listOf(localEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(localEvent))
+
+        val result = trainingEventService.bulkDelete(ids)
+
+        assertEquals(1, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("Deleted 1 session.", result.message)
+        verifyNoInteractions(calendarClient)
+        verify(trainingEventPersistence).bulkRemove(listOf(localEvent), currentUser)
+    }
+
+    @Test
+    fun `bulkDelete returns empty result for empty session list`() {
+        val result = trainingEventService.bulkDelete(emptyList())
+
+        assertEquals(0, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("No sessions were selected.", result.message)
+        verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(calendarClient)
         verifyNoInteractions(trainingEventPersistence)
     }
 

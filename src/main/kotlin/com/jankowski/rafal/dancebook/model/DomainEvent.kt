@@ -109,3 +109,11 @@ class TrainingBulkAttendanceUpdatedEvent(
     val status: AttendanceStatus,
     actor: AppUser
 ) : DomainEvent(actor)
+
+/**
+ * One activity entry for a bulk delete across multiple sessions.
+ */
+class TrainingBulkDeletedEvent(
+    val count: Int,
+    actor: AppUser
+) : DomainEvent(actor)
