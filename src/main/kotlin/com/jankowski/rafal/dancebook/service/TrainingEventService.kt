@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -25,6 +26,8 @@ interface TrainingEventService {
     fun update(id: UUID, request: TrainingEventRequest): TrainingEvent
 
     fun updateAttendance(id: UUID, status: AttendanceStatus): TrainingEvent
+
+    fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult
 
     /** Moves a session to a new slot, e.g. after dragging it in the calendar view. */
     fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent

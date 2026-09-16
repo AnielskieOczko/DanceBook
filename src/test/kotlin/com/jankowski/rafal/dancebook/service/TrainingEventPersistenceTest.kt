@@ -2,14 +2,19 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.InOrder
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.Mockito.`when`
 import org.springframework.context.ApplicationEventPublisher
 import java.time.LocalDateTime
@@ -83,5 +88,36 @@ class TrainingEventPersistenceTest {
         val order: InOrder = inOrder(trainingRecordWriter, trainingEventRepository)
         order.verify(trainingRecordWriter).orphan(listOf(toDelete.id!!))
         order.verify(trainingEventRepository).delete(toDelete)
+    }
+
+    @Test
+    fun `bulk updating sessions syncs their records and publishes a single bulk event`() {
+        val event1 = event(AttendanceStatus.PLANNED)
+        val event2 = event(AttendanceStatus.PLANNED)
+        val events = listOf(event1, event2)
+        `when`(trainingEventRepository.saveAll(events)).thenReturn(events)
+
+        val updated = persistence.bulkUpdateAttendance(events, AttendanceStatus.ATTENDED, actor)
+
+        assertEquals(2, updated.size)
+        assertEquals(AttendanceStatus.ATTENDED, event1.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, event2.attendanceStatus)
+        verify(trainingRecordWriter).sync(event1)
+        verify(trainingRecordWriter).sync(event2)
+
+        val captor = ArgumentCaptor.forClass(TrainingBulkAttendanceUpdatedEvent::class.java)
+        verify(eventPublisher).publishEvent(captor.capture())
+        assertEquals(2, captor.value.count)
+        assertEquals(AttendanceStatus.ATTENDED, captor.value.status)
+        assertEquals(actor, captor.value.actor)
+    }
+
+    @Test
+    fun `bulk updating empty list does nothing`() {
+        val updated = persistence.bulkUpdateAttendance(emptyList(), AttendanceStatus.ATTENDED, actor)
+
+        assertTrue(updated.isEmpty())
+        verifyNoInteractions(trainingRecordWriter)
+        verifyNoInteractions(eventPublisher)
     }
 }

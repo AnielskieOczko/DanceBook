@@ -552,6 +552,103 @@ class TrainingEventServiceTest {
             )
     }
 
+    @Test
+    fun `bulkUpdateAttendance updates past sessions and skips future ones`() {
+        val pastEvent = existingEvent(null).apply {
+            startTime = LocalDateTime.now().minusDays(2)
+            endTime = LocalDateTime.now().minusDays(2).plusHours(2)
+            attendanceStatus = AttendanceStatus.PLANNED
+        }
+        val futureEvent = existingEvent(null).apply {
+            startTime = LocalDateTime.now().plusDays(2)
+            endTime = LocalDateTime.now().plusDays(2).plusHours(2)
+            attendanceStatus = AttendanceStatus.PLANNED
+        }
+        val ids = listOf(pastEvent.id!!, futureEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(pastEvent, futureEvent))
+
+        val result = trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.ATTENDED)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(1, result.futureSkippedCount)
+        assertEquals(AttendanceStatus.ATTENDED, result.status)
+        assertTrue(result.message.contains("Marked 1 session as attended"))
+        assertTrue(result.message.contains("1 future session was skipped"))
+        verify(trainingEventPersistence).bulkUpdateAttendance(listOf(pastEvent), AttendanceStatus.ATTENDED, currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateAttendance can update past sessions whose outcome was already recorded`() {
+        val pastAttended = existingEvent(null).apply {
+            startTime = LocalDateTime.now().minusDays(1)
+            endTime = LocalDateTime.now().minusDays(1).plusHours(2)
+            attendanceStatus = AttendanceStatus.ATTENDED
+        }
+        val ids = listOf(pastAttended.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(pastAttended))
+
+        val result = trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.SKIPPED)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(0, result.futureSkippedCount)
+        assertEquals(AttendanceStatus.SKIPPED, result.status)
+        assertEquals("Marked 1 session as skipped.", result.message)
+        verify(trainingEventPersistence).bulkUpdateAttendance(listOf(pastAttended), AttendanceStatus.SKIPPED, currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateAttendance never modifies sessions belonging to another user`() {
+        val otherUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "other"
+        }
+        val foreignEvent = existingEvent(null).apply {
+            createdBy = otherUser
+            startTime = LocalDateTime.now().minusDays(1)
+            endTime = LocalDateTime.now().minusDays(1).plusHours(2)
+        }
+        val ids = listOf(foreignEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignEvent))
+
+        val result = trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.ATTENDED)
+
+        assertEquals(0, result.updatedCount)
+        assertEquals(0, result.futureSkippedCount)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    @Test
+    fun `bulkUpdateAttendance allows admin to modify sessions belonging to another user`() {
+        currentUser.role = Role.ADMIN
+        val otherUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "other"
+        }
+        val foreignPastEvent = existingEvent(null).apply {
+            createdBy = otherUser
+            startTime = LocalDateTime.now().minusDays(1)
+            endTime = LocalDateTime.now().minusDays(1).plusHours(2)
+        }
+        val ids = listOf(foreignPastEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignPastEvent))
+
+        val result = trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.ATTENDED)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(0, result.futureSkippedCount)
+        verify(trainingEventPersistence).bulkUpdateAttendance(listOf(foreignPastEvent), AttendanceStatus.ATTENDED, currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateAttendance returns empty result for empty session list`() {
+        val result = trainingEventService.bulkUpdateAttendance(emptyList(), AttendanceStatus.ATTENDED)
+
+        assertEquals(0, result.updatedCount)
+        assertEquals(0, result.futureSkippedCount)
+        verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
     private fun validRequest(
         title: String = "Monday practice",
         segments: List<TrainingEventSegmentRequest> = emptyList(),

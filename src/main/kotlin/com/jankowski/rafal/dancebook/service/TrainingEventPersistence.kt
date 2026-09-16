@@ -1,7 +1,9 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
@@ -9,6 +11,7 @@ import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.UUID
 
 /**
@@ -46,6 +49,29 @@ class TrainingEventPersistence(
         val saved = trainingEventRepository.save(event)
         trainingRecordWriter.sync(saved)
         eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
+        return saved
+    }
+
+    /**
+     * Updates attendance across multiple sessions in one transaction, syncing their records
+     * and publishing a single bulk activity event rather than one per session.
+     */
+    @Transactional
+    fun bulkUpdateAttendance(
+        events: List<TrainingEvent>,
+        status: AttendanceStatus,
+        actor: AppUser
+    ): List<TrainingEvent> {
+        if (events.isEmpty()) return emptyList()
+
+        val now = LocalDateTime.now()
+        events.forEach { event ->
+            event.attendanceStatus = status
+            event.updatedAt = now
+        }
+        val saved = trainingEventRepository.saveAll(events)
+        saved.forEach { trainingRecordWriter.sync(it) }
+        eventPublisher.publishEvent(TrainingBulkAttendanceUpdatedEvent(saved.size, status, actor))
         return saved
     }
 

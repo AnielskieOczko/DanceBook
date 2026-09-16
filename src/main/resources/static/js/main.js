@@ -54,6 +54,55 @@ document.addEventListener('change', function(event) {
     const select = event.target.closest('.js-filter-select');
     if (select) {
         select.form.submit();
+        return;
+    }
+
+    // Bulk select-all handler
+    const selectAll = event.target.closest('.js-select-all-sessions');
+    if (selectAll) {
+        const isChecked = selectAll.checked;
+        const checkboxes = document.querySelectorAll('.js-session-checkbox');
+        checkboxes.forEach(cb => { cb.checked = isChecked; });
+        updateBulkActionBar();
+        return;
+    }
+
+    // Bulk session checkbox handler
+    const sessionCb = event.target.closest('.js-session-checkbox');
+    if (sessionCb) {
+        const checkboxes = document.querySelectorAll('.js-session-checkbox');
+        const selectAllInput = document.querySelector('.js-select-all-sessions');
+        if (selectAllInput && checkboxes.length > 0) {
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+            selectAllInput.checked = allChecked;
+            selectAllInput.indeterminate = someChecked && !allChecked;
+        }
+        updateBulkActionBar();
+        return;
+    }
+});
+
+function updateBulkActionBar() {
+    const checked = document.querySelectorAll('.js-session-checkbox:checked');
+    const count = checked.length;
+    const bar = document.getElementById('bulkActionBar');
+    const countEl = document.getElementById('bulkSelectedCount');
+    if (bar && countEl) {
+        if (count > 0) {
+            countEl.textContent = count === 1 ? '1 selected' : `${count} selected`;
+            bar.classList.remove('hidden');
+            bar.classList.add('flex');
+        } else {
+            bar.classList.add('hidden');
+            bar.classList.remove('flex');
+        }
+    }
+}
+
+document.addEventListener('htmx:afterSwap', function(event) {
+    if (event.detail.target && (event.detail.target.id === 'events-list' || event.detail.target.closest('#events-list'))) {
+        updateBulkActionBar();
     }
 });
 
@@ -61,6 +110,30 @@ document.addEventListener('change', function(event) {
  * Global click handler for delegated events.
  */
 document.addEventListener('click', function(event) {
+    // Bulk action clear selection handler
+    const clearBtn = event.target.closest('.js-bulk-clear');
+    if (clearBtn) {
+        event.preventDefault();
+        const checkboxes = document.querySelectorAll('.js-session-checkbox');
+        checkboxes.forEach(cb => { cb.checked = false; });
+        const selectAll = document.querySelector('.js-select-all-sessions');
+        if (selectAll) {
+            selectAll.checked = false;
+            selectAll.indeterminate = false;
+        }
+        updateBulkActionBar();
+        return;
+    }
+
+    // Dismiss banner handler
+    const dismissBannerBtn = event.target.closest('.js-dismiss-banner');
+    if (dismissBannerBtn) {
+        event.preventDefault();
+        const banner = dismissBannerBtn.closest('.js-banner');
+        if (banner) banner.remove();
+        return;
+    }
+
     // 1. Expandable card handler
     const expandBtn = event.target.closest('.js-expand-btn');
     if (expandBtn) {

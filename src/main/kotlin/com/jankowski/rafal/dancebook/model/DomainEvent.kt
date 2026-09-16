@@ -100,3 +100,12 @@ class TrainingSeriesCreatedEvent(
     val occurrenceCount: Int,
     actor: AppUser
 ) : DomainEvent(actor)
+
+/**
+ * One activity entry for a bulk attendance update across multiple sessions.
+ */
+class TrainingBulkAttendanceUpdatedEvent(
+    val count: Int,
+    val status: AttendanceStatus,
+    actor: AppUser
+) : DomainEvent(actor)
