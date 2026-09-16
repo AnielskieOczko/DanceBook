@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
+import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -9,6 +10,17 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 interface TrainingEventService {
+
+    companion object {
+        /**
+         * One web action becomes one Google API call per session on mutating paths,
+         * so bulk actions over a selection are capped to fit comfortably in a normal request.
+         */
+        const val MAX_BULK_ACTION = 50
+
+        fun bulkCapRefusal(count: Int, action: String = "delete"): String =
+            "Cannot $action $count sessions at once: maximum is $MAX_BULK_ACTION."
+    }
 
     fun findByCurrentUser(
         eventTypes: List<TrainingEventType>? = null,
@@ -28,6 +40,8 @@ interface TrainingEventService {
     fun updateAttendance(id: UUID, status: AttendanceStatus): TrainingEvent
 
     fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult
+
+    fun bulkDelete(sessionIds: List<UUID>): BulkDeleteResult
 
     /** Moves a session to a new slot, e.g. after dragging it in the calendar view. */
     fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent

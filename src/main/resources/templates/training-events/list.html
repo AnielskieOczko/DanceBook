@@ -144,6 +144,14 @@
                         class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
                     Mark Skipped
                 </button>
+                <button type="button"
+                        th:hx-post="@{/training-events/bulk-delete-dialog}"
+                        hx-target="#confirmModalContainer"
+                        hx-swap="innerHTML"
+                        hx-include=".js-session-checkbox:checked, #filterForm"
+                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap text-danger border-danger/30 hover:bg-danger-soft">
+                    Delete
+                </button>
                 <button type="button" class="js-bulk-clear btn-icon text-on-surface-variant hover:text-on-surface ml-1"
                         title="Clear selection" aria-label="Clear selection">
                     <span class="material-symbols-outlined text-[18px]">close</span>

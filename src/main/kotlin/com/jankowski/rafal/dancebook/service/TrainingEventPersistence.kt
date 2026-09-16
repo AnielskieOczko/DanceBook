@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
@@ -73,6 +74,21 @@ class TrainingEventPersistence(
         saved.forEach { trainingRecordWriter.sync(it) }
         eventPublisher.publishEvent(TrainingBulkAttendanceUpdatedEvent(saved.size, status, actor))
         return saved
+    }
+
+    /**
+     * Removes multiple sessions in one transaction, orphaning their records
+     * and publishing a single bulk activity event rather than one per session.
+     */
+    @Transactional
+    fun bulkRemove(events: List<TrainingEvent>, actor: AppUser): Int {
+        if (events.isEmpty()) return 0
+
+        val ids = events.mapNotNull { it.id }
+        trainingRecordWriter.orphan(ids)
+        trainingEventRepository.deleteAll(events)
+        eventPublisher.publishEvent(TrainingBulkDeletedEvent(ids.size, actor))
+        return ids.size
     }
 
     @Transactional

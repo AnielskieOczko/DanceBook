@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
+import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingMonthGroup
@@ -767,5 +768,114 @@ class TrainingEventWebControllerTest {
 
         assertEquals("redirect:/training-events", viewName)
         verify(trainingEventService).bulkUpdateAttendance(ids, AttendanceStatus.SKIPPED)
+    }
+
+    @Test
+    fun `bulkDeleteDialog renders confirmModal with count and Google Calendar consequence message`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())
+
+        val viewName = controller.bulkDeleteDialog(ids, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Delete Sessions", model["dialogTitle"])
+        assertEquals("Delete 3 Sessions", model["confirmLabel"])
+        assertEquals("/training-events/bulk-delete", model["confirmUrl"])
+        assertEquals("#events-list", model["hxTarget"])
+        assertEquals("outerHTML", model["hxSwap"])
+        assertEquals("#filterForm", model["hxInclude"])
+        assertEquals(3, model["selectedCount"])
+        assertEquals(ids, model["sessionIds"])
+        val message = model["dialogMessage"] as String
+        assertTrue(message.contains("3 training sessions will be deleted"))
+        assertTrue(message.contains("removed from Google Calendar"))
+    }
+
+    @Test
+    fun `bulkDeleteDialog with count exceeding cap renders refusal modal without confirm action`() {
+        val model = ConcurrentModel()
+        val ids = (1..55).map { UUID.randomUUID() }
+
+        val viewName = controller.bulkDeleteDialog(ids, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Cannot Delete Sessions", model["dialogTitle"])
+        val message = model["dialogMessage"] as String
+        assertTrue(message.contains("Cannot delete 55 sessions at once: maximum is 50."))
+        assertNull(model["confirmUrl"])
+        assertEquals("Close", model["cancelLabel"])
+    }
+
+    @Test
+    fun `bulkDeleteDialog with empty list renders informative notice without confirm action`() {
+        val model = ConcurrentModel()
+
+        val viewName = controller.bulkDeleteDialog(emptyList(), model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("No Sessions Selected", model["dialogTitle"])
+        assertNull(model["confirmUrl"])
+        assertEquals("Close", model["cancelLabel"])
+    }
+
+    @Test
+    fun `bulkDelete over HTMX refreshes list with filters intact and adds feedback message to model`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID(), UUID.randomUUID())
+        val categoryId = UUID.randomUUID()
+        val result = BulkDeleteResult(deletedCount = 2, failedCount = 0)
+        `when`(trainingEventService.bulkDelete(ids)).thenReturn(result)
+        `when`(
+            trainingEventService.findByCurrentUser(
+                eventTypes = listOf(TrainingEventType.TRAINING),
+                categoryIds = listOf(categoryId),
+                attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+                titleSearch = "practice",
+                awaitingConfirmation = true,
+                calendarId = defaultCal.id
+            )
+        ).thenReturn(emptyList())
+        `when`(activeCalendarService.active()).thenReturn(defaultCal)
+
+        val viewName = controller.bulkDelete(
+            sessionIds = ids,
+            eventTypes = listOf(TrainingEventType.TRAINING),
+            categoryIds = listOf(categoryId),
+            attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+            search = "practice",
+            awaitingConfirmation = true,
+            isHtmxRequest = true,
+            model = model
+        )
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        assertEquals(result.message, model["bulkMessage"])
+        assertEquals(emptyList<TrainingEvent>(), model["events"])
+        verify(trainingEventService).bulkDelete(ids)
+        verify(trainingEventService).findByCurrentUser(
+            eventTypes = listOf(TrainingEventType.TRAINING),
+            categoryIds = listOf(categoryId),
+            attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+            titleSearch = "practice",
+            awaitingConfirmation = true,
+            calendarId = defaultCal.id
+        )
+    }
+
+    @Test
+    fun `bulkDelete without HTMX redirects to list`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val result = BulkDeleteResult(deletedCount = 1, failedCount = 0)
+        `when`(trainingEventService.bulkDelete(ids)).thenReturn(result)
+
+        val viewName = controller.bulkDelete(
+            sessionIds = ids,
+            isHtmxRequest = false,
+            model = model
+        )
+
+        assertEquals("redirect:/training-events", viewName)
+        verify(trainingEventService).bulkDelete(ids)
     }
 }

@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
+import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -165,6 +166,57 @@ class TrainingEventServiceImpl(
             updatedCount = pastEvents.size,
             futureSkippedCount = futureEvents.size,
             status = status
+        )
+    }
+
+    override fun bulkDelete(sessionIds: List<UUID>): BulkDeleteResult {
+        if (sessionIds.isEmpty()) {
+            return BulkDeleteResult(deletedCount = 0, failedCount = 0)
+        }
+
+        if (sessionIds.size > TrainingEventService.MAX_BULK_ACTION) {
+            return BulkDeleteResult(
+                deletedCount = 0,
+                failedCount = 0,
+                errorMessage = TrainingEventService.bulkCapRefusal(sessionIds.size, "delete")
+            )
+        }
+
+        val currentUser = appUserService.getCurrentUser()
+        val events = trainingEventRepository.findAllByIdIn(sessionIds)
+
+        // Only delete sessions belonging to the current user (or if admin)
+        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val succeededEvents = mutableListOf<TrainingEvent>()
+        var failedCount = 0
+
+        for (event in ownedEvents) {
+            try {
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (event.googleEventId != null) {
+                    if (googleCalId != null) {
+                        calendarClient.deleteEvent(googleCalId, event.googleEventId!!)
+                    } else {
+                        log.error("Cannot delete calendar event {}: no calendar resolved; skipping Google delete and removing local row", event.googleEventId)
+                    }
+                }
+                succeededEvents.add(event)
+            } catch (e: Exception) {
+                log.error("Failed to delete training event '{}' ({}) from Google Calendar: {}", event.title, event.id, e.message)
+                failedCount++
+            }
+        }
+
+        if (succeededEvents.isNotEmpty()) {
+            log.debug("User '{}' deleting {} training events", currentUser.username, succeededEvents.size)
+            trainingEventPersistence.bulkRemove(succeededEvents, currentUser)
+        }
+
+        return BulkDeleteResult(
+            deletedCount = succeededEvents.size,
+            failedCount = failedCount
         )
     }
 
