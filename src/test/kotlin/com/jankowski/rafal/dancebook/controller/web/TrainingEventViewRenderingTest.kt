@@ -34,6 +34,7 @@ import org.springframework.web.servlet.support.RequestDataValueProcessor
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
@@ -130,6 +131,41 @@ class TrainingEventViewRenderingTest {
         mockMvc.perform(get("/training-events").with(csrf()))
             .andExpect(status().isOk)
             .andExpect(content().string(org.hamcrest.Matchers.containsString("No training sessions yet")))
+    }
+
+    @Test
+    fun `should render checkboxes, select-all control, and bulk action bar when sessions exist`() {
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("selectAllSessions")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("js-session-checkbox")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("bulkActionBar")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Mark Attended")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Mark Skipped")))
+    }
+
+    @Test
+    fun `should render bulk feedback banner following a bulk attendance update over HTMX`() {
+        val session1 = attendedSession()
+        `when`(trainingEventService.bulkUpdateAttendance(listOf(session1.id!!), AttendanceStatus.ATTENDED))
+            .thenReturn(com.jankowski.rafal.dancebook.dto.BulkAttendanceResult(1, 0, AttendanceStatus.ATTENDED))
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(session1))
+
+        mockMvc.perform(
+            post("/training-events/bulk-attendance")
+                .header("HX-Request", "true")
+                .param("sessionIds", session1.id.toString())
+                .param("status", "ATTENDED")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("Marked 1 session as attended.")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("js-dismiss-banner")))
     }
 
     @Test

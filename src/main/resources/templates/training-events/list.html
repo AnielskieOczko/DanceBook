@@ -102,6 +102,55 @@
                th:if="${activeCalendar == null || activeCalendar.enabled}">Add Session</a>
         </div>
 
+        <!-- Feedback message following a bulk action -->
+        <div th:if="${bulkMessage != null}"
+             class="js-banner p-4 rounded-md bg-surface-container border border-outline-variant flex items-center justify-between text-body-md text-on-surface">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                <span th:text="${bulkMessage}">3 sessions marked as attended.</span>
+            </div>
+            <button type="button" class="js-dismiss-banner text-outline hover:text-on-surface" aria-label="Dismiss">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+
+        <!-- List header with select-all control -->
+        <div th:if="${events != null && !events.isEmpty()}"
+             class="flex items-center justify-between py-2 px-1 border-b border-outline-variant/30">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-body-md font-medium text-on-surface select-none">
+                <input type="checkbox" id="selectAllSessions" class="js-select-all-sessions rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" aria-label="Select all sessions">
+                <span id="selectAllLabel">Select all</span>
+            </label>
+            <span class="text-label-sm text-outline tabular-nums" th:text="${#lists.size(events)} + ' sessions'">6 sessions</span>
+        </div>
+
+        <!-- Floating bulk action bar -->
+        <form id="bulkActionBar" th:hx-post="@{/training-events/bulk-attendance}"
+              hx-target="#events-list" hx-swap="outerHTML"
+              hx-include=".js-session-checkbox:checked, #filterForm"
+              class="hidden fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-40
+                     bg-surface-container-high border border-outline-variant shadow-ambient
+                     rounded-xl px-4 py-3 items-center justify-between gap-3
+                     max-w-[calc(100vw-2rem)] sm:max-w-lg w-full sm:w-auto">
+            <div class="flex items-center gap-2">
+                <span id="bulkSelectedCount" class="font-medium text-on-surface text-body-md whitespace-nowrap">0 selected</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="submit" name="status" value="ATTENDED"
+                        class="btn-primary text-sm px-3 py-1.5 whitespace-nowrap">
+                    Mark Attended
+                </button>
+                <button type="submit" name="status" value="SKIPPED"
+                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                    Mark Skipped
+                </button>
+                <button type="button" class="js-bulk-clear btn-icon text-on-surface-variant hover:text-on-surface ml-1"
+                        title="Clear selection" aria-label="Clear selection">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                </button>
+            </div>
+        </form>
+
         <!-- A training log is read in months: how much was scheduled, how many hours it came to. -->
         <div th:each="group : ${monthGroups}" class="space-y-gutter">
 
@@ -116,6 +165,10 @@
 
             <div th:each="row : ${group.rows}" th:with="event=${row.event}"
                  class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
+
+                <input type="checkbox" name="sessionIds" th:value="${event.id}"
+                       class="js-session-checkbox mt-3 sm:mt-3.5 rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer shrink-0"
+                       aria-label="Select session">
 
                 <!-- Date rail; the stripe and tint are the session's status. -->
                 <div class="tc-rail"

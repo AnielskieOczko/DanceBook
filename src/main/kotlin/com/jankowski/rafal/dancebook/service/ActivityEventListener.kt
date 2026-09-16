@@ -18,6 +18,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TargetType
 import com.jankowski.rafal.dancebook.repository.ActivityEventRepository
 import org.slf4j.LoggerFactory
@@ -183,6 +184,23 @@ class ActivityEventListener(
             targetId = event.firstOccurrence.id,
             targetName = event.firstOccurrence.title,
             metadata = event.occurrenceCount.toString()
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingBulkAttendanceUpdated(event: TrainingBulkAttendanceUpdatedEvent) {
+        log.info(
+            "Recording TRAINING_BULK_ATTENDANCE_UPDATED event for {} sessions as {}",
+            event.count, event.status
+        )
+        save(
+            eventType = EventType.TRAINING_BULK_ATTENDANCE_UPDATED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = null,
+            targetName = event.status.name.lowercase(),
+            metadata = event.count.toString()
         )
     }
 

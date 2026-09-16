@@ -330,6 +330,43 @@ class TrainingEventWebController(
         return "training-events/list :: eventsList"
     }
 
+    /**
+     * Bulk attendance update across a selection of sessions. Swaps the agenda list back
+     * with active filters preserved, leaving future sessions untouched and displaying
+     * feedback on how many were updated and skipped.
+     */
+    @PostMapping("/bulk-attendance")
+    fun bulkUpdateAttendance(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        @RequestParam status: AttendanceStatus,
+        @RequestParam(required = false) eventTypes: List<TrainingEventType>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
+        @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val result = trainingEventService.bulkUpdateAttendance(sessionIds ?: emptyList(), status)
+
+        if (isHtmxRequest != true) {
+            return "redirect:/training-events"
+        }
+
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes = eventTypes,
+            categoryIds = categoryIds,
+            attendanceStatuses = attendanceStatuses,
+            titleSearch = search,
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = activeCalendarService.active()?.id
+        )
+        populateEventsList(model, events)
+        model.addAttribute("bulkMessage", result.message)
+
+        return "training-events/list :: eventsList"
+    }
+
     @PostMapping("/{id}/delete")
     fun deleteTrainingEvent(
         @PathVariable id: UUID,

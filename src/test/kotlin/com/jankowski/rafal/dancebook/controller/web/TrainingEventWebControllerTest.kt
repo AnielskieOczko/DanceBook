@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingMonthGroup
@@ -703,5 +704,68 @@ class TrainingEventWebControllerTest {
         assertEquals(HttpStatus.BAD_GATEWAY, response.statusCode)
         val body = response.body as? Map<*, *>
         assertEquals("Google API timeout", body?.get("error"))
+    }
+
+    @Test
+    fun `bulkUpdateAttendance over HTMX refreshes list with filters intact and adds feedback message to model`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID(), UUID.randomUUID())
+        val categoryId = UUID.randomUUID()
+        val result = BulkAttendanceResult(updatedCount = 2, futureSkippedCount = 1, status = AttendanceStatus.ATTENDED)
+        `when`(trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.ATTENDED)).thenReturn(result)
+        `when`(
+            trainingEventService.findByCurrentUser(
+                eventTypes = listOf(TrainingEventType.TRAINING),
+                categoryIds = listOf(categoryId),
+                attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+                titleSearch = "practice",
+                awaitingConfirmation = true,
+                calendarId = defaultCal.id
+            )
+        ).thenReturn(emptyList())
+        `when`(activeCalendarService.active()).thenReturn(defaultCal)
+
+        val viewName = controller.bulkUpdateAttendance(
+            sessionIds = ids,
+            status = AttendanceStatus.ATTENDED,
+            eventTypes = listOf(TrainingEventType.TRAINING),
+            categoryIds = listOf(categoryId),
+            attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+            search = "practice",
+            awaitingConfirmation = true,
+            isHtmxRequest = true,
+            model = model
+        )
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        assertEquals(result.message, model["bulkMessage"])
+        assertEquals(emptyList<TrainingEvent>(), model["events"])
+        verify(trainingEventService).bulkUpdateAttendance(ids, AttendanceStatus.ATTENDED)
+        verify(trainingEventService).findByCurrentUser(
+            eventTypes = listOf(TrainingEventType.TRAINING),
+            categoryIds = listOf(categoryId),
+            attendanceStatuses = listOf(AttendanceStatus.PLANNED),
+            titleSearch = "practice",
+            awaitingConfirmation = true,
+            calendarId = defaultCal.id
+        )
+    }
+
+    @Test
+    fun `bulkUpdateAttendance without HTMX redirects to list`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val result = BulkAttendanceResult(updatedCount = 1, futureSkippedCount = 0, status = AttendanceStatus.SKIPPED)
+        `when`(trainingEventService.bulkUpdateAttendance(ids, AttendanceStatus.SKIPPED)).thenReturn(result)
+
+        val viewName = controller.bulkUpdateAttendance(
+            sessionIds = ids,
+            status = AttendanceStatus.SKIPPED,
+            isHtmxRequest = false,
+            model = model
+        )
+
+        assertEquals("redirect:/training-events", viewName)
+        verify(trainingEventService).bulkUpdateAttendance(ids, AttendanceStatus.SKIPPED)
     }
 }

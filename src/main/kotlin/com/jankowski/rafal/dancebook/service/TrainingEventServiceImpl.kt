@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -138,6 +139,33 @@ class TrainingEventServiceImpl(
         // Attendance is app-only metadata Google Calendar has no field for, so this path
         // deliberately does not touch the calendar.
         return trainingEventPersistence.applyUpdate(event, currentUser)
+    }
+
+    override fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult {
+        if (sessionIds.isEmpty()) {
+            return BulkAttendanceResult(updatedCount = 0, futureSkippedCount = 0, status = status)
+        }
+
+        val currentUser = appUserService.getCurrentUser()
+        val events = trainingEventRepository.findAllByIdIn(sessionIds)
+
+        // Only modify sessions belonging to the current user (or if admin)
+        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+
+        val now = LocalDateTime.now()
+        // Only past sessions can have attendance set. A session has happened if its end time is not after now.
+        val (pastEvents, futureEvents) = ownedEvents.partition { !it.endTime.isAfter(now) }
+
+        if (pastEvents.isNotEmpty()) {
+            log.debug("User '{}' marking {} sessions as {}", currentUser.username, pastEvents.size, status)
+            trainingEventPersistence.bulkUpdateAttendance(pastEvents, status, currentUser)
+        }
+
+        return BulkAttendanceResult(
+            updatedCount = pastEvents.size,
+            futureSkippedCount = futureEvents.size,
+            status = status
+        )
     }
 
     override fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent {
