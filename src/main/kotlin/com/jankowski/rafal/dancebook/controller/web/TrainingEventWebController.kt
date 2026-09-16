@@ -30,7 +30,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import com.jankowski.rafal.dancebook.dto.BulkSegmentsRequest
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
+import com.jankowski.rafal.dancebook.service.MaterialService
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -46,7 +48,8 @@ class TrainingEventWebController(
     private val danceCategoryService: DanceCategoryService,
     private val activeCalendarService: ActiveCalendarService,
     private val trainingCalendarService: TrainingCalendarService,
-    private val calendarSyncService: CalendarSyncService
+    private val calendarSyncService: CalendarSyncService,
+    private val materialService: MaterialService
 ) {
 
     companion object {
@@ -432,6 +435,230 @@ class TrainingEventWebController(
         model: Model
     ): String {
         val result = trainingEventService.bulkDelete(sessionIds ?: emptyList())
+
+        if (isHtmxRequest != true) {
+            return "redirect:/training-events"
+        }
+
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes = eventTypes,
+            categoryIds = categoryIds,
+            attendanceStatuses = attendanceStatuses,
+            titleSearch = search,
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = activeCalendarService.active()?.id
+        )
+        populateEventsList(model, events)
+        model.addAttribute("bulkMessage", result.message)
+
+        return "training-events/list :: eventsList"
+    }
+
+    /**
+     * Renders the modal dialog for changing event type across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-type-dialog")
+    fun bulkEditTypeDialog(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        model: Model
+    ): String {
+        val ids = sessionIds ?: emptyList()
+        val count = ids.size
+
+        if (count > TrainingEventService.MAX_BULK_ACTION) {
+            model.addAttribute("dialogTitle", "Cannot Update Sessions")
+            model.addAttribute(
+                "dialogMessage",
+                TrainingEventService.bulkCapRefusal(count, "update")
+            )
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        if (count == 0) {
+            model.addAttribute("dialogTitle", "No Sessions Selected")
+            model.addAttribute("dialogMessage", "Please select at least one session to update.")
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        model.addAttribute("dialogTitle", "Change Event Type")
+        model.addAttribute("selectedCount", count)
+        model.addAttribute("sessionIds", ids)
+        model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
+        return "fragments/bulk-edit-dialog :: editEventTypeModal"
+    }
+
+    /**
+     * Bulk event type update across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-type")
+    fun bulkEditType(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        @RequestParam eventType: TrainingEventType,
+        @RequestParam(required = false) eventTypes: List<TrainingEventType>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
+        @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val result = trainingEventService.bulkUpdateEventType(sessionIds ?: emptyList(), eventType)
+
+        if (isHtmxRequest != true) {
+            return "redirect:/training-events"
+        }
+
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes = eventTypes,
+            categoryIds = categoryIds,
+            attendanceStatuses = attendanceStatuses,
+            titleSearch = search,
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = activeCalendarService.active()?.id
+        )
+        populateEventsList(model, events)
+        model.addAttribute("bulkMessage", result.message)
+
+        return "training-events/list :: eventsList"
+    }
+
+    /**
+     * Renders the modal dialog for setting style segments across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-styles-dialog")
+    fun bulkEditStylesDialog(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        model: Model
+    ): String {
+        val ids = sessionIds ?: emptyList()
+        val count = ids.size
+
+        if (count > TrainingEventService.MAX_BULK_ACTION) {
+            model.addAttribute("dialogTitle", "Cannot Update Sessions")
+            model.addAttribute(
+                "dialogMessage",
+                TrainingEventService.bulkCapRefusal(count, "update")
+            )
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        if (count == 0) {
+            model.addAttribute("dialogTitle", "No Sessions Selected")
+            model.addAttribute("dialogMessage", "Please select at least one session to update.")
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        model.addAttribute("dialogTitle", "Replace Style Segments")
+        model.addAttribute("selectedCount", count)
+        model.addAttribute("sessionIds", ids)
+        model.addAttribute("danceCategories", danceCategoryService.findAll())
+        return "fragments/bulk-edit-dialog :: editStylesModal"
+    }
+
+    /**
+     * Bulk style segments update across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-styles")
+    fun bulkEditStyles(
+        @ModelAttribute request: BulkSegmentsRequest,
+        @RequestParam(required = false) sessionIds: List<UUID>? = null,
+        @RequestParam(required = false) eventTypes: List<TrainingEventType>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
+        @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val ids = if (request.sessionIds.isNotEmpty()) request.sessionIds else (sessionIds ?: emptyList())
+        val result = trainingEventService.bulkUpdateSegments(ids, request.segments)
+
+        if (isHtmxRequest != true) {
+            return "redirect:/training-events"
+        }
+
+        val events = trainingEventService.findByCurrentUser(
+            eventTypes = eventTypes,
+            categoryIds = categoryIds,
+            attendanceStatuses = attendanceStatuses,
+            titleSearch = search,
+            awaitingConfirmation = awaitingConfirmation,
+            calendarId = activeCalendarService.active()?.id
+        )
+        populateEventsList(model, events)
+        model.addAttribute("bulkMessage", result.message)
+
+        return "training-events/list :: eventsList"
+    }
+
+    /**
+     * Renders the modal dialog for setting material (Note / external link) across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-material-dialog")
+    fun bulkEditMaterialDialog(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        model: Model
+    ): String {
+        val ids = sessionIds ?: emptyList()
+        val count = ids.size
+
+        if (count > TrainingEventService.MAX_BULK_ACTION) {
+            model.addAttribute("dialogTitle", "Cannot Update Sessions")
+            model.addAttribute(
+                "dialogMessage",
+                TrainingEventService.bulkCapRefusal(count, "update")
+            )
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        if (count == 0) {
+            model.addAttribute("dialogTitle", "No Sessions Selected")
+            model.addAttribute("dialogMessage", "Please select at least one session to update.")
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        model.addAttribute("dialogTitle", "Attach Note or Link")
+        model.addAttribute("selectedCount", count)
+        model.addAttribute("sessionIds", ids)
+        model.addAttribute("materials", materialService.findAll())
+        return "fragments/bulk-edit-dialog :: editMaterialModal"
+    }
+
+    /**
+     * Bulk material update across a selection of sessions.
+     */
+    @PostMapping("/bulk-edit-material")
+    fun bulkEditMaterial(
+        @RequestParam(required = false) sessionIds: List<UUID>?,
+        @RequestParam(required = false) materialId: UUID? = null,
+        @RequestParam(required = false) materialsUrl: String? = null,
+        @RequestParam(required = false, defaultValue = "false") clearMaterial: Boolean = false,
+        @RequestParam(required = false) eventTypes: List<TrainingEventType>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) attendanceStatuses: List<AttendanceStatus>? = null,
+        @RequestParam(required = false) search: String? = null,
+        @RequestParam(required = false) awaitingConfirmation: Boolean? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        model: Model
+    ): String {
+        val result = trainingEventService.bulkUpdateMaterial(
+            sessionIds = sessionIds ?: emptyList(),
+            materialId = materialId,
+            materialsUrl = materialsUrl,
+            clearMaterial = clearMaterial
+        )
 
         if (isHtmxRequest != true) {
             return "redirect:/training-events"

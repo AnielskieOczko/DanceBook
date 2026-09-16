@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -123,6 +124,11 @@ class MaterialServiceImpl(
         }
 
         eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, currentUser))
+    }
+
+    override fun findAll(): List<Material> {
+        log.debug("Retrieving all materials")
+        return materialRepository.findAll(Sort.by(Sort.Direction.ASC, "name"))
     }
 
     override fun findAll(

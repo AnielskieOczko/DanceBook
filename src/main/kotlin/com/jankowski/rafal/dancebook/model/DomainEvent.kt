@@ -117,3 +117,13 @@ class TrainingBulkDeletedEvent(
     val count: Int,
     actor: AppUser
 ) : DomainEvent(actor)
+
+/**
+ * One activity entry for a bulk edit across multiple sessions.
+ */
+class TrainingBulkUpdatedEvent(
+    val count: Int,
+    val updateType: String,
+    actor: AppUser
+) : DomainEvent(actor)
+

@@ -42,8 +42,9 @@
                                         event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
                                         event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
                                         event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                        event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                        event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' : 'unpublished'}">add_circle</span>
+                                         event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
+                                         event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
+                                         event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
                     </div>
 
                     <!-- Text -->
@@ -69,9 +70,10 @@
                                 <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
                                 <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'"> marked </span>
                                 <span th:case="'TRAINING_BULK_DELETED'"> cancelled </span>
+                                <span th:case="'TRAINING_BULK_UPDATED'"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
                             </span>
                             <!-- Link for Material / CustomList -->
-                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED'}"
+                            <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
                                th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
                                class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
                             <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
@@ -97,6 +99,10 @@
                             <a th:if="${event.eventType.name() == 'TRAINING_BULK_DELETED'}"
                                th:href="@{/training-events}"
                                class="font-semibold text-primary hover:underline truncate"><span th:text="${event.metadata ?: 'multiple'}"></span> training sessions</a>
+                            <!-- Link/Text for Bulk Update -->
+                            <a th:if="${event.eventType.name() == 'TRAINING_BULK_UPDATED'}"
+                               th:href="@{/training-events}"
+                               class="font-semibold text-primary hover:underline truncate"><span th:text="${event.targetName}">multiple sessions</span></a>
                         </p>
                         <p class="font-label-sm text-label-sm text-outline mt-1"
                            th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>

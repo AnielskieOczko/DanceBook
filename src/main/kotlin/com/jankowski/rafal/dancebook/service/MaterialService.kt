@@ -13,6 +13,7 @@ interface MaterialService {
     fun create(materialRequest: MaterialRequest): Material
     fun update(id: UUID, request: MaterialRequest): Material
     fun delete(id: UUID)
+    fun findAll(): List<Material>
     fun findAll(
         typeIds: List<UUID>? = null,
         categoryIds: List<UUID>? = null,

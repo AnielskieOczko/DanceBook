@@ -134,6 +134,43 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // Bulk edit add style segment handler
+    const bulkAddSegmentBtn = event.target.closest('.js-bulk-add-segment');
+    if (bulkAddSegmentBtn) {
+        event.preventDefault();
+        const container = bulkAddSegmentBtn.closest('.js-segments-container');
+        if (container) {
+            const rowsContainer = container.querySelector('.js-segment-rows');
+            const template = container.querySelector('.js-segment-template');
+            if (rowsContainer && template) {
+                const index = rowsContainer.querySelectorAll('.js-segment-row').length;
+                const clone = template.content.cloneNode(true);
+                clone.querySelectorAll('select, input').forEach(field => {
+                    if (field.name) field.name = field.name.replace('INDEX', index);
+                });
+                rowsContainer.appendChild(clone);
+            }
+        }
+        return;
+    }
+
+    // Bulk edit remove style segment handler
+    const bulkRemoveSegmentBtn = event.target.closest('.js-bulk-remove-segment');
+    if (bulkRemoveSegmentBtn) {
+        event.preventDefault();
+        const row = bulkRemoveSegmentBtn.closest('.js-segment-row');
+        const rowsContainer = row ? row.closest('.js-segment-rows') : null;
+        if (row) row.remove();
+        if (rowsContainer) {
+            rowsContainer.querySelectorAll('.js-segment-row').forEach((r, idx) => {
+                r.querySelectorAll('select, input').forEach(field => {
+                    if (field.name) field.name = field.name.replace(/segments\[[^\]]*\]/, `segments[${idx}]`);
+                });
+            });
+        }
+        return;
+    }
+
     // 1. Expandable card handler
     const expandBtn = event.target.closest('.js-expand-btn');
     if (expandBtn) {

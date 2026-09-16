@@ -253,6 +253,7 @@ class GoogleCalendarClientImpl(
             val styles = event.segments.joinToString(", ") { "${it.danceCategory?.name} ${it.durationMinutes}min" }
             lines.add("Styles: $styles")
         }
+        event.material?.name?.takeIf { it.isNotBlank() }?.let { lines.add("Note: $it") }
         event.materialsUrl?.takeIf { it.isNotBlank() }?.let { lines.add("Materials: $it") }
         return lines.joinToString("\n")
     }
