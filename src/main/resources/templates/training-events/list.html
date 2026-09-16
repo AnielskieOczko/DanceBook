@@ -131,11 +131,11 @@
               class="hidden fixed bottom-20 md:bottom-8 left-1/2 -translate-x-1/2 z-40
                      bg-surface-container-high border border-outline-variant shadow-ambient
                      rounded-xl px-4 py-3 items-center justify-between gap-3
-                     max-w-[calc(100vw-2rem)] sm:max-w-lg w-full sm:w-auto">
+                     max-w-[calc(100vw-2rem)] sm:max-w-2xl w-full sm:w-auto">
             <div class="flex items-center gap-2">
                 <span id="bulkSelectedCount" class="font-medium text-on-surface text-body-md whitespace-nowrap">0 selected</span>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                 <button type="submit" name="status" value="ATTENDED"
                         class="btn-primary text-sm px-3 py-1.5 whitespace-nowrap">
                     Mark Attended
@@ -143,6 +143,30 @@
                 <button type="submit" name="status" value="SKIPPED"
                         class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
                     Mark Skipped
+                </button>
+                <button type="button"
+                        th:hx-post="@{/training-events/bulk-edit-type-dialog}"
+                        hx-target="#confirmModalContainer"
+                        hx-swap="innerHTML"
+                        hx-include=".js-session-checkbox:checked, #filterForm"
+                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                    Change Type
+                </button>
+                <button type="button"
+                        th:hx-post="@{/training-events/bulk-edit-styles-dialog}"
+                        hx-target="#confirmModalContainer"
+                        hx-swap="innerHTML"
+                        hx-include=".js-session-checkbox:checked, #filterForm"
+                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                    Set Styles
+                </button>
+                <button type="button"
+                        th:hx-post="@{/training-events/bulk-edit-material-dialog}"
+                        hx-target="#confirmModalContainer"
+                        hx-swap="innerHTML"
+                        hx-include=".js-session-checkbox:checked, #filterForm"
+                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                    Set Note
                 </button>
                 <button type="button"
                         th:hx-post="@{/training-events/bulk-delete-dialog}"

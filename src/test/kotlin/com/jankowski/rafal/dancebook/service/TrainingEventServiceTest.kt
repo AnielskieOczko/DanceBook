@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -41,6 +42,7 @@ class TrainingEventServiceTest {
     private lateinit var appUserService: AppUserService
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var materialService: MaterialService
+    private lateinit var entityManager: jakarta.persistence.EntityManager
     private lateinit var trainingEventService: TrainingEventServiceImpl
     private lateinit var currentUser: AppUser
     private lateinit var defaultCalendar: TrainingCalendar
@@ -54,6 +56,7 @@ class TrainingEventServiceTest {
         appUserService = mock(AppUserService::class.java)
         danceCategoryService = mock(DanceCategoryService::class.java)
         materialService = mock(MaterialService::class.java)
+        entityManager = mock(jakarta.persistence.EntityManager::class.java)
 
         currentUser = AppUser().apply {
             id = UUID.randomUUID()
@@ -78,7 +81,8 @@ class TrainingEventServiceTest {
             trainingCalendarService,
             appUserService,
             danceCategoryService,
-            materialService
+            materialService,
+            entityManager
         )
     }
 
@@ -766,6 +770,264 @@ class TrainingEventServiceTest {
         verifyNoInteractions(trainingEventRepository)
         verifyNoInteractions(calendarClient)
         verifyNoInteractions(trainingEventPersistence)
+    }
+
+    // ── Bulk Event Type ──────────────────────────────────────────────────────
+
+    @Test
+    fun `bulkUpdateEventType updates sessions, syncs Google Calendar, and persists bulk update`() {
+        val event1 = existingEvent("google-1").apply { eventType = TrainingEventType.TRAINING }
+        val event2 = existingEvent("google-2").apply { eventType = TrainingEventType.TRAINING }
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+
+        val result = trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
+
+        assertEquals(2, result.updatedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals("Updated event type for 2 sessions.", result.message)
+        assertEquals(TrainingEventType.WORKSHOP, event1.eventType)
+        assertEquals(TrainingEventType.WORKSHOP, event2.eventType)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "event type", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateEventType handles partial failure when Google Calendar update fails for one session`() {
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-fail")
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+        doThrow(RuntimeException("Google 500")).`when`(calendarClient)
+            .updateEvent(defaultCalendar.googleCalendarId, "google-fail", event2)
+
+        val result = trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(1, result.failedCount)
+        assertEquals("Updated event type for 1 session (1 session could not be updated).", result.message)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1), "event type", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateEventType refuses selection larger than cap`() {
+        val ids = (1..51).map { UUID.randomUUID() }
+
+        val result = trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
+
+        assertEquals(0, result.updatedCount)
+        assertEquals("Cannot update 51 sessions at once: maximum is 50.", result.message)
+        verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    @Test
+    fun `bulkUpdateEventType skips sessions belonging to another user`() {
+        val foreignUser = AppUser().apply { id = UUID.randomUUID() }
+        val foreignEvent = existingEvent("google-foreign").apply { createdBy = foreignUser }
+        val ownEvent = existingEvent("google-own")
+        val ids = listOf(foreignEvent.id!!, ownEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignEvent, ownEvent))
+
+        val result = trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals("Updated event type for 1 session.", result.message)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-own", ownEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-foreign", foreignEvent)
+        verify(trainingEventPersistence).bulkUpdate(listOf(ownEvent), "event type", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateEventType returns empty result for empty session list`() {
+        val result = trainingEventService.bulkUpdateEventType(emptyList(), TrainingEventType.WORKSHOP)
+
+        assertEquals(0, result.updatedCount)
+        assertEquals("No sessions were selected.", result.message)
+        verifyNoInteractions(trainingEventRepository)
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    // ── Bulk Style Segments ──────────────────────────────────────────────────
+
+    @Test
+    fun `bulkUpdateSegments updates style breakdown across sessions`() {
+        val cat = category("Standard")
+        `when`(danceCategoryService.findById(cat.id!!)).thenReturn(cat)
+
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-2")
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+
+        val segments = listOf(TrainingEventSegmentRequest(cat.id, 60))
+        val result = trainingEventService.bulkUpdateSegments(ids, segments)
+
+        assertEquals(2, result.updatedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals(0, result.skippedCount)
+        assertEquals("Updated style breakdown for 2 sessions.", result.message)
+        assertEquals(1, event1.segments.size)
+        assertEquals(60, event1.segments[0].durationMinutes)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "style breakdown", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateSegments skips sessions whose duration is shorter than breakdown and reports them`() {
+        val cat = category("Standard")
+        `when`(danceCategoryService.findById(cat.id!!)).thenReturn(cat)
+
+        val longEvent = existingEvent("google-long")
+        val shortEvent = existingEvent("google-short").apply {
+            endTime = startTime.plusMinutes(45)
+        }
+        val ids = listOf(longEvent.id!!, shortEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(longEvent, shortEvent))
+
+        val segments = listOf(TrainingEventSegmentRequest(cat.id, 60))
+        val result = trainingEventService.bulkUpdateSegments(ids, segments)
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(0, result.failedCount)
+        assertEquals(1, result.skippedCount)
+        assertEquals(
+            "Updated style breakdown for 1 session (1 session was skipped because the style breakdown exceeds its duration).",
+            result.message
+        )
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-long", longEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-short", shortEvent)
+        verify(trainingEventPersistence).bulkUpdate(listOf(longEvent), "style breakdown", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateSegments reports message correctly when all sessions are skipped`() {
+        val cat = category("Standard")
+        val shortEvent = existingEvent("google-short").apply {
+            endTime = startTime.plusMinutes(30)
+        }
+        val ids = listOf(shortEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(shortEvent))
+
+        val segments = listOf(TrainingEventSegmentRequest(cat.id, 60))
+        val result = trainingEventService.bulkUpdateSegments(ids, segments)
+
+        assertEquals(0, result.updatedCount)
+        assertEquals(1, result.skippedCount)
+        assertEquals(
+            "No sessions were updated (1 session was skipped because the style breakdown exceeds its duration).",
+            result.message
+        )
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
+    }
+
+    // ── Bulk Material ────────────────────────────────────────────────────────
+
+    @Test
+    fun `bulkUpdateMaterial sets Note and external link across sessions`() {
+        val material = Material().apply {
+            id = UUID.randomUUID()
+            name = "Rumba Walk Notes"
+        }
+        `when`(materialService.findById(material.id!!)).thenReturn(material)
+
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-2")
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+
+        val result = trainingEventService.bulkUpdateMaterial(
+            sessionIds = ids,
+            materialId = material.id,
+            materialsUrl = "https://example.com/video",
+            clearMaterial = false
+        )
+
+        assertEquals(2, result.updatedCount)
+        assertEquals("Updated material for 2 sessions.", result.message)
+        assertEquals(material, event1.material)
+        assertEquals("https://example.com/video", event1.materialsUrl)
+        assertEquals(material, event2.material)
+        assertEquals("https://example.com/video", event2.materialsUrl)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "material", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateMaterial clears material when clearMaterial is true`() {
+        val material = Material().apply { id = UUID.randomUUID(); name = "Old Note" }
+        val event1 = existingEvent("google-1").apply {
+            this.material = material
+            this.materialsUrl = "https://old.com"
+        }
+        val ids = listOf(event1.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1))
+
+        val result = trainingEventService.bulkUpdateMaterial(
+            sessionIds = ids,
+            materialId = null,
+            materialsUrl = null,
+            clearMaterial = true
+        )
+
+        assertEquals(1, result.updatedCount)
+        assertEquals("Updated material for 1 session.", result.message)
+        assertEquals(null, event1.material)
+        assertEquals(null, event1.materialsUrl)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1), "material", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateMaterial handles partial failure when Google Calendar update fails`() {
+        val material = Material().apply { id = UUID.randomUUID(); name = "Note" }
+        `when`(materialService.findById(material.id!!)).thenReturn(material)
+
+        val event1 = existingEvent("google-1")
+        val event2 = existingEvent("google-fail")
+        val ids = listOf(event1.id!!, event2.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
+        doThrow(RuntimeException("Google 500")).`when`(calendarClient)
+            .updateEvent(defaultCalendar.googleCalendarId, "google-fail", event2)
+
+        val result = trainingEventService.bulkUpdateMaterial(
+            sessionIds = ids,
+            materialId = material.id,
+            materialsUrl = null,
+            clearMaterial = false
+        )
+
+        assertEquals(1, result.updatedCount)
+        assertEquals(1, result.failedCount)
+        assertEquals("Updated material for 1 session (1 session could not be updated).", result.message)
+        verify(trainingEventPersistence).bulkUpdate(listOf(event1), "material", currentUser)
+    }
+
+    @Test
+    fun `bulkUpdateMaterial skips sessions belonging to another user`() {
+        val foreignUser = AppUser().apply { id = UUID.randomUUID() }
+        val foreignEvent = existingEvent("google-foreign").apply { createdBy = foreignUser }
+        val ownEvent = existingEvent("google-own")
+        val ids = listOf(foreignEvent.id!!, ownEvent.id!!)
+        `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(foreignEvent, ownEvent))
+
+        val result = trainingEventService.bulkUpdateMaterial(
+            sessionIds = ids,
+            materialId = null,
+            materialsUrl = "https://link.com",
+            clearMaterial = false
+        )
+
+        assertEquals(1, result.updatedCount)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-own", ownEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-foreign", foreignEvent)
+        verify(trainingEventPersistence).bulkUpdate(listOf(ownEvent), "material", currentUser)
     }
 
     private fun validRequest(

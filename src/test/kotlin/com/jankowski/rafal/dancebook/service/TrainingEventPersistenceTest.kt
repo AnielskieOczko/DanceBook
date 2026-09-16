@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -115,10 +116,13 @@ class TrainingEventPersistenceTest {
 
     @Test
     fun `bulk updating empty list does nothing`() {
-        val updated = persistence.bulkUpdateAttendance(emptyList(), AttendanceStatus.ATTENDED, actor)
+        val updatedAttendance = persistence.bulkUpdateAttendance(emptyList(), AttendanceStatus.ATTENDED, actor)
+        val updatedSessions = persistence.bulkUpdate(emptyList(), "event type", actor)
 
-        assertTrue(updated.isEmpty())
+        assertTrue(updatedAttendance.isEmpty())
+        assertTrue(updatedSessions.isEmpty())
         verifyNoInteractions(trainingRecordWriter)
+        verifyNoInteractions(trainingEventRepository)
         verifyNoInteractions(eventPublisher)
     }
 
@@ -149,5 +153,27 @@ class TrainingEventPersistenceTest {
         verifyNoInteractions(trainingRecordWriter)
         verifyNoInteractions(trainingEventRepository)
         verifyNoInteractions(eventPublisher)
+    }
+
+    @Test
+    fun `bulk updating sessions saves them, syncs their training records, and publishes a single bulk event`() {
+        val event1 = event()
+        val event2 = event()
+        val events = listOf(event1, event2)
+        `when`(trainingEventRepository.saveAll(events)).thenReturn(events)
+
+        val updated = persistence.bulkUpdate(events, "event type", actor)
+
+        assertEquals(2, updated.size)
+        val order: InOrder = inOrder(trainingEventRepository, trainingRecordWriter)
+        order.verify(trainingEventRepository).saveAll(events)
+        order.verify(trainingRecordWriter).sync(event1)
+        order.verify(trainingRecordWriter).sync(event2)
+
+        val captor = ArgumentCaptor.forClass(TrainingBulkUpdatedEvent::class.java)
+        verify(eventPublisher).publishEvent(captor.capture())
+        assertEquals(2, captor.value.count)
+        assertEquals("event type", captor.value.updateType)
+        assertEquals(actor, captor.value.actor)
     }
 }

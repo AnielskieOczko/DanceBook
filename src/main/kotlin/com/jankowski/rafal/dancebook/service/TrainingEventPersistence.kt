@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
+import com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
@@ -73,6 +74,24 @@ class TrainingEventPersistence(
         val saved = trainingEventRepository.saveAll(events)
         saved.forEach { trainingRecordWriter.sync(it) }
         eventPublisher.publishEvent(TrainingBulkAttendanceUpdatedEvent(saved.size, status, actor))
+        return saved
+    }
+
+    /**
+     * Persists updates across multiple sessions in one transaction, syncing their records
+     * and publishing a single bulk activity event rather than one per session.
+     */
+    @Transactional
+    fun bulkUpdate(
+        events: List<TrainingEvent>,
+        updateType: String,
+        actor: AppUser
+    ): List<TrainingEvent> {
+        if (events.isEmpty()) return emptyList()
+
+        val saved = trainingEventRepository.saveAll(events)
+        saved.forEach { trainingRecordWriter.sync(it) }
+        eventPublisher.publishEvent(TrainingBulkUpdatedEvent(saved.size, updateType, actor))
         return saved
     }
 

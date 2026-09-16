@@ -22,6 +22,7 @@ import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -49,6 +50,7 @@ class TrainingEventWebControllerTest {
     private lateinit var activeCalendarService: ActiveCalendarService
     private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var calendarSyncService: CalendarSyncService
+    private lateinit var materialService: com.jankowski.rafal.dancebook.service.MaterialService
     private lateinit var controller: TrainingEventWebController
     private lateinit var defaultCal: TrainingCalendar
 
@@ -60,6 +62,7 @@ class TrainingEventWebControllerTest {
         activeCalendarService = mock(ActiveCalendarService::class.java)
         trainingCalendarService = mock(TrainingCalendarService::class.java)
         calendarSyncService = mock(CalendarSyncService::class.java)
+        materialService = mock(com.jankowski.rafal.dancebook.service.MaterialService::class.java)
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Default"
@@ -75,7 +78,8 @@ class TrainingEventWebControllerTest {
             danceCategoryService,
             activeCalendarService,
             trainingCalendarService,
-            calendarSyncService
+            calendarSyncService,
+            materialService
         )
     }
 
@@ -877,5 +881,151 @@ class TrainingEventWebControllerTest {
 
         assertEquals("redirect:/training-events", viewName)
         verify(trainingEventService).bulkDelete(ids)
+    }
+
+    // ── Bulk Edit Type Controller Tests ──────────────────────────────────────
+
+    @Test
+    fun `bulkEditTypeDialog renders editEventTypeModal with session ids and event types`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID(), UUID.randomUUID())
+
+        val viewName = controller.bulkEditTypeDialog(ids, model)
+
+        assertEquals("fragments/bulk-edit-dialog :: editEventTypeModal", viewName)
+        assertEquals("Change Event Type", model["dialogTitle"])
+        assertEquals(2, model["selectedCount"])
+        assertEquals(ids, model["sessionIds"])
+        assertNotNull(model["eventTypeOptions"])
+    }
+
+    @Test
+    fun `bulkEditTypeDialog with count exceeding cap renders refusal modal`() {
+        val model = ConcurrentModel()
+        val ids = (1..55).map { UUID.randomUUID() }
+
+        val viewName = controller.bulkEditTypeDialog(ids, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Cannot Update Sessions", model["dialogTitle"])
+        val message = model["dialogMessage"] as String
+        assertTrue(message.contains("Cannot update 55 sessions at once: maximum is 50."))
+    }
+
+    @Test
+    fun `bulkEditType over HTMX refreshes list with filters intact`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val result = com.jankowski.rafal.dancebook.dto.BulkEditResult(updatedCount = 1, actionDescription = "Updated event type for")
+        `when`(trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)).thenReturn(result)
+        `when`(trainingEventService.findByCurrentUser(calendarId = defaultCal.id)).thenReturn(emptyList())
+        `when`(activeCalendarService.active()).thenReturn(defaultCal)
+
+        val viewName = controller.bulkEditType(
+            sessionIds = ids,
+            eventType = TrainingEventType.WORKSHOP,
+            isHtmxRequest = true,
+            model = model
+        )
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        assertEquals(result.message, model["bulkMessage"])
+        verify(trainingEventService).bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
+    }
+
+    @Test
+    fun `bulkEditType without HTMX redirects to list`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val result = com.jankowski.rafal.dancebook.dto.BulkEditResult(updatedCount = 1)
+        `when`(trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)).thenReturn(result)
+
+        val viewName = controller.bulkEditType(
+            sessionIds = ids,
+            eventType = TrainingEventType.WORKSHOP,
+            isHtmxRequest = false,
+            model = model
+        )
+
+        assertEquals("redirect:/training-events", viewName)
+    }
+
+    // ── Bulk Edit Styles Controller Tests ────────────────────────────────────
+
+    @Test
+    fun `bulkEditStylesDialog renders editStylesModal with dance categories`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val cat = DanceCategory().apply { id = UUID.randomUUID(); name = "Standard" }
+        `when`(danceCategoryService.findAll()).thenReturn(listOf(cat))
+
+        val viewName = controller.bulkEditStylesDialog(ids, model)
+
+        assertEquals("fragments/bulk-edit-dialog :: editStylesModal", viewName)
+        assertEquals("Replace Style Segments", model["dialogTitle"])
+        assertEquals(1, model["selectedCount"])
+        assertEquals(listOf(cat), model["danceCategories"])
+    }
+
+    @Test
+    fun `bulkEditStyles over HTMX refreshes list with filters intact`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val segments = mutableListOf(com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest(UUID.randomUUID(), 45))
+        val request = com.jankowski.rafal.dancebook.dto.BulkSegmentsRequest(ids, segments)
+        val result = com.jankowski.rafal.dancebook.dto.BulkEditResult(updatedCount = 1, actionDescription = "Updated style breakdown for")
+        `when`(trainingEventService.bulkUpdateSegments(ids, segments)).thenReturn(result)
+        `when`(trainingEventService.findByCurrentUser(calendarId = defaultCal.id)).thenReturn(emptyList())
+        `when`(activeCalendarService.active()).thenReturn(defaultCal)
+
+        val viewName = controller.bulkEditStyles(
+            request = request,
+            isHtmxRequest = true,
+            model = model
+        )
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        assertEquals(result.message, model["bulkMessage"])
+        verify(trainingEventService).bulkUpdateSegments(ids, segments)
+    }
+
+    // ── Bulk Edit Material Controller Tests ──────────────────────────────────
+
+    @Test
+    fun `bulkEditMaterialDialog renders editMaterialModal with materials`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val mat = com.jankowski.rafal.dancebook.model.Material().apply { id = UUID.randomUUID(); name = "Note 1" }
+        `when`(materialService.findAll()).thenReturn(listOf(mat))
+
+        val viewName = controller.bulkEditMaterialDialog(ids, model)
+
+        assertEquals("fragments/bulk-edit-dialog :: editMaterialModal", viewName)
+        assertEquals("Attach Note or Link", model["dialogTitle"])
+        assertEquals(listOf(mat), model["materials"])
+    }
+
+    @Test
+    fun `bulkEditMaterial over HTMX refreshes list with filters intact`() {
+        val model = ConcurrentModel()
+        val ids = listOf(UUID.randomUUID())
+        val matId = UUID.randomUUID()
+        val result = com.jankowski.rafal.dancebook.dto.BulkEditResult(updatedCount = 1, actionDescription = "Updated material for")
+        `when`(trainingEventService.bulkUpdateMaterial(ids, matId, "https://link.com", false)).thenReturn(result)
+        `when`(trainingEventService.findByCurrentUser(calendarId = defaultCal.id)).thenReturn(emptyList())
+        `when`(activeCalendarService.active()).thenReturn(defaultCal)
+
+        val viewName = controller.bulkEditMaterial(
+            sessionIds = ids,
+            materialId = matId,
+            materialsUrl = "https://link.com",
+            clearMaterial = false,
+            isHtmxRequest = true,
+            model = model
+        )
+
+        assertEquals("training-events/list :: eventsList", viewName)
+        assertEquals(result.message, model["bulkMessage"])
+        verify(trainingEventService).bulkUpdateMaterial(ids, matId, "https://link.com", false)
     }
 }

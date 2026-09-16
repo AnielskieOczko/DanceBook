@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
+import com.jankowski.rafal.dancebook.dto.BulkEditResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -42,6 +43,17 @@ interface TrainingEventService {
     fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult
 
     fun bulkDelete(sessionIds: List<UUID>): BulkDeleteResult
+
+    fun bulkUpdateEventType(sessionIds: List<UUID>, eventType: TrainingEventType): BulkEditResult
+
+    fun bulkUpdateSegments(sessionIds: List<UUID>, segments: List<com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest>): BulkEditResult
+
+    fun bulkUpdateMaterial(
+        sessionIds: List<UUID>,
+        materialId: UUID? = null,
+        materialsUrl: String? = null,
+        clearMaterial: Boolean = false
+    ): BulkEditResult
 
     /** Moves a session to a new slot, e.g. after dragging it in the calendar view. */
     fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent

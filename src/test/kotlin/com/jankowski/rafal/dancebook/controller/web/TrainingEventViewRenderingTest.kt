@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
@@ -11,6 +12,7 @@ import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -85,6 +87,7 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var trainingEventService: TrainingEventService
     @MockBean private lateinit var trainingSeriesService: TrainingSeriesService
     @MockBean private lateinit var danceCategoryService: DanceCategoryService
+    @MockBean private lateinit var materialService: MaterialService
     @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
     @MockBean private lateinit var activeCalendarService: ActiveCalendarService
     @MockBean private lateinit var calendarSyncService: CalendarSyncService
@@ -493,6 +496,100 @@ class TrainingEventViewRenderingTest {
         val doc = Jsoup.parse(html)
         val syncText = doc.select(".text-text-secondary:contains(Never synced)")
         assertEquals(1, syncText.size, "Should display Never synced when null")
+    }
+
+    @Test
+    fun `bulk action bar displays change type, set styles, and set note buttons`() {
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val bulkBar = doc.select("#bulkActionBar")
+        assertEquals(1, bulkBar.size, "Bulk action bar should be present")
+        assertTrue(bulkBar.text().contains("Change Type"), "Bulk action bar should contain Change Type")
+        assertTrue(bulkBar.text().contains("Set Styles"), "Bulk action bar should contain Set Styles")
+        assertTrue(bulkBar.text().contains("Set Note"), "Bulk action bar should contain Set Note")
+    }
+
+    @Test
+    fun `bulk edit type dialog renders with event type options and csrf`() {
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+        val id3 = UUID.randomUUID()
+        val html = mockMvc.perform(
+            post("/training-events/bulk-edit-type-dialog")
+                .param("sessionIds", id1.toString(), id2.toString(), id3.toString())
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editEventTypeModal"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val title = doc.select("#modalTitle").text()
+        assertTrue(title.contains("Change Event Type"), "Dialog title should be Change Event Type")
+        assertTrue(html.contains("Apply to 3 selected sessions"), "Subtitle should include session count")
+        assertTrue(doc.select("select[name=eventType]").size > 0, "Should include eventType select")
+        assertTrue(doc.select("input[name=_csrf]").size > 0, "Should include CSRF hidden field")
+    }
+
+    @Test
+    fun `bulk edit styles dialog renders with categories and segment inputs`() {
+        val cat1 = DanceCategory().apply { name = "Standard" }
+        val cat2 = DanceCategory().apply { name = "Latin" }
+        `when`(danceCategoryService.findAll()).thenReturn(listOf(cat1, cat2))
+
+        val ids = (1..5).map { UUID.randomUUID().toString() }.toTypedArray()
+        val html = mockMvc.perform(
+            post("/training-events/bulk-edit-styles-dialog")
+                .param("sessionIds", *ids)
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editStylesModal"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val title = doc.select("#modalTitle").text()
+        assertTrue(title.contains("Replace Style Segments"), "Dialog title should be Replace Style Segments")
+        assertTrue(html.contains("Apply to 5 selected sessions"), "Subtitle should include session count")
+        assertTrue(doc.select(".js-bulk-add-segment").size > 0, "Should include Add Style button")
+        assertTrue(doc.select("select[name='segments[0].categoryId']").size > 0, "Should include first segment category select")
+        assertTrue(doc.select("input[name=_csrf]").size > 0, "Should include CSRF hidden field")
+    }
+
+    @Test
+    fun `bulk edit material dialog renders with notes dropdown and clear checkbox`() {
+        val note = Material().apply {
+            id = UUID.randomUUID()
+            name = "Choreo Notes 2026"
+        }
+        `when`(materialService.findAll()).thenReturn(listOf(note))
+
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+        val html = mockMvc.perform(
+            post("/training-events/bulk-edit-material-dialog")
+                .param("sessionIds", id1.toString(), id2.toString())
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editMaterialModal"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val title = doc.select("#modalTitle").text()
+        assertTrue(title.contains("Attach Note or Link"), "Dialog title should be Attach Note or Link")
+        assertTrue(html.contains("Apply to 2 selected sessions"), "Subtitle should include session count")
+        assertTrue(doc.select("select[name=materialId]").size > 0, "Should include material select")
+        assertTrue(doc.select("input[name=materialsUrl]").size > 0, "Should include materialsUrl input")
+        assertTrue(doc.select("input[name=clearMaterial]").size > 0, "Should include clearMaterial checkbox")
+        assertTrue(doc.select("input[name=_csrf]").size > 0, "Should include CSRF hidden field")
     }
 }
 

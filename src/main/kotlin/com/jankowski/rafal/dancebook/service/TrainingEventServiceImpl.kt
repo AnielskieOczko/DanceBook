@@ -2,7 +2,9 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
+import com.jankowski.rafal.dancebook.dto.BulkEditResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
+import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.Role
@@ -12,6 +14,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
+import jakarta.persistence.EntityManager
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Sort
@@ -33,7 +36,8 @@ class TrainingEventServiceImpl(
     private val trainingCalendarService: TrainingCalendarService,
     private val appUserService: AppUserService,
     private val danceCategoryService: DanceCategoryService,
-    private val materialService: MaterialService
+    private val materialService: MaterialService,
+    private val entityManager: EntityManager
 ) : TrainingEventService {
 
     companion object {
@@ -220,6 +224,198 @@ class TrainingEventServiceImpl(
         )
     }
 
+    override fun bulkUpdateEventType(sessionIds: List<UUID>, eventType: TrainingEventType): BulkEditResult {
+        if (sessionIds.isEmpty()) {
+            return BulkEditResult(updatedCount = 0, failedCount = 0, actionDescription = "Updated event type for")
+        }
+
+        if (sessionIds.size > TrainingEventService.MAX_BULK_ACTION) {
+            return BulkEditResult(
+                updatedCount = 0,
+                failedCount = 0,
+                actionDescription = "Updated event type for",
+                errorMessage = TrainingEventService.bulkCapRefusal(sessionIds.size, "update")
+            )
+        }
+
+        val currentUser = appUserService.getCurrentUser()
+        val events = trainingEventRepository.findAllByIdIn(sessionIds)
+        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val succeededEvents = mutableListOf<TrainingEvent>()
+        var failedCount = 0
+
+        for (event in ownedEvents) {
+            try {
+                event.eventType = eventType
+                event.updatedAt = LocalDateTime.now()
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (event.googleEventId != null) {
+                    if (googleCalId != null) {
+                        calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
+                    } else {
+                        log.error("Cannot update calendar event {}: no calendar resolved; skipping Google update", event.googleEventId)
+                    }
+                }
+                succeededEvents.add(event)
+            } catch (e: Exception) {
+                log.error("Failed to update training event '{}' ({}) in Google Calendar: {}", event.title, event.id, e.message)
+                // The session was mutated before the calendar call, and open-in-view leaves it
+                // managed, so the transaction that saves the sessions that *did* succeed would
+                // flush this one too - changing the app while Google still shows the old value.
+                // Evicting it is what keeps a reported failure from half-applying.
+                entityManager.detach(event)
+                failedCount++
+            }
+        }
+
+        if (succeededEvents.isNotEmpty()) {
+            log.debug("User '{}' updating event type for {} training events", currentUser.username, succeededEvents.size)
+            trainingEventPersistence.bulkUpdate(succeededEvents, "event type", currentUser)
+        }
+
+        return BulkEditResult(
+            updatedCount = succeededEvents.size,
+            failedCount = failedCount,
+            actionDescription = "Updated event type for"
+        )
+    }
+
+    override fun bulkUpdateSegments(sessionIds: List<UUID>, segments: List<TrainingEventSegmentRequest>): BulkEditResult {
+        if (sessionIds.isEmpty()) {
+            return BulkEditResult(updatedCount = 0, failedCount = 0, actionDescription = "Updated style breakdown for")
+        }
+
+        if (sessionIds.size > TrainingEventService.MAX_BULK_ACTION) {
+            return BulkEditResult(
+                updatedCount = 0,
+                failedCount = 0,
+                actionDescription = "Updated style breakdown for",
+                errorMessage = TrainingEventService.bulkCapRefusal(sessionIds.size, "update")
+            )
+        }
+
+        val currentUser = appUserService.getCurrentUser()
+        val events = trainingEventRepository.findAllByIdIn(sessionIds)
+        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+
+        val requested = segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+        val totalSegmentMinutes = requested.sumOf { it.durationMinutes ?: 0 }
+
+        val (validEvents, skippedEvents) = ownedEvents.partition {
+            val slotMinutes = java.time.Duration.between(it.startTime, it.endTime).toMinutes()
+            totalSegmentMinutes <= slotMinutes
+        }
+
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val succeededEvents = mutableListOf<TrainingEvent>()
+        var failedCount = 0
+
+        for (event in validEvents) {
+            try {
+                applySegmentsList(event, requested)
+                event.updatedAt = LocalDateTime.now()
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (event.googleEventId != null) {
+                    if (googleCalId != null) {
+                        calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
+                    } else {
+                        log.error("Cannot update calendar event {}: no calendar resolved; skipping Google update", event.googleEventId)
+                    }
+                }
+                succeededEvents.add(event)
+            } catch (e: Exception) {
+                log.error("Failed to update training event '{}' ({}) in Google Calendar: {}", event.title, event.id, e.message)
+                // The session was mutated before the calendar call, and open-in-view leaves it
+                // managed, so the transaction that saves the sessions that *did* succeed would
+                // flush this one too - changing the app while Google still shows the old value.
+                // Evicting it is what keeps a reported failure from half-applying.
+                entityManager.detach(event)
+                failedCount++
+            }
+        }
+
+        if (succeededEvents.isNotEmpty()) {
+            log.debug("User '{}' updating style breakdown for {} training events", currentUser.username, succeededEvents.size)
+            trainingEventPersistence.bulkUpdate(succeededEvents, "style breakdown", currentUser)
+        }
+
+        return BulkEditResult(
+            updatedCount = succeededEvents.size,
+            failedCount = failedCount,
+            skippedCount = skippedEvents.size,
+            actionDescription = "Updated style breakdown for"
+        )
+    }
+
+    override fun bulkUpdateMaterial(
+        sessionIds: List<UUID>,
+        materialId: UUID?,
+        materialsUrl: String?,
+        clearMaterial: Boolean
+    ): BulkEditResult {
+        if (sessionIds.isEmpty()) {
+            return BulkEditResult(updatedCount = 0, failedCount = 0, actionDescription = "Updated material for")
+        }
+
+        if (sessionIds.size > TrainingEventService.MAX_BULK_ACTION) {
+            return BulkEditResult(
+                updatedCount = 0,
+                failedCount = 0,
+                actionDescription = "Updated material for",
+                errorMessage = TrainingEventService.bulkCapRefusal(sessionIds.size, "update")
+            )
+        }
+
+        val currentUser = appUserService.getCurrentUser()
+        val events = trainingEventRepository.findAllByIdIn(sessionIds)
+        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+
+        val resolvedMaterial = if (!clearMaterial && materialId != null) materialService.findById(materialId) else null
+        val resolvedUrl = if (!clearMaterial) materialsUrl?.takeIf { it.isNotBlank() } else null
+
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val succeededEvents = mutableListOf<TrainingEvent>()
+        var failedCount = 0
+
+        for (event in ownedEvents) {
+            try {
+                event.material = resolvedMaterial
+                event.materialsUrl = resolvedUrl
+                event.updatedAt = LocalDateTime.now()
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (event.googleEventId != null) {
+                    if (googleCalId != null) {
+                        calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
+                    } else {
+                        log.error("Cannot update calendar event {}: no calendar resolved; skipping Google update", event.googleEventId)
+                    }
+                }
+                succeededEvents.add(event)
+            } catch (e: Exception) {
+                log.error("Failed to update training event '{}' ({}) in Google Calendar: {}", event.title, event.id, e.message)
+                // The session was mutated before the calendar call, and open-in-view leaves it
+                // managed, so the transaction that saves the sessions that *did* succeed would
+                // flush this one too - changing the app while Google still shows the old value.
+                // Evicting it is what keeps a reported failure from half-applying.
+                entityManager.detach(event)
+                failedCount++
+            }
+        }
+
+        if (succeededEvents.isNotEmpty()) {
+            log.debug("User '{}' updating material for {} training events", currentUser.username, succeededEvents.size)
+            trainingEventPersistence.bulkUpdate(succeededEvents, "material", currentUser)
+        }
+
+        return BulkEditResult(
+            updatedCount = succeededEvents.size,
+            failedCount = failedCount,
+            actionDescription = "Updated material for"
+        )
+    }
+
     override fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
         val event = findById(id)
@@ -328,7 +524,15 @@ class TrainingEventServiceImpl(
      */
     private fun applySegments(event: TrainingEvent, request: TrainingEventRequest) {
         val requested = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+        applySegmentsList(event, requested)
+    }
 
+    /**
+     * Rebuilds the style breakdown in place. orphanRemoval on the collection means clearing
+     * and refilling the existing list deletes the rows that went away — replacing the list
+     * instance would detach them instead and trip Hibernate.
+     */
+    private fun applySegmentsList(event: TrainingEvent, requested: List<TrainingEventSegmentRequest>) {
         val totalSegmentMinutes = requested.sumOf { it.durationMinutes ?: 0 }
         val slotMinutes = java.time.Duration.between(event.startTime, event.endTime).toMinutes()
         require(totalSegmentMinutes <= slotMinutes) {
