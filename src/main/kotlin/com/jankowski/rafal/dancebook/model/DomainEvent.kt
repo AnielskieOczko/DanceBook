@@ -102,6 +102,16 @@ class TrainingSeriesCreatedEvent(
 ) : DomainEvent(actor)
 
 /**
+ * One activity entry for a series-wide delete across occurrences of a repeating series.
+ */
+class TrainingSeriesDeletedEvent(
+    val seriesTitle: String,
+    val deletedCount: Int,
+    val seriesRemoved: Boolean,
+    actor: AppUser
+) : DomainEvent(actor)
+
+/**
  * One activity entry for a bulk attendance update across multiple sessions.
  */
 class TrainingBulkAttendanceUpdatedEvent(

@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.dto.groupByMonth
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -30,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap
 import com.jankowski.rafal.dancebook.dto.BulkSegmentsRequest
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.MaterialService
@@ -275,7 +278,7 @@ class TrainingEventWebController(
         try {
             // "This and following" regenerates the rest of the series; "this event"
             // detaches the occurrence and updates it alone.
-            if (request.editScope.equals("THIS_AND_FOLLOWING", ignoreCase = true)) {
+            if (request.editScope == SeriesScope.THIS_AND_FOLLOWING) {
                 trainingSeriesService.updateThisAndFollowing(id, request)
             } else {
                 trainingEventService.update(id, request)
@@ -678,15 +681,52 @@ class TrainingEventWebController(
         return "training-events/list :: eventsList"
     }
 
+    @GetMapping("/{id}/delete-dialog")
+    fun deleteDialog(
+        @PathVariable id: UUID,
+        model: Model
+    ): String {
+        val event = trainingEventService.findById(id)
+        val series = event.series
+        if (series == null) {
+            model.addAttribute("dialogTitle", "Delete Session")
+            model.addAttribute(
+                "dialogMessage",
+                "Delete this training session? It will also be removed from your Google Calendar."
+            )
+            model.addAttribute("confirmLabel", "Delete Session")
+            model.addAttribute("confirmUrl", "/training-events/$id/delete")
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        val scopeOptions = trainingSeriesService.calculateDeleteScopeOptions(id)
+        model.addAttribute("dialogTitle", "Delete Recurring Session")
+        model.addAttribute(
+            "dialogMessage",
+            "This session is part of a repeating series. How far should this delete reach?"
+        )
+        model.addAttribute("scopeOptions", scopeOptions)
+        model.addAttribute("confirmLabel", "Delete")
+        model.addAttribute("confirmUrl", "/training-events/$id/delete")
+        return "fragments/confirm-dialog :: confirmModal"
+    }
+
     @PostMapping("/{id}/delete")
     fun deleteTrainingEvent(
         @PathVariable id: UUID,
-        @RequestParam(required = false) scope: String? = null
+        @RequestParam(required = false) scope: SeriesScope? = null,
+        redirectAttributes: RedirectAttributes = RedirectAttributesModelMap()
     ): String {
-        if (scope.equals("THIS_AND_FOLLOWING", ignoreCase = true)) {
-            trainingSeriesService.deleteThisAndFollowing(id)
-        } else {
-            trainingEventService.delete(id)
+        val result = when (scope ?: SeriesScope.THIS_EVENT) {
+            SeriesScope.THIS_EVENT -> {
+                trainingEventService.delete(id)
+                null
+            }
+            SeriesScope.THIS_AND_FOLLOWING -> trainingSeriesService.deleteThisAndFollowing(id)
+            SeriesScope.ALL_EVENTS -> trainingSeriesService.deleteAll(id)
+        }
+        if (result != null && result.failedCount > 0) {
+            redirectAttributes.addFlashAttribute("bulkMessage", result.message)
         }
         return "redirect:/training-events"
     }

@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.springframework.format.annotation.DateTimeFormat
@@ -60,10 +61,10 @@ data class TrainingEventRequest(
     val repeatUntil: LocalDate? = null,
 
     /**
-     * Which occurrences an edit applies to: "THIS_EVENT" or "THIS_AND_FOLLOWING".
+     * Which occurrences an edit applies to: THIS_EVENT or THIS_AND_FOLLOWING.
      * Ignored when the event is not part of a series.
      */
-    val editScope: String = "THIS_EVENT"
+    val editScope: SeriesScope = SeriesScope.THIS_EVENT
 ) {
     val isRepeating: Boolean
         get() = repeat.equals("WEEKLY", ignoreCase = true)

@@ -15,7 +15,14 @@
         </div>
         <div class="flex items-center gap-3 shrink-0">
             <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-primary">Edit</a>
-            <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+            <button th:if="${event.series != null}"
+                    type="button"
+                    class="btn-danger"
+                    th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
+                    hx-target="#confirmModalContainer"
+                    hx-swap="innerHTML">Delete</button>
+            <form th:if="${event.series == null}"
+                  th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
                   data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
                 <button type="submit" class="btn-danger">Delete</button>
             </form>
@@ -31,6 +38,10 @@
 
         <div class="flex flex-wrap items-center gap-2">
             <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+            <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">event_repeat</span>
+                <span>Repeating series</span>
+            </span>
             <span th:each="segment : ${event.segments}" class="badge-secondary"
                   th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
             <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>

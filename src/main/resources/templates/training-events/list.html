@@ -258,7 +258,17 @@
                     <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-icon" title="Edit">
                         <span class="material-symbols-outlined text-[20px]">edit</span>
                     </a>
-                    <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                    <button th:if="${event.series != null}"
+                            type="button"
+                            class="btn-icon text-error"
+                            title="Delete"
+                            th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
+                            hx-target="#confirmModalContainer"
+                            hx-swap="innerHTML">
+                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                    <form th:if="${event.series == null}"
+                          th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
                           data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
                         <button type="submit" class="btn-icon text-error" title="Delete">
                             <span class="material-symbols-outlined text-[20px]">delete</span>
@@ -277,7 +287,17 @@
                             <span class="material-symbols-outlined text-[18px]">edit</span>
                             Edit
                         </a>
-                        <form th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                        <button th:if="${event.series != null}"
+                                type="button"
+                                class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container"
+                                th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
+                                hx-target="#confirmModalContainer"
+                                hx-swap="innerHTML">
+                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                            Delete
+                        </button>
+                        <form th:if="${event.series == null}"
+                              th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
                               data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
                             <button type="submit"
                                     class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container">

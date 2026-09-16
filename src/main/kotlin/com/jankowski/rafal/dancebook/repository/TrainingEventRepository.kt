@@ -46,6 +46,10 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
         startTime: LocalDateTime
     ): List<TrainingEvent>
 
+    fun findAllBySeriesOrderByStartTimeAsc(series: TrainingSeries): List<TrainingEvent>
+
+    fun countBySeries(series: TrainingSeries): Long
+
     /**
      * One window of the user's history, newest first — future sessions, then today, then the past.
      *

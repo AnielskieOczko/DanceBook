@@ -87,13 +87,14 @@
                                                 event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
                                                 event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
                                                 event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
-                                                event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
-                                                 event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
-                                                 event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
-                                                  event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                                   event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                                   event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
-                                                   event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
+                                                 event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
+                                                  event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
+                                                  event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
+                                                   event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
+                                                   event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
+                                                    event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
+                                                    event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
+                                                    event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
                             </div>
 
                             <!-- Text -->
@@ -117,12 +118,16 @@
                                         <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
                                         <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
                                         <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
+                                        <span th:case="'TRAINING_SERIES_DELETED'">
+                                            <span th:if="${event.metadata != null}"> cancelled <span th:text="${event.metadata}"></span> following sessions of </span>
+                                            <span th:unless="${event.metadata != null}"> cancelled series </span>
+                                        </span>
                                         <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'"> marked </span>
                                         <span th:case="'TRAINING_BULK_DELETED'"> cancelled </span>
                                         <span th:case="'TRAINING_BULK_UPDATED'"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
                                     </span>
                                     <!-- Link for Material / CustomList -->
-                                    <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
+                                    <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_SERIES_DELETED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
                                        th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
                                        class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
                                     <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
@@ -138,6 +143,14 @@
                                        th:href="@{/training-events/{id}(id=${event.targetId})}"
                                        class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
                                     <span th:if="${event.eventType.name() == 'TRAINING_EVENT_DELETED'}"
+                                          class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                                    <!-- Link/Text for TrainingSeries -->
+                                    <a th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId != null}"
+                                       th:href="@{/training-events/{id}(id=${event.targetId})}"
+                                       class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
+                                    <span th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId == null}"
+                                          class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                                    <span th:if="${event.eventType.name() == 'TRAINING_SERIES_DELETED'}"
                                           class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
                                     <!-- Link/Text for Bulk Attendance -->
                                     <a th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"

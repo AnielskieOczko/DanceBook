@@ -6,7 +6,9 @@ import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingSeriesRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -30,6 +32,7 @@ import java.util.UUID
 class TrainingEventPersistenceTest {
 
     private lateinit var trainingEventRepository: TrainingEventRepository
+    private lateinit var trainingSeriesRepository: TrainingSeriesRepository
     private lateinit var trainingRecordWriter: TrainingRecordWriter
     private lateinit var eventPublisher: ApplicationEventPublisher
     private lateinit var persistence: TrainingEventPersistence
@@ -38,9 +41,15 @@ class TrainingEventPersistenceTest {
     @BeforeEach
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
+        trainingSeriesRepository = mock(TrainingSeriesRepository::class.java)
         trainingRecordWriter = mock(TrainingRecordWriter::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
-        persistence = TrainingEventPersistence(trainingEventRepository, trainingRecordWriter, eventPublisher)
+        persistence = TrainingEventPersistence(
+            trainingEventRepository,
+            trainingSeriesRepository,
+            trainingRecordWriter,
+            eventPublisher
+        )
         actor = AppUser().apply {
             id = UUID.randomUUID()
             username = "tester"
@@ -175,5 +184,29 @@ class TrainingEventPersistenceTest {
         assertEquals(2, captor.value.count)
         assertEquals("event type", captor.value.updateType)
         assertEquals(actor, captor.value.actor)
+    }
+
+    @Test
+    fun `remove deletes series definition when last occurrence is deleted`() {
+        val series = TrainingSeries().apply { id = UUID.randomUUID() }
+        val ev = event().apply { this.series = series }
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(0L)
+
+        persistence.remove(ev, actor)
+
+        verify(trainingEventRepository).delete(ev)
+        verify(trainingSeriesRepository).delete(series)
+    }
+
+    @Test
+    fun `remove keeps series definition when occurrences remain`() {
+        val series = TrainingSeries().apply { id = UUID.randomUUID() }
+        val ev = event().apply { this.series = series }
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(2L)
+
+        persistence.remove(ev, actor)
+
+        verify(trainingEventRepository).delete(ev)
+        verify(trainingSeriesRepository, org.mockito.Mockito.never()).delete(series)
     }
 }
