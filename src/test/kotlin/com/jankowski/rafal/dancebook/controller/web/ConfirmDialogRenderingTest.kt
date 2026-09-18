@@ -62,6 +62,33 @@ class NonAdminSampleDialogController {
         model.addAttribute("sessionIds", listOf(id1, id2))
         return "fragments/confirm-dialog :: confirmModal"
     }
+
+    @GetMapping("/test/scope-confirm-dialog")
+    fun scopeDialog(model: Model): String {
+        val id = UUID.randomUUID()
+        model.addAttribute("dialogTitle", "Delete Recurring Session")
+        model.addAttribute("dialogMessage", "This session is part of a repeating series. How far should this delete reach?")
+        model.addAttribute("confirmLabel", "Delete")
+        model.addAttribute("confirmUrl", "/training-events/$id/delete")
+        model.addAttribute("scopeOptions", listOf(
+            com.jankowski.rafal.dancebook.dto.ScopeOption(
+                scope = com.jankowski.rafal.dancebook.model.SeriesScope.THIS_EVENT,
+                count = 1,
+                outcomeCount = 0
+            ),
+            com.jankowski.rafal.dancebook.dto.ScopeOption(
+                scope = com.jankowski.rafal.dancebook.model.SeriesScope.THIS_AND_FOLLOWING,
+                count = 4,
+                outcomeCount = 1
+            ),
+            com.jankowski.rafal.dancebook.dto.ScopeOption(
+                scope = com.jankowski.rafal.dancebook.model.SeriesScope.ALL_EVENTS,
+                count = 3,
+                outcomeCount = 2
+            )
+        ))
+        return "fragments/confirm-dialog :: confirmModal"
+    }
 }
 
 @WebMvcTest(
@@ -146,5 +173,24 @@ class ConfirmDialogRenderingTest {
             .andExpect(content().string(containsString("2 selected")))
             .andExpect(content().string(containsString("hx-include=\"#filterForm\"")))
             .andExpect(content().string(containsString("name=\"sessionIds\"")))
+    }
+
+    @Test
+    fun `confirm dialog renders series scope radio options with counts and history descriptions`() {
+        mockMvc.perform(get("/test/scope-confirm-dialog").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Delete Recurring Session")))
+            .andExpect(content().string(containsString("This session is part of a repeating series. How far should this delete reach?")))
+            .andExpect(content().string(containsString("name=\"scope\"")))
+            .andExpect(content().string(containsString("value=\"THIS_EVENT\"")))
+            .andExpect(content().string(containsString("value=\"THIS_AND_FOLLOWING\"")))
+            .andExpect(content().string(containsString("value=\"ALL_EVENTS\"")))
+            .andExpect(content().string(containsString("This event")))
+            .andExpect(content().string(containsString("This and following")))
+            .andExpect(content().string(containsString("All events")))
+            .andExpect(content().string(containsString("1 session")))
+            .andExpect(content().string(containsString("4 sessions (1 with recorded outcome)")))
+            .andExpect(content().string(containsString("3 sessions (2 with recorded outcomes)")))
+            .andExpect(content().string(containsString("Delete")))
     }
 }

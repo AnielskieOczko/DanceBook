@@ -6,10 +6,14 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingSeriesRepository
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.any
 import org.mockito.Mockito.anyList
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.springframework.context.ApplicationEventPublisher
@@ -65,6 +69,75 @@ class TrainingSeriesPersistenceTest {
 
         verify(trainingRecordWriter).orphan(listOf(first.id!!, second.id!!))
         verify(trainingEventRepository).deleteAll(listOf(first, second))
+    }
+
+    @Test
+    fun `removeOccurrences deletes series and publishes event with seriesRemoved true when no remaining occurrences`() {
+        val series = TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Weekly Practice"
+        }
+        val first = occurrence().apply { this.series = series }
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(0L)
+
+        persistence.removeOccurrences(listOf(first), series, actor)
+
+        verify(trainingSeriesRepository).delete(series)
+        val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent::class.java)
+        verify(eventPublisher).publishEvent(eventCaptor.capture())
+        org.junit.jupiter.api.Assertions.assertEquals("Weekly Practice", eventCaptor.value.seriesTitle)
+        org.junit.jupiter.api.Assertions.assertEquals(1, eventCaptor.value.deletedCount)
+        org.junit.jupiter.api.Assertions.assertEquals(true, eventCaptor.value.seriesRemoved)
+    }
+
+    @Test
+    fun `removeOccurrences keeps series and publishes delete event with seriesRemoved false when occurrences remain`() {
+        val series = TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Weekly Practice"
+        }
+        val first = occurrence().apply { this.series = series }
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(2L)
+
+        persistence.removeOccurrences(listOf(first), series, actor)
+
+        verify(trainingSeriesRepository, never()).delete(series)
+        val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent::class.java)
+        verify(eventPublisher).publishEvent(eventCaptor.capture())
+        org.junit.jupiter.api.Assertions.assertEquals("Weekly Practice", eventCaptor.value.seriesTitle)
+        org.junit.jupiter.api.Assertions.assertEquals(1, eventCaptor.value.deletedCount)
+        org.junit.jupiter.api.Assertions.assertEquals(false, eventCaptor.value.seriesRemoved)
+    }
+
+    @Test
+    fun `deleteAll detaches surviving events, orphans and deletes non-surviving events, and deletes series`() {
+        val series = TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Weekly Practice"
+        }
+        val surviving = occurrence().apply {
+            this.series = series
+            attendanceStatus = AttendanceStatus.ATTENDED
+        }
+        val toDelete = occurrence().apply {
+            this.series = series
+            attendanceStatus = AttendanceStatus.PLANNED
+        }
+
+        persistence.deleteAll(series, listOf(surviving), listOf(toDelete), actor)
+
+        assertNull(surviving.series, "surviving event is detached from the series")
+        assertNull(toDelete.series)
+        verify(trainingEventRepository).saveAll(listOf(surviving))
+        verify(trainingRecordWriter).orphan(listOf(toDelete.id!!))
+        verify(trainingEventRepository).deleteAll(listOf(toDelete))
+        verify(trainingSeriesRepository).delete(series)
+
+        val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent::class.java)
+        verify(eventPublisher).publishEvent(eventCaptor.capture())
+        org.junit.jupiter.api.Assertions.assertEquals("Weekly Practice", eventCaptor.value.seriesTitle)
+        org.junit.jupiter.api.Assertions.assertEquals(1, eventCaptor.value.deletedCount)
+        org.junit.jupiter.api.Assertions.assertEquals(true, eventCaptor.value.seriesRemoved)
     }
 
     @Test

@@ -7,6 +7,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingMonthGroup
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
@@ -481,7 +482,7 @@ class TrainingEventWebControllerTest {
             date = LocalDate.of(2026, 9, 14),
             startTime = LocalTime.of(19, 0),
             endTime = LocalTime.of(21, 0),
-            editScope = "THIS_AND_FOLLOWING"
+            editScope = SeriesScope.THIS_AND_FOLLOWING
         )
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
 
@@ -494,12 +495,40 @@ class TrainingEventWebControllerTest {
     @Test
     fun `should delete following occurrences when that scope is requested`() {
         val id = UUID.randomUUID()
+        val result = BulkDeleteResult(deletedCount = 2, failedCount = 0)
+        `when`(trainingSeriesService.deleteThisAndFollowing(id)).thenReturn(result)
 
-        val viewName = controller.deleteTrainingEvent(id, "THIS_AND_FOLLOWING")
+        val viewName = controller.deleteTrainingEvent(id, SeriesScope.THIS_AND_FOLLOWING)
 
         assertEquals("redirect:/training-events", viewName)
         verify(trainingSeriesService).deleteThisAndFollowing(id)
         verify(trainingEventService, never()).delete(id)
+    }
+
+    @Test
+    fun `should delete all occurrences when all events scope is requested`() {
+        val id = UUID.randomUUID()
+        val result = BulkDeleteResult(deletedCount = 3, failedCount = 0)
+        `when`(trainingSeriesService.deleteAll(id)).thenReturn(result)
+
+        val viewName = controller.deleteTrainingEvent(id, SeriesScope.ALL_EVENTS)
+
+        assertEquals("redirect:/training-events", viewName)
+        verify(trainingSeriesService).deleteAll(id)
+        verify(trainingEventService, never()).delete(id)
+    }
+
+    @Test
+    fun `should surface Google Calendar delete failure as flash message when deleting series`() {
+        val id = UUID.randomUUID()
+        val redirectAttributes = org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap()
+        val result = BulkDeleteResult(deletedCount = 2, failedCount = 1)
+        `when`(trainingSeriesService.deleteThisAndFollowing(id)).thenReturn(result)
+
+        val viewName = controller.deleteTrainingEvent(id, SeriesScope.THIS_AND_FOLLOWING, redirectAttributes)
+
+        assertEquals("redirect:/training-events", viewName)
+        assertEquals(result.message, redirectAttributes.flashAttributes["bulkMessage"])
     }
 
     @Test
@@ -511,6 +540,47 @@ class TrainingEventWebControllerTest {
         assertEquals("redirect:/training-events", viewName)
         verify(trainingEventService).delete(id)
         verify(trainingSeriesService, never()).deleteThisAndFollowing(id)
+        verify(trainingSeriesService, never()).deleteAll(id)
+    }
+
+    @Test
+    fun `should render delete dialog with scope options for series occurrence`() {
+        val event = seriesOccurrence(LocalDate.of(2026, 9, 14))
+        val model = ConcurrentModel()
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        val mockOptions = listOf(
+            com.jankowski.rafal.dancebook.dto.ScopeOption(
+                scope = SeriesScope.THIS_EVENT,
+                label = "This session only",
+                count = 1,
+                outcomeCount = 0,
+                description = "Delete this occurrence."
+            )
+        )
+        `when`(trainingSeriesService.calculateDeleteScopeOptions(event.id!!)).thenReturn(mockOptions)
+
+        val fragment = controller.deleteDialog(event.id!!, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", fragment)
+        assertEquals("/training-events/${event.id}/delete", model["confirmUrl"])
+        assertEquals("Delete Recurring Session", model["dialogTitle"])
+        assertEquals("Delete", model["confirmLabel"])
+        assertEquals(mockOptions, model["scopeOptions"])
+    }
+
+    @Test
+    fun `should render delete dialog without scope options for standalone event`() {
+        val event = session(LocalDateTime.of(2026, 9, 14, 18, 0), 120)
+        val model = ConcurrentModel()
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+
+        val fragment = controller.deleteDialog(event.id!!, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", fragment)
+        assertEquals("/training-events/${event.id}/delete", model["confirmUrl"])
+        assertEquals("Delete Session", model["dialogTitle"])
+        assertEquals("Delete Session", model["confirmLabel"])
+        assertNull(model["scopeOptions"])
     }
 
     @Test
@@ -654,7 +724,7 @@ class TrainingEventWebControllerTest {
             date = LocalDate.of(2026, 3, 2),
             startTime = LocalTime.of(18, 0),
             endTime = LocalTime.of(20, 0),
-            editScope = "THIS_AND_FOLLOWING"
+            editScope = SeriesScope.THIS_AND_FOLLOWING
         )
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
         `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
@@ -677,7 +747,7 @@ class TrainingEventWebControllerTest {
     fun `should keep the series scope selector when validation fails`() {
         val model = ConcurrentModel()
         val event = seriesOccurrence(LocalDate.of(2026, 6, 29))
-        val request = TrainingEventRequest(editScope = "THIS_AND_FOLLOWING")
+        val request = TrainingEventRequest(editScope = SeriesScope.THIS_AND_FOLLOWING)
         val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
         bindingResult.rejectValue("title", "NotBlank")
         `when`(trainingEventService.findById(event.id!!)).thenReturn(event)

@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingSeriesRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -32,6 +33,7 @@ import java.util.UUID
 @Component
 class TrainingEventPersistence(
     private val trainingEventRepository: TrainingEventRepository,
+    private val trainingSeriesRepository: TrainingSeriesRepository,
     private val trainingRecordWriter: TrainingRecordWriter,
     private val eventPublisher: ApplicationEventPublisher
 ) {
@@ -104,8 +106,15 @@ class TrainingEventPersistence(
         if (events.isEmpty()) return 0
 
         val ids = events.mapNotNull { it.id }
+        val affectedSeries = events.mapNotNull { it.series }.distinctBy { it.id }
+        events.forEach { it.series = null }
         trainingRecordWriter.orphan(ids)
         trainingEventRepository.deleteAll(events)
+        for (series in affectedSeries) {
+            if (trainingEventRepository.countBySeries(series) == 0L) {
+                trainingSeriesRepository.delete(series)
+            }
+        }
         eventPublisher.publishEvent(TrainingBulkDeletedEvent(ids.size, actor))
         return ids.size
     }
@@ -114,10 +123,18 @@ class TrainingEventPersistence(
     fun remove(event: TrainingEvent, actor: AppUser) {
         val id: UUID = event.id!!
         val title = event.title
+        val series = event.series
+        event.series = null
         // The record is marked orphaned rather than deleted: the schedule entry is disposable,
         // the training that happened is not.
         trainingRecordWriter.orphan(listOf(id))
         trainingEventRepository.delete(event)
+        if (series != null) {
+            val remaining = trainingEventRepository.countBySeries(series)
+            if (remaining == 0L) {
+                trainingSeriesRepository.delete(series)
+            }
+        }
         eventPublisher.publishEvent(TrainingEventDeletedEvent(id, title, actor))
     }
 }

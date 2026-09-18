@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingSeriesRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -59,8 +60,64 @@ class TrainingSeriesPersistence(
     }
 
     @Transactional
-    fun removeOccurrences(occurrences: List<TrainingEvent>) {
-        trainingRecordWriter.orphan(occurrences.mapNotNull { it.id })
+    fun removeOccurrences(
+        occurrences: List<TrainingEvent>,
+        series: TrainingSeries? = occurrences.firstOrNull()?.series,
+        actor: AppUser? = null
+    ) {
+        if (occurrences.isEmpty()) return
+        val seriesToClean = series ?: occurrences.firstNotNullOfOrNull { it.series }
+        val ids = occurrences.mapNotNull { it.id }
+        occurrences.forEach { it.series = null }
+        trainingRecordWriter.orphan(ids)
         trainingEventRepository.deleteAll(occurrences)
+        if (seriesToClean != null) {
+            val remaining = trainingEventRepository.countBySeries(seriesToClean)
+            val seriesRemoved = remaining == 0L
+            if (seriesRemoved) {
+                trainingSeriesRepository.delete(seriesToClean)
+            }
+            if (actor != null) {
+                eventPublisher.publishEvent(
+                    TrainingSeriesDeletedEvent(
+                        seriesTitle = seriesToClean.title,
+                        deletedCount = ids.size,
+                        seriesRemoved = seriesRemoved,
+                        actor = actor
+                    )
+                )
+            }
+        }
+    }
+
+    @Transactional
+    fun deleteAll(
+        series: TrainingSeries,
+        surviving: List<TrainingEvent>,
+        toDelete: List<TrainingEvent>,
+        actor: AppUser
+    ) {
+        // Detach surviving events so they become standalone sessions
+        surviving.forEach { it.series = null }
+        trainingEventRepository.saveAll(surviving)
+
+        // Remove non-surviving events, orphaning their records if any
+        if (toDelete.isNotEmpty()) {
+            toDelete.forEach { it.series = null }
+            trainingRecordWriter.orphan(toDelete.mapNotNull { it.id })
+            trainingEventRepository.deleteAll(toDelete)
+        }
+
+        // The series definition no longer has any occurrences referencing it
+        trainingSeriesRepository.delete(series)
+
+        eventPublisher.publishEvent(
+            TrainingSeriesDeletedEvent(
+                seriesTitle = series.title,
+                deletedCount = toDelete.size,
+                seriesRemoved = true,
+                actor = actor
+            )
+        )
     }
 }

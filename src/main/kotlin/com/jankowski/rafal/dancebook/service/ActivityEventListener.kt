@@ -18,6 +18,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkAttendanceUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkDeletedEvent
 import com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent
@@ -186,6 +187,24 @@ class ActivityEventListener(
             targetId = event.firstOccurrence.id,
             targetName = event.firstOccurrence.title,
             metadata = event.occurrenceCount.toString()
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onTrainingSeriesDeleted(event: TrainingSeriesDeletedEvent) {
+        log.info(
+            "Recording TRAINING_SERIES_DELETED event for '{}' ({} occurrences, seriesRemoved={})",
+            event.seriesTitle, event.deletedCount, event.seriesRemoved
+        )
+        val metadata = if (event.seriesRemoved) null else event.deletedCount.toString()
+        save(
+            eventType = EventType.TRAINING_SERIES_DELETED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = null,
+            targetName = event.seriesTitle,
+            metadata = metadata
         )
     }
 

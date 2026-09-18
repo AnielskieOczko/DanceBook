@@ -25,7 +25,7 @@
                 <!-- Event Icon -->
                 <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
                      th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' || event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'bg-primary-container text-on-primary-container' :
-                                      event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error-container text-on-error-container' :
+                                      event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' || event.eventType.name() == 'TRAINING_SERIES_DELETED' || event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'bg-error-container text-on-error-container' :
                                       event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' :
                                       event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-variant text-on-surface-variant'}">
                     <span class="material-symbols-outlined text-[16px]"
@@ -43,10 +43,11 @@
                                     event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
                                     event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
                                     event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
-                                     event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                      event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                      event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
-                                      event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
+                                    event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
+                                    event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
+                                    event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
+                                    event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
+                                    event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
                 </div>
                 <!-- Event Content -->
                 <div class="flex-1 min-w-0">
@@ -69,12 +70,16 @@
                             <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
                             <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
                             <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
+                            <span th:case="'TRAINING_SERIES_DELETED'">
+                                <span th:if="${event.metadata != null}"> cancelled <span th:text="${event.metadata}"></span> following sessions of </span>
+                                <span th:unless="${event.metadata != null}"> cancelled series </span>
+                            </span>
                             <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'"> marked </span>
                             <span th:case="'TRAINING_BULK_DELETED'"> cancelled </span>
                             <span th:case="'TRAINING_BULK_UPDATED'"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
                         </span>
                         <!-- Link for Material / CustomList -->
-                        <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
+                        <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_SERIES_DELETED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
                            th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
                            class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
                         <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
@@ -90,6 +95,14 @@
                            th:href="@{/training-events/{id}(id=${event.targetId})}"
                            class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
                         <span th:if="${event.eventType.name() == 'TRAINING_EVENT_DELETED'}"
+                              class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                        <!-- Link/Text for TrainingSeries -->
+                        <a th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId != null}"
+                           th:href="@{/training-events/{id}(id=${event.targetId})}"
+                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
+                        <span th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId == null}"
+                              class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                        <span th:if="${event.eventType.name() == 'TRAINING_SERIES_DELETED'}"
                               class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
                         <!-- Link/Text for Bulk Attendance -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"

@@ -591,5 +591,102 @@ class TrainingEventViewRenderingTest {
         assertTrue(doc.select("input[name=clearMaterial]").size > 0, "Should include clearMaterial checkbox")
         assertTrue(doc.select("input[name=_csrf]").size > 0, "Should include CSRF hidden field")
     }
+
+    @Test
+    fun `view page renders repeating series badge and htmx delete dialog button for series occurrence`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val event = attendedSession().apply {
+            this.series = series
+        }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+
+        val html = mockMvc.perform(get("/training-events/${event.id}").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("training-events/view"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        assertTrue(doc.select(".badge-neutral:contains(Repeating series)").size > 0,
+            "Should render Repeating series badge")
+        val deleteBtn = doc.select("button[hx-get='/training-events/${event.id}/delete-dialog']")
+        assertEquals(1, deleteBtn.size, "Should render HTMX delete button targeting confirm modal")
+        assertEquals("#confirmModalContainer", deleteBtn.attr("hx-target"))
+    }
+
+    @Test
+    fun `view page renders standard data-confirm delete form for standalone event`() {
+        val event = attendedSession()
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+
+        val html = mockMvc.perform(get("/training-events/${event.id}").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("training-events/view"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        assertEquals(0, doc.select(".badge-neutral:contains(Repeating series)").size,
+            "Should not render Repeating series badge for standalone session")
+        assertEquals(0, doc.select("button[hx-get='/training-events/${event.id}/delete-dialog']").size,
+            "Should not render HTMX delete button")
+        val form = doc.select("form[action='/training-events/${event.id}/delete']")
+        assertEquals(1, form.size, "Should render standard delete form")
+        assertTrue(form.attr("data-confirm").contains("Delete this training session"),
+            "Should have data-confirm on delete form")
+    }
+
+    @Test
+    fun `agenda renders htmx delete dialog button for series occurrence and data-confirm for standalone`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val seriesOcc = attendedSession().apply { this.series = series }
+        val standalone = attendedSession()
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(seriesOcc, standalone))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val seriesDeleteBtns = doc.select("button[hx-get='/training-events/${seriesOcc.id}/delete-dialog']")
+        assertTrue(seriesDeleteBtns.size > 0, "Series occurrence should have HTMX delete button")
+        val standaloneDeleteForms = doc.select("form[action='/training-events/${standalone.id}/delete']")
+        assertTrue(standaloneDeleteForms.size > 0, "Standalone event should have standard delete form")
+    }
+
+    @Test
+    fun `deleteDialog endpoint returns confirm modal fragment with scope options for series occurrence`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val event = attendedSession().apply { this.series = series }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        val mockOptions = listOf(
+            com.jankowski.rafal.dancebook.dto.ScopeOption(
+                scope = com.jankowski.rafal.dancebook.model.SeriesScope.THIS_EVENT,
+                label = "This session only",
+                count = 1,
+                outcomeCount = 0,
+                description = "Delete 1 session"
+            )
+        )
+        `when`(trainingSeriesService.calculateDeleteScopeOptions(event.id!!)).thenReturn(mockOptions)
+
+        val html = mockMvc.perform(get("/training-events/${event.id}/delete-dialog").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/confirm-dialog :: confirmModal"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        assertTrue(doc.select("input[name=scope]").size > 0, "Should include radio scope options")
+        assertEquals("/training-events/${event.id}/delete", doc.select("form").attr("action"))
+    }
 }
 

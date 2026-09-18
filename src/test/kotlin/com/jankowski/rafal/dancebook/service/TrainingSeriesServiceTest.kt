@@ -3,7 +3,9 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
@@ -238,6 +240,169 @@ class TrainingSeriesServiceTest {
             service.deleteThisAndFollowing(owned.id!!)
         }
         verifyNoInteractions(trainingSeriesPersistence)
+    }
+
+    @Test
+    fun `calculateDeleteScopeOptions calculates counts and outcomes correctly`() {
+        val series = seriesFor()
+        val pastAttended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            attendanceStatus = AttendanceStatus.ATTENDED
+        }
+        val currentPlanned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            attendanceStatus = AttendanceStatus.PLANNED
+        }
+        val futureSkipped = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
+            attendanceStatus = AttendanceStatus.SKIPPED
+        }
+        `when`(trainingEventRepository.findById(currentPlanned.id!!)).thenReturn(Optional.of(currentPlanned))
+        `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(
+            listOf(pastAttended, currentPlanned, futureSkipped)
+        )
+
+        val options = service.calculateDeleteScopeOptions(currentPlanned.id!!)
+
+        assertEquals(3, options.size)
+        val thisOption = options[0]
+        assertEquals(SeriesScope.THIS_EVENT, thisOption.scope)
+        assertEquals(1, thisOption.count)
+        assertEquals(0, thisOption.outcomeCount)
+
+        val followingOption = options[1]
+        assertEquals(SeriesScope.THIS_AND_FOLLOWING, followingOption.scope)
+        assertEquals(2, followingOption.count)
+        assertEquals(1, followingOption.outcomeCount)
+
+        val allOption = options[2]
+        assertEquals(SeriesScope.ALL_EVENTS, allOption.scope)
+        assertEquals(3, allOption.count, "all sessions in series: 3")
+        assertEquals(2, allOption.outcomeCount, "sessions with recorded outcomes (attended + skipped)")
+    }
+
+    @Test
+    fun `deleteAll separates surviving events with outcomes from unhappened events to delete`() {
+        val series = seriesFor()
+        val attended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            attendanceStatus = AttendanceStatus.ATTENDED
+            googleEventId = "google-attended"
+        }
+        val planned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            attendanceStatus = AttendanceStatus.PLANNED
+            googleEventId = "google-planned"
+        }
+        val cancelled = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
+            attendanceStatus = AttendanceStatus.CANCELLED
+            googleEventId = "google-cancelled"
+        }
+
+        `when`(trainingEventRepository.findById(planned.id!!)).thenReturn(Optional.of(planned))
+        `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(
+            listOf(attended, planned, cancelled)
+        )
+
+        val result = service.deleteAll(planned.id!!)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        // Google calendar events are deleted only for unhappened occurrences, not surviving ones
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-planned")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-cancelled")
+        verify(calendarClient, never()).deleteEvent(defaultCalendar.googleCalendarId, "google-attended")
+
+        verify(trainingSeriesPersistence).deleteAll(
+            eq(series),
+            eq(listOf(attended)),
+            eq(listOf(planned, cancelled)),
+            eq(currentUser)
+        )
+    }
+
+    @Test
+    fun `deleteAll continues and deletes database rows even if Google Calendar fails on some events`() {
+        val series = seriesFor()
+        val planned1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            attendanceStatus = AttendanceStatus.PLANNED
+            googleEventId = "google-fail"
+        }
+        val planned2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            attendanceStatus = AttendanceStatus.PLANNED
+            googleEventId = "google-succeed"
+        }
+
+        `when`(trainingEventRepository.findById(planned1.id!!)).thenReturn(Optional.of(planned1))
+        `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(listOf(planned1, planned2))
+        `when`(calendarClient.deleteEvent(defaultCalendar.googleCalendarId, "google-fail"))
+            .thenThrow(RuntimeException("Google API 500 error"))
+
+        val result = service.deleteAll(planned1.id!!)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(1, result.failedCount)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-succeed")
+        verify(trainingSeriesPersistence).deleteAll(
+            eq(series),
+            eq(emptyList()),
+            eq(listOf(planned1, planned2)),
+            eq(currentUser)
+        )
+    }
+
+    @Test
+    fun `deleteThisAndFollowing continues even if Google Calendar fails on an event`() {
+        val series = seriesFor()
+        val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            googleEventId = "google-fail"
+        }
+        val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            googleEventId = "google-succeed"
+        }
+
+        `when`(trainingEventRepository.findById(occ1.id!!)).thenReturn(Optional.of(occ1))
+        `when`(trainingEventRepository.findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
+            eq(series), any(LocalDateTime::class.java)
+        )).thenReturn(listOf(occ1, occ2))
+        `when`(calendarClient.deleteEvent(defaultCalendar.googleCalendarId, "google-fail"))
+            .thenThrow(RuntimeException("Google API 500 error"))
+
+        val result = service.deleteThisAndFollowing(occ1.id!!)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(1, result.failedCount)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-succeed")
+        verify(trainingSeriesPersistence).removeOccurrences(
+            eq(listOf(occ1, occ2)),
+            eq(series),
+            eq(currentUser)
+        )
+    }
+
+    @Test
+    fun `deleteThisAndFollowing deletes occurrences and returns BulkDeleteResult with zero failures`() {
+        val series = seriesFor()
+        val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            googleEventId = "google-1"
+        }
+        val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            googleEventId = "google-2"
+        }
+
+        `when`(trainingEventRepository.findById(occ1.id!!)).thenReturn(Optional.of(occ1))
+        `when`(trainingEventRepository.findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
+            eq(series), any(LocalDateTime::class.java)
+        )).thenReturn(listOf(occ1, occ2))
+
+        val result = service.deleteThisAndFollowing(occ1.id!!)
+
+        assertEquals(2, result.deletedCount)
+        assertEquals(0, result.failedCount)
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-2")
+        verify(trainingSeriesPersistence).removeOccurrences(
+            eq(listOf(occ1, occ2)),
+            eq(series),
+            eq(currentUser)
+        )
     }
 
     @Test

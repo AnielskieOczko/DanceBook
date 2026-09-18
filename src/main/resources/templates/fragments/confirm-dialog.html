@@ -25,7 +25,37 @@
         <p class="text-on-surface-variant font-body-md mb-6 leading-relaxed" th:text="${dialogMessage}">
             Are you sure you want to proceed?
         </p>
-        <div class="flex justify-end gap-3">
+        <!-- Recurring series scope choices -->
+        <form th:if="${scopeOptions != null && confirmUrl != null}"
+              th:action="${confirmUrl}"
+              th:hx-post="${hxTarget != null ? confirmUrl : null}"
+              th:hx-target="${hxTarget}"
+              th:hx-swap="${hxSwap ?: 'outerHTML'}"
+              th:hx-include="${hxInclude}"
+              method="post"
+              class="space-y-4">
+            <div class="space-y-2 mb-6">
+                <label th:each="opt : ${scopeOptions}"
+                       class="flex items-start gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer transition-colors">
+                    <input type="radio"
+                           name="scope"
+                           th:value="${opt.scope.name()}"
+                           th:checked="${opt.scope == T(com.jankowski.rafal.dancebook.model.SeriesScope).THIS_EVENT}"
+                           class="mt-1 text-primary focus:ring-primary border-border">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-on-surface" th:text="${opt.label}">This event</div>
+                        <div class="text-sm text-on-surface-variant" th:text="${opt.description}">1 session</div>
+                    </div>
+                </label>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" class="js-close-modal btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
+                <button type="submit" class="btn-danger" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
+            </div>
+        </form>
+
+        <!-- Standard confirm dialog (existing callers) -->
+        <div th:if="${scopeOptions == null}" class="flex justify-end gap-3">
             <button type="button" class="js-close-modal btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
             <form th:if="${confirmUrl != null}"
                   th:action="${confirmUrl}"

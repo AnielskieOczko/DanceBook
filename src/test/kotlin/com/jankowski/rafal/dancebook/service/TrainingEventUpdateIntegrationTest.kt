@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import com.jankowski.rafal.dancebook.repository.DanceCategoryRepository
@@ -194,7 +195,7 @@ class TrainingEventUpdateIntegrationTest {
         // Exactly what the edit form now posts: the series' own horizon travels back with the
         // edit, which is what the regeneration needs and what used to be missing.
         val edit = request("weekly practice renamed").copy(
-            editScope = "THIS_AND_FOLLOWING",
+            editScope = SeriesScope.THIS_AND_FOLLOWING,
             repeatUntil = LocalDate.of(2026, 3, 23)
         )
         inOpenSession { trainingSeriesService.updateThisAndFollowing(first.id!!, edit) }

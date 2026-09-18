@@ -1,8 +1,11 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
+import com.jankowski.rafal.dancebook.dto.ScopeOption
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -100,7 +103,7 @@ class TrainingSeriesServiceImpl(
         return saved.firstOrNull() ?: occurrence
     }
 
-    override fun deleteThisAndFollowing(occurrenceId: UUID) {
+    override fun deleteThisAndFollowing(occurrenceId: UUID): BulkDeleteResult {
         val currentUser = appUserService.getCurrentUser()
         val occurrence = findOccurrence(occurrenceId)
         checkOwnership(occurrence, currentUser)
@@ -114,18 +117,103 @@ class TrainingSeriesServiceImpl(
 
         log.debug("Deleting {} occurrences of series '{}' from {}", future.size, series.title, cutOff)
 
+        var failedCount = 0
         future.forEach { event ->
             event.googleEventId?.let { id ->
                 val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
                 if (googleCalId != null) {
-                    calendarClient.deleteEvent(googleCalId, id)
+                    try {
+                        calendarClient.deleteEvent(googleCalId, id)
+                    } catch (e: Exception) {
+                        log.error("Could not delete Google Calendar event {}: {}", id, e.message)
+                        failedCount++
+                    }
                 } else {
                     log.error("Cannot delete calendar event {}: no calendar resolved; skipping Google delete", id)
                 }
             }
         }
-        trainingSeriesPersistence.removeOccurrences(future)
+        trainingSeriesPersistence.removeOccurrences(future, series, currentUser)
+        return BulkDeleteResult(
+            deletedCount = future.size,
+            failedCount = failedCount
+        )
     }
+
+    override fun deleteAll(occurrenceId: UUID): BulkDeleteResult {
+        val currentUser = appUserService.getCurrentUser()
+        val occurrence = findOccurrence(occurrenceId)
+        checkOwnership(occurrence, currentUser)
+
+        val series = occurrence.series
+            ?: throw IllegalStateException("This session is not part of a repeating series")
+
+        val allOccurrences = trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
+        val (surviving, toDelete) = allOccurrences.partition { hasRecordedOutcome(it) }
+
+        log.debug("Deleting series '{}' ({} to delete, {} surviving standalone)", series.title, toDelete.size, surviving.size)
+
+        var failedCount = 0
+        toDelete.forEach { event ->
+            event.googleEventId?.let { id ->
+                val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+                if (googleCalId != null) {
+                    try {
+                        calendarClient.deleteEvent(googleCalId, id)
+                    } catch (e: Exception) {
+                        log.error("Could not delete Google Calendar event {}: {}", id, e.message)
+                        failedCount++
+                    }
+                } else {
+                    log.error("Cannot delete calendar event {}: no calendar resolved; skipping Google delete", id)
+                }
+            }
+        }
+
+        trainingSeriesPersistence.deleteAll(series, surviving, toDelete, currentUser)
+        return BulkDeleteResult(
+            deletedCount = toDelete.size,
+            failedCount = failedCount
+        )
+    }
+
+    override fun calculateDeleteScopeOptions(occurrenceId: UUID): List<ScopeOption> {
+        val currentUser = appUserService.getCurrentUser()
+        val occurrence = findOccurrence(occurrenceId)
+        checkOwnership(occurrence, currentUser)
+
+        val series = occurrence.series
+            ?: throw IllegalStateException("This session is not part of a repeating series")
+
+        val allOccurrences = trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
+        val cutOff = occurrence.startTime.toLocalDate().atStartOfDay()
+        val followingOccurrences = allOccurrences.filter { !it.startTime.isBefore(cutOff) }
+
+        val thisEventOutcomeCount = if (hasRecordedOutcome(occurrence)) 1 else 0
+        val followingOutcomeCount = followingOccurrences.count { hasRecordedOutcome(it) }
+        val allOutcomeCount = allOccurrences.count { hasRecordedOutcome(it) }
+
+        return listOf(
+            ScopeOption(
+                scope = SeriesScope.THIS_EVENT,
+                count = 1,
+                outcomeCount = thisEventOutcomeCount
+            ),
+            ScopeOption(
+                scope = SeriesScope.THIS_AND_FOLLOWING,
+                count = followingOccurrences.size,
+                outcomeCount = followingOutcomeCount
+            ),
+            ScopeOption(
+                scope = SeriesScope.ALL_EVENTS,
+                count = allOccurrences.size,
+                outcomeCount = allOutcomeCount
+            )
+        )
+    }
+
+    private fun hasRecordedOutcome(event: TrainingEvent): Boolean =
+        event.attendanceStatus == AttendanceStatus.ATTENDED || event.attendanceStatus == AttendanceStatus.SKIPPED
 
     /**
      * Creates a calendar event for every date, rolling back the ones already created if any
