@@ -15,6 +15,12 @@ import org.springframework.stereotype.Component
  * bypasses Spring's AOP proxy, so calling it from `run()` on the service itself would execute
  * without a transaction and fail at runtime. Crossing the bean boundary ensures the proxy
  * intercepts the call and opens an ambient transaction.
+ *
+ * The order of the two calls in [run] is load-bearing and must not be swapped. The backfill is
+ * what gives sessions their calendar on a database restored from a snapshot predating #52; the
+ * reconciliation then copies that calendar onto their records. Reversed, records would read
+ * sessions that have not been given a calendar yet, the restore would silently need a second
+ * boot to heal, and #61 would be back. `TrainingCalendarBootstrapTest` holds the order.
  */
 @Component
 class TrainingCalendarBootstrap(

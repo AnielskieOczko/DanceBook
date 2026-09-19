@@ -18,10 +18,25 @@ class TrainingRecordReconciliationServiceImpl(
         private val log = LoggerFactory.getLogger(TrainingRecordReconciliationServiceImpl::class.java)
     }
 
+    /**
+     * Read-modify-write rather than a bulk `UPDATE ... FROM`, which would have to be native:
+     * [com.jankowski.rafal.dancebook.model.TrainingRecord] deliberately holds only a raw
+     * `trainingEventId` and no association, so JPQL cannot express the join. Going through the
+     * entities keeps the statement dialect-free, cannot be defeated by a stale persistence
+     * context, and yields an exact repaired count for the log.
+     *
+     * It does load every calendar-less record at once, which on a restored database is all of
+     * them. That is a deliberate trade at this project's scale — a personal training log, not a
+     * multi-tenant table — and the point to revisit if the row count ever stops being small.
+     *
+     * Orphaned records are excluded by the query alone. The in-memory guard that used to sit
+     * here could never fire and only suggested the query might return them; the invariant that
+     * a frozen record is never rewritten is enforced by the query name and held by
+     * `TrainingRecordReconciliationServiceTest` and its integration counterpart.
+     */
     @Transactional
     override fun reconcile(): Int {
         val candidates = trainingRecordRepository.findAllByCalendarIdIsNullAndOrphanedAtIsNull()
-            .filterNot { it.isOrphaned }
         if (candidates.isEmpty()) {
             return 0
         }

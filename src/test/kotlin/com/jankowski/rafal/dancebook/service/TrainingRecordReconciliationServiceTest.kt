@@ -99,24 +99,18 @@ class TrainingRecordReconciliationServiceTest {
     }
 
     @Test
-    fun `leaves orphaned records untouched`() {
-        val orphanRecord = TrainingRecord().apply {
-            id = UUID.randomUUID()
-            trainingEventId = UUID.randomUUID()
-            orphanedAt = LocalDateTime.now()
-        }
-
-        // Repository returns it if somehow not filtered in SQL, or query filters it
+    fun `sources candidates only from the finder that excludes frozen records`() {
         `when`(trainingRecordRepository.findAllByCalendarIdIsNullAndOrphanedAtIsNull())
-            .thenReturn(listOf(orphanRecord))
+            .thenReturn(emptyList())
 
-        val count = service.reconcile()
+        service.reconcile()
 
-        assertEquals(0, count)
-        verify(trainingRecordRepository, never()).saveAll(recordsCaptor.capture())
-        assertNull(orphanRecord.calendarId)
-        assertNull(orphanRecord.calendarName)
-        assertTrue(listAppender.list.isEmpty(), "logs nothing when zero repaired")
+        // The query is the entire orphan guard. An orphaned record's session is gone, so the
+        // calendar it belonged to is unrecoverable and the row must never be rewritten; this
+        // asserts the service never reaches for a broader read. The behaviour itself is proven
+        // against a real database in TrainingRecordReconciliationIntegrationTest.
+        verify(trainingRecordRepository).findAllByCalendarIdIsNullAndOrphanedAtIsNull()
+        verify(trainingRecordRepository, never()).findAll()
     }
 
     @Test
