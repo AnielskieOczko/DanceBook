@@ -65,9 +65,16 @@ verifies nothing — it is only replaying agy's own result back at you. If the b
 suspiciously fast, or reports most tasks `up-to-date`, you have not verified anything yet.
 `./gradlew clean build` works too and is slower.
 
-agy is expected to have run the build itself and fixed its own failures. Run it anyway —
-it reports `SUCCESS` for runs that did nothing, so its claim is not evidence. A failure
-here means it stopped early, and that is a fix round, not a judgement call.
+agy is expected to have run the build itself and fixed its own failures — the `Stop` gate
+in `.agents/hooks.json` will not let a delegated run end until a full build has gone green
+since its last edit. Run it anyway: the gate proves a build passed at some point in the
+run, not that the diff in front of you is green, and agy reports `SUCCESS` for runs that
+did nothing. A failure here means it stopped early, and that is a fix round, not a
+judgement call.
+
+**If the run ended with no green build at all**, check whether the clone predates the gate
+(`test -f ../DanceBook-agy-<N>/.agents/hooks.json`) — an old clone has no gate, and
+re-cloning is cheaper than diagnosing the run.
 
 Prefer `./gradlew test --tests "*TheNewTest*" --rerun-tasks` first for a fast signal, then
 the full build before opening the PR.
@@ -108,7 +115,7 @@ re-paying ~31k tokens of onboarding:
 ```bash
 cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
     --conversation <conversation_id> --output-format json --print-timeout 45m \
-    -p='Read .agy-review.md and address every numbered item. Update .agy-plan.md to match what you actually did. Re-run ./gradlew build until it passes.' \
+    -p='Read .agy-review.md and address every numbered item. Update .agy-plan.md to match what you actually did. Then re-run ./gradlew build. The runtime will send it to the background - that is normal, so do not relaunch it; wait for its completion notification and fix failures until it passes. End your reply by quoting the last two lines of that build verbatim.' \
     > .agy-run.json 2>&1
 ```
 

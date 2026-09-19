@@ -36,11 +36,18 @@ should also be done by probing, not by reasoning about what ought to work.
   `gemini-3.8-flash-low` / `-medium` / `-high`.
 - **Write `-p='…'` last.** A bare `-p` swallows the next flag as its prompt.
 - **Background the run** (`run_in_background: true`) for anything real.
-- **Forbid agy from backgrounding the build.** Left to itself it launches `./gradlew build`
-  as a background task, reports "I will wait for it to complete", goes idle, and then
-  terminates that task on its own way out — `terminating N background task(s) on exit` in
-  the stderr above the JSON. It never sees a build result, so it fixes nothing. Say
-  *foreground* in the prompt, and treat that stderr line as proof the build never ran.
+- **Do not ask for a foreground build — agy cannot run one.** `run_command` takes a
+  `WaitMsBeforeAsync`, and its own schema caps it at **10000ms**; anything still running
+  after that is detached into a background task. Every Gradle build here takes 14–56s, so
+  every build is backgrounded, always. The cap is server-side: a probe passing `85000` was
+  backgrounded anyway. Upstream issue #983 confirms the 10-second threshold.
+- **Backgrounding is the working path, not the failure.** The full output comes back as a
+  `task_notification`, and each task also leaves a durable log at
+  `~/.gemini/antigravity-cli/brain/<conversation_id>/.system_generated/tasks/task-<N>.log`.
+  That log — not any stderr line — is the evidence that a build ran.
+- **The failure is the turn ending while the task is still running.** agy replies "I will
+  report the output once it finishes", the run ends, and the result never arrives. It is a
+  race, so no prompt wording fixes it. The `Stop` hook below does.
 
 ## Prerequisites (once)
 
@@ -80,6 +87,26 @@ and are *not* read; agy's real project scope is keyed to its own `--project` ent
 
 The worktree's parent must be in `trustedWorkspaces` (`/Volumes/my-data/Developer/Projects`
 covers every `../DanceBook-agy-<N>`).
+
+`.agents/hooks.json` registers a `Stop` hook, `.agents/hooks/agy-stop-gate.py`, which is
+what actually makes agy verify its own work. agy's `Stop` hook receives `fullyIdle` ("true
+if all background tasks are done") and can return `{"decision":"continue"}` to block
+termination and re-enter the loop. The gate refuses to stop while a background task is
+running, and then refuses again until a full `./gradlew build` has gone green *since the
+last edit* — identified by `> Task :build`, `:check` and `:test` together in a task log, so
+a filtered `test --tests …` run cannot satisfy it. It engages only when `.agy-task.md` is
+present, so your own interactive agy sessions in this repo are untouched. Continues are
+bounded (40 idle waits, 3 build rounds, a 1h deadline) and every error path falls open to
+`stop`, so the gate can never wedge a run.
+
+**These three files are the only tracked content under `.agents/`** — the rest of that
+directory is still gitignored. They have to be tracked because delegation works on a
+`git clone`, and an untracked hook would not reach it. **A clone made before this change
+has no gate**; re-clone rather than reasoning about why a run stopped early.
+
+Verified by probe: with the gate, `sleep 75 && echo PROBE_MARKER_DONE` returns its output
+after 90s; with `.agy-task.md` removed so the gate stands down, the identical run ends in
+6s having lost the result. Run `.agents/hooks/test-agy-stop-gate.sh` after editing the gate.
 
 Keep `agy mcp list` clean. A dead MCP server blocks startup for minutes on *every* run —
 removing one took a trivial run from 430s to 10s.
@@ -197,22 +224,27 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ```bash
 cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
-    -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Run ./gradlew build in the FOREGROUND and wait for it to finish - do not launch it as a background task, you will kill it on exit and never see the result. Fix any failures yourself and re-run it until it passes. Then summarise what you changed.' \
+    -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Then run ./gradlew build. The runtime will send it to the background - that is normal and expected, so do not relaunch it. Wait for its completion notification, fix any failures yourself, and re-run it until it passes. Your final message must end by quoting the last two lines of that build verbatim; if you cannot quote them, you are not finished.' \
     > .agy-run.json 2>&1
 ```
 
 **Default to `-high`.** agy is doing the thinking now, not the typing; `-medium` is for
 genuinely mechanical issues where the shape of the change is not in question.
 
-**Insist that agy runs `./gradlew build` in the foreground and fixes its own failures until
-green.** This is the whole point: every compile error it resolves itself is a Claude
-round-trip that never happens. Verifying its work afterwards is still mandatory — it is a
-second opinion, not the first run.
+**The prompt demands a verbatim build result, and the `Stop` gate enforces it.** Asking for
+a quote gives the model a finish condition it cannot satisfy by stopping early; the gate
+makes stopping early impossible. Together they keep compile errors on Gemini's side of the
+line, which is the whole point — every one agy fixes itself is a Claude round-trip that
+never happens. Verifying afterwards is still mandatory: a second opinion, not the first run.
 
 Issue #84 is the worked example of the cost when this goes wrong: two runs, ~6 hours of wall
-clock and 4.8M tokens, both ending with the build killed on exit, and the delivered tests did
-not compile — a single `!` where `!!` was meant, which a real build would have caught in 20
-seconds.
+clock and 4.8M tokens, and the delivered tests did not compile — a single `!` where `!!` was
+meant, which a real build would have caught in 20 seconds. Its transcript shows 14
+`./gradlew build` launches, exactly **one** task notification, and the only
+`BUILD SUCCESSFUL` anywhere in it was a 17s `compileKotlin`. It ran on agy 1.2.6, whose
+changelog entry for 1.2.7 reads "Fixed headless (`-p`) runs occasionally skipping the
+background-task waiting notice" — which is why issue #85 on 1.2.7 did receive its
+`BUILD SUCCESSFUL in 56s` and quote it. *Occasionally* is the problem the gate removes.
 
 ### 5. Validate — do not trust `status`
 
@@ -228,7 +260,12 @@ runs alike. The validator checks non-empty `response`, `num_turns > 0` and absen
 **A missing `.agy-plan.md` is a red flag even when the diff looks plausible.** It means agy
 did not follow the work loop, so nothing else it was told to do is safe to assume either.
 
-**Always run `./gradlew build` yourself before reviewing.** agy claiming green is not
+The validator also checks the conversation's task logs for a green full `./gradlew build`
+and prints the `BUILD SUCCESSFUL in …` line it found. That log is written by the runtime,
+so unlike agy's summary it cannot be claimed — but it says the build passed *somewhere in
+that run*, not that the final diff is green.
+
+**So always run `./gradlew build` yourself before reviewing.** agy claiming green is not
 evidence, and `status:"ERROR"` with a substantial diff is common — the work can be most of
 the way there while never having compiled once. Pipe gradle through `tail` only with
 `set -o pipefail`, or you will read `tail`'s exit code and call a failed build a pass.

@@ -41,7 +41,11 @@ src/main/resources/static/css/output.css
 *-service-account*.json
 
 ### AI Agents ###
-.agents/
+# Local agent customizations stay out of the repo, except the agy Stop-hook gate:
+# delegation clones the repo, so the gate has to be tracked to reach the clone.
+.agents/*
+!.agents/hooks.json
+!.agents/hooks/
 
 # Per-run scratch written into an agy worktree (spec, task brief, agy's own plan,
 # run result, review notes).
