@@ -37,4 +37,11 @@ interface TrainingRecordRepository : JpaRepository<TrainingRecord, UUID> {
         createdBy: AppUser,
         calendarId: UUID
     ): List<TrainingRecord>
+
+    /**
+     * The candidates for the startup reconciliation pass: records that never got their copy of
+     * a calendar, excluding the orphaned ones, whose session is gone and whose calendar is
+     * therefore unrecoverable.
+     */
+    fun findAllByCalendarIdIsNullAndOrphanedAtIsNull(): List<TrainingRecord>
 }
