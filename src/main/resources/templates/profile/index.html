@@ -51,7 +51,7 @@
                 
                 <!-- Collection Card -->
                 <a th:each="list : ${navLists}" th:href="@{/lists/{id}(id=${list.id})}"
-                   class="group border border-border rounded-lg overflow-hidden bg-surface hover:shadow-ambient hover:-translate-y-[2px] transition-all duration-300 cursor-pointer flex h-24">
+                   class="group border border-border rounded-lg overflow-hidden bg-surface hover:shadow-ambient hover:translate-y-[-2px] transition-all duration-300 cursor-pointer flex h-24">
                      <div class="w-1/3 bg-surface-container-highest flex items-center justify-center">
                          <span class="material-symbols-outlined text-outline" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
                      </div>

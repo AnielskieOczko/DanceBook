@@ -87,15 +87,41 @@ tasks.withType<Test> {
     }
 }
 
+// Tailwind 4. The CLI now ships in its own package, @tailwindcss/cli, which is what
+// provides the `tailwindcss` bin here; the `tailwindcss` package alone no longer does.
+// Sources are pinned in input.css via `source(none)` plus explicit @source globs, so the
+// inputs below must stay in step with them or Gradle will call the task up to date after
+// a template change and serve stale CSS.
 tasks.register<com.github.gradle.node.npm.task.NpxTask>("buildTailwind") {
     group = "build"
-    description = "Builds the Tailwind task"
+    description = "Compiles input.css into static/css/output.css with the Tailwind CLI"
     dependsOn(tasks.named("npmInstall"))
     command.set("tailwindcss")
     args.set(listOf(
         "-i", "./input.css",
         "-o", "../static/css/output.css",
         "--minify"
+    ))
+
+    inputs.file("src/main/resources/frontend/input.css")
+    inputs.file("src/main/resources/frontend/package.json")
+    inputs.dir("src/main/resources/templates")
+    inputs.dir("src/main/resources/static/js")
+    inputs.dir("src/main/kotlin")
+    outputs.file("src/main/resources/static/css/output.css")
+}
+
+// Rebuilds output.css on every change to a scanned source. Run alongside bootRun while
+// working on templates: ./gradlew watchTailwind
+tasks.register<com.github.gradle.node.npm.task.NpxTask>("watchTailwind") {
+    group = "application"
+    description = "Watches sources and rebuilds output.css until interrupted"
+    dependsOn(tasks.named("npmInstall"))
+    command.set("tailwindcss")
+    args.set(listOf(
+        "-i", "./input.css",
+        "-o", "../static/css/output.css",
+        "--watch"
     ))
 }
 

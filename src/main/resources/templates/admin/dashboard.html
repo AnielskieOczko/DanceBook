@@ -49,7 +49,7 @@
             <div class="flex items-center gap-2 mt-1">
                 <p class="text-sm text-text-secondary">Configure global application behaviors and timeouts.</p>
                 <div class="relative inline-block">
-                    <button type="button" class="js-menu-btn text-text-secondary hover:text-primary transition-colors focus:outline-none flex items-center" title="How this works">
+                    <button type="button" class="js-menu-btn text-text-secondary hover:text-primary transition-colors focus:outline-hidden flex items-center" title="How this works">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                     </button>
                     <div class="js-menu-dropdown hidden absolute left-0 top-full mt-2 w-64 p-3 bg-surface-warm border border-border rounded-button shadow-lg z-50 text-xs text-text-secondary leading-relaxed">
@@ -516,7 +516,7 @@
 
     <tr th:fragment="calendarRow" th:id="'calendar-row-' + ${cal.id}" class="table-row">
         <td class="table-cell font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
-        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-xs" th:text="${cal.googleCalendarId}">cal-id</td>
+        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-[20rem]" th:text="${cal.googleCalendarId}">cal-id</td>
         <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
         <td class="table-cell">
             <span th:if="${cal.isDefault}" class="badge-primary inline-flex items-center gap-1">
