@@ -185,6 +185,11 @@ wait to be told where the code lives; go and find it.
 3. **Implement.** Write the change and its tests together.
 4. **Verify.** Run `./gradlew build` until it passes, fixing your own failures. Resolving
    your own compile errors is the entire reason the work was delegated to you.
+   The build takes far longer than the 10s your command tool will wait, so the runtime
+   *will* detach it into a background task. That is normal. Do not relaunch it — a second
+   build while one is in flight is how past runs burned hours without ever seeing a result.
+   Wait for the completion notification, read it, and re-run only after you have acted on
+   it. You are not finished until you can quote the last two lines of a passing build.
 5. **Report.** See *Reporting back* below.
 
 ### When the spec is ambiguous

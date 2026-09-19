@@ -1,0 +1,11 @@
+{
+    "build-verification-gate": {
+        "Stop": [
+            {
+                "type": "command",
+                "command": "./hooks/agy-stop-gate.py",
+                "timeout": 40
+            }
+        ]
+    }
+}
