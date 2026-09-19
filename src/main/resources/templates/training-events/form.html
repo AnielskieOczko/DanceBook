@@ -97,24 +97,32 @@
             </div>
         </div>
 
-        <!-- Which occurrences an edit applies to; the past is never rewritten -->
+        <!-- Which occurrences an edit applies to -->
         <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4">
             <!-- The Repeats block above is create-only, so on an edit this is the only thing
-                 carrying the series' end date back. Regenerating the following occurrences
-                 needs a horizon to work to; without it the save is rejected outright. -->
+                 carrying the series' end date back. -->
             <input type="hidden" th:field="*{repeatUntil}">
             <label class="form-label">This session repeats. Apply changes to</label>
-            <div class="space-y-2 mt-2">
-                <label class="flex items-center gap-3 font-body-md">
-                    <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
-                    <span>This event only</span>
-                </label>
+            <div class="space-y-3 mt-2">
+                <div>
+                    <label class="flex items-center gap-3 font-body-md">
+                        <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
+                        <span>This event only</span>
+                    </label>
+                    <p class="form-hint ml-7 mt-1 text-on-surface-variant">
+                        Detaches this session from the series. It will become a standalone session and cannot be reconnected.
+                    </p>
+                </div>
                 <label class="flex items-center gap-3 font-body-md">
                     <input type="radio" th:field="*{editScope}" value="THIS_AND_FOLLOWING">
                     <span>This and following events</span>
                 </label>
+                <label class="flex items-center gap-3 font-body-md">
+                    <input type="radio" th:field="*{editScope}" value="ALL_EVENTS">
+                    <span>All events</span>
+                </label>
             </div>
-            <p class="form-hint mt-2">Sessions that already happened keep their times and attendance.</p>
+            <p class="form-hint mt-3">Sessions keep their dates, times, attendance and outcomes.</p>
         </div>
 
         <!-- Style breakdown -->

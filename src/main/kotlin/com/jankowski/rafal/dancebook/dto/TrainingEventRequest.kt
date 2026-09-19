@@ -61,7 +61,7 @@ data class TrainingEventRequest(
     val repeatUntil: LocalDate? = null,
 
     /**
-     * Which occurrences an edit applies to: THIS_EVENT or THIS_AND_FOLLOWING.
+     * Which occurrences an edit applies to: THIS_EVENT, THIS_AND_FOLLOWING, or ALL_EVENTS.
      * Ignored when the event is not part of a series.
      */
     val editScope: SeriesScope = SeriesScope.THIS_EVENT

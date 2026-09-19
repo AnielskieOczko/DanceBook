@@ -3,6 +3,8 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
+import com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeriesCreatedEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeriesDeletedEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
@@ -57,6 +59,50 @@ class TrainingSeriesPersistence(
         trainingEventRepository.deleteAll(removed)
         added.forEach { it.series = series }
         return trainingEventRepository.saveAll(added)
+    }
+
+    /**
+     * Updates series occurrences in place without re-generating rows or changing event IDs,
+     * keeping attendance status and syncing training records.
+     */
+    @Transactional
+    fun updateOccurrencesInPlace(
+        series: TrainingSeries,
+        occurrences: List<TrainingEvent>,
+        actor: AppUser
+    ): List<TrainingEvent> {
+        trainingSeriesRepository.save(series)
+        val saved = trainingEventRepository.saveAll(occurrences)
+        saved.forEach { trainingRecordWriter.sync(it) }
+        eventPublisher.publishEvent(
+            TrainingBulkUpdatedEvent(
+                count = saved.size,
+                updateType = "repeating series",
+                actor = actor
+            )
+        )
+        return saved
+    }
+
+    /**
+     * Detaches a single occurrence from its series, updating it as a standalone session.
+     * If this leaves the series with zero occurrences, deletes the series definition.
+     */
+    @Transactional
+    fun detachAndSave(
+        event: TrainingEvent,
+        series: TrainingSeries,
+        actor: AppUser
+    ): TrainingEvent {
+        event.series = null
+        val saved = trainingEventRepository.save(event)
+        trainingRecordWriter.sync(saved)
+        val remaining = trainingEventRepository.countBySeries(series)
+        if (remaining == 0L) {
+            trainingSeriesRepository.delete(series)
+        }
+        eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
+        return saved
     }
 
     @Transactional

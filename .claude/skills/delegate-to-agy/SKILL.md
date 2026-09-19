@@ -36,6 +36,11 @@ should also be done by probing, not by reasoning about what ought to work.
   `gemini-3.8-flash-low` / `-medium` / `-high`.
 - **Write `-p='…'` last.** A bare `-p` swallows the next flag as its prompt.
 - **Background the run** (`run_in_background: true`) for anything real.
+- **Forbid agy from backgrounding the build.** Left to itself it launches `./gradlew build`
+  as a background task, reports "I will wait for it to complete", goes idle, and then
+  terminates that task on its own way out — `terminating N background task(s) on exit` in
+  the stderr above the JSON. It never sees a build result, so it fixes nothing. Say
+  *foreground* in the prompt, and treat that stderr line as proof the build never ran.
 
 ## Prerequisites (once)
 
@@ -192,17 +197,22 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ```bash
 cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
-    -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Run ./gradlew build and fix any failures yourself until it passes. Then summarise what you changed.' \
+    -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Run ./gradlew build in the FOREGROUND and wait for it to finish - do not launch it as a background task, you will kill it on exit and never see the result. Fix any failures yourself and re-run it until it passes. Then summarise what you changed.' \
     > .agy-run.json 2>&1
 ```
 
 **Default to `-high`.** agy is doing the thinking now, not the typing; `-medium` is for
 genuinely mechanical issues where the shape of the change is not in question.
 
-**Insist that agy runs `./gradlew build` and fixes its own failures until green.** This is
-the whole point: every compile error it resolves itself is a Claude round-trip that never
-happens. Verifying its work afterwards is still mandatory — it is a second opinion, not
-the first run.
+**Insist that agy runs `./gradlew build` in the foreground and fixes its own failures until
+green.** This is the whole point: every compile error it resolves itself is a Claude
+round-trip that never happens. Verifying its work afterwards is still mandatory — it is a
+second opinion, not the first run.
+
+Issue #84 is the worked example of the cost when this goes wrong: two runs, ~6 hours of wall
+clock and 4.8M tokens, both ending with the build killed on exit, and the delivered tests did
+not compile — a single `!` where `!!` was meant, which a real build would have caught in 20
+seconds.
 
 ### 5. Validate — do not trust `status`
 
@@ -217,6 +227,11 @@ runs alike. The validator checks non-empty `response`, `num_turns > 0` and absen
 
 **A missing `.agy-plan.md` is a red flag even when the diff looks plausible.** It means agy
 did not follow the work loop, so nothing else it was told to do is safe to assume either.
+
+**Always run `./gradlew build` yourself before reviewing.** agy claiming green is not
+evidence, and `status:"ERROR"` with a substantial diff is common — the work can be most of
+the way there while never having compiled once. Pipe gradle through `tail` only with
+`set -o pipefail`, or you will read `tail`'s exit code and call a failed build a pass.
 
 If it reports denied tools, add the action to `permissions.allow`, then resume the *same*
 conversation instead of re-paying the onboarding cost:

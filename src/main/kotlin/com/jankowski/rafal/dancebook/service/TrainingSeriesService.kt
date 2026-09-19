@@ -12,10 +12,25 @@ interface TrainingSeriesService {
     fun create(request: TrainingEventRequest): TrainingEvent
 
     /**
-     * Applies an edit to the given occurrence and every later one, leaving completed
-     * sessions untouched. Returns the regenerated occurrence at the original date.
+     * Applies an edit to a single occurrence of a series, detaching it from the series
+     * so subsequent series-wide edits no longer touch it. If it was the last occurrence
+     * in the series, the series definition is deleted.
+     */
+    fun updateThisEvent(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent
+
+    /**
+     * Applies a content-only edit to the given occurrence and every later one in place,
+     * keeping occurrence IDs, Google Calendar event IDs, dates, times, attendance statuses and
+     * recorded outcomes intact.
      */
     fun updateThisAndFollowing(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent
+
+    /**
+     * Applies a content-only edit to every occurrence of the series (past and future) in place,
+     * keeping occurrence IDs, Google Calendar event IDs, dates, times, attendance statuses and
+     * recorded outcomes intact.
+     */
+    fun updateAll(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent
 
     /** Deletes the given occurrence and every later one, leaving completed sessions alone. */
     fun deleteThisAndFollowing(occurrenceId: UUID): BulkDeleteResult

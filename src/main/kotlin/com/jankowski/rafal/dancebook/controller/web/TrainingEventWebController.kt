@@ -276,12 +276,17 @@ class TrainingEventWebController(
         }
 
         try {
-            // "This and following" regenerates the rest of the series; "this event"
-            // detaches the occurrence and updates it alone.
-            if (request.editScope == SeriesScope.THIS_AND_FOLLOWING) {
-                trainingSeriesService.updateThisAndFollowing(id, request)
-            } else {
-                trainingEventService.update(id, request)
+            when (request.editScope) {
+                SeriesScope.THIS_AND_FOLLOWING -> trainingSeriesService.updateThisAndFollowing(id, request)
+                SeriesScope.ALL_EVENTS -> trainingSeriesService.updateAll(id, request)
+                SeriesScope.THIS_EVENT -> {
+                    val event = trainingEventService.findById(id)
+                    if (event.series != null) {
+                        trainingSeriesService.updateThisEvent(id, request)
+                    } else {
+                        trainingEventService.update(id, request)
+                    }
+                }
             }
         } catch (e: Exception) {
             log.error("Failed to update training event {}", id, e)

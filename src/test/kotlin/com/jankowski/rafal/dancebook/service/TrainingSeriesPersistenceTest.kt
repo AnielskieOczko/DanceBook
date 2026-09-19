@@ -151,4 +151,55 @@ class TrainingSeriesPersistenceTest {
 
         verify(trainingRecordWriter).orphan(listOf(removed.id!!))
     }
+
+    @Test
+    fun `updateOccurrencesInPlace saves series and occurrences, syncs records, and publishes bulk update event`() {
+        val series = TrainingSeries().apply { id = UUID.randomUUID(); title = "Weekly" }
+        val occ1 = occurrence()
+        val occ2 = occurrence()
+        `when`(trainingEventRepository.saveAll(listOf(occ1, occ2))).thenReturn(listOf(occ1, occ2))
+
+        val result = persistence.updateOccurrencesInPlace(series, listOf(occ1, occ2), actor)
+
+        verify(trainingSeriesRepository).save(series)
+        verify(trainingEventRepository).saveAll(listOf(occ1, occ2))
+        verify(trainingRecordWriter).sync(occ1)
+        verify(trainingRecordWriter).sync(occ2)
+        val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent::class.java)
+        verify(eventPublisher).publishEvent(eventCaptor.capture())
+        org.junit.jupiter.api.Assertions.assertEquals(2, eventCaptor.value.count)
+        org.junit.jupiter.api.Assertions.assertEquals("repeating series", eventCaptor.value.updateType)
+        org.junit.jupiter.api.Assertions.assertEquals(2, result.size)
+    }
+
+    @Test
+    fun `detachAndSave clears series on event, saves event, syncs record, and deletes series if empty`() {
+        val series = TrainingSeries().apply { id = UUID.randomUUID() }
+        val event = occurrence().apply { this.series = series }
+        `when`(trainingEventRepository.save(event)).thenReturn(event)
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(0L)
+
+        val result = persistence.detachAndSave(event, series, actor)
+
+        assertNull(result.series, "event must be detached")
+        verify(trainingEventRepository).save(event)
+        verify(trainingRecordWriter).sync(event)
+        verify(trainingSeriesRepository).delete(series)
+        val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent::class.java)
+        verify(eventPublisher).publishEvent(eventCaptor.capture())
+        org.junit.jupiter.api.Assertions.assertEquals(event, eventCaptor.value.trainingEvent)
+    }
+
+    @Test
+    fun `detachAndSave keeps series when other occurrences remain`() {
+        val series = TrainingSeries().apply { id = UUID.randomUUID() }
+        val event = occurrence().apply { this.series = series }
+        `when`(trainingEventRepository.save(event)).thenReturn(event)
+        `when`(trainingEventRepository.countBySeries(series)).thenReturn(3L)
+
+        persistence.detachAndSave(event, series, actor)
+
+        verify(trainingSeriesRepository, never()).delete(series)
+        verify(eventPublisher).publishEvent(any(com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent::class.java))
+    }
 }
