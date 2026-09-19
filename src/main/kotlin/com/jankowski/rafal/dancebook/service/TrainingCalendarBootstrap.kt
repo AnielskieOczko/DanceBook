@@ -4,8 +4,9 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
 /**
- * Seeds the default training calendar from `google.calendar.calendar-id` on startup
- * and backfills any existing training events that lack a calendar reference.
+ * Seeds the default training calendar from `google.calendar.calendar-id` on startup,
+ * backfills any existing training events that lack a calendar reference, and reconciles
+ * any training records missing their calendar copy while their session has one.
  *
  * This is a separate component from [TrainingCalendarServiceImpl] because
  * [TrainingCalendarService.bootstrapDefaultCalendar] performs a `@Modifying` bulk update
@@ -17,7 +18,11 @@ import org.springframework.stereotype.Component
  */
 @Component
 class TrainingCalendarBootstrap(
-    private val trainingCalendarService: TrainingCalendarService
+    private val trainingCalendarService: TrainingCalendarService,
+    private val trainingRecordReconciliationService: TrainingRecordReconciliationService
 ) : CommandLineRunner {
-    override fun run(vararg args: String?) = trainingCalendarService.bootstrapDefaultCalendar()
+    override fun run(vararg args: String?) {
+        trainingCalendarService.bootstrapDefaultCalendar()
+        trainingRecordReconciliationService.reconcile()
+    }
 }
