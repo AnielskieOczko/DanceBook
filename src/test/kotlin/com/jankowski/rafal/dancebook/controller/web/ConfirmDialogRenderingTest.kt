@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.config.SecurityConfig
+import com.jankowski.rafal.dancebook.dto.PatternReconcilePlan
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -87,6 +88,24 @@ class NonAdminSampleDialogController {
                 outcomeCount = 2
             )
         ))
+        return "fragments/confirm-dialog :: confirmModal"
+    }
+
+    @GetMapping("/test/pattern-reconcile-dialog")
+    fun patternReconcileDialog(model: Model): String {
+        val id = UUID.randomUUID()
+        model.addAttribute("dialogTitle", "Edit Recurring Series")
+        model.addAttribute("dialogMessage", "Updating this repeating series will recompute session dates:")
+        model.addAttribute("reconcilePlan", PatternReconcilePlan(
+            createdCount = 2,
+            movedCount = 3,
+            removedCount = 1,
+            droppedRecordedCount = 1,
+            targetTotalCount = 5
+        ))
+        model.addAttribute("confirmLabel", "Apply Changes")
+        model.addAttribute("confirmUrl", "/training-events/$id")
+        model.addAttribute("confirmFormId", "trainingEventForm")
         return "fragments/confirm-dialog :: confirmModal"
     }
 }
@@ -192,5 +211,19 @@ class ConfirmDialogRenderingTest {
             .andExpect(content().string(containsString("4 sessions (1 with recorded outcome)")))
             .andExpect(content().string(containsString("3 sessions (2 with recorded outcomes)")))
             .andExpect(content().string(containsString("Delete")))
+    }
+
+    @Test
+    fun `confirm dialog renders reconcile plan with created moved removed counts and dropped recorded warning`() {
+        mockMvc.perform(get("/test/pattern-reconcile-dialog").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Edit Recurring Series")))
+            .andExpect(content().string(containsString("Updating this repeating series will recompute session dates:")))
+            .andExpect(content().string(containsString("2 sessions will be created")))
+            .andExpect(content().string(containsString("3 sessions will be moved")))
+            .andExpect(content().string(containsString("1 session will be removed")))
+            .andExpect(content().string(containsString("1 past session with recorded attendance will be dropped from the series and kept as a standalone session.")))
+            .andExpect(content().string(containsString("Apply Changes")))
+            .andExpect(content().string(containsString("id=\"modalConfirmBtn\"")))
     }
 }

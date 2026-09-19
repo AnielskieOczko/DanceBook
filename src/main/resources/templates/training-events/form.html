@@ -11,7 +11,13 @@
     </div>
 
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
-          th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm">
+          th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm"
+          th:data-event-id="${trainingEventId}"
+          th:data-is-series="${isSeriesOccurrence}"
+          th:data-original-weekday="${seriesDayOfWeek}"
+          th:data-original-start-time="${seriesStartTime}"
+          th:data-original-end-time="${seriesEndTime}"
+          th:data-original-ends-on="${seriesEndsOn}">
 
         <!-- Target / Owning Calendar Statement -->
         <div th:if="${calendarError}" class="p-4 rounded-md bg-error/10 border border-error text-error text-body-md"
@@ -98,31 +104,52 @@
         </div>
 
         <!-- Which occurrences an edit applies to -->
-        <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4">
-            <!-- The Repeats block above is create-only, so on an edit this is the only thing
-                 carrying the series' end date back. -->
-            <input type="hidden" th:field="*{repeatUntil}">
-            <label class="form-label">This session repeats. Apply changes to</label>
-            <div class="space-y-3 mt-2">
-                <div>
+        <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4 space-y-4">
+            <div>
+                <label class="form-label">This session repeats. Apply changes to</label>
+                <div class="space-y-3 mt-2">
+                    <div>
+                        <label class="flex items-center gap-3 font-body-md">
+                            <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
+                            <span>This event only</span>
+                        </label>
+                        <p class="form-hint ml-7 mt-1 text-on-surface-variant">
+                            Detaches this session from the series. It will become a standalone session and cannot be reconnected.
+                        </p>
+                    </div>
                     <label class="flex items-center gap-3 font-body-md">
-                        <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
-                        <span>This event only</span>
+                        <input type="radio" th:field="*{editScope}" value="THIS_AND_FOLLOWING">
+                        <span>This and following events</span>
                     </label>
-                    <p class="form-hint ml-7 mt-1 text-on-surface-variant">
-                        Detaches this session from the series. It will become a standalone session and cannot be reconnected.
-                    </p>
+                    <label class="flex items-center gap-3 font-body-md">
+                        <input type="radio" th:field="*{editScope}" value="ALL_EVENTS">
+                        <span>All events</span>
+                    </label>
                 </div>
-                <label class="flex items-center gap-3 font-body-md">
-                    <input type="radio" th:field="*{editScope}" value="THIS_AND_FOLLOWING">
-                    <span>This and following events</span>
-                </label>
-                <label class="flex items-center gap-3 font-body-md">
-                    <input type="radio" th:field="*{editScope}" value="ALL_EVENTS">
-                    <span>All events</span>
-                </label>
+                <p id="scopeHint" class="form-hint mt-3">Sessions keep their dates, times, attendance and outcomes.</p>
             </div>
-            <p class="form-hint mt-3">Sessions keep their dates, times, attendance and outcomes.</p>
+
+            <!-- Recurrence pattern controls (shown when All events is selected) -->
+            <div id="seriesPatternControls" class="border-t border-border pt-4 space-y-4 hidden">
+                <div class="font-medium text-on-surface text-body-md">Recurrence Pattern</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="dayOfWeek" class="form-label">Weekday *</label>
+                        <select id="dayOfWeek" th:field="*{dayOfWeek}" class="form-select">
+                            <option th:each="dow : ${dayOfWeekOptions}"
+                                    th:value="${dow}"
+                                    th:text="${#strings.capitalize(#strings.toLowerCase(dow))}">Monday</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="repeatUntil" class="form-label">Repeat until *</label>
+                        <input id="repeatUntil" type="date" th:field="*{repeatUntil}" class="form-input">
+                    </div>
+                </div>
+                <p class="form-hint" id="editPatternSummary">
+                    Changing the weekday or times moves every occurrence. Shortening drops excess sessions; extending creates new ones.
+                </p>
+            </div>
         </div>
 
         <!-- Style breakdown -->

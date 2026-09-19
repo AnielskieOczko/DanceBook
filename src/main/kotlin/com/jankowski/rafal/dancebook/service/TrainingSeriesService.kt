@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
+import com.jankowski.rafal.dancebook.dto.PatternReconcilePlan
 import com.jankowski.rafal.dancebook.dto.ScopeOption
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -26,9 +27,11 @@ interface TrainingSeriesService {
     fun updateThisAndFollowing(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent
 
     /**
-     * Applies a content-only edit to every occurrence of the series (past and future) in place,
-     * keeping occurrence IDs, Google Calendar event IDs, dates, times, attendance statuses and
-     * recorded outcomes intact.
+     * Applies an edit to every occurrence of the series (past and future). If the recurrence
+     * pattern (weekday, start/end times, repeat-until) is changed, reconciles occurrences:
+     * moving surviving occurrences to new dates/times in place (keeping rows, Google events,
+     * and attendance), generating missing occurrences, and trimming excess occurrences
+     * (leaving recorded ones as standalone sessions).
      */
     fun updateAll(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent
 
@@ -47,4 +50,10 @@ interface TrainingSeriesService {
      * three delete scopes (THIS_EVENT, THIS_AND_FOLLOWING, ALL_EVENTS).
      */
     fun calculateDeleteScopeOptions(occurrenceId: UUID): List<ScopeOption>
+
+    /**
+     * Calculates the created, moved, and removed counts, and the number of past sessions
+     * with recorded outcomes that would be dropped from the series by a pattern change.
+     */
+    fun calculatePatternReconcile(occurrenceId: UUID, request: TrainingEventRequest): PatternReconcilePlan
 }

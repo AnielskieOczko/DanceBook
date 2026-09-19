@@ -221,6 +221,143 @@
     if (repeatUntil) repeatUntil.addEventListener('change', updateRepeatSummary);
     if (dateInput) dateInput.addEventListener('change', refreshRepeat);
 
+    // ── Edit Mode Series Recurrence ──────────────────────────────────────────
+    const isSeries = form.dataset.isSeries === 'true';
+    const seriesPatternControls = document.getElementById('seriesPatternControls');
+    const editScopeRadios = form.querySelectorAll('input[name="editScope"]');
+    const dayOfWeekSelect = document.getElementById('dayOfWeek');
+    const scopeHint = document.getElementById('scopeHint');
+
+    function refreshEditScope() {
+        if (!isSeries || !seriesPatternControls) return;
+        const checkedScope = form.querySelector('input[name="editScope"]:checked');
+        const scope = checkedScope ? checkedScope.value : 'THIS_EVENT';
+
+        if (scope === 'ALL_EVENTS') {
+            seriesPatternControls.classList.remove('hidden');
+            if (dateInput) dateInput.readOnly = true;
+            if (startInput) startInput.readOnly = false;
+            if (endInput) endInput.readOnly = false;
+            if (scopeHint) {
+                scopeHint.textContent = 'Recurrence pattern is editable. Changing weekday, times or repeat-until recomputes the series.';
+            }
+        } else if (scope === 'THIS_AND_FOLLOWING') {
+            seriesPatternControls.classList.add('hidden');
+            if (dateInput) dateInput.readOnly = true;
+            if (startInput) startInput.readOnly = true;
+            if (endInput) endInput.readOnly = true;
+            if (scopeHint) {
+                scopeHint.textContent = 'Sessions keep their dates, times, attendance and outcomes. Content changes apply to this and all future sessions.';
+            }
+        } else {
+            seriesPatternControls.classList.add('hidden');
+            if (dateInput) dateInput.readOnly = false;
+            if (startInput) startInput.readOnly = false;
+            if (endInput) endInput.readOnly = false;
+            if (scopeHint) {
+                scopeHint.textContent = 'Detaches this session from the series. It will become a standalone session and cannot be reconnected.';
+            }
+        }
+    }
+
+    if (editScopeRadios.length > 0) {
+        editScopeRadios.forEach(function (radio) {
+            radio.addEventListener('change', refreshEditScope);
+        });
+        refreshEditScope();
+    }
+
+    // ── Confirm dialog on pattern changes ────────────────────────────────────
+    let isConfirmed = false;
+
+    form.addEventListener('submit', function (event) {
+        if (isConfirmed) return;
+        if (!isSeries) return;
+
+        const checkedScope = form.querySelector('input[name="editScope"]:checked');
+        if (!checkedScope || checkedScope.value !== 'ALL_EVENTS') return;
+
+        const currentWeekday = dayOfWeekSelect ? dayOfWeekSelect.value : null;
+        const currentStart = startInput ? startInput.value : null;
+        const currentEnd = endInput ? endInput.value : null;
+        const currentRepeatUntil = document.getElementById('repeatUntil') ? document.getElementById('repeatUntil').value : null;
+
+        const origWeekday = form.dataset.originalWeekday;
+        const origStart = form.dataset.originalStartTime ? form.dataset.originalStartTime.slice(0, 5) : null;
+        const origEnd = form.dataset.originalEndTime ? form.dataset.originalEndTime.slice(0, 5) : null;
+        const origEndsOn = form.dataset.originalEndsOn;
+
+        const patternChanged = (currentWeekday && origWeekday && currentWeekday !== origWeekday) ||
+            (currentStart && origStart && currentStart !== origStart) ||
+            (currentEnd && origEnd && currentEnd !== origEnd) ||
+            (currentRepeatUntil && origEndsOn && currentRepeatUntil !== origEndsOn);
+
+        if (patternChanged) {
+            event.preventDefault();
+            const eventId = form.dataset.eventId;
+            if (!eventId) return;
+
+            const formData = new FormData(form);
+            const csrfMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]');
+            const headers = {};
+            if (csrfMeta && csrfHeader) {
+                headers[csrfHeader.content] = csrfMeta.content;
+            }
+
+            fetch('/training-events/' + eventId + '/confirm-dialog', {
+                method: 'POST',
+                body: formData,
+                headers: headers
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    throw new Error('Server returned ' + res.status);
+                }
+                return res.text();
+            })
+            .then(function (html) {
+                const container = document.getElementById('confirmModalContainer');
+                if (container) {
+                    container.innerHTML = html;
+                    const confirmBtn = container.querySelector('#modalConfirmBtn');
+                    if (confirmBtn) {
+                        confirmBtn.addEventListener('click', function () {
+                            isConfirmed = true;
+                            form.submit();
+                        });
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.error('Failed to load pattern confirmation dialog', err);
+                const container = document.getElementById('confirmModalContainer');
+                if (container) {
+                    container.innerHTML = `
+<div id="confirmModal" class="js-modal fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+    <div class="js-modal-backdrop fixed inset-0"></div>
+    <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-md w-full mx-4 p-6 relative z-10">
+        <div class="flex items-center gap-4 mb-4 text-danger">
+            <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined">error</span>
+            </div>
+            <h3 id="confirmModalTitle" class="font-headline-md text-on-surface text-xl font-semibold">Cannot Verify Changes</h3>
+        </div>
+        <p class="text-on-surface-variant font-body-md mb-6 leading-relaxed">
+            Could not verify recurring pattern changes with the server. Please check your connection and try again.
+        </p>
+        <div class="flex justify-end">
+            <button type="button" class="js-close-modal btn-outline">Close</button>
+        </div>
+    </div>
+</div>`;
+                } else {
+                    alert('Could not verify recurring pattern changes with the server. Please check your connection and try again.');
+                }
+            });
+        }
+    });
+
     refreshRepeat();
     updateTotal();
 })();

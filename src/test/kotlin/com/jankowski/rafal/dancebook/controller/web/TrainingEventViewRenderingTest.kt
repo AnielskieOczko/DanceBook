@@ -371,6 +371,38 @@ class TrainingEventViewRenderingTest {
     }
 
     @Test
+    fun `edit form for series occurrence renders pattern controls with series weekday and repeat until input`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+            dayOfWeek = java.time.DayOfWeek.MONDAY
+            endsOn = java.time.LocalDate.of(2026, 12, 14)
+            startTime = java.time.LocalTime.of(18, 0)
+            endTime = java.time.LocalTime.of(20, 0)
+        }
+        val event = attendedSession().apply { this.series = series }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events/${event.id}/edit").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val form = doc.select("#trainingEventForm")
+        assertEquals("true", form.attr("data-is-series"))
+        assertEquals("MONDAY", form.attr("data-original-weekday"))
+        assertEquals("2026-12-14", form.attr("data-original-ends-on"))
+        assertEquals("18:00", form.attr("data-original-start-time"))
+        assertEquals("20:00", form.attr("data-original-end-time"))
+
+        val patternControls = doc.select("#seriesPatternControls")
+        assertEquals(1, patternControls.size, "Should render seriesPatternControls container")
+        assertEquals(1, patternControls.select("select[name=dayOfWeek]").size, "Should render weekday selector")
+        assertEquals(1, patternControls.select("input[name=repeatUntil]").size, "Should render repeatUntil input")
+    }
+
+    @Test
     fun `the calendar selector is hidden with one calendar and shown with two`() {
         val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
         `when`(activeCalendarService.selectable()).thenReturn(listOf(club))

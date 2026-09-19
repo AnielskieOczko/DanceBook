@@ -1,11 +1,13 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
+import com.jankowski.rafal.dancebook.dto.PatternReconcilePlan
 import com.jankowski.rafal.dancebook.dto.ScopeOption
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -18,8 +20,11 @@ import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.temporal.TemporalAdjusters
 import java.util.UUID
 
 /**
@@ -144,6 +149,47 @@ class TrainingSeriesServiceImpl(
         return updateOccurrencesInPlace(series, occurrences, request, currentUser, occurrenceId)
     }
 
+    private data class TargetSeriesPattern(
+        val dayOfWeek: DayOfWeek,
+        val startTime: LocalTime,
+        val endTime: LocalTime,
+        val startsOn: LocalDate,
+        val endsOn: LocalDate,
+        val targetDates: List<LocalDate>,
+        val isPatternChanged: Boolean
+    )
+
+    private fun deriveTargetPattern(series: TrainingSeries, request: TrainingEventRequest): TargetSeriesPattern {
+        val newDayOfWeek = request.dayOfWeek ?: request.date?.dayOfWeek ?: series.dayOfWeek
+        val newStartTime = request.startTime ?: series.startTime
+        val newEndTime = request.endTime ?: series.endTime
+        val newEndsOn = request.repeatUntil ?: series.endsOn
+
+        val newStartsOn = if (newDayOfWeek == series.dayOfWeek) {
+            series.startsOn
+        } else {
+            series.startsOn.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                .plusDays((newDayOfWeek.value - 1).toLong())
+        }
+
+        val targetDates = occurrenceDates(newStartsOn, newEndsOn, newDayOfWeek)
+
+        val isPatternChanged = newDayOfWeek != series.dayOfWeek ||
+            newStartTime != series.startTime ||
+            newEndTime != series.endTime ||
+            newEndsOn != series.endsOn
+
+        return TargetSeriesPattern(
+            dayOfWeek = newDayOfWeek,
+            startTime = newStartTime,
+            endTime = newEndTime,
+            startsOn = newStartsOn,
+            endsOn = newEndsOn,
+            targetDates = targetDates,
+            isPatternChanged = isPatternChanged
+        )
+    }
+
     override fun updateAll(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
         val occurrence = findOccurrence(occurrenceId)
@@ -152,9 +198,21 @@ class TrainingSeriesServiceImpl(
         val series = occurrence.series
             ?: throw IllegalStateException("This session is not part of a repeating series")
 
+        val pattern = deriveTargetPattern(series, request)
         val occurrences = trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
 
-        return updateOccurrencesInPlace(series, occurrences, request, currentUser, occurrenceId)
+        return if (pattern.isPatternChanged) {
+            reconcileSeriesPattern(
+                series = series,
+                occurrences = occurrences,
+                request = request,
+                pattern = pattern,
+                currentUser = currentUser,
+                targetOccurrenceId = occurrenceId
+            )
+        } else {
+            updateOccurrencesInPlace(series, occurrences, request, currentUser, occurrenceId)
+        }
     }
 
     override fun deleteThisAndFollowing(occurrenceId: UUID): BulkDeleteResult {
@@ -266,6 +324,43 @@ class TrainingSeriesServiceImpl(
         )
     }
 
+    override fun calculatePatternReconcile(occurrenceId: UUID, request: TrainingEventRequest): PatternReconcilePlan {
+        val currentUser = appUserService.getCurrentUser()
+        val occurrence = findOccurrence(occurrenceId)
+        checkOwnership(occurrence, currentUser)
+
+        val series = occurrence.series
+            ?: throw IllegalStateException("This session is not part of a repeating series")
+
+        val pattern = deriveTargetPattern(series, request)
+        val existingOccurrences = trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
+
+        val m = existingOccurrences.size
+        val n = pattern.targetDates.size
+
+        val createdCount = maxOf(0, n - m)
+        val removedCount = maxOf(0, m - n)
+        val droppedRecordedCount = if (m > n) {
+            existingOccurrences.subList(n, m).count { hasRecordedOutcome(it) }
+        } else 0
+
+        val movedCount = (0 until minOf(m, n)).count { i ->
+            val targetDate = pattern.targetDates[i]
+            val slotStart = LocalDateTime.of(targetDate, pattern.startTime)
+            val endDate = if (pattern.endTime > pattern.startTime) targetDate else targetDate.plusDays(1)
+            val slotEnd = LocalDateTime.of(endDate, pattern.endTime)
+            existingOccurrences[i].startTime != slotStart || existingOccurrences[i].endTime != slotEnd
+        }
+
+        return PatternReconcilePlan(
+            createdCount = createdCount,
+            movedCount = movedCount,
+            removedCount = removedCount,
+            droppedRecordedCount = droppedRecordedCount,
+            targetTotalCount = n
+        )
+    }
+
     private fun hasRecordedOutcome(event: TrainingEvent): Boolean =
         event.attendanceStatus == AttendanceStatus.ATTENDED || event.attendanceStatus == AttendanceStatus.SKIPPED
 
@@ -334,12 +429,12 @@ class TrainingSeriesServiceImpl(
         return event
     }
 
-    private fun occurrenceDates(from: LocalDate, until: LocalDate, series: TrainingSeries): List<LocalDate> {
+    private fun occurrenceDates(from: LocalDate, until: LocalDate, dayOfWeek: DayOfWeek): List<LocalDate> {
         require(!until.isBefore(from)) { "The repeat end date must not be before the first session" }
 
         val dates = mutableListOf<LocalDate>()
         var cursor = from
-        while (cursor.dayOfWeek != series.dayOfWeek) {
+        while (cursor.dayOfWeek != dayOfWeek) {
             cursor = cursor.plusDays(1)
             if (cursor.isAfter(until)) break
         }
@@ -349,7 +444,7 @@ class TrainingSeriesServiceImpl(
         }
 
         require(dates.isNotEmpty()) {
-            "No ${series.dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}s fall between " +
+            "No ${dayOfWeek.name.lowercase().replaceFirstChar { it.uppercase() }}s fall between " +
             "$from and $until"
         }
         require(dates.size <= MAX_OCCURRENCES) {
@@ -358,6 +453,9 @@ class TrainingSeriesServiceImpl(
         }
         return dates
     }
+
+    private fun occurrenceDates(from: LocalDate, until: LocalDate, series: TrainingSeries): List<LocalDate> =
+        occurrenceDates(from, until, series.dayOfWeek)
 
     private fun buildSeries(
         series: TrainingSeries,
@@ -489,6 +587,236 @@ class TrainingSeriesServiceImpl(
         return saved.firstOrNull { it.id == targetOccurrenceId }
             ?: occurrences.firstOrNull { it.id == targetOccurrenceId }
             ?: occurrences.first()
+    }
+
+    private fun reconcileSeriesPattern(
+        series: TrainingSeries,
+        occurrences: List<TrainingEvent>,
+        request: TrainingEventRequest,
+        pattern: TargetSeriesPattern,
+        currentUser: AppUser,
+        targetOccurrenceId: UUID
+    ): TrainingEvent {
+        val newStartsOn = pattern.startsOn
+        val newEndsOn = pattern.endsOn
+        val newDayOfWeek = pattern.dayOfWeek
+        val newStartTime = pattern.startTime
+        val newEndTime = pattern.endTime
+        val targetDates = pattern.targetDates
+
+        val seriesSlotMinutes = java.time.Duration.between(newStartTime, newEndTime).toMinutes().let {
+            if (it <= 0) it + 24 * 60 else it
+        }
+        val validSegments = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+        val resolvedSegments = validSegments.map {
+            danceCategoryService.findById(it.categoryId!!) to it.durationMinutes!!
+        }
+        val totalSegmentMinutes = resolvedSegments.sumOf { it.second }
+        require(totalSegmentMinutes <= seriesSlotMinutes) {
+            "The style breakdown adds up to $totalSegmentMinutes minutes, which is longer " +
+            "than the $seriesSlotMinutes-minute session"
+        }
+
+        val m = occurrences.size
+        val n = targetDates.size
+        val survivingCount = minOf(m, n)
+        val surviving = occurrences.subList(0, survivingCount)
+
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val seriesCalendar = occurrences.firstOrNull()?.calendar ?: trainingCalendarService.findDefault()
+
+        // Snapshot surviving occurrences before pushing to Google Calendar so we can rollback on failure
+        val snapshots = surviving.map { event ->
+            EventGoogleSnapshot(
+                title = event.title,
+                startTime = event.startTime,
+                endTime = event.endTime,
+                eventType = event.eventType,
+                description = event.description,
+                material = event.material,
+                materialsUrl = event.materialsUrl,
+                segments = event.segments.map { SegmentSnapshot(it.danceCategory, it.durationMinutes, it.sortOrder) }
+            )
+        }
+
+        val now = LocalDateTime.now()
+        val updatedGoogleEvents = mutableListOf<Pair<TrainingEvent, EventGoogleSnapshot>>()
+        val createdGoogleEvents = mutableListOf<TrainingEvent>()
+        val newOccurrences = mutableListOf<TrainingEvent>()
+
+        fun rollbackGoogleCalendar() {
+            for (event in createdGoogleEvents) {
+                event.googleEventId?.let { id ->
+                    val googleCalId = event.calendar?.googleCalendarId ?: seriesCalendar?.googleCalendarId ?: defaultGoogleCalId
+                    if (googleCalId != null) {
+                        runCatching { calendarClient.deleteEvent(googleCalId, id) }
+                            .onFailure { log.error("Failed to delete Google event {} during rollback", id, it) }
+                    }
+                }
+                event.googleEventId = null
+            }
+            for ((event, snapshot) in updatedGoogleEvents) {
+                restoreSnapshot(event, snapshot)
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleEventId = event.googleEventId
+                if (googleCalId != null && googleEventId != null) {
+                    runCatching { calendarClient.updateEvent(googleCalId, googleEventId, event) }
+                        .onFailure { log.error("Failed to restore Google event {} during rollback", googleEventId, it) }
+                }
+            }
+        }
+
+        try {
+            for (i in 0 until survivingCount) {
+                val event = surviving[i]
+                val snapshot = snapshots[i]
+                val targetDate = targetDates[i]
+                val endDate = if (newEndTime > newStartTime) targetDate else targetDate.plusDays(1)
+
+                event.title = request.title
+                event.startTime = LocalDateTime.of(targetDate, newStartTime)
+                event.endTime = LocalDateTime.of(endDate, newEndTime)
+                event.eventType = TrainingEventType.valueOf(request.eventType)
+                event.description = request.description?.takeIf { it.isNotBlank() }
+                event.material = request.materialId?.let { materialService.findById(it) }
+                event.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
+                event.updatedAt = now
+                applyResolvedSegmentsToEvent(event, resolvedSegments)
+
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (googleCalId != null) {
+                    if (event.googleEventId != null) {
+                        calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
+                        updatedGoogleEvents.add(event to snapshot)
+                    } else {
+                        val newId = calendarClient.createEvent(googleCalId, event)
+                        event.googleEventId = newId
+                        createdGoogleEvents.add(event)
+                    }
+                }
+            }
+
+            if (n > m) {
+                for (i in m until n) {
+                    val date = targetDates[i]
+                    val newEvent = occurrenceFor(series, date, currentUser).apply {
+                        title = request.title
+                        startTime = LocalDateTime.of(date, newStartTime)
+                        endTime = LocalDateTime.of(if (newEndTime > newStartTime) date else date.plusDays(1), newEndTime)
+                        eventType = TrainingEventType.valueOf(request.eventType)
+                        description = request.description?.takeIf { it.isNotBlank() }
+                        material = request.materialId?.let { materialService.findById(it) }
+                        materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
+                        calendar = seriesCalendar
+                        applyResolvedSegmentsToEvent(this, resolvedSegments)
+                    }
+                    if (seriesCalendar?.googleCalendarId != null) {
+                        newEvent.googleEventId = calendarClient.createEvent(seriesCalendar.googleCalendarId, newEvent)
+                        if (newEvent.googleEventId != null) {
+                            createdGoogleEvents.add(newEvent)
+                        }
+                    }
+                    newOccurrences.add(newEvent)
+                }
+            }
+        } catch (e: Exception) {
+            log.error(
+                "Google Calendar call failed during series reconcile for '{}'; rolling back",
+                series.title, e
+            )
+            rollbackGoogleCalendar()
+            throw e
+        }
+
+        val (detachedToKeep, toDelete) = if (m > n) {
+            occurrences.subList(n, m).partition { hasRecordedOutcome(it) }
+        } else {
+            emptyList<TrainingEvent>() to emptyList<TrainingEvent>()
+        }
+
+        series.title = request.title
+        series.dayOfWeek = newDayOfWeek
+        series.startTime = newStartTime
+        series.endTime = newEndTime
+        series.startsOn = newStartsOn
+        series.endsOn = newEndsOn
+        series.eventType = TrainingEventType.valueOf(request.eventType)
+        series.description = request.description?.takeIf { it.isNotBlank() }
+        series.material = request.materialId?.let { materialService.findById(it) }
+        series.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
+        series.updatedAt = now
+        applyResolvedSegmentsToSeries(series, resolvedSegments)
+
+        val saved = try {
+            trainingSeriesPersistence.reconcileSeries(
+                series = series,
+                survivingOccurrences = surviving,
+                newOccurrences = newOccurrences,
+                detachedOccurrences = detachedToKeep,
+                deletedOccurrences = toDelete,
+                actor = currentUser
+            )
+        } catch (e: Exception) {
+            log.error(
+                "Local write failed after updating calendar events for series '{}'; calendar is ahead of the database",
+                series.title, e
+            )
+            throw e
+        }
+
+        for (event in toDelete) {
+            event.googleEventId?.let { id ->
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                if (googleCalId != null) {
+                    try {
+                        calendarClient.deleteEvent(googleCalId, id)
+                    } catch (e: Exception) {
+                        log.error("Could not delete Google Calendar event {}: {}", id, e.message)
+                    }
+                }
+            }
+        }
+
+        return saved.firstOrNull { it.id == targetOccurrenceId }
+            ?: surviving.firstOrNull { it.id == targetOccurrenceId }
+            ?: saved.firstOrNull()
+            ?: occurrences.first()
+    }
+
+    private data class SegmentSnapshot(
+        val category: DanceCategory?,
+        val durationMinutes: Int,
+        val sortOrder: Int
+    )
+
+    private data class EventGoogleSnapshot(
+        val title: String,
+        val startTime: LocalDateTime,
+        val endTime: LocalDateTime,
+        val eventType: TrainingEventType,
+        val description: String?,
+        val material: Material?,
+        val materialsUrl: String?,
+        val segments: List<SegmentSnapshot>
+    )
+
+    private fun restoreSnapshot(event: TrainingEvent, snapshot: EventGoogleSnapshot) {
+        event.title = snapshot.title
+        event.startTime = snapshot.startTime
+        event.endTime = snapshot.endTime
+        event.eventType = snapshot.eventType
+        event.description = snapshot.description
+        event.material = snapshot.material
+        event.materialsUrl = snapshot.materialsUrl
+        event.segments.clear()
+        snapshot.segments.forEach { seg ->
+            event.segments.add(TrainingEventSegment().apply {
+                trainingEvent = event
+                danceCategory = seg.category
+                durationMinutes = seg.durationMinutes
+                sortOrder = seg.sortOrder
+            })
+        }
     }
 
     private fun applyResolvedSegmentsToEvent(
