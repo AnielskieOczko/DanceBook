@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.ScopeOption
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -65,6 +66,69 @@ class TrainingSeriesServiceImpl(
         return trainingSeriesPersistence.insertSeries(series, occurrences, currentUser).first()
     }
 
+    override fun updateThisEvent(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent {
+        val currentUser = appUserService.getCurrentUser()
+        val occurrence = findOccurrence(occurrenceId)
+        checkOwnership(occurrence, currentUser)
+
+        val series = occurrence.series
+            ?: throw IllegalStateException("This session is not part of a repeating series")
+
+        val date = requireNotNull(request.date) { "Date is required" }
+        val startTime = requireNotNull(request.startTime) { "Start time is required" }
+        val endTime = requireNotNull(request.endTime) { "End time is required" }
+        val start = LocalDateTime.of(date, startTime)
+        val end = LocalDateTime.of(request.effectiveEndDate() ?: date, endTime)
+        require(end.isAfter(start)) { "End time must be after the start time" }
+
+        occurrence.title = request.title
+        occurrence.startTime = start
+        occurrence.endTime = end
+        occurrence.eventType = TrainingEventType.valueOf(request.eventType)
+        occurrence.description = request.description?.takeIf { it.isNotBlank() }
+        occurrence.material = request.materialId?.let { materialService.findById(it) }
+        occurrence.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
+        occurrence.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)
+        occurrence.updatedAt = LocalDateTime.now()
+
+        val validSegments = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+        val resolvedSegments = validSegments.map {
+            danceCategoryService.findById(it.categoryId!!) to it.durationMinutes!!
+        }
+        val slotMinutes = java.time.Duration.between(occurrence.startTime, occurrence.endTime).toMinutes()
+        val totalSegmentMinutes = resolvedSegments.sumOf { it.second }
+        require(totalSegmentMinutes <= slotMinutes) {
+            "The style breakdown adds up to $totalSegmentMinutes minutes, which is longer " +
+            "than the $slotMinutes-minute session"
+        }
+        applyResolvedSegmentsToEvent(occurrence, resolvedSegments)
+
+        occurrence.series = null
+
+        val cal = occurrence.calendar ?: trainingCalendarService.findDefault()
+        val googleCalId = cal?.googleCalendarId
+        val googleEventId = occurrence.googleEventId
+        if (googleCalId != null) {
+            if (googleEventId != null) {
+                calendarClient.updateEvent(googleCalId, googleEventId, occurrence)
+            } else {
+                occurrence.googleEventId = calendarClient.createEvent(googleCalId, occurrence)
+            }
+        } else {
+            log.error("Cannot update calendar event {}: no calendar resolved", googleEventId)
+        }
+
+        return try {
+            trainingSeriesPersistence.detachAndSave(occurrence, series, currentUser)
+        } catch (e: Exception) {
+            log.error(
+                "Local write failed after updating calendar event {}; calendar is ahead of the database",
+                occurrence.googleEventId, e
+            )
+            throw e
+        }
+    }
+
     override fun updateThisAndFollowing(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
         val occurrence = findOccurrence(occurrenceId)
@@ -73,34 +137,24 @@ class TrainingSeriesServiceImpl(
         val series = occurrence.series
             ?: throw IllegalStateException("This session is not part of a repeating series")
 
-        // The cut-off is the occurrence being edited: everything before it is history.
-        val cutOff = occurrence.startTime.toLocalDate()
-        val future = trainingEventRepository
-            .findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(series, cutOff.atStartOfDay())
+        val cutOff = occurrence.startTime.toLocalDate().atStartOfDay()
+        val occurrences = trainingEventRepository
+            .findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(series, cutOff)
 
-        buildSeries(series, request, currentUser)
-        series.startsOn = cutOff
-        val dates = occurrenceDates(cutOff, series.endsOn, series)
+        return updateOccurrencesInPlace(series, occurrences, request, currentUser, occurrenceId)
+    }
 
-        val calendar = occurrence.calendar ?: trainingCalendarService.requireDefault()
-        val replacements = createOccurrences(series, dates, currentUser, calendar)
+    override fun updateAll(occurrenceId: UUID, request: TrainingEventRequest): TrainingEvent {
+        val currentUser = appUserService.getCurrentUser()
+        val occurrence = findOccurrence(occurrenceId)
+        checkOwnership(occurrence, currentUser)
 
-        // Only remove the old calendar events once the new ones exist, so a failure
-        // mid-way leaves the original series intact rather than a gap.
-        future.forEach { old ->
-            old.googleEventId?.let { id ->
-                val googleCalId = old.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
-                if (googleCalId != null) {
-                    runCatching { calendarClient.deleteEvent(googleCalId, id) }
-                        .onFailure { log.error("Could not remove superseded calendar event {}", id, it) }
-                } else {
-                    log.error("Could not remove superseded calendar event {}: no calendar resolved", id)
-                }
-            }
-        }
+        val series = occurrence.series
+            ?: throw IllegalStateException("This session is not part of a repeating series")
 
-        val saved = trainingSeriesPersistence.replaceOccurrences(series, future, replacements)
-        return saved.firstOrNull() ?: occurrence
+        val occurrences = trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
+
+        return updateOccurrencesInPlace(series, occurrences, request, currentUser, occurrenceId)
     }
 
     override fun deleteThisAndFollowing(occurrenceId: UUID): BulkDeleteResult {
@@ -341,32 +395,150 @@ class TrainingSeriesServiceImpl(
         series.createdBy = series.createdBy ?: actor
         series.updatedAt = LocalDateTime.now()
 
-        // Rewritten in place rather than cleared and refilled, for the same reason as
-        // TrainingEventServiceImpl.applySegments: Hibernate flushes the child INSERTs before
-        // the orphan DELETEs, so reusing a sortOrder the outgoing row still holds trips
-        // unique_training_series_segment_sort_order mid-flush.
-        requestedSegments.forEachIndexed { index, segmentRequest ->
-            val requestedCategory = danceCategoryService.findById(segmentRequest.categoryId!!)
-            val requestedMinutes = segmentRequest.durationMinutes!!
+        applyResolvedSegmentsToSeries(series, requestedSegments.map {
+            danceCategoryService.findById(it.categoryId!!) to it.durationMinutes!!
+        })
+        return series
+    }
+
+    private fun updateOccurrencesInPlace(
+        series: TrainingSeries,
+        occurrences: List<TrainingEvent>,
+        request: TrainingEventRequest,
+        currentUser: AppUser,
+        targetOccurrenceId: UUID
+    ): TrainingEvent {
+        if (occurrences.isEmpty()) {
+            return findOccurrence(targetOccurrenceId)
+        }
+
+        val validSegments = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
+        val resolvedSegments = validSegments.map {
+            danceCategoryService.findById(it.categoryId!!) to it.durationMinutes!!
+        }
+
+        val seriesSlotMinutes = java.time.Duration.between(series.startTime, series.endTime).toMinutes().let {
+            if (it <= 0) it + 24 * 60 else it
+        }
+        val totalSegmentMinutes = resolvedSegments.sumOf { it.second }
+        require(totalSegmentMinutes <= seriesSlotMinutes) {
+            "The style breakdown adds up to $totalSegmentMinutes minutes, which is longer " +
+            "than the $seriesSlotMinutes-minute session"
+        }
+
+        series.title = request.title
+        series.eventType = TrainingEventType.valueOf(request.eventType)
+        series.description = request.description?.takeIf { it.isNotBlank() }
+        series.material = request.materialId?.let { materialService.findById(it) }
+        series.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
+        series.updatedAt = LocalDateTime.now()
+        applyResolvedSegmentsToSeries(series, resolvedSegments)
+
+        val now = LocalDateTime.now()
+        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+
+        // Every occurrence is pushed to Google before anything is written locally, so a failure
+        // part-way leaves the calendar showing the edit for the occurrences already sent while
+        // the database still shows none of it. Nothing can roll those back without a snapshot of
+        // their previous content, so name them in the log — that list is the only record of where
+        // the two sides diverged, and the only way to put them back by hand.
+        val pushedToGoogle = mutableListOf<String>()
+        try {
+            for (event in occurrences) {
+                event.title = request.title
+                event.eventType = series.eventType
+                event.description = series.description
+                event.material = series.material
+                event.materialsUrl = series.materialsUrl
+                event.updatedAt = now
+                applyResolvedSegmentsToEvent(event, resolvedSegments)
+
+                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleEventId = event.googleEventId
+                if (googleCalId != null) {
+                    if (googleEventId != null) {
+                        calendarClient.updateEvent(googleCalId, googleEventId, event)
+                        pushedToGoogle.add(googleEventId)
+                    } else {
+                        event.googleEventId = calendarClient.createEvent(googleCalId, event)
+                        event.googleEventId?.let { pushedToGoogle.add(it) }
+                    }
+                } else {
+                    log.error("Cannot update calendar event {}: no calendar resolved", googleEventId)
+                }
+            }
+        } catch (e: Exception) {
+            log.error(
+                "Series edit failed after updating {} of {} calendar events for series '{}'; " +
+                "the calendar is ahead of the database for these events: {}",
+                pushedToGoogle.size, occurrences.size, series.title, pushedToGoogle, e
+            )
+            throw e
+        }
+
+        val saved = try {
+            trainingSeriesPersistence.updateOccurrencesInPlace(series, occurrences, currentUser)
+        } catch (e: Exception) {
+            log.error(
+                "Local write failed after updating calendar events for series '{}'; calendar is ahead of the database",
+                series.title, e
+            )
+            throw e
+        }
+
+        return saved.firstOrNull { it.id == targetOccurrenceId }
+            ?: occurrences.firstOrNull { it.id == targetOccurrenceId }
+            ?: occurrences.first()
+    }
+
+    private fun applyResolvedSegmentsToEvent(
+        event: TrainingEvent,
+        resolvedSegments: List<Pair<DanceCategory, Int>>
+    ) {
+        resolvedSegments.forEachIndexed { index, (category, minutes) ->
+            if (index < event.segments.size) {
+                event.segments[index].apply {
+                    danceCategory = category
+                    durationMinutes = minutes
+                    sortOrder = index
+                }
+            } else {
+                event.segments.add(TrainingEventSegment().apply {
+                    trainingEvent = event
+                    danceCategory = category
+                    durationMinutes = minutes
+                    sortOrder = index
+                })
+            }
+        }
+        while (event.segments.size > resolvedSegments.size) {
+            event.segments.removeAt(event.segments.size - 1)
+        }
+    }
+
+    private fun applyResolvedSegmentsToSeries(
+        series: TrainingSeries,
+        resolvedSegments: List<Pair<DanceCategory, Int>>
+    ) {
+        resolvedSegments.forEachIndexed { index, (category, minutes) ->
             if (index < series.segments.size) {
                 series.segments[index].apply {
-                    danceCategory = requestedCategory
-                    durationMinutes = requestedMinutes
+                    danceCategory = category
+                    durationMinutes = minutes
                     sortOrder = index
                 }
             } else {
                 series.segments.add(TrainingSeriesSegment().apply {
                     trainingSeries = series
-                    danceCategory = requestedCategory
-                    durationMinutes = requestedMinutes
+                    danceCategory = category
+                    durationMinutes = minutes
                     sortOrder = index
                 })
             }
         }
-        while (series.segments.size > requestedSegments.size) {
+        while (series.segments.size > resolvedSegments.size) {
             series.segments.removeAt(series.segments.size - 1)
         }
-        return series
     }
 
     private fun findOccurrence(id: UUID): TrainingEvent =

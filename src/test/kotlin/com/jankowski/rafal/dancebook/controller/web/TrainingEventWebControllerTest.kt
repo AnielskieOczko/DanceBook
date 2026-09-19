@@ -493,6 +493,74 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
+    fun `should apply an edit to all occurrences when ALL_EVENTS scope is chosen`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val request = TrainingEventRequest(
+            title = "Monday practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(21, 0),
+            editScope = SeriesScope.ALL_EVENTS
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        controller.updateTrainingEvent(id, request, bindingResult, model)
+
+        verify(trainingSeriesService).updateAll(id, request)
+        verify(trainingEventService, never()).update(id, request)
+        verify(trainingSeriesService, never()).updateThisAndFollowing(id, request)
+        verify(trainingSeriesService, never()).updateThisEvent(id, request)
+    }
+
+    @Test
+    fun `should detach occurrence when THIS_EVENT scope is chosen on series occurrence`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val event = seriesOccurrence(LocalDate.of(2026, 9, 14)).apply { this.id = id }
+        `when`(trainingEventService.findById(id)).thenReturn(event)
+
+        val request = TrainingEventRequest(
+            title = "Detached practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(21, 0),
+            editScope = SeriesScope.THIS_EVENT
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        controller.updateTrainingEvent(id, request, bindingResult, model)
+
+        verify(trainingSeriesService).updateThisEvent(id, request)
+        verify(trainingEventService, never()).update(id, request)
+    }
+
+    @Test
+    fun `should perform regular update when THIS_EVENT scope is chosen on standalone event`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val event = TrainingEvent().apply {
+            this.id = id
+            this.series = null
+        }
+        `when`(trainingEventService.findById(id)).thenReturn(event)
+
+        val request = TrainingEventRequest(
+            title = "Standalone practice",
+            date = LocalDate.of(2026, 9, 14),
+            startTime = LocalTime.of(19, 0),
+            endTime = LocalTime.of(21, 0),
+            editScope = SeriesScope.THIS_EVENT
+        )
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent")
+
+        controller.updateTrainingEvent(id, request, bindingResult, model)
+
+        verify(trainingEventService).update(id, request)
+        verify(trainingSeriesService, never()).updateThisEvent(id, request)
+    }
+
+    @Test
     fun `should delete following occurrences when that scope is requested`() {
         val id = UUID.randomUUID()
         val result = BulkDeleteResult(deletedCount = 2, failedCount = 0)

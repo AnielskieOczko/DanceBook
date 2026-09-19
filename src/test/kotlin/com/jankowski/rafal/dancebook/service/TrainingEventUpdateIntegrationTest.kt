@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.SeriesScope
@@ -12,6 +13,8 @@ import com.jankowski.rafal.dancebook.repository.DanceCategoryRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -182,26 +185,139 @@ class TrainingEventUpdateIntegrationTest {
 
     private fun reload(id: UUID) = trainingEventRepository.findAllByIdIn(listOf(id)).single()
 
+    /**
+     * The occurrences of the series [seed] belongs to, earliest first.
+     *
+     * Scoped to the series on purpose. This class is deliberately not @Transactional and
+     * shares one container across its tests, so rows survive from one test to the next and
+     * findAll() would count occurrences every earlier test left behind.
+     */
+    private fun occurrencesOf(seed: TrainingEvent): List<TrainingEvent> = inOpenSession {
+        val series = reload(seed.id!!).series
+            ?: error("training event ${seed.id} is not part of a series")
+        trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)
+    }
+
     @Test
-    fun `applying an edit to every occurrence renames the whole series`() {
+    fun `applying an edit to every occurrence renames the whole series in place keeping IDs and Google event IDs`() {
         val seriesRequest = request("weekly practice").copy(
             repeat = "WEEKLY",
             // Four Mondays: 2, 9, 16 and 23 March 2026.
             repeatUntil = LocalDate.of(2026, 3, 23)
         )
         val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
-        assertEquals(4, trainingEventRepository.findAll().count { it.title == "weekly practice" })
+        val beforeOccurrences = occurrencesOf(first)
+        assertEquals(4, beforeOccurrences.size)
+        val beforeIds = beforeOccurrences.map { it.id }
+        val beforeGoogleIds = beforeOccurrences.map { it.googleEventId }
 
-        // Exactly what the edit form now posts: the series' own horizon travels back with the
-        // edit, which is what the regeneration needs and what used to be missing.
         val edit = request("weekly practice renamed").copy(
             editScope = SeriesScope.THIS_AND_FOLLOWING,
             repeatUntil = LocalDate.of(2026, 3, 23)
         )
         inOpenSession { trainingSeriesService.updateThisAndFollowing(first.id!!, edit) }
 
-        val titles = trainingEventRepository.findAll().map { it.title }
+        val afterOccurrences = occurrencesOf(first)
+        assertEquals(4, afterOccurrences.size)
+        assertEquals(beforeIds, afterOccurrences.map { it.id }, "occurrence IDs must not change")
+        assertEquals(beforeGoogleIds, afterOccurrences.map { it.googleEventId }, "google event IDs must not change")
+        val titles = afterOccurrences.map { it.title }
         assertEquals(0, titles.count { it == "weekly practice" }, "no occurrence keeps the old title")
-        assertEquals(4, titles.count { it == "weekly practice renamed" }, "every occurrence is renamed")
+        assertEquals(4, titles.count { it == "weekly practice renamed" }, "every occurrence is renamed in place")
+    }
+
+    @Test
+    fun `all events edit updates past occurrences with recorded outcomes in place without orphaning records`() {
+        val seriesRequest = request("spring series").copy(
+            repeat = "WEEKLY",
+            repeatUntil = LocalDate.of(2026, 3, 23)
+        )
+        val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        val occurrences = occurrencesOf(first)
+        val firstOccurrence = occurrences[0]
+        val thirdOccurrence = occurrences[2]
+        val originalIds = occurrences.map { it.id }
+        val originalGoogleIds = occurrences.map { it.googleEventId }
+
+        // Confirm the first session as attended; this creates a training record
+        inOpenSession {
+            trainingEventService.updateAttendance(firstOccurrence.id!!, AttendanceStatus.ATTENDED)
+        }
+        val recordBefore = inOpenSession {
+            trainingRecordRepository.findByTrainingEventId(firstOccurrence.id!!)!!
+        }
+        assertEquals("spring series", recordBefore.title)
+        assertNull(recordBefore.orphanedAt)
+
+        // Edit all events from the third occurrence
+        val edit = request("spring series renamed", segmentMinutes = listOf(30, 45)).copy(
+            editScope = SeriesScope.ALL_EVENTS,
+            repeatUntil = LocalDate.of(2026, 3, 23)
+        )
+        inOpenSession { trainingSeriesService.updateAll(thirdOccurrence.id!!, edit) }
+
+        val updatedOccurrences = occurrencesOf(first)
+        assertEquals(4, updatedOccurrences.size)
+        assertEquals(originalIds, updatedOccurrences.map { it.id }, "IDs must be preserved")
+        assertEquals(originalGoogleIds, updatedOccurrences.map { it.googleEventId }, "Google event IDs must be preserved")
+        assertTrue(updatedOccurrences.all { it.title == "spring series renamed" })
+        assertEquals(AttendanceStatus.ATTENDED, reload(firstOccurrence.id!!).attendanceStatus, "attendance must be kept")
+
+        // Check that the training record for the first occurrence was updated in place and NOT orphaned
+        // Read inside one bound session, like the earlier record test: the breakdown is lazy,
+        // so loading the record in one session and traversing it in the next cannot work.
+        val (recordTitle, recordOrphanedAt, recordMinutes) = inOpenSession {
+            val record = trainingRecordRepository.findByTrainingEventId(firstOccurrence.id!!)!!
+            Triple(
+                record.title,
+                record.orphanedAt,
+                record.segments.sortedBy { it.sortOrder }.map { it.durationMinutes }
+            )
+        }
+        assertEquals("spring series renamed", recordTitle)
+        assertNull(recordOrphanedAt, "training record must not be orphaned by series edit")
+        assertEquals(listOf(30, 45), recordMinutes)
+    }
+
+    @Test
+    fun `this event edit detaches occurrence so subsequent series-wide edit does not affect it`() {
+        val seriesRequest = request("summer drill").copy(
+            repeat = "WEEKLY",
+            repeatUntil = LocalDate.of(2026, 3, 16) // 3 Mondays: 2, 9, 16
+        )
+        val created = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        val occurrences = occurrencesOf(created)
+        assertEquals(3, occurrences.size)
+        val secondOcc = occurrences[1]
+        val secondOriginalId = secondOcc.id
+        val secondOriginalGoogleId = secondOcc.googleEventId
+
+        // Edit second occurrence with THIS_EVENT (detaching it)
+        val detachEdit = request("detached one-off").copy(
+            editScope = SeriesScope.THIS_EVENT,
+            date = secondOcc.startTime.toLocalDate(),
+            startTime = secondOcc.startTime.toLocalTime(),
+            endTime = secondOcc.endTime.toLocalTime()
+        )
+        inOpenSession { trainingSeriesService.updateThisEvent(secondOcc.id!!, detachEdit) }
+
+        val detachedReloaded = reload(secondOcc.id!!)
+        assertNull(detachedReloaded.series, "detached session must have null series")
+        assertEquals(secondOriginalId, detachedReloaded.id)
+        assertEquals(secondOriginalGoogleId, detachedReloaded.googleEventId)
+        assertEquals("detached one-off", detachedReloaded.title)
+
+        // Subsequent series-wide edit on the first session
+        val firstOcc = occurrences[0]
+        val seriesEdit = request("summer drill updated").copy(
+            editScope = SeriesScope.ALL_EVENTS,
+            repeatUntil = LocalDate.of(2026, 3, 16)
+        )
+        inOpenSession { trainingSeriesService.updateAll(firstOcc.id!!, seriesEdit) }
+
+        // The detached session must keep its one-off title!
+        assertEquals("detached one-off", reload(secondOcc.id!!).title)
+        assertEquals("summer drill updated", reload(firstOcc.id!!).title)
+        assertEquals("summer drill updated", reload(occurrences[2].id!!).title)
     }
 }

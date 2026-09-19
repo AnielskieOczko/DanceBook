@@ -332,6 +332,45 @@ class TrainingEventViewRenderingTest {
     }
 
     @Test
+    fun `edit form for series occurrence renders all three scopes and detachment warning`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val event = attendedSession().apply { this.series = series }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events/${event.id}/edit").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        assertEquals(3, doc.select("input[name=editScope]").size, "Should render 3 edit scope radio buttons")
+        assertEquals(1, doc.select("input[name=editScope][value=THIS_EVENT]").size)
+        assertEquals(1, doc.select("input[name=editScope][value=THIS_AND_FOLLOWING]").size)
+        assertEquals(1, doc.select("input[name=editScope][value=ALL_EVENTS]").size)
+        assertTrue(html.contains("This event only"))
+        assertTrue(html.contains("This and following events"))
+        assertTrue(html.contains("All events"))
+        assertTrue(html.contains("Detaches this session from the series"), "Should warn that 'this event' detaches it")
+    }
+
+    @Test
+    fun `edit form for standalone session does not render series scope block`() {
+        val event = attendedSession().apply { this.series = null }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events/${event.id}/edit").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        assertEquals(0, doc.select("input[name=editScope]").size, "Should not render series scope radios for standalone session")
+    }
+
+    @Test
     fun `the calendar selector is hidden with one calendar and shown with two`() {
         val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
         `when`(activeCalendarService.selectable()).thenReturn(listOf(club))

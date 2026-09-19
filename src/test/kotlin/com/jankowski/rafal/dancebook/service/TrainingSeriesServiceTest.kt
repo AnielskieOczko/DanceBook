@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -181,33 +182,139 @@ class TrainingSeriesServiceTest {
     }
 
     @Test
-    fun `should only regenerate occurrences from the edited one forward`() {
+    fun `should update occurrences in place from the edited one forward keeping IDs and Google event IDs`() {
         val series = seriesFor()
         val edited = occurrence(series, LocalDate.of(2026, 9, 21))
+        val originalId = edited.id
+        val originalGoogleEventId = edited.googleEventId
         `when`(trainingEventRepository.findById(edited.id!!)).thenReturn(Optional.of(edited))
         `when`(
             trainingEventRepository.findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
                 series, LocalDate.of(2026, 9, 21).atStartOfDay()
             )
         ).thenReturn(listOf(edited))
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))).thenReturn("google-new")
         `when`(
-            trainingSeriesPersistence.replaceOccurrences(
-                any(TrainingSeries::class.java), anyList(), anyList()
+            trainingSeriesPersistence.updateOccurrencesInPlace(
+                any(TrainingSeries::class.java), anyList(), any(AppUser::class.java)
             )
-        ).thenAnswer { it.getArgument<List<TrainingEvent>>(2) }
+        ).thenAnswer { it.getArgument<List<TrainingEvent>>(1) }
 
-        service.updateThisAndFollowing(
+        val result = service.updateThisAndFollowing(
             edited.id!!,
-            weeklyRequest(until = LocalDate.of(2026, 9, 28)).copy(date = LocalDate.of(2026, 9, 21))
+            weeklyRequest(until = LocalDate.of(2026, 9, 28)).copy(
+                title = "Updated in place",
+                date = LocalDate.of(2026, 9, 21)
+            )
         )
 
-        // The repository was asked only for occurrences at or after the edited date, so
-        // completed sessions are never even loaded, let alone rewritten.
+        // The repository was asked only for occurrences at or after the edited date
         verify(trainingEventRepository).findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
             series, LocalDate.of(2026, 9, 21).atStartOfDay()
         )
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-old")
+        // Google calendar event was updated in place, never deleted or recreated
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-old", edited)
+        verify(calendarClient, never()).deleteEvent(org.mockito.Mockito.anyString(), org.mockito.Mockito.anyString())
+        verify(calendarClient, never()).createEvent(org.mockito.Mockito.anyString(), any(TrainingEvent::class.java))
+
+        // Same row ID and same Google event ID
+        assertEquals(originalId, result.id)
+        assertEquals(originalGoogleEventId, result.googleEventId)
+        assertEquals("Updated in place", result.title)
+    }
+
+    @Test
+    fun `should update all occurrences in place including past ones with recorded outcomes`() {
+        val series = seriesFor()
+        val pastAttended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
+            attendanceStatus = AttendanceStatus.ATTENDED
+            googleEventId = "google-past"
+        }
+        val futurePlanned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
+            attendanceStatus = AttendanceStatus.PLANNED
+            googleEventId = "google-future"
+        }
+        val pastId = pastAttended.id
+        val futureId = futurePlanned.id
+
+        `when`(trainingEventRepository.findById(futurePlanned.id!!)).thenReturn(Optional.of(futurePlanned))
+        `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(listOf(pastAttended, futurePlanned))
+        `when`(
+            trainingSeriesPersistence.updateOccurrencesInPlace(
+                any(TrainingSeries::class.java), anyList(), any(AppUser::class.java)
+            )
+        ).thenAnswer { it.getArgument<List<TrainingEvent>>(1) }
+
+        service.updateAll(
+            futurePlanned.id!!,
+            weeklyRequest(until = LocalDate.of(2026, 9, 28)).copy(title = "All updated")
+        )
+
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-past", pastAttended)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-future", futurePlanned)
+        verify(calendarClient, never()).deleteEvent(org.mockito.Mockito.anyString(), org.mockito.Mockito.anyString())
+        verify(calendarClient, never()).createEvent(org.mockito.Mockito.anyString(), any(TrainingEvent::class.java))
+
+        assertEquals(pastId, pastAttended.id)
+        assertEquals(futureId, futurePlanned.id)
+        assertEquals("google-past", pastAttended.googleEventId)
+        assertEquals("google-future", futurePlanned.googleEventId)
+        assertEquals(AttendanceStatus.ATTENDED, pastAttended.attendanceStatus, "recorded outcome is kept")
+        assertEquals(AttendanceStatus.PLANNED, futurePlanned.attendanceStatus)
+        assertEquals("All updated", pastAttended.title)
+        assertEquals("All updated", futurePlanned.title)
+    }
+
+    @Test
+    fun `updateThisEvent should detach occurrence from series and update in place`() {
+        val series = seriesFor()
+        val occurrence = occurrence(series, LocalDate.of(2026, 9, 21))
+        val originalId = occurrence.id
+        val originalGoogleEventId = occurrence.googleEventId
+
+        `when`(trainingEventRepository.findById(occurrence.id!!)).thenReturn(Optional.of(occurrence))
+        `when`(
+            trainingSeriesPersistence.detachAndSave(
+                any(TrainingEvent::class.java), eq(series), any(AppUser::class.java)
+            )
+        ).thenAnswer { it.getArgument<TrainingEvent>(0) }
+
+        val request = weeklyRequest(until = LocalDate.of(2026, 9, 28)).copy(
+            title = "Detached one-off",
+            date = LocalDate.of(2026, 9, 21),
+            startTime = LocalTime.of(17, 0),
+            endTime = LocalTime.of(19, 0)
+        )
+        val result = service.updateThisEvent(occurrence.id!!, request)
+
+        assertNull(result.series, "occurrence must be detached from series")
+        assertEquals(originalId, result.id)
+        assertEquals(originalGoogleEventId, result.googleEventId)
+        assertEquals("Detached one-off", result.title)
+        assertEquals(LocalTime.of(17, 0), result.startTime.toLocalTime())
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-old", occurrence)
+        verify(trainingSeriesPersistence).detachAndSave(occurrence, series, currentUser)
+    }
+
+    @Test
+    fun `partial failure in Google Calendar during update throws and logs without saving to database`() {
+        val series = seriesFor()
+        val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply { googleEventId = "g-1" }
+        val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply { googleEventId = "g-2" }
+
+        `when`(trainingEventRepository.findById(occ1.id!!)).thenReturn(Optional.of(occ1))
+        `when`(trainingEventRepository.findAllBySeriesAndStartTimeGreaterThanEqualOrderByStartTime(
+            eq(series), any(LocalDateTime::class.java)
+        )).thenReturn(listOf(occ1, occ2))
+        `when`(calendarClient.updateEvent(defaultCalendar.googleCalendarId, "g-2", occ2))
+            .thenThrow(RuntimeException("Google API 500 error"))
+
+        assertThrows(RuntimeException::class.java) {
+            service.updateThisAndFollowing(occ1.id!!, weeklyRequest(until = LocalDate.of(2026, 9, 28)))
+        }
+
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "g-1", occ1)
+        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "g-2", occ2)
+        verifyNoInteractions(trainingSeriesPersistence)
     }
 
     @Test
@@ -220,11 +327,11 @@ class TrainingSeriesServiceTest {
         }
         `when`(trainingEventRepository.findById(standalone.id!!)).thenReturn(Optional.of(standalone))
 
-        val exception = assertThrows(IllegalStateException::class.java) {
-            service.deleteThisAndFollowing(standalone.id!!)
-        }
-
-        assertEquals("This session is not part of a repeating series", exception.message)
+        val req = weeklyRequest(until = LocalDate.of(2026, 9, 28))
+        assertThrows(IllegalStateException::class.java) { service.updateThisEvent(standalone.id!!, req) }
+        assertThrows(IllegalStateException::class.java) { service.updateThisAndFollowing(standalone.id!!, req) }
+        assertThrows(IllegalStateException::class.java) { service.updateAll(standalone.id!!, req) }
+        assertThrows(IllegalStateException::class.java) { service.deleteThisAndFollowing(standalone.id!!) }
         verify(calendarClient, never()).deleteEvent(org.mockito.Mockito.anyString(), org.mockito.Mockito.anyString())
     }
 
