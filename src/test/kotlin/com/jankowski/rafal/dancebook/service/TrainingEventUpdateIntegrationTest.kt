@@ -30,6 +30,7 @@ import jakarta.persistence.EntityManagerFactory
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
@@ -319,5 +320,133 @@ class TrainingEventUpdateIntegrationTest {
         assertEquals("detached one-off", reload(secondOcc.id!!).title)
         assertEquals("summer drill updated", reload(firstOcc.id!!).title)
         assertEquals("summer drill updated", reload(occurrences[2].id!!).title)
+    }
+
+    @Test
+    fun `extending series repeat-until generates new occurrences and updates series endsOn while preserving existing rows and google IDs`() {
+        val seriesRequest = request("spring workshop").copy(
+            repeat = "WEEKLY",
+            repeatUntil = LocalDate.of(2026, 3, 9) // 2 Mondays: 2, 9
+        )
+        val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        val beforeOccurrences = occurrencesOf(first)
+        assertEquals(2, beforeOccurrences.size)
+        val beforeIds = beforeOccurrences.map { it.id }
+        val beforeGoogleIds = beforeOccurrences.map { it.googleEventId }
+
+        // Extend to 4 Mondays: March 2, 9, 16, 23
+        val extendEdit = request("spring workshop").copy(
+            editScope = SeriesScope.ALL_EVENTS,
+            repeatUntil = LocalDate.of(2026, 3, 23)
+        )
+        inOpenSession { trainingSeriesService.updateAll(first.id!!, extendEdit) }
+
+        val afterOccurrences = occurrencesOf(first)
+        assertEquals(4, afterOccurrences.size)
+        assertEquals(beforeIds, afterOccurrences.take(2).map { it.id }, "original 2 occurrences must retain their IDs")
+        assertEquals(beforeGoogleIds, afterOccurrences.take(2).map { it.googleEventId }, "original 2 occurrences must retain their Google event IDs")
+        assertTrue(afterOccurrences[2].id != null && afterOccurrences[2].googleEventId != null)
+        assertTrue(afterOccurrences[3].id != null && afterOccurrences[3].googleEventId != null)
+        val seriesEndsOn = inOpenSession { reload(first.id!!).series?.endsOn }
+        assertEquals(LocalDate.of(2026, 3, 23), seriesEndsOn)
+    }
+
+    @Test
+    fun `shortening series deletes planned occurrences and detaches recorded past sessions as standalone keeping training records`() {
+        val seriesRequest = request("autumn technique").copy(
+            repeat = "WEEKLY",
+            repeatUntil = LocalDate.of(2026, 3, 16) // 3 Mondays: 2, 9, 16
+        )
+        val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        val occurrences = occurrencesOf(first)
+        assertEquals(3, occurrences.size)
+        val occ1 = occurrences[0]
+        val occ2 = occurrences[1]
+        val occ3 = occurrences[2]
+
+        // Mark occ3 as attended; this creates a training record
+        inOpenSession {
+            trainingEventService.updateAttendance(occ3.id!!, AttendanceStatus.ATTENDED)
+        }
+        val occ3RecordBefore = inOpenSession {
+            trainingRecordRepository.findByTrainingEventId(occ3.id!!)!!
+        }
+        assertEquals("autumn technique", occ3RecordBefore.title)
+
+        // Shorten series to end on March 2 (1 Monday)
+        val shortenEdit = request("autumn technique").copy(
+            editScope = SeriesScope.ALL_EVENTS,
+            repeatUntil = LocalDate.of(2026, 3, 2)
+        )
+        inOpenSession { trainingSeriesService.updateAll(occ1.id!!, shortenEdit) }
+
+        // Occ1 is the only remaining occurrence of the series
+        val remainingOccurrences = occurrencesOf(occ1)
+        assertEquals(1, remainingOccurrences.size)
+        assertEquals(occ1.id, remainingOccurrences[0].id)
+
+        // Occ2 (planned) was deleted from DB
+        assertTrue(trainingEventRepository.findById(occ2.id!!).isEmpty, "planned falling-away occurrence must be deleted")
+
+        // Occ3 (attended) remains standing as standalone session (series == null)
+        val detachedOcc3 = reload(occ3.id!!)
+        assertNull(detachedOcc3.series, "recorded session must be detached from series")
+        assertEquals(AttendanceStatus.ATTENDED, detachedOcc3.attendanceStatus, "attendance must be preserved")
+
+        // Occ3 training record remains intact and not orphaned
+        val occ3RecordAfter = inOpenSession {
+            trainingRecordRepository.findByTrainingEventId(occ3.id!!)!!
+        }
+        assertNull(occ3RecordAfter.orphanedAt, "training record must not be orphaned")
+    }
+
+    @Test
+    fun `moving series weekday and times moves occurrences in place preserving row IDs, Google event IDs and attendance status`() {
+        val seriesRequest = request("ballroom practice").copy(
+            repeat = "WEEKLY",
+            startTime = LocalTime.of(18, 0),
+            endTime = LocalTime.of(20, 0),
+            repeatUntil = LocalDate.of(2026, 3, 9) // 2 Mondays: March 2, 9
+        )
+        val first = inOpenSession { trainingSeriesService.create(seriesRequest) }
+        val occurrences = occurrencesOf(first)
+        assertEquals(2, occurrences.size)
+        val origId1 = occurrences[0].id!!
+        val origId2 = occurrences[1].id!!
+        val origGoogleId1 = occurrences[0].googleEventId
+        val origGoogleId2 = occurrences[1].googleEventId
+
+        // Mark occ1 as attended
+        inOpenSession {
+            trainingEventService.updateAttendance(origId1, AttendanceStatus.ATTENDED)
+        }
+
+        // Move to Wednesday 19:30-21:30, ending on March 11 (2 Wednesdays: March 4, 11)
+        val moveEdit = request("ballroom practice").copy(
+            editScope = SeriesScope.ALL_EVENTS,
+            dayOfWeek = DayOfWeek.WEDNESDAY,
+            startTime = LocalTime.of(19, 30),
+            endTime = LocalTime.of(21, 30),
+            repeatUntil = LocalDate.of(2026, 3, 11)
+        )
+        inOpenSession { trainingSeriesService.updateAll(origId1, moveEdit) }
+
+        val movedOccurrences = occurrencesOf(first)
+        assertEquals(2, movedOccurrences.size)
+
+        val moved1 = reload(origId1)
+        val moved2 = reload(origId2)
+
+        assertEquals(LocalDate.of(2026, 3, 4), moved1.startTime.toLocalDate())
+        assertEquals(LocalTime.of(19, 30), moved1.startTime.toLocalTime())
+        assertEquals(LocalTime.of(21, 30), moved1.endTime.toLocalTime())
+        assertEquals(AttendanceStatus.ATTENDED, moved1.attendanceStatus)
+        assertEquals(origGoogleId1, moved1.googleEventId)
+
+        assertEquals(LocalDate.of(2026, 3, 11), moved2.startTime.toLocalDate())
+        assertEquals(LocalTime.of(19, 30), moved2.startTime.toLocalTime())
+        assertEquals(LocalTime.of(21, 30), moved2.endTime.toLocalTime())
+        assertEquals(AttendanceStatus.PLANNED, moved2.attendanceStatus)
+        assertEquals(origGoogleId2, moved2.googleEventId)
     }
 }

@@ -85,6 +85,56 @@ class TrainingSeriesPersistence(
     }
 
     /**
+     * Reconciles series occurrences after a recurrence pattern edit:
+     * saves surviving occurrences, creates new occurrences, detaches surviving excess occurrences,
+     * deletes unrecorded excess occurrences, and syncs training records.
+     */
+    @Transactional
+    fun reconcileSeries(
+        series: TrainingSeries,
+        survivingOccurrences: List<TrainingEvent>,
+        newOccurrences: List<TrainingEvent>,
+        detachedOccurrences: List<TrainingEvent>,
+        deletedOccurrences: List<TrainingEvent>,
+        actor: AppUser
+    ): List<TrainingEvent> {
+        trainingSeriesRepository.save(series)
+
+        if (detachedOccurrences.isNotEmpty()) {
+            detachedOccurrences.forEach { it.series = null }
+            trainingEventRepository.saveAll(detachedOccurrences)
+        }
+
+        if (deletedOccurrences.isNotEmpty()) {
+            deletedOccurrences.forEach { it.series = null }
+            trainingRecordWriter.orphan(deletedOccurrences.mapNotNull { it.id })
+            trainingEventRepository.deleteAll(deletedOccurrences)
+        }
+
+        val savedSurviving = if (survivingOccurrences.isNotEmpty()) {
+            val saved = trainingEventRepository.saveAll(survivingOccurrences)
+            saved.forEach { trainingRecordWriter.sync(it) }
+            saved
+        } else emptyList()
+
+        val savedNew = if (newOccurrences.isNotEmpty()) {
+            newOccurrences.forEach { it.series = series }
+            trainingEventRepository.saveAll(newOccurrences)
+        } else emptyList()
+
+        val totalActive = savedSurviving.size + savedNew.size
+        eventPublisher.publishEvent(
+            TrainingBulkUpdatedEvent(
+                count = totalActive,
+                updateType = "repeating series",
+                actor = actor
+            )
+        )
+
+        return savedSurviving + savedNew
+    }
+
+    /**
      * Detaches a single occurrence from its series, updating it as a standalone session.
      * If this leaves the series with zero occurrences, deletes the series definition.
      */

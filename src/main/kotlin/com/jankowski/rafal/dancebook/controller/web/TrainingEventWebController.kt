@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap
 import com.jankowski.rafal.dancebook.dto.BulkSegmentsRequest
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -232,6 +233,7 @@ class TrainingEventWebController(
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val event = trainingEventService.findById(id)
+        val series = event.series
         model.addAttribute(
             "trainingEvent",
             TrainingEventRequest(
@@ -251,14 +253,20 @@ class TrainingEventWebController(
                 materialId = event.material?.id,
                 materialsUrl = event.materialsUrl,
                 attendanceStatus = event.attendanceStatus.name,
+                repeat = if (series != null) "WEEKLY" else "NONE",
                 // The series keeps its existing horizon when an edit is applied to every
                 // occurrence. Without it the regeneration has no end date to work to and
                 // rejects the save with "A repeat end date is required".
-                repeatUntil = event.series?.endsOn
+                repeatUntil = series?.endsOn,
+                dayOfWeek = series?.dayOfWeek ?: event.startTime.dayOfWeek
             )
         )
         model.addAttribute("trainingEventId", id)
-        model.addAttribute("isSeriesOccurrence", event.series != null)
+        model.addAttribute("isSeriesOccurrence", series != null)
+        model.addAttribute("seriesDayOfWeek", series?.dayOfWeek)
+        model.addAttribute("seriesEndsOn", series?.endsOn)
+        model.addAttribute("seriesStartTime", series?.startTime)
+        model.addAttribute("seriesEndTime", series?.endTime)
         model.addAttribute("targetCalendar", event.calendar ?: trainingCalendarService.findDefault())
         populateFormOptions(model)
         return "training-events/form"
@@ -298,6 +306,58 @@ class TrainingEventWebController(
     }
 
     /**
+     * Renders the confirm dialog for an edit, stating created, moved, and removed counts,
+     * and warning when past sessions with recorded attendance would be dropped.
+     */
+    @PostMapping("/{id}/confirm-dialog")
+    fun editConfirmDialog(
+        @PathVariable id: UUID,
+        @Valid @ModelAttribute("trainingEvent") request: TrainingEventRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            val errorMsg = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Please fill in all required fields."
+            model.addAttribute("dialogTitle", "Cannot Update Series")
+            model.addAttribute("dialogMessage", errorMsg)
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        val event = trainingEventService.findById(id)
+        val series = event.series
+
+        if (series == null) {
+            model.addAttribute("dialogTitle", "Edit Session")
+            model.addAttribute("dialogMessage", "Apply changes to this session?")
+            model.addAttribute("confirmLabel", "Save")
+            model.addAttribute("confirmUrl", "/training-events/$id")
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+
+        try {
+            val plan = trainingSeriesService.calculatePatternReconcile(id, request)
+            model.addAttribute("dialogTitle", "Edit Recurring Series")
+            model.addAttribute(
+                "dialogMessage",
+                "Updating this repeating series will recompute session dates:"
+            )
+            model.addAttribute("reconcilePlan", plan)
+            model.addAttribute("confirmLabel", "Apply Changes")
+            model.addAttribute("confirmUrl", "/training-events/$id")
+            model.addAttribute("confirmFormId", "trainingEventForm")
+            return "fragments/confirm-dialog :: confirmModal"
+        } catch (e: IllegalArgumentException) {
+            model.addAttribute("dialogTitle", "Cannot Update Series")
+            model.addAttribute("dialogMessage", e.message ?: "Invalid series pattern")
+            model.addAttribute("cancelLabel", "Close")
+            model.addAttribute("confirmUrl", null)
+            return "fragments/confirm-dialog :: confirmModal"
+        }
+    }
+
+    /**
      * Re-renders the edit form after a failed save.
      *
      * `isSeriesOccurrence` has to be restored here, not just on the initial GET: without it the
@@ -306,8 +366,13 @@ class TrainingEventWebController(
      */
     private fun redisplayEditForm(model: Model, id: UUID): String {
         val event = trainingEventService.findById(id)
+        val series = event.series
         model.addAttribute("trainingEventId", id)
-        model.addAttribute("isSeriesOccurrence", event.series != null)
+        model.addAttribute("isSeriesOccurrence", series != null)
+        model.addAttribute("seriesDayOfWeek", series?.dayOfWeek)
+        model.addAttribute("seriesEndsOn", series?.endsOn)
+        model.addAttribute("seriesStartTime", series?.startTime)
+        model.addAttribute("seriesEndTime", series?.endTime)
         model.addAttribute("targetCalendar", event.calendar ?: trainingCalendarService.findDefault())
         populateFormOptions(model)
         return "training-events/form"
@@ -759,5 +824,6 @@ class TrainingEventWebController(
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
+        model.addAttribute("dayOfWeekOptions", DayOfWeek.entries.toTypedArray())
     }
 }

@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.SeriesScope
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import org.springframework.format.annotation.DateTimeFormat
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
@@ -64,7 +65,12 @@ data class TrainingEventRequest(
      * Which occurrences an edit applies to: THIS_EVENT, THIS_AND_FOLLOWING, or ALL_EVENTS.
      * Ignored when the event is not part of a series.
      */
-    val editScope: SeriesScope = SeriesScope.THIS_EVENT
+    val editScope: SeriesScope = SeriesScope.THIS_EVENT,
+
+    /**
+     * Weekday of the repeating series; populated on ALL_EVENTS edits.
+     */
+    val dayOfWeek: DayOfWeek? = null
 ) {
     val isRepeating: Boolean
         get() = repeat.equals("WEEKLY", ignoreCase = true)

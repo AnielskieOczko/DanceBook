@@ -17,6 +17,7 @@ import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.CalendarSyncOutcome
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
+import com.jankowski.rafal.dancebook.dto.PatternReconcilePlan
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.SyncReport
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
@@ -38,6 +39,7 @@ import org.mockito.Mockito.verifyNoInteractions
 import org.springframework.http.HttpStatus
 import org.springframework.ui.ConcurrentModel
 import org.springframework.validation.BeanPropertyBindingResult
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -1166,4 +1168,118 @@ class TrainingEventWebControllerTest {
         assertEquals(result.message, model["bulkMessage"])
         verify(trainingEventService).bulkUpdateMaterial(ids, matId, "https://link.com", false)
     }
+
+    // ── Edit Recurrence Pattern Dialog Tests ─────────────────────────────────
+
+    @Test
+    fun `editConfirmDialog for series occurrence returns confirm modal with reconcile plan and form submission hook`() {
+        val model = ConcurrentModel()
+        val event = seriesOccurrence(LocalDate.of(2026, 6, 29))
+        val id = event.id!!
+        `when`(trainingEventService.findById(id)).thenReturn(event)
+
+        val plan = PatternReconcilePlan(
+            createdCount = 2,
+            movedCount = 4,
+            removedCount = 1,
+            droppedRecordedCount = 1,
+            targetTotalCount = 6
+        )
+        val request = TrainingEventRequest(
+            title = "Monday practice",
+            dayOfWeek = DayOfWeek.TUESDAY,
+            repeatUntil = LocalDate.of(2026, 7, 28)
+        )
+        `when`(trainingSeriesService.calculatePatternReconcile(id, request)).thenReturn(plan)
+
+        val viewName = controller.editConfirmDialog(id, request, BeanPropertyBindingResult(request, "trainingEvent"), model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Edit Recurring Series", model["dialogTitle"])
+        assertEquals(plan, model["reconcilePlan"])
+        assertEquals("Apply Changes", model["confirmLabel"])
+        assertEquals("/training-events/$id", model["confirmUrl"])
+        assertEquals("trainingEventForm", model["confirmFormId"])
+    }
+
+    @Test
+    fun `editConfirmDialog for standalone session returns simple confirm modal without reconcile plan`() {
+        val model = ConcurrentModel()
+        val event = session(LocalDateTime.of(2026, 9, 14, 18, 0), 120)
+        val id = event.id!!
+        `when`(trainingEventService.findById(id)).thenReturn(event)
+
+        val request = TrainingEventRequest(title = "One-off session")
+        val viewName = controller.editConfirmDialog(id, request, BeanPropertyBindingResult(request, "trainingEvent"), model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Edit Session", model["dialogTitle"])
+        assertEquals("Save", model["confirmLabel"])
+        assertEquals("/training-events/$id", model["confirmUrl"])
+        assertNull(model["reconcilePlan"])
+        assertNull(model["confirmFormId"])
+    }
+
+    @Test
+    fun `editConfirmDialog when pattern exceeds 52 cap renders refusal modal with close label and no confirm url`() {
+        val model = ConcurrentModel()
+        val event = seriesOccurrence(LocalDate.of(2026, 6, 29))
+        val id = event.id!!
+        `when`(trainingEventService.findById(id)).thenReturn(event)
+
+        val request = TrainingEventRequest(
+            title = "Monday practice",
+            repeatUntil = LocalDate.of(2028, 1, 1)
+        )
+        `when`(trainingSeriesService.calculatePatternReconcile(id, request)).thenThrow(
+            IllegalArgumentException("That would produce 80 occurrences; the limit is 52. Choose an earlier end date.")
+        )
+
+        val viewName = controller.editConfirmDialog(id, request, BeanPropertyBindingResult(request, "trainingEvent"), model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Cannot Update Series", model["dialogTitle"])
+        val message = model["dialogMessage"] as String
+        assertTrue(message.contains("the limit is 52"))
+        assertEquals("Close", model["cancelLabel"])
+        assertNull(model["confirmUrl"])
+    }
+
+    @Test
+    fun `editConfirmDialog with binding errors returns refusal modal without throwing`() {
+        val model = ConcurrentModel()
+        val id = UUID.randomUUID()
+        val request = TrainingEventRequest(title = "")
+        val bindingResult = BeanPropertyBindingResult(request, "trainingEvent").apply {
+            rejectValue("title", "NotBlank", "Title is required")
+        }
+
+        val viewName = controller.editConfirmDialog(id, request, bindingResult, model)
+
+        assertEquals("fragments/confirm-dialog :: confirmModal", viewName)
+        assertEquals("Cannot Update Series", model["dialogTitle"])
+        assertEquals("Title is required", model["dialogMessage"])
+        assertEquals("Close", model["cancelLabel"])
+        assertNull(model["confirmUrl"])
+    }
+
+    @Test
+    fun `showEditForm populates series weekday and endsOn for series occurrence`() {
+        val model = ConcurrentModel()
+        val endsOn = LocalDate.of(2026, 6, 29)
+        val event = seriesOccurrence(endsOn)
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.showEditForm(event.id!!, model)
+
+        val request = model["trainingEvent"] as TrainingEventRequest
+        assertEquals(DayOfWeek.MONDAY, request.dayOfWeek)
+        assertEquals(DayOfWeek.MONDAY, model["seriesDayOfWeek"])
+        assertEquals(endsOn, model["seriesEndsOn"])
+        assertEquals(LocalTime.of(18, 0), model["seriesStartTime"])
+        assertEquals(LocalTime.of(20, 0), model["seriesEndTime"])
+        assertNotNull(model["dayOfWeekOptions"])
+    }
 }
+
