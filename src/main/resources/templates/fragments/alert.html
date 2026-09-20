@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Alert Banner -->
+<div th:fragment="alert"
+     role="alert"
+     class="p-4 rounded-md border flex items-start gap-3"
+     th:classappend="${(variant == 'error' or variant == 'danger' ? 'bg-error/10 border-error text-error' :
+                       (variant == 'warning' ? 'bg-warning/10 border-warning text-warning' :
+                       (variant == 'success' ? 'bg-primary/10 border-primary text-primary' :
+                       'bg-surface-container border-outline text-on-surface'))) +
+                      (cls != null ? ' ' + cls : '')}">
+    <span th:replace="~{fragments/icon :: icon(name=${variant == 'error' or variant == 'danger' ? 'error' :
+                                                      (variant == 'warning' ? 'warning' :
+                                                      (variant == 'success' ? 'check_circle' : 'info'))}, size='md')}"></span>
+    <div class="flex-1">
+        <h4 th:if="${title != null}" class="font-semibold text-base mb-1" th:text="${title}">Alert Title</h4>
+        <p class="text-sm font-normal" th:text="${text}">Alert message text.</p>
+    </div>
+    <button th:if="${dismissible == true}"
+            type="button"
+            class="js-dismiss-alert shrink-0 p-1 hover:opacity-80 transition-opacity"
+            aria-label="Dismiss">
+        <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+    </button>
+</div>
+
+</body>
+</html>

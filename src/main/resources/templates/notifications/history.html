@@ -5,7 +5,7 @@
 <section th:with="activeNav=''" class="space-y-xl">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline-solid')}"></div>
+    <div th:replace="~{fragments/page :: header(title='Activity History', subtitle='A complete timeline of all actions across your workspace.', actionUrl='/', actionText='Dashboard', actionIcon='arrow_back', actionVariant='outline')}"></div>
 
     <!-- Timeline -->
     <div class="card p-md md:p-margin">

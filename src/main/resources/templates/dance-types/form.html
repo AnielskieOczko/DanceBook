@@ -4,10 +4,7 @@
 
 <section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div class="mb-8 pb-6 border-b border-neutral-100">
-        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}">Form Title</h1>
-        <p class="text-on-surface-variant font-body-md">Define a specific dance style and assign it to a category.</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}, subtitle='Define a specific dance style and assign it to a category.')}"></div>
 
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
           th:object="${danceType}" method="post" class="card p-8">

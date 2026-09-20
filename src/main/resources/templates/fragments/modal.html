@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Native HTML5 Dialog Modal -->
+<dialog th:fragment="modal"
+        th:id="${id}"
+        class="rounded-lg border border-outline-variant bg-surface p-6 shadow-ambient backdrop:bg-black/50 w-full"
+        th:classappend="${(size == 'sm' ? 'max-w-[20rem]' : (size == 'lg' ? 'max-w-[40rem]' : 'max-w-[28rem]')) + (cls != null ? ' ' + cls : '')}">
+    <div class="flex items-center justify-between pb-4 border-b border-outline-variant mb-4">
+        <h3 th:if="${title != null}" class="text-title font-sans text-on-surface" th:text="${title}">Modal Title</h3>
+        <form method="dialog" class="ml-auto">
+            <button type="submit" class="btn-icon p-1 min-h-0 min-w-0" aria-label="Close">
+                <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
+            </button>
+        </form>
+    </div>
+    <div class="mb-6" th:if="${body != null}">
+        <th:block th:replace="${body}"></th:block>
+    </div>
+    <div th:if="${footer != null}" class="flex items-center justify-end gap-3 pt-4 border-t border-outline-variant">
+        <th:block th:replace="${footer}"></th:block>
+    </div>
+</dialog>
+
+</body>
+</html>

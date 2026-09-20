@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Stat Card -->
+<th:block th:fragment="statCard">
+    <a th:if="${href != null}"
+       th:href="${href}"
+       class="stat-card group cursor-pointer hover:border-outline transition-colors"
+       th:classappend="${cls}">
+        <div th:if="${icon != null}" class="stat-card-icon text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg')}"></span>
+        </div>
+        <div>
+            <div class="stat-card-value" th:text="${value}">0</div>
+            <div class="stat-card-label" th:text="${label}">Label</div>
+        </div>
+        <div th:if="${trend != null}"
+             class="text-xs flex items-center gap-1"
+             th:classappend="${trendUp == true ? 'text-primary' : (trendUp == false ? 'text-error' : 'text-on-surface-variant')}">
+            <span th:if="${trendUp != null}"
+                  th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            <span th:text="${trend}">+10%</span>
+        </div>
+    </a>
+    <div th:if="${href == null}"
+         class="stat-card"
+         th:classappend="${cls}">
+        <div th:if="${icon != null}" class="stat-card-icon text-primary">
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg')}"></span>
+        </div>
+        <div>
+            <div class="stat-card-value" th:text="${value}">0</div>
+            <div class="stat-card-label" th:text="${label}">Label</div>
+        </div>
+        <div th:if="${trend != null}"
+             class="text-xs flex items-center gap-1"
+             th:classappend="${trendUp == true ? 'text-primary' : (trendUp == false ? 'text-error' : 'text-on-surface-variant')}">
+            <span th:if="${trendUp != null}"
+                  th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            <span th:text="${trend}">+10%</span>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

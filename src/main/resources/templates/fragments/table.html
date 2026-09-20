@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Generic Data Table -->
+<div th:fragment="dataTable" class="overflow-x-auto" tabindex="0" th:classappend="${cls}">
+    <table class="w-full text-left border-collapse text-base">
+        <thead th:if="${head != null}" class="table-header border-b border-outline-variant">
+            <th:block th:replace="${head}"></th:block>
+        </thead>
+        <tbody th:if="${body != null}">
+            <th:block th:replace="${body}"></th:block>
+        </tbody>
+    </table>
+</div>
+
+<!-- Dance Figure Step Table adhering to the density contract -->
+<div th:fragment="stepTable" class="overflow-x-auto" tabindex="0" aria-label="Step details table" th:classappend="${cls}">
+    <table class="w-full text-left border-collapse text-base">
+        <thead>
+            <tr class="table-header border-b border-outline-variant">
+                <th scope="col" class="table-cell w-16 text-center">Step</th>
+                <th scope="col" class="table-cell w-28">Timing</th>
+                <th scope="col" class="table-cell w-28">Foot</th>
+                <th scope="col" class="table-cell">Action</th>
+                <th scope="col" class="table-cell w-28">Footwork</th>
+                <th scope="col" class="table-cell w-32">Alignment</th>
+                <th scope="col" class="table-cell w-28">Turn</th>
+                <th scope="col" class="table-cell min-w-[240px]">Technical Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="step : ${steps}" class="table-row">
+                <td class="table-cell text-center font-bold text-primary" th:text="${step.stepNumber}">1</td>
+                <td class="table-cell">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container rounded border border-outline-variant">
+                        <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
+                        <span th:text="${step.timing}">S</span>
+                    </span>
+                </td>
+                <td class="table-cell">
+                    <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded border border-outline-variant">
+                        <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1]')}"></span> L
+                    </span>
+                    <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded border border-outline-variant">
+                        <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true)}"></span> R
+                    </span>
+                    <span th:if="${step.foot != 'LF' and step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
+                </td>
+                <td class="table-cell font-medium text-on-surface" th:text="${step.action}">Step forward</td>
+                <td class="table-cell">
+                    <span th:if="${step.footwork != null and step.footwork != '' and step.footwork != '-'}"
+                          class="inline-flex items-center px-2 py-0.5 font-mono text-sm font-bold bg-surface-container border border-outline-variant rounded text-on-surface"
+                          th:text="${step.footwork}">HT</span>
+                    <span th:if="${step.footwork == null or step.footwork == '' or step.footwork == '-'}"
+                          class="text-on-surface-variant font-bold text-sm">-</span>
+                </td>
+                <td class="table-cell text-on-surface" th:text="${step.alignment ?: '-'}">LOD</td>
+                <td class="table-cell text-on-surface">
+                    <span th:if="${step.amountOfTurn == null or step.amountOfTurn == '' or step.amountOfTurn == '-' or step.amountOfTurn == 'None' or step.amountOfTurn == '0'}"
+                          class="text-on-surface-variant font-bold text-sm">-</span>
+                    <span th:if="${step.amountOfTurn != null and step.amountOfTurn != '' and step.amountOfTurn != '-' and step.amountOfTurn != 'None' and step.amountOfTurn != '0'}"
+                          th:text="${step.amountOfTurn}">1/4 to L</span>
+                </td>
+                <td class="table-cell text-on-surface-variant">
+                    <ul th:if="${step.comments != null and !#lists.isEmpty(step.comments)}" class="list-disc list-inside space-y-1">
+                        <li th:each="c : ${step.comments}" th:text="${c.commentText}">Comment text</li>
+                    </ul>
+                    <span th:if="${step.comments == null or #lists.isEmpty(step.comments)}" class="text-on-surface-variant/50 italic text-sm">-</span>
+                </td>
+            </tr>
+            <tr th:if="${steps == null or #lists.isEmpty(steps)}">
+                <td colspan="8" class="table-cell py-12 text-center text-on-surface-variant/50 italic"
+                    th:text="${'No ' + (role ?: '') + ' steps registered for this figure.'}">No steps registered.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

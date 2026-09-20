@@ -5,7 +5,7 @@
 <section th:with="activeNav='dance-types'">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/components :: page-header('Dance Styles', ${#lists.size(danceTypes)} + ' styles', '/dance-types/new', 'Add Style', 'add', 'primary')}"></div>
+    <div th:replace="~{fragments/page :: header(title='Dance Styles', subtitle=${#lists.size(danceTypes)} + ' styles', actionUrl='/dance-types/new', actionText='Add Style', actionIcon='add', actionVariant='primary')}"></div>
 
     <div th:if="${#lists.isEmpty(danceTypes)}" class="empty-state">
         <div class="empty-state-icon">

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Standard Form Input Field -->
+<div th:fragment="field" class="form-group" th:classappend="${cls}">
+    <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
+        <span th:text="${label}">Label</span>
+        <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
+    </label>
+    <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+        <input th:id="${id ?: path}"
+               th:type="${type ?: 'text'}"
+               th:field="*{__${path}__}"
+               th:required="${required == true}"
+               th:placeholder="${placeholder}"
+               th:disabled="${disabled == true}"
+               th:readonly="${readonly == true}"
+               th:autocomplete="${autocomplete}"
+               class="form-input"
+               th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''" />
+        <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
+    </th:block>
+    <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+        <input th:id="${id ?: path}"
+               th:name="${path}"
+               th:value="${value}"
+               th:type="${type ?: 'text'}"
+               th:required="${required == true}"
+               th:placeholder="${placeholder}"
+               th:disabled="${disabled == true}"
+               th:readonly="${readonly == true}"
+               th:autocomplete="${autocomplete}"
+               class="form-input" />
+    </th:block>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Select Dropdown -->
+<div th:fragment="select" class="form-group" th:classappend="${cls}">
+    <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
+        <span th:text="${label}">Label</span>
+        <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
+    </label>
+    <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+        <select th:id="${id ?: path}"
+                th:field="*{__${path}__}"
+                th:required="${required == true}"
+                th:disabled="${disabled == true}"
+                class="form-select"
+                th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''">
+            <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
+            <option th:each="opt : ${options}"
+                    th:value="${optValue != null ? opt[optValue] : opt}"
+                    th:text="${optLabel != null ? opt[optLabel] : opt}">Option</option>
+        </select>
+        <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
+    </th:block>
+    <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+        <select th:id="${id ?: path}"
+                th:name="${path}"
+                th:required="${required == true}"
+                th:disabled="${disabled == true}"
+                class="form-select">
+            <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
+            <option th:each="opt : ${options}"
+                    th:value="${optValue != null ? opt[optValue] : opt}"
+                    th:text="${optLabel != null ? opt[optLabel] : opt}"
+                    th:selected="${(optValue != null ? opt[optValue] : opt) == value}">Option</option>
+        </select>
+    </th:block>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Textarea -->
+<div th:fragment="textarea" class="form-group" th:classappend="${cls}">
+    <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
+        <span th:text="${label}">Label</span>
+        <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
+    </label>
+    <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+        <textarea th:id="${id ?: path}"
+                  th:field="*{__${path}__}"
+                  th:rows="${rows ?: 4}"
+                  th:required="${required == true}"
+                  th:placeholder="${placeholder}"
+                  th:disabled="${disabled == true}"
+                  th:readonly="${readonly == true}"
+                  class="form-textarea"
+                  th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''"></textarea>
+        <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
+    </th:block>
+    <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+        <textarea th:id="${id ?: path}"
+                  th:name="${path}"
+                  th:rows="${rows ?: 4}"
+                  th:required="${required == true}"
+                  th:placeholder="${placeholder}"
+                  th:disabled="${disabled == true}"
+                  th:readonly="${readonly == true}"
+                  class="form-textarea"
+                  th:text="${value}"></textarea>
+    </th:block>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Checkbox -->
+<div th:fragment="checkbox" class="form-group" th:classappend="${cls}">
+    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+        <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+            <input th:id="${id ?: path}"
+                   type="checkbox"
+                   th:field="*{__${path}__}"
+                   th:disabled="${disabled == true}"
+                   class="rounded border-outline text-primary focus:ring-primary w-4 h-4" />
+        </th:block>
+        <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+            <input th:id="${id ?: path}"
+                   th:name="${path}"
+                   type="checkbox"
+                   th:checked="${value == true}"
+                   th:disabled="${disabled == true}"
+                   class="rounded border-outline text-primary focus:ring-primary w-4 h-4" />
+        </th:block>
+        <span th:if="${label != null}" class="text-sm font-semibold text-on-surface" th:text="${label}">Label</span>
+    </label>
+    <p th:if="${hint != null}" class="form-hint ml-6" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Toggle Switch -->
+<div th:fragment="toggle" class="form-group" th:classappend="${cls}">
+    <label class="inline-flex items-center gap-3 cursor-pointer select-none">
+        <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+            <input th:id="${id ?: path}"
+                   type="checkbox"
+                   th:field="*{__${path}__}"
+                   th:disabled="${disabled == true}"
+                   class="sr-only peer" />
+        </th:block>
+        <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+            <input th:id="${id ?: path}"
+                   th:name="${path}"
+                   type="checkbox"
+                   th:checked="${value == true}"
+                   th:disabled="${disabled == true}"
+                   class="sr-only peer" />
+        </th:block>
+        <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary relative"></div>
+        <span th:if="${label != null}" class="text-sm font-semibold text-on-surface" th:text="${label}">Label</span>
+    </label>
+    <p th:if="${hint != null}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Rich Text Editor Field (Plain Textarea until Item 11) -->
+<div th:fragment="richText" class="form-group" th:classappend="${cls}">
+    <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
+        <span th:text="${label}">Label</span>
+        <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
+    </label>
+    <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
+        <textarea th:id="${id ?: path}"
+                  th:field="*{__${path}__}"
+                  th:rows="${rows ?: 6}"
+                  th:required="${required == true}"
+                  th:placeholder="${placeholder}"
+                  th:disabled="${disabled == true}"
+                  class="form-textarea"
+                  th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''"></textarea>
+        <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
+    </th:block>
+    <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
+        <textarea th:id="${id ?: path}"
+                  th:name="${path}"
+                  th:rows="${rows ?: 6}"
+                  th:required="${required == true}"
+                  th:placeholder="${placeholder}"
+                  th:disabled="${disabled == true}"
+                  class="form-textarea"
+                  th:text="${value}"></textarea>
+    </th:block>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+<!-- Error Summary Box -->
+<div th:fragment="errorSummary"
+     th:if="${#fields != null and #fields.hasErrors('*')}"
+     class="p-4 rounded-md bg-error/10 border border-error mb-6"
+     th:classappend="${cls}">
+    <div class="flex items-center gap-2 text-error font-semibold text-base mb-2">
+        <span class="material-symbols-outlined text-[20px]" aria-hidden="true">error</span>
+        <span th:text="${title ?: 'Please correct the following errors:'}">Please correct the following errors:</span>
+    </div>
+    <ul class="list-disc list-inside text-sm text-error space-y-1">
+        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li>
+    </ul>
+</div>
+
+<!-- Raw Field for forms without backing model objects (e.g. comment posting) -->
+<div th:fragment="rawField" class="form-group" th:classappend="${cls}">
+    <label th:if="${label != null}" th:for="${id ?: name}" class="form-label">
+        <span th:text="${label}">Label</span>
+        <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
+    </label>
+    <input th:id="${id ?: name}"
+           th:name="${name}"
+           th:value="${value}"
+           th:type="${type ?: 'text'}"
+           th:required="${required == true}"
+           th:placeholder="${placeholder}"
+           th:disabled="${disabled == true}"
+           th:readonly="${readonly == true}"
+           class="form-input" />
+    <p th:if="${hint != null}" class="form-hint" th:text="${hint}">Hint</p>
+</div>
+
+</body>
+</html>

@@ -4,11 +4,7 @@
 
 <section th:with="activeNav='choreographies'" class="max-w-3xl mx-auto py-12">
 
-    <div class="mb-8 pb-6 border-b border-neutral-100">
-        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" 
-            th:text="${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}">New Choreography</h1>
-        <p class="text-on-surface-variant font-body-md">Set up your choreography metadata. You can add figures to the routine in the next step.</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}, subtitle='Set up your choreography metadata. You can add figures to the routine in the next step.')}"></div>
 
     <form th:action="@{${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/metadata'}}"
           th:object="${choreographyRequest}" method="post" class="card p-8 space-y-8">

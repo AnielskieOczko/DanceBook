@@ -4,10 +4,7 @@
 
 <section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
 
-    <div class="mb-8 pb-6 border-b border-neutral-100">
-        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${listId == null ? 'New Collection' : 'Edit Collection'}">Form Title</h1>
-        <p class="text-on-surface-variant font-body-md">Create a filtered collection of your dance materials with a beautiful cover image.</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${listId == null ? 'New Collection' : 'Edit Collection'}, subtitle='Create a filtered collection of your dance materials with a beautiful cover image.')}"></div>
 
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
           th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">

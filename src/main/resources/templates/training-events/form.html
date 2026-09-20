@@ -4,11 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto">
 
-    <div class="page-header mb-6">
-        <h1 class="page-title text-3xl"
-            th:text="${trainingEventId == null ? 'Add Training Session' : 'Edit Training Session'}">Add Training Session</h1>
-        <p class="page-subtitle">Saved here and written through to your Google Calendar.</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${trainingEventId == null ? 'Add Training Session' : 'Edit Training Session'}, subtitle='Saved here and written through to your Google Calendar.')}"></div>
 
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
           th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm"
@@ -20,10 +16,8 @@
           th:data-original-ends-on="${seriesEndsOn}">
 
         <!-- Target / Owning Calendar Statement -->
-        <div th:if="${calendarError}" class="p-4 rounded-md bg-error/10 border border-error text-error text-body-md"
-             th:text="${calendarError}">
-            This calendar is disabled.
-        </div>
+        <div th:if="${calendarError}"
+             th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
 
         <div th:if="${targetCalendar != null}"
              class="bg-surface-container rounded-md p-4 flex items-center justify-between">
