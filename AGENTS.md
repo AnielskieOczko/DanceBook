@@ -79,6 +79,45 @@ Services publish subclasses of the sealed `model/DomainEvent.kt` through
 **When you add a mutating service method, publish the matching event** — otherwise the
 change is invisible in the activity feed.
 
+### Thymeleaf fragment catalog
+
+`templates/fragments/` is the component vocabulary, and since #98 there is **one source per
+component**: `icon`, `button` (`link`, `button`, `iconButton`, `submitRow`), `form`
+(`field`, `select`, `textarea`, `checkbox`, `toggle`, `richText`, `errorSummary`,
+`rawField`), `page` (`header`, `sectionTitle`), `card`, `table` (`dataTable`, `stepTable`),
+`badge`, `empty`, `alert`, `modal` and `rich-text`. Do not hand-roll a page header, a
+badge or an empty state in a template — the fragment exists, and the reason #98 was worth
+doing is that six training pages had each copied the header instead.
+
+**Fragments declare no parameter signature and are called with named parameters.**
+Thymeleaf validates arity strictly only when a fragment declares its parameters, so the old
+six-parameter `page-header(...)` forced every caller to pass all six —
+`notifications/history.html` passed dummy values purely to satisfy it. Signature-less plus
+named parameters means a caller passes only what it needs and an absent parameter arrives
+as `null`, defaulted inside the fragment.
+
+The cost of that is real and worth stating: **a mistyped parameter name is silently `null`,
+not an error.** `FragmentCatalogRenderingTest` is what makes it loud — it renders every
+fragment twice, once with required parameters only and once with all of them, and fails on
+a literal `null` or an unparsed `th:` attribute in the output. A new fragment, or a new
+parameter on an existing one, belongs in that test's list or it is unguarded.
+
+**A header with more than one action passes its toolbar as a slot**, not as a parameter per
+button: the caller declares a named fragment in its own file and hands it over as
+`~{::thatFragment}`, which the header inserts. That is what a parameter list cannot express
+and what the six hand-copied headers existed to work around.
+
+**Form fields bind through preprocessing**: `th:field="*{__${path}__}"`. `th:attr` cannot do
+this — it writes plain output attributes after the dialect has already run. Because fragment
+insertion is inline, the `*{…}` resolves against the caller's `<form th:object>`. Fields
+also render unbound, as a plain named input, for the one form that submits raw request
+parameters with no `th:object` behind it.
+
+**Variants are semantics, never class fragments.** A fragment takes `variant='danger'` and
+maps it to a class literal internally; it never concatenates `'badge-' + variant`, because
+an assembled name appears in no scanned source, so Tailwind drops the rule while the
+attribute still renders — an unstyled element with no error anywhere.
+
 ### HTMX partial rendering
 
 Web controllers accept `@RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?`
@@ -90,6 +129,15 @@ return if (isHtmxRequest == true) "dance-figures/list :: figuresTable" else "dan
 
 They also skip loading filter-dropdown data on HTMX requests. Follow this shape for new
 list/filter endpoints (`controller/web/DanceFigureWebController.kt` is the reference).
+
+**A fragment a controller names in a string is frozen.** The selector is a string, so a
+rename is a runtime 500 the compiler cannot see, and the root element's `id` is what the
+swap targets — drop it and the first swap works while every later one silently no-ops.
+When refactoring a template that contains one, migrate its *contents* and leave the
+`th:fragment` marker on its original element, in its original file, with its original tag
+and `id`. `HtmxFragmentRenderingTest` (#98) turns this into a build failure: it requests
+seven htmx endpoints with `HX-Request: true` and asserts each still returns its expected
+root id.
 
 ### Global template model
 
@@ -159,6 +207,10 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   A `@utility` emits no CSS until a scanned source names it, so a dead one is invisible in
   the output and accumulates silently — #95 deleted 25. Search templates, `static/js` and
   `src/main/kotlin` before deleting or renaming one.
+  Since #98 this layer has a counterpart in `templates/fragments/` (above): the `@utility`
+  blocks own what a component *looks* like, the fragments own its *markup*. A new component
+  usually needs both, and a variant added to a fragment needs a matching utility or it maps
+  to a class literal with no rule behind it.
 - **Colour never becomes a hex literal in Kotlin or JS.** `dto/TrainingEventPalette.kt`
   maps a training status to a *token* (`var(--color-…)`) and derives its 10% calendar tint
   with `color-mix`. An inline style resolves `var()` natively; a canvas cannot, so
@@ -209,6 +261,12 @@ before yours, insert rows, migrate to yours, assert.
 
 MockMvc rendering tests must use `.with(csrf())` — `layout.html` evaluates `${_csrf.token}`
 on every page, so a request without it throws during render rather than failing an assertion.
+
+Two template guards came in with #98 and are cheap to extend, so extend them rather than
+working around them. `FragmentCatalogRenderingTest` renders every catalog fragment twice
+against a test-only harness template under `src/test/resources/templates/test/`, which is
+where a new fragment's two cases go. `HtmxFragmentRenderingTest` pins the root id of every
+controller-named htmx fragment.
 
 ## Repo conventions
 
@@ -265,6 +323,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - HTMX list/filter page → `controller/web/DanceFigureWebController.kt` plus
   `templates/dance-figures/list.html`
 - Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
+- Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
+  slot, `form.html` for a bound field, `table.html` for a dense table)
 - Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
   `service/TrainingEventServiceTest.kt`
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
@@ -289,6 +349,13 @@ ask — nobody is reading the run live, so a question ends the run without an an
   `controller/web/DanceFigureWebController.kt` (fragment selector on `HX-Request`).
 - **New top-level route ⇒ add a branch to `activeNav()`** in
   `controller/web/NavbarAdvice.kt`.
+- **A component that exists in `templates/fragments/` ⇒ call it, do not hand-roll it.**
+  Headers, buttons, fields, badges, empty states, alerts and modals all live there. A new
+  fragment, or a new parameter on one, must be added to `FragmentCatalogRenderingTest` —
+  named parameters make a typo silently `null`, and that test is the only thing that says so.
+- **Never rename, move or restructure a fragment a controller names in a string.** Its
+  file, root tag, `id` and fragment name are frozen; migrate the contents and leave the
+  marker where it is. `HtmxFragmentRenderingTest` will fail if you do not.
 - **Colours come from the design tokens** in the `@theme` block of
   `frontend/input.css` — five neutrals, one accent, two status colours, no success green —
   not raw Tailwind palette values, and never as a hex literal in Kotlin or JS. Tailwind
