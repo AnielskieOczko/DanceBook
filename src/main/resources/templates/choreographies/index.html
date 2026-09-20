@@ -52,7 +52,7 @@
         <!-- 1. Grid (Cards) View -->
         <div th:if="${!#lists.isEmpty(choreographies) && currentView == 'grid'}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div th:each="choreo : ${choreographies}"
-                 class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col justify-between p-5 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 transition-all duration-300 min-h-[180px]">
+                 class="card relative group flex flex-col justify-between p-5 hover:z-30 focus-within:z-30 min-h-[180px]">
                 
                 <!-- Main Link -->
                 <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only">View</span></a>
@@ -119,7 +119,7 @@
         <!-- 2. Compact List View -->
         <div th:if="${!#lists.isEmpty(choreographies) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
             <div th:each="choreo : ${choreographies}"
-                 class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-4 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30 transition-all duration-300">
+                 class="card relative group flex items-center justify-between p-4 hover:z-30 focus-within:z-30">
                 
                 <!-- Main Link -->
                 <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only">View</span></a>

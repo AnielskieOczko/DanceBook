@@ -8,7 +8,7 @@
     <div th:replace="~{fragments/components :: page-header('Activity History', 'A complete timeline of all actions across your workspace.', '/', 'Dashboard', 'arrow_back', 'outline-solid')}"></div>
 
     <!-- Timeline -->
-    <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
+    <div class="card p-md md:p-margin">
         <div th:if="${events != null && !events.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
             <div th:each="event : ${events}" class="relative pl-8">
                 <!-- Timeline Dot -->

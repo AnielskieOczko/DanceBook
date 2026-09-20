@@ -10,7 +10,7 @@
     </div>
 
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
-          th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 shadow-ambient space-y-8">
+          th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">
 
         <!-- Basic Info Section -->
         <div class="space-y-6">

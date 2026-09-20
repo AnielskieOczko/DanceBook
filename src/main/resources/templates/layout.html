@@ -86,7 +86,7 @@
                 <div id="notification-dropdown" class="hidden absolute right-0 top-full mt-2 w-80 md:w-96 z-50"></div>
             </div>
 
-            <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:shadow-ambient transition-shadow">
+            <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:border-outline transition-colors">
                 <a href="/profile">
                     <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">
                         <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>

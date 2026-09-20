@@ -14,42 +14,42 @@
     <!-- Stats Grid (Bento Style) -->
     <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter order-3 lg:order-2">
         <!-- Card 1: Materials -->
-        <a href="/materials" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+        <a href="/materials" class="card p-md flex flex-col gap-md group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">movie</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Materials</p>
+                <p class="text-meta text-on-surface-variant font-semibold">Materials</p>
                 <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${materialCount}">124 <span class="font-body-md text-body-md text-outline font-normal">Videos</span></p>
             </div>
         </a>
         <!-- Card 2: Figures -->
-        <a href="/dance-figures" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+        <a href="/dance-figures" class="card p-md flex flex-col gap-md group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">accessibility_new</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Figures</p>
+                <p class="text-meta text-on-surface-variant font-semibold">Figures</p>
                 <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${figureCount}">42 <span class="font-body-md text-body-md text-outline font-normal">Techniques</span></p>
             </div>
         </a>
         <!-- Card 3: Styles -->
-        <a href="/dance-categories" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+        <a href="/dance-categories" class="card p-md flex flex-col gap-md group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">category</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Styles</p>
+                <p class="text-meta text-on-surface-variant font-semibold">Styles</p>
                 <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${danceTypeCount}">8 <span class="font-body-md text-body-md text-outline font-normal">Genres</span></p>
             </div>
         </a>
         <!-- Card 4: Comments -->
-        <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md flex flex-col gap-md hover:-translate-y-1 transition-transform duration-300 shadow-ambient group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface flex items-center justify-center text-on-surface group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+        <div class="card p-md flex flex-col gap-md group cursor-pointer">
+            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
             </div>
             <div>
-                <p class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Feedback</p>
+                <p class="text-meta text-on-surface-variant font-semibold">Feedback</p>
                 <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${commentCount}">23 <span class="font-body-md text-body-md text-outline font-normal">Notes</span></p>
             </div>
         </div>
@@ -60,10 +60,10 @@
         <!-- Timeline -->
         <section class="order-2 lg:order-1 lg:col-span-8 space-y-md">
             <div class="flex items-center justify-between">
-                <h3 class="font-headline-md text-headline-md text-on-surface">Recent Activity</h3>
+                <h3 class="text-section font-heading text-on-surface">Recent Activity</h3>
                 <a href="/activity-history" class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</a>
             </div>
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-md md:p-margin shadow-ambient">
+            <div class="card p-md md:p-margin">
                 <div th:if="${recentEvents != null && !recentEvents.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
                     <div th:each="event : ${recentEvents}" class="relative pl-8">
                         <!-- Timeline Dot -->
@@ -180,7 +180,7 @@
 
         <!-- Workspace Quick Actions -->
         <section class="order-1 lg:order-2 lg:col-span-4 space-y-md">
-            <h3 class="font-headline-md text-headline-md text-on-surface">Workspace</h3>
+            <h3 class="text-section text-on-surface">Workspace</h3>
             <div class="bg-surface-container-low rounded-xl p-md space-y-4">
                 <a href="/materials/new" class="btn-primary w-full">
                     <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 20px;">add</span>

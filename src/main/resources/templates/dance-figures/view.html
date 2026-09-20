@@ -510,11 +510,11 @@
         </div>
 
         <!-- Notes (2/3 Width) -->
-        <div class="card p-8 space-y-6 bg-white text-base lg:col-span-2">
-            <h2 class="text-xl font-bold text-on-surface border-b border-border pb-3 flex items-center gap-2">
+        <div class="card p-8 space-y-6 text-base lg:col-span-2">
+            <h2 class="text-xl font-bold text-on-surface border-b border-outline-variant pb-3 flex items-center gap-2">
                 <span class="material-symbols-outlined text-[20px] text-primary">description</span> Figure Notes
             </h2>
-            <div class="text-on-surface font-body-md whitespace-pre-line leading-relaxed bg-surface-container-low p-6 rounded-md border border-border/40 text-base" 
+            <div class="prose-text text-on-surface whitespace-pre-line leading-relaxed bg-surface-container-low p-6 rounded-md border border-outline-variant text-base" 
                  th:text="${danceFigure.notes ?: 'No notes available for this figure.'}">
                 Notes details.
             </div>

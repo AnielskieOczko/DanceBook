@@ -246,21 +246,17 @@ layer(base);
 
 @utility btn {
   /* ── Buttons ─────────────────────────────────── */
-  @apply inline-flex items-center justify-center gap-2 font-body font-semibold
+  @apply inline-flex items-center justify-center gap-2 font-sans font-semibold
            transition-all duration-200 ease-in-out cursor-pointer
-           min-h-[48px] focus:outline-hidden;
+           disabled:opacity-50 disabled:cursor-not-allowed select-none;
 }
 
 @utility btn-sm {
-  @apply px-4 py-2 text-sm rounded-button min-h-[40px];
+  @apply px-4 py-2 text-sm rounded-md min-h-[44px];
 }
 
 @utility btn-md {
-  @apply px-6 py-3 text-base rounded-button min-h-[48px];
-}
-
-@utility btn-lg {
-  @apply px-8 py-4 text-lg rounded-button min-h-[56px];
+  @apply px-6 py-3 text-base rounded-md min-h-[48px];
 }
 
 @utility btn-primary {
@@ -269,42 +265,34 @@ layer(base);
 }
 
 @utility btn-secondary {
-  @apply btn btn-md bg-secondary text-white
-           hover:bg-secondary-hover active:scale-[0.98];
+  @apply btn btn-md bg-surface-container text-on-surface border border-outline
+           hover:bg-surface-container-highest active:scale-[0.98];
 }
 
 @utility btn-outline {
-  @apply btn btn-md bg-transparent border border-outline-variant text-on-surface
+  @apply btn btn-md bg-transparent border border-outline text-on-surface
            hover:bg-surface-container active:scale-[0.98];
 }
 
 @utility btn-danger {
-  @apply btn btn-md bg-danger text-white
-           hover:bg-red-700 active:scale-[0.98];
+  @apply btn btn-md bg-error text-on-error
+           hover:opacity-90 active:scale-[0.98];
 }
 
 @utility btn-ghost {
-  @apply btn btn-md bg-transparent text-text-secondary
-           hover:bg-surface-warm hover:text-text-primary;
+  @apply btn btn-md bg-transparent text-on-surface-variant
+           hover:bg-surface-container hover:text-on-surface;
 }
 
 @utility btn-icon {
-  @apply btn p-3 rounded-button text-text-secondary min-h-[48px] min-w-[48px]
-           hover:bg-surface-warm hover:text-text-primary;
+  @apply btn p-3 rounded-md text-on-surface-variant min-h-[48px] min-w-[48px]
+           hover:bg-surface-container hover:text-on-surface;
 }
 
 @utility card {
   /* ── Cards ───────────────────────────────────── */
-  @apply bg-surface rounded-card border border-outline-variant
+  @apply bg-surface rounded-xl border border-outline-variant
            transition-all duration-300;
-}
-
-@utility card-hover {
-  @apply card hover:shadow-ambient hover:translate-y-[-2px] hover:border-outline;
-}
-
-@utility card-interactive {
-  @apply card-hover cursor-pointer;
 }
 
 @utility badge {
@@ -318,7 +306,7 @@ layer(base);
 }
 
 @utility badge-secondary {
-  @apply badge bg-surface-container-high text-on-surface border border-border;
+  @apply badge bg-surface-container text-on-surface border border-outline-variant;
 }
 
 @utility badge-accent {
@@ -326,15 +314,15 @@ layer(base);
 }
 
 @utility badge-neutral {
-  @apply badge bg-surface-warm text-text-secondary border border-border;
+  @apply badge bg-surface-container text-on-surface-variant border border-outline-variant;
 }
 
 @utility badge-danger {
-  @apply badge bg-danger-soft text-danger border border-danger/20;
+  @apply badge bg-error-container text-error border border-error/20;
 }
 
 @utility badge-success {
-  @apply badge bg-success-soft text-success border border-success/20;
+  @apply badge bg-surface-container text-primary border border-primary/20;
 }
 
 @utility stat-card {
@@ -347,24 +335,27 @@ layer(base);
 }
 
 @utility stat-card-value {
-  @apply text-3xl font-heading font-bold text-text-primary;
+  @apply text-3xl font-sans font-bold text-on-surface;
 }
 
 @utility stat-card-label {
-  @apply text-label-sm text-text-secondary font-semibold;
+  @apply text-meta text-on-surface-variant font-semibold;
 }
 
 @utility form-input {
   /* ── Form Elements ───────────────────────────── */
   @apply w-full px-4 py-3 bg-surface-container border border-outline rounded-sm
-           text-text-primary placeholder-text-secondary text-base min-h-[48px]
+           text-on-surface placeholder:text-on-surface-variant text-base min-h-[48px]
            focus:outline-hidden focus:border-primary
            transition-colors duration-200;
 }
 
 @utility form-select {
   @apply form-input appearance-none bg-no-repeat bg-right pr-10 cursor-pointer;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5251' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  /* The select chevron is an SVG data URI and cannot resolve CSS custom properties
+   * (var(--color-on-surface-variant)). #5b6067 matches on-surface-variant and is the sole
+   * permitted hex literal in this stylesheet. */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-size: 1.25rem;
   background-position: right center;
 }
@@ -374,61 +365,30 @@ layer(base);
 }
 
 @utility form-label {
-  @apply block text-base font-semibold text-text-primary mb-2;
+  @apply block text-base font-semibold text-on-surface mb-2;
 }
 
 @utility form-error {
-  @apply mt-2 text-base text-danger font-semibold;
+  @apply mt-2 text-base text-error font-semibold;
 }
 
 @utility form-hint {
-  @apply mt-2 text-sm text-text-secondary font-medium;
+  @apply mt-2 text-meta text-on-surface-variant font-normal;
 }
 
 @utility chip {
   /* ── Chips ────────────────────────────────────── */
-  @apply inline-flex items-center gap-2 px-4 py-2 rounded-pill
-           text-base font-semibold cursor-pointer bg-surface-container text-on-surface border border-border
-           hover:bg-surface-container-high transition-all duration-200 min-h-[40px];
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-full
+           text-base font-semibold cursor-pointer bg-surface-container text-on-surface border border-outline-variant
+           hover:bg-surface hover:border-outline transition-all duration-200 min-h-[44px];
 }
 
 @utility chip-active {
-  @apply bg-primary-fixed text-on-primary-fixed border-primary-container;
+  @apply bg-primary text-on-primary border-primary;
 }
 
 @utility chip-group {
   @apply flex flex-wrap gap-3;
-}
-
-@utility avatar {
-  /* ── Avatar ──────────────────────────────────── */
-  @apply w-10 h-10 rounded-full flex items-center justify-center
-           bg-surface-container-highest text-on-surface text-base font-heading font-bold uppercase
-           flex-shrink-0 border-2 border-border;
-}
-
-@utility avatar-sm {
-  @apply w-8 h-8 text-sm;
-}
-
-@utility avatar-lg {
-  @apply w-14 h-14 text-xl;
-}
-
-@utility nav-item {
-  /* ── Navigation ──────────────────────────────── */
-  @apply flex items-center gap-3 px-4 py-3 rounded-button
-           text-base font-semibold text-text-secondary min-h-[48px]
-           hover:bg-primary-soft hover:text-primary
-           transition-all duration-200;
-}
-
-@utility nav-item-active {
-  @apply bg-primary-soft text-primary font-semibold;
-}
-
-@utility nav-icon {
-  @apply w-5 h-5 flex-shrink-0;
 }
 
 @utility page-header {
@@ -437,11 +397,11 @@ layer(base);
 }
 
 @utility page-title {
-  @apply text-2xl font-heading font-medium text-text-primary;
+  @apply text-title font-sans text-on-surface;
 }
 
 @utility page-subtitle {
-  @apply text-sm text-text-secondary mt-1;
+  @apply text-meta text-on-surface-variant mt-1;
 }
 
 @utility empty-state {
@@ -450,108 +410,37 @@ layer(base);
 }
 
 @utility empty-state-icon {
-  @apply w-16 h-16 rounded-full bg-surface-warm flex items-center justify-center mb-4;
+  @apply w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4;
 }
 
 @utility empty-state-title {
-  @apply text-lg font-heading font-medium text-text-primary mb-2;
+  @apply text-section font-sans text-on-surface mb-2;
 }
 
 @utility empty-state-text {
-  @apply text-sm text-text-secondary max-w-[24rem] mb-6;
+  @apply text-body text-on-surface-variant max-w-[24rem] mb-6;
 }
 
 @utility table-header {
   /* ── Table ───────────────────────────────────── */
-  @apply bg-surface-container text-text-secondary text-label-sm font-semibold;
+  @apply bg-surface-container text-on-surface-variant text-meta font-semibold;
 }
 
 @utility table-cell {
-  @apply px-4 py-3 text-sm;
+  @apply px-4 py-3 text-tabular;
 }
 
 @utility table-row {
   @apply border-b border-outline-variant hover:bg-surface-container/50 transition-colors;
 }
 
-@utility toast {
-  /* ── Toast (global notification) ─────────────── */
-  @apply fixed top-4 right-4 z-50 px-5 py-3 rounded-card shadow-ambient
-           text-sm font-medium flex items-center gap-3
-           transform transition-all duration-300
-           translate-y-0 opacity-100;
-}
-
-@utility toast-success {
-  @apply toast bg-success text-white;
-}
-
-@utility toast-error {
-  @apply toast bg-danger text-white;
-}
-
-@utility star {
-  /* ── Star Rating ─────────────────────────────── */
-  @apply w-4 h-4 text-border;
-}
-
-@utility star-filled {
-  @apply w-4 h-4 text-accent;
-}
-
 @utility divider {
   /* ── Divider ─────────────────────────────────── */
-  @apply border-t border-border my-4;
-}
-
-@utility sidebar {
-  /* ── Sidebar (Legacy but kept for transition) ── */
-  @apply fixed left-0 top-0 h-screen w-64 bg-surface-warm border-r border-border
-           flex flex-col z-40 overflow-y-auto;
-}
-
-@utility sidebar-logo {
-  @apply px-5 py-6 flex items-center gap-3;
-}
-
-@utility sidebar-nav {
-  @apply flex-1 px-3 py-4 space-y-1;
-}
-
-@utility sidebar-footer {
-  @apply px-3 py-4 border-t border-border;
-}
-
-@utility bottom-nav {
-  /* ── Bottom Nav (Mobile) ─────────────────────── */
-  @apply fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-border
-           flex items-center justify-around z-40 px-2;
-}
-
-@utility bottom-nav-item {
-  @apply flex flex-col items-center gap-0.5 py-1 px-2
-           text-text-secondary text-[10px] font-medium uppercase tracking-wider
-           transition-colors duration-200 relative;
+  @apply border-t border-outline-variant my-4;
 }
 
 @utility bottom-nav-item-active {
-  @apply text-on-surface after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary-container after:rounded-full;
-}
-
-@utility bottom-nav-icon {
-  @apply w-6 h-6;
-}
-
-@utility bottom-nav-add {
-  @apply -mt-4 w-12 h-12 rounded-full bg-primary-container text-on-primary-container
-           flex items-center justify-center shadow-ambient
-           hover:bg-primary-fixed hover:text-on-primary-fixed transition-all duration-200
-           active:scale-95;
-}
-
-@utility modal-backdrop {
-  /* ── Confirm Modal ───────────────────────────── */
-  @apply fixed inset-0 bg-black/40 z-50 flex items-center justify-center backdrop-blur-xs;
+  @apply text-on-surface after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full;
 }
 
 @utility icon-filled {
@@ -569,7 +458,7 @@ layer(base);
 }
 
 @utility tc-chip-time {
-  @apply block text-[11px] font-semibold tabular-nums text-on-surface-variant;
+  @apply block text-tabular font-semibold tabular-nums text-on-surface-variant;
 }
 
 @utility tc-chip-title {
@@ -605,22 +494,22 @@ layer(base);
 
 @utility tc-agenda-card {
   @apply flex items-start gap-3 rounded-sm border border-l-[3px] border-outline-variant/60
-           bg-surface-container-lowest p-3 text-left;
+           bg-surface p-3 text-left;
 }
 
 @utility tc-agenda-time {
-  @apply w-19 shrink-0 text-[13px] font-semibold tabular-nums text-on-surface-variant;
+  @apply w-19 shrink-0 text-tabular font-semibold tabular-nums text-on-surface-variant;
 }
 
 @utility tc-agenda-empty {
   @apply rounded-sm border border-dashed border-outline-variant px-4 py-8 text-center
-           font-body-md text-body-md text-on-surface-variant;
+           text-body text-on-surface-variant;
 }
 
 @utility tc-fab {
   /* Floating create button, clearing the fixed bottom nav. */
   @apply fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full
-           bg-primary-container text-on-primary-container shadow-ambient
+           bg-primary text-on-primary shadow-ambient
            transition-transform duration-200 active:scale-95;
   bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
@@ -632,7 +521,7 @@ layer(base);
 
 @utility tc-sheet {
   @apply fixed inset-x-0 bottom-0 z-100 max-h-[85vh] overflow-y-auto rounded-t-xl
-           border-t border-outline-variant bg-surface-container-lowest px-4 pt-2;
+           border-t border-outline-variant bg-surface px-4 pt-2;
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
 }
 
@@ -688,7 +577,7 @@ layer(base);
 
 @utility tc-timeline-node-future {
   /* Nothing has happened yet, so the node is hollow rather than filled. */
-  @apply bg-background;
+  @apply bg-surface;
 }
 
 @utility tc-timeline-upcoming {
@@ -698,42 +587,15 @@ layer(base);
 
 @utility tc-timeline-today {
   /* Where the present sits in the scroll. */
-  @apply relative -ml-6 sm:-ml-8 mb-gutter flex items-center gap-3 font-label-sm text-label-sm
-           font-bold uppercase tracking-wider text-primary;
+  @apply relative -ml-6 sm:-ml-8 mb-gutter flex items-center gap-3 text-meta font-bold text-primary;
   &::after {
     @apply h-px flex-1 bg-primary/40;
     content: '';
   }
 }
 
-/* ────────────────────────────────────────────────
- * UTILITY LAYER
- * ──────────────────────────────────────────────── */
-
-@utility text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-primary to-accent;
-}
-
-@utility scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 @utility prose-text {
-  font-family: var(--font-prose);
-  font-size: 17px;
-  line-height: 28px;
-  max-width: 68ch;
-}
-
-@utility text-tabular {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
+  @apply font-serif text-prose max-w-[68ch];
 }
 
 @media (min-width: 768px) {
@@ -751,10 +613,10 @@ layer(base);
     @apply scroll-smooth;
   }
   body {
-    @apply bg-background font-body text-text-primary antialiased;
+    @apply bg-surface font-sans text-on-surface antialiased;
   }
   h1, h2, h3, h4 {
-    @apply font-heading;
+    @apply font-sans;
   }
 }
 
@@ -789,7 +651,7 @@ layer(base);
   --fc-today-bg-color: var(--color-surface-container);
   --fc-now-indicator-color: var(--color-error);
   --fc-list-event-hover-bg-color: var(--color-surface-container);
-  font-family: var(--font-body-md);
+  font-family: var(--font-sans);
   color: var(--color-on-surface);
 }
 
@@ -803,7 +665,7 @@ layer(base);
   margin-top: 1rem;
 }
 .fc .fc-toolbar-title {
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -813,22 +675,22 @@ layer(base);
 .fc .fc-button,
 .fc .fc-button-primary {
   background-color: var(--color-surface);
-  border: 1px solid var(--color-outline-variant);
+  border: 1px solid var(--color-outline);
   border-radius: var(--radius-sm);
   color: var(--color-on-surface-variant);
-  font-family: var(--font-body-md);
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0.5rem 0.85rem;
   box-shadow: none;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 .fc .fc-button-primary:not(:disabled):hover {
   background-color: var(--color-surface-container);
-  border-color: var(--color-outline-variant);
+  border-color: var(--color-outline);
   color: var(--color-on-surface);
 }
 .fc .fc-button-primary:not(:disabled).fc-button-active,
@@ -846,7 +708,7 @@ layer(base);
 }
 .fc .fc-button-primary:disabled {
   background-color: var(--color-surface);
-  border-color: var(--color-outline-variant);
+  border-color: var(--color-outline);
   color: var(--color-on-surface-variant);
   opacity: 0.4;
 }
@@ -986,7 +848,7 @@ layer(base);
 }
 .fc .fc-list-day-cushion {
   background-color: var(--color-surface-container-low);
-  font-family: var(--font-heading);
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
   color: var(--color-on-surface);
