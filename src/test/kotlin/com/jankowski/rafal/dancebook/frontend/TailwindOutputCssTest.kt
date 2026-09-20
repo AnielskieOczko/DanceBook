@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.frontend
 
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -56,6 +57,59 @@ class TailwindOutputCssTest {
             "`$className` has no rule in output.css. It is generated outside the Thymeleaf " +
                 "templates, so it survives only while input.css scans that directory — check the " +
                 "@source globs there and the matching inputs on buildTailwind in build.gradle.kts."
+        )
+    }
+
+    @ParameterizedTest(name = "{0} was deleted and is absent from output.css")
+    @ValueSource(
+        strings = [
+            "btn-lg", "card-hover", "card-interactive", "avatar", "avatar-sm", "avatar-lg",
+            "nav-item", "nav-item-active", "nav-icon", "toast", "toast-success", "toast-error",
+            "star", "star-filled", "sidebar", "sidebar-logo", "sidebar-nav", "sidebar-footer",
+            "bottom-nav", "bottom-nav-item", "bottom-nav-icon", "bottom-nav-add",
+            "modal-backdrop", "text-gradient", "scrollbar-hide"
+        ]
+    )
+    fun `dead utilities are absent from output css`(className: String) {
+        val classSelectorRegex = Regex("""\.${cssEscape(className)}(?=[^a-zA-Z0-9_-]|$)""")
+        assertFalse(
+            classSelectorRegex.containsMatchIn(css),
+            "`$className` should have been deleted from input.css but is still present in output.css."
+        )
+    }
+
+    @ParameterizedTest(name = "type token {0} is emitted in output.css")
+    @ValueSource(
+        strings = [
+            "var(--text-title)",
+            "var(--text-section)",
+            "var(--text-meta)",
+            "var(--text-tabular)",
+            "var(--text-prose)"
+        ]
+    )
+    fun `type tokens are emitted in output css`(token: String) {
+        assertTrue(
+            css.contains(token),
+            "Expected output.css to contain type token reference `$token`."
+        )
+    }
+
+    @Test
+    fun `btn-outline uses outline border rather than outline-variant`() {
+        val btnOutlineRegex = Regex("""\.btn-outline\s*\{[^}]*var\(--color-outline\)[^}]*\}""")
+        assertTrue(
+            btnOutlineRegex.containsMatchIn(css),
+            ".btn-outline must use var(--color-outline) border token."
+        )
+    }
+
+    @Test
+    fun `card component uses surface and outline-variant tokens`() {
+        val cardRegex = Regex("""\.card\s*\{[^}]*var\(--color-outline-variant\)[^}]*\}""")
+        assertTrue(
+            cardRegex.containsMatchIn(css),
+            ".card must use var(--color-outline-variant) token."
         )
     }
 

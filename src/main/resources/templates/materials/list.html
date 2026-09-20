@@ -142,7 +142,7 @@
                      th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                               catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
                               imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
-                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex flex-col transition-all duration-300 hover:shadow-[0px_4px_20px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                     class="card relative group flex flex-col hover:z-30 focus-within:z-30">
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
                 
@@ -173,7 +173,7 @@
                             <span class="material-symbols-outlined text-white text-3xl font-light" style="font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;">play_arrow</span>
                         </div>
                     </div>
-                    <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-white rounded-tr-lg">
+                    <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-surface rounded-tr-lg">
                         <div>
                             <div class="flex items-start justify-between mb-2">
                                 <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-normal pr-8 flex-1" th:text="${m.name}">Material Name</h3>
@@ -191,7 +191,7 @@
                         </div>
                         <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
                              <button type="button" class="js-expand-btn text-primary flex items-center gap-1 text-sm font-label-md transition-colors hover:text-primary-container focus:outline-hidden">
-                                 <span class="btn-text pointer-events-none">View description</span>
+                                 <span class="pointer-events-none">View description</span>
                                  <span class="material-symbols-outlined transition-transform duration-300 icon-expand pointer-events-none">expand_more</span>
                              </button>
                         </div>
@@ -199,7 +199,7 @@
                 </div>
                 
                 <div th:if="${m.description}" class="expandable-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out w-full relative z-20 pointer-events-none rounded-b-lg">
-                     <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-white">
+                     <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-surface">
                          <p class="font-body-md text-sm text-on-surface-variant mt-3 whitespace-pre-wrap leading-relaxed relative z-20" th:text="${m.description}">Description</p>
                      </div>
                 </div>
@@ -209,7 +209,7 @@
         <!-- 2. Compact List View -->
         <div th:if="${!#lists.isEmpty(materials) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
             <article th:each="m : ${materials}"
-                     class="relative group border border-[#EAEAEA] bg-white rounded-lg flex items-center justify-between p-3 transition-all duration-300 hover:shadow-[0px_4px_12px_rgba(45,45,45,0.05)] hover:-translate-y-0.5 hover:z-30 focus-within:z-30">
+                     class="card relative group flex items-center justify-between p-3 hover:z-30 focus-within:z-30">
                 
                 <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${m.name}">View Material</span></a>
                 

@@ -10,7 +10,7 @@
     </div>
 
     <form th:action="@{${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}(_csrf=${_csrf.token})}"
-          th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="card p-8 shadow-ambient">
+          th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="card p-8">
 
         <div class="space-y-6">
             <div>
