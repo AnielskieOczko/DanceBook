@@ -1,10 +1,10 @@
 /**
  * Draws the two charts on the training statistics page.
  *
- * Both datasets arrive as JSON on the canvas elements themselves, colours included, so
- * this file holds no data and no palette -- the colours are Noble Harmony tokens resolved
- * server-side in TrainingEventPalette, which is the only place a training concept becomes
- * a hex value.
+ * Both datasets arrive as JSON on the canvas elements themselves, colours included.
+ * Slices carry design token custom properties (var(--color-...)) which this script
+ * resolves at runtime via getComputedStyle so Chart.js can draw to canvas while the
+ * stylesheet remains the single source of truth.
  */
 (function () {
     function readSlices(canvas) {
@@ -14,6 +14,24 @@
             console.error('[training-stats] could not read chart data', error);
             return [];
         }
+    }
+
+    /**
+     * Canvas 2D cannot resolve CSS custom properties (var(--x)), so resolve
+     * tokens at runtime against computed style on :root or canvas before drawing.
+     */
+    function resolveColor(canvas, color) {
+        if (!color || typeof color !== 'string') return color;
+        var trimmed = color.trim();
+        if (trimmed.indexOf('var(') === 0) {
+            var match = trimmed.match(/^var\(\s*([^,\)\s]+)/);
+            if (match) {
+                var propName = match[1];
+                var computed = getComputedStyle(canvas || document.documentElement).getPropertyValue(propName).trim();
+                if (computed) return computed;
+            }
+        }
+        return color;
     }
 
     /**
@@ -38,7 +56,7 @@
                 labels: slices.map(function (slice) { return slice.label; }),
                 datasets: [{
                     data: slices.map(function (slice) { return slice.minutes; }),
-                    backgroundColor: slices.map(function (slice) { return slice.color; }),
+                    backgroundColor: slices.map(function (slice) { return resolveColor(canvas, slice.color); }),
                     borderWidth: 0
                 }]
             },
@@ -60,7 +78,7 @@
         var slices = readSlices(canvas);
         if (slices.length === 0) return;
 
-        var gridColor = canvas.dataset.gridColor;
+        var gridColor = resolveColor(canvas, canvas.dataset.gridColor);
 
         new Chart(canvas, {
             type: 'bar',
@@ -68,8 +86,8 @@
                 labels: slices.map(function (slice) { return slice.label; }),
                 datasets: [{
                     data: slices.map(function (slice) { return slice.minutes; }),
-                    backgroundColor: slices.map(function (slice) { return slice.color; }),
-                    borderRadius: 6
+                    backgroundColor: slices.map(function (slice) { return resolveColor(canvas, slice.color); }),
+                    borderRadius: 4
                 }]
             },
             options: {

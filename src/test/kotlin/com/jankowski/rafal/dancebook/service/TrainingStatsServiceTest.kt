@@ -430,7 +430,7 @@ class TrainingStatsServiceTest {
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)
 
         (stats.byCategory + stats.byEventType).forEach { slice ->
-            assertTrue(slice.color.startsWith("#"), "slice ${slice.label} has no colour")
+            assertTrue(slice.color.startsWith("var(--color-"), "slice ${slice.label} has no colour: ${slice.color}")
         }
         val unassigned = stats.byCategory.first { it.label == "Unassigned" }
         assertEquals(TrainingEventPalette.UNASSIGNED_COLOR, unassigned.color)

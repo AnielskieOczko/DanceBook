@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.config.SecurityConfig
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Material
@@ -109,8 +110,8 @@ class TrainingEventViewRenderingTest {
             .andExpect(view().name("training-events/list"))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("September 2026")))
             // The rail's stripe is the session's own status colour, straight from the palette.
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("border-left-color:#2e5d51")))
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("border-left-color:#695d46")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("border-left-color:${TrainingEventPalette.ATTENDED.color}")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("border-left-color:${TrainingEventPalette.UNCONFIRMED.color}")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Needs confirmation")))
             // Edit and delete fold behind an overflow menu on a phone.
             .andExpect(content().string(org.hamcrest.Matchers.containsString("js-menu-dropdown")))
@@ -220,7 +221,7 @@ class TrainingEventViewRenderingTest {
             .andExpect(status().isOk)
             .andExpect(view().name("training-events/calendar"))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Needs confirmation")))
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("background-color:#ba1a1a")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("background-color:${TrainingEventPalette.SKIPPED.color}")))
             // The mobile half of the page: the day agenda, its row template and the create button.
             .andExpect(content().string(org.hamcrest.Matchers.containsString("dayAgendaItemTemplate")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("quickCreateFab")))

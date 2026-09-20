@@ -6,7 +6,7 @@
  * rather than hardcoding hex values.
  * ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap')
 layer(base);
 
 /* Source detection is pinned rather than automatic. This stylesheet sits in
@@ -23,74 +23,94 @@ layer(base);
 @source '../../kotlin/**/*.kt';
 
 @theme {
-  --color-inverse-on-surface: #f3f0ef;
-  --color-surface-container-highest: #e5e2e1;
-  --color-error-container: #ffdad6;
-  --color-tertiary-fixed-dim: #d3c3bc;
-  --color-tertiary: #140d09;
-  --color-surface-container: #f0edec;
-  --color-outline: #737877;
-  --color-primary: #090f0f;
-  --color-on-primary: #ffffff;
-  --color-surface-variant: #e5e2e1;
-  --color-on-surface: #1b1c1b;
-  --color-tertiary-fixed: #f0dfd7;
-  --color-on-surface-variant: #434847;
-  --color-surface: #fcf9f8;
-  --color-on-primary-fixed-variant: #414847;
-  --color-on-tertiary-fixed: #221a15;
-  --color-secondary: #695d46;
-  --color-background: #fcf9f8;
-  --color-surface-dim: #dcd9d9;
-  --color-error: #ba1a1a;
-  --color-outline-variant: #c3c7c6;
-  --color-on-secondary-fixed-variant: #504530;
-  --color-primary-fixed-dim: #c1c8c6;
-  --color-surface-container-low: #f6f3f2;
-  --color-on-background: #1b1c1b;
+  --color-surface: #ffffff;
+  --color-surface-container: #f5f5f3;
   --color-surface-container-lowest: #ffffff;
-  --color-on-secondary-fixed: #231a09;
-  --color-inverse-primary: #c1c8c6;
-  --color-secondary-container: #efdec1;
-  --color-surface-container-high: #eae7e7;
-  --color-secondary-fixed: #f2e0c4;
-  --color-on-tertiary-container: #968881;
-  --color-primary-fixed: #dde4e2;
-  --color-primary-container: #1e2524;
-  --color-on-tertiary: #ffffff;
-  --color-surface-bright: #fcf9f8;
-  --color-on-tertiary-fixed-variant: #4f453f;
-  --color-on-secondary-container: #6d614a;
-  --color-surface-tint: #59605e;
-  --color-tertiary-container: #2b221d;
-  --color-on-error-container: #93000a;
-  --color-on-primary-fixed: #161d1c;
-  --color-on-error: #ffffff;
-  --color-secondary-fixed-dim: #d5c4a9;
-  --color-inverse-surface: #313030;
-  --color-on-secondary: #ffffff;
-  --color-on-primary-container: #dde4e2;
-  --color-text-primary: #1b1c1b;
-  --color-text-secondary: #4b5251;
-  --color-border: #c8c4c2;
-  --color-primary-soft: #1e2524;
-  --color-primary-hover: #414847;
-  --color-surface-warm: #f0edec;
-  --color-secondary-hover: #504530;
-  --color-accent: #59605e;
-  --color-danger: #ba1a1a;
-  --color-danger-soft: #ffdad6;
-  --color-success: #2e5d51;
-  --color-success-soft: #e6e2dc;
+  --color-surface-container-low: #f5f5f3;
+  --color-surface-container-high: #f5f5f3;
+  --color-surface-container-highest: #e3e3e0;
+  --color-surface-dim: #f5f5f3;
+  --color-surface-bright: #ffffff;
+  --color-surface-variant: #f5f5f3;
+  --color-surface-warm: #f5f5f3;
+  --color-surface-tint: #1f4b4a;
 
-  --radius: 0.5rem;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  --color-outline: #8e9199;
+  --color-outline-variant: #e3e3e0;
+  --color-border: #e3e3e0;
+
+  --color-on-surface: #16181a;
+  --color-on-surface-variant: #5b6067;
+  --color-text-primary: #16181a;
+  --color-text-secondary: #5b6067;
+  --color-background: #ffffff;
+  --color-on-background: #16181a;
+  --color-inverse-surface: #16181a;
+  --color-inverse-on-surface: #ffffff;
+
+  --color-primary: #1f4b4a;
+  --color-primary-hover: #163736;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1f4b4a;
+  --color-on-primary-container: #ffffff;
+  --color-primary-fixed: #163736;
+  --color-primary-fixed-dim: #1f4b4a;
+  --color-on-primary-fixed: #ffffff;
+  --color-on-primary-fixed-variant: #5b6067;
+  --color-inverse-primary: #1f4b4a;
+  --color-primary-soft: #e9eded;
+  --color-accent: #1f4b4a;
+
+  --color-secondary: #5b6067;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #f5f5f3;
+  --color-on-secondary-container: #16181a;
+  --color-secondary-fixed: #f5f5f3;
+  --color-secondary-fixed-dim: #e3e3e0;
+  --color-on-secondary-fixed: #16181a;
+  --color-on-secondary-fixed-variant: #5b6067;
+  --color-secondary-hover: #16181a;
+
+  --color-tertiary: #5b6067;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #f5f5f3;
+  --color-on-tertiary-container: #5b6067;
+  --color-tertiary-fixed: #f5f5f3;
+  --color-tertiary-fixed-dim: #e3e3e0;
+  --color-on-tertiary-fixed: #16181a;
+  --color-on-tertiary-fixed-variant: #5b6067;
+
+  --color-error: #b3261e;
+  --color-on-error: #ffffff;
+  --color-error-container: #f7e9e8;
+  --color-on-error-container: #b3261e;
+  --color-danger: #b3261e;
+  --color-danger-soft: #f7e9e8;
+
+  --color-warning: #8a5a00;
+  --color-on-warning: #ffffff;
+
+  --color-success: #1f4b4a;
+  --color-success-soft: #e9eded;
+
+  --color-chart-1: #1f4b4a;
+  --color-chart-2: #8a5a00;
+  --color-chart-3: #2b4c6f;
+  --color-chart-4: #b3261e;
+  --color-chart-5: #48592a;
+  --color-chart-6: #633b5e;
+  --color-chart-7: #7a4328;
+  --color-chart-8: #41555e;
+
+  --radius: 4px;
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 8px;
   --radius-full: 9999px;
-  --radius-card: 0.5rem;
-  --radius-button: 0.5rem;
+  --radius-card: 8px;
+  --radius-button: 4px;
   --radius-pill: 9999px;
 
   /* Careful: a --spacing-<name> token shadows the stock --container-<name> one,
@@ -107,46 +127,95 @@ layer(base);
   --spacing-gutter: 32px;
   --spacing-margin: 40px;
 
-  --font-display-lg: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-headline-lg: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-headline-md: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-body-lg: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-body-md: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-label-sm: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-heading: Atkinson Hyperlegible, Inter, sans-serif;
-  --font-body: Atkinson Hyperlegible, Inter, sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Source Serif 4', serif;
+  --font-display-lg: 'Inter', sans-serif;
+  --font-headline-lg: 'Inter', sans-serif;
+  --font-headline-md: 'Inter', sans-serif;
+  --font-body-lg: 'Inter', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-label-sm: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-prose: 'Source Serif 4', serif;
 
-  --text-display-lg: 52px;
-  --text-display-lg--line-height: 1.2;
+  --text-display: 30px;
+  --text-display--line-height: 36px;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 600;
+
+  --text-display-lg: 30px;
+  --text-display-lg--line-height: 36px;
   --text-display-lg--letter-spacing: -0.02em;
-  --text-display-lg--font-weight: 700;
-  --text-headline-lg: 36px;
-  --text-headline-lg--line-height: 1.3;
-  --text-headline-lg--letter-spacing: -0.01em;
+  --text-display-lg--font-weight: 600;
+
+  --text-title: 24px;
+  --text-title--line-height: 32px;
+  --text-title--font-weight: 600;
+
+  --text-headline-lg: 24px;
+  --text-headline-lg--line-height: 32px;
   --text-headline-lg--font-weight: 600;
-  --text-headline-md: 28px;
-  --text-headline-md--line-height: 1.4;
+
+  --text-section: 18px;
+  --text-section--line-height: 28px;
+  --text-section--font-weight: 600;
+
+  --text-headline-md: 18px;
+  --text-headline-md--line-height: 28px;
   --text-headline-md--font-weight: 600;
-  --text-body-lg: 20px;
-  --text-body-lg--line-height: 1.7;
-  --text-body-lg--font-weight: 500;
-  --text-body-md: 18px;
-  --text-body-md--line-height: 1.7;
+
+  --text-body: 16px;
+  --text-body--line-height: 26px;
+  --text-body--font-weight: 400;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 26px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 26px;
   --text-body-md--font-weight: 400;
-  --text-label-md: 15px;
-  --text-label-md--line-height: 1.5;
-  --text-label-md--letter-spacing: 0.05em;
+
+  --text-prose: 17px;
+  --text-prose--line-height: 28px;
+  --text-prose--font-weight: 400;
+
+  --text-label: 13px;
+  --text-label--line-height: 16px;
+  --text-label--font-weight: 600;
+
+  --text-label-md: 13px;
+  --text-label-md--line-height: 16px;
   --text-label-md--font-weight: 600;
+
   --text-label-sm: 13px;
-  --text-label-sm--line-height: 1.5;
-  --text-label-sm--letter-spacing: 0.05em;
+  --text-label-sm--line-height: 16px;
   --text-label-sm--font-weight: 600;
 
-  --shadow-ambient: 0px 4px 20px rgba(45, 45, 45, 0.05);
-  --shadow-warm-sm: 0px 4px 20px rgba(45, 45, 45, 0.05);
-  --shadow-warm-md: 0px 4px 20px rgba(45, 45, 45, 0.05);
-  --shadow-warm-lg: 0px 4px 20px rgba(45, 45, 45, 0.05);
-  --shadow-warm-xl: 0px 4px 20px rgba(45, 45, 45, 0.05);
+  --text-meta: 13px;
+  --text-meta--line-height: 18px;
+  --text-meta--font-weight: 400;
+
+  --text-tabular: 14px;
+  --text-tabular--line-height: 20px;
+  --text-tabular--font-weight: 500;
+
+  --shadow-level-0: none;
+  --shadow-level-1: 0 4px 20px rgba(22, 24, 26, 0.08);
+
+  --shadow-ambient: 0 4px 20px rgba(22, 24, 26, 0.08);
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow: none;
+  --shadow-warm-sm: none;
+  --shadow-warm-md: none;
+  --shadow-warm-lg: none;
+  --shadow-warm-xl: none;
+
+  --shadow-lg: 0 4px 20px rgba(22, 24, 26, 0.08);
+  --shadow-xl: 0 4px 20px rgba(22, 24, 26, 0.08);
 }
 
 /*
@@ -187,8 +256,8 @@ layer(base);
 }
 
 @utility btn-primary {
-  @apply btn btn-md bg-primary-container text-on-primary-container
-           hover:bg-primary-fixed hover:text-on-primary-fixed active:scale-[0.98];
+  @apply btn btn-md bg-primary text-on-primary
+           hover:bg-primary-hover active:scale-[0.98];
 }
 
 @utility btn-secondary {
@@ -197,8 +266,8 @@ layer(base);
 }
 
 @utility btn-outline {
-  @apply btn btn-md bg-transparent border-2 border-primary-container text-on-surface
-           hover:bg-surface-container-highest active:scale-[0.98];
+  @apply btn btn-md bg-transparent border border-outline-variant text-on-surface
+           hover:bg-surface-container active:scale-[0.98];
 }
 
 @utility btn-danger {
@@ -218,7 +287,7 @@ layer(base);
 
 @utility card {
   /* ── Cards ───────────────────────────────────── */
-  @apply bg-surface rounded-card border-2 border-border
+  @apply bg-surface rounded-card border border-outline-variant
            transition-all duration-300;
 }
 
@@ -232,14 +301,12 @@ layer(base);
 
 @utility badge {
   /* ── Badges ──────────────────────────────────── */
-  @apply inline-flex items-center px-3 py-1 rounded-pill
+  @apply inline-flex items-center px-3 py-1 rounded-sm
            text-sm font-semibold whitespace-nowrap;
 }
 
 @utility badge-primary {
-  /* on-surface here is #1b1c1b against a #1e2524 pill -- near-black on near-black.
-       The container colour's own paired on-colour is what makes the label readable. */
-  @apply badge bg-primary-soft text-on-primary-container border border-border;
+  @apply badge bg-primary text-on-primary border border-outline-variant;
 }
 
 @utility badge-secondary {
@@ -247,7 +314,7 @@ layer(base);
 }
 
 @utility badge-accent {
-  @apply badge bg-primary-fixed text-on-primary-fixed;
+  @apply badge bg-primary text-on-primary;
 }
 
 @utility badge-neutral {
@@ -276,14 +343,14 @@ layer(base);
 }
 
 @utility stat-card-label {
-  @apply text-sm text-text-secondary font-bold uppercase tracking-wider;
+  @apply text-label-sm text-text-secondary font-semibold;
 }
 
 @utility form-input {
   /* ── Form Elements ───────────────────────────── */
-  @apply w-full px-4 py-3 bg-surface-container border-2 border-border rounded-md
+  @apply w-full px-4 py-3 bg-surface-container border border-outline rounded-sm
            text-text-primary placeholder-text-secondary text-base min-h-[48px]
-           focus:outline-hidden focus:border-primary-container
+           focus:outline-hidden focus:border-primary
            transition-colors duration-200;
 }
 
@@ -388,7 +455,7 @@ layer(base);
 
 @utility table-header {
   /* ── Table ───────────────────────────────────── */
-  @apply bg-surface-warm text-text-secondary text-xs font-semibold uppercase tracking-wider;
+  @apply bg-surface-container text-text-secondary text-label-sm font-semibold;
 }
 
 @utility table-cell {
@@ -396,7 +463,7 @@ layer(base);
 }
 
 @utility table-row {
-  @apply border-b border-border hover:bg-surface-warm/50 transition-colors;
+  @apply border-b border-outline-variant hover:bg-surface-container/50 transition-colors;
 }
 
 @utility toast {
@@ -646,6 +713,28 @@ layer(base);
     display: none;
   }
 }
+
+@utility prose-text {
+  font-family: var(--font-prose);
+  font-size: 17px;
+  line-height: 28px;
+  max-width: 68ch;
+}
+
+@utility text-tabular {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .text-display,
+  .text-display-lg {
+    font-size: 36px;
+    line-height: 40px;
+  }
+}
 /* ────────────────────────────────────────────────
  * BASE LAYER
  * ──────────────────────────────────────────────── */
@@ -687,10 +776,10 @@ layer(base);
 
 .fc {
   --fc-border-color: var(--color-outline-variant);
-  --fc-page-bg-color: var(--color-surface-container-lowest);
-  --fc-neutral-bg-color: var(--color-surface-container-low);
+  --fc-page-bg-color: var(--color-surface);
+  --fc-neutral-bg-color: var(--color-surface-container);
   --fc-today-bg-color: var(--color-surface-container);
-  --fc-now-indicator-color: var(--color-danger);
+  --fc-now-indicator-color: var(--color-error);
   --fc-list-event-hover-bg-color: var(--color-surface-container);
   font-family: var(--font-body-md);
   color: var(--color-on-surface);
@@ -715,7 +804,7 @@ layer(base);
 
 .fc .fc-button,
 .fc .fc-button-primary {
-  background-color: var(--color-surface-container-lowest);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-outline-variant);
   border-radius: var(--radius-sm);
   color: var(--color-on-surface-variant);
@@ -736,9 +825,9 @@ layer(base);
 }
 .fc .fc-button-primary:not(:disabled).fc-button-active,
 .fc .fc-button-primary:not(:disabled):active {
-  background-color: var(--color-primary-container);
-  border-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
   box-shadow: none;
 }
 .fc .fc-button-primary:focus,
@@ -748,7 +837,7 @@ layer(base);
   outline-offset: 2px;
 }
 .fc .fc-button-primary:disabled {
-  background-color: var(--color-surface-container-lowest);
+  background-color: var(--color-surface);
   border-color: var(--color-outline-variant);
   color: var(--color-on-surface-variant);
   opacity: 0.4;
@@ -786,7 +875,7 @@ layer(base);
   overflow: hidden;
 }
 .fc .fc-col-header-cell {
-  background-color: var(--color-surface-container-low);
+  background-color: var(--color-surface-container);
   padding: 0.5rem 0;
   font-size: 12px;
   font-weight: 600;
@@ -816,8 +905,8 @@ layer(base);
   margin: 4px;
   padding: 4px 0;
   border-radius: var(--radius-full);
-  background-color: var(--color-primary-container);
-  color: var(--color-on-primary-container);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
   text-align: center;
 }
 
@@ -827,7 +916,7 @@ layer(base);
  * be purged.
  */
 .fc .fc-daygrid-day[data-tc-selected] {
-  background-color: var(--color-secondary-container);
+  background-color: var(--color-surface-container);
 }
 /* Today keeps its filled pill when it is also the selected day; overriding the colour here
  * would put near-black text on the near-black pill. */
