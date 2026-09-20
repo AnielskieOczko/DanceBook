@@ -190,7 +190,7 @@
      class="p-4 rounded-md bg-error/10 border border-error mb-6"
      th:classappend="${cls}">
     <div class="flex items-center gap-2 text-error font-semibold text-base mb-2">
-        <span class="material-symbols-outlined text-[20px]" aria-hidden="true">error</span>
+        <span th:replace="~{fragments/icon :: icon(name='error', size='md')}"></span>
         <span th:text="${title ?: 'Please correct the following errors:'}">Please correct the following errors:</span>
     </div>
     <ul class="list-disc list-inside text-sm text-error space-y-1">

@@ -21,7 +21,7 @@
         <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[20px] text-primary">auto_awesome</span> Guided Figure Import
+                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary')}"></span> Guided Figure Import
                 </h2>
                 <p class="text-xs text-on-surface-variant mt-1">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
             </div>
@@ -39,7 +39,7 @@
 
         <!-- Error Display Box -->
         <div id="guided-error-container" class="hidden bg-rose-50 border border-rose-200 text-rose-950 p-4 rounded-lg flex gap-3 text-xs">
-            <span class="material-symbols-outlined text-[20px] text-rose-600 shrink-0">error</span>
+            <span th:replace="~{fragments/icon :: icon(name='error', size='md', cls='text-rose-600 shrink-0')}"></span>
             <div class="space-y-1">
                 <h4 class="font-bold">AI Analysis Failed</h4>
                 <p id="guided-error-message"></p>
@@ -55,10 +55,10 @@
             
             <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
                 <button type="button" id="toggle-schema-btn" class="text-xs text-primary font-medium hover:underline flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[14px]">schema</span> Show Expected JSON Format
+                    <span th:replace="~{fragments/icon :: icon(name='schema', size='sm')}"></span> Show Expected JSON Format
                 </button>
                 <button type="button" id="validate-json-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[18px]">check_circle</span> Validate &amp; Preview
+                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> Validate &amp; Preview
                 </button>
             </div>
 
@@ -96,7 +96,7 @@
             <div class="border-t border-border/40 pt-4 mt-2">
                 <details class="group">
                     <summary class="flex items-center gap-1.5 cursor-pointer list-none text-xs font-semibold text-primary select-none hover:underline">
-                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-90">chevron_right</span>
+                        <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='transform transition-transform group-open:rotate-90')}"></span>
                         ⚙️ Advanced AI Parameters
                     </summary>
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-surface-container/30 p-4 rounded-lg border border-border/50">
@@ -145,7 +145,7 @@
                 </div>
                 <div class="ml-auto">
                     <button type="button" id="parse-url-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span> Analyze Page with AI
+                        <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm')}"></span> Analyze Page with AI
                     </button>
                 </div>
             </div>
@@ -155,10 +155,10 @@
                 <details class="group">
                     <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-semibold text-on-surface">
                         <span class="flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-[16px] text-primary">analytics</span>
+                            <span th:replace="~{fragments/icon :: icon(name='analytics', size='sm', cls='text-primary')}"></span>
                             AI Token Usage Statistics
                         </span>
-                        <span class="material-symbols-outlined text-[16px] transform transition-transform group-open:rotate-180">expand_more</span>
+                        <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='transform transition-transform group-open:rotate-180')}"></span>
                     </summary>
                     <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-border/50 pt-3">
                         <div class="bg-white p-2.5 rounded border border-border/50">
@@ -248,10 +248,10 @@
             <div id="diff-steps-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
                 <button type="button" id="toggle-diff-steps-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
                     <span class="flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-[16px] text-primary">list_alt</span>
+                        <span th:replace="~{fragments/icon :: icon(name='list_alt', size='sm', cls='text-primary')}"></span>
                         Preview Steps to Import (<span id="diff-steps-preview-count">0</span> steps)
                     </span>
-                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-steps-arrow">expand_more</span>
+                    <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-steps-arrow', cls='transform transition-transform')}"></span>
                 </button>
                 <div id="diff-steps-preview-content" class="hidden mt-3 overflow-x-auto">
                     <table class="w-full text-left text-[11px] border-collapse">
@@ -278,10 +278,10 @@
             <div id="diff-links-preview-container" class="hidden border border-border rounded-lg p-4 bg-surface-container/20 space-y-2">
                 <button type="button" id="toggle-diff-links-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
                     <span class="flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-[16px] text-primary">link</span>
+                        <span th:replace="~{fragments/icon :: icon(name='link', size='sm', cls='text-primary')}"></span>
                         Preview Resource Links to Import (<span id="diff-links-preview-count">0</span> links)
                     </span>
-                    <span class="material-symbols-outlined text-[16px] transform transition-transform" id="diff-links-arrow">expand_more</span>
+                    <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-links-arrow', cls='transform transition-transform')}"></span>
                 </button>
                 <div id="diff-links-preview-content" class="hidden mt-3">
                     <ul id="diff-links-preview-list" class="space-y-1.5 list-disc list-inside text-[11px] text-on-surface-variant">
@@ -294,7 +294,7 @@
             <div class="flex justify-end gap-3 pt-4 border-t border-border">
                 <button type="button" id="discard-import-btn" class="btn-outline btn-sm">Discard</button>
                 <button type="button" id="apply-import-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[18px]">check_circle</span> Apply to Form
+                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> Apply to Form
                 </button>
             </div>
         </div>
@@ -312,7 +312,7 @@
                 <!-- Section 1: Core Information -->
                 <div class="card p-8 space-y-6 bg-white">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[20px] text-primary">info</span> Core Information
+                        <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-primary')}"></span> Core Information
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -365,7 +365,7 @@
                 <!-- Section 2: Positions & Footwork -->
                 <div class="card p-8 space-y-6 bg-white">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[20px] text-primary">accessibility_new</span> Positions &amp; Footwork
+                        <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span> Positions &amp; Footwork
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -382,7 +382,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-4">
                         <div>
                             <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px] text-primary">face</span> Leader Footwork
+                                <span th:replace="~{fragments/icon :: icon(name='face', size='sm', cls='text-primary')}"></span> Leader Footwork
                             </h3>
                             <div class="space-y-4">
                                 <div>
@@ -397,7 +397,7 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-[16px] text-primary">face_2</span> Follower Footwork
+                                <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm', cls='text-primary')}"></span> Follower Footwork
                             </h3>
                             <div class="space-y-4">
                                 <div>
@@ -420,7 +420,7 @@
                 <!-- Section 5: External Links & Videos -->
                 <div class="card p-8 space-y-6 bg-white flex flex-col h-full">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2 flex-shrink-0">
-                        <span class="material-symbols-outlined text-[20px] text-primary">smart_display</span> Videos &amp; Resources
+                        <span th:replace="~{fragments/icon :: icon(name='smart_display', size='md', cls='text-primary')}"></span> Videos &amp; Resources
                     </h2>
                     
                     <div class="overflow-x-auto min-h-[100px] flex-1">
@@ -450,8 +450,8 @@
                                         </select>
                                     </td>
                                     <td class="py-2 text-right">
-                                        <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
-                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        <button type="button" aria-label="Remove link" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
+                                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                         </button>
                                     </td>
                                 </tr>
@@ -460,7 +460,7 @@
                     </div>
                     
                     <button type="button" id="add-link-btn" class="btn-outline btn-sm w-full mt-4 flex-shrink-0">
-                        <span class="material-symbols-outlined text-[16px]">add</span> Add Resource Link
+                        <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Resource Link
                     </button>
                 </div>
                  <!-- MIDDLE SECTION: Step-by-Step Breakdown (Full Width) -->
@@ -469,7 +469,7 @@
             <div class="card p-8 space-y-6 bg-white overflow-hidden" id="step-sets-card">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3 gap-3">
                     <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[20px] text-primary">list_alt</span> Steps Breakdown
+                        <span th:replace="~{fragments/icon :: icon(name='list_alt', size='md', cls='text-primary')}"></span> Steps Breakdown
                     </h2>
                     
                     <!-- Step Sets Tab Bar -->
@@ -479,10 +479,10 @@
                              th:classappend="${setStat.index == 0 ? 'bg-primary border-primary text-white' : 'bg-surface border-border text-text-secondary hover:text-on-surface'}"
                              th:data-set-idx="${setStat.index}">
                             <span class="js-tab-name-display" th:text="${set.name ?: 'Set ' + (setStat.index + 1)}">Default</span>
-                            <span th:if="${set.isDefault}" class="js-tab-default-indicator material-symbols-outlined text-[14px]">star</span>
+                            <span th:if="${set.isDefault}" th:replace="~{fragments/icon :: icon(name='star', size='sm', cls='js-tab-default-indicator')}"></span>
                         </div>
                         <button type="button" id="add-step-set-btn" class="btn-outline btn-sm py-1 px-2.5 flex items-center gap-1 shrink-0">
-                            <span class="material-symbols-outlined text-[16px]">add</span> Add Combination
+                            <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Combination
                         </button>
                     </div>
                 </div>
@@ -515,7 +515,7 @@
                             
                             <div class="flex items-center justify-end pt-4">
                                 <button type="button" class="btn-outline btn-sm text-danger hover:bg-danger-soft/20 border-danger/30 hover:border-danger js-remove-step-set-btn">
-                                    <span class="material-symbols-outlined text-[16px] mr-1">delete</span> Delete Combination
+                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='mr-1')}"></span> Delete Combination
                                 </button>
                             </div>
                         </div>
@@ -525,10 +525,10 @@
                             <span class="text-sm font-bold text-outline uppercase">Steps List</span>
                             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
                                 <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
-                                    <span class="material-symbols-outlined text-[18px]">face</span> Leader
+                                    <span th:replace="~{fragments/icon :: icon(name='face', size='sm')}"></span> Leader
                                 </button>
                                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
-                                    <span class="material-symbols-outlined text-[18px]">face_2</span> Follower
+                                    <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm')}"></span> Follower
                                 </button>
                             </div>
                         </div>
@@ -558,8 +558,8 @@
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                                 <input type="hidden" class="step-role" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].role'" value="LEADER" />
                                                 <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
-                                                <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
-                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
@@ -593,10 +593,10 @@
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
                                                 <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
                                                     <span>Show Technical Details</span>
-                                                    <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                                    <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='js-mobile-arrow')}"></span>
                                                 </button>
-                                                <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
-                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
+                                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -604,7 +604,7 @@
                                 </table>
                             </div>
                             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="LEADER">
-                                <span class="material-symbols-outlined text-[16px]">add</span> Add Leader Step
+                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Leader Step
                             </button>
                         </div>
 
@@ -633,8 +633,8 @@
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                                 <input type="hidden" class="step-role" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].role'" value="FOLLOWER" />
                                                 <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
-                                                <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
-                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
@@ -668,10 +668,10 @@
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
                                                 <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
                                                     <span>Show Technical Details</span>
-                                                    <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                                                    <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='js-mobile-arrow')}"></span>
                                                 </button>
-                                                <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
-                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
+                                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                         </tr>
@@ -679,7 +679,7 @@
                                 </table>
                             </div>
                             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
-                                <span class="material-symbols-outlined text-[16px]">add</span> Add Follower Step
+                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Follower Step
                             </button>
                         </div>
                     </div>
@@ -694,7 +694,7 @@
             <!-- Figure Connections (1/3 Width) -->
             <div class="card p-8 space-y-6 bg-white lg:col-span-1">
                 <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[20px] text-primary">link</span> Connections
+                    <span th:replace="~{fragments/icon :: icon(name='link', size='md', cls='text-primary')}"></span> Connections
                 </h2>
 
                 <!-- Preceding Figures -->
@@ -723,7 +723,7 @@
             <!-- Notes (2/3 Width) -->
             <div class="card p-8 space-y-6 bg-white lg:col-span-2">
                 <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[20px] text-primary">description</span> Figure Notes
+                    <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> Figure Notes
                 </h2>
                 <div>
                     <label for="notes" class="form-label">General Notes</label>

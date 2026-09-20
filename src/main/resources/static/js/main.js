@@ -563,3 +563,21 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+/**
+ * Renders an icon span matching the Thymeleaf fragments/icon contract.
+ * @param {string} name - Material Symbol glyph name
+ * @param {Object} [options] - Options: size ('sm'|'md'|'lg'), filled (boolean), cls (string), ariaLabel (string), id (string), title (string)
+ * @returns {string} HTML string for the icon
+ */
+function renderIcon(name, options = {}) {
+    const size = options.size || 'md';
+    const sizeClass = size === 'sm' ? 'text-[16px]' : (size === 'lg' ? 'text-[24px]' : 'text-[20px]');
+    const filledClass = options.filled ? ' icon-filled' : '';
+    const cls = options.cls ? ' ' + options.cls : '';
+    const idAttr = options.id ? ` id="${options.id}"` : '';
+    const titleAttr = options.title ? ` title="${options.title}"` : '';
+    const ariaAttr = options.ariaLabel ? `aria-label="${options.ariaLabel}" aria-hidden="false"` : 'aria-hidden="true"';
+    return `<span${idAttr}${titleAttr} class="material-symbols-outlined shrink-0 select-none ${sizeClass}${filledClass}${cls}" ${ariaAttr}>${name}</span>`;
+}
+
+

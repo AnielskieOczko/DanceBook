@@ -31,14 +31,14 @@
 
     <div class="card p-8 space-y-6">
         <h2 class="text-xl font-bold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-[20px] text-primary">event</span>
+            <span th:replace="~{fragments/icon :: icon(name='event', size='md', cls='text-primary')}"></span>
             Session details
         </h2>
 
         <div class="flex flex-wrap items-center gap-2">
             <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
             <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
-                <span class="material-symbols-outlined text-[16px]">event_repeat</span>
+                <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
                 <span>Repeating series</span>
             </span>
             <span th:each="segment : ${event.segments}" class="badge-secondary"

@@ -339,7 +339,7 @@
     <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-danger">
             <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined">error</span>
+                ${renderIcon('error', { size: 'md' })}
             </div>
             <h3 id="confirmModalTitle" class="font-headline-md text-on-surface text-xl font-semibold">Cannot Verify Changes</h3>
         </div>

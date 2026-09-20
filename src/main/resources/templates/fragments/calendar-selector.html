@@ -19,7 +19,7 @@
     </div>
     <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
             hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
-        <span class="material-symbols-outlined text-[18px]">sync</span>
+        <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
         <span>Sync now</span>
     </button>
     <span class="text-xs text-text-secondary whitespace-nowrap"

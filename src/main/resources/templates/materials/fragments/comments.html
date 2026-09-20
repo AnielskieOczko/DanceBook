@@ -53,13 +53,13 @@
                     th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
-                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span class="material-symbols-outlined text-[14px]">edit</span> Edit</button>
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit</button>
             <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
                     hx-confirm="Remove this note?"
-                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-error transition-colors"><span class="material-symbols-outlined text-[14px]">delete</span> Delete</button>
+                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-error transition-colors"><span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete</button>
         </div>
     </div>
 </div>

@@ -9,7 +9,7 @@
 
     <div th:if="${#lists.isEmpty(danceTypes)}" class="empty-state">
         <div class="empty-state-icon">
-            <span class="material-symbols-outlined text-[32px] text-text-secondary">category</span>
+            <span th:replace="~{fragments/icon :: icon(name='category', size='lg', cls='text-text-secondary')}"></span>
         </div>
         <h3 class="empty-state-title">No dance styles</h3>
         <p class="empty-state-text">Add your first dance style to start categorizing materials.</p>
@@ -20,7 +20,7 @@
         <div th:each="dt : ${danceTypes}" class="flex items-center justify-between p-4 hover:bg-surface-warm/50 transition-colors">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-button bg-primary-soft flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-primary text-[18px]">category</span>
+                    <span th:replace="~{fragments/icon :: icon(name='category', size='sm', cls='text-primary')}"></span>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                     <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
@@ -28,13 +28,14 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="btn-icon p-1.5" title="Edit">
-                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="btn-icon" title="Edit" aria-label="Edit">
+                    <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                 </a>
                 <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post"
                       onsubmit="return confirm('Delete this style?')">
-                    <button type="submit" class="btn-icon p-1.5 hover:text-danger" title="Delete">
-                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                    <button type="submit" class="flex items-center gap-1.5 px-3 min-h-[44px] rounded-md text-error hover:bg-danger-soft/20 text-sm font-label-sm" title="Delete">
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
+                        <span>Delete</span>
                     </button>
                 </form>
             </div>

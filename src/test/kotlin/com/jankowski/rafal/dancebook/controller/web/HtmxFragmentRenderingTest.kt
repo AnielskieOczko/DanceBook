@@ -184,4 +184,15 @@ class HtmxFragmentRenderingTest {
             .andExpect(view().name("notifications/dropdown :: notificationPanel"))
             .andExpect(content().string(startsWith("<div")))
     }
+
+    @Test
+    fun `dance-figures new form renders chevron with rotating classes passed via cls`() {
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(get("/dance-figures/new").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("dance-figures/form"))
+            .andExpect(content().string(containsString("transform transition-transform group-open:rotate-90")))
+            .andExpect(content().string(containsString("transform transition-transform group-open:rotate-180")))
+    }
 }

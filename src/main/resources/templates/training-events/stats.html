@@ -9,19 +9,19 @@
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <a href="/training-events/history" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
                     History
                 </a>
                 <a href="/training-events/timeline" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">timeline</span>
+                    <span th:replace="~{fragments/icon :: icon(name='timeline', size='md')}"></span>
                     Timeline
                 </a>
                 <a href="/training-events" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">list</span>
+                    <span th:replace="~{fragments/icon :: icon(name='list', size='md')}"></span>
                     List
                 </a>
                 <a href="/training-events/calendar" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                    <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md')}"></span>
                     Calendar
                 </a>
             </div>
@@ -40,25 +40,15 @@
     </div>
 
     <!-- Empty state: no sessions to summarise. -->
-    <div th:if="${stats.counts.total == 0}" class="card">
-        <div class="empty-state">
-            <span class="material-symbols-outlined empty-state-icon">monitoring</span>
-            <h2 class="empty-state-title"
-                th:text="${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'">
-                No sessions logged yet</h2>
-            <p class="empty-state-text"
-               th:text="${stats.period.name() == 'ALL_TIME'}
-                   ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
-                   : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'">
-                Log a training session and this page will start
-                keeping score: hours trained, how often you show up, and where your time goes.</p>
-            <a href="/training-events/new" class="btn-primary"
-               th:if="${activeCalendar == null || activeCalendar.enabled}">
-                <span class="material-symbols-outlined text-[20px]">add</span>
-                Add Session
-            </a>
-        </div>
-    </div>
+    <div th:if="${stats.counts.total == 0}"
+         th:replace="~{fragments/empty :: emptyState(
+             icon='monitoring',
+             title=(${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'),
+             text=(${stats.period.name() == 'ALL_TIME'}
+                 ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
+                 : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'),
+             actionHref=(${activeCalendar == null || activeCalendar.enabled} ? '/training-events/new' : null),
+             actionLabel='Add Session')}"></div>
 
     <div th:if="${stats.counts.total > 0}" class="space-y-lg">
 
@@ -92,7 +82,7 @@
         <a th:if="${stats.counts.unconfirmed > 0}"
            th:href="@{/training-events(awaitingConfirmation=true)}"
            class="card p-4 flex items-center gap-4 hover:border-outline transition-colors">
-            <span class="material-symbols-outlined text-secondary">help</span>
+            <span th:replace="~{fragments/icon :: icon(name='help', size='md', cls='text-secondary')}"></span>
             <div>
                 <p class="font-semibold text-text-primary"
                    th:text="${stats.counts.unconfirmed} + ' past sessions need confirming'">

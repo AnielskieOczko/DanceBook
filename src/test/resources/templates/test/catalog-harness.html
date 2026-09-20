@@ -11,7 +11,19 @@
 </div>
 
 <div th:fragment="iconAll">
-    <span th:replace="~{fragments/icon :: icon(name='star', size='lg', filled=true, cls='custom-icon')}"></span>
+    <span th:replace="~{fragments/icon :: icon(name='star', size='lg', filled=true, cls='custom-icon', ariaLabel='Favorite', id='test-icon-id', title='Favorite icon')}"></span>
+</div>
+
+<div th:fragment="iconSm">
+    <span th:replace="~{fragments/icon :: icon(name='star', size='sm')}"></span>
+</div>
+
+<div th:fragment="iconMd">
+    <span th:replace="~{fragments/icon :: icon(name='star', size='md')}"></span>
+</div>
+
+<div th:fragment="iconWithRotation">
+    <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='transform transition-transform group-open:rotate-90')}"></span>
 </div>
 
 <!-- 2. BUTTON: link -->

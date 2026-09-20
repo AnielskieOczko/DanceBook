@@ -10,8 +10,8 @@
             <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-4xl">
                 <span th:text="${appUser.displayName != null ? appUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
-            <button class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full p-2 hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-[16px]">edit</span>
+            <button type="button" class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-primary-fixed transition-colors" aria-label="Edit avatar" title="Edit avatar">
+                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
             </button>
         </div>
         <div th:replace="~{fragments/page :: header(title=${appUser.displayName}, subtitle=${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}, cls='mb-0')}"></div>
@@ -36,8 +36,8 @@
         <div>
             <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-xs">
                 <h2 class="font-headline-md text-headline-md text-on-surface">My Collections</h2>
-                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors">
-                    <span class="material-symbols-outlined">add_circle</span>
+                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center" aria-label="New collection" title="New collection">
+                    <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md')}"></span>
                 </a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
@@ -50,7 +50,7 @@
                 <a th:each="list : ${navLists}" th:href="@{/lists/{id}(id=${list.id})}"
                    class="card group overflow-hidden cursor-pointer flex h-24">
                      <div class="w-1/3 bg-surface-container-highest flex items-center justify-center">
-                         <span class="material-symbols-outlined text-outline" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
+                         <span th:replace="~{fragments/icon :: icon(name=${list.isPublic ? 'public' : 'lock'}, size='md', cls='text-outline')}"></span>
                      </div>
                      <div class="w-2/3 p-md flex flex-col justify-center">
                          <h3 class="font-body-lg text-body-lg text-on-surface mb-xs truncate" th:text="${list.name}">Collection Name</h3>
@@ -98,7 +98,7 @@
                 <li class="border-t border-outline-variant">
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="w-full flex items-center gap-sm py-4 text-error hover:opacity-70 transition-colors">
-                            <span class="material-symbols-outlined">logout</span>
+                            <span th:replace="~{fragments/icon :: icon(name='logout', size='md')}"></span>
                             <span class="font-body-md text-body-md font-medium">Log Out</span>
                         </button>
                     </form>

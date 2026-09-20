@@ -6,6 +6,8 @@
 <body>
 
 <span th:fragment="icon"
+      th:id="${id}"
+      th:title="${title}"
       class="material-symbols-outlined shrink-0 select-none"
       th:classappend="${(size == 'sm' ? 'text-[16px]' : (size == 'lg' ? 'text-[24px]' : 'text-[20px]')) + (filled == true ? ' icon-filled' : '') + (cls != null ? ' ' + cls : '')}"
       th:attr="aria-hidden=${ariaLabel == null ? 'true' : 'false'}, aria-label=${ariaLabel}"
