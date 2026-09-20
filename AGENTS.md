@@ -120,7 +120,9 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   whole literals — `'badge-' + status` yields nothing. `buildTailwind` in
   `build.gradle.kts` declares the same three directories as task inputs; change one place
   and you must change the other, or Gradle serves stale CSS.
-  `TailwindOutputCssTest` guards the classes that only exist in JS or Kotlin.
+  `TailwindOutputCssTest` guards the classes that only exist in JS or Kotlin, and since
+  #95 also that the utilities deleted there stay deleted, that the type tokens reach the
+  output, and that control borders resolve through `outline`.
   `static/css/output.css` is generated and gitignored; never edit it by hand.
 - **Colours, type and elevation come from the design tokens** in the `@theme` block of
   `frontend/input.css`. Tailwind 4 emits every entry as a CSS custom property on `:root`.
@@ -133,16 +135,30 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   carries form-control borders, where AA wants 3:1 for non-text contrast.
   `outline-variant` (1.29:1) is decorative hairlines and table rules only — never put it on
   a control.
+- **A background token never goes in a text slot.** Text on a coloured ground takes the
+  matching foreground token — `on-primary` over `primary`, `on-error` over `error` — never
+  `surface`. `text-surface` renders the right pixel today only because the page ground is
+  also white, which is exactly why the mistake survives review; it is the vocabulary
+  collapse #46 exists to end.
 - **Two type faces, by role.** Inter for UI, labels, navigation and all tabular data;
   Source Serif 4 for long-form prose only. Nothing else — Atkinson Hyperlegible and Manrope
   were retired in #93, and the tracked-out ALL-CAPS label style went with them.
 - **Elevation has exactly two levels.** Level 0 is flat with a 1px `outline-variant`
   hairline — every card, table, input and panel — so the stock shadow tokens (`shadow-xs`,
-  `-sm`, `-md`) resolve to `none`. Level 1 is a real shadow and belongs only to things that
-  genuinely float: dropdowns, the toast, modals. **Known exception:** `shadow-ambient`
-  still paints, because its 30 call sites mix five modal panels and the calendar
-  quick-create sheet with ~18 flat cards, and no token can tell them apart. Items 3 and 12
-  of #46 resolve it by removing the class from the flat sites.
+  `-sm`, `-md`) resolve to `none`, and a flat surface stays flat in every state, hover
+  included. Level 1 is `shadow-ambient`. #95 cut it back from ~30 call sites to the 12
+  that genuinely float: the sticky header, the fixed mobile bottom nav, the modal and
+  confirm dialogs, the two dropdown menus, the agenda's fixed bulk-action bar, and the
+  calendar quick-create popover. Putting it on anything that sits in the page flow is the
+  mistake it exists to prevent.
+- **The component layer is the `@utility` blocks in `frontend/input.css`** — 70 of them,
+  consumed heavily by the templates (`card`, `form-input`, `form-label`, `table-cell`,
+  `badge`). #95 put every one on the canonical tokens, so nothing in the stylesheet reaches
+  for a legacy alias any more, even though the aliases stay *defined* in `@theme` for the
+  ~30 templates that still name them. Write a new utility in canonical tokens only.
+  A `@utility` emits no CSS until a scanned source names it, so a dead one is invisible in
+  the output and accumulates silently — #95 deleted 25. Search templates, `static/js` and
+  `src/main/kotlin` before deleting or renaming one.
 - **Colour never becomes a hex literal in Kotlin or JS.** `dto/TrainingEventPalette.kt`
   maps a training status to a *token* (`var(--color-…)`) and derives its 10% calendar tint
   with `color-mix`. An inline style resolves `var()` natively; a canvas cannot, so
@@ -153,8 +169,13 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   `.text-title` only once a scanned source references it literally, so a freshly added
   token styles nothing until a template uses it — which looks exactly like a dropped rule
   and is not one. Read the custom property directly (`var(--text-title)`) if you need it
-  before then. `text-title`, `text-section`, `text-prose`, `text-meta` and `text-tabular`
-  are in this state today; items 3 onward start consuming them.
+  before then.
+- **The default border colour is not a DanceBook token.** The Tailwind v4 compat shim near
+  the top of `input.css` sets `border-color: var(--color-gray-200, currentcolor)` on every
+  element, and `--color-gray-200` does resolve — to Tailwind's stock
+  `oklch(92.8% .006 264.531)`, not to `outline-variant`. So a bare `border` class, which
+  the templates carry ~176 of, paints a colour the design system never picked. Name the
+  colour (`border border-outline-variant`) rather than relying on the default.
 - **Do not use `max-w-{xs,sm,md,lg,xl}`.** The named spacing scale defines
   `--spacing-md` and friends, and a `--spacing-<name>` token shadows the stock
   `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
