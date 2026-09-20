@@ -15,7 +15,7 @@
                 <div class="relative flex-1 group">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
                     <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-none"
+                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
                            placeholder="Search..."
                            hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                 </div>
@@ -32,7 +32,7 @@
                         <input type="radio" name="view" value="list" class="hidden peer"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">view_list</span>
                         </div>
                     </label>
@@ -40,7 +40,7 @@
                         <input type="radio" name="view" value="grid" class="hidden peer"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span class="material-symbols-outlined text-[18px]">grid_view</span>
                         </div>
                     </label>
@@ -92,7 +92,7 @@
                     <div class="flex flex-col gap-1">
                         <label for="filterRating" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Minimum Rating</label>
                         <select name="minRating" id="filterRating" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
                                 th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                             <option value="" th:selected="${selectedMinRating == null}">Any Rating</option>
                             <option value="5" th:selected="${selectedMinRating == 5}">★★★★★ (5 Stars)</option>
@@ -108,7 +108,7 @@
                 <div class="flex flex-col gap-1 mt-4">
                     <label for="filterSort" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
                     <select name="sort" id="filterSort" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-none w-full"
+                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
                             th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <option value="createdAt,desc" th:selected="${currentSort == 'createdAt,desc'}">Newest First</option>
                         <option value="createdAt,asc" th:selected="${currentSort == 'createdAt,asc'}">Oldest First</option>
@@ -190,7 +190,7 @@
                             </div>
                         </div>
                         <div th:if="${m.description}" class="mt-auto pt-3 relative z-20 pointer-events-auto">
-                             <button type="button" class="js-expand-btn text-primary flex items-center gap-1 text-sm font-label-md transition-colors hover:text-primary-container focus:outline-none">
+                             <button type="button" class="js-expand-btn text-primary flex items-center gap-1 text-sm font-label-md transition-colors hover:text-primary-container focus:outline-hidden">
                                  <span class="btn-text pointer-events-none">View description</span>
                                  <span class="material-symbols-outlined transition-transform duration-300 icon-expand pointer-events-none">expand_more</span>
                              </button>

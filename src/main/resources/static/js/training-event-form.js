@@ -334,9 +334,9 @@
                 const container = document.getElementById('confirmModalContainer');
                 if (container) {
                     container.innerHTML = `
-<div id="confirmModal" class="js-modal fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+<div id="confirmModal" class="js-modal fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
     <div class="js-modal-backdrop fixed inset-0"></div>
-    <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-md w-full mx-4 p-6 relative z-10">
+    <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-danger">
             <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined">error</span>

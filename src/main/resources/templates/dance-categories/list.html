@@ -19,7 +19,7 @@
     <div th:if="${!#lists.isEmpty(danceCategories)}" class="flex flex-col gap-6 sm:gap-8">
         
         <!-- Desktop Header (Standalone) -->
-        <div class="hidden sm:flex bg-surface-container-low border border-[#EAEAEA] rounded-lg shadow-sm">
+        <div class="hidden sm:flex bg-surface-container-low border border-[#EAEAEA] rounded-lg shadow-xs">
             <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/2">Name</div>
             <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant w-1/4">Type</div>
             <div class="px-6 py-3 text-xs font-label-sm uppercase tracking-wider text-on-surface-variant text-right w-1/4">Actions</div>
@@ -56,14 +56,14 @@
             </div>
             
             <!-- Empty State for Category -->
-            <div th:if="${#lists.isEmpty(dc.danceTypes)}" class="bg-white p-4 sm:px-6 sm:py-4 pl-12 sm:pl-[4.5rem]">
+            <div th:if="${#lists.isEmpty(dc.danceTypes)}" class="bg-white p-4 sm:px-6 sm:py-4 pl-12 sm:pl-18">
                 <span class="text-sm font-body-md text-outline italic">
                     No styles added to this category yet.
                 </span>
             </div>
 
             <!-- Style Rows -->
-            <div th:each="dt : ${dc.danceTypes}" class="bg-white hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center p-4 pl-12 sm:p-0 sm:pl-[4.5rem]">
+            <div th:each="dt : ${dc.danceTypes}" class="bg-white hover:bg-surface-container-low/50 transition-colors flex flex-col sm:flex-row sm:items-center p-4 pl-12 sm:p-0 sm:pl-18">
                 <div class="sm:w-1/2 sm:py-4 mb-1 sm:mb-0">
                     <span class="font-body-md text-on-surface text-sm font-medium" th:text="${dt.name}">Style Name</span>
                 </div>

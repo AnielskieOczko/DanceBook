@@ -16,6 +16,7 @@ Keep responses concise and focused on the task at hand.
 ./gradlew test --tests "com.jankowski.rafal.dancebook.service.DanceFigureServiceTest"
 ./gradlew test --tests "*DanceFigureServiceTest.should create figure*"
 ./gradlew buildTailwind         # regenerate static/css/output.css only
+./gradlew watchTailwind         # rebuild output.css on every source change, until interrupted
 docker compose up -d postgres   # local Postgres (dancebook/dancebook @ :5432)
 docker compose up -d sonarqube  # local SonarQube on :9000, for ./gradlew sonar
 ```
@@ -33,7 +34,7 @@ directory, so run them from the repo root.
 ## Stack
 
 Kotlin 1.9 / Java 21 · Spring Boot 3.5 (Web MVC, Data JPA, Security, Thymeleaf) ·
-PostgreSQL + Flyway · Thymeleaf + HTMX 2 + Tailwind 3 · Gradle Kotlin DSL.
+PostgreSQL + Flyway · Thymeleaf + HTMX 2 + Tailwind 4 · Gradle Kotlin DSL.
 Deployed to Google Cloud Run via `.github/workflows/deploy.yml`.
 
 ## Architecture
@@ -112,13 +113,24 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   `src/main/resources/db/migration/V<next>__description.sql` — check that directory for the
   highest version rather than trusting a number written here, which goes stale every release.
   `config/FlywayConfig.kt` runs `repair()` before `migrate()` on every boot.
-- **Tailwind only scans templates.** `frontend/tailwind.config.js` has
-  `content: ['../templates/**/*.html']` — classes generated in `static/js/*.js` are
-  **not** emitted. Put dynamically-applied classes in a template or safelist them.
+- **Tailwind scans templates, `static/js`, and `src/main/kotlin`.** There is no
+  `tailwind.config.js` and no safelist: `frontend/input.css` pins its own sources with
+  `@import 'tailwindcss' source(none)` plus three `@source` globs. A class reaches the
+  stylesheet only if it appears literally in one of those trees, so build class names as
+  whole literals — `'badge-' + status` yields nothing. `buildTailwind` in
+  `build.gradle.kts` declares the same three directories as task inputs; change one place
+  and you must change the other, or Gradle serves stale CSS.
+  `TailwindOutputCssTest` guards the classes that only exist in JS or Kotlin.
   `static/css/output.css` is generated and gitignored; never edit it by hand.
-- **Colors come from the "Noble Harmony" token set** in `tailwind.config.js`
-  (`surface`, `on-surface`, `primary`, `outline-variant`, …). Use those tokens rather
-  than raw Tailwind palette values.
+- **Colors come from the "Noble Harmony" token set** in the `@theme` block of
+  `frontend/input.css` (`surface`, `on-surface`, `primary`, `outline-variant`, …). Use
+  those tokens rather than raw Tailwind palette values. Tailwind 4 emits every `@theme`
+  entry as a CSS custom property on `:root`, so JS should read them with
+  `getComputedStyle` instead of duplicating hex values.
+- **Do not use `max-w-{xs,sm,md,lg,xl}`.** The named spacing scale defines
+  `--spacing-md` and friends, and a `--spacing-<name>` token shadows the stock
+  `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
+  `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
   the policy allowlists only `unpkg.com` (HTMX, SortableJS), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.
@@ -228,9 +240,10 @@ ask — nobody is reading the run live, so a question ends the run without an an
   `controller/web/DanceFigureWebController.kt` (fragment selector on `HX-Request`).
 - **New top-level route ⇒ add a branch to `activeNav()`** in
   `controller/web/NavbarAdvice.kt`.
-- **Colours come from the Noble Harmony tokens** in `frontend/tailwind.config.js`, not raw
-  Tailwind palette values. Tailwind only scans templates, so classes used from
-  `static/js/*.js` must be safelisted or placed in a template.
+- **Colours come from the Noble Harmony tokens** in the `@theme` block of
+  `frontend/input.css`, not raw Tailwind palette values. Tailwind scans templates,
+  `static/js` and `src/main/kotlin`, so a class name must appear as a whole literal in one
+  of those trees to be emitted — never assemble one by concatenation.
 - **New external script/style ⇒ update the CSP** in `config/SecurityConfig.kt`.
 
 **Never touch**

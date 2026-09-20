@@ -27,7 +27,8 @@ out/
 !**/src/test/**/out/
 ### Node ###
 node_modules/
-package-lock.json
+# package-lock.json is tracked: CI must build the same Tailwind patch release that was
+# verified locally, and output.css is generated rather than committed.
 src/main/resources/static/css/output.css
 
 ### Kotlin ###
