@@ -91,8 +91,11 @@ itself rather than following a plan Claude wrote:
 - **HTMX** — new list/filter endpoints return a fragment selector on `HX-Request` and skip
   loading dropdown data, per `controller/web/DanceFigureWebController.kt`.
 - **Navbar** — new top-level routes have an `activeNav()` branch in `NavbarAdvice.kt`.
-- **Tailwind** — Noble Harmony tokens only; no classes generated from `static/js/*.js`
-  without a safelist; `static/css/output.css` untouched.
+- **Tailwind** — design tokens only, never raw palette values and never a hex literal in
+  Kotlin or JS; `outline` on controls and `outline-variant` only on decoration; class names
+  as whole literals, never assembled by concatenation (there is no safelist — `input.css`
+  pins its sources with `@source` globs covering templates, `static/js` and
+  `src/main/kotlin`); `static/css/output.css` untouched.
 - **CSP** — new external scripts/styles are allowlisted in `config/SecurityConfig.kt`.
 - **Tests** — new service logic has JUnit 5 + Mockito coverage in the existing style, and
   no `@DataJpaTest` slice has crept in.
