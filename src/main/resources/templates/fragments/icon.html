@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<span th:fragment="icon"
+      class="material-symbols-outlined shrink-0 select-none"
+      th:classappend="${(size == 'sm' ? 'text-[16px]' : (size == 'lg' ? 'text-[24px]' : 'text-[20px]')) + (filled == true ? ' icon-filled' : '') + (cls != null ? ' ' + cls : '')}"
+      th:attr="aria-hidden=${ariaLabel == null ? 'true' : 'false'}, aria-label=${ariaLabel}"
+      th:text="${name}">icon</span>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Empty State -->
+<div th:fragment="emptyState" class="empty-state" th:classappend="${cls}">
+    <div th:if="${icon != null}" class="empty-state-icon">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-on-surface-variant')}"></span>
+    </div>
+    <h3 class="empty-state-title" th:text="${title}">No items found</h3>
+    <p th:if="${text != null}" class="empty-state-text" th:text="${text}">There are no items to display.</p>
+    <a th:if="${actionHref != null and actionLabel != null}"
+       th:href="${actionHref}"
+       class="btn-primary"
+       th:text="${actionLabel}">Action</a>
+</div>
+
+</body>
+</html>

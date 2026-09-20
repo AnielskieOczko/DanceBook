@@ -5,10 +5,7 @@
 <section th:with="activeNav='materials'">
 
     <!-- Page Header -->
-    <div class="page-header">
-        <h1 class="page-title" th:text="${materialId == null ? 'New Material' : 'Edit Material'}">Form Title</h1>
-        <p class="page-subtitle" th:text="${materialId == null ? 'Add a new dance material to your library' : 'Update this material'}">Subtitle</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${materialId == null ? 'New Material' : 'Edit Material'}, subtitle=${materialId == null ? 'Add a new dance material to your library' : 'Update this material'})}"></div>
 
     <form th:action="${materialId == null ? '/materials' : '/materials/' + materialId}"
           th:object="${material}" method="post" class="card p-6 md:p-8 space-y-6">

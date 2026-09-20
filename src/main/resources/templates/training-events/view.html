@@ -4,16 +4,15 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-lg">
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div class="page-header mb-0">
-            <h1 class="page-title text-3xl" th:text="${event.title}">Monday practice</h1>
+    <div th:replace="~{fragments/page :: header(title=${event.title}, subtitleSlot=~{::eventSubtitle}, toolbar=~{::eventToolbar})}">
+        <th:block th:fragment="eventSubtitle">
             <p class="page-subtitle">
                 <span th:text="${#temporals.format(event.startTime, 'EEEE, MMMM d yyyy · HH:mm')}">Thursday, September 10 2026 · 18:00</span>
                 <span> – </span>
                 <span th:text="${#temporals.format(event.endTime, 'HH:mm')}">20:00</span>
             </p>
-        </div>
-        <div class="flex items-center gap-3 shrink-0">
+        </th:block>
+        <div th:fragment="eventToolbar" class="flex items-center gap-3 shrink-0">
             <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-primary">Edit</a>
             <button th:if="${event.series != null}"
                     type="button"
@@ -44,11 +43,7 @@
             </span>
             <span th:each="segment : ${event.segments}" class="badge-secondary"
                   th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
-            <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
-            <span th:unless="${event.isAwaitingConfirmation}"
-                  th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
-                                    event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' : 'badge-neutral'}"
-                  th:text="${event.attendanceStatus}">PLANNED</span>
+            <span th:replace="~{fragments/badge :: attendanceBadge(event=${event})}"></span>
             <span class="badge-neutral" th:text="${event.durationMinutes} + ' min'">120 min</span>
         </div>
 

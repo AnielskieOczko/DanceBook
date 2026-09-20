@@ -4,23 +4,13 @@
 
 <section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div class="mb-8 pb-6 border-b border-neutral-100">
-        <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceCategoryId == null ? 'New Category' : 'Edit Category'}">Form Title</h1>
-        <p class="text-on-surface-variant font-body-md">Define a new high-level grouping for your dance styles.</p>
-    </div>
+    <div th:replace="~{fragments/page :: header(title=${danceCategoryId == null ? 'New Category' : 'Edit Category'}, subtitle='Define a new high-level grouping for your dance styles.')}"></div>
 
     <form th:action="@{${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}(_csrf=${_csrf.token})}"
           th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="card p-8">
 
         <div class="space-y-6">
-            <div>
-                <label for="catName" class="form-label">Category Name *</label>
-                <input id="catName" type="text" th:field="*{name}" required 
-                       class="form-input"
-                       th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
-                       placeholder="e.g. Ballet, Contemporary, Jazz...">
-                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
-            </div>
+            <div th:replace="~{fragments/form :: field(path='name', label='Category Name', required=true, placeholder='e.g. Ballet, Contemporary, Jazz...')}"></div>
             
             <!-- Image Upload Section -->
             <div>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 1. ICON -->
+<div th:fragment="iconRequired">
+    <span th:replace="~{fragments/icon :: icon(name='star')}"></span>
+</div>
+
+<div th:fragment="iconAll">
+    <span th:replace="~{fragments/icon :: icon(name='star', size='lg', filled=true, cls='custom-icon')}"></span>
+</div>
+
+<!-- 2. BUTTON: link -->
+<div th:fragment="linkRequired">
+    <a th:replace="~{fragments/button :: link(href='/dest', label='Go')}"></a>
+</div>
+
+<div th:fragment="linkAll">
+    <a th:replace="~{fragments/button :: link(href='/dest', label='Go', variant='secondary', size='sm', icon='arrow_forward', iconPos='right', cls='extra-cls')}"></a>
+</div>
+
+<!-- 3. BUTTON: button -->
+<div th:fragment="buttonRequired">
+    <button th:replace="~{fragments/button :: button(label='Save')}"></button>
+</div>
+
+<div th:fragment="buttonAll">
+    <button th:replace="~{fragments/button :: button(label='Delete', type='submit', variant='danger', size='sm', icon='delete', iconPos='left', name='action', value='del', cls='extra-cls', disabled=true)}"></button>
+</div>
+
+<!-- 4. BUTTON: iconButton -->
+<div th:fragment="iconButtonRequired">
+    <th:block th:replace="~{fragments/button :: iconButton(icon='close', label='Close')}"></th:block>
+</div>
+
+<div th:fragment="iconButtonAll">
+    <th:block th:replace="~{fragments/button :: iconButton(icon='close', label='Close', href='/cancel', variant='primary', size='sm', cls='extra-cls')}"></th:block>
+</div>
+
+<!-- 5. BUTTON: submitRow -->
+<div th:fragment="submitRowRequired">
+    <div th:replace="~{fragments/button :: submitRow(cancelHref='/back', submitLabel='Save')}"></div>
+</div>
+
+<div th:fragment="submitRowAll">
+    <div th:replace="~{fragments/button :: submitRow(cancelHref='/back', submitLabel='Save', cancelLabel='Discard', submitIcon='done', cls='extra-cls')}"></div>
+</div>
+
+<!-- 6. FORM: field -->
+<form th:fragment="fieldRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: field(path='name')}"></div>
+</form>
+
+<form th:fragment="fieldAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: field(path='name', label='Full Name', type='text', hint='Your full legal name', required=true, placeholder='John Doe', disabled=false, readonly=false, autocomplete='name', cls='extra-cls', id='custom-name')}"></div>
+</form>
+
+<div th:fragment="fieldStandalone">
+    <div th:replace="~{fragments/form :: field(path='search', label='Search keyword', placeholder='Search...')}"></div>
+</div>
+
+<!-- 7. FORM: select -->
+<form th:fragment="selectRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: select(path='category')}"></div>
+</form>
+
+<form th:fragment="selectAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: select(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat')}"></div>
+</form>
+
+<!-- 8. FORM: textarea -->
+<form th:fragment="textareaRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: textarea(path='description')}"></div>
+</form>
+
+<form th:fragment="textareaAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: textarea(path='description', label='Description', hint='Optional details', required=false, placeholder='Write...', rows=6, disabled=false, cls='extra-cls', id='custom-desc')}"></div>
+</form>
+
+<!-- 9. FORM: checkbox -->
+<form th:fragment="checkboxRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: checkbox(path='active')}"></div>
+</form>
+
+<form th:fragment="checkboxAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: checkbox(path='active', label='Active Status', hint='Mark as active', disabled=false, cls='extra-cls', id='custom-act')}"></div>
+</form>
+
+<!-- 10. FORM: toggle -->
+<form th:fragment="toggleRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: toggle(path='enabled')}"></div>
+</form>
+
+<form th:fragment="toggleAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: toggle(path='enabled', label='Enable notifications', hint='Receive updates', disabled=false, cls='extra-cls', id='custom-tog')}"></div>
+</form>
+
+<!-- 11. FORM: richText -->
+<form th:fragment="richTextRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: richText(path='notes')}"></div>
+</form>
+
+<form th:fragment="richTextAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: richText(path='notes', label='Notes', hint='Rich text', required=false, placeholder='Write notes...', rows=5, disabled=false, cls='extra-cls', id='custom-rt')}"></div>
+</form>
+
+<!-- 12. FORM: errorSummary -->
+<form th:fragment="errorSummaryRequired" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: errorSummary}"></div>
+</form>
+
+<form th:fragment="errorSummaryAll" th:object="${testForm}">
+    <div th:replace="~{fragments/form :: errorSummary(title='Errors found', cls='extra-cls')}"></div>
+</form>
+
+<!-- 13. FORM: rawField -->
+<div th:fragment="rawFieldRequired">
+    <div th:replace="~{fragments/form :: rawField(name='comment')}"></div>
+</div>
+
+<div th:fragment="rawFieldAll">
+    <div th:replace="~{fragments/form :: rawField(name='comment', label='Add Comment', type='text', value='Initial text', hint='Be helpful', required=true, placeholder='Comment...', disabled=false, cls='extra-cls', id='custom-raw')}"></div>
+</div>
+
+<!-- 14. PAGE: header -->
+<div th:fragment="headerRequired">
+    <div th:replace="~{fragments/page :: header(title='Dashboard')}"></div>
+</div>
+
+<div th:fragment="headerAll">
+    <div th:replace="~{fragments/page :: header(title='Dashboard', subtitle='Welcome back', icon='dashboard', toolbar=~{::headerToolbar}, cls='extra-cls')}">
+        <div th:fragment="headerToolbar" class="flex gap-2">
+            <button class="btn-primary">New Action</button>
+        </div>
+    </div>
+</div>
+
+<!-- 15. PAGE: sectionTitle -->
+<div th:fragment="sectionTitleRequired">
+    <div th:replace="~{fragments/page :: sectionTitle(title='Recent Items')}"></div>
+</div>
+
+<div th:fragment="sectionTitleAll">
+    <div th:replace="~{fragments/page :: sectionTitle(title='Recent Items', icon='history', cls='extra-cls')}"></div>
+</div>
+
+<!-- 16. CARD: statCard -->
+<div th:fragment="statCardRequired">
+    <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users')}"></div>
+</div>
+
+<div th:fragment="statCardAll">
+    <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users', icon='group', trend='+12%', trendUp=true, href='/admin/users', cls='extra-cls')}"></div>
+</div>
+
+<!-- 17. TABLE: dataTable -->
+<div th:fragment="dataTableRequired">
+    <div th:replace="~{fragments/table :: dataTable(head=~{::dtHead}, body=~{::dtBody})}">
+        <tr th:fragment="dtHead"><th>Name</th></tr>
+        <tr th:fragment="dtBody"><td>Alice</td></tr>
+    </div>
+</div>
+
+<div th:fragment="dataTableAll">
+    <div th:replace="~{fragments/table :: dataTable(head=~{::dtHeadAll}, body=~{::dtBodyAll}, cls='extra-cls')}">
+        <tr th:fragment="dtHeadAll"><th>Name</th><th>Role</th></tr>
+        <tr th:fragment="dtBodyAll"><td>Alice</td><td>Admin</td></tr>
+    </div>
+</div>
+
+<!-- 18. TABLE: stepTable -->
+<div th:fragment="stepTableRequired">
+    <div th:replace="~{fragments/table :: stepTable(steps=${steps}, role='LEADER')}"></div>
+</div>
+
+<div th:fragment="stepTableAll">
+    <div th:replace="~{fragments/table :: stepTable(steps=${steps}, role='LEADER', cls='extra-cls')}"></div>
+</div>
+
+<!-- 19. BADGE: badge -->
+<div th:fragment="badgeRequired">
+    <span th:replace="~{fragments/badge :: badge(label='Pending')}"></span>
+</div>
+
+<div th:fragment="badgeAll">
+    <span th:replace="~{fragments/badge :: badge(label='Verified', variant='primary', icon='verified', cls='extra-cls')}"></span>
+</div>
+
+<!-- 20. BADGE: attendanceBadge -->
+<div th:fragment="attendanceBadgeRequired">
+    <span th:replace="~{fragments/badge :: attendanceBadge(event=${event})}"></span>
+</div>
+
+<div th:fragment="attendanceBadgeAll">
+    <span th:replace="~{fragments/badge :: attendanceBadge(event=${event}, cls='extra-cls')}"></span>
+</div>
+
+<!-- 21. EMPTY: emptyState -->
+<div th:fragment="emptyStateRequired">
+    <div th:replace="~{fragments/empty :: emptyState(title='No items found')}"></div>
+</div>
+
+<div th:fragment="emptyStateAll">
+    <div th:replace="~{fragments/empty :: emptyState(icon='folder_open', title='No items found', text='Please create an item to get started.', actionHref='/create', actionLabel='Create Item', cls='extra-cls')}"></div>
+</div>
+
+<!-- 22. ALERT: alert -->
+<div th:fragment="alertRequired">
+    <div th:replace="~{fragments/alert :: alert(text='Operation completed successfully.')}"></div>
+</div>
+
+<div th:fragment="alertAll">
+    <div th:replace="~{fragments/alert :: alert(variant='error', title='Error occurred', text='Failed to save record.', dismissible=true, cls='extra-cls')}"></div>
+</div>
+
+<!-- 23. MODAL: modal -->
+<div th:fragment="modalRequired">
+    <dialog th:replace="~{fragments/modal :: modal(id='testModal')}"></dialog>
+</div>
+
+<div th:fragment="modalAll">
+    <dialog th:replace="~{fragments/modal :: modal(id='testModalAll', title='Confirm Action', body=~{::modalBody}, footer=~{::modalFooter}, size='lg')}">
+        <p th:fragment="modalBody">Are you sure you want to proceed?</p>
+        <button th:fragment="modalFooter" class="btn-primary">Confirm</button>
+    </dialog>
+</div>
+
+<!-- 24. RICH-TEXT: content -->
+<div th:fragment="richTextContentRequired">
+    <div th:replace="~{fragments/rich-text :: content(value='Hello world')}"></div>
+</div>
+
+<div th:fragment="richTextContentAll">
+    <div th:replace="~{fragments/rich-text :: content(value='Hello world', cls='extra-cls')}"></div>
+</div>
+
+<!-- 25. RICH-TEXT: excerpt -->
+<div th:fragment="richTextExcerptRequired">
+    <p th:replace="~{fragments/rich-text :: excerpt(value='Hello world excerpt')}"></p>
+</div>
+
+<div th:fragment="richTextExcerptAll">
+    <p th:replace="~{fragments/rich-text :: excerpt(value='Hello world excerpt that is a bit longer', max=20, cls='extra-cls')}"></p>
+</div>
+
+</body>
+</html>

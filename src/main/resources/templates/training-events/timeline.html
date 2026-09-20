@@ -4,31 +4,29 @@
 
 <section th:with="activeNav='training-timeline'" class="space-y-lg">
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div class="page-header mb-0">
-            <h1 class="page-title text-3xl">Timeline</h1>
-            <p class="page-subtitle">Your training in order — what is coming, and everything behind it.</p>
-        </div>
-        <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
-        <!-- The way back to the rest of the training pages. On a phone this cluster is the only
-             way here and away again: the bottom nav stays at six items on purpose. -->
-        <div class="flex flex-wrap items-center gap-2 shrink-0">
-            <a href="/training-events/history" class="btn-outline">
-                <span class="material-symbols-outlined text-[20px]">history</span>
-                History
-            </a>
-            <a href="/training-events" class="btn-outline">
-                <span class="material-symbols-outlined text-[20px]">list</span>
-                Agenda
-            </a>
-            <a href="/training-events/stats" class="btn-outline">
-                <span class="material-symbols-outlined text-[20px]">monitoring</span>
-                Stats
-            </a>
-            <a href="/training-events/calendar" class="btn-outline">
-                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
-                Calendar
-            </a>
+    <div th:replace="~{fragments/page :: header(title='Timeline', subtitle='Your training in order — what is coming, and everything behind it.', toolbar=~{::timelineToolbar})}">
+        <div th:fragment="timelineToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
+            <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
+            <!-- The way back to the rest of the training pages. On a phone this cluster is the only
+                 way here and away again: the bottom nav stays at six items on purpose. -->
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <a href="/training-events/history" class="btn-outline">
+                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    History
+                </a>
+                <a href="/training-events" class="btn-outline">
+                    <span class="material-symbols-outlined text-[20px]">list</span>
+                    Agenda
+                </a>
+                <a href="/training-events/stats" class="btn-outline">
+                    <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                    Stats
+                </a>
+                <a href="/training-events/calendar" class="btn-outline">
+                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                    Calendar
+                </a>
+            </div>
         </div>
     </div>
 
@@ -36,13 +34,8 @@
          with the sessions it fetched plus the next control. -->
     <div th:fragment="timelinePage" class="space-y-lg">
 
-        <div th:if="${timeline.isEmpty and timeline.isFirstPage}" class="empty-state">
-            <span class="material-symbols-outlined empty-state-icon">timeline</span>
-            <h3 class="empty-state-title">No training logged yet</h3>
-            <p class="empty-state-text">Once you log a session it will show up here, newest first.</p>
-            <a href="/training-events/new" class="btn-primary mt-4"
-               th:if="${activeCalendar == null || activeCalendar.enabled}">Add Session</a>
-        </div>
+        <div th:if="${timeline.isEmpty and timeline.isFirstPage}"
+             th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
 
         <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Standard Page Header -->
+<div th:fragment="header"
+     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
+     th:classappend="${cls}">
+    <div class="page-header mb-0">
+        <h1 class="page-title text-3xl flex items-center gap-2">
+            <span th:if="${icon != null}"
+                  th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
+            <span th:text="${title}">Page Title</span>
+        </h1>
+        <p th:if="${subtitle != null and subtitleSlot == null}" class="page-subtitle" th:text="${subtitle}">Subtitle</p>
+        <th:block th:if="${subtitleSlot != null}">
+            <th:block th:replace="${subtitleSlot}"></th:block>
+        </th:block>
+    </div>
+
+    <!-- Toolbar slot or single action -->
+    <th:block th:if="${toolbar != null}">
+        <div class="shrink-0" th:replace="${toolbar}"></div>
+    </th:block>
+    <th:block th:if="${toolbar == null and actionUrl != null}">
+        <div class="shrink-0">
+            <a th:href="${actionUrl}"
+               class="btn"
+               th:classappend="${actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary'}">
+                <span th:if="${actionIcon != null}"
+                      th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
+                <span th:text="${actionText}">Action</span>
+            </a>
+        </div>
+    </th:block>
+</div>
+
+<!-- Section Title -->
+<div th:fragment="sectionTitle"
+     class="flex items-center gap-2 border-b border-outline-variant pb-2 mb-4"
+     th:classappend="${cls}">
+    <span th:if="${icon != null}"
+          th:replace="~{fragments/icon :: icon(name=${icon}, size='md', cls='text-primary')}"></span>
+    <h2 class="text-section font-sans text-on-surface" th:text="${title}">Section Title</h2>
+</div>
+
+</body>
+</html>

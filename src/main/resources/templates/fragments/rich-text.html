@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Rich text content display (plain text with line breaks until Item 10 adds RichTextService) -->
+<div th:fragment="content"
+     class="rich-text whitespace-pre-line text-on-surface"
+     th:classappend="${cls}"
+     th:text="${value}">Content</div>
+
+<!-- Excerpt display with length truncation -->
+<p th:fragment="excerpt"
+   class="text-on-surface-variant line-clamp-2"
+   th:classappend="${cls}"
+   th:text="${value != null and value.length() > (max ?: 160) ? value.substring(0, max ?: 160) + '...' : value}">Excerpt</p>
+
+</body>
+</html>

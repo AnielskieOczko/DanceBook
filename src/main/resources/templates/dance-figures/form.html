@@ -4,14 +4,9 @@
 
 <section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-    <div class="mb-8 pb-6 border-b border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-headline-lg text-on-surface mb-2" th:text="${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}">Create New Figure</h1>
-            <p class="text-on-surface-variant font-body-md">Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.</p>
-        </div>
-        
+    <div th:replace="~{fragments/page :: header(title=${danceFigureId == null ? 'Create New Figure' : 'Edit Figure'}, subtitle='Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.', toolbar=~{::editModeToolbar})}">
         <!-- Manual vs Guided Edit Tab Switcher -->
-        <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-sm h-fit self-start md:self-center">
+        <div th:fragment="editModeToolbar" class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-sm h-fit self-start md:self-center">
             <button type="button" id="manual-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
                 ✏️ Manual Edit
             </button>
