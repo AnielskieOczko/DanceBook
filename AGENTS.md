@@ -122,11 +122,39 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   and you must change the other, or Gradle serves stale CSS.
   `TailwindOutputCssTest` guards the classes that only exist in JS or Kotlin.
   `static/css/output.css` is generated and gitignored; never edit it by hand.
-- **Colors come from the "Noble Harmony" token set** in the `@theme` block of
-  `frontend/input.css` (`surface`, `on-surface`, `primary`, `outline-variant`, …). Use
-  those tokens rather than raw Tailwind palette values. Tailwind 4 emits every `@theme`
-  entry as a CSS custom property on `:root`, so JS should read them with
-  `getComputedStyle` instead of duplicating hex values.
+- **Colours, type and elevation come from the design tokens** in the `@theme` block of
+  `frontend/input.css`. Tailwind 4 emits every entry as a CSS custom property on `:root`.
+  The palette is deliberately small: five neutrals (`surface`, `surface-container`,
+  `outline-variant`, `outline`, `on-surface-variant`, `on-surface`), one accent
+  (`primary`), and two status colours (`error`, `warning`). Use the tokens, never raw
+  Tailwind palette values. There is **no success green** — affirmative states use the
+  accent, which is what keeps the accent consistently meaning "affirmative".
+- **`outline` and `outline-variant` are not interchangeable.** `outline` (3.15:1 on white)
+  carries form-control borders, where AA wants 3:1 for non-text contrast.
+  `outline-variant` (1.29:1) is decorative hairlines and table rules only — never put it on
+  a control.
+- **Two type faces, by role.** Inter for UI, labels, navigation and all tabular data;
+  Source Serif 4 for long-form prose only. Nothing else — Atkinson Hyperlegible and Manrope
+  were retired in #93, and the tracked-out ALL-CAPS label style went with them.
+- **Elevation has exactly two levels.** Level 0 is flat with a 1px `outline-variant`
+  hairline — every card, table, input and panel — so the stock shadow tokens (`shadow-xs`,
+  `-sm`, `-md`) resolve to `none`. Level 1 is a real shadow and belongs only to things that
+  genuinely float: dropdowns, the toast, modals. **Known exception:** `shadow-ambient`
+  still paints, because its 30 call sites mix five modal panels and the calendar
+  quick-create sheet with ~18 flat cards, and no token can tell them apart. Items 3 and 12
+  of #46 resolve it by removing the class from the flat sites.
+- **Colour never becomes a hex literal in Kotlin or JS.** `dto/TrainingEventPalette.kt`
+  maps a training status to a *token* (`var(--color-…)`) and derives its 10% calendar tint
+  with `color-mix`. An inline style resolves `var()` natively; a canvas cannot, so
+  `training-stats.js` resolves through `getComputedStyle` before handing colours to
+  Chart.js. Changing a token in the stylesheet should move the calendar and both charts
+  with no Kotlin edit.
+- **A token in `@theme` does not by itself create a utility class.** Tailwind emits
+  `.text-title` only once a scanned source references it literally, so a freshly added
+  token styles nothing until a template uses it — which looks exactly like a dropped rule
+  and is not one. Read the custom property directly (`var(--text-title)`) if you need it
+  before then. `text-title`, `text-section`, `text-prose`, `text-meta` and `text-tabular`
+  are in this state today; items 3 onward start consuming them.
 - **Do not use `max-w-{xs,sm,md,lg,xl}`.** The named spacing scale defines
   `--spacing-md` and friends, and a `--spacing-<name>` token shadows the stock
   `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
@@ -240,10 +268,11 @@ ask — nobody is reading the run live, so a question ends the run without an an
   `controller/web/DanceFigureWebController.kt` (fragment selector on `HX-Request`).
 - **New top-level route ⇒ add a branch to `activeNav()`** in
   `controller/web/NavbarAdvice.kt`.
-- **Colours come from the Noble Harmony tokens** in the `@theme` block of
-  `frontend/input.css`, not raw Tailwind palette values. Tailwind scans templates,
-  `static/js` and `src/main/kotlin`, so a class name must appear as a whole literal in one
-  of those trees to be emitted — never assemble one by concatenation.
+- **Colours come from the design tokens** in the `@theme` block of
+  `frontend/input.css` — five neutrals, one accent, two status colours, no success green —
+  not raw Tailwind palette values, and never as a hex literal in Kotlin or JS. Tailwind
+  scans templates, `static/js` and `src/main/kotlin`, so a class name must appear as a
+  whole literal in one of those trees to be emitted — never assemble one by concatenation.
 - **New external script/style ⇒ update the CSP** in `config/SecurityConfig.kt`.
 
 **Never touch**
