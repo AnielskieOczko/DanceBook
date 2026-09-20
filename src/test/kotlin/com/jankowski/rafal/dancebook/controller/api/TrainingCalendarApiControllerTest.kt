@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.api
 
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -106,10 +107,10 @@ class TrainingCalendarApiControllerTest {
         val chip = controller.calendarFeed("2026-01-01T00:00:00", "2027-01-01T00:00:00")[0]
 
         // The chip is drawn as a solid stripe over a faint wash of the same colour, so the
-        // fill has to be the border colour plus an alpha rather than a second value.
-        assertEquals(chip.borderColor + "1a", chip.backgroundColor)
+        // fill has to be the border colour plus a tint mix rather than a second value.
+        assertEquals("color-mix(in srgb, ${chip.borderColor} 10%, transparent)", chip.backgroundColor)
         // Text sits on the tint, not on the solid colour, so it stays readable.
-        assertEquals("#1b1c1b", chip.textColor)
+        assertEquals(TrainingEventPalette.TEXT_COLOR, chip.textColor)
         assertEquals("Attended", chip.extendedProps.statusLabel)
     }
 

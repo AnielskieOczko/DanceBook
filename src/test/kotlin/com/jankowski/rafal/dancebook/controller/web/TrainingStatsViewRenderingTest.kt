@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.dto.BreakdownSlice
 import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
@@ -95,8 +96,8 @@ class TrainingStatsViewRenderingTest {
             totalMinutesTrained = 750,
             attendanceRatePercent = 90,
             currentStreak = 4,
-            byCategory = listOf(BreakdownSlice("Standard", 360, 6, "#2e5d51")),
-            byEventType = listOf(BreakdownSlice("TRAINING", 750, 10, "#695d46"))
+            byCategory = listOf(BreakdownSlice("Standard", 360, 6, TrainingEventPalette.chartColor(0))),
+            byEventType = listOf(BreakdownSlice("TRAINING", 750, 10, TrainingEventPalette.chartColor(1)))
         )
         `when`(trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)).thenReturn(stats)
 
@@ -112,7 +113,7 @@ class TrainingStatsViewRenderingTest {
             .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"category-chart\"")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"event-type-chart\"")))
             // The slice actually made it through ObjectMapper onto the canvas's data attribute.
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("&quot;color&quot;:&quot;#2e5d51&quot;")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("&quot;color&quot;:&quot;${TrainingEventPalette.chartColor(0)}&quot;")))
     }
 
     @Test
