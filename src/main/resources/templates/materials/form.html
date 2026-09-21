@@ -17,22 +17,13 @@
         <!-- Hidden version field for optimistic locking -->
         <input type="hidden" th:field="*{version}"/>
 
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
         <!-- Name -->
-        <div>
-            <label for="name" class="form-label">Name *</label>
-            <input id="name" type="text" th:field="*{name}" required
-                   class="form-input"
-                   th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
-                   placeholder="e.g. Waltz Natural Turn">
-            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
-        </div>
+        <div th:replace="~{fragments/form :: field(path='name', label='Name', required=true, placeholder='e.g. Waltz Natural Turn', id='name')}"></div>
 
         <!-- Description -->
-        <div>
-            <label for="description" class="form-label">Description</label>
-            <textarea id="description" th:field="*{description}" rows="3" class="form-textarea"
-                      placeholder="Brief notes about this material..."></textarea>
-        </div>
+        <div th:replace="~{fragments/form :: textarea(path='description', label='Description', rows=3, placeholder='Brief notes about this material...', id='description')}"></div>
 
         <!-- Dance Category & Type (two columns, Category first) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -58,32 +49,14 @@
         </div>
 
         <!-- Rating -->
-        <div class="max-w-[200px]">
-            <label for="rating" class="form-label">Rating (1–5)</label>
-            <input id="rating" type="number" th:field="*{rating}" min="1" max="5" class="form-input" placeholder="3">
-            <p th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="form-error"></p>
-        </div>
+        <div th:replace="~{fragments/form :: field(path='rating', label='Rating (1–5)', type='number', min='1', max='5', placeholder='3', id='rating', cls='max-w-[200px]')}"></div>
 
         <div class="divider"></div>
 
         <!-- Links Section -->
         <div class="space-y-4">
-            <div>
-                <label for="videoLink" class="form-label">Video Link</label>
-                <input id="videoLink" type="url" th:field="*{videoLink}" class="form-input"
-                       th:classappend="${#fields.hasErrors('videoLink')} ? 'border-danger ring-1 ring-danger' : ''"
-                       placeholder="https://youtube.com/watch?v=...">
-                <p class="form-hint">YouTube, Vimeo, or any external link</p>
-                <p th:if="${#fields.hasErrors('videoLink')}" th:errors="*{videoLink}" class="form-error"></p>
-            </div>
-            <div>
-                <label for="sourceLink" class="form-label">Source Link</label>
-                <input id="sourceLink" type="url" th:field="*{sourceLink}" class="form-input"
-                       th:classappend="${#fields.hasErrors('sourceLink')} ? 'border-danger ring-1 ring-danger' : ''"
-                       placeholder="https://facebook.com/...">
-                <p class="form-hint">Original source (Facebook, Instagram, etc.)</p>
-                <p th:if="${#fields.hasErrors('sourceLink')}" th:errors="*{sourceLink}" class="form-error"></p>
-            </div>
+            <div th:replace="~{fragments/form :: field(path='videoLink', label='Video Link', type='url', placeholder='https://youtube.com/watch?v=...', hint='YouTube, Vimeo, or any external link', id='videoLink')}"></div>
+            <div th:replace="~{fragments/form :: field(path='sourceLink', label='Source Link', type='url', placeholder='https://facebook.com/...', hint='Original source (Facebook, Instagram, etc.)', id='sourceLink')}"></div>
         </div>
 
         <div class="divider"></div>

@@ -5,9 +5,11 @@ import com.jankowski.rafal.dancebook.dto.ChoreographyRequest
 import com.jankowski.rafal.dancebook.service.ChoreographyService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -53,9 +55,16 @@ class ChoreographyWebController(
 
     @PostMapping
     fun createChoreography(
-        @ModelAttribute("choreographyRequest") request: ChoreographyRequest
+        @Valid @ModelAttribute("choreographyRequest") request: ChoreographyRequest,
+        bindingResult: BindingResult,
+        model: Model
     ): String {
         log.debug("Creating choreography with request: {}", request)
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("danceTypes", danceTypeService.findAll())
+            model.addAttribute("activeNav", "choreographies")
+            return "choreographies/form"
+        }
         val created = choreographyService.create(request)
         return "redirect:/choreographies/${created.id}/edit"
     }
@@ -115,9 +124,17 @@ class ChoreographyWebController(
     @PostMapping("/{id}/metadata")
     fun updateMetadata(
         @PathVariable id: UUID,
-        @ModelAttribute("choreographyRequest") request: ChoreographyRequest
+        @Valid @ModelAttribute("choreographyRequest") request: ChoreographyRequest,
+        bindingResult: BindingResult,
+        model: Model
     ): String {
         log.debug("Updating metadata for choreography {}: {}", id, request)
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("choreographyId", id)
+            model.addAttribute("danceTypes", danceTypeService.findAll())
+            model.addAttribute("activeNav", "choreographies")
+            return "choreographies/form"
+        }
         choreographyService.update(id, request)
         return "redirect:/choreographies/$id"
     }
@@ -140,12 +157,26 @@ class ChoreographyWebController(
     @PostMapping("/{id}/entries")
     fun addEntry(
         @PathVariable id: UUID,
-        @ModelAttribute request: ChoreographyEntryRequest,
+        @Valid @ModelAttribute request: ChoreographyEntryRequest,
+        bindingResult: BindingResult,
         model: Model
     ): String {
         log.debug("HTMX: Adding entry to choreography {}: {}", id, request)
-        val updated = choreographyService.addEntry(id, request)
-        model.addAttribute("choreography", updated)
+        if (bindingResult.hasErrors()) {
+            val choreography = choreographyService.findById(id)
+            model.addAttribute("choreography", choreography)
+            model.addAttribute("lineIndicators", com.jankowski.rafal.dancebook.model.LineIndicator.values())
+            model.addAttribute("entryError", bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Invalid entry")
+            return "choreographies/edit :: sequenceTimeline"
+        }
+        try {
+            val updated = choreographyService.addEntry(id, request)
+            model.addAttribute("choreography", updated)
+        } catch (e: IllegalArgumentException) {
+            val choreography = choreographyService.findById(id)
+            model.addAttribute("choreography", choreography)
+            model.addAttribute("entryError", e.message ?: "Invalid entry")
+        }
         model.addAttribute("lineIndicators", com.jankowski.rafal.dancebook.model.LineIndicator.values())
         return "choreographies/edit :: sequenceTimeline"
     }
@@ -183,12 +214,26 @@ class ChoreographyWebController(
     fun updateEntry(
         @PathVariable id: UUID,
         @PathVariable entryId: UUID,
-        @ModelAttribute request: ChoreographyEntryRequest,
+        @Valid @ModelAttribute request: ChoreographyEntryRequest,
+        bindingResult: BindingResult,
         model: Model
     ): String {
         log.debug("HTMX: Updating entry {} in choreography {}: {}", entryId, id, request)
-        val updated = choreographyService.updateEntry(id, entryId, request)
-        model.addAttribute("choreography", updated)
+        if (bindingResult.hasErrors()) {
+            val choreography = choreographyService.findById(id)
+            model.addAttribute("choreography", choreography)
+            model.addAttribute("lineIndicators", com.jankowski.rafal.dancebook.model.LineIndicator.values())
+            model.addAttribute("entryError", bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Invalid entry")
+            return "choreographies/edit :: sequenceTimeline"
+        }
+        try {
+            val updated = choreographyService.updateEntry(id, entryId, request)
+            model.addAttribute("choreography", updated)
+        } catch (e: IllegalArgumentException) {
+            val choreography = choreographyService.findById(id)
+            model.addAttribute("choreography", choreography)
+            model.addAttribute("entryError", e.message ?: "Invalid entry")
+        }
         model.addAttribute("lineIndicators", com.jankowski.rafal.dancebook.model.LineIndicator.values())
         return "choreographies/edit :: sequenceTimeline"
     }

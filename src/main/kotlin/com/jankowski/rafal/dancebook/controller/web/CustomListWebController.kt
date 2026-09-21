@@ -5,9 +5,11 @@ import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
@@ -68,7 +70,15 @@ class CustomListWebController(
     }
 
     @PostMapping
-    fun createList(@ModelAttribute("listRequest") request: CustomListRequest): String {
+    fun createList(
+        @Valid @ModelAttribute("listRequest") request: CustomListRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            populateDropdowns(model)
+            return "lists/form"
+        }
         val created = customListService.create(request)
         return "redirect:/lists/${created.id}"
     }
@@ -126,8 +136,17 @@ class CustomListWebController(
     @PostMapping("/{id}")
     fun updateList(
         @PathVariable id: UUID,
-        @ModelAttribute("listRequest") request: CustomListRequest
+        @Valid @ModelAttribute("listRequest") request: CustomListRequest,
+        bindingResult: BindingResult,
+        model: Model
     ): String {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("listId", id)
+            val list = customListService.findById(id)
+            model.addAttribute("currentImage", list.imageFilename)
+            populateDropdowns(model)
+            return "lists/form"
+        }
         customListService.update(id, request)
         return "redirect:/lists/$id"
     }

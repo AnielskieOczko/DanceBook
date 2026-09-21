@@ -152,7 +152,8 @@ class AppUserServiceImpl(
             this.displayName = request.displayName
             
             // Security Check: Prevent removing the last admin or demoting the root user
-            if (oldRole == Role.ADMIN && request.role == Role.USER) {
+            val newRole = request.role ?: throw IllegalArgumentException("Role is required")
+            if (oldRole == Role.ADMIN && newRole == Role.USER) {
                 if (oldUsername == rootAdminUsername) {
                     throw IllegalArgumentException("The root administrator account cannot be demoted.")
                 }
@@ -161,7 +162,7 @@ class AppUserServiceImpl(
                 }
             }
             
-            this.role = request.role
+            this.role = newRole
         }
 
         if (!request.newPassword.isNullOrBlank()) {

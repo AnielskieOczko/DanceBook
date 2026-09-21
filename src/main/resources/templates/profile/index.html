@@ -71,25 +71,25 @@
                 
                 <!-- Messages -->
                 <div th:if="${passwordSuccessMsg}" class="p-3 rounded-lg bg-primary/10 text-primary text-sm" th:text="${passwordSuccessMsg}"></div>
-                <div th:if="${passwordErrorMsg}" class="p-3 rounded-lg bg-error/10 text-error text-sm" th:text="${passwordErrorMsg}"></div>
 
-                <form th:hx-post="@{/profile/password}" hx-target="#password-section" hx-swap="outerHTML" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="sm:col-span-2">
-                        <label for="currentPassword" class="form-label">Current Password</label>
-                        <input id="currentPassword" type="password" name="currentPassword" required class="form-input">
-                    </div>
-                    <div>
-                        <label for="newPassword" class="form-label">New Password</label>
-                        <input id="newPassword" type="password" name="newPassword" required class="form-input" minlength="8">
-                    </div>
-                    <div>
-                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                        <input id="confirmPassword" type="password" name="confirmPassword" required class="form-input">
-                    </div>
-                    <div class="sm:col-span-2 flex justify-end">
-                        <button type="submit" class="btn-outline">
-                            Update Security
-                        </button>
+                <form th:hx-post="@{/profile/password}" hx-target="#password-section" hx-swap="outerHTML" th:object="${passwordChangeRequest}" class="space-y-6">
+                    <div th:replace="~{fragments/form :: errorSummary}"></div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="sm:col-span-2">
+                            <div th:replace="~{fragments/form :: field(path='currentPassword', label='Current Password', type='password', required=true, id='currentPassword')}"></div>
+                        </div>
+                        <div>
+                            <div th:replace="~{fragments/form :: field(path='newPassword', label='New Password', type='password', required=true, id='newPassword')}"></div>
+                        </div>
+                        <div>
+                            <div th:replace="~{fragments/form :: field(path='confirmNewPassword', label='Confirm New Password', type='password', required=true, id='confirmPassword')}"></div>
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end">
+                            <button type="submit" class="btn-outline">
+                                Update Security
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

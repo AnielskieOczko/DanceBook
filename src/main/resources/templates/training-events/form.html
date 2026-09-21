@@ -15,6 +15,9 @@
           th:data-original-end-time="${seriesEndTime}"
           th:data-original-ends-on="${seriesEndsOn}">
 
+        <!-- Error Summary -->
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
         <!-- Target / Owning Calendar Statement -->
         <div th:if="${calendarError}"
              th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
@@ -41,34 +44,13 @@
         <input th:if="${trainingEventId == null}" type="hidden" name="calendarId"
                th:value="${targetCalendar?.id}">
 
-        <div>
-            <label for="title" class="form-label">Title *</label>
-            <input id="title" type="text" th:field="*{title}" required class="form-input text-body-lg"
-                   th:classappend="${#fields.hasErrors('title')} ? 'border-danger ring-1 ring-danger' : ''"
-                   placeholder="e.g. Monday practice, Standard camp...">
-            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="form-error"></p>
-        </div>
+        <div th:replace="~{fragments/form :: field(path='title', label='Title', required=true, id='title', placeholder='e.g. Monday practice, Standard camp...')}"></div>
 
         <!-- Date and times, laid out the way Google's editor does -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-                <label for="date" class="form-label">Date *</label>
-                <input id="date" type="date" th:field="*{date}" required class="form-input"
-                       th:classappend="${#fields.hasErrors('date')} ? 'border-danger ring-1 ring-danger' : ''">
-                <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" class="form-error"></p>
-            </div>
-            <div>
-                <label for="startTime" class="form-label">From *</label>
-                <input id="startTime" type="time" th:field="*{startTime}" required class="form-input"
-                       th:classappend="${#fields.hasErrors('startTime')} ? 'border-danger ring-1 ring-danger' : ''">
-                <p th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="form-error"></p>
-            </div>
-            <div>
-                <label for="endTime" class="form-label">To *</label>
-                <input id="endTime" type="time" th:field="*{endTime}" required class="form-input"
-                       th:classappend="${#fields.hasErrors('endTime')} ? 'border-danger ring-1 ring-danger' : ''">
-                <p th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="form-error"></p>
-            </div>
+            <div th:replace="~{fragments/form :: field(path='date', label='Date', type='date', required=true, id='date')}"></div>
+            <div th:replace="~{fragments/form :: field(path='startTime', label='From', type='time', required=true, id='startTime')}"></div>
+            <div th:replace="~{fragments/form :: field(path='endTime', label='To', type='time', required=true, id='endTime')}"></div>
         </div>
 
         <div>
@@ -77,23 +59,15 @@
                 Ends on a different day
             </button>
             <div id="endDateRow" class="hidden mt-2">
-                <label for="endDate" class="form-label">End date</label>
-                <input id="endDate" type="date" th:field="*{endDate}" class="form-input">
-                <p class="form-hint">For camps and competitions that run across days.</p>
+                <div th:replace="~{fragments/form :: field(path='endDate', label='End date', type='date', id='endDate', hint='For camps and competitions that run across days.')}"></div>
             </div>
         </div>
 
         <!-- Repeats: recurrence is a property of the event, as in Google's editor -->
         <div th:if="${trainingEventId == null}">
-            <label for="repeat" class="form-label">Repeats</label>
-            <select id="repeat" th:field="*{repeat}" class="form-select">
-                <option value="NONE">Does not repeat</option>
-                <option value="WEEKLY">Weekly on this weekday</option>
-            </select>
+            <div th:replace="~{fragments/form :: select(path='repeat', label='Repeats', id='repeat', options=${repeatOptions}, optValue='value', optLabel='label')}"></div>
             <div id="repeatUntilRow" class="hidden mt-3">
-                <label for="repeatUntil" class="form-label">Repeat until *</label>
-                <input id="repeatUntil" type="date" th:field="*{repeatUntil}" class="form-input">
-                <p class="form-hint" id="repeatSummary">Sessions are created up front, at most 52.</p>
+                <div th:replace="~{fragments/form :: field(path='repeatUntil', label='Repeat until', type='date', required=true, id='repeatUntil', hint='Sessions are created up front, at most 52.', hintId='repeatSummary')}"></div>
             </div>
         </div>
 
@@ -128,16 +102,10 @@
                 <div class="font-medium text-on-surface text-body-md">Recurrence Pattern</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label for="dayOfWeek" class="form-label">Weekday *</label>
-                        <select id="dayOfWeek" th:field="*{dayOfWeek}" class="form-select">
-                            <option th:each="dow : ${dayOfWeekOptions}"
-                                    th:value="${dow}"
-                                    th:text="${#strings.capitalize(#strings.toLowerCase(dow))}">Monday</option>
-                        </select>
+                        <div th:replace="~{fragments/form :: select(path='dayOfWeek', label='Weekday', required=true, id='dayOfWeek', options=${dayOfWeekOptions}, optValue='value', optLabel='label')}"></div>
                     </div>
                     <div>
-                        <label for="repeatUntil" class="form-label">Repeat until *</label>
-                        <input id="repeatUntil" type="date" th:field="*{repeatUntil}" class="form-input">
+                        <div th:replace="~{fragments/form :: field(path='repeatUntil', label='Repeat until', type='date', required=true, id='repeatUntil')}"></div>
                     </div>
                 </div>
                 <p class="form-hint" id="editPatternSummary">
@@ -199,36 +167,18 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-6">
             <div>
-                <label for="eventType" class="form-label">Type *</label>
-                <select id="eventType" th:field="*{eventType}" class="form-select">
-                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}">TRAINING</option>
-                </select>
+                <div th:replace="~{fragments/form :: select(path='eventType', label='Type', required=true, id='eventType', options=${eventTypeOptions})}"></div>
             </div>
             <div>
-                <label for="attendanceStatus" class="form-label">Attendance</label>
-                <select id="attendanceStatus" th:field="*{attendanceStatus}" class="form-select">
-                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}">PLANNED</option>
-                </select>
+                <div th:replace="~{fragments/form :: select(path='attendanceStatus', label='Attendance', id='attendanceStatus', options=${attendanceStatusOptions})}"></div>
             </div>
         </div>
 
-        <div>
-            <label for="description" class="form-label">Notes</label>
-            <textarea id="description" th:field="*{description}" rows="4" class="form-textarea"
-                      placeholder="What did you work on?"></textarea>
-        </div>
+        <div th:replace="~{fragments/form :: textarea(path='description', label='Notes', id='description', placeholder='What did you work on?', rows=4)}"></div>
 
-        <div>
-            <label for="materialsUrl" class="form-label">External materials link</label>
-            <input id="materialsUrl" type="url" th:field="*{materialsUrl}" class="form-input"
-                   placeholder="https://...">
-            <p class="form-hint">For links outside DanceBook.</p>
-        </div>
+        <div th:replace="~{fragments/form :: field(path='materialsUrl', label='External materials link', type='url', id='materialsUrl', placeholder='https://...', hint='For links outside DanceBook.')}"></div>
 
-        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">
-            <a href="/training-events" class="btn-outline">Cancel</a>
-            <button type="submit" class="btn-primary">Save Session</button>
-        </div>
+        <div th:replace="~{fragments/button :: submitRow(cancelHref='/training-events', submitLabel='Save Session')}"></div>
     </form>
 
     <script th:src="@{/js/training-event-form.js}"></script>

@@ -68,7 +68,7 @@
 </form>
 
 <form th:fragment="fieldAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: field(path='name', label='Full Name', type='text', hint='Your full legal name', required=true, placeholder='John Doe', disabled=false, readonly=false, autocomplete='name', cls='extra-cls', id='custom-name')}"></div>
+    <div th:replace="~{fragments/form :: field(path='name', label='Full Name', type='text', hint='Your full legal name', required=true, placeholder='John Doe', disabled=false, readonly=false, autocomplete='name', cls='extra-cls', id='custom-name', min='1', max='10', step='1', hintId='custom-hint')}"></div>
 </form>
 
 <div th:fragment="fieldStandalone">
@@ -81,7 +81,7 @@
 </form>
 
 <form th:fragment="selectAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: select(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat')}"></div>
+    <div th:replace="~{fragments/form :: select(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat', multiple=false, hintId='custom-select-hint')}"></div>
 </form>
 
 <!-- 8. FORM: textarea -->
@@ -90,7 +90,7 @@
 </form>
 
 <form th:fragment="textareaAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: textarea(path='description', label='Description', hint='Optional details', required=false, placeholder='Write...', rows=6, disabled=false, cls='extra-cls', id='custom-desc')}"></div>
+    <div th:replace="~{fragments/form :: textarea(path='description', label='Description', hint='Optional details', required=false, placeholder='Write...', rows=6, disabled=false, cls='extra-cls', id='custom-desc', hintId='custom-textarea-hint')}"></div>
 </form>
 
 <!-- 9. FORM: checkbox -->

@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.FormSelectOption
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
@@ -824,6 +825,21 @@ class TrainingEventWebController(
         model.addAttribute("danceCategories", danceCategoryService.findAll())
         model.addAttribute("eventTypeOptions", TrainingEventType.entries.toTypedArray())
         model.addAttribute("attendanceStatusOptions", AttendanceStatus.entries.toTypedArray())
-        model.addAttribute("dayOfWeekOptions", DayOfWeek.entries.toTypedArray())
+        model.addAttribute(
+            "dayOfWeekOptions",
+            DayOfWeek.entries.map {
+                FormSelectOption(
+                    value = it.name,
+                    label = it.name.lowercase().replaceFirstChar { c -> c.uppercase() }
+                )
+            }
+        )
+        model.addAttribute(
+            "repeatOptions",
+            listOf(
+                FormSelectOption("NONE", "Does not repeat"),
+                FormSelectOption("WEEKLY", "Weekly on this weekday")
+            )
+        )
     }
 }

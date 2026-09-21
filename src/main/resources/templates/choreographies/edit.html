@@ -70,6 +70,11 @@
                     <!-- This fragment gets swapped by HTMX on any sequence modifications -->
                     <div th:fragment="sequenceTimeline" id="sequence-timeline" class="space-y-4">
                         <input type="hidden" id="choreoIdInput" th:value="${choreography.id}">
+
+                        <!-- Error alert -->
+                        <div th:if="${entryError != null}" class="mb-4">
+                            <div th:replace="~{fragments/alert :: alert(variant='error', text=${entryError})}"></div>
+                        </div>
                         
                         <!-- Empty timeline state -->
                         <div th:if="${#lists.isEmpty(choreography.entries)}" class="empty-state py-8">
@@ -143,6 +148,7 @@
                                             <div class="flex items-center gap-1.5 max-w-[32rem]">
                                                 <span th:replace="~{fragments/icon :: icon(name='notes', size='sm', cls='text-text-secondary')}"></span>
                                                 <input type="text" name="notes" th:value="${entry.notes}"
+                                                       maxlength="500"
                                                        placeholder="Add practice details..."
                                                        th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
                                                        hx-trigger="change"

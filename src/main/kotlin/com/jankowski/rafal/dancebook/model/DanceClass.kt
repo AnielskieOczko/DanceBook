@@ -1,5 +1,7 @@
 package com.jankowski.rafal.dancebook.model
 
 enum class DanceClass {
-    H, G, F, E, D, C, B, A, S
+    H, G, F, E, D, C, B, A, S;
+
+    val displayName: String get() = "Class $name"
 }
