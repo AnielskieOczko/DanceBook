@@ -121,6 +121,17 @@ maps it to a class literal internally; it never concatenates `'badge-' + variant
 an assembled name appears in no scanned source, so Tailwind drops the rule while the
 attribute still renders — an unstyled element with no error anywhere.
 
+**A conditional and a fragment inclusion on the same element do not work together.**
+`th:replace` is processed at attribute precedence 100 and `th:if` at 300, so the replacement
+happens first and carries the host element — condition included — out of the document before
+the condition is ever evaluated. The include is unconditional. Put the `th:if` on an enclosing
+`<th:block>` instead. This is invisible at runtime, survives a green build and reads as
+obviously correct, which is how it reached `page.html`, `badge.html` and `card.html` in #98
+and went unnoticed: in all three the conditional include is an icon, and an icon with no name
+renders an empty span with no glyph. #117 tracks fixing those three and adding a guard. Until
+then, **do not copy a conditional include out of the catalog** — it is one of the few things
+in there that is wrong.
+
 **Every icon goes through the `icon` fragment.** Since #101 no template renders a bare
 `material-symbols-outlined` span and none carries an inline `<svg>`; a sweep of ~336 call
 sites across 36 templates put them all behind `fragments/icon :: icon`. The size scale is
@@ -187,6 +198,46 @@ the Note form's htmx-driven category select, the style select carrying `danceTyp
 fragment `MaterialWebController` names in a string, so it must not move), the Drive upload
 block, and the repeating rows JavaScript clones from indexed names on the training, figure and
 link forms.
+
+### Rich text
+
+**Every long-form text field passes through `RichTextService`, and it is the only thing that
+decides what markup may exist.** Since #114 it runs on write in all nine service sites —
+material descriptions, comments, figure notes, session and series descriptions, choreography
+descriptions — and again on read. Re-sanitising on read is what makes skipping a migration
+honest: notes written before #114 are still plain text in the database, and nothing has to
+backfill them.
+
+`templates/fragments/rich-text.html` is **the only file in the repo permitted to contain
+`th:utext`**, and `UnescapedTemplateOutputTest` fails the build if unescaped output appears
+anywhere else. That test also asserts the fragment still uses it, so the guard cannot quietly
+become a tautology. Its `excerpt` fragment renders with `th:text` over plain-text-stripped
+input, which is why list and index views are structurally incapable of leaking markup rather
+than merely careful not to.
+
+The safelist allows bold, italic, bullet and numbered lists, and links — nothing else. It
+centres on the block markup **Trix 2 actually emits**, which is `<div>`, not `<p>`; #46 phase 11
+introduces Trix, and the set was chosen so that phase needs no safelist change. A link gets
+`rel="nofollow noopener noreferrer"` enforced, and anything that is not `http`, `https` or
+`mailto` loses its `href`.
+
+**The trap is emptiness.** An untouched rich text editor does not submit an empty string, it
+submits markup — and `"<div><br></div>".isNotBlank()` is `true`. `clean()` therefore returns
+`null` when the content has no visible text, and that is why the `?.takeIf { it.isNotBlank() }`
+gates that used to guard these writes are gone: there were six in `TrainingSeriesServiceImpl`
+alone, and leaving any one of them would render an empty description panel on a detail page.
+**Decide emptiness by calling the service, never by testing the string yourself.**
+
+Two consequences worth knowing before touching this. Session descriptions are converted with
+`toPlainText()` before they reach Google Calendar, or raw markup shows up in calendar entries.
+And length limits use `@RichTextLength`, which counts the text the user typed rather than the
+bytes of markup, behind a much larger raw ceiling — a plain `@Size` on one of these fields will
+reject a short note the moment formatting triples its byte count.
+
+**Editors are still plain `<textarea>`s.** #114 built the boundary only; the editor is phase 11.
+Note the two similar names: `fragments/rich-text.html` is the **display** fragment described
+here and is in use, while `richText` in `fragments/form.html` is the **input** field, built in
+#98 and still uncalled until Trix lands.
 
 ### Dialogs
 
@@ -415,6 +466,12 @@ against a test-only harness template under `src/test/resources/templates/test/`,
 where a new fragment's two cases go. `HtmxFragmentRenderingTest` pins the root id of every
 controller-named htmx fragment.
 
+`UnescapedTemplateOutputTest` (#114) is the third template guard and the one with teeth: it
+walks the template tree and fails if unescaped output appears outside
+`fragments/rich-text.html`. It starts from zero offenders, so it stays meaningful rather than
+grandfathering a list — and it also asserts the permitted fragment still uses unescaped output,
+so deleting the one legitimate use cannot quietly turn the test into a tautology.
+
 **Every GET route is requested on every build.** Both template guards above assert on
 fragments and htmx endpoints, so until #105 a template that parsed but threw when rendered
 passed the build and 500'd on first visit — which is how #98 shipped a broken Add material
@@ -512,6 +569,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - Dialog → `templates/fragments/modal.html` for a new one, `fragments/confirm-dialog.html`
   for the htmx-delivered confirmation shape
 - Test that needs a real servlet container → `controller/web/ErrorPageIntegrationTest.kt`
+- Sanitised long-form text, and the one permitted unescaped render →
+  `service/RichTextServiceImpl.kt` plus `templates/fragments/rich-text.html`
 - Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
   `service/TrainingEventServiceTest.kt`
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
@@ -556,6 +615,11 @@ ask — nobody is reading the run live, so a question ends the run without an an
   not raw Tailwind palette values, and never as a hex literal in Kotlin or JS. Tailwind
   scans templates, `static/js` and `src/main/kotlin`, so a class name must appear as a
   whole literal in one of those trees to be emitted — never assemble one by concatenation.
+- **Long-form text field ⇒ it goes through `RichTextService`**, on write and on read, and
+  emptiness is decided by calling `clean()` rather than by testing the string. A raw
+  `isNotBlank()` on one of these fields passes editor markup as content and renders an empty
+  panel. Never add `th:utext` outside `fragments/rich-text.html`;
+  `UnescapedTemplateOutputTest` fails the build if you do.
 - **New external script/style ⇒ update the CSP** in `config/SecurityConfig.kt`.
 
 **Never touch**
