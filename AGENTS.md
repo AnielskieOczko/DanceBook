@@ -159,9 +159,11 @@ those templates, which got shorter by doing it.
 `bindingResult.hasErrors()` re-populates whatever the view needs — dropdown options, the
 entity id, the current image — then returns the view name instead of redirecting.
 `CustomListWebController.kt` is the shape to copy. Omit the `BindingResult` and Spring throws
-rather than binding, which reaches the user as the Whitelabel 400 page — and through an htmx
-swap, as a page of error HTML dropped inside the current one. That was live on the admin user
-handlers until #107.
+rather than binding: a full-page POST lands on the Whitelabel 400 page, and an htmx POST shows
+the user *nothing at all* — htmx's default `responseHandling` does not swap a 4xx, so the
+submit button simply does nothing and the only trace is an `htmx:responseError` in the console.
+The silent one is the worse failure, and it is the one that was live on the admin user handlers
+until #107, since those post over htmx.
 
 **Request DTOs give every bound field a default.** `@ModelAttribute` binds through the
 constructor, so a non-null Kotlin parameter with no default fails to construct when its field
