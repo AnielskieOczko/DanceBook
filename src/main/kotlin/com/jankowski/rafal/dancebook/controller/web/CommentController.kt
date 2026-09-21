@@ -30,16 +30,22 @@ class CommentController(
     @PostMapping
     fun addComment(
         @PathVariable materialId: UUID,
-        @RequestParam(value = "content", required = false) content: String,
+        @RequestParam(value = "content", required = false) content: String?,
         @AuthenticationPrincipal userDetails: UserDetails,
         model: Model,
     ): String {
         val currentUser = appUserService.findByUsername(userDetails.username)
-        commentService.addComment(
-            materialId = materialId,
-            content = content,
-            author = currentUser
-        )
+        if (!content.isNullOrBlank()) {
+            try {
+                commentService.addComment(
+                    materialId = materialId,
+                    content = content,
+                    author = currentUser
+                )
+            } catch (_: IllegalArgumentException) {
+                // Structurally empty rich text (e.g. <div><br></div>): no-op without erroring
+            }
+        }
         val material = materialService.findById(materialId)
         model.addAttribute("material", material)
         model.addAttribute("comments", commentService.getCommentsForMaterial(materialId))
@@ -63,13 +69,18 @@ class CommentController(
     fun updateComment(
         @PathVariable materialId: UUID,
         @PathVariable commentId: UUID,
-        @RequestParam(value = "content", required = false) content: String,
+        @RequestParam(value = "content", required = false) content: String?,
         @AuthenticationPrincipal userDetails: UserDetails,
         model: Model,
     ): String {
-
         val currentUser = appUserService.findByUsername(userDetails.username)
-        commentService.updateComment(commentId, content, currentUser)
+        if (!content.isNullOrBlank()) {
+            try {
+                commentService.updateComment(commentId, content, currentUser)
+            } catch (_: IllegalArgumentException) {
+                // Structurally empty rich text: keep existing comment without erroring
+            }
+        }
 
         val material = materialService.findById(materialId)
         model.addAttribute("material", material)

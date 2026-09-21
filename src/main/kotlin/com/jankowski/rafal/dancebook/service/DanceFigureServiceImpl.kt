@@ -26,7 +26,8 @@ class DanceFigureServiceImpl(
     private val danceFigureRepository: DanceFigureRepository,
     private val danceTypeService: DanceTypeService,
     private val eventPublisher: ApplicationEventPublisher,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val richTextService: RichTextService
 ) : DanceFigureService {
 
     companion object {
@@ -132,7 +133,7 @@ class DanceFigureServiceImpl(
         danceFigure.endingPosition = request.endingPosition
         danceFigure.precedingFigureNames = request.precedingFigureNames
         danceFigure.followingFigureNames = request.followingFigureNames
-        danceFigure.notes = request.notes
+        danceFigure.notes = richTextService.clean(request.notes)
 
         // Step Sets
         danceFigure.stepSets.clear()

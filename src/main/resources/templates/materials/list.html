@@ -202,7 +202,7 @@
                 
                 <div th:if="${m.description}" class="expandable-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out w-full relative z-20 pointer-events-none rounded-b-lg">
                      <div class="px-4 pb-4 pt-1 border-t border-outline-variant/30 mt-2 mx-4 pointer-events-auto bg-surface">
-                         <p class="font-body-md text-sm text-on-surface-variant mt-3 whitespace-pre-wrap leading-relaxed relative z-20" th:text="${m.description}">Description</p>
+                          <div th:replace="~{fragments/rich-text :: content(value=${m.description}, cls='font-body-md text-sm text-on-surface-variant mt-3 leading-relaxed relative z-20')}"></div>
                      </div>
                 </div>
             </article>

@@ -14,7 +14,7 @@ data class MaterialRequest(
     @field:Size(min = 2, max = 255)
     val name: String = "",
     
-    @field:Size(max = 2000)
+    @field:RichTextLength(max = 2000)
     val description: String? = null,
     
     val danceCategoryId: UUID? = null,

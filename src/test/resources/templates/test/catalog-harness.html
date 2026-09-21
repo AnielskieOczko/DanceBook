@@ -250,6 +250,10 @@
     <div th:replace="~{fragments/rich-text :: content(value='Hello world', cls='extra-cls')}"></div>
 </div>
 
+<div th:fragment="richTextContentNull">
+    <div th:replace="~{fragments/rich-text :: content(value=null)}"></div>
+</div>
+
 <!-- 25. RICH-TEXT: excerpt -->
 <div th:fragment="richTextExcerptRequired">
     <p th:replace="~{fragments/rich-text :: excerpt(value='Hello world excerpt')}"></p>

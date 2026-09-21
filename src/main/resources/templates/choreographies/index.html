@@ -69,7 +69,7 @@
                         </div>
 
                         <h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1 mb-1 pr-8" th:text="${choreo.name}">Competition Waltz</h3>
-                        <p class="text-sm text-text-secondary line-clamp-2" th:text="${choreo.description ?: 'No description provided.'}">Description...</p>
+                        <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=160, fallback='No description provided.', cls='text-sm text-on-surface-variant line-clamp-2')}"></p>
                     </div>
 
                     <!-- Footer / Info -->
@@ -136,7 +136,7 @@
                             <span class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[9px] font-label-sm uppercase tracking-wider border border-primary-container/30 shrink-0"
                                   th:text="${choreo.danceType != null ? choreo.danceType.name : 'Unknown'}">Waltz</span>
                         </div>
-                        <p class="text-xs text-text-secondary line-clamp-1" th:text="${choreo.description ?: 'No description.'}">Description...</p>
+                        <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=80, fallback='No description.', cls='text-xs text-on-surface-variant line-clamp-1')}"></p>
                     </div>
                 </div>
 

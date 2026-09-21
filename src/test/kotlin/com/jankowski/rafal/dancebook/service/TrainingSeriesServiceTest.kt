@@ -76,7 +76,8 @@ class TrainingSeriesServiceTest {
             trainingCalendarService,
             appUserService,
             danceCategoryService,
-            materialService
+            materialService,
+            RichTextServiceImpl()
         )
     }
 

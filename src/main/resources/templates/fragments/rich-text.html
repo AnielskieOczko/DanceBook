@@ -5,17 +5,18 @@
 </head>
 <body>
 
-<!-- Rich text content display (plain text with line breaks until Item 10 adds RichTextService) -->
+<!-- Rich text content display: single permitted site for unescaped HTML rendering -->
 <div th:fragment="content"
-     class="rich-text whitespace-pre-line text-on-surface"
+     th:if="${value != null}"
+     class="rich-text text-on-surface"
      th:classappend="${cls}"
-     th:text="${value}">Content</div>
+     th:utext="${@richTextService.render(value)}">Content</div>
 
-<!-- Excerpt display with length truncation -->
+<!-- Excerpt display with length truncation: guaranteed plain-text and escaped -->
 <p th:fragment="excerpt"
    class="text-on-surface-variant line-clamp-2"
    th:classappend="${cls}"
-   th:text="${value != null and value.length() > (max ?: 160) ? value.substring(0, max ?: 160) + '...' : value}">Excerpt</p>
+   th:text="${@richTextService.excerpt(value, max ?: 160) ?: fallback}">Excerpt</p>
 
 </body>
 </html>

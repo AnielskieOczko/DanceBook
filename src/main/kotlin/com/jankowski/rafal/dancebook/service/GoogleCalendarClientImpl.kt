@@ -21,7 +21,8 @@ import java.util.Date
 
 @Service
 class GoogleCalendarClientImpl(
-    private val calendarProperties: GoogleCalendarProperties
+    private val calendarProperties: GoogleCalendarProperties,
+    private val richTextService: RichTextService
 ) : GoogleCalendarClient {
 
     private val logger = LoggerFactory.getLogger(GoogleCalendarClientImpl::class.java)
@@ -247,7 +248,7 @@ class GoogleCalendarClientImpl(
     /** Google Calendar has no field for our metadata, so fold the useful parts into the body. */
     private fun buildCalendarDescription(event: TrainingEvent): String {
         val lines = mutableListOf<String>()
-        event.description?.takeIf { it.isNotBlank() }?.let { lines.add(it) }
+        richTextService.toPlainText(event.description)?.takeIf { it.isNotBlank() }?.let { lines.add(it) }
         lines.add("Type: ${event.eventType}")
         if (event.segments.isNotEmpty()) {
             val styles = event.segments.joinToString(", ") { "${it.danceCategory?.name} ${it.durationMinutes}min" }

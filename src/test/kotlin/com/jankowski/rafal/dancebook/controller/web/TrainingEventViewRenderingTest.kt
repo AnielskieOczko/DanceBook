@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -68,7 +69,7 @@ import org.jsoup.Jsoup
     ]
 )
 @AutoConfigureMockMvc(addFilters = false)
-@Import(TrainingEventViewRenderingTest.CsrfProcessorConfig::class)
+@Import(TrainingEventViewRenderingTest.CsrfProcessorConfig::class, RichTextServiceImpl::class)
 class TrainingEventViewRenderingTest {
 
     /**

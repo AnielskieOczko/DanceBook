@@ -16,7 +16,8 @@ class ChoreographyServiceImpl(
     private val choreographyRepository: ChoreographyRepository,
     private val appUserService: AppUserService,
     private val danceTypeService: DanceTypeService,
-    private val danceFigureService: DanceFigureService
+    private val danceFigureService: DanceFigureService,
+    private val richTextService: RichTextService
 ) : ChoreographyService {
 
     companion object {
@@ -45,7 +46,7 @@ class ChoreographyServiceImpl(
 
         val choreography = Choreography().apply {
             name = request.name
-            description = request.description?.takeIf { it.isNotBlank() }
+            description = richTextService.clean(request.description)
             this.danceType = danceType
             owner = currentUser
             isPublic = request.isPublic
@@ -66,7 +67,7 @@ class ChoreographyServiceImpl(
         val danceType = danceTypeService.findById(request.danceTypeId!!)
 
         choreography.name = request.name
-        choreography.description = request.description?.takeIf { it.isNotBlank() }
+        choreography.description = richTextService.clean(request.description)
         choreography.danceType = danceType
         choreography.isPublic = request.isPublic
         choreography.updatedAt = LocalDateTime.now()

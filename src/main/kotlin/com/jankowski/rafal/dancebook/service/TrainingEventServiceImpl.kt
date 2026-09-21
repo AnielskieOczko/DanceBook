@@ -37,7 +37,8 @@ class TrainingEventServiceImpl(
     private val appUserService: AppUserService,
     private val danceCategoryService: DanceCategoryService,
     private val materialService: MaterialService,
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
+    private val richTextService: RichTextService
 ) : TrainingEventService {
 
     companion object {
@@ -508,7 +509,7 @@ class TrainingEventServiceImpl(
         event.startTime = start
         event.endTime = end
         event.eventType = TrainingEventType.valueOf(request.eventType)
-        event.description = request.description?.takeIf { it.isNotBlank() }
+        event.description = richTextService.clean(request.description)
         event.material = request.materialId?.let { materialService.findById(it) }
         event.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         event.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)

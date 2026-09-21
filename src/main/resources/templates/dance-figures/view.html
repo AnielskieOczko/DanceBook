@@ -513,9 +513,11 @@
             <h2 class="text-xl font-bold text-on-surface border-b border-outline-variant pb-3 flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> Figure Notes
             </h2>
-            <div class="prose-text text-on-surface whitespace-pre-line leading-relaxed bg-surface-container-low p-6 rounded-md border border-outline-variant text-base" 
-                 th:text="${danceFigure.notes ?: 'No notes available for this figure.'}">
-                Notes details.
+            <th:block th:if="${danceFigure.notes != null}">
+                <div th:replace="~{fragments/rich-text :: content(value=${danceFigure.notes}, cls='prose-text leading-relaxed bg-surface-container-low p-6 rounded-md border border-outline-variant text-base')}"></div>
+            </th:block>
+            <div th:if="${danceFigure.notes == null}" class="prose-text text-on-surface-variant italic bg-surface-container-low p-6 rounded-md border border-outline-variant text-base">
+                No notes available for this figure.
             </div>
         </div>
     </div>

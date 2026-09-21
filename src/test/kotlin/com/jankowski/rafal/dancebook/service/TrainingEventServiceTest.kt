@@ -82,7 +82,8 @@ class TrainingEventServiceTest {
             appUserService,
             danceCategoryService,
             materialService,
-            entityManager
+            entityManager,
+            RichTextServiceImpl()
         )
     }
 
