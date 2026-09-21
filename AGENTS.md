@@ -118,6 +118,30 @@ maps it to a class literal internally; it never concatenates `'badge-' + variant
 an assembled name appears in no scanned source, so Tailwind drops the rule while the
 attribute still renders — an unstyled element with no error anywhere.
 
+**Every icon goes through the `icon` fragment.** Since #101 no template renders a bare
+`material-symbols-outlined` span and none carries an inline `<svg>`; a sweep of ~336 call
+sites across 36 templates put them all behind `fragments/icon :: icon`. The size scale is
+three steps and nothing else — `sm` 16px, `md` 20px (the default), `lg` 24px — so reach for
+the nearest step rather than adding a fourth. Fill is `filled=true`, which applies
+`.icon-filled`; the `th:style` and raw `style="font-variation-settings: 'FILL' 1"` spellings
+that used to coexist with it are gone, and `grep -r 'font-variation-settings' templates`
+should stay empty.
+
+Extra classes go through **`cls`**, not `class`. Passing `class='text-primary'` is the
+silent-`null` trap above in its most expensive form: it renders a valid page with the colour
+quietly dropped, and it cost a full review round on #101 when 54 call sites had it — the
+chevrons on collapsible sections had stopped rotating because their
+`group-open:rotate-90` rode on that parameter. `FragmentCatalogRenderingTest` asserts a
+passed class reaches the output and `HtmxFragmentRenderingTest` asserts a real template
+still emits the rotation classes, so the pair fails if this recurs.
+
+Icons built in JavaScript cannot use a Thymeleaf fragment, so they go through `renderIcon`
+in `static/js/main.js`, which emits the same classes. `main.js` loads in `layout.html` for
+every page, so call it directly — it is always defined. The one icon that is not a glyph is
+the multi-colour Google brand mark, served from `static/images/google.svg`, because
+substituting a Material Symbol for a brand mark would be wrong rather than merely
+approximate.
+
 ### HTMX partial rendering
 
 Web controllers accept `@RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?`
@@ -161,6 +185,19 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   `src/main/resources/db/migration/V<next>__description.sql` — check that directory for the
   highest version rather than trusting a number written here, which goes stale every release.
   `config/FlywayConfig.kt` runs `repair()` before `migrate()` on every boot.
+- **Never put the word `new` inside a `${...}` in a fragment expression.** Thymeleaf
+  evaluates fragment expressions — the `~{...}` of `th:replace`, `th:insert` and
+  `th:include` — in *restricted mode*, which forbids object instantiation, static class
+  access and request-parameter access. The check matches the SpEL **text**, not the parsed
+  syntax tree, so it cannot tell the `new` operator from the English word: a parameter
+  reading `${cond ? 'Add a new material' : 'Edit'}` throws `TemplateProcessingException`
+  blaming object instantiation. The match is lowercase `new` followed by whitespace, and
+  only inside a `${...}` — a plain quoted literal never reaches the SpEL evaluator, so
+  `'/materials/new'`, `'New Material'` and `'renewal'` are all fine. Build the string in a
+  `th:with` on an enclosing element, which is evaluated unrestricted, and pass the variable
+  in. This broke the Add material page for two releases (#103), because the template parses,
+  the application starts and the build passes — it only fails when the page is requested.
+  `ThymeleafRestrictedExpressionTest` scans every template for the pattern.
 - **Tailwind scans templates, `static/js`, and `src/main/kotlin`.** There is no
   `tailwind.config.js` and no safelist: `frontend/input.css` pins its own sources with
   `@import 'tailwindcss' source(none)` plus three `@source` globs. A class reaches the
@@ -267,6 +304,14 @@ working around them. `FragmentCatalogRenderingTest` renders every catalog fragme
 against a test-only harness template under `src/test/resources/templates/test/`, which is
 where a new fragment's two cases go. `HtmxFragmentRenderingTest` pins the root id of every
 controller-named htmx fragment.
+
+**The suite's blind spot is the whole page.** Both guards assert on fragments and htmx
+endpoints, so a template that parses but throws when rendered passes the build and 500s on
+first visit — which is how #98 shipped a broken Add material page that survived #101 and was
+only found in the running app (#103). `ThymeleafRestrictedExpressionTest` closes the one
+known instance of that class by scanning templates statically, but there is still no test
+that simply requests every GET route and asserts 200. Until there is, render the pages you
+touched before calling a template change done.
 
 ## Repo conventions
 
