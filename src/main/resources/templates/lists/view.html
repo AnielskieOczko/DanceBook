@@ -73,25 +73,25 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div id="deleteConfirmModal" style="display: none;" class="fixed inset-0 z-100 items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity">
-        <div class="bg-white rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative">
-            <div class="flex items-center gap-4 mb-4 text-danger">
-                <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
-                    <span th:replace="~{fragments/icon :: icon(name='warning', size='lg')}"></span>
-                </div>
-                <h3 class="font-headline-md text-on-surface text-xl">Delete Collection?</h3>
+    <dialog id="deleteConfirmModal" class="rounded-xl shadow-ambient border border-outline-variant bg-surface max-w-[28rem] w-full p-6 backdrop:bg-black/40 backdrop:backdrop-blur-xs">
+        <div class="flex items-center gap-4 mb-4 text-danger">
+            <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
+                <span th:replace="~{fragments/icon :: icon(name='warning', size='lg')}"></span>
             </div>
-            <p class="text-on-surface-variant font-body-md mb-6">
-                Are you sure you want to delete "<span class="font-semibold text-on-surface" th:text="${customList.name}"></span>"? This action cannot be undone, but the materials inside will not be deleted.
-            </p>
-            <div class="flex justify-end gap-3">
-                <button type="button" class="js-close-delete-modal btn-outline">Cancel</button>
-                <form th:action="@{/lists/{id}/delete(id=${customList.id})}" method="post" class="contents">
-                    <button type="submit" class="btn-danger">Delete Collection</button>
-                </form>
-            </div>
+            <h3 class="font-headline-md text-on-surface text-xl">Delete Collection?</h3>
         </div>
-    </div>
+        <p class="text-on-surface-variant font-body-md mb-6">
+            Are you sure you want to delete "<span class="font-semibold text-on-surface" th:text="${customList.name}"></span>"? This action cannot be undone, but the materials inside will not be deleted.
+        </p>
+        <div class="flex justify-end gap-3">
+            <form method="dialog" class="inline">
+                <button type="submit" class="btn-outline">Cancel</button>
+            </form>
+            <form th:action="@{/lists/{id}/delete(id=${customList.id})}" method="post" class="contents">
+                <button type="submit" class="btn-danger">Delete Collection</button>
+            </form>
+        </div>
+    </dialog>
 
     <!-- Materials in this list -->
     <div th:replace="~{materials/list :: materialsTable}"></div>

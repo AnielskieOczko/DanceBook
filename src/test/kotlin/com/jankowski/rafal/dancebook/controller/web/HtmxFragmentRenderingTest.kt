@@ -35,11 +35,14 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.data.domain.PageImpl
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
+import com.jankowski.rafal.dancebook.model.TrainingEvent
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import java.util.UUID
 
 @WebMvcTest(
     controllers = [
@@ -203,5 +206,72 @@ class HtmxFragmentRenderingTest {
             .andExpect(view().name("dance-figures/form"))
             .andExpect(content().string(containsString("transform transition-transform group-open:rotate-90")))
             .andExpect(content().string(containsString("transform transition-transform group-open:rotate-180")))
+    }
+
+    @Test
+    fun `training-events deleteDialog htmx returns confirmModal fragment as native dialog with id confirmModal`() {
+        val eventId = UUID.randomUUID()
+        val event = TrainingEvent().apply {
+            id = eventId
+            title = "Test Session"
+            series = null
+        }
+        `when`(trainingEventService.findById(eventId)).thenReturn(event)
+
+        mockMvc.perform(get("/training-events/$eventId/delete-dialog").header("HX-Request", "true").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/confirm-dialog :: confirmModal"))
+            .andExpect(content().string(containsString("id=\"confirmModal\"")))
+            .andExpect(content().string(startsWith("<dialog")))
+    }
+
+    @Test
+    fun `training-events bulk-edit-type-dialog htmx returns editEventTypeModal fragment as native dialog with id bulkEditTypeModal`() {
+        val id = UUID.randomUUID()
+
+        mockMvc.perform(
+            post("/training-events/bulk-edit-type-dialog")
+                .param("sessionIds", id.toString())
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editEventTypeModal"))
+            .andExpect(content().string(containsString("id=\"bulkEditTypeModal\"")))
+            .andExpect(content().string(startsWith("<dialog")))
+    }
+
+    @Test
+    fun `training-events bulk-edit-styles-dialog htmx returns editStylesModal fragment as native dialog with id bulkEditStylesModal`() {
+        val id = UUID.randomUUID()
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/training-events/bulk-edit-styles-dialog")
+                .param("sessionIds", id.toString())
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editStylesModal"))
+            .andExpect(content().string(containsString("id=\"bulkEditStylesModal\"")))
+            .andExpect(content().string(startsWith("<dialog")))
+    }
+
+    @Test
+    fun `training-events bulk-edit-material-dialog htmx returns editMaterialModal fragment as native dialog with id bulkEditMaterialModal`() {
+        val id = UUID.randomUUID()
+        `when`(materialService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/training-events/bulk-edit-material-dialog")
+                .param("sessionIds", id.toString())
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("fragments/bulk-edit-dialog :: editMaterialModal"))
+            .andExpect(content().string(containsString("id=\"bulkEditMaterialModal\"")))
+            .andExpect(content().string(startsWith("<dialog")))
     }
 }

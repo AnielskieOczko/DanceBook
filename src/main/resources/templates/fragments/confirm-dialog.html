@@ -5,110 +5,107 @@
 </head>
 <body>
 
-<div th:fragment="confirmModal"
-     id="confirmModal"
-     class="js-modal fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity"
-     role="dialog"
-     aria-modal="true"
-     aria-labelledby="confirmModalTitle">
-    <div class="js-modal-backdrop fixed inset-0"></div>
-    <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
-        <div class="flex items-center gap-4 mb-4 text-danger">
-            <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
-                <span th:replace="~{fragments/icon :: icon(name='warning', size='md')}"></span>
-            </div>
-            <h3 id="confirmModalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
-                <span th:text="${dialogTitle ?: 'Confirm Action'}">Confirm Action</span>
-                <span th:if="${selectedCount != null}" class="text-xs font-medium px-2 py-0.5 rounded-full bg-danger-soft text-danger" th:text="${selectedCount} + ' selected'">3 selected</span>
-            </h3>
+<dialog th:fragment="confirmModal"
+        id="confirmModal"
+        class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full p-6 backdrop:bg-black/40 backdrop:backdrop-blur-xs"
+        aria-labelledby="confirmModalTitle">
+    <div class="flex items-center gap-4 mb-4 text-danger">
+        <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
+            <span th:replace="~{fragments/icon :: icon(name='warning', size='md')}"></span>
         </div>
-        <p class="text-on-surface-variant font-body-md mb-6 leading-relaxed" th:text="${dialogMessage}">
-            Are you sure you want to proceed?
-        </p>
+        <h3 id="confirmModalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
+            <span th:text="${dialogTitle ?: 'Confirm Action'}">Confirm Action</span>
+            <span th:if="${selectedCount != null}" class="text-xs font-medium px-2 py-0.5 rounded-full bg-danger-soft text-danger" th:text="${selectedCount} + ' selected'">3 selected</span>
+        </h3>
+    </div>
+    <p class="text-on-surface-variant font-body-md mb-6 leading-relaxed" th:text="${dialogMessage}">
+        Are you sure you want to proceed?
+    </p>
 
-        <!-- Reconcile plan details for repeating series pattern edit -->
-        <div th:if="${reconcilePlan != null}" class="space-y-4 mb-6">
-            <div class="space-y-2">
-                <div th:if="${reconcilePlan.createdCount > 0}"
-                     class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md', cls='text-primary')}"></span>
-                    <span th:text="${reconcilePlan.createdCount} + (${reconcilePlan.createdCount == 1} ? ' session will be created' : ' sessions will be created')">
-                        2 sessions will be created
-                    </span>
-                </div>
-                <div th:if="${reconcilePlan.movedCount > 0}"
-                     class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span th:replace="~{fragments/icon :: icon(name='update', size='md', cls='text-secondary')}"></span>
-                    <span th:text="${reconcilePlan.movedCount} + (${reconcilePlan.movedCount == 1} ? ' session will be moved' : ' sessions will be moved')">
-                        4 sessions will be moved
-                    </span>
-                </div>
-                <div th:if="${reconcilePlan.removedCount > 0}"
-                     class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span th:replace="~{fragments/icon :: icon(name='remove_circle', size='md', cls='text-error')}"></span>
-                    <span th:text="${reconcilePlan.removedCount} + (${reconcilePlan.removedCount == 1} ? ' session will be removed' : ' sessions will be removed')">
-                        2 sessions will be removed
-                    </span>
-                </div>
+    <!-- Reconcile plan details for repeating series pattern edit -->
+    <div th:if="${reconcilePlan != null}" class="space-y-4 mb-6">
+        <div class="space-y-2">
+            <div th:if="${reconcilePlan.createdCount > 0}"
+                 class="flex items-center gap-2 text-body-md text-on-surface">
+                <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md', cls='text-primary')}"></span>
+                <span th:text="${reconcilePlan.createdCount} + (${reconcilePlan.createdCount == 1} ? ' session will be created' : ' sessions will be created')">
+                    2 sessions will be created
+                </span>
             </div>
-            <div th:if="${reconcilePlan.droppedRecordedCount > 0}"
-                 class="p-3 rounded-lg bg-danger-soft text-danger text-sm flex items-start gap-2">
-                <span th:replace="~{fragments/icon :: icon(name='warning', size='sm', cls='mt-0.5')}"></span>
-                <span th:text="${reconcilePlan.droppedRecordedCount} + (${reconcilePlan.droppedRecordedCount == 1} ? ' past session with recorded attendance will be dropped from the series and kept as a standalone session.' : ' past sessions with recorded attendance will be dropped from the series and kept as standalone sessions.')">
-                    1 past session with recorded attendance will be dropped from the series and kept as a standalone session.
+            <div th:if="${reconcilePlan.movedCount > 0}"
+                 class="flex items-center gap-2 text-body-md text-on-surface">
+                <span th:replace="~{fragments/icon :: icon(name='update', size='md', cls='text-secondary')}"></span>
+                <span th:text="${reconcilePlan.movedCount} + (${reconcilePlan.movedCount == 1} ? ' session will be moved' : ' sessions will be moved')">
+                    4 sessions will be moved
+                </span>
+            </div>
+            <div th:if="${reconcilePlan.removedCount > 0}"
+                 class="flex items-center gap-2 text-body-md text-on-surface">
+                <span th:replace="~{fragments/icon :: icon(name='remove_circle', size='md', cls='text-error')}"></span>
+                <span th:text="${reconcilePlan.removedCount} + (${reconcilePlan.removedCount == 1} ? ' session will be removed' : ' sessions will be removed')">
+                    2 sessions will be removed
                 </span>
             </div>
         </div>
+        <div th:if="${reconcilePlan.droppedRecordedCount > 0}"
+             class="p-3 rounded-lg bg-danger-soft text-danger text-sm flex items-start gap-2">
+            <span th:replace="~{fragments/icon :: icon(name='warning', size='sm', cls='mt-0.5')}"></span>
+            <span th:text="${reconcilePlan.droppedRecordedCount} + (${reconcilePlan.droppedRecordedCount == 1} ? ' past session with recorded attendance will be dropped from the series and kept as a standalone session.' : ' past sessions with recorded attendance will be dropped from the series and kept as standalone sessions.')">
+                1 past session with recorded attendance will be dropped from the series and kept as a standalone session.
+            </span>
+        </div>
+    </div>
 
-        <!-- Recurring series scope choices -->
-        <form th:if="${scopeOptions != null && confirmUrl != null}"
+    <!-- Recurring series scope choices -->
+    <form th:if="${scopeOptions != null && confirmUrl != null}"
+          th:action="${confirmUrl}"
+          th:hx-post="${hxTarget != null ? confirmUrl : null}"
+          th:hx-target="${hxTarget}"
+          th:hx-swap="${hxSwap ?: 'outerHTML'}"
+          th:hx-include="${hxInclude}"
+          method="post"
+          class="space-y-4">
+        <div class="space-y-2 mb-6">
+            <label th:each="opt : ${scopeOptions}"
+                   class="flex items-start gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer transition-colors">
+                <input type="radio"
+                       name="scope"
+                       th:value="${opt.scope.name()}"
+                       th:checked="${opt.scope == T(com.jankowski.rafal.dancebook.model.SeriesScope).THIS_EVENT}"
+                       class="mt-1 text-primary focus:ring-primary border-border">
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-on-surface" th:text="${opt.label}">This event</div>
+                    <div class="text-sm text-on-surface-variant" th:text="${opt.description}">1 session</div>
+                </div>
+            </label>
+        </div>
+        <div class="flex justify-end gap-3">
+            <button type="submit" formmethod="dialog" class="btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
+            <button type="submit" class="btn-danger" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
+        </div>
+    </form>
+
+    <!-- Standard / Reconcile confirm dialog -->
+    <div th:if="${scopeOptions == null}" class="flex justify-end gap-3">
+        <form method="dialog" class="inline">
+            <button type="submit" class="btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
+        </form>
+        <form th:if="${confirmUrl != null && confirmFormId == null}"
               th:action="${confirmUrl}"
               th:hx-post="${hxTarget != null ? confirmUrl : null}"
               th:hx-target="${hxTarget}"
               th:hx-swap="${hxSwap ?: 'outerHTML'}"
               th:hx-include="${hxInclude}"
               method="post"
-              class="space-y-4">
-            <div class="space-y-2 mb-6">
-                <label th:each="opt : ${scopeOptions}"
-                       class="flex items-start gap-3 p-3 rounded-lg border border-outline-variant hover:bg-surface-container-low cursor-pointer transition-colors">
-                    <input type="radio"
-                           name="scope"
-                           th:value="${opt.scope.name()}"
-                           th:checked="${opt.scope == T(com.jankowski.rafal.dancebook.model.SeriesScope).THIS_EVENT}"
-                           class="mt-1 text-primary focus:ring-primary border-border">
-                    <div class="flex-1 min-w-0">
-                        <div class="font-medium text-on-surface" th:text="${opt.label}">This event</div>
-                        <div class="text-sm text-on-surface-variant" th:text="${opt.description}">1 session</div>
-                    </div>
-                </label>
-            </div>
-            <div class="flex justify-end gap-3">
-                <button type="button" class="js-close-modal btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
-                <button type="submit" class="btn-danger" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
-            </div>
+              class="contents">
+            <th:block th:if="${sessionIds != null}">
+                <input th:each="id : ${sessionIds}" type="hidden" name="sessionIds" th:value="${id}">
+            </th:block>
+            <button type="submit" th:class="${reconcilePlan != null ? 'btn-primary' : 'btn-danger'}" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
         </form>
-
-        <!-- Standard / Reconcile confirm dialog -->
-        <div th:if="${scopeOptions == null}" class="flex justify-end gap-3">
-            <button type="button" class="js-close-modal btn-outline" th:text="${cancelLabel ?: 'Cancel'}">Cancel</button>
-            <form th:if="${confirmUrl != null && confirmFormId == null}"
-                  th:action="${confirmUrl}"
-                  th:hx-post="${hxTarget != null ? confirmUrl : null}"
-                  th:hx-target="${hxTarget}"
-                  th:hx-swap="${hxSwap ?: 'outerHTML'}"
-                  th:hx-include="${hxInclude}"
-                  method="post"
-                  class="contents">
-                <th:block th:if="${sessionIds != null}">
-                    <input th:each="id : ${sessionIds}" type="hidden" name="sessionIds" th:value="${id}">
-                </th:block>
-                <button type="submit" th:class="${reconcilePlan != null ? 'btn-primary' : 'btn-danger'}" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
-            </form>
-            <button th:if="${confirmFormId != null}" type="button" id="modalConfirmBtn" class="btn-primary" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
-        </div>
+        <button th:if="${confirmFormId != null}" type="button" id="modalConfirmBtn" class="btn-primary" th:text="${confirmLabel ?: 'Confirm'}">Confirm</button>
     </div>
-</div>
+</dialog>
 
 <div th:fragment="confirmDialog(dialogTitle, dialogMessage, confirmLabel, confirmUrl, hxTarget, hxSwap, cancelLabel)"
      th:replace="~{fragments/confirm-dialog :: confirmModal}">

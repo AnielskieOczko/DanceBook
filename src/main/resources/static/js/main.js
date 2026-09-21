@@ -263,37 +263,16 @@ document.addEventListener('click', function(event) {
     if (openDeleteModalBtn) {
         event.preventDefault();
         const modal = document.getElementById('deleteConfirmModal');
-        if (modal) modal.style.display = 'flex';
+        if (modal && typeof modal.showModal === 'function') modal.showModal();
         return;
     }
 
-    // 6. Delete list modal close
-    const closeDeleteModalBtn = event.target.closest('.js-close-delete-modal');
-    if (closeDeleteModalBtn) {
+    // Dismiss alert button
+    const dismissAlertBtn = event.target.closest('.js-dismiss-alert');
+    if (dismissAlertBtn) {
         event.preventDefault();
-        const modal = document.getElementById('deleteConfirmModal');
-        if (modal) modal.style.display = 'none';
-        return;
-    }
-
-    // 6b. Shared confirm dialog close button
-    const closeModalBtn = event.target.closest('.js-close-modal');
-    if (closeModalBtn) {
-        event.preventDefault();
-        const container = document.getElementById('confirmModalContainer');
-        if (container) container.innerHTML = '';
-        const modal = closeModalBtn.closest('.js-modal');
-        if (modal) modal.classList.add('hidden');
-        return;
-    }
-
-    // 6c. Modal backdrop click handler
-    if (event.target.classList.contains('js-modal-backdrop')) {
-        event.preventDefault();
-        const container = document.getElementById('confirmModalContainer');
-        if (container) container.innerHTML = '';
-        const modal = event.target.closest('.js-modal');
-        if (modal) modal.classList.add('hidden');
+        const alertBox = dismissAlertBtn.closest('[role="alert"]');
+        if (alertBox) alertBox.remove();
         return;
     }
 
@@ -550,18 +529,23 @@ document.addEventListener('change', function(event) {
     }
 }, true);
 
-// Close modals on Escape key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        const container = document.getElementById('confirmModalContainer');
-        if (container && container.innerHTML.trim() !== '') {
-            container.innerHTML = '';
+// Open native dialogs swapped into confirmModalContainer
+document.addEventListener('htmx:afterSwap', function(event) {
+    if (event.target.id === 'confirmModalContainer') {
+        const dialog = event.target.querySelector('dialog');
+        if (dialog && typeof dialog.showModal === 'function') {
+            dialog.showModal();
         }
-        document.querySelectorAll('.js-modal').forEach(m => m.classList.add('hidden'));
-        const deleteModal = document.getElementById('deleteConfirmModal');
-        if (deleteModal) deleteModal.style.display = 'none';
     }
 });
+
+// Clear confirmModalContainer when its dialog closes
+document.addEventListener('close', function(event) {
+    if (event.target.tagName === 'DIALOG' && event.target.closest('#confirmModalContainer')) {
+        const container = document.getElementById('confirmModalContainer');
+        if (container) container.innerHTML = '';
+    }
+}, true);
 
 /**
  * Renders an icon span matching the Thymeleaf fragments/icon contract.
@@ -579,5 +563,47 @@ function renderIcon(name, options = {}) {
     const ariaAttr = options.ariaLabel ? `aria-label="${options.ariaLabel}" aria-hidden="false"` : 'aria-hidden="true"';
     return `<span${idAttr}${titleAttr} class="material-symbols-outlined shrink-0 select-none ${sizeClass}${filledClass}${cls}" ${ariaAttr}>${name}</span>`;
 }
+
+/**
+ * Renders a visible error alert matching the fragments/alert style into #alert-container.
+ * Replaces any existing message so only one message is displayed at a time.
+ * @param {string} message - Error message to display
+ */
+function showErrorAlert(message) {
+    let container = document.getElementById('alert-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'alert-container';
+        container.className = 'mb-6';
+        const main = document.querySelector('main');
+        if (main) {
+            main.insertBefore(container, main.firstChild);
+        } else {
+            document.body.insertBefore(container, document.body.firstChild);
+        }
+    }
+    container.innerHTML = `
+<div role="alert" class="p-4 rounded-md border flex items-start gap-3 bg-error/10 border-error text-error">
+    ${renderIcon('error', { size: 'md' })}
+    <div class="flex-1">
+        <p class="text-sm font-normal">${message}</p>
+    </div>
+    <button type="button" class="js-dismiss-alert shrink-0 p-1 hover:opacity-80 transition-opacity" aria-label="Dismiss">
+        ${renderIcon('close', { size: 'sm' })}
+    </button>
+</div>`;
+}
+window.showErrorAlert = showErrorAlert;
+
+// Surface background HTMX failures in the alert container
+document.body.addEventListener('htmx:responseError', function(event) {
+    const status = event.detail.xhr ? event.detail.xhr.status : null;
+    const message = status ? `Request failed (${status}). Please try again.` : 'An unexpected error occurred. Please try again.';
+    showErrorAlert(message);
+});
+
+document.body.addEventListener('htmx:sendError', function() {
+    showErrorAlert('Network error. Please check your connection and try again.');
+});
 
 

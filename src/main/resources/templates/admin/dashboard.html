@@ -14,11 +14,11 @@
     </div>
 
     <!-- Flash Messages for Settings -->
-    <div th:if="${settingsSuccess != null}" class="mb-8 p-4 rounded-button bg-success-soft border border-success/30">
-        <p class="text-sm font-medium text-success" th:text="${settingsSuccess}">Success</p>
+    <div th:if="${settingsSuccess != null}" class="mb-8">
+        <div th:replace="~{fragments/alert :: alert(variant='success', text=${settingsSuccess})}"></div>
     </div>
-    <div th:if="${settingsError != null}" class="mb-8 p-4 rounded-button bg-danger-soft border border-danger/30">
-        <p class="text-sm font-medium text-danger" th:text="${settingsError}">Error</p>
+    <div th:if="${settingsError != null}" class="mb-8">
+        <div th:replace="~{fragments/alert :: alert(variant='error', text=${settingsError})}"></div>
     </div>
 
     <!-- Application Configuration -->
@@ -43,10 +43,10 @@
         </div>
 
         <div th:if="${systemSettingsSuccess != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-success bg-success-soft rounded-button font-medium border border-success/30" th:text="${systemSettingsSuccess}">Success</div>
+            <div th:replace="~{fragments/alert :: alert(variant='success', text=${systemSettingsSuccess})}"></div>
         </div>
         <div th:if="${systemSettingsError != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium border border-danger/30" th:text="${systemSettingsError}">Error</div>
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${systemSettingsError})}"></div>
         </div>
 
         <div class="p-6">
@@ -206,7 +206,7 @@
         </div>
 
         <div th:if="${createUserSuccess != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-success bg-success-soft rounded-button font-medium" th:text="${createUserSuccess}">Success</div>
+            <div th:replace="~{fragments/alert :: alert(variant='success', text=${createUserSuccess})}"></div>
         </div>
 
         <div id="createUserFormContainer">
@@ -284,18 +284,15 @@
     </div>
 
     <!-- HTMX Fragments (hidden, returned by HTMX endpoints) -->
-    <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="p-4 rounded-button bg-secondary-container/50 border border-secondary/30 mt-2">
-        <h3 class="font-heading font-semibold text-on-secondary-container mb-2">Simulation Complete</h3>
-        <p class="text-text-primary text-sm">Found <strong th:text="${orphanedFiles.size()}">0</strong> orphaned file(s).</p>
+    <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='info', title='Simulation Complete', text='Found ' + ${orphanedFiles.size()} + ' orphaned file(s).' + (${orphanedFiles.isEmpty()} ? ' Storage is clean!' : ''))}"></div>
         <ul th:if="${!orphanedFiles.isEmpty()}" class="list-disc pl-5 mt-2 text-sm text-text-secondary">
             <li th:each="fileId : ${orphanedFiles}" th:text="${fileId}">file-id</li>
         </ul>
-        <p th:if="${orphanedFiles.isEmpty()}" class="text-sm text-success mt-1 font-medium">No orphaned files found. Storage is clean!</p>
     </div>
 
-    <div th:fragment="cleanupSuccess" th:if="${deletedCount != null}" class="p-4 rounded-button bg-success-soft border border-success/30 mt-2">
-        <h3 class="font-heading font-semibold text-success mb-2">Cleanup Successful</h3>
-        <p class="text-text-primary text-sm">Permanently deleted <strong th:text="${deletedCount}">0</strong> orphaned file(s) from Google Drive.</p>
+    <div th:fragment="cleanupSuccess" th:if="${deletedCount != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='success', title='Cleanup Successful', text='Permanently deleted ' + ${deletedCount} + ' orphaned file(s) from Google Drive.')}"></div>
     </div>
 
     <div th:fragment="driveSection" th:if="${driveFiles != null}" class="space-y-4">
@@ -355,7 +352,9 @@
     <div th:fragment="empty"></div>
 
     <div th:fragment="createUserForm" class="p-6 border-b border-border bg-surface-warm">
-        <div th:if="${createUserError != null}" class="p-3 mb-4 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${createUserError}">Error</div>
+        <div th:if="${createUserError != null}" class="mb-4">
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${createUserError})}"></div>
+        </div>
         <form hx-post="/admin/users" hx-target="#usersSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="form-label">Username</label>
@@ -406,7 +405,7 @@
 
     <tr th:fragment="editUserRow" th:id="'user-row-' + ${editUser.id}" class="bg-primary-soft/20">
         <td colspan="4" class="p-4">
-            <div th:if="${updateUserError != null}" class="p-3 mb-4 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${updateUserError}">Error</div>
+            <div th:if="${updateUserError != null}" class="mb-4" th:replace="~{fragments/alert :: alert(variant='danger', text=${updateUserError})}"></div>
             <form th:hx-post="@{/admin/users/{id}/edit(id=${editUser.id})}" hx-target="closest tr" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
                     <label class="form-label text-xs">Username</label>
@@ -439,12 +438,8 @@
         </td>
     </tr>
 
-    <div th:fragment="importSuccess" th:if="${importResult != null}" class="p-4 rounded-button bg-success-soft border border-success/30 mt-2">
-        <h3 class="font-heading font-semibold text-success mb-2">Import Successful</h3>
-        <p class="text-text-primary text-sm">
-            Updated <strong th:text="${importResult.figuresUpdated}">0</strong> figures and created/updated <strong th:text="${importResult.stepsCreated}">0</strong> steps.
-            Skipped <strong th:text="${importResult.skippedUnmatched}">0</strong> unmatched figures.
-        </p>
+    <div th:fragment="importSuccess" th:if="${importResult != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='success', title='Import Successful', text='Updated ' + ${importResult.figuresUpdated} + ' figures and created/updated ' + ${importResult.stepsCreated} + ' steps. Skipped ' + ${importResult.skippedUnmatched} + ' unmatched figures.')}"></div>
         <details th:if="${!importResult.warnings.isEmpty()}" class="mt-2 text-xs cursor-pointer">
             <summary class="font-semibold text-text-primary hover:text-primary">View Warnings (<span th:text="${importResult.warnings.size()}">0</span>)</summary>
             <ul class="list-disc pl-5 mt-1 text-text-secondary max-h-40 overflow-y-auto space-y-0.5">
@@ -453,17 +448,16 @@
         </details>
     </div>
 
-    <div th:fragment="importFailure" th:if="${importError != null}" class="p-4 rounded-button bg-danger-soft border border-danger/30 mt-2">
-        <h3 class="font-heading font-semibold text-danger mb-2">Import Failed</h3>
-        <p class="text-text-primary text-sm" th:text="${importError}">Error details</p>
+    <div th:fragment="importFailure" th:if="${importError != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='error', title='Import Failed', text=${importError})}"></div>
     </div>
 
     <div th:fragment="calendarsSection" id="calendarsSection">
         <div th:if="${calendarSuccess != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-success bg-success-soft rounded-button font-medium border border-success/30" th:text="${calendarSuccess}">Success</div>
+            <div th:replace="~{fragments/alert :: alert(variant='success', text=${calendarSuccess})}"></div>
         </div>
         <div th:if="${calendarError != null}" class="px-6 pt-4 pb-2">
-            <div class="p-3 text-sm text-danger bg-danger-soft rounded-button font-medium border border-danger/30" th:text="${calendarError}">Error</div>
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
         </div>
 
         <div id="addCalendarFormContainer">
@@ -588,7 +582,9 @@
     </tr>
 
     <div th:fragment="addCalendarForm" class="p-6 border-b border-border bg-surface-warm">
-        <div th:if="${calendarError != null}" class="p-3 mb-4 text-sm text-danger bg-danger-soft rounded-button font-medium" th:text="${calendarError}">Error</div>
+        <div th:if="${calendarError != null}" class="mb-4">
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
+        </div>
         <form hx-post="/admin/calendars" hx-target="#calendarsSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="form-label">Display Name</label>
