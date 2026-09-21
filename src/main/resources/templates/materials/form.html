@@ -2,10 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'">
+<section th:with="activeNav='materials',
+                  pageTitle=${materialId == null ? 'New Material' : 'Edit Material'},
+                  pageSubtitle=${materialId == null ? 'Add a new dance material to your library' : 'Update this material'}">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: header(title=${materialId == null ? 'New Material' : 'Edit Material'}, subtitle=${materialId == null ? 'Add a new dance material to your library' : 'Update this material'})}"></div>
+    <!-- Thymeleaf evaluates fragment expressions in restricted mode, which rejects the
+         token "new " even inside a string literal, so the strings are built here instead. -->
+    <div th:replace="~{fragments/page :: header(title=${pageTitle}, subtitle=${pageSubtitle})}"></div>
 
     <form th:action="${materialId == null ? '/materials' : '/materials/' + materialId}"
           th:object="${material}" method="post" class="card p-6 md:p-8 space-y-6">
