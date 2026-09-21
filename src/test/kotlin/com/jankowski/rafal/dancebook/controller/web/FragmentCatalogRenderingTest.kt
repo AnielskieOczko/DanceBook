@@ -7,6 +7,7 @@ import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.CustomListService
+import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
@@ -137,7 +138,7 @@ class CatalogHarnessController {
     ]
 )
 @AutoConfigureMockMvc(addFilters = false)
-@Import(FragmentCatalogRenderingTest.CsrfProcessorConfig::class)
+@Import(FragmentCatalogRenderingTest.CsrfProcessorConfig::class, RichTextServiceImpl::class)
 class FragmentCatalogRenderingTest {
 
     @TestConfiguration
@@ -297,5 +298,15 @@ class FragmentCatalogRenderingTest {
 
         val html = result.response.contentAsString
         assertTrue(html.contains("transform transition-transform group-open:rotate-90"))
+    }
+
+    @Test
+    fun `rich text content fragment with null value produces no rich-text element`() {
+        val result = mockMvc.perform(get("/test/catalog/richTextContentNull").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertFalse(html.contains("rich-text"), "Null value should produce no rich-text element, but got:\n$html")
     }
 }

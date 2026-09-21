@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.config.SecurityConfig
+import org.springframework.context.annotation.Import
 import com.jankowski.rafal.dancebook.dto.TrainingTimeline
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
@@ -13,6 +14,7 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
@@ -64,6 +66,7 @@ import java.util.UUID
     ]
 )
 @AutoConfigureMockMvc(addFilters = false)
+@Import(RichTextServiceImpl::class)
 class HtmxFragmentRenderingTest {
 
     @Autowired

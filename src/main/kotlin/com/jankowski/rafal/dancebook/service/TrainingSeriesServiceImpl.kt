@@ -43,7 +43,8 @@ class TrainingSeriesServiceImpl(
     private val trainingCalendarService: TrainingCalendarService,
     private val appUserService: AppUserService,
     private val danceCategoryService: DanceCategoryService,
-    private val materialService: MaterialService
+    private val materialService: MaterialService,
+    private val richTextService: RichTextService
 ) : TrainingSeriesService {
 
     companion object {
@@ -90,7 +91,7 @@ class TrainingSeriesServiceImpl(
         occurrence.startTime = start
         occurrence.endTime = end
         occurrence.eventType = TrainingEventType.valueOf(request.eventType)
-        occurrence.description = request.description?.takeIf { it.isNotBlank() }
+        occurrence.description = richTextService.clean(request.description)
         occurrence.material = request.materialId?.let { materialService.findById(it) }
         occurrence.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         occurrence.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)
@@ -487,7 +488,7 @@ class TrainingSeriesServiceImpl(
         series.startsOn = date
         series.endsOn = until
         series.eventType = TrainingEventType.valueOf(request.eventType)
-        series.description = request.description?.takeIf { it.isNotBlank() }
+        series.description = richTextService.clean(request.description)
         series.material = request.materialId?.let { materialService.findById(it) }
         series.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         series.createdBy = series.createdBy ?: actor
@@ -526,7 +527,7 @@ class TrainingSeriesServiceImpl(
 
         series.title = request.title
         series.eventType = TrainingEventType.valueOf(request.eventType)
-        series.description = request.description?.takeIf { it.isNotBlank() }
+        series.description = richTextService.clean(request.description)
         series.material = request.materialId?.let { materialService.findById(it) }
         series.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         series.updatedAt = LocalDateTime.now()
@@ -677,7 +678,7 @@ class TrainingSeriesServiceImpl(
                 event.startTime = LocalDateTime.of(targetDate, newStartTime)
                 event.endTime = LocalDateTime.of(endDate, newEndTime)
                 event.eventType = TrainingEventType.valueOf(request.eventType)
-                event.description = request.description?.takeIf { it.isNotBlank() }
+                event.description = richTextService.clean(request.description)
                 event.material = request.materialId?.let { materialService.findById(it) }
                 event.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
                 event.updatedAt = now
@@ -704,7 +705,7 @@ class TrainingSeriesServiceImpl(
                         startTime = LocalDateTime.of(date, newStartTime)
                         endTime = LocalDateTime.of(if (newEndTime > newStartTime) date else date.plusDays(1), newEndTime)
                         eventType = TrainingEventType.valueOf(request.eventType)
-                        description = request.description?.takeIf { it.isNotBlank() }
+                        description = richTextService.clean(request.description)
                         material = request.materialId?.let { materialService.findById(it) }
                         materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
                         calendar = seriesCalendar
@@ -741,7 +742,7 @@ class TrainingSeriesServiceImpl(
         series.startsOn = newStartsOn
         series.endsOn = newEndsOn
         series.eventType = TrainingEventType.valueOf(request.eventType)
-        series.description = request.description?.takeIf { it.isNotBlank() }
+        series.description = richTextService.clean(request.description)
         series.material = request.materialId?.let { materialService.findById(it) }
         series.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
         series.updatedAt = now

@@ -20,7 +20,8 @@ import com.jankowski.rafal.dancebook.model.CommentAddedEvent
 class CommentServiceImpl(
     private val commentRepository: CommentRepository,
     private val materialRepository: MaterialRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val richTextService: RichTextService
 ): CommentService {
 
     companion object {
@@ -36,8 +37,11 @@ class CommentServiceImpl(
         val material = materialRepository.findById(materialId)
             .orElseThrow { EntityNotFoundException("Material with id $materialId does not exist") }
 
+        val cleanedContent = richTextService.clean(content)
+        require(!cleanedContent.isNullOrBlank()) { "Comment content must not be blank" }
+
         val comment = Comment().apply {
-            this.content = content
+            this.content = cleanedContent
             this.author = author
             this.material = material
         }
@@ -56,7 +60,10 @@ class CommentServiceImpl(
             throw AccessDeniedException("You are not allowed to change this comment to this user")
         }
 
-        comment.content = content
+        val cleanedContent = richTextService.clean(content)
+        require(!cleanedContent.isNullOrBlank()) { "Comment content must not be blank" }
+
+        comment.content = cleanedContent
         comment.updatedAt = LocalDateTime.now()
         return commentRepository.save(comment)
     }

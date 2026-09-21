@@ -115,9 +115,9 @@
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-3">
-                <p class="text-body-md text-text-secondary italic whitespace-pre-line print:text-black" th:text="${choreography.description}">
-                    Choreography details and style guidelines...
-                </p>
+                <th:block th:if="${choreography.description != null}">
+                    <div th:replace="~{fragments/rich-text :: content(value=${choreography.description}, cls='text-body-md text-on-surface-variant italic print:text-black')}"></div>
+                </th:block>
                 
                 <!-- LOD Color Legend Badge -->
                 <details id="lod-color-guide" class="relative group inline-block no-print shrink-0" th:unless="${#lists.isEmpty(choreography.entries)}">

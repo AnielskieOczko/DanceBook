@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventType
 import java.time.LocalDateTime
 
 class GoogleCalendarClientMappingTest {
@@ -23,7 +25,7 @@ class GoogleCalendarClientMappingTest {
             timeZone = "Europe/Warsaw"
         )
         // Instantiation must NOT trigger lazy credentials or transport
-        client = GoogleCalendarClientImpl(properties)
+        client = GoogleCalendarClientImpl(properties, RichTextServiceImpl())
     }
 
     @Test
@@ -137,5 +139,27 @@ class GoogleCalendarClientMappingTest {
     @Test
     fun `isWindowComplete is true only for full sync when drain completed`() {
         assertTrue(client.isWindowComplete(isFullSync = true, drainCompleted = true))
+    }
+
+    @Test
+    fun `strips markup from session description when creating calendar description`() {
+        val event = TrainingEvent().apply {
+            title = "Practice Session"
+            description = "<p>Focus on <strong>waltz</strong> timing</p><ul><li>Step 1</li><li>Step 2</li></ul>"
+            eventType = TrainingEventType.TRAINING
+        }
+
+        val toGoogleEventMethod = GoogleCalendarClientImpl::class.java.getDeclaredMethod("toGoogleEvent", TrainingEvent::class.java).apply {
+            isAccessible = true
+        }
+        val googleEvent = toGoogleEventMethod.invoke(client, event) as Event
+
+        assertNotNull(googleEvent.description)
+        assertFalse(googleEvent.description.contains("<p>"))
+        assertFalse(googleEvent.description.contains("<strong>"))
+        assertFalse(googleEvent.description.contains("<ul>"))
+        assertFalse(googleEvent.description.contains("<li>"))
+        assertTrue(googleEvent.description.contains("Focus on waltz timing"))
+        assertTrue(googleEvent.description.contains("Type: TRAINING"))
     }
 }

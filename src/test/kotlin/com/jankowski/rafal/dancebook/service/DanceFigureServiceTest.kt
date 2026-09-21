@@ -50,7 +50,8 @@ class DanceFigureServiceTest {
             danceFigureRepository,
             danceTypeService,
             eventPublisher,
-            appUserService
+            appUserService,
+            RichTextServiceImpl()
         )
     }
 

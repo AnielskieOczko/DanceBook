@@ -58,7 +58,8 @@ class MaterialServiceFigureTest {
             danceFigureRepository,
             googleDriveService,
             eventPublisher,
-            appUserService
+            appUserService,
+            RichTextServiceImpl()
         )
     }
 

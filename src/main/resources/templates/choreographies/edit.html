@@ -41,7 +41,10 @@
                 <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
                       th:text="${choreography.danceType != null ? choreography.danceType.name : 'Unknown'}">Waltz</span>
             </div>
-            <p class="text-sm text-text-secondary mt-1" th:text="${choreography.description ?: 'No description. Click Edit Details to add one.'}">Routine notes...</p>
+            <th:block th:if="${choreography.description != null}">
+                <div th:replace="~{fragments/rich-text :: content(value=${choreography.description}, cls='text-sm text-on-surface-variant mt-1')}"></div>
+            </th:block>
+            <p th:if="${choreography.description == null}" class="text-sm text-on-surface-variant mt-1">No description. Click Edit Details to add one.</p>
         </div>
         <div class="flex items-center gap-3">
             <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="btn-outline">

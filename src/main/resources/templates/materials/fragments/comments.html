@@ -45,7 +45,7 @@
             <span class="font-label-sm text-label-sm text-on-surface-variant opacity-50"
                   th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>
         </div>
-        <p class="font-body-md text-on-surface leading-relaxed whitespace-pre-wrap mt-1" th:text="${c.content}">Note content</p>
+        <div th:replace="~{fragments/rich-text :: content(value=${c.content}, cls='font-body-md leading-relaxed mt-1')}"></div>
         
         <!-- Actions -->
         <div class="flex gap-4 mt-3">

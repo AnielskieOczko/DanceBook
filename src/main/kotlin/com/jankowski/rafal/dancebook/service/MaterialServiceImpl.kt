@@ -35,7 +35,8 @@ class MaterialServiceImpl(
     private val danceFigureRepository: DanceFigureRepository,
     private val googleDriveService: GoogleDriveService,
     private val eventPublisher: ApplicationEventPublisher,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val richTextService: RichTextService
 ) : MaterialService {
 
     companion object {
@@ -54,7 +55,7 @@ class MaterialServiceImpl(
         log.debug("Creating material {}", request)
         val material = Material()
         material.name = request.name
-        material.description = request.description
+        material.description = richTextService.clean(request.description)
         material.rating = request.rating
         material.videoLink = request.videoLink
         material.sourceLink = request.sourceLink
@@ -83,7 +84,7 @@ class MaterialServiceImpl(
         }
 
         existing.name = request.name
-        existing.description = request.description
+        existing.description = richTextService.clean(request.description)
         existing.rating = request.rating
         existing.videoLink = request.videoLink
         existing.sourceLink = request.sourceLink

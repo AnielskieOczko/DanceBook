@@ -61,8 +61,7 @@
 
         <div th:if="${event.description != null}">
             <h3 class="form-label">Notes</h3>
-            <p class="font-body-md text-body-md text-on-surface-variant whitespace-pre-line"
-               th:text="${event.description}">What we worked on.</p>
+            <div th:replace="~{fragments/rich-text :: content(value=${event.description}, cls='font-body-md text-body-md text-on-surface-variant leading-relaxed')}"></div>
         </div>
 
         <div th:if="${event.material != null}">
