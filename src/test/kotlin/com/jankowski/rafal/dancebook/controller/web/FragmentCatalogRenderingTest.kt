@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -160,6 +161,9 @@ class FragmentCatalogRenderingTest {
         strings = [
             // Required parameters only
             "iconRequired",
+            "iconSm",
+            "iconMd",
+            "iconWithRotation",
             "linkRequired",
             "buttonRequired",
             "iconButtonRequired",
@@ -241,5 +245,57 @@ class FragmentCatalogRenderingTest {
             .andExpect(content().string(containsString("Errors found")))
             .andExpect(content().string(containsString("Name is required")))
             .andExpect(content().string(containsString("Category must be chosen")))
+    }
+
+    @Test
+    fun `icon fragment renders default size md, aria-hidden true and unlabelled by default`() {
+        val result = mockMvc.perform(get("/test/catalog/iconRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertTrue(html.contains("material-symbols-outlined"))
+        assertTrue(html.contains("text-[20px]"))
+        assertTrue(html.contains("aria-hidden=\"true\""))
+        assertFalse(html.contains("aria-label"))
+        assertFalse(html.contains("icon-filled"))
+        assertTrue(html.contains(">star</span>"))
+    }
+
+    @Test
+    fun `icon fragment renders size sm text-16px`() {
+        val result = mockMvc.perform(get("/test/catalog/iconSm").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertTrue(html.contains("text-[16px]"))
+    }
+
+    @Test
+    fun `icon fragment renders with all parameters populated including size lg, filled, id, title and aria-label`() {
+        val result = mockMvc.perform(get("/test/catalog/iconAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertTrue(html.contains("text-[24px]"))
+        assertTrue(html.contains("icon-filled"))
+        assertTrue(html.contains("id=\"test-icon-id\""))
+        assertTrue(html.contains("title=\"Favorite icon\""))
+        assertTrue(html.contains("aria-label=\"Favorite\""))
+        assertTrue(html.contains("aria-hidden=\"false\""))
+        assertTrue(html.contains("custom-icon"))
+        assertTrue(html.contains(">star</span>"))
+    }
+
+    @Test
+    fun `icon fragment renders passed extra classes into class attribute`() {
+        val result = mockMvc.perform(get("/test/catalog/iconWithRotation").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertTrue(html.contains("transform transition-transform group-open:rotate-90"))
     }
 }

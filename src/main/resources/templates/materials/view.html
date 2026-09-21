@@ -8,12 +8,12 @@
     <!-- Contextual Sub-Header -->
     <header class="flex items-center justify-between py-4 border-b border-surface-variant mb-6">
         <a href="/materials" class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors group">
-            <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-1 transition-transform')}"></span>
             <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
         </a>
         <div class="flex items-center gap-4">
             <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
-                <span class="material-symbols-outlined text-[18px]">edit</span>
+                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                 Edit Notes
             </a>
         </div>
@@ -28,7 +28,7 @@
         <th:block th:if="${material.driveFileId == null && material.videoLink != null}">
             <div class="w-full h-full flex flex-col items-center justify-center bg-surface-container-highest">
                 <a th:href="${material.videoLink}" target="_blank" rel="noopener" class="flex flex-col items-center gap-4 text-primary hover:text-primary-hover transition-colors">
-                    <span class="material-symbols-outlined text-6xl">play_circle</span>
+                    <span th:replace="~{fragments/icon :: icon(name='play_circle', size='lg')}"></span>
                     <span class="text-body-lg font-medium">Watch External Video</span>
                 </a>
             </div>
@@ -52,7 +52,7 @@
             <!-- Figures List (Bento Grid Style) -->
             <div class="space-y-6">
                 <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">format_list_bulleted</span>
+                    <span th:replace="~{fragments/icon :: icon(name='format_list_bulleted', size='md', cls='text-primary')}"></span>
                     Key Figures & Movements
                 </h2>
                 
@@ -63,9 +63,9 @@
                 <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div th:each="f : ${figures}" class="p-4 border border-outline-variant rounded-lg bg-surface flex gap-4 items-center hover:border-outline transition-colors cursor-pointer group">
                         <div class="w-16 h-16 rounded bg-surface-container overflow-hidden shrink-0 relative flex items-center justify-center">
-                            <span class="material-symbols-outlined text-outline/30 group-hover:text-primary/50 transition-colors">accessibility_new</span>
+                            <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-outline/30 group-hover:text-primary/50 transition-colors')}"></span>
                             <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="material-symbols-outlined text-white text-sm">play_arrow</span>
+                                <span th:replace="~{fragments/icon :: icon(name='play_arrow', size='sm', cls='text-white')}"></span>
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
@@ -74,19 +74,20 @@
                         </div>
                         <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                             <button type="button" 
-                                    class="js-edit-figure-btn text-outline-variant hover:text-primary transition-colors"
+                                    class="js-edit-figure-btn text-outline-variant hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                                     th:data-id="${f.id}"
                                     th:data-dance-figure-id="${f.danceFigure?.id}"
                                     th:data-start-time="${f.startTime}"
                                     th:data-end-time="${f.endTime}"
-                                    title="Edit figure">
-                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                    title="Edit figure" aria-label="Edit figure">
+                                <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
                             </button>
                             <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
                                   method="post" data-confirm="Delete this figure?"
                                   class="inline">
-                                <button type="submit" class="text-outline-variant hover:text-error transition-colors" title="Delete figure">
-                                    <span class="material-symbols-outlined text-[20px]">close</span>
+                                <button type="submit" class="text-outline-variant hover:text-error transition-colors flex items-center gap-1 text-sm min-h-[44px] px-2" title="Delete figure">
+                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+                                    <span>Delete</span>
                                 </button>
                             </form>
                         </div>
@@ -97,7 +98,7 @@
             <!-- Add/Edit Figure Form -->
             <div id="figureFormContainer" class="p-4 sm:p-6 border border-surface-variant rounded-xl bg-surface-container/20 space-y-6">
                 <h3 id="figureFormHeader" class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-3">
-                    <span id="figureFormHeaderIcon" class="material-symbols-outlined text-primary">add_circle</span>
+                    <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md', cls='text-primary', id='figureFormHeaderIcon')}"></span>
                     <span id="figureFormHeaderText">Add Figure to Sequence</span>
                 </h3>
 
@@ -112,8 +113,8 @@
                                     Figure Name
                                 </option>
                             </select>
-                            <button type="button" class="js-toggle-inline-figure w-10 h-10 rounded-lg border border-primary text-primary hover:bg-primary/10 flex items-center justify-center shrink-0 transition-colors" title="Create a new figure inline">
-                                <span class="material-symbols-outlined">add</span>
+                            <button type="button" class="js-toggle-inline-figure w-11 h-11 rounded-lg border border-primary text-primary hover:bg-primary/10 flex items-center justify-center shrink-0 transition-colors" title="Create a new figure inline" aria-label="Create a new figure inline">
+                                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                             </button>
                         </div>
                         <span th:if="${inlineError != null}" class="text-error font-body-sm text-[12px] block mt-1" th:text="${inlineError}">Error message</span>

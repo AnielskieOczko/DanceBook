@@ -7,7 +7,7 @@
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-text-secondary mb-6">
         <a href="/lists" class="hover:text-primary transition-colors">Lists</a>
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-outline')}"></span>
         <span class="text-text-primary font-medium truncate" th:text="${customList.name}">List Name</span>
     </nav>
 
@@ -39,18 +39,20 @@
                 <div class="flex bg-white/60 backdrop-blur-md p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
+                               aria-label="List view"
                                th:checked="${currentView == 'list'}"
                                th:hx-get="@{/lists/{id}(id=${customList.id})}" hx-target="#materials-grid" hx-swap="outerHTML">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                            <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
+                               aria-label="Grid view"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists/{id}(id=${customList.id})}" hx-target="#materials-grid" hx-swap="outerHTML">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                            <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
                 </div>
@@ -58,11 +60,12 @@
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-2">
                     <a th:href="@{/lists/{id}/edit(id=${customList.id})}" 
-                       class="flex items-center justify-center w-10 h-10 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection">
-                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                       class="flex items-center justify-center w-11 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection" aria-label="Edit Collection">
+                        <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
                     </a>
-                    <button type="button" class="js-open-delete-modal flex items-center justify-center w-10 h-10 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-danger hover:bg-danger-soft hover:border-danger/30 transition-colors" title="Delete Collection">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    <button type="button" class="js-open-delete-modal flex items-center justify-center px-3 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-danger hover:bg-danger-soft hover:border-danger/30 transition-colors gap-1.5 font-label-md" title="Delete Collection">
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+                        <span>Delete</span>
                     </button>
                 </div>
             </div>
@@ -74,7 +77,7 @@
         <div class="bg-white rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative">
             <div class="flex items-center gap-4 mb-4 text-danger">
                 <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
-                    <span class="material-symbols-outlined">warning</span>
+                    <span th:replace="~{fragments/icon :: icon(name='warning', size='lg')}"></span>
                 </div>
                 <h3 class="font-headline-md text-on-surface text-xl">Delete Collection?</h3>
             </div>

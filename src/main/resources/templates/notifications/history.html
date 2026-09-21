@@ -26,26 +26,25 @@
                                            event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' || event.eventType.name() == 'TRAINING_SERIES_DELETED' || event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'bg-error-container text-on-error-container' :
                                            event.eventType.name() == 'COMMENT_ADDED' ? 'bg-tertiary-container text-on-tertiary-container' :
                                            event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-variant text-on-surface-variant'}">
-                        <span class="material-symbols-outlined text-[18px]"
-                              th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
-                                        event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
-                                        event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
-                                        event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
-                                        event.eventType.name() == 'LIST_CREATED' ? 'layers' :
-                                        event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
-                                        event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
-                                        event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
-                                        event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
-                                        event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
-                                        event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
-                                        event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
-                                        event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
-                                        event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
-                                        event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                        event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
-                                        event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                        event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
-                                        event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
+                        <span th:replace="~{fragments/icon :: icon(name=${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
+                                          event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
+                                          event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
+                                          event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
+                                          event.eventType.name() == 'LIST_CREATED' ? 'layers' :
+                                          event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
+                                          event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
+                                          event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
+                                          event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
+                                          event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
+                                          event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
+                                          event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
+                                          event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
+                                          event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
+                                          event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
+                                          event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
+                                          event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
+                                          event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
+                                          event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}, size='sm')}"></span>
                     </div>
 
                     <!-- Text -->
@@ -126,7 +125,7 @@
 
         <!-- Empty State -->
         <div th:if="${events == null || events.isEmpty()}" class="text-center py-16">
-            <span class="material-symbols-outlined text-outline text-[48px] mb-4 block">history</span>
+            <span th:replace="~{fragments/icon :: icon(name='history', size='lg', cls='text-outline mb-4 block')}"></span>
             <p class="font-headline-md text-headline-md text-on-surface mb-2">No activity yet</p>
             <p class="font-body-md text-body-md text-outline">Events will appear here as you create materials, add comments, and manage collections.</p>
         </div>

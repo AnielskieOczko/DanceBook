@@ -12,7 +12,7 @@
         <!-- Card 1: Materials -->
         <a href="/materials" class="card p-md flex flex-col gap-md group cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">movie</span>
+                <span th:replace="~{fragments/icon :: icon(name='movie', size='md')}"></span>
             </div>
             <div>
                 <p class="text-meta text-on-surface-variant font-semibold">Materials</p>
@@ -22,7 +22,7 @@
         <!-- Card 2: Figures -->
         <a href="/dance-figures" class="card p-md flex flex-col gap-md group cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">accessibility_new</span>
+                <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md')}"></span>
             </div>
             <div>
                 <p class="text-meta text-on-surface-variant font-semibold">Figures</p>
@@ -32,7 +32,7 @@
         <!-- Card 3: Styles -->
         <a href="/dance-categories" class="card p-md flex flex-col gap-md group cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">category</span>
+                <span th:replace="~{fragments/icon :: icon(name='category', size='md')}"></span>
             </div>
             <div>
                 <p class="text-meta text-on-surface-variant font-semibold">Styles</p>
@@ -42,7 +42,7 @@
         <!-- Card 4: Comments -->
         <div class="card p-md flex flex-col gap-md group cursor-pointer">
             <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
+                <span th:replace="~{fragments/icon :: icon(name='chat', size='md')}"></span>
             </div>
             <div>
                 <p class="text-meta text-on-surface-variant font-semibold">Feedback</p>
@@ -71,26 +71,25 @@
                             <!-- Icon -->
                             <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                                  th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error-container text-on-error-container' : 'bg-primary-container text-on-primary-container'}">
-                                <span class="material-symbols-outlined text-[18px]"
-                                      th:text="${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
-                                                event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
-                                                event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
-                                                event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
-                                                event.eventType.name() == 'LIST_CREATED' ? 'layers' :
-                                                event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
-                                                event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
-                                                event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
-                                                event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
-                                                event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
-                                                event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
-                                                 event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
-                                                  event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
-                                                  event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
-                                                   event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                                   event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
-                                                    event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                                    event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
-                                                    event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}">add_circle</span>
+                                <span th:replace="~{fragments/icon :: icon(name=${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
+                                                  event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
+                                                  event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
+                                                  event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
+                                                  event.eventType.name() == 'LIST_CREATED' ? 'layers' :
+                                                  event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
+                                                  event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
+                                                  event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
+                                                  event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
+                                                  event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
+                                                  event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
+                                                   event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
+                                                    event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
+                                                    event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
+                                                     event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
+                                                     event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
+                                                      event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
+                                                      event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
+                                                      event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}, size='sm')}"></span>
                             </div>
 
                             <!-- Text -->
@@ -161,9 +160,9 @@
                                     <a th:if="${event.eventType.name() == 'TRAINING_BULK_UPDATED'}"
                                        th:href="@{/training-events}"
                                        class="font-semibold text-primary hover:underline truncate"><span th:text="${event.targetName}">multiple sessions</span></a>
-                                </p>
-                                <p class="font-label-sm text-label-sm text-outline mt-1"
-                                   th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
+                                 </p>
+                                 <p class="font-label-sm text-label-sm text-outline mt-1"
+                                    th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
                             </div>
                         </div>
                     </div>
@@ -179,11 +178,11 @@
             <h3 class="text-section text-on-surface">Workspace</h3>
             <div class="bg-surface-container-low rounded-xl p-md space-y-4">
                 <a href="/materials/new" class="btn-primary w-full">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 20px;">add</span>
+                    <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                     New Material
                 </a>
                 <a href="/lists/new" class="btn-outline w-full">
-                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 20px;">layers</span>
+                    <span th:replace="~{fragments/icon :: icon(name='layers', size='md')}"></span>
                     Create Collection
                 </a>
             </div>

@@ -13,22 +13,22 @@
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <div class="flex items-center gap-2 shrink-0">
                 <a href="/training-events/timeline" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">timeline</span>
+                    <span th:replace="~{fragments/icon :: icon(name='timeline', size='md')}"></span>
                     Timeline
                 </a>
                 <a href="/training-events/stats" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                    <span th:replace="~{fragments/icon :: icon(name='monitoring', size='md')}"></span>
                     Stats
                 </a>
                 <a href="/training-events" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">list</span>
+                    <span th:replace="~{fragments/icon :: icon(name='list', size='md')}"></span>
                     Agenda
                 </a>
                 <!-- On a phone the floating + creates on the selected day, so this would be a second
                      create button competing with it for a very narrow header. -->
                 <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
                    th:if="${activeCalendar == null || activeCalendar.enabled}">
-                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                     Add Session
                 </a>
             </div>
@@ -77,7 +77,7 @@
                 <span class="mt-0.5 block text-[13px] text-on-surface-variant" data-agenda-meta></span>
                 <span class="mt-1 block text-[12px] text-on-surface-variant" data-agenda-styles></span>
             </span>
-            <span class="material-symbols-outlined shrink-0 text-[20px] text-outline">chevron_right</span>
+            <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='shrink-0 text-outline')}"></span>
         </a>
     </template>
 
@@ -86,7 +86,7 @@
     <button id="quickCreateFab" type="button" class="tc-fab md:hidden"
             th:if="${activeCalendar == null || activeCalendar.enabled}"
             aria-label="Add a session on the selected day">
-        <span class="material-symbols-outlined text-[26px]">add</span>
+        <span th:replace="~{fragments/icon :: icon(name='add', size='lg')}"></span>
     </button>
 
     <!-- Quick create as a bottom sheet on phones. `md:hidden` stays on both while they are
@@ -121,8 +121,8 @@
                     Calendar: <span class="font-medium text-on-surface" th:text="${targetCalendar.displayName}">Club</span>
                 </p>
             </div>
-            <button type="button" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close">
-                <span class="material-symbols-outlined text-[20px]">close</span>
+            <button type="button" aria-label="Close" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close">
+                <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
             </button>
         </div>
 

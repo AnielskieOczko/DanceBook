@@ -11,19 +11,19 @@
                  way here and away again: the bottom nav stays at six items on purpose. -->
             <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <a href="/training-events/history" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">history</span>
+                    <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
                     History
                 </a>
                 <a href="/training-events" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">list</span>
+                    <span th:replace="~{fragments/icon :: icon(name='list', size='md')}"></span>
                     Agenda
                 </a>
                 <a href="/training-events/stats" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                    <span th:replace="~{fragments/icon :: icon(name='monitoring', size='md')}"></span>
                     Stats
                 </a>
                 <a href="/training-events/calendar" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                    <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md')}"></span>
                     Calendar
                 </a>
             </div>
@@ -114,7 +114,7 @@
             <button type="button" class="btn-outline"
                     th:hx-get="@{/training-events/timeline(page=${timeline.nextPage},lastMonth=${timeline.lastMonthLabel})}"
                     hx-target="this" hx-swap="outerHTML" hx-push-url="false">
-                <span class="material-symbols-outlined text-[20px]">history</span>
+                <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
                 Load older sessions
             </button>
         </div>

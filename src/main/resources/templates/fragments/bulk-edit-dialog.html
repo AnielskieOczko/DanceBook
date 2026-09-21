@@ -16,7 +16,7 @@
     <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-primary">
             <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined">category</span>
+                <span th:replace="~{fragments/icon :: icon(name='category', size='md')}"></span>
             </div>
             <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
                 <span th:text="${dialogTitle ?: 'Change Event Type'}">Change Event Type</span>
@@ -62,7 +62,7 @@
     <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[32rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-primary">
             <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined">style</span>
+                <span th:replace="~{fragments/icon :: icon(name='style', size='md')}"></span>
             </div>
             <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
                 <span th:text="${dialogTitle ?: 'Replace Style Segments'}">Replace Style Segments</span>
@@ -94,14 +94,14 @@
                     <input type="number" min="0" step="5" name="segments[0].durationMinutes"
                            class="form-input w-28" placeholder="min">
                     <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" class="btn-icon text-error js-bulk-remove-segment" title="Remove">
-                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove">
+                        <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                     </button>
                 </div>
             </div>
 
             <button type="button" class="js-bulk-add-segment btn-outline text-sm">
-                <span class="material-symbols-outlined text-[18px]">add</span>
+                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
                 Add style
             </button>
 
@@ -116,8 +116,8 @@
                     <input type="number" min="0" step="5" name="segments[INDEX].durationMinutes"
                            class="form-input w-28" placeholder="min">
                     <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" class="btn-icon text-error js-bulk-remove-segment" title="Remove">
-                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove">
+                        <span th:replace="~{fragments/icon :: icon(name='close')}"></span>
                     </button>
                 </div>
             </template>
@@ -141,7 +141,7 @@
     <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-primary">
             <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined">menu_book</span>
+                <span th:replace="~{fragments/icon :: icon(name='menu_book', size='md')}"></span>
             </div>
             <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
                 <span th:text="${dialogTitle ?: 'Attach Note or Link'}">Attach Note or Link</span>

@@ -901,10 +901,10 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.className = `flex items-center gap-3 p-4 rounded-xl border shadow-lg ${typeClasses} transition-all duration-300 transform translate-y-2 opacity-0`;
         
         toast.innerHTML = `
-            <span class="material-symbols-outlined text-[20px] shrink-0">${icon}</span>
+            ${renderIcon(icon, { size: 'md' })}
             <p class="text-xs font-medium">${message}</p>
-            <button type="button" class="ml-auto text-outline hover:text-on-surface shrink-0 js-toast-close">
-                <span class="material-symbols-outlined text-[16px]">close</span>
+            <button type="button" class="ml-auto text-outline hover:text-on-surface shrink-0 js-toast-close" aria-label="Close">
+                ${renderIcon('close', { size: 'sm' })}
             </button>
         `;
 

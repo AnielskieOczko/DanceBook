@@ -59,26 +59,27 @@
 
         <!-- Trailing Icons -->
         <div class="flex items-center gap-4">
-            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden md:flex items-center text-outline hover:text-on-surface transition-colors" title="Admin Dashboard">
-                <span class="material-symbols-outlined">settings</span>
+            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden md:flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors" aria-label="Admin Dashboard" title="Admin Dashboard">
+                <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
             </a>
 
             <!-- Notification Bell -->
             <div class="relative" id="notification-bell-wrapper">
                 <button id="notification-bell"
-                        class="relative flex items-center text-outline hover:text-on-surface transition-colors"
+                        class="relative flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors"
                         hx-get="/notifications"
                         hx-target="#notification-dropdown"
                         hx-swap="innerHTML"
+                        aria-label="Notifications"
                         title="Notifications">
-                    <span class="material-symbols-outlined">notifications</span>
+                    <span th:replace="~{fragments/icon :: icon(name='notifications', size='md')}"></span>
                     <!-- Badge (HTMX polling) -->
                     <span id="notification-badge"
                           hx-get="/notifications/count"
                           hx-trigger="load, poll-notifications from:body"
                           hx-swap="innerHTML">
                         <span th:if="${unreadNotificationCount != null && unreadNotificationCount > 0}"
-                              class="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-error text-on-error text-[10px] font-bold rounded-full px-1"
+                              class="absolute top-1 right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-error text-on-error text-[10px] font-bold rounded-full px-1"
                               th:text="${unreadNotificationCount}">3</span>
                     </span>
                 </button>
@@ -110,41 +111,39 @@
      ═══════════════════════════════════════════════ -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-1 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
     <!-- Dashboard -->
-    <a href="/" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:style="${activeNav == 'home' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">grid_view</span>
+        <span th:replace="~{fragments/icon :: icon(name='grid_view', size='md', filled=${activeNav == 'home'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Dashboard</span>
     </a>
     <!-- Library -->
-    <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'materials' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:classappend="${activeNav == 'materials' ? 'icon-filled' : ''}">subscriptions</span>
+        <span th:replace="~{fragments/icon :: icon(name='subscriptions', size='md', filled=${activeNav == 'materials'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Library</span>
     </a>
     <!-- Collections -->
-    <a href="/lists" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/lists" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'lists' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:style="${activeNav == 'lists' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">layers</span>
+        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', filled=${activeNav == 'lists'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Collections</span>
     </a>
     <!-- Choreographies -->
-    <a href="/choreographies" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/choreographies" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'choreographies' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:style="${activeNav == 'choreographies' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">route</span>
+        <span th:replace="~{fragments/icon :: icon(name='route', size='md', filled=${activeNav == 'choreographies'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Choreos</span>
     </a>
     <!-- Figures -->
-    <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:classappend="${activeNav == 'dance-figures' ? 'icon-filled' : ''}"
-              th:style="${activeNav == 'dance-figures' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">accessibility_new</span>
+        <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', filled=${activeNav == 'dance-figures'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Figures</span>
     </a>
     <!-- Training -->
-    <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150"
+    <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
        th:classappend="${activeNav == 'training-events' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span class="material-symbols-outlined" th:classappend="${activeNav == 'training-events' ? 'icon-filled' : ''}"
-              th:style="${activeNav == 'training-events' ? 'font-variation-settings: &quot;FILL&quot; 1;' : ''}">calendar_month</span>
+        <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', filled=${activeNav == 'training-events'})}"></span>
         <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Training</span>
     </a>
 </nav>

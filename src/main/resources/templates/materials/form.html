@@ -87,7 +87,7 @@
         <!-- Google Drive Upload Section -->
         <div class="bg-linear-to-br from-primary-soft/30 to-surface-warm rounded-card border border-border p-5">
             <label class="form-label font-bold flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-primary text-[20px]">cloud_upload</span>
+                <span th:replace="~{fragments/icon :: icon(name='cloud_upload', size='md', cls='text-primary')}"></span>
                 Upload Video to Google Drive
             </label>
 
@@ -97,7 +97,7 @@
             <!-- Current video indicator -->
             <div id="currentVideo" class="hidden mb-3 bg-surface rounded-button border border-success p-3 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-success text-[20px] flex-shrink-0">check_circle</span>
+                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='md', cls='text-primary flex-shrink-0')}"></span>
                     <span class="text-sm text-text-primary">Video linked: <strong id="currentVideoId" class="text-primary font-mono text-xs"></strong></span>
                 </div>
                 <button type="button" id="removeVideoBtn" class="btn btn-sm bg-danger text-white hover:bg-red-700 focus:ring-danger">
@@ -145,7 +145,7 @@
         <div class="flex justify-end gap-3 pt-6 border-t border-border">
             <a href="/materials" class="btn-outline">Cancel</a>
             <button type="submit" id="saveBtn" class="btn-primary">
-                <span class="material-symbols-outlined text-[20px]">save</span>
+                <span th:replace="~{fragments/icon :: icon(name='save', size='md')}"></span>
                 Save Material
             </button>
         </div>

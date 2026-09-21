@@ -22,7 +22,7 @@
         <div th:if="${targetCalendar != null}"
              class="bg-surface-container rounded-md p-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-[22px]">calendar_today</span>
+                <span th:replace="~{fragments/icon :: icon(name='calendar_today', size='md', cls='text-primary')}"></span>
                 <div>
                     <span class="text-label-sm font-label-sm uppercase tracking-wide text-on-surface-variant block"
                           th:text="${trainingEventId == null ? 'Target calendar' : 'Calendar'}">
@@ -73,7 +73,7 @@
 
         <div>
             <button type="button" id="toggleEndDate" class="btn-ghost px-0 min-h-0 text-label-md">
-                <span class="material-symbols-outlined text-[18px]">event_repeat</span>
+                <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
                 Ends on a different day
             </button>
             <div id="endDateRow" class="hidden mt-2">
@@ -168,14 +168,14 @@
                            th:field="*{segments[__${iter.index}__].durationMinutes}"
                            class="form-input w-28" placeholder="min" data-segment-minutes>
                     <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" class="btn-icon text-error" data-remove-segment title="Remove">
-                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove">
+                        <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                     </button>
                 </div>
             </div>
 
             <button type="button" id="addSegment" class="btn-outline mt-3">
-                <span class="material-symbols-outlined text-[20px]">add</span>
+                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                 Add style
             </button>
 
@@ -190,8 +190,8 @@
                     <input type="number" min="0" step="5" name="segments[INDEX].durationMinutes"
                            class="form-input w-28" placeholder="min" data-segment-minutes>
                     <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" class="btn-icon text-error" data-remove-segment title="Remove">
-                        <span class="material-symbols-outlined text-[20px]">close</span>
+                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove">
+                        <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                     </button>
                 </div>
             </template>

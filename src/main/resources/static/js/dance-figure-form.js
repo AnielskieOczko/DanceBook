@@ -211,7 +211,8 @@ function updateDefaultSetSelection(selectedIndex) {
             if (isDefault) {
                 if (!indicator) {
                     indicator = document.createElement('span');
-                    indicator.className = 'js-tab-default-indicator material-symbols-outlined text-[14px]';
+                    indicator.className = 'js-tab-default-indicator material-symbols-outlined shrink-0 select-none text-[16px] icon-filled';
+                    indicator.setAttribute('aria-hidden', 'true');
                     indicator.textContent = 'star';
                     tab.appendChild(indicator);
                 }
@@ -347,7 +348,7 @@ function addStepSet() {
             
             <div class="flex items-center justify-end pt-4">
                 <button type="button" class="btn-outline btn-sm text-danger hover:bg-danger-soft/20 border-danger/30 hover:border-danger js-remove-step-set-btn">
-                    <span class="material-symbols-outlined text-[16px] mr-1">delete</span> Delete Combination
+                    ${renderIcon('delete', { size: 'sm', cls: 'mr-1' })} Delete Combination
                 </button>
             </div>
         </div>
@@ -357,10 +358,10 @@ function addStepSet() {
             <span class="text-sm font-bold text-outline uppercase">Steps List</span>
             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
                 <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
-                    <span class="material-symbols-outlined text-[18px]">face</span> Leader
+                    ${renderIcon('face', { size: 'md' })} Leader
                 </button>
                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
-                    <span class="material-symbols-outlined text-[18px]">face_2</span> Follower
+                    ${renderIcon('face_2', { size: 'md' })} Follower
                 </button>
             </div>
         </div>
@@ -387,7 +388,7 @@ function addStepSet() {
                 </table>
             </div>
             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="LEADER">
-                <span class="material-symbols-outlined text-[16px]">add</span> Add Leader Step
+                ${renderIcon('add', { size: 'sm' })} Add Leader Step
             </button>
         </div>
 
@@ -413,7 +414,7 @@ function addStepSet() {
                 </table>
             </div>
             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
-                <span class="material-symbols-outlined text-[16px]">add</span> Add Follower Step
+                ${renderIcon('add', { size: 'sm' })} Add Follower Step
             </button>
         </div>
     `;
@@ -473,8 +474,8 @@ function addStepRow(panel, role) {
             <input type="hidden" class="step-id" name="stepSets[0].steps[0].id" value="" />
             <input type="hidden" class="step-role" name="stepSets[0].steps[0].role" value="${role}" />
             <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline">1</span>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden" aria-label="Remove step" title="Remove step">
+                ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>
         <td class="col-span-1 md:table-cell py-1 md:py-2">
@@ -508,10 +509,10 @@ function addStepRow(panel, role) {
         <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
             <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
                 <span>Show Technical Details</span>
-                <span class="material-symbols-outlined text-[16px] js-mobile-arrow">expand_more</span>
+                ${renderIcon('expand_more', { size: 'sm', cls: 'js-mobile-arrow' })}
             </button>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex" aria-label="Remove step" title="Remove step">
+                ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>
     `;
@@ -564,8 +565,8 @@ function addLinkRow() {
             </select>
         </td>
         <td class="py-2 text-right">
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
-                <span class="material-symbols-outlined text-[18px]">delete</span>
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn" aria-label="Remove link" title="Remove link">
+                ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>
     `;

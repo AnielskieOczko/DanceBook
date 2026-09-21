@@ -13,7 +13,7 @@
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 group">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors text-[20px]">search</span>
+                    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
                     <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
                            class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
                            placeholder="Search collections..."
@@ -21,19 +21,19 @@
                 </div>
 
                 <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
-                    <span class="material-symbols-outlined text-[20px] pointer-events-none">tune</span>
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]" aria-label="Filters">
+                    <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
                     <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none">Filters</span>
                 </button>
 
                 <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">view_list</span>
+                            <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
@@ -41,7 +41,7 @@
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
-                            <span class="material-symbols-outlined text-[18px]">grid_view</span>
+                            <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
                 </div>
@@ -59,7 +59,7 @@
                                        th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
                                        th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span class="hidden peer-checked:inline"><span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span></span>
                                     <span th:text="${c.name}">Category</span>
                                 </span>
                             </label>
@@ -79,7 +79,7 @@
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span class="material-symbols-outlined text-[14px] hidden peer-checked:inline">check</span>
+                                    <span class="hidden peer-checked:inline"><span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span></span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>
                             </label>
@@ -108,7 +108,7 @@
         <!-- Empty State -->
         <div th:if="${#lists.isEmpty(lists)}" class="empty-state">
             <div class="empty-state-icon">
-                <span class="material-symbols-outlined text-4xl text-outline">search_off</span>
+                <span th:replace="~{fragments/icon :: icon(name='search_off', size='lg', cls='text-outline')}"></span>
             </div>
             <h3 class="empty-state-title">No collections found</h3>
             <p class="empty-state-text">No collections match the selected filters or search queries.</p>
@@ -127,20 +127,20 @@
                 
                 <!-- Absolute Action Menu (Fixed Stacking) -->
                 <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
-                    <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                        <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                    <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options">
+                        <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
                     </button>
                     <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                         <a th:href="@{/lists/{id}(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                            <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span> Open
                         </a>
                         <a th:href="@{/lists/{id}/edit(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                            <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
                         </a>
                         <form th:action="@{/lists/{id}/delete(id=${list.id})}" method="post"
                               data-confirm="Are you sure you want to delete this collection?">
                             <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
-                                <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
                             </button>
                         </form>
                     </div>
@@ -150,7 +150,7 @@
                     <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg rounded-bl-lg bg-surface-container-high block z-0">
                         <img th:src="${imgSrc}" onerror="this.src='/images/categories/placeholder.png'" alt="Collection Cover" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
                         <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <span class="material-symbols-outlined text-white text-3xl font-light" style="font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;">folder_open</span>
+                            <span th:replace="~{fragments/icon :: icon(name='folder_open', size='lg', cls='text-white')}"></span>
                         </div>
                     </div>
                     <div class="w-2/3 p-4 flex flex-col justify-between relative z-10 bg-surface rounded-tr-lg rounded-br-lg">
@@ -182,7 +182,7 @@
                     <!-- Mini Cover / Icon -->
                     <div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden shrink-0 flex items-center justify-center text-on-surface-variant">
                         <img th:if="${list.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${list.imageFilename})}" alt="Collection Cover" class="w-full h-full object-cover">
-                        <span th:unless="${list.imageFilename != null}" class="material-symbols-outlined" th:text="${list.isPublic ? 'public' : 'lock'}">layers</span>
+                        <span th:unless="${list.imageFilename != null}" th:replace="~{fragments/icon :: icon(name=${list.isPublic ? 'public' : 'lock'}, size='md')}"></span>
                     </div>
                     
                     <div class="flex flex-col gap-1 overflow-hidden">
@@ -201,24 +201,24 @@
                 
                 <div class="flex flex-col items-end gap-1 relative z-20 pointer-events-auto">
                     <span class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0">
-                        <span class="material-symbols-outlined text-[14px]">calendar_today</span> 
+                        <span th:replace="~{fragments/icon :: icon(name='calendar_today', size='sm')}"></span> 
                         <span th:text="${#temporals.format(list.createdAt, 'dd MMM yyyy')}">Date</span>
                     </span>
                     <div class="group/menu">
-                        <button type="button" class="js-menu-btn w-8 h-8 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-[20px] pointer-events-none">more_vert</span>
+                        <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options">
+                            <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
                         </button>
                         <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                             <a th:href="@{/lists/{id}(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                <span class="material-symbols-outlined text-[18px]">open_in_new</span> Open
+                                <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span> Open
                             </a>
                             <a th:href="@{/lists/{id}/edit(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                <span class="material-symbols-outlined text-[18px]">edit</span> Edit
+                                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
                             </a>
                             <form th:action="@{/lists/{id}/delete(id=${list.id})}" method="post"
                                   data-confirm="Are you sure you want to delete this collection?">
                                 <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
                                 </button>
                             </form>
                         </div>

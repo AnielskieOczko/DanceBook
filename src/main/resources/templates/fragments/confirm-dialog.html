@@ -15,7 +15,7 @@
     <div class="bg-surface rounded-xl shadow-ambient border border-outline-variant max-w-[28rem] w-full mx-4 p-6 relative z-10">
         <div class="flex items-center gap-4 mb-4 text-danger">
             <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined">warning</span>
+                <span th:replace="~{fragments/icon :: icon(name='warning', size='md')}"></span>
             </div>
             <h3 id="confirmModalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
                 <span th:text="${dialogTitle ?: 'Confirm Action'}">Confirm Action</span>
@@ -31,21 +31,21 @@
             <div class="space-y-2">
                 <div th:if="${reconcilePlan.createdCount > 0}"
                      class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span class="material-symbols-outlined text-primary text-[18px]">add_circle</span>
+                    <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md', cls='text-primary')}"></span>
                     <span th:text="${reconcilePlan.createdCount} + (${reconcilePlan.createdCount == 1} ? ' session will be created' : ' sessions will be created')">
                         2 sessions will be created
                     </span>
                 </div>
                 <div th:if="${reconcilePlan.movedCount > 0}"
                      class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span class="material-symbols-outlined text-secondary text-[18px]">update</span>
+                    <span th:replace="~{fragments/icon :: icon(name='update', size='md', cls='text-secondary')}"></span>
                     <span th:text="${reconcilePlan.movedCount} + (${reconcilePlan.movedCount == 1} ? ' session will be moved' : ' sessions will be moved')">
                         4 sessions will be moved
                     </span>
                 </div>
                 <div th:if="${reconcilePlan.removedCount > 0}"
                      class="flex items-center gap-2 text-body-md text-on-surface">
-                    <span class="material-symbols-outlined text-danger text-[18px]">remove_circle</span>
+                    <span th:replace="~{fragments/icon :: icon(name='remove_circle', size='md', cls='text-error')}"></span>
                     <span th:text="${reconcilePlan.removedCount} + (${reconcilePlan.removedCount == 1} ? ' session will be removed' : ' sessions will be removed')">
                         2 sessions will be removed
                     </span>
@@ -53,7 +53,7 @@
             </div>
             <div th:if="${reconcilePlan.droppedRecordedCount > 0}"
                  class="p-3 rounded-lg bg-danger-soft text-danger text-sm flex items-start gap-2">
-                <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5">warning</span>
+                <span th:replace="~{fragments/icon :: icon(name='warning', size='sm', cls='mt-0.5')}"></span>
                 <span th:text="${reconcilePlan.droppedRecordedCount} + (${reconcilePlan.droppedRecordedCount == 1} ? ' past session with recorded attendance will be dropped from the series and kept as a standalone session.' : ' past sessions with recorded attendance will be dropped from the series and kept as standalone sessions.')">
                     1 past session with recorded attendance will be dropped from the series and kept as a standalone session.
                 </span>

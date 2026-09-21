@@ -9,15 +9,15 @@
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <a href="/training-events" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">list</span>
+                    <span th:replace="~{fragments/icon :: icon(name='list', size='md')}"></span>
                     Agenda
                 </a>
                 <a href="/training-events/timeline" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">timeline</span>
+                    <span th:replace="~{fragments/icon :: icon(name='timeline', size='md')}"></span>
                     Timeline
                 </a>
                 <a href="/training-events/stats" class="btn-outline">
-                    <span class="material-symbols-outlined text-[20px]">monitoring</span>
+                    <span th:replace="~{fragments/icon :: icon(name='monitoring', size='md')}"></span>
                     Stats
                 </a>
             </div>
@@ -31,7 +31,7 @@
          page that cannot be corrected from the calendar, so it needs a sentence. -->
     <div th:if="${history.orphanedCount > 0}"
          class="card p-4 flex items-start gap-3 font-body-md text-[14px] text-on-surface-variant">
-        <span class="material-symbols-outlined text-[20px] text-secondary shrink-0" aria-hidden="true">info</span>
+        <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-secondary shrink-0')}"></span>
         <p>
             <span th:text="${history.orphanedExplanation}">This session has been deleted from your calendar.</span>
             The record stays, so your hours and streak stand. If you marked it by mistake, remove
@@ -98,8 +98,9 @@
                       th:action="@{/training-events/history/{id}/delete(id=${record.id})}" method="post"
                       class="shrink-0"
                       data-confirm="Remove this training record? Your hours and attendance rate will be recalculated without it.">
-                    <button type="submit" class="btn-outline" th:aria-label="'Remove record: ' + ${record.title}">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                    <button type="submit" class="btn-outline text-error hover:bg-error-soft/20 border-error/30 hover:border-error flex items-center gap-1.5" th:aria-label="'Remove record: ' + ${record.title}">
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+                        <span>Remove</span>
                     </button>
                 </form>
             </div>
