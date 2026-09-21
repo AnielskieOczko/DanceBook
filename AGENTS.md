@@ -186,6 +186,67 @@ fragment `MaterialWebController` names in a string, so it must not move), the Dr
 block, and the repeating rows JavaScript clones from indexed names on the training, figure and
 link forms.
 
+### Dialogs
+
+**Every dialog is a native `<dialog>`, and nothing about opening or closing one is written
+by hand.** Since #111 there are no `<div>` overlays: `fragments/confirm-dialog` (named from
+16 controller sites), the three in `fragments/bulk-edit-dialog`, and the delete dialog in
+`lists/view.html` are all real dialogs, and `fragments/modal.html` is the generic one to
+call for a new case.
+
+The mechanism is worth knowing before you add one. A controller returns the dialog fragment,
+htmx swaps it into `#confirmModalContainer` in `layout.html`, and a single `htmx:afterSwap`
+listener calls `showModal()` on whatever dialog just landed; a `close` listener empties the
+container afterwards. That is the entire JavaScript. **Focus trapping, Escape, the inert
+backdrop and the close button are the browser's**, so do not reimplement them — the ~60 lines
+that used to do it by hand were deleted, and they never trapped focus anyway: Tab walked
+behind the dialog into the page underneath. A close button is `<form method="dialog">`, which
+needs no script at all.
+
+**These four fragments are a standing exception to the frozen-root rule below.** #111 changed
+their root tag from `<div>` to `<dialog>`, which that rule otherwise forbids. The part that
+actually matters — the file, the fragment name and every `id` — is unchanged, because those
+are what htmx targets and what a controller names in a string. `HtmxFragmentRenderingTest`
+now pins each of these roots as a `<dialog>`, so the exception is recorded rather than left
+open as precedent. Do not read it as permission to change another fragment's tag.
+
+### Error pages and failed requests
+
+**`templates/error/404.html`, `error/500.html` and `templates/error.html`** are the designed
+error pages, resolved by Spring Boot's own convention — specific status first, then the
+generic `error` view, which is why the fallback sits at the templates root rather than inside
+`error/`. No controller is involved and none should be added.
+
+**`SecurityConfig` permits the `ERROR` dispatch type, and that line is what makes them
+render.** The authorization rules apply to error dispatches too, so without it an error is
+re-authorized and the user is redirected to login instead of seeing the page. Deleting that
+line does not break the build and does not fail a fragment test — it silently reverts the
+feature.
+
+**A signed-out visitor goes to the login page for every URL, whether or not it exists.** That
+is deliberate and was reverted into place after #111 briefly changed it. Sending unknown URLs
+around the authentication check leaks which routes exist — a real one redirects to login, an
+invented one 404s — and the handler lookup it requires cannot see resource handlers, so
+static paths break unless each is special-cased. The designed 404 is for signed-in users,
+which is everyone who actually browses the app. `ErrorPageIntegrationTest` asserts the
+redirect, so reintroducing the old behaviour fails the build.
+
+Error pages expose no stack trace, no exception message and no class names, and the
+`server.error.include-*` properties stay at their defaults in every profile.
+
+**htmx does not swap a 4xx or 5xx response.** Its default `responseHandling` marks them
+`swap: false, error: true`, and this app overrides neither that config nor the events, so
+before #111 a failed background action did *nothing at all*: the button went dead, no message
+appeared, and the only trace was a console error. `htmx:responseError` and `htmx:sendError`
+listeners in `main.js` now put a message in `#alert-container` through `showErrorAlert`.
+
+`showErrorAlert` builds the alert markup as a JavaScript string, duplicating
+`fragments/alert.html` on purpose — the same bargain `renderIcon` makes, for the same reason:
+content built in JavaScript cannot call a Thymeleaf fragment, so it emits the same classes
+instead, and it calls `renderIcon` for its own icons. **It interpolates its argument into
+`innerHTML`, so pass it literal text** — never a server response body, an exception message
+or anything a user can influence.
+
 ### HTMX partial rendering
 
 Web controllers accept `@RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?`
@@ -340,8 +401,11 @@ Testcontainers Postgres with no Spring context at all, so they need none of the 
 vars (`migration/TrainingRecordBackfillTest.kt` is the pattern). Migrate to the version
 before yours, insert rows, migrate to yours, assert.
 
-MockMvc rendering tests must use `.with(csrf())` — `layout.html` evaluates `${_csrf.token}`
-on every page, so a request without it throws during render rather than failing an assertion.
+MockMvc tests that POST must use `.with(csrf())`, because CSRF protection rejects the
+request otherwise. Until #111 this was also true of plain renders: `layout.html` dereferenced
+`${_csrf.token}` on every page, so a GET without it threw during render rather than failing an
+assertion. Those meta tags are guarded now — an error page that throws while rendering an
+error leaves the user with nothing — so a render test no longer needs it to survive.
 
 Two template guards came in with #98 and are cheap to extend, so extend them rather than
 working around them. `FragmentCatalogRenderingTest` renders every catalog fragment twice
@@ -374,6 +438,15 @@ already pays, in every local build.
 `FormValidationWebTest` (#107) is the same idea for the other half of a page: it POSTs invalid
 input to all eight form screens and asserts the error actually renders, so a form that
 swallows its errors fails the build.
+
+**`ErrorPageIntegrationTest` (#111) is the one test here that does not use MockMvc**, and the
+reason is load-bearing: MockMvc does not reliably perform the ERROR dispatch, so a MockMvc
+test asserting a 404 status passes just as happily when the error page is broken or
+unreachable. It runs against a real servlet container on a random port and drives it over
+HTTP. It also does not add an endpoint to crash on — it mocks a service into throwing and
+requests a page that already exists, which keeps the test from needing anything loosened in
+production security config. **If a test cannot pass without changing production security,
+change the test.** A `permitAll` rule that exists only to serve a test is a hole that ships.
 
 ## Repo conventions
 
@@ -434,6 +507,9 @@ ask — nobody is reading the run live, so a question ends the run without an an
   slot, `form.html` for a bound field, `table.html` for a dense table)
 - Bound form that re-renders its own validation errors →
   `controller/web/CustomListWebController.kt` plus `templates/lists/form.html`
+- Dialog → `templates/fragments/modal.html` for a new one, `fragments/confirm-dialog.html`
+  for the htmx-delivered confirmation shape
+- Test that needs a real servlet container → `controller/web/ErrorPageIntegrationTest.kt`
 - Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
   `service/TrainingEventServiceTest.kt`
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
@@ -467,6 +543,9 @@ ask — nobody is reading the run live, so a question ends the run without an an
   binding and the user gets the Whitelabel 400 page. Every bound field on the request DTO
   needs a default value too, or binding fails before validation runs and there is no error
   to show. `FormValidationWebTest` covers the eight existing forms; a new one belongs there.
+- **A dialog ⇒ a native `<dialog>`, never a `<div>` overlay.** Opening it is one
+  `showModal()` call; focus, Escape and the backdrop are the browser's. Writing any of those
+  by hand re-creates what #111 deleted.
 - **Never rename, move or restructure a fragment a controller names in a string.** Its
   file, root tag, `id` and fragment name are frozen; migrate the contents and leave the
   marker where it is. `HtmxFragmentRenderingTest` will fail if you do not.
