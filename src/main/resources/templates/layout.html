@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}"/>
+    <meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : ''}"/>
     <title th:text="${pageTitle != null ? pageTitle + ' · CHOREO' : 'CHOREO'}">CHOREO</title>
 
     <!-- Google Fonts & Icons -->
@@ -102,6 +102,8 @@
      MAIN CONTENT AREA
      ═══════════════════════════════════════════════ -->
 <main class="max-w-7xl mx-auto px-6 py-lg md:py-xl">
+    <!-- Global dynamic alert container for background/HTMX failures -->
+    <div id="alert-container" class="mb-6 empty:hidden"></div>
     <!-- Page content injected here -->
     <div th:replace="${content}"></div>
 </main>

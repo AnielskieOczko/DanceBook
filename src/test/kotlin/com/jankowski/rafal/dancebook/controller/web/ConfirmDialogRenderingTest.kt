@@ -155,8 +155,8 @@ class ConfirmDialogRenderingTest {
             .andExpect(content().string(containsString("action=\"/lists/123/delete\"")))
             .andExpect(content().string(containsString("hx-post=\"/lists/123/delete\"")))
             .andExpect(content().string(containsString("hx-target=\"#collectionsList\"")))
-            .andExpect(content().string(containsString("js-close-modal")))
-            .andExpect(content().string(containsString("js-modal-backdrop")))
+            .andExpect(content().string(containsString("<dialog")))
+            .andExpect(content().string(not(containsString("js-modal-backdrop"))))
             .andExpect(content().string(not(containsString("onclick="))))
     }
 

@@ -243,7 +243,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(model().attributeExists("createUserError"))
-            .andExpect(content().string(containsString("bg-danger-soft")))
+            .andExpect(content().string(containsString("role=\"alert\"")))
     }
 
     @Test
@@ -256,7 +256,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(model().attributeExists("updateUserError"))
-            .andExpect(content().string(containsString("bg-danger-soft")))
+            .andExpect(content().string(containsString("role=\"alert\"")))
     }
 
     @Test
@@ -273,7 +273,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(model().attributeExists("updateUserError"))
-            .andExpect(content().string(containsString("bg-danger-soft")))
+            .andExpect(content().string(containsString("role=\"alert\"")))
 
         val freshUser = appUserRepository.findById(adminUser.id!!).get()
         assertEquals(originalRole, freshUser.role)
