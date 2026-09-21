@@ -109,9 +109,12 @@ and what the six hand-copied headers existed to work around.
 
 **Form fields bind through preprocessing**: `th:field="*{__${path}__}"`. `th:attr` cannot do
 this — it writes plain output attributes after the dialect has already run. Because fragment
-insertion is inline, the `*{…}` resolves against the caller's `<form th:object>`. Fields
-also render unbound, as a plain named input, for the one form that submits raw request
-parameters with no `th:object` behind it.
+insertion is inline, the `*{…}` resolves against the caller's `<form th:object>`. Every field
+fragment also carries an unbound branch — a plain named input, selected by `bound=false` or
+`raw=true`, alongside a separate `rawField` — for a form with no `th:object` behind it. Since
+#107 no template takes it: all eight form screens are bound. `FragmentCatalogRenderingTest`
+still renders it, so it works, but no real page exercises it. See *Forms and validation* below
+for the shape the bound ones use.
 
 **Variants are semantics, never class fragments.** A fragment takes `variant='danger'` and
 maps it to a class literal internally; it never concatenates `'badge-' + variant`, because
@@ -141,6 +144,47 @@ every page, so call it directly — it is always defined. The one icon that is n
 the multi-colour Google brand mark, served from `static/images/google.svg`, because
 substituting a Material Symbol for a brand mark would be wrong rather than merely
 approximate.
+
+### Forms and validation
+
+Since #107 every ordinary field on the eight create/edit screens — Notes, Figures, Dance
+styles, Categories, Collections, Choreographies, Training sessions and the profile password
+form — renders through `fragments/form`, and all eight report failure the same way: the
+offending control takes `border-error ring-1 ring-error` and shows its message underneath,
+and `errorSummary` lists them at the top of the form. Hand-copied field markup is gone from
+those templates, which got shorter by doing it.
+
+**A form only shows errors if its controller is shaped for it.** The handler takes
+`@Valid @ModelAttribute` *and* a `BindingResult` immediately after it, and on
+`bindingResult.hasErrors()` re-populates whatever the view needs — dropdown options, the
+entity id, the current image — then returns the view name instead of redirecting.
+`CustomListWebController.kt` is the shape to copy. Omit the `BindingResult` and Spring throws
+rather than binding, which reaches the user as the Whitelabel 400 page — and through an htmx
+swap, as a page of error HTML dropped inside the current one. That was live on the admin user
+handlers until #107.
+
+**Request DTOs give every bound field a default.** `@ModelAttribute` binds through the
+constructor, so a non-null Kotlin parameter with no default fails to construct when its field
+is absent, and the request dies before validation runs — leaving no object to hang an error
+on. `val name: String = ""` next to `@field:NotBlank` is what makes the error visible.
+
+**A constraint on a non-null Kotlin type never fires.** `@field:NotNull var role: Role` cannot
+fail, because the type cannot hold null. Declare it `Role?` and keep the `@NotNull` — and do
+*not* reach for a default instead, which is the tempting fix and the wrong one:
+`role: Role = Role.USER` turns a POST that omits `role` into a silent demotion of an admin
+rather than a visible error. `MaterialRequest.version` stays required for the same reason —
+defaulting it to `0` would trade away the optimistic-locking token.
+
+**Select options are read by property name.** `optValue` and `optLabel` are strings the
+fragment applies as `opt[...]`, so the option type has to expose those properties. That is why
+`DanceClass` carries a `displayName`, and why `FormSelectOption` (`value`, `label`) exists at
+all — for a select whose controller has no domain type to hand over.
+
+Four things stay hand-written on purpose, and moving them into the catalog would break them:
+the Note form's htmx-driven category select, the style select carrying `danceTypeOptions` (a
+fragment `MaterialWebController` names in a string, so it must not move), the Drive upload
+block, and the repeating rows JavaScript clones from indexed names on the training, figure and
+link forms.
 
 ### HTMX partial rendering
 
@@ -305,13 +349,31 @@ against a test-only harness template under `src/test/resources/templates/test/`,
 where a new fragment's two cases go. `HtmxFragmentRenderingTest` pins the root id of every
 controller-named htmx fragment.
 
-**The suite's blind spot is the whole page.** Both guards assert on fragments and htmx
-endpoints, so a template that parses but throws when rendered passes the build and 500s on
-first visit — which is how #98 shipped a broken Add material page that survived #101 and was
-only found in the running app (#103). `ThymeleafRestrictedExpressionTest` closes the one
-known instance of that class by scanning templates statically, but there is still no test
-that simply requests every GET route and asserts 200. Until there is, render the pages you
-touched before calling a template change done.
+**Every GET route is requested on every build.** Both template guards above assert on
+fragments and htmx endpoints, so until #105 a template that parsed but threw when rendered
+passed the build and 500'd on first visit — which is how #98 shipped a broken Add material
+page that survived #101 and was found only by using the app (#103).
+`WebRouteSmokeTest` closes that: it discovers every GET mapping on every `@Controller` that
+is not a `@RestController` through `RequestMappingHandlerMapping`, and requests each one as
+an admin against a seeded domain graph, as its own named `DynamicTest`. Discovery is dynamic,
+so **a new route is covered the moment it is added** — a hand-maintained list was ruled out
+deliberately. 57 routes today, every one of which must reach HTTP 200.
+
+Two things that test will ask of you. A pattern whose path variable it cannot resolve
+throws telling you to add a fixture, rather than skipping the route quietly — so a new
+entity type in a URL means a new fixture in `ensureFixtures()` and a branch in
+`resolveUri()`. And a route that genuinely cannot reach 200 has to become an explicit named
+exception with a stated reason; anything looser lets a 4xx count as covered, which is how
+`/training-events/quick-create` was caught returning 400 and rendering nothing.
+`ThymeleafRestrictedExpressionTest` still scans statically for the one known
+`new`-in-a-fragment-expression pattern, because a static scan names the offending template.
+
+The cost is ~2.2s of requests on top of the Spring context and Testcontainers boot the suite
+already pays, in every local build.
+
+`FormValidationWebTest` (#107) is the same idea for the other half of a page: it POSTs invalid
+input to all eight form screens and asserts the error actually renders, so a form that
+swallows its errors fails the build.
 
 ## Repo conventions
 
@@ -370,6 +432,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
   slot, `form.html` for a bound field, `table.html` for a dense table)
+- Bound form that re-renders its own validation errors →
+  `controller/web/CustomListWebController.kt` plus `templates/lists/form.html`
 - Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
   `service/TrainingEventServiceTest.kt`
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
@@ -398,6 +462,11 @@ ask — nobody is reading the run live, so a question ends the run without an an
   Headers, buttons, fields, badges, empty states, alerts and modals all live there. A new
   fragment, or a new parameter on one, must be added to `FragmentCatalogRenderingTest` —
   named parameters make a typo silently `null`, and that test is the only thing that says so.
+- **`@Valid` on a handler ⇒ a `BindingResult` parameter directly after it**, plus a branch
+  that repopulates the model and returns the view name. Without it Spring throws instead of
+  binding and the user gets the Whitelabel 400 page. Every bound field on the request DTO
+  needs a default value too, or binding fails before validation runs and there is no error
+  to show. `FormValidationWebTest` covers the eight existing forms; a new one belongs there.
 - **Never rename, move or restructure a fragment a controller names in a string.** Its
   file, root tag, `id` and fragment name are frozen; migrate the contents and leave the
   marker where it is. `HtmxFragmentRenderingTest` will fail if you do not.
