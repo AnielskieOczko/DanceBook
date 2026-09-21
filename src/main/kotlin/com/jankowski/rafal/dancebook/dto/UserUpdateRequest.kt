@@ -7,13 +7,13 @@ import jakarta.validation.constraints.NotNull
 
 data class UserUpdateRequest(
     @field:NotBlank
-    var username: String,
+    var username: String = "",
     @field:Email @field:NotBlank
-    var email: String,
+    var email: String = "",
     @field:NotBlank
-    var displayName: String,
+    var displayName: String = "",
 
-    @field:NotNull
-    var role: Role,
+    @field:NotNull(message = "Role is required")
+    var role: Role? = null,
     var newPassword: String? = null
 )

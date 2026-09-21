@@ -15,7 +15,9 @@ import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -208,7 +210,18 @@ class AdminController(
     }
 
     @PostMapping("/users")
-    fun createUser(@Valid request: UserCreateRequest, model: Model): String {
+    fun createUser(
+        @Valid @ModelAttribute request: UserCreateRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        if (bindingResult.hasErrors()) {
+            val errorMsg = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Validation failed"
+            model.addAttribute("createUserError", errorMsg)
+            model.addAttribute("showCreateForm", true)
+            model.addAttribute("users", appUserRepository.findAll())
+            return "admin/dashboard :: usersSection"
+        }
         try {
             appUserService.createUser(request)
             model.addAttribute("createUserSuccess", "Account created successfully!")
@@ -235,19 +248,36 @@ class AdminController(
     }
 
     @PostMapping("/users/{id}/edit")
-    fun editUser(@PathVariable id: String, @Valid request: UserUpdateRequest, model: Model): String {
+    fun editUser(
+        @PathVariable id: String,
+        @Valid @ModelAttribute request: UserUpdateRequest,
+        bindingResult: BindingResult,
+        model: Model
+    ): String {
+        val userId = UUID.fromString(id)
+        if (bindingResult.hasErrors()) {
+            val errorMsg = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Validation failed"
+            model.addAttribute("updateUserError", errorMsg)
+            val user = appUserService.findById(userId)
+            user.username = request.username
+            user.email = request.email
+            user.displayName = request.displayName
+            request.role?.let { user.role = it }
+            model.addAttribute("editUser", user)
+            return "admin/dashboard :: editUserRow"
+        }
         try {
-            val updatedUser = appUserService.updateUser(UUID.fromString(id), request)
+            val updatedUser = appUserService.updateUser(userId, request)
             model.addAttribute("user", updatedUser)
             return "admin/dashboard :: userRow"
         } catch (e: Exception) {
             model.addAttribute("updateUserError", e.message)
             // Retrieve current user and overlay request values to maintain form state
-            val user = appUserService.findById(UUID.fromString(id))
+            val user = appUserService.findById(userId)
             user.username = request.username
             user.email = request.email
             user.displayName = request.displayName
-            user.role = request.role
+            request.role?.let { user.role = it }
             model.addAttribute("editUser", user)
             return "admin/dashboard :: editUserRow"
         }

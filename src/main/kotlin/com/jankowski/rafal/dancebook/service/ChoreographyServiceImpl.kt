@@ -131,6 +131,8 @@ class ChoreographyServiceImpl(
         val nextSortOrder = (choreography.entries.maxOfOrNull { it.sortOrder } ?: -1) + 1
         log.debug("Adding entry type '{}' to choreography '{}' at sortOrder {}", request.entryType, choreography.name, nextSortOrder)
 
+        require(request.notes == null || request.notes.length <= 500) { "Notes cannot exceed 500 characters" }
+
         val newEntry = ChoreographyEntry().apply {
             this.choreography = choreography
             this.entryType = EntryType.valueOf(request.entryType)
@@ -210,6 +212,8 @@ class ChoreographyServiceImpl(
         log.debug("Updating entry {} in choreography '{}'", entryId, choreography.name)
         val entry = choreography.entries.find { it.id == entryId }
             ?: throw EntityNotFoundException("Entry with id $entryId not found in choreography")
+
+        require(request.notes == null || request.notes.length <= 500) { "Notes cannot exceed 500 characters" }
 
         entry.notes = request.notes?.takeIf { it.isNotBlank() }
         entry.lineIndicator = request.lineIndicator?.takeIf { it.isNotBlank() }?.let { LineIndicator.valueOf(it) }

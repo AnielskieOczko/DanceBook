@@ -12,64 +12,32 @@
         <!-- CSRF Token (Automatically handled by Thymeleaf, but good to ensure) -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-        <!-- Hidden input for dance type if editing -->
-        <input type="hidden" th:if="${choreographyId != null}" name="danceTypeId" th:value="*{danceTypeId}">
+        <!-- Error Summary -->
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
 
         <div class="space-y-6">
             <!-- Name -->
-            <div>
-                <label for="choreoName" class="form-label font-semibold">Choreography Name *</label>
-                <input id="choreoName" type="text" th:field="*{name}" required 
-                       class="form-input"
-                       placeholder="e.g. Bronze Waltz Routine">
-            </div>
+            <div th:replace="~{fragments/form :: field(path='name', label='Choreography Name', required=true, placeholder='e.g. Bronze Waltz Routine')}"></div>
 
             <!-- Description -->
-            <div>
-                <label for="choreoDesc" class="form-label font-semibold">Description / Notes</label>
-                <textarea id="choreoDesc" th:field="*{description}" 
-                          class="form-textarea h-28"
-                          placeholder="Add details, target level, or practice focus..."></textarea>
-            </div>
+            <div th:replace="~{fragments/form :: textarea(path='description', label='Description / Notes', placeholder='Add details, target level, or practice focus...', rows=4)}"></div>
 
             <!-- Dance Style -->
-            <div>
-                <label for="danceType" class="form-label font-semibold">Dance Style *</label>
-                <select id="danceType" name="danceTypeId" th:field="*{danceTypeId}" required
-                        class="form-select" th:disabled="${choreographyId != null}">
-                    <option value="" disabled selected>Select a dance style...</option>
-                    <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
-                </select>
-                <p th:if="${choreographyId != null}" class="text-xs text-outline mt-1.5">
-                    Dance style cannot be changed after choreography has been created.
-                </p>
+            <div th:if="${choreographyId != null}">
+                <input type="hidden" name="danceTypeId" th:value="*{danceTypeId}">
+                <div th:replace="~{fragments/form :: select(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...', disabled=true, hint='Dance style cannot be changed after choreography has been created.')}"></div>
+            </div>
+            <div th:if="${choreographyId == null}">
+                <div th:replace="~{fragments/form :: select(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...')}"></div>
             </div>
         </div>
 
         <hr class="border-outline-variant/30">
 
         <!-- Visibility Toggle -->
-        <div>
-            <div class="flex items-center gap-3">
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" th:field="*{isPublic}" class="sr-only peer">
-                    <div class="w-11 h-6 bg-outline-variant/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </label>
-                <div>
-                    <span class="text-sm font-semibold text-on-surface">Public Choreography</span>
-                    <p class="text-xs text-on-surface-variant">Visible and cloneable by other dancers</p>
-                </div>
-            </div>
-        </div>
+        <div th:replace="~{fragments/form :: toggle(path='isPublic', label='Public Choreography', hint='Visible and cloneable by other dancers')}"></div>
 
-        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
-            <a th:href="${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}" 
-               class="btn-outline">Cancel</a>
-            <button type="submit" class="btn-primary">
-                <span th:replace="~{fragments/icon :: icon(name='save', size='md')}"></span>
-                Save Details
-            </button>
-        </div>
+        <div th:replace="~{fragments/button :: submitRow(cancelHref=${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}, submitLabel='Save Details', submitIcon='save')}"></div>
     </form>
 
 </section>

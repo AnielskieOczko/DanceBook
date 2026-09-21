@@ -12,7 +12,7 @@ import java.util.UUID
 data class MaterialRequest(
     @field:NotBlank 
     @field:Size(min = 2, max = 255)
-    val name: String,
+    val name: String = "",
     
     @field:Size(max = 2000)
     val description: String? = null,

@@ -20,6 +20,9 @@
                th:disabled="${disabled == true}"
                th:readonly="${readonly == true}"
                th:autocomplete="${autocomplete}"
+               th:min="${min}"
+               th:max="${max}"
+               th:step="${step}"
                class="form-input"
                th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''" />
         <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
@@ -34,9 +37,14 @@
                th:disabled="${disabled == true}"
                th:readonly="${readonly == true}"
                th:autocomplete="${autocomplete}"
+               th:min="${min}"
+               th:max="${max}"
+               th:step="${step}"
                class="form-input" />
     </th:block>
-    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}"
+       th:id="${hintId}"
+       class="form-hint" th:text="${hint}">Hint</p>
 </div>
 
 <!-- Select Dropdown -->
@@ -50,6 +58,7 @@
                 th:field="*{__${path}__}"
                 th:required="${required == true}"
                 th:disabled="${disabled == true}"
+                th:multiple="${multiple == true}"
                 class="form-select"
                 th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''">
             <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
@@ -64,6 +73,7 @@
                 th:name="${path}"
                 th:required="${required == true}"
                 th:disabled="${disabled == true}"
+                th:multiple="${multiple == true}"
                 class="form-select">
             <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
             <option th:each="opt : ${options}"
@@ -72,7 +82,9 @@
                     th:selected="${(optValue != null ? opt[optValue] : opt) == value}">Option</option>
         </select>
     </th:block>
-    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}"
+       th:id="${hintId}"
+       class="form-hint" th:text="${hint}">Hint</p>
 </div>
 
 <!-- Textarea -->
@@ -104,7 +116,9 @@
                   class="form-textarea"
                   th:text="${value}"></textarea>
     </th:block>
-    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
+    <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}"
+       th:id="${hintId}"
+       class="form-hint" th:text="${hint}">Hint</p>
 </div>
 
 <!-- Checkbox -->
@@ -187,6 +201,8 @@
 <!-- Error Summary Box -->
 <div th:fragment="errorSummary"
      th:if="${#fields != null and #fields.hasErrors('*')}"
+     th:id="${id ?: 'errorSummary'}"
+     role="alert"
      class="p-4 rounded-md bg-error/10 border border-error mb-6"
      th:classappend="${cls}">
     <div class="flex items-center gap-2 text-error font-semibold text-base mb-2">

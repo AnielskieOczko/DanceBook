@@ -9,14 +9,11 @@
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
           th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">
 
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
         <!-- Basic Info Section -->
         <div class="space-y-6">
-            <div>
-                <label for="listName" class="form-label">Collection Name *</label>
-                <input id="listName" type="text" th:field="*{name}" required 
-                       class="form-input"
-                       placeholder="e.g. My Waltz Collection">
-            </div>
+            <div th:replace="~{fragments/form :: field(path='name', label='Collection Name', required=true, placeholder='e.g. My Waltz Collection', id='listName')}"></div>
 
             <!-- Image Upload Section -->
             <div>
@@ -58,40 +55,16 @@
             <h3 class="font-headline-md text-on-surface mb-4">Collection Filters</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name Filter -->
-                <div>
-                    <label for="nameFilter" class="form-label">Name Contains</label>
-                    <input id="nameFilter" type="text" th:field="*{nameFilter}" 
-                           class="form-input"
-                           placeholder="Filter materials by name...">
-                </div>
+                <div th:replace="~{fragments/form :: field(path='nameFilter', label='Name Contains', placeholder='Filter materials by name...', id='nameFilter')}"></div>
 
                 <!-- Min Rating -->
-                <div>
-                    <label for="minRating" class="form-label">Minimum Rating</label>
-                    <input id="minRating" type="number" th:field="*{minRating}" min="1" max="5" 
-                           class="form-input" 
-                           placeholder="1-5">
-                </div>
+                <div th:replace="~{fragments/form :: field(path='minRating', label='Minimum Rating', type='number', min='1', max='5', placeholder='1-5', id='minRating')}"></div>
 
                 <!-- Dance Types -->
-                <div>
-                    <label for="danceTypeIds" class="form-label">Dance Styles</label>
-                    <select id="danceTypeIds" th:field="*{danceTypeIds}" multiple 
-                            class="form-select min-h-[100px]">
-                        <option th:each="type : ${danceTypes}" th:value="${type.id}" th:text="${type.name}"></option>
-                    </select>
-                    <p class="text-xs text-on-surface-variant mt-1">Hold Ctrl/Cmd to select multiple</p>
-                </div>
+                <div th:replace="~{fragments/form :: select(path='danceTypeIds', label='Dance Styles', options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceTypeIds')}"></div>
 
                 <!-- Dance Categories -->
-                <div>
-                    <label for="danceCategoryIds" class="form-label">Categories</label>
-                    <select id="danceCategoryIds" th:field="*{danceCategoryIds}" multiple 
-                            class="form-select min-h-[100px]">
-                        <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                    </select>
-                    <p class="text-xs text-on-surface-variant mt-1">Hold Ctrl/Cmd to select multiple</p>
-                </div>
+                <div th:replace="~{fragments/form :: select(path='danceCategoryIds', label='Categories', options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceCategoryIds')}"></div>
             </div>
         </div>
 
@@ -99,16 +72,7 @@
 
         <!-- Settings Section -->
         <div>
-            <div class="flex items-center gap-3">
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" th:field="*{isPublic}" class="sr-only peer">
-                    <div class="w-11 h-6 bg-outline-variant/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </label>
-                <div>
-                    <span class="text-sm font-medium text-on-surface">Public Collection</span>
-                    <p class="text-xs text-on-surface-variant">Visible to all users on the platform</p>
-                </div>
-            </div>
+            <div th:replace="~{fragments/form :: toggle(path='isPublic', label='Public Collection', hint='Visible to all users on the platform')}"></div>
         </div>
 
         <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-border">

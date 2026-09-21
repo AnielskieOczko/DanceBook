@@ -9,26 +9,12 @@
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
           th:object="${danceType}" method="post" class="card p-8">
 
-        <div class="space-y-6">
-            <div>
-                <label for="typeName" class="form-label">Style Name *</label>
-                <input id="typeName" type="text" th:field="*{name}" required 
-                       class="form-input"
-                       th:classappend="${#fields.hasErrors('name')} ? 'border-danger ring-1 ring-danger' : ''"
-                       placeholder="e.g. Waltz, Tango, Foxtrot...">
-                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-error"></p>
-            </div>
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
 
-            <div>
-                <label for="categoryId" class="form-label">Category *</label>
-                <select id="categoryId" th:field="*{categoryId}" required 
-                        class="form-select"
-                        th:classappend="${#fields.hasErrors('categoryId')} ? 'border-danger ring-1 ring-danger' : ''">
-                    <option value="">-- Select Category --</option>
-                    <option th:each="cat : ${danceCategories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-                </select>
-                <p th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="form-error"></p>
-            </div>
+        <div class="space-y-6">
+            <div th:replace="~{fragments/form :: field(path='name', label='Style Name', required=true, placeholder='e.g. Waltz, Tango, Foxtrot...', id='typeName')}"></div>
+
+            <div th:replace="~{fragments/form :: select(path='categoryId', label='Category', required=true, options=${danceCategories}, optValue='id', optLabel='name', placeholder='-- Select Category --', id='categoryId')}"></div>
         </div>
 
         <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">

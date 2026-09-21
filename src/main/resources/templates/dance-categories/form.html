@@ -9,6 +9,8 @@
     <form th:action="@{${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}(_csrf=${_csrf.token})}"
           th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="card p-8">
 
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
         <div class="space-y-6">
             <div th:replace="~{fragments/form :: field(path='name', label='Category Name', required=true, placeholder='e.g. Ballet, Contemporary, Jazz...')}"></div>
             
