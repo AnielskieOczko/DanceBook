@@ -186,6 +186,15 @@ class HtmxFragmentRenderingTest {
     }
 
     @Test
+    fun `materials new form renders`() {
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        mockMvc.perform(get("/materials/new").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/form"))
+    }
+
+    @Test
     fun `dance-figures new form renders chevron with rotating classes passed via cls`() {
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
 
