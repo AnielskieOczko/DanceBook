@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/page :: header(title='Training', subtitleSlot=~{::calendarSubtitle}, toolbar=~{::calendarToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitleSlot=~{::calendarSubtitle}, toolbar=~{::calendarToolbar})}">
         <th:block th:fragment="calendarSubtitle">
             <p class="page-subtitle hidden md:block">Click a slot to add a session, or drag one to move it.</p>
             <p class="page-subtitle md:hidden">Tap a day to read it. Tap + to add a session.</p>

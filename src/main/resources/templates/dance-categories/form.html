@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: header(title=${danceCategoryId == null ? 'New Category' : 'Edit Category'}, subtitle='Define a new high-level grouping for your dance styles.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${danceCategoryId == null ? 'New Category' : 'Edit Category'}, subtitle='Define a new high-level grouping for your dance styles.')}"></div>
 
     <form th:action="@{${danceCategoryId == null ? '/dance-categories' : '/dance-categories/' + danceCategoryId}(_csrf=${_csrf.token})}"
           th:object="${danceCategory}" method="post" enctype="multipart/form-data" class="card p-8">

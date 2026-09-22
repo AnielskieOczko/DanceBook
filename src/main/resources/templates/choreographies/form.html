@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='choreographies'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: header(title=${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}, subtitle='Set up your choreography metadata. You can add figures to the routine in the next step.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}, subtitle='Set up your choreography metadata. You can add figures to the routine in the next step.')}"></div>
 
     <form th:action="@{${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/metadata'}}"
           th:object="${choreographyRequest}" method="post" class="card p-8 space-y-8">
@@ -25,10 +25,10 @@
             <!-- Dance Style -->
             <div th:if="${choreographyId != null}">
                 <input type="hidden" name="danceTypeId" th:value="*{danceTypeId}">
-                <div th:replace="~{fragments/form :: select(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...', disabled=true, hint='Dance style cannot be changed after choreography has been created.')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...', disabled=true, hint='Dance style cannot be changed after choreography has been created.')}"></div>
             </div>
             <div th:if="${choreographyId == null}">
-                <div th:replace="~{fragments/form :: select(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...')}"></div>
             </div>
         </div>
 

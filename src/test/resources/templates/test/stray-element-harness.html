@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Catalog-style fragment with an unambiguous name -->
+<div th:fragment="customTextarea" class="intended-fragment">
+    <textarea name="description" class="intended-textarea">Intended content</textarea>
+</div>
+
+<!-- Stray element of the same tag name in the same file -->
+<textarea name="description" class="stray-textarea">Stray content</textarea>
+
+<!-- Another stray element inside a different fragment in the same file -->
+<div th:fragment="otherSection">
+    <textarea name="description" class="stray-in-other">Other stray content</textarea>
+</div>
+
+<!-- Harness consumer including the fragment by unambiguous name -->
+<div th:fragment="renderSafeTextarea">
+    <div th:replace="~{test/stray-element-harness :: customTextarea}"></div>
+</div>
+
+<!-- Harness consumer demonstrating the broken tag-name selector collision -->
+<div th:fragment="renderAmbiguousTextarea">
+    <div th:replace="~{test/stray-element-harness :: textarea}"></div>
+</div>
+
+</body>
+</html>

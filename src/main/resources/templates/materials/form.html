@@ -9,7 +9,7 @@
     <!-- Page Header -->
     <!-- Thymeleaf evaluates fragment expressions in restricted mode, which rejects the
          token "new " even inside a string literal, so the strings are built here instead. -->
-    <div th:replace="~{fragments/page :: header(title=${pageTitle}, subtitle=${pageSubtitle})}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${pageTitle}, subtitle=${pageSubtitle})}"></div>
 
     <form th:action="${materialId == null ? '/materials' : '/materials/' + materialId}"
           th:object="${material}" method="post" class="card p-6 md:p-8 space-y-6">
