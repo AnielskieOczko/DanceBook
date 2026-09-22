@@ -4,7 +4,6 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CommentService
 import com.jankowski.rafal.dancebook.service.MaterialService
-import org.apache.http.HttpResponse
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -32,16 +31,14 @@ class CommentController(
         model: Model,
     ): String {
         val currentUser = appUserService.getCurrentUser()
-        if (!content.isNullOrBlank()) {
-            try {
-                commentService.addComment(
-                    materialId = materialId,
-                    content = content,
-                    author = currentUser
-                )
-            } catch (_: IllegalArgumentException) {
-                // Structurally empty rich text (e.g. <div><br></div>): no-op without erroring
-            }
+        try {
+            commentService.addComment(
+                materialId = materialId,
+                content = content ?: "",
+                author = currentUser
+            )
+        } catch (e: IllegalArgumentException) {
+            model.addAttribute("commentError", e.message ?: "Comment content must not be blank")
         }
         val material = materialService.findById(materialId)
         model.addAttribute("material", material)
@@ -70,18 +67,18 @@ class CommentController(
         model: Model,
     ): String {
         val currentUser = appUserService.getCurrentUser()
-        if (!content.isNullOrBlank()) {
-            try {
-                commentService.updateComment(commentId, content, currentUser)
-            } catch (_: IllegalArgumentException) {
-                // Structurally empty rich text: keep existing comment without erroring
-            }
-        }
-
         val material = materialService.findById(materialId)
         model.addAttribute("material", material)
-        model.addAttribute("c", commentService.findCommentById(commentId))
-        return "materials/fragments/comments :: comment-item"
+
+        try {
+            commentService.updateComment(commentId, content ?: "", currentUser)
+            model.addAttribute("c", commentService.findCommentById(commentId))
+            return "materials/fragments/comments :: comment-item"
+        } catch (e: IllegalArgumentException) {
+            model.addAttribute("comment", commentService.findCommentById(commentId))
+            model.addAttribute("commentError", e.message ?: "Comment content must not be blank")
+            return "materials/fragments/comments :: comment-edit-form"
+        }
     }
 
     @GetMapping("/{commentId}")

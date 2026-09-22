@@ -131,10 +131,10 @@ class CommentWebControllerTest {
 
     @Test
     @WithMockUser(username = "dancer")
-    fun `posting structurally empty comment is handled gracefully without creating comment`() {
+    fun `posting structurally empty comment is refused with visible error message`() {
         val emptyContent = "<div><br></div>"
         `when`(commentService.addComment(materialId, emptyContent, testUser))
-            .thenThrow(IllegalArgumentException("Comment content cannot be blank"))
+            .thenThrow(IllegalArgumentException("Comment content must not be blank"))
 
         mockMvc.perform(
             post("/materials/$materialId/comments")
@@ -143,7 +143,26 @@ class CommentWebControllerTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("comment-section")))
+            .andExpect(content().string(containsString("role=\"alert\"")))
+            .andExpect(content().string(containsString("Comment content must not be blank")))
             .andExpect(content().string(containsString("<trix-editor id=\"comment-content\"")))
+    }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `posting blank comment is refused with visible error message`() {
+        `when`(commentService.addComment(materialId, "", testUser))
+            .thenThrow(IllegalArgumentException("Comment content must not be blank"))
+
+        mockMvc.perform(
+            post("/materials/$materialId/comments")
+                .param("content", "")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("comment-section")))
+            .andExpect(content().string(containsString("role=\"alert\"")))
+            .andExpect(content().string(containsString("Comment content must not be blank")))
     }
 
     @Test
@@ -181,5 +200,42 @@ class CommentWebControllerTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("rich-text")))
             .andExpect(content().string(containsString("Refined <em>posture</em> and timing")))
+    }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `updating comment with blank content is refused with visible error alert and preserves original note`() {
+        `when`(commentService.updateComment(commentId, "", testUser))
+            .thenThrow(IllegalArgumentException("Comment content must not be blank"))
+
+        mockMvc.perform(
+            put("/materials/$materialId/comments/$commentId")
+                .param("content", "")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("role=\"alert\"")))
+            .andExpect(content().string(containsString("Comment content must not be blank")))
+            .andExpect(content().string(containsString("<trix-editor id=\"comment-edit-$commentId\"")))
+            .andExpect(content().string(containsString("value=\"&lt;div&gt;Good &lt;strong&gt;timing&lt;/strong&gt; on chasse&lt;/div&gt;\"")))
+    }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `updating comment with structurally empty content is refused with visible error alert and preserves original note`() {
+        val emptyContent = "<div><br></div>"
+        `when`(commentService.updateComment(commentId, emptyContent, testUser))
+            .thenThrow(IllegalArgumentException("Comment content must not be blank"))
+
+        mockMvc.perform(
+            put("/materials/$materialId/comments/$commentId")
+                .param("content", emptyContent)
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("role=\"alert\"")))
+            .andExpect(content().string(containsString("Comment content must not be blank")))
+            .andExpect(content().string(containsString("<trix-editor id=\"comment-edit-$commentId\"")))
+            .andExpect(content().string(containsString("value=\"&lt;div&gt;Good &lt;strong&gt;timing&lt;/strong&gt; on chasse&lt;/div&gt;\"")))
     }
 }
