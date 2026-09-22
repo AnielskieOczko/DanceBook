@@ -430,7 +430,9 @@
                              th:classappend="${setStat.index == 0 ? 'bg-primary border-primary text-white' : 'bg-surface border-border text-text-secondary hover:text-on-surface'}"
                              th:data-set-idx="${setStat.index}">
                             <span class="js-tab-name-display" th:text="${set.name ?: 'Set ' + (setStat.index + 1)}">Default</span>
-                            <span th:if="${set.isDefault}" th:replace="~{fragments/icon :: icon(name='star', size='sm', cls='js-tab-default-indicator')}"></span>
+                            <th:block th:if="${set.isDefault}">
+                                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', cls='js-tab-default-indicator')}"></span>
+                            </th:block>
                         </div>
                         <button type="button" id="add-step-set-btn" class="btn-outline btn-sm py-1 px-2.5 flex items-center gap-1 shrink-0">
                             <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Combination

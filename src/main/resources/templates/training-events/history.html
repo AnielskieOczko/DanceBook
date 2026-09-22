@@ -24,8 +24,9 @@
         </div>
     </div>
 
-    <div th:if="${history.isEmpty}"
-         th:replace="~{fragments/empty :: emptyState(icon='history', title='No confirmed training yet', text='Mark a session attended or skipped and it is recorded here for good — deleting the session afterwards will not take it away.', actionHref='/training-events', actionLabel='Go to sessions')}"></div>
+    <th:block th:if="${history.isEmpty}">
+        <div th:replace="~{fragments/empty :: emptyState(icon='history', title='No confirmed training yet', text='Mark a session attended or skipped and it is recorded here for good — deleting the session afterwards will not take it away.', actionHref='/training-events', actionLabel='Go to sessions')}"></div>
+    </th:block>
 
     <!-- Shown only when there is something to explain: an orphaned row is the one row on this
          page that cannot be corrected from the calendar, so it needs a sentence. -->

@@ -34,8 +34,9 @@
          with the sessions it fetched plus the next control. -->
     <div th:fragment="timelinePage" class="space-y-lg">
 
-        <div th:if="${timeline.isEmpty and timeline.isFirstPage}"
-             th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+        <th:block th:if="${timeline.isEmpty and timeline.isFirstPage}">
+            <div th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+        </th:block>
 
         <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
 

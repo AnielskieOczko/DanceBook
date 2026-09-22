@@ -40,15 +40,16 @@
     </div>
 
     <!-- Empty state: no sessions to summarise. -->
-    <div th:if="${stats.counts.total == 0}"
-         th:replace="~{fragments/empty :: emptyState(
-             icon='monitoring',
-             title=(${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'),
-             text=(${stats.period.name() == 'ALL_TIME'}
-                 ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
-                 : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'),
-             actionHref=(${activeCalendar == null || activeCalendar.enabled} ? '/training-events/new' : null),
-             actionLabel='Add Session')}"></div>
+    <th:block th:if="${stats.counts.total == 0}">
+        <div th:replace="~{fragments/empty :: emptyState(
+            icon='monitoring',
+            title=(${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'),
+            text=(${stats.period.name() == 'ALL_TIME'}
+                ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
+                : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'),
+            actionHref=(${activeCalendar == null || activeCalendar.enabled} ? '/training-events/new' : null),
+            actionLabel='Add Session')}"></div>
+    </th:block>
 
     <div th:if="${stats.counts.total > 0}" class="space-y-lg">
 

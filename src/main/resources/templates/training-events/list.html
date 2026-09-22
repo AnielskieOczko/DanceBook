@@ -92,8 +92,9 @@
     <!-- Agenda list (HTMX swap target) -->
     <div th:fragment="eventsList" id="events-list" class="space-y-lg">
 
-        <div th:if="${events == null || events.isEmpty()}"
-             th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+        <th:block th:if="${events == null || events.isEmpty()}">
+            <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+        </th:block>
 
         <!-- Feedback message following a bulk action -->
         <div th:if="${bulkMessage != null}"

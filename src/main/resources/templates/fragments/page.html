@@ -11,8 +11,9 @@
      th:classappend="${cls}">
     <div class="page-header mb-0">
         <h1 class="page-title text-3xl flex items-center gap-2">
-            <span th:if="${icon != null}"
-                  th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
+            <th:block th:if="${icon != null}">
+                <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
+            </th:block>
             <span th:text="${title}">Page Title</span>
         </h1>
         <p th:if="${subtitle != null and subtitleSlot == null}" class="page-subtitle" th:text="${subtitle}">Subtitle</p>
@@ -30,8 +31,9 @@
             <a th:href="${actionUrl}"
                class="btn"
                th:classappend="${actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary'}">
-                <span th:if="${actionIcon != null}"
-                      th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
+                <th:block th:if="${actionIcon != null}">
+                    <span th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
+                </th:block>
                 <span th:text="${actionText}">Action</span>
             </a>
         </div>
@@ -42,8 +44,9 @@
 <div th:fragment="sectionTitle"
      class="flex items-center gap-2 border-b border-outline-variant pb-2 mb-4"
      th:classappend="${cls}">
-    <span th:if="${icon != null}"
-          th:replace="~{fragments/icon :: icon(name=${icon}, size='md', cls='text-primary')}"></span>
+    <th:block th:if="${icon != null}">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size='md', cls='text-primary')}"></span>
+    </th:block>
     <h2 class="text-section font-sans text-on-surface" th:text="${title}">Section Title</h2>
 </div>
 
