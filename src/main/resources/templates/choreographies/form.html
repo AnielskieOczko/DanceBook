@@ -20,7 +20,7 @@
             <div th:replace="~{fragments/form :: field(path='name', label='Choreography Name', required=true, placeholder='e.g. Bronze Waltz Routine')}"></div>
 
             <!-- Description -->
-            <div th:replace="~{fragments/form :: textarea(path='description', label='Description / Notes', placeholder='Add details, target level, or practice focus...', rows=4)}"></div>
+            <div th:replace="~{fragments/form :: richText(path='description', label='Description / Notes', placeholder='Add details, target level, or practice focus...', rows=4)}"></div>
 
             <!-- Dance Style -->
             <div th:if="${choreographyId != null}">
@@ -40,5 +40,6 @@
         <div th:replace="~{fragments/button :: submitRow(cancelHref=${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}, submitLabel='Save Details', submitIcon='save')}"></div>
     </form>
 
+    <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
 </section>
 </html>

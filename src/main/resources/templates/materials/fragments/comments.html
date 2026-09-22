@@ -11,9 +11,7 @@
                 <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
             <div class="flex-1">
-                <textarea name="content" required placeholder="Add a note or timestamp..."
-                          class="w-full bg-transparent border-0 border-b border-surface-variant focus:border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors resize-none"
-                          rows="3"></textarea>
+                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder='Add a note or timestamp...', id='comment-content')}"></div>
                 <div class="flex justify-end mt-2">
                     <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-wider hover:opacity-70 transition-colors">Post Note</button>
                 </div>
@@ -72,8 +70,7 @@
         <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
               hx-target="closest .group"
               hx-swap="outerHTML">
-            <textarea name="content" required class="w-full bg-transparent border-0 border-b border-primary focus:ring-0 px-0 pb-2 font-body-md text-on-surface"
-                      rows="3" th:text="${comment.content}"></textarea>
+            <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, value=${comment.content}, id='comment-edit-' + ${comment.id})}"></div>
             <div class="flex gap-4 mt-2 justify-end">
                 <button type="button"
                         th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"

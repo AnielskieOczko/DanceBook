@@ -660,7 +660,7 @@
                 <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
                     <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> Figure Notes
                 </h2>
-                <div th:replace="~{fragments/form :: textarea(path='notes', label='General Notes', rows=5, placeholder='Add technical details, tips or specific instruction notes here...', id='notes')}"></div>
+                <div th:replace="~{fragments/form :: richText(path='notes', label='General Notes', rows=5, placeholder='Add technical details, tips or specific instruction notes here...', id='notes')}"></div>
             </div>
         </div>
 
@@ -672,6 +672,7 @@
     </form>
 
     <!-- Vanilla Javascript Form Dynamics -->
+    <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
     <script th:src="@{/js/dance-figure-form.js}"></script>
     <script th:src="@{/js/guided-figure-edit.js}"></script>
 

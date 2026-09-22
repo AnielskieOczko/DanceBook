@@ -120,6 +120,10 @@
     <div th:replace="~{fragments/form :: richText(path='notes', label='Notes', hint='Rich text', required=false, placeholder='Write notes...', rows=5, disabled=false, cls='extra-cls', id='custom-rt')}"></div>
 </form>
 
+<div th:fragment="richTextStandalone">
+    <div th:replace="~{fragments/form :: richText(path='content', raw=true, label='Comments', placeholder='Type comment...', value='<p>Sample comment</p>')}"></div>
+</div>
+
 <!-- 12. FORM: errorSummary -->
 <form th:fragment="errorSummaryRequired" th:object="${testForm}">
     <div th:replace="~{fragments/form :: errorSummary}"></div>

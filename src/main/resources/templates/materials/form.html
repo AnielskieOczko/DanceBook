@@ -23,7 +23,7 @@
         <div th:replace="~{fragments/form :: field(path='name', label='Name', required=true, placeholder='e.g. Waltz Natural Turn', id='name')}"></div>
 
         <!-- Description -->
-        <div th:replace="~{fragments/form :: textarea(path='description', label='Description', rows=3, placeholder='Brief notes about this material...', id='description')}"></div>
+        <div th:replace="~{fragments/form :: richText(path='description', label='Description', rows=3, placeholder='Brief notes about this material...', id='description')}"></div>
 
         <!-- Dance Category & Type (two columns, Category first) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -128,6 +128,7 @@
         </div>
     </form>
 
+    <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
     <script th:src="@{/js/drive-upload.js}"></script>
     <script th:src="@{/js/drive-form.js}"></script>
 
