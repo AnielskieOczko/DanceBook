@@ -216,8 +216,9 @@ input, which is why list and index views are structurally incapable of leaking m
 than merely careful not to.
 
 The safelist allows bold, italic, bullet and numbered lists, and links — nothing else. It
-centres on the block markup **Trix 2 actually emits**, which is `<div>`, not `<p>`; #46 phase 11
-introduces Trix, and the set was chosen so that phase needs no safelist change. A link gets
+centres on the block markup **Trix 2 actually emits**, which is `<div>`, not `<p>`; #119 put
+Trix on the six long-form fields and needed no safelist change, which is what that choice
+bought. A link gets
 `rel="nofollow noopener noreferrer"` enforced, and anything that is not `http`, `https` or
 `mailto` loses its `href`.
 
@@ -234,10 +235,53 @@ And length limits use `@RichTextLength`, which counts the text the user typed ra
 bytes of markup, behind a much larger raw ceiling — a plain `@Size` on one of these fields will
 reject a short note the moment formatting triples its byte count.
 
-**Editors are still plain `<textarea>`s.** #114 built the boundary only; the editor is phase 11.
-Note the two similar names: `fragments/rich-text.html` is the **display** fragment described
-here and is in use, while `richText` in `fragments/form.html` is the **input** field, built in
-#98 and still uncalled until Trix lands.
+Note the two similar names. `fragments/rich-text.html` is the **display** fragment described
+above; `richText` in `fragments/form.html` is the **input** field, and since #119 it renders a
+Trix editor rather than the `<textarea>` it carried from #98.
+
+### The rich text editor
+
+**`richText` renders a hidden `<input>` with a `<trix-editor>` bound to it by id.** The hidden
+input is what `th:field` owns and what submits, so the value still arrives as an ordinary form
+field and nothing on the server knows an editor exists. One fragment covers both cases: the
+bound one, and `raw=true` for the two comment forms. The editor element carries
+`data-required="true"` rather than `required`, and the label points `for` at the editor, which
+a click handler in `main.js` turns into focus because a custom element does not get that for
+free.
+
+**Trix loads per page, not from the layout.** Five templates carry
+`<script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js">` near the bottom:
+`materials/form.html`, `materials/view.html`, `choreographies/form.html`,
+`dance-figures/form.html` and `training-events/form.html`. **A new page that calls the
+`richText` fragment must add that tag itself**, or the field renders as an inert hidden input
+with no visible control and nothing fails — not the build, not the page. No CSP edit is needed:
+`script-src` already allows `unpkg.com`.
+
+**The toolbar is pruned, not configured.** Trix ships more controls than the safelist permits,
+so a `trix-initialize` listener in `static/js/main.js` removes strike, heading, quote, code, the
+two nesting buttons and the file and history groups, leaving the five the safelist allows —
+bold, italic, link, bullet list, numbered list. Pruning on the event rather than at render is
+what makes an htmx-swapped editor come up with the same toolbar as a server-rendered one. A
+`trix-file-accept` listener refuses attachments outright, since nothing downstream would store
+them.
+
+**Required-ness is enforced by hand, because constraint validation cannot see the value.** The
+real input is hidden, and a hidden input is excluded from constraint validation — so `required`
+on it is ignored, htmx's `checkValidity` waves the form through, and a blank note reaches a
+server that drops it silently. A **capture-phase** `submit` listener on `document` runs ahead of
+htmx's own form-level listener and calls `stopImmediatePropagation()`, so htmx never sees the
+event; an `htmx:configRequest` guard covers requests not issued by a submit. Both decide
+emptiness from the editor's text, never from the markup in the input — the same trap as above,
+one layer up. This is a client-side halt only: `CommentController` still accepts a blank
+`content` and re-renders the list without saying anything, which is what #116 is open for.
+
+**The skin is ours and deliberately unlayered.** `frontend/input.css` styles `trix-toolbar` and
+`trix-editor` in plain unlayered CSS alongside the FullCalendar block, so the token rules beat
+Tailwind's layers, and the toolbar icons are masks tinted by `currentColor` rather than a
+duplicated hex. The display half needed rules too: Tailwind's preflight strips list markers, so
+a stored bullet list rendered as flat lines until `.rich-text` got its own.
+`TailwindOutputCssTest` asserts both blocks survive into `output.css`, because a rendering test
+asserts on HTML and cannot see a missing rule.
 
 ### Dialogs
 
@@ -327,6 +371,27 @@ root id.
 `navLists`, `unreadNotificationCount`, `pollInterval`, `autoLogout`, and `activeNav` to
 every template. Adding a new top-level route means adding a branch to `activeNav()`
 for the navbar to highlight correctly.
+
+### Who the current user is
+
+**Resolve the current user through `AppUserService.getCurrentUser()`, and never through
+`@AuthenticationPrincipal`.** Login is form-based *or* Google OAuth2, and the two put different
+principal types in the security context: a `UserDetails` for form login, a `DefaultOAuth2User`
+for Google. `getCurrentUser()` reads the context itself and handles both — an OAuth2 principal
+is looked up by its `email` attribute, a form principal by `authentication.name`. A parameter
+declared `@AuthenticationPrincipal userDetails: UserDetails` simply binds `null` under Google
+login, and Kotlin's non-null check then throws `NullPointerException` *before the method body
+runs*, which is why the failure is a stack trace rather than a friendly error. That was #122:
+`CommentController` was the only place in the codebase still taking the user that way, and
+posting, editing and deleting a note were all broken for every Google user. No `@AuthenticationPrincipal` remains in the codebase.
+
+**In templates the same split breaks identity comparisons.** `#authentication.name` is the
+username under form login and the *email* under OAuth2, and usernames here are not emails — so
+`#authentication.name == c.author.username` is false for the author of the row whenever they
+signed in with Google, which quietly hid the Edit and Delete controls on their own comments.
+Compare the `currentUser` that `NavbarAdvice` supplies, by id:
+`${currentUser != null and currentUser.id == c.author.id}`. No `#authentication` remains in the
+templates either.
 
 ### LLM providers
 
@@ -428,9 +493,10 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
   `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
-  the policy allowlists only `unpkg.com` (HTMX, SortableJS), Google Fonts, and Drive.
+  the policy allowlists only `unpkg.com` (HTMX, SortableJS, Trix), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.
-  Login is form-based *or* Google OAuth2 (`security/CustomOAuth2UserService.kt`).
+  Login is form-based *or* Google OAuth2 (`security/CustomOAuth2UserService.kt`) — see
+  **Who the current user is** above before reading the principal anywhere.
 - Uploaded files live outside the classpath and are served at `/uploads/**` by
   `config/WebMvcConfig.kt`; `uploads/` and `scratch/` are gitignored.
 - Do not run production migrations locally — let Flyway run through the application.
@@ -497,6 +563,16 @@ already pays, in every local build.
 `FormValidationWebTest` (#107) is the same idea for the other half of a page: it POSTs invalid
 input to all eight form screens and asserts the error actually renders, so a form that
 swallows its errors fails the build.
+
+**Every web test here signs in with form login, which is half the app.** `@WithMockUser` puts
+a `UserDetails` in the security context and Google never does, so #122 shipped three comment
+endpoints that threw for every Google user with the whole suite green.
+`CommentControllerOAuth2Test` (#122) is the shape for the other half: build a real
+`DefaultOAuth2User` carrying an `email` attribute and set it with
+`TestSecurityContextHolder.setContext(...)` — **not** with the `authentication()` request
+post-processor, which needs a security filter chain that an `addFilters = false` slice does not
+run, and which therefore leaves the test passing with no principal at all rather than the
+non-`UserDetails` one that is the whole point. Anything that reads the current user earns one.
 
 **`ErrorPageIntegrationTest` (#111) is the one test here that does not use MockMvc**, and the
 reason is load-bearing: MockMvc does not reliably perform the ERROR dispatch, so a MockMvc
@@ -571,6 +647,11 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - Test that needs a real servlet container → `controller/web/ErrorPageIntegrationTest.kt`
 - Sanitised long-form text, and the one permitted unescaped render →
   `service/RichTextServiceImpl.kt` plus `templates/fragments/rich-text.html`
+- Rich text editor field, its toolbar pruning and its blank-submit guard →
+  `templates/fragments/form.html :: richText` plus the Trix block at the end of
+  `static/js/main.js`
+- Test that signs in with Google rather than form login →
+  `controller/web/CommentControllerOAuth2Test.kt`
 - Service unit test (JUnit 5 + Mockito) → `service/DanceFigureServiceTest.kt`,
   `service/TrainingEventServiceTest.kt`
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
@@ -620,6 +701,14 @@ ask — nobody is reading the run live, so a question ends the run without an an
   `isNotBlank()` on one of these fields passes editor markup as content and renders an empty
   panel. Never add `th:utext` outside `fragments/rich-text.html`;
   `UnescapedTemplateOutputTest` fails the build if you do.
+- **The current user ⇒ `AppUserService.getCurrentUser()`.** Never take it as
+  `@AuthenticationPrincipal`: under Google login the principal is not a `UserDetails`, the
+  parameter binds `null` and Kotlin throws before your code runs. In a template, compare
+  `currentUser.id` to decide ownership, never `#authentication.name` — that name is an email
+  under OAuth2 and a username under form login.
+- **A page that calls the `richText` fragment ⇒ add the Trix script tag** to that template
+  (`materials/form.html` shows where). It is not in the layout, and without it the field is an
+  invisible hidden input that no test and no build failure will point at.
 - **New external script/style ⇒ update the CSP** in `config/SecurityConfig.kt`.
 
 **Never touch**
