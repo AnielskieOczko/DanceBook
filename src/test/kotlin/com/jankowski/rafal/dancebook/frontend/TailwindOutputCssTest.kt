@@ -113,6 +113,42 @@ class TailwindOutputCssTest {
         )
     }
 
+    @Test
+    fun `trix-editor and toolbar skin survive into output css`() {
+        assertTrue(
+            css.contains("trix-editor"),
+            "Expected output.css to contain trix-editor rules from the unlayered skin."
+        )
+        assertTrue(
+            css.contains("trix-toolbar"),
+            "Expected output.css to contain trix-toolbar rules from the unlayered skin."
+        )
+    }
+
+    @Test
+    fun `rich-text prose list and link styles survive into output css`() {
+        assertTrue(
+            css.contains(".rich-text ul"),
+            "Expected output.css to contain .rich-text ul bullet list styling."
+        )
+        assertTrue(
+            css.contains(".rich-text ol"),
+            "Expected output.css to contain .rich-text ol numbered list styling."
+        )
+        assertTrue(
+            css.contains(".rich-text a"),
+            "Expected output.css to contain .rich-text a link styling."
+        )
+    }
+
+    @Test
+    fun `toolbar icons use mask currentColor without hardcoded hex`() {
+        assertFalse(
+            css.contains("%2316181a"),
+            "output.css should not contain hardcoded hex %2316181a in toolbar icons."
+        )
+    }
+
     /** Tailwind escapes the characters that are not legal bare in a CSS selector. */
     private fun cssEscape(className: String): String =
         className.replace(Regex("""([\[\]./:#%!])"""), """\\$1""")

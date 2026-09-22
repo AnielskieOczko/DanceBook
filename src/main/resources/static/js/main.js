@@ -606,4 +606,107 @@ document.body.addEventListener('htmx:sendError', function() {
     showErrorAlert('Network error. Please check your connection and try again.');
 });
 
+// ════════════════════════════════════════════════
+// TRIX RICH TEXT EDITOR
+// ════════════════════════════════════════════════
+
+// Prevent file drop & paste attachments entirely
+document.addEventListener('trix-file-accept', function(event) {
+    event.preventDefault();
+});
+
+// Configure and prune toolbar on editor initialization
+document.addEventListener('trix-initialize', function(event) {
+    const editor = event.target;
+    const toolbar = editor.toolbarElement;
+    if (!toolbar) return;
+
+    // Prune disallowed buttons & button groups to keep only 5 controls:
+    // bold, italic, link, bullet list, numbered list
+    const disallowedSelectors = [
+        '[data-trix-attribute="strike"]',
+        '[data-trix-attribute="heading1"]',
+        '[data-trix-attribute="quote"]',
+        '[data-trix-attribute="code"]',
+        '[data-trix-action="decreaseNestingLevel"]',
+        '[data-trix-action="increaseNestingLevel"]',
+        '[data-trix-button-group="file-tools"]',
+        '[data-trix-button-group="history-tools"]'
+    ];
+    disallowedSelectors.forEach(sel => {
+        toolbar.querySelectorAll(sel).forEach(el => el.remove());
+    });
+
+    // Ensure all remaining toolbar buttons have accessible names
+    toolbar.querySelectorAll('button').forEach(btn => {
+        const title = btn.getAttribute('title') || btn.textContent.trim();
+        if (title && !btn.getAttribute('aria-label')) {
+            btn.setAttribute('aria-label', title);
+        }
+    });
+});
+
+// Transfer focus from label to trix-editor
+document.addEventListener('click', function(event) {
+    const label = event.target.closest('label[for]');
+    if (label) {
+        const target = document.getElementById(label.getAttribute('for'));
+        if (target && target.tagName === 'TRIX-EDITOR') {
+            target.focus();
+        }
+    }
+});
+
+function isTrixEditorBlank(editor) {
+    if (editor.editor) {
+        return editor.editor.getDocument().toString().trim().length === 0;
+    }
+    const inputId = editor.getAttribute('input');
+    const input = inputId ? document.getElementById(inputId) : null;
+    if (input) {
+        return input.value.replace(/<[^>]*>/g, '').trim().length === 0;
+    }
+    return true;
+}
+
+function findBlankRequiredTrixEditor(container) {
+    const editors = container.querySelectorAll('trix-editor[data-required="true"]');
+    for (const editor of editors) {
+        if (isTrixEditorBlank(editor)) {
+            return editor;
+        }
+    }
+    return null;
+}
+
+// Intercept form submission if a required trix-editor is empty.
+// Capture phase (useCapture = true) intercepts the submit event on document
+// BEFORE it reaches any form-level listeners (including HTMX's submit listener), so
+// stopImmediatePropagation() prevents HTMX from ever seeing the event or issuing a request.
+document.addEventListener('submit', function(event) {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const blankEditor = findBlankRequiredTrixEditor(form);
+    if (blankEditor) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        blankEditor.focus();
+    }
+}, true);
+
+// Additionally hook htmx:configRequest to guarantee no HTMX request leaves if issued from or inside
+// a form with an empty required editor (e.g. if triggered programmatically or via non-submit triggers).
+document.addEventListener('htmx:configRequest', function(event) {
+    const elt = event.detail.elt;
+    const form = elt instanceof HTMLFormElement ? elt : (elt ? elt.closest('form') : null);
+    if (!form) return;
+    const blankEditor = findBlankRequiredTrixEditor(form);
+    if (blankEditor) {
+        event.preventDefault();
+        blankEditor.focus();
+    }
+});
+
+
+
 

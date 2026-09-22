@@ -218,7 +218,8 @@ class FragmentCatalogRenderingTest {
             "richTextExcerptAll",
 
             // Standalone field without backing form object
-            "fieldStandalone"
+            "fieldStandalone",
+            "richTextStandalone"
         ]
     )
     fun `every fragment is exercised and renders cleanly without null`(fragmentName: String) {

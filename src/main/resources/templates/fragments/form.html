@@ -168,32 +168,38 @@
     <p th:if="${hint != null}" class="form-hint" th:text="${hint}">Hint</p>
 </div>
 
-<!-- Rich Text Editor Field (Plain Textarea until Item 11) -->
+<!-- Rich Text Editor Field (Trix) -->
 <div th:fragment="richText" class="form-group" th:classappend="${cls}">
-    <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
+    <label th:if="${label != null}" th:id="${(id ?: path) + '_label'}" th:for="${id ?: path}" class="form-label">
         <span th:text="${label}">Label</span>
         <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
     </label>
     <th:block th:if="${springBoundObjectExpression != null and bound != false and raw != true}">
-        <textarea th:id="${id ?: path}"
-                  th:field="*{__${path}__}"
-                  th:rows="${rows ?: 6}"
-                  th:required="${required == true}"
-                  th:placeholder="${placeholder}"
-                  th:disabled="${disabled == true}"
-                  class="form-textarea"
-                  th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''"></textarea>
+        <input type="hidden"
+               th:id="${(id ?: path) + '_input'}"
+               th:field="*{__${path}__}"
+               th:disabled="${disabled == true}" />
+        <trix-editor th:id="${id ?: path}"
+                     th:input="${(id ?: path) + '_input'}"
+                     th:placeholder="${placeholder}"
+                     th:disabled="${disabled == true}"
+                     th:attr="data-required=${required == true ? 'true' : null},aria-labelledby=${label != null ? (id ?: path) + '_label' : null},aria-label=${label == null && placeholder != null ? placeholder : null}"
+                     class="trix-content"
+                     th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''"></trix-editor>
         <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
     </th:block>
     <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
-        <textarea th:id="${id ?: path}"
-                  th:name="${path}"
-                  th:rows="${rows ?: 6}"
-                  th:required="${required == true}"
-                  th:placeholder="${placeholder}"
-                  th:disabled="${disabled == true}"
-                  class="form-textarea"
-                  th:text="${value}"></textarea>
+        <input type="hidden"
+               th:id="${(id ?: path) + '_input'}"
+               th:name="${path}"
+               th:value="${value}"
+               th:disabled="${disabled == true}" />
+        <trix-editor th:id="${id ?: path}"
+                     th:input="${(id ?: path) + '_input'}"
+                     th:placeholder="${placeholder}"
+                     th:disabled="${disabled == true}"
+                     th:attr="data-required=${required == true ? 'true' : null},aria-labelledby=${label != null ? (id ?: path) + '_label' : null},aria-label=${label == null && placeholder != null ? placeholder : null}"
+                     class="trix-content"></trix-editor>
     </th:block>
     <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
 </div>

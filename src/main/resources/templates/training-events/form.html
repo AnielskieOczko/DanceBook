@@ -174,13 +174,14 @@
             </div>
         </div>
 
-        <div th:replace="~{fragments/form :: textarea(path='description', label='Notes', id='description', placeholder='What did you work on?', rows=4)}"></div>
+        <div th:replace="~{fragments/form :: richText(path='description', label='Notes', id='description', placeholder='What did you work on?', rows=4)}"></div>
 
         <div th:replace="~{fragments/form :: field(path='materialsUrl', label='External materials link', type='url', id='materialsUrl', placeholder='https://...', hint='For links outside DanceBook.')}"></div>
 
         <div th:replace="~{fragments/button :: submitRow(cancelHref='/training-events', submitLabel='Save Session')}"></div>
     </form>
 
+    <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
     <script th:src="@{/js/training-event-form.js}"></script>
 
 </section>
