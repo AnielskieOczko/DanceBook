@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-timeline'" class="space-y-lg">
 
-    <div th:replace="~{fragments/page :: header(title='Timeline', subtitle='Your training in order — what is coming, and everything behind it.', toolbar=~{::timelineToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Timeline', subtitle='Your training in order — what is coming, and everything behind it.', toolbar=~{::timelineToolbar})}">
         <div th:fragment="timelineToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <!-- The way back to the rest of the training pages. On a phone this cluster is the only

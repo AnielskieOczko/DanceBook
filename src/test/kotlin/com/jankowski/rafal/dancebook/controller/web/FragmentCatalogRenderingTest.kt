@@ -11,6 +11,7 @@ import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -123,6 +124,13 @@ class CatalogHarnessController {
         model.addAttribute("testForm", form)
         model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "testForm", bindingResult)
         return "test/catalog-harness :: errorSummaryAll"
+    }
+
+    @GetMapping("/test/stray-element/{fragmentName}")
+    fun renderStrayElementFragment(
+        @PathVariable fragmentName: String
+    ): String {
+        return "test/stray-element-harness :: $fragmentName"
     }
 }
 
@@ -369,5 +377,41 @@ class FragmentCatalogRenderingTest {
             "Stat card with trend but no trendUp must not emit any icon element, but found:\n${resultTrend.response.contentAsString}"
         )
     }
-}
 
+    @Test
+    fun `reference to an unambiguous fragment name resolves only to that fragment and ignores stray elements of the same tag name`() {
+        val result = mockMvc.perform(get("/test/stray-element/renderSafeTextarea").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertTrue(html.contains("intended-textarea"), "Expected intended-textarea in rendered output:\n$html")
+        assertFalse(html.contains("stray-textarea"), "Stray textarea outside fragment was matched:\n$html")
+        assertFalse(html.contains("stray-in-other"), "Stray textarea in other fragment was matched:\n$html")
+
+        val textareaCount = Regex("<textarea\\b").findAll(html).count()
+        assertEquals(1, textareaCount, "Expected exactly 1 textarea element, got $textareaCount:\n$html")
+    }
+
+    @Test
+    fun `tag-name selector matches all stray elements demonstrating the collision defect`() {
+        val result = mockMvc.perform(get("/test/stray-element/renderAmbiguousTextarea").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        val textareaCount = Regex("<textarea\\b").findAll(html).count()
+        assertTrue(textareaCount > 1, "Expected ambiguous selector to match multiple stray elements, got $textareaCount:\n$html")
+    }
+
+    @Test
+    fun `actionButton fragment resolves to single button despite stray button elements in fragments button html`() {
+        val result = mockMvc.perform(get("/test/catalog/buttonRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        val buttonCount = Regex("<button\\b").findAll(html).count()
+        assertEquals(1, buttonCount, "Expected exactly 1 button rendered, got $buttonCount:\n$html")
+    }
+}

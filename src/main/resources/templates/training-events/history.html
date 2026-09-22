@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg">
 
-    <div th:replace="~{fragments/page :: header(title='Training history', subtitle='Every session you confirmed — kept even after its calendar entry is gone.', toolbar=~{::historyToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Training history', subtitle='Every session you confirmed — kept even after its calendar entry is gone.', toolbar=~{::historyToolbar})}">
         <div th:fragment="historyToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">
