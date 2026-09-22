@@ -5,8 +5,6 @@ import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CommentService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import org.apache.http.HttpResponse
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -31,10 +29,9 @@ class CommentController(
     fun addComment(
         @PathVariable materialId: UUID,
         @RequestParam(value = "content", required = false) content: String?,
-        @AuthenticationPrincipal userDetails: UserDetails,
         model: Model,
     ): String {
-        val currentUser = appUserService.findByUsername(userDetails.username)
+        val currentUser = appUserService.getCurrentUser()
         if (!content.isNullOrBlank()) {
             try {
                 commentService.addComment(
@@ -70,10 +67,9 @@ class CommentController(
         @PathVariable materialId: UUID,
         @PathVariable commentId: UUID,
         @RequestParam(value = "content", required = false) content: String?,
-        @AuthenticationPrincipal userDetails: UserDetails,
         model: Model,
     ): String {
-        val currentUser = appUserService.findByUsername(userDetails.username)
+        val currentUser = appUserService.getCurrentUser()
         if (!content.isNullOrBlank()) {
             try {
                 commentService.updateComment(commentId, content, currentUser)
@@ -105,9 +101,8 @@ class CommentController(
     fun deleteComment(
         @PathVariable materialId: UUID,
         @PathVariable commentId: UUID,
-        @AuthenticationPrincipal userDetails: UserDetails
     ) {
-        val currentUser = appUserService.findByUsername(userDetails.username)
+        val currentUser = appUserService.getCurrentUser()
         commentService.deleteComment(commentId, currentUser)
     }
 

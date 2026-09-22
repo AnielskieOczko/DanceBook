@@ -49,12 +49,12 @@
         
         <!-- Actions -->
         <div class="flex gap-4 mt-3">
-            <button th:if="${#authentication.name == c.author.username}"
+            <button th:if="${currentUser != null and currentUser.id == c.author.id}"
                     th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
                     class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit</button>
-            <button th:if="${#authentication.name == c.author.username or #authorization.expression('hasRole(''ADMIN'')')}"
+            <button th:if="${(currentUser != null and currentUser.id == c.author.id) or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
