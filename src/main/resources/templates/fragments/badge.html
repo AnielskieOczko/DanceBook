@@ -8,7 +8,7 @@
 <!-- Standard Badge -->
 <span th:fragment="badge"
       class="badge"
-      th:classappend="${(variant == 'primary' ? 'badge-primary' : (variant == 'secondary' ? 'badge-secondary' : (variant == 'accent' ? 'badge-accent' : (variant == 'danger' or variant == 'error' ? 'badge-danger' : (variant == 'success' ? 'badge-success' : 'badge-neutral'))))) + (cls != null ? ' ' + cls : '')}">
+      th:classappend="${(variant == 'primary' ? 'badge-primary' : (variant == 'secondary' ? 'badge-secondary' : (variant == 'accent' ? 'badge-accent' : (variant == 'danger' or variant == 'error' ? 'badge-danger' : (variant == 'success' ? 'badge-success' : (variant == 'warning' ? 'badge-warning' : 'badge-neutral')))))) + (cls != null ? ' ' + cls : '')}">
     <th:block th:if="${icon != null}">
         <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm')}"></span>
     </th:block>
@@ -17,14 +17,17 @@
 
 <!-- Training Event Attendance Badge (4 States + Unconfirmed) -->
 <th:block th:fragment="attendanceBadge"
-          th:with="statusName=${event != null ? (event.attendanceStatus != null ? event.attendanceStatus.name() : (event.name != null ? event.name() : event.toString())) : 'PLANNED'},
-                   isUnconfirmed=${event != null and event.isAwaitingConfirmation != null and event.isAwaitingConfirmation}">
+          th:with="statusName=${status != null ? (status.name != null ? status.name() : status.toString()) : 'PLANNED'},
+                   isUnconfirmed=${unconfirmed != null and unconfirmed}">
     <span class="badge"
-          th:classappend="${(isUnconfirmed ? 'bg-warning/10 text-warning border border-warning/30' :
+          th:classappend="${(isUnconfirmed ? 'badge-warning' :
                              (statusName == 'ATTENDED' ? 'badge-success' :
                               (statusName == 'SKIPPED' ? 'badge-danger' : 'badge-neutral'))) +
-                           (cls != null ? ' ' + cls : '')}"
-          th:text="${isUnconfirmed ? 'UNCONFIRMED' : statusName}">PLANNED</span>
+                            (cls != null ? ' ' + cls : '')}"
+          th:text="${isUnconfirmed ? 'Needs confirmation' :
+                    (statusName == 'ATTENDED' ? 'Attended' :
+                     (statusName == 'SKIPPED' ? 'Skipped' :
+                      (statusName == 'CANCELLED' ? 'Cancelled' : 'Planned')))}">Planned</span>
 </th:block>
 
 </body>

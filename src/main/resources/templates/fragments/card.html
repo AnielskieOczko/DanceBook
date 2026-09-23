@@ -17,6 +17,7 @@
         <div>
             <div class="stat-card-value" th:text="${value}">0</div>
             <div class="stat-card-label" th:text="${label}">Label</div>
+            <div th:if="${caption != null}" class="text-sm text-on-surface-variant" th:text="${caption}"></div>
         </div>
         <div th:if="${trend != null}"
              class="text-xs flex items-center gap-1"
@@ -36,6 +37,7 @@
         <div>
             <div class="stat-card-value" th:text="${value}">0</div>
             <div class="stat-card-label" th:text="${label}">Label</div>
+            <div th:if="${caption != null}" class="text-sm text-on-surface-variant" th:text="${caption}"></div>
         </div>
         <div th:if="${trend != null}"
              class="text-xs flex items-center gap-1"

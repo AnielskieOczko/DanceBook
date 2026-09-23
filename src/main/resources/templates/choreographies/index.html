@@ -64,8 +64,7 @@
                         <div class="flex flex-wrap items-center gap-2 mb-2 pr-8">
                             <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider border border-primary-container/30"
                                   th:text="${choreo.danceType != null ? choreo.danceType.name : 'Unknown Dance'}">Waltz</span>
-                            <span th:if="${choreo.isPublic}" class="badge bg-success-soft text-success text-[10px]">Public</span>
-                            <span th:unless="${choreo.isPublic}" class="badge bg-surface-warm text-text-secondary text-[10px]">Private</span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${choreo.isPublic ? 'Public' : 'Private'}), variant=(${choreo.isPublic ? 'secondary' : 'neutral'}))}"></span>
                         </div>
 
                         <h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1 mb-1 pr-8" th:text="${choreo.name}">Competition Waltz</h3>

@@ -55,27 +55,10 @@
 
         <!-- KPI cards. Two up on a phone, four across from md. -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-            <div class="stat-card">
-                <p class="stat-card-label">Hours trained</p>
-                <p class="stat-card-value" th:text="${stats.totalTrainedLabel}">12h 30m</p>
-            </div>
-            <div class="stat-card">
-                <p class="stat-card-label">Attendance</p>
-                <p class="stat-card-value"
-                   th:text="${stats.attendanceRatePercent != null} ? ${stats.attendanceRatePercent} + '%' : '—'">75%</p>
-            </div>
-            <div class="stat-card">
-                <p class="stat-card-label">Streak</p>
-                <p class="stat-card-value" th:text="${stats.currentStreak}">4</p>
-                <p class="text-sm text-text-secondary">consecutive, all time</p>
-            </div>
-            <div class="stat-card">
-                <p class="stat-card-label">Attended</p>
-                <p class="stat-card-value" th:text="${stats.counts.attended}">18</p>
-                <p class="text-sm text-text-secondary"
-                   th:text="${stats.counts.skipped} + ' skipped · ' + ${stats.counts.upcoming} + ' upcoming'">
-                    2 skipped · 3 upcoming</p>
-            </div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label='Hours trained')}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label='Attendance')}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label='Streak', caption='consecutive, all time')}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.counts.attended}, label='Attended', caption=(${stats.counts.skipped + ' skipped · ' + stats.counts.upcoming + ' upcoming'}))}"></div>
         </div>
 
         <!-- Nudge. Unconfirmed sessions are excluded from every figure above, so the way

@@ -24,7 +24,9 @@
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                     <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
-                    <span th:if="${dt.category != null}" class="badge-secondary text-[10px] py-0.5" th:text="${dt.category.name}">Category</span>
+                    <th:block th:if="${dt.category != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=${dt.category.name}, variant='secondary')}"></span>
+                    </th:block>
                 </div>
             </div>
             <div class="flex items-center gap-2">

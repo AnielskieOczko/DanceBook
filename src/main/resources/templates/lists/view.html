@@ -24,12 +24,19 @@
             <div>
                 <h1 class="page-title mb-2 text-4xl" th:text="${customList.name}">List Name</h1>
                 <div class="flex flex-wrap gap-2 mt-2">
-                    <span th:each="t : ${customList.danceTypes}" class="badge-primary" th:text="${t.name}">Type</span>
-                    <span th:each="c : ${customList.danceCategories}" class="badge-secondary" th:text="${c.name}">Cat</span>
-                    <span th:if="${customList.minRating != null}" class="badge-accent" th:text="${customList.minRating} + '+ stars'">Rating</span>
-                    <span th:if="${customList.nameFilter != null}" class="badge-neutral" th:text="'Search: ' + ${customList.nameFilter}">Filter</span>
-                    <span th:if="${customList.isPublic}" class="badge-secondary">Public</span>
-                    <span th:if="${!customList.isPublic}" class="badge-neutral">Private</span>
+                    <th:block th:each="t : ${customList.danceTypes}">
+                        <span th:replace="~{fragments/badge :: badge(label=${t.name}, variant='primary')}"></span>
+                    </th:block>
+                    <th:block th:each="c : ${customList.danceCategories}">
+                        <span th:replace="~{fragments/badge :: badge(label=${c.name}, variant='secondary')}"></span>
+                    </th:block>
+                    <th:block th:if="${customList.minRating != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=(${customList.minRating + '+ stars'}), variant='accent')}"></span>
+                    </th:block>
+                    <th:block th:if="${customList.nameFilter != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=(${'Search: ' + customList.nameFilter}), variant='neutral')}"></span>
+                    </th:block>
+                    <span th:replace="~{fragments/badge :: badge(label=(${customList.isPublic ? 'Public' : 'Private'}), variant=(${customList.isPublic ? 'secondary' : 'neutral'}))}"></span>
                 </div>
             </div>
             

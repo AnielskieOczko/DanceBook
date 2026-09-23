@@ -221,13 +221,7 @@
                         <span th:each="segment : ${event.segments}" class="badge-secondary"
                               th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
 
-                        <span th:if="${event.isAwaitingConfirmation}" class="badge-accent">Needs confirmation</span>
-
-                        <span th:unless="${event.isAwaitingConfirmation}"
-                              th:classappend="${event.attendanceStatus.name() == 'ATTENDED' ? 'badge-success' :
-                                                event.attendanceStatus.name() == 'SKIPPED' ? 'badge-danger' :
-                                                event.attendanceStatus.name() == 'CANCELLED' ? 'badge-neutral' : 'badge-neutral'}"
-                              th:text="${event.attendanceStatus}">PLANNED</span>
+                        <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=${event.isAwaitingConfirmation})}"></span>
                     </div>
 
                     <!-- One-tap confirmation for a past session still marked PLANNED. It sits in

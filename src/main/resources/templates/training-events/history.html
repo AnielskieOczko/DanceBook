@@ -86,8 +86,7 @@
                         <span th:each="segment : ${record.segments}" class="badge-secondary"
                               th:text="${segment.label} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
 
-                        <span th:classappend="${record.outcome.name() == 'ATTENDED' ? 'badge-success' : 'badge-danger'}"
-                              th:text="${row.swatch.label}">Attended</span>
+                        <span th:replace="~{fragments/badge :: attendanceBadge(status=${record.outcome})}"></span>
 
                         <span th:if="${row.isOrphaned}" class="badge-neutral">Session deleted</span>
                     </div>
