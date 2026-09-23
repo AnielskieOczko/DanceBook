@@ -10,11 +10,13 @@
    th:href="${href}"
    th:target="${target}"
    th:class="${(variant == 'secondary' ? 'btn-secondary' : (variant == 'outline' ? 'btn-outline' : (variant == 'danger' ? 'btn-danger' : (variant == 'ghost' ? 'btn-ghost' : (variant == 'icon' ? 'btn-icon' : 'btn-primary'))))) + (size == 'sm' ? ' btn-sm' : '') + (cls != null ? ' ' + cls : '')}">
-    <span th:if="${icon != null and iconPos != 'right'}"
-          th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    <th:block th:if="${icon != null and iconPos != 'right'}">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    </th:block>
     <span th:if="${label != null}" th:text="${label}">Link</span>
-    <span th:if="${icon != null and iconPos == 'right'}"
-          th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    <th:block th:if="${icon != null and iconPos == 'right'}">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    </th:block>
 </a>
 
 <!-- Button element -->
@@ -24,11 +26,13 @@
         th:value="${value}"
         th:disabled="${disabled == true}"
         th:class="${(variant == 'secondary' ? 'btn-secondary' : (variant == 'outline' ? 'btn-outline' : (variant == 'danger' ? 'btn-danger' : (variant == 'ghost' ? 'btn-ghost' : (variant == 'icon' ? 'btn-icon' : 'btn-primary'))))) + (size == 'sm' ? ' btn-sm' : '') + (cls != null ? ' ' + cls : '')}">
-    <span th:if="${icon != null and iconPos != 'right'}"
-          th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    <th:block th:if="${icon != null and iconPos != 'right'}">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    </th:block>
     <span th:if="${label != null}" th:text="${label}">Button</span>
-    <span th:if="${icon != null and iconPos == 'right'}"
-          th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    <th:block th:if="${icon != null and iconPos == 'right'}">
+        <span th:replace="~{fragments/icon :: icon(name=${icon}, size=${size == 'sm' ? 'sm' : 'md'})}"></span>
+    </th:block>
 </button>
 
 <!-- Icon-only button or link -->
@@ -61,8 +65,9 @@
        class="btn-outline"
        th:text="${cancelLabel ?: 'Cancel'}">Cancel</a>
     <button type="submit" class="btn-primary">
-        <span th:if="${submitIcon != null}"
-              th:replace="~{fragments/icon :: icon(name=${submitIcon})}"></span>
+        <th:block th:if="${submitIcon != null}">
+            <span th:replace="~{fragments/icon :: icon(name=${submitIcon})}"></span>
+        </th:block>
         <span th:text="${submitLabel ?: 'Save changes'}">Save changes</span>
     </button>
 </div>

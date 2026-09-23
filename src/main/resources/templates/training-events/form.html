@@ -19,8 +19,9 @@
         <div th:replace="~{fragments/form :: errorSummary}"></div>
 
         <!-- Target / Owning Calendar Statement -->
-        <div th:if="${calendarError}"
-             th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
+        <th:block th:if="${calendarError}">
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>
+        </th:block>
 
         <div th:if="${targetCalendar != null}"
              class="bg-surface-container rounded-md p-4 flex items-center justify-between">

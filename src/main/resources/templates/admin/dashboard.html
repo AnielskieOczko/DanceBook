@@ -405,7 +405,9 @@
 
     <tr th:fragment="editUserRow" th:id="'user-row-' + ${editUser.id}" class="bg-primary-soft/20">
         <td colspan="4" class="p-4">
-            <div th:if="${updateUserError != null}" class="mb-4" th:replace="~{fragments/alert :: alert(variant='danger', text=${updateUserError})}"></div>
+            <th:block th:if="${updateUserError != null}">
+                <div class="mb-4" th:replace="~{fragments/alert :: alert(variant='danger', text=${updateUserError})}"></div>
+            </th:block>
             <form th:hx-post="@{/admin/users/{id}/edit(id=${editUser.id})}" hx-target="closest tr" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
                     <label class="form-label text-xs">Username</label>

@@ -207,6 +207,7 @@ class FragmentCatalogRenderingTest {
             "headerAll",
             "sectionTitleAll",
             "statCardAll",
+            "statCardTrendNoIcon",
             "dataTableAll",
             "stepTableAll",
             "badgeAll",
@@ -310,4 +311,63 @@ class FragmentCatalogRenderingTest {
         val html = result.response.contentAsString
         assertFalse(html.contains("rich-text"), "Null value should produce no rich-text element, but got:\n$html")
     }
+
+    @Test
+    fun `page header without icon produces no icon element`() {
+        val result = mockMvc.perform(get("/test/catalog/headerRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertFalse(
+            html.contains("material-symbols-outlined"),
+            "Header rendered without icon must not emit any icon element, but found:\n$html"
+        )
+    }
+
+    @Test
+    fun `section title without icon produces no icon element`() {
+        val result = mockMvc.perform(get("/test/catalog/sectionTitleRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertFalse(
+            html.contains("material-symbols-outlined"),
+            "Section title rendered without icon must not emit any icon element, but found:\n$html"
+        )
+    }
+
+    @Test
+    fun `badge without icon produces no icon element`() {
+        val result = mockMvc.perform(get("/test/catalog/badgeRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        assertFalse(
+            html.contains("material-symbols-outlined"),
+            "Badge rendered without icon must not emit any icon element, but found:\n$html"
+        )
+    }
+
+    @Test
+    fun `stat card without icon produces no icon element`() {
+        val resultRequired = mockMvc.perform(get("/test/catalog/statCardRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        assertFalse(
+            resultRequired.response.contentAsString.contains("material-symbols-outlined"),
+            "Stat card without icon must not emit any icon element, but found:\n${resultRequired.response.contentAsString}"
+        )
+
+        val resultTrend = mockMvc.perform(get("/test/catalog/statCardTrendNoIcon").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        assertFalse(
+            resultTrend.response.contentAsString.contains("material-symbols-outlined"),
+            "Stat card with trend but no trendUp must not emit any icon element, but found:\n${resultTrend.response.contentAsString}"
+        )
+    }
 }
+

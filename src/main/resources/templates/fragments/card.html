@@ -21,8 +21,9 @@
         <div th:if="${trend != null}"
              class="text-xs flex items-center gap-1"
              th:classappend="${trendUp == true ? 'text-primary' : (trendUp == false ? 'text-error' : 'text-on-surface-variant')}">
-            <span th:if="${trendUp != null}"
-                  th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            <th:block th:if="${trendUp != null}">
+                <span th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            </th:block>
             <span th:text="${trend}">+10%</span>
         </div>
     </a>
@@ -39,8 +40,9 @@
         <div th:if="${trend != null}"
              class="text-xs flex items-center gap-1"
              th:classappend="${trendUp == true ? 'text-primary' : (trendUp == false ? 'text-error' : 'text-on-surface-variant')}">
-            <span th:if="${trendUp != null}"
-                  th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            <th:block th:if="${trendUp != null}">
+                <span th:replace="~{fragments/icon :: icon(name=${trendUp ? 'trending_up' : 'trending_down'}, size='sm')}"></span>
+            </th:block>
             <span th:text="${trend}">+10%</span>
         </div>
     </div>

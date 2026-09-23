@@ -173,6 +173,11 @@
     <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users', icon='group', trend='+12%', trendUp=true, href='/admin/users', cls='extra-cls')}"></div>
 </div>
 
+<div th:fragment="statCardTrendNoIcon">
+    <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users', trend='+12%')}"></div>
+</div>
+
+
 <!-- 17. TABLE: dataTable -->
 <div th:fragment="dataTableRequired">
     <div th:replace="~{fragments/table :: dataTable(head=~{::dtHead}, body=~{::dtBody})}">
