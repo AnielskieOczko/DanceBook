@@ -114,6 +114,14 @@ class TailwindOutputCssTest {
     }
 
     @Test
+    fun `badge-warning component is emitted in output css`() {
+        assertTrue(
+            css.contains(".badge-warning"),
+            "Expected output.css to contain .badge-warning rule."
+        )
+    }
+
+    @Test
     fun `trix-editor and toolbar skin survive into output css`() {
         assertTrue(
             css.contains("trix-editor"),

@@ -170,7 +170,7 @@
 </div>
 
 <div th:fragment="statCardAll">
-    <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users', icon='group', trend='+12%', trendUp=true, href='/admin/users', cls='extra-cls')}"></div>
+    <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users', caption='Active accounts', icon='group', trend='+12%', trendUp=true, href='/admin/users', cls='extra-cls')}"></div>
 </div>
 
 <div th:fragment="statCardTrendNoIcon">
@@ -213,11 +213,11 @@
 
 <!-- 20. BADGE: attendanceBadge -->
 <div th:fragment="attendanceBadgeRequired">
-    <span th:replace="~{fragments/badge :: attendanceBadge(event=${event})}"></span>
+    <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus})}"></span>
 </div>
 
 <div th:fragment="attendanceBadgeAll">
-    <span th:replace="~{fragments/badge :: attendanceBadge(event=${event}, cls='extra-cls')}"></span>
+    <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=true, cls='extra-cls')}"></span>
 </div>
 
 <!-- 21. EMPTY: emptyState -->

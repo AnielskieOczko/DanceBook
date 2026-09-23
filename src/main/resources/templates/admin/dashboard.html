@@ -256,8 +256,7 @@
                     <tr th:each="log : ${cleanupLogs}" class="table-row">
                         <td class="table-cell font-medium" th:text="${#temporals.format(log.executedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
                         <td class="table-cell">
-                            <span th:if="${log.isDryRun}" class="badge-accent">Simulate</span>
-                            <span th:if="${!log.isDryRun}" class="badge-danger">Delete</span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${log.isDryRun ? 'Simulate' : 'Delete'}), variant=(${log.isDryRun ? 'accent' : 'danger'}))}"></span>
                         </td>
                         <td class="table-cell" th:text="${log.filesDeletedCount}">0</td>
                         <td class="table-cell">
@@ -335,8 +334,7 @@
                         <td class="table-cell font-medium" th:text="${f.name}">Name</td>
                         <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : 'Unknown'}">Size</td>
                         <td class="table-cell">
-                            <span th:if="${f.isOrphaned}" class="badge-danger">Orphaned</span>
-                            <span th:if="${!f.isOrphaned}" class="badge-success">Linked</span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? 'Orphaned' : 'Linked'}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
                         </td>
                     </tr>
                     <tr th:if="${driveFiles.isEmpty()}">
@@ -393,8 +391,7 @@
             <div class="text-xs text-text-secondary/70 mt-0.5" th:text="'@' + ${user.username}"></div>
         </td>
         <td class="table-cell">
-            <span th:if="${user.role.name() == 'ADMIN'}" class="badge-primary">Admin</span>
-            <span th:if="${user.role.name() != 'ADMIN'}" class="badge-neutral">User</span>
+            <span th:replace="~{fragments/badge :: badge(label=(${user.role.name() == 'ADMIN' ? 'Admin' : 'User'}), variant=(${user.role.name() == 'ADMIN' ? 'primary' : 'neutral'}))}"></span>
         </td>
         <td class="table-cell text-text-secondary" th:text="${#temporals.format(user.createdAt, 'MMM dd, yyyy')}">Date</td>
         <td class="table-cell text-right">

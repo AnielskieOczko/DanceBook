@@ -379,6 +379,41 @@ class FragmentCatalogRenderingTest {
     }
 
     @Test
+    fun `stat card renders caption when present and omits it when absent`() {
+        val resultAll = mockMvc.perform(get("/test/catalog/statCardAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val allHtml = resultAll.response.contentAsString
+        assertTrue(allHtml.contains("Active accounts"), "Expected caption 'Active accounts' in statCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("text-sm text-on-surface-variant"), "Expected caption styling in statCardAll:\n$allHtml")
+
+        val resultRequired = mockMvc.perform(get("/test/catalog/statCardRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val reqHtml = resultRequired.response.contentAsString
+        assertFalse(reqHtml.contains("text-sm text-on-surface-variant"), "statCardRequired must not render caption element:\n$reqHtml")
+    }
+
+    @Test
+    fun `attendance badge renders sentence-case labels and component classes`() {
+        val resultRequired = mockMvc.perform(get("/test/catalog/attendanceBadgeRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val reqHtml = resultRequired.response.contentAsString
+        assertTrue(reqHtml.contains("Attended"), "Expected sentence-case 'Attended' in attendanceBadgeRequired:\n$reqHtml")
+        assertTrue(reqHtml.contains("badge-success"), "Expected 'badge-success' in attendanceBadgeRequired:\n$reqHtml")
+
+        val resultAll = mockMvc.perform(get("/test/catalog/attendanceBadgeAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val allHtml = resultAll.response.contentAsString
+        assertTrue(allHtml.contains("Needs confirmation"), "Expected 'Needs confirmation' in attendanceBadgeAll:\n$allHtml")
+        assertTrue(allHtml.contains("badge-warning"), "Expected 'badge-warning' in attendanceBadgeAll:\n$allHtml")
+        assertTrue(allHtml.contains("extra-cls"), "Expected 'extra-cls' in attendanceBadgeAll:\n$allHtml")
+    }
+
+
+    @Test
     fun `reference to an unambiguous fragment name resolves only to that fragment and ignores stray elements of the same tag name`() {
         val result = mockMvc.perform(get("/test/stray-element/renderSafeTextarea").with(csrf()))
             .andExpect(status().isOk)

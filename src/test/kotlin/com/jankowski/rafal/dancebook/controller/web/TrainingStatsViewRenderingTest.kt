@@ -104,9 +104,11 @@ class TrainingStatsViewRenderingTest {
         mockMvc.perform(get("/training-events/stats").with(csrf()))
             .andExpect(status().isOk)
             .andExpect(view().name("training-events/stats"))
-            // KPI cards, formatted via TrainingStats' own labels.
+            // KPI cards, formatted via TrainingStats' own labels and sub-captions.
             .andExpect(content().string(org.hamcrest.Matchers.containsString("12h 30m")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("90%")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("consecutive, all time")))
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("2 skipped · 2 upcoming")))
             // The style legend and the session-type legend, straight from the slices.
             .andExpect(content().string(org.hamcrest.Matchers.containsString("Standard")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("TRAINING")))
