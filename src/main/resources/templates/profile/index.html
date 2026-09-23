@@ -14,7 +14,7 @@
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
             </button>
         </div>
-        <div th:replace="~{fragments/page :: header(title=${appUser.displayName}, subtitle=${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}, cls='mb-0')}"></div>
+        <div th:replace="~{fragments/page :: pageHeader(title=${appUser.displayName}, subtitle=${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}, cls='mb-0')}"></div>
         <div class="w-full grid grid-cols-2 gap-sm pt-sm border-t border-outline-variant">
             <div class="bg-surface-container-low p-sm rounded-lg flex flex-col items-center md:items-start">
                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs">Library</span>

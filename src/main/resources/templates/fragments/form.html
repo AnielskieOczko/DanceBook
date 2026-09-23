@@ -48,7 +48,7 @@
 </div>
 
 <!-- Select Dropdown -->
-<div th:fragment="select" class="form-group" th:classappend="${cls}">
+<div th:fragment="selectField" class="form-group" th:classappend="${cls}">
     <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
         <span th:text="${label}">Label</span>
         <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>
@@ -88,7 +88,7 @@
 </div>
 
 <!-- Textarea -->
-<div th:fragment="textarea" class="form-group" th:classappend="${cls}">
+<div th:fragment="textareaField" class="form-group" th:classappend="${cls}">
     <label th:if="${label != null}" th:for="${id ?: path}" class="form-label">
         <span th:text="${label}">Label</span>
         <span th:if="${required == true}" class="text-error font-bold" aria-hidden="true"> *</span>

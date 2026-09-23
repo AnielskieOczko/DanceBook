@@ -28,20 +28,20 @@
 
 <!-- 2. BUTTON: link -->
 <div th:fragment="linkRequired">
-    <a th:replace="~{fragments/button :: link(href='/dest', label='Go')}"></a>
+    <a th:replace="~{fragments/button :: linkButton(href='/dest', label='Go')}"></a>
 </div>
 
 <div th:fragment="linkAll">
-    <a th:replace="~{fragments/button :: link(href='/dest', label='Go', variant='secondary', size='sm', icon='arrow_forward', iconPos='right', cls='extra-cls')}"></a>
+    <a th:replace="~{fragments/button :: linkButton(href='/dest', label='Go', variant='secondary', size='sm', icon='arrow_forward', iconPos='right', cls='extra-cls')}"></a>
 </div>
 
 <!-- 3. BUTTON: button -->
 <div th:fragment="buttonRequired">
-    <button th:replace="~{fragments/button :: button(label='Save')}"></button>
+    <button th:replace="~{fragments/button :: actionButton(label='Save')}"></button>
 </div>
 
 <div th:fragment="buttonAll">
-    <button th:replace="~{fragments/button :: button(label='Delete', type='submit', variant='danger', size='sm', icon='delete', iconPos='left', name='action', value='del', cls='extra-cls', disabled=true)}"></button>
+    <button th:replace="~{fragments/button :: actionButton(label='Delete', type='submit', variant='danger', size='sm', icon='delete', iconPos='left', name='action', value='del', cls='extra-cls', disabled=true)}"></button>
 </div>
 
 <!-- 4. BUTTON: iconButton -->
@@ -77,20 +77,20 @@
 
 <!-- 7. FORM: select -->
 <form th:fragment="selectRequired" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: select(path='category')}"></div>
+    <div th:replace="~{fragments/form :: selectField(path='category')}"></div>
 </form>
 
 <form th:fragment="selectAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: select(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat', multiple=false, hintId='custom-select-hint')}"></div>
+    <div th:replace="~{fragments/form :: selectField(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat', multiple=false, hintId='custom-select-hint')}"></div>
 </form>
 
 <!-- 8. FORM: textarea -->
 <form th:fragment="textareaRequired" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: textarea(path='description')}"></div>
+    <div th:replace="~{fragments/form :: textareaField(path='description')}"></div>
 </form>
 
 <form th:fragment="textareaAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: textarea(path='description', label='Description', hint='Optional details', required=false, placeholder='Write...', rows=6, disabled=false, cls='extra-cls', id='custom-desc', hintId='custom-textarea-hint')}"></div>
+    <div th:replace="~{fragments/form :: textareaField(path='description', label='Description', hint='Optional details', required=false, placeholder='Write...', rows=6, disabled=false, cls='extra-cls', id='custom-desc', hintId='custom-textarea-hint')}"></div>
 </form>
 
 <!-- 9. FORM: checkbox -->
@@ -142,13 +142,13 @@
     <div th:replace="~{fragments/form :: rawField(name='comment', label='Add Comment', type='text', value='Initial text', hint='Be helpful', required=true, placeholder='Comment...', disabled=false, cls='extra-cls', id='custom-raw')}"></div>
 </div>
 
-<!-- 14. PAGE: header -->
+<!-- 14. PAGE: pageHeader -->
 <div th:fragment="headerRequired">
-    <div th:replace="~{fragments/page :: header(title='Dashboard')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title='Dashboard')}"></div>
 </div>
 
 <div th:fragment="headerAll">
-    <div th:replace="~{fragments/page :: header(title='Dashboard', subtitle='Welcome back', icon='dashboard', toolbar=~{::headerToolbar}, cls='extra-cls')}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Dashboard', subtitle='Welcome back', icon='dashboard', toolbar=~{::headerToolbar}, cls='extra-cls')}">
         <div th:fragment="headerToolbar" class="flex gap-2">
             <button class="btn-primary">New Action</button>
         </div>

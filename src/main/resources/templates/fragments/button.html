@@ -6,7 +6,7 @@
 <body>
 
 <!-- Link styled as a button -->
-<a th:fragment="link"
+<a th:fragment="linkButton"
    th:href="${href}"
    th:target="${target}"
    th:class="${(variant == 'secondary' ? 'btn-secondary' : (variant == 'outline' ? 'btn-outline' : (variant == 'danger' ? 'btn-danger' : (variant == 'ghost' ? 'btn-ghost' : (variant == 'icon' ? 'btn-icon' : 'btn-primary'))))) + (size == 'sm' ? ' btn-sm' : '') + (cls != null ? ' ' + cls : '')}">
@@ -20,7 +20,7 @@
 </a>
 
 <!-- Button element -->
-<button th:fragment="button"
+<button th:fragment="actionButton"
         th:type="${type ?: 'button'}"
         th:name="${name}"
         th:value="${value}"

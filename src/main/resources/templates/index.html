@@ -5,7 +5,7 @@
 <section th:with="activeNav='home'" class="flex flex-col gap-xl">
 
     <!-- Welcome Section -->
-    <div th:replace="~{fragments/page :: header(title=${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}, subtitle='Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.', cls='order-1')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}, subtitle='Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.', cls='order-1')}"></div>
 
     <!-- Stats Grid (Bento Style) -->
     <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter order-3 lg:order-2">
