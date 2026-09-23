@@ -434,8 +434,17 @@ layer(base);
   @apply px-4 py-3 text-tabular;
 }
 
+@utility table-header-pinned {
+  @apply sticky left-0 bg-surface-container border-r border-outline-variant z-20;
+}
+
+@utility table-cell-pinned {
+  @apply sticky left-0 border-r border-outline-variant z-10 transition-colors;
+  background-color: inherit;
+}
+
 @utility table-row {
-  @apply border-b border-outline-variant hover:bg-surface-container/50 transition-colors;
+  @apply bg-surface border-b border-outline-variant hover:bg-surface-container/50 transition-colors;
 }
 
 @utility divider {

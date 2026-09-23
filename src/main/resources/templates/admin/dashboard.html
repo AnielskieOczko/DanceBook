@@ -215,11 +215,11 @@
             </th:block>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Registered Users">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell text-left">User</th>
+                        <th class="table-cell table-header-pinned text-left">User</th>
                         <th class="table-cell text-left">Role</th>
                         <th class="table-cell text-left">Joined</th>
                         <th class="table-cell text-right">Actions</th>
@@ -242,11 +242,11 @@
                 Cleanup Job History
             </h2>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Cleanup Job History">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell text-left">Executed At</th>
+                        <th class="table-cell table-header-pinned text-left">Executed At</th>
                         <th class="table-cell text-left">Type</th>
                         <th class="table-cell text-left">Files Deleted</th>
                         <th class="table-cell text-left">Details</th>
@@ -254,7 +254,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="log : ${cleanupLogs}" class="table-row">
-                        <td class="table-cell font-medium" th:text="${#temporals.format(log.executedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                        <td class="table-cell table-cell-pinned font-medium" th:text="${#temporals.format(log.executedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
                         <td class="table-cell">
                             <span th:replace="~{fragments/badge :: badge(label=(${log.isDryRun ? 'Simulate' : 'Delete'}), variant=(${log.isDryRun ? 'accent' : 'danger'}))}"></span>
                         </td>
@@ -320,18 +320,18 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto border border-border rounded-button">
+        <div class="overflow-x-auto border border-border rounded-button" tabindex="0" role="region" aria-label="Google Drive Files">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell text-left">File Name</th>
+                        <th class="table-cell table-header-pinned text-left">File Name</th>
                         <th class="table-cell text-left">Size</th>
                         <th class="table-cell text-left">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="f : ${driveFiles}" class="table-row" th:classappend="${f.isOrphaned} ? 'bg-danger-soft/50' : ''">
-                        <td class="table-cell font-medium" th:text="${f.name}">Name</td>
+                        <td class="table-cell table-cell-pinned font-medium" th:text="${f.name}">Name</td>
                         <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : 'Unknown'}">Size</td>
                         <td class="table-cell">
                             <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? 'Orphaned' : 'Linked'}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
@@ -385,7 +385,7 @@
     </div>
 
     <tr th:fragment="userRow" th:id="'user-row-' + ${user.id}" class="table-row">
-        <td class="table-cell">
+        <td class="table-cell table-cell-pinned">
             <div class="font-medium text-text-primary" th:text="${user.displayName}"></div>
             <div class="text-xs text-text-secondary" th:text="${user.email}"></div>
             <div class="text-xs text-text-secondary/70 mt-0.5" th:text="'@' + ${user.username}"></div>
@@ -465,11 +465,11 @@
             </th:block>
         </div>
 
-        <div th:if="${calendars != null && !calendars.isEmpty()}" class="overflow-x-auto">
+        <div th:if="${calendars != null && !calendars.isEmpty()}" class="overflow-x-auto" tabindex="0" role="region" aria-label="Training Calendars">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell text-left">Display Name</th>
+                        <th class="table-cell table-header-pinned text-left">Display Name</th>
                         <th class="table-cell text-left">Google ID</th>
                         <th class="table-cell text-left">Last Synced</th>
                         <th class="table-cell text-left">Default</th>
@@ -490,7 +490,7 @@
     </div>
 
     <tr th:fragment="calendarRow" th:id="'calendar-row-' + ${cal.id}" class="table-row">
-        <td class="table-cell font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
+        <td class="table-cell table-cell-pinned font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
         <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-[20rem]" th:text="${cal.googleCalendarId}">cal-id</td>
         <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
         <td class="table-cell">

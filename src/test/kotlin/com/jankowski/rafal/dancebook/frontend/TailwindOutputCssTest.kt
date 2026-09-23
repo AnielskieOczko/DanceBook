@@ -122,6 +122,55 @@ class TailwindOutputCssTest {
     }
 
     @Test
+    fun `pinned table utilities survive into output css`() {
+        assertTrue(
+            css.contains(".table-header-pinned"),
+            "Expected output.css to contain .table-header-pinned rule."
+        )
+        assertTrue(
+            css.contains(".table-cell-pinned"),
+            "Expected output.css to contain .table-cell-pinned rule."
+        )
+    }
+
+    @Test
+    fun `pinned table utilities use required design tokens for opacity and seam`() {
+        val headerRegex = Regex("""\.table-header-pinned\s*\{[^}]*var\(--color-surface-container\)[^}]*\}""")
+        assertTrue(
+            headerRegex.containsMatchIn(css),
+            ".table-header-pinned must use var(--color-surface-container) token."
+        )
+        val rowRegex = Regex("""\.table-row\s*\{[^}]*var\(--color-surface\)[^}]*\}""")
+        assertTrue(
+            rowRegex.containsMatchIn(css),
+            ".table-row must define opaque base background using var(--color-surface)."
+        )
+        val cellRegex = Regex("""\.table-cell-pinned\s*\{[^}]*background-color\s*:\s*inherit[^}]*\}""")
+        assertTrue(
+            cellRegex.containsMatchIn(css),
+            ".table-cell-pinned must inherit background-color from its row."
+        )
+        val seamRegex = Regex("""\.table-cell-pinned\s*\{[^}]*var\(--color-outline-variant\)[^}]*\}""")
+        assertTrue(
+            seamRegex.containsMatchIn(css),
+            ".table-cell-pinned must use var(--color-outline-variant) token for seam."
+        )
+    }
+
+    @Test
+    fun `table row and pinned cell utilities support dynamic row state tracking via inheritance`() {
+        assertTrue(
+            css.contains(".table-row:hover"),
+            "Expected output.css to contain .table-row:hover rule for row hover highlight."
+        )
+        val cellInheritRegex = Regex("""\.table-cell-pinned\s*\{[^}]*background-color\s*:\s*inherit[^}]*\}""")
+        assertTrue(
+            cellInheritRegex.containsMatchIn(css),
+            ".table-cell-pinned must use background-color: inherit to dynamically track row states."
+        )
+    }
+
+    @Test
     fun `trix-editor and toolbar skin survive into output css`() {
         assertTrue(
             css.contains("trix-editor"),
