@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: header(title=${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}, subtitle='Define a specific dance style and assign it to a category.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${danceTypeId == null ? 'New Dance Style' : 'Edit Dance Style'}, subtitle='Define a specific dance style and assign it to a category.')}"></div>
 
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
           th:object="${danceType}" method="post" class="card p-8">
@@ -14,7 +14,7 @@
         <div class="space-y-6">
             <div th:replace="~{fragments/form :: field(path='name', label='Style Name', required=true, placeholder='e.g. Waltz, Tango, Foxtrot...', id='typeName')}"></div>
 
-            <div th:replace="~{fragments/form :: select(path='categoryId', label='Category', required=true, options=${danceCategories}, optValue='id', optLabel='name', placeholder='-- Select Category --', id='categoryId')}"></div>
+            <div th:replace="~{fragments/form :: selectField(path='categoryId', label='Category', required=true, options=${danceCategories}, optValue='id', optLabel='name', placeholder='-- Select Category --', id='categoryId')}"></div>
         </div>
 
         <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">

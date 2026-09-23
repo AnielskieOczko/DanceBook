@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -18,6 +19,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.testcontainers.containers.PostgreSQLContainer
@@ -292,5 +294,34 @@ class FormValidationWebTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
             .andExpect(content().string(containsString("border-error")))
+    }
+
+    @Test
+    fun `no form screen renders duplicate field names`() {
+        val formEndpoints = listOf(
+            "/materials/new",
+            "/dance-figures/new",
+            "/dance-categories/new",
+            "/dance-types/new",
+            "/lists/new",
+            "/choreographies/new",
+            "/training-events/new",
+            "/profile"
+        )
+
+        for (endpoint in formEndpoints) {
+            val result = mockMvc.perform(
+                get(endpoint)
+                    .with(csrf())
+                    .with(user(adminUser.username).roles("ADMIN", "USER"))
+            ).andExpect(status().isOk).andReturn()
+
+            val html = result.response.contentAsString
+            val errors = findDuplicateFormFieldErrors(html, endpoint)
+            assertTrue(
+                errors.isEmpty(),
+                "Found duplicate field names in $endpoint:\n" + errors.joinToString("\n")
+            )
+        }
     }
 }

@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-lg">
 
-    <div th:replace="~{fragments/page :: header(title=${event.title}, subtitleSlot=~{::eventSubtitle}, toolbar=~{::eventToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=${event.title}, subtitleSlot=~{::eventSubtitle}, toolbar=~{::eventToolbar})}">
         <th:block th:fragment="eventSubtitle">
             <p class="page-subtitle">
                 <span th:text="${#temporals.format(event.startTime, 'EEEE, MMMM d yyyy · HH:mm')}">Thursday, September 10 2026 · 18:00</span>

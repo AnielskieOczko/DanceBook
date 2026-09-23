@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/page :: header(title='Training', subtitle=${#lists.size(events)} + ' sessions logged', toolbar=~{::listToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${#lists.size(events)} + ' sessions logged', toolbar=~{::listToolbar})}">
         <div th:fragment="listToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <div class="flex flex-wrap items-center gap-2 shrink-0">

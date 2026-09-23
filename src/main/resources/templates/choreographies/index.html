@@ -5,7 +5,7 @@
 <section th:with="activeNav='choreographies'" class="space-y-lg relative">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: header(title='Choreographies', subtitle=${#lists.size(choreographies)} + ' choreography routines created', actionUrl='/choreographies/new', actionText='New Choreography', actionIcon='add', actionVariant='primary')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title='Choreographies', subtitle=${#lists.size(choreographies)} + ' choreography routines created', actionUrl='/choreographies/new', actionText='New Choreography', actionIcon='add', actionVariant='primary')}"></div>
 
     <!-- View Toggles and Filter Summary -->
     <section class="bg-background z-40 py-2 border-b border-outline-variant/30 transition-all duration-300">

@@ -373,6 +373,16 @@ class WebRouteSmokeTest {
                         resolvedException
                     )
                 }
+
+                // Assert no rendered form posts the same field name more than once (Issue #121)
+                val html = mvcResult.response.contentAsString
+                val duplicateErrors = findDuplicateFormFieldErrors(html, uri)
+                if (duplicateErrors.isNotEmpty()) {
+                    throw AssertionError(
+                        "Route GET ${route.pattern} ($uri) rendered form with duplicate field names:\n" +
+                            duplicateErrors.joinToString("\n")
+                    )
+                }
             }
         }
     }

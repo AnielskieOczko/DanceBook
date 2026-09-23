@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: header(title=${listId == null ? 'New Collection' : 'Edit Collection'}, subtitle='Create a filtered collection of your dance materials with a beautiful cover image.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${listId == null ? 'New Collection' : 'Edit Collection'}, subtitle='Create a filtered collection of your dance materials with a beautiful cover image.')}"></div>
 
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
           th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">
@@ -61,10 +61,10 @@
                 <div th:replace="~{fragments/form :: field(path='minRating', label='Minimum Rating', type='number', min='1', max='5', placeholder='1-5', id='minRating')}"></div>
 
                 <!-- Dance Types -->
-                <div th:replace="~{fragments/form :: select(path='danceTypeIds', label='Dance Styles', options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceTypeIds')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeIds', label='Dance Styles', options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceTypeIds')}"></div>
 
                 <!-- Dance Categories -->
-                <div th:replace="~{fragments/form :: select(path='danceCategoryIds', label='Categories', options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceCategoryIds')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceCategoryIds', label='Categories', options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceCategoryIds')}"></div>
             </div>
         </div>
 
