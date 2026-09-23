@@ -1,6 +1,11 @@
 <div th:fragment="comment-list" id="comment-section" class="space-y-8">
     <h2 class="font-headline-md text-headline-md text-on-surface">Director's Notes</h2>
 
+    <!-- Error Alert -->
+    <div th:if="${commentError != null}">
+        <div th:replace="~{fragments/alert :: alert(variant='error', text=${commentError})}"></div>
+    </div>
+
     <!-- Input Area -->
     <div class="mb-8">
         <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
@@ -64,9 +69,13 @@
 
 <div th:fragment="comment-edit-form" class="group flex gap-4">
     <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
-        <span th:text="${c != null && c.author.displayName != null ? c.author.displayName.substring(0,1) : 'U'}">U</span>
+        <span th:text="${comment != null && comment.author?.displayName != null ? comment.author.displayName.substring(0,1) : 'U'}">U</span>
     </div>
     <div class="flex-1">
+        <!-- Error Alert -->
+        <div th:if="${commentError != null}" class="mb-4">
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${commentError})}"></div>
+        </div>
         <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
               hx-target="closest .group"
               hx-swap="outerHTML">
