@@ -89,6 +89,22 @@ component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `subm
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
 
+**A catalog fragment nothing calls is not a component, it is a second copy waiting to drift.**
+`attendanceBadge` (in `badge.html`) and `statCard` (in `card.html`) both existed before #129 and
+almost nothing called them, so the markup they were written to replace stayed spread across the
+training views and drifted apart: the same session rendered unconfirmed in the accent on two
+screens and in warning on a third, status labels were the raw enum in capitals on three screens
+and sentence case on the fourth, and one copy carried a `CANCELLED` branch that could not fire
+while another had no `CANCELLED` branch at all. `attendanceBadge` now takes a status and an
+unconfirmed flag rather than an event, which is what lets the training history table pass its
+narrower `TrainingOutcome` to the same fragment — before #130 it could not, so it showed no
+unconfirmed state at all. Unconfirmed is `badge-warning` everywhere, per the colour table in #46
+that reserves warning for exactly this and the accent for affirmative states. `statCard` gained a
+caption, because the stat tiles carry a third line — the streak's basis, the skipped/upcoming
+split — that the fragment could not express and that its `trend` parameter does not substitute
+for. Those captions are content: a migration that dropped them would have passed the build and
+made the page worse.
+
 **No fragment may be named after an HTML element.** `~{template :: name}` is not a
 fragment-name lookup, it is a **markup selector**, and a bare word matches any element
 carrying that `th:fragment` *or any element whose tag name is that word*. A fragment called
@@ -365,6 +381,42 @@ content built in JavaScript cannot call a Thymeleaf fragment, so it emits the sa
 instead, and it calls `renderIcon` for its own icons. **It interpolates its argument into
 `innerHTML`, so pass it literal text** — never a server response body, an exception message
 or anything a user can influence.
+
+### Dense tables
+
+A dense table keeps its own `overflow-x: auto` container at every width, **pins its identifying
+column**, and names that container for assistive technology with `tabindex="0"`, `role="region"`
+and an `aria-label`. The four admin tables have done this since #131. One pattern at every width,
+and the same mechanism the step tables already used.
+
+#46 originally prescribed the opposite below 1024px — a stacked definition list — and #131 built
+four competing versions of the worst-case table and measured them before dropping it. The stacked
+list cost 2.6x the height and repeated a label per field where the value spoke for itself, but the
+decisive objection was structural: `calendarRow` is a `<tr>` fragment whose edit control swaps with
+`hx-target="closest tr"`. A stacked layout has no `tr`, and the controller has no way to know which
+layout to return, so it would have cost a second row fragment plus a second edit-form variant per
+table. Nothing was hidden and the body never scrolled sideways either, so the prescription was
+answering a question the screen had not asked. The real defect was that scrolling right to reach
+the action buttons took the identifying column off screen, leaving you able to press Delete on a
+row you could no longer name.
+
+**The pinned cell inherits its background and must never set one.** Cells paint after rows in CSS
+table order, so an opaque background on the pinned cell covers whatever the row is painting — the
+hover highlight, and the danger tint marking an orphaned Drive file, on precisely the column that
+names the file. `table-row` therefore paints an opaque base and `table-cell-pinned` carries
+`background-color: inherit`, which tracks every row state, including ones added later, without the
+stylesheet enumerating any of them or naming a template's utility class. The first attempt at this
+enumerated the states and hardcoded `.bg-danger-soft\/50` into `input.css`;
+`PinnedColumnRowStateGuardTest` now fails the build on either shape.
+
+**`table-row` shares its name with a stock Tailwind display utility.** Tailwind emits
+`.table-row{display:table-row}` and the custom `@utility` emits the border and background, so both
+rules exist, and `md:table-row` in `dance-figures/form.html` picks up the custom one too. Harmless
+today — those rows already carry `bg-white`, and `--color-surface` and `--color-background` are
+both `#ffffff`, so the opaque base is inert outside the admin screen — but it means an edit to
+`table-row` reaches further than the tables it was written for. The new row background also
+competes with the orphan tint at equal specificity, where cascade order decides: `.table-row` is
+emitted before `.bg-danger-soft\/50`, so the tint wins.
 
 ### HTMX partial rendering
 
