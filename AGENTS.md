@@ -82,12 +82,26 @@ change is invisible in the activity feed.
 ### Thymeleaf fragment catalog
 
 `templates/fragments/` is the component vocabulary, and since #98 there is **one source per
-component**: `icon`, `button` (`link`, `button`, `iconButton`, `submitRow`), `form`
-(`field`, `select`, `textarea`, `checkbox`, `toggle`, `richText`, `errorSummary`,
-`rawField`), `page` (`header`, `sectionTitle`), `card`, `table` (`dataTable`, `stepTable`),
-`badge`, `empty`, `alert`, `modal` and `rich-text`. Do not hand-roll a page header, a
-badge or an empty state in a template — the fragment exists, and the reason #98 was worth
-doing is that six training pages had each copied the header instead.
+component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `submitRow`),
+`form` (`field`, `selectField`, `textareaField`, `checkbox`, `toggle`, `richText`,
+`errorSummary`, `rawField`), `page` (`pageHeader`, `sectionTitle`), `card`, `table`
+(`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal` and `rich-text`. Do not
+hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
+the reason #98 was worth doing is that six training pages had each copied the header instead.
+
+**No fragment may be named after an HTML element.** `~{template :: name}` is not a
+fragment-name lookup, it is a **markup selector**, and a bare word matches any element
+carrying that `th:fragment` *or any element whose tag name is that word*. A fragment called
+`textarea` therefore resolves to itself plus every literal `<textarea>` elsewhere in the same
+file, and Thymeleaf renders all of them. That is silent data corruption rather than a
+rendering glitch: the browser posts one value per element, Spring joins the multi-valued
+parameter with commas, and the saved value grows on every save — one material's description
+reached `Test note…,Test note…,ohiopp` in the running app before #121. Five fragments carried
+element names and were renamed for it: `select` and `textarea` became `selectField` and
+`textareaField`, `button` and `link` became `actionButton` and `linkButton`, and `header`
+became `pageHeader`. `FragmentNameAmbiguityTest` scans `templates/fragments/` against the full
+HTML element list, which is what makes this a rule rather than something every caller has to
+remember.
 
 **Fragments declare no parameter signature and are called with named parameters.**
 Thymeleaf validates arity strictly only when a fragment declares its parameters, so the old
@@ -128,9 +142,12 @@ the condition is ever evaluated. The include is unconditional. Put the `th:if` o
 `<th:block>` instead. This is invisible at runtime, survives a green build and reads as
 obviously correct, which is how it reached `page.html`, `badge.html` and `card.html` in #98
 and went unnoticed: in all three the conditional include is an icon, and an icon with no name
-renders an empty span with no glyph. #117 tracks fixing those three and adding a guard. Until
-then, **do not copy a conditional include out of the catalog** — it is one of the few things
-in there that is wrong.
+renders an empty span with no glyph. By the time #125 fixed it the construct had been copied
+into nine more templates, and there it wrapped error alerts and empty-state banners, where an
+unconditional include is not invisible at all. Every occurrence now puts its condition on an
+enclosing `<th:block>`, and `ThymeleafConditionalIncludeTest` fails the build on any
+conditional (`th:if`, `th:unless`) sharing an element with any inclusion (`th:replace`,
+`th:insert`, `th:include`), so the shape cannot return.
 
 **Every icon goes through the `icon` fragment.** Since #101 no template renders a bare
 `material-symbols-outlined` span and none carries an inline `<svg>`; a sweep of ~336 call
@@ -272,8 +289,13 @@ server that drops it silently. A **capture-phase** `submit` listener on `documen
 htmx's own form-level listener and calls `stopImmediatePropagation()`, so htmx never sees the
 event; an `htmx:configRequest` guard covers requests not issued by a submit. Both decide
 emptiness from the editor's text, never from the markup in the input — the same trap as above,
-one layer up. This is a client-side halt only: `CommentController` still accepts a blank
-`content` and re-renders the list without saying anything, which is what #116 is open for.
+one layer up. That halt is only the first line of defence: since #124 the refusal is the
+server's, and it is visible. `CommentController` hands `content` straight to `CommentService`,
+whose `clean()` boundary already raised on a blank result, and that exception now becomes a
+`commentError` on the model rendered through `fragments/alert` **inside the swapped region** —
+`comment-list` for a post, `comment-edit-form` for an edit — so it reaches the page over htmx
+instead of dying in a swap that never happens. Editing to blank re-renders the edit form with
+the original note intact. Emptiness is still decided in exactly one place.
 
 **The skin is ours and deliberately unlayered.** `frontend/input.css` styles `trix-toolbar` and
 `trix-editor` in plain unlayered CSS alongside the FullCalendar block, so the token rules beat
@@ -538,6 +560,14 @@ walks the template tree and fails if unescaped output appears outside
 grandfathering a list — and it also asserts the permitted fragment still uses unescaped output,
 so deleting the one legitimate use cannot quietly turn the test into a tautology.
 
+Two more joined that family, and both exist for the same reason: a construct that parses,
+builds and renders without complaint while being wrong. `ThymeleafConditionalIncludeTest`
+(#125) fails on a conditional and a fragment inclusion sharing an element;
+`FragmentNameAmbiguityTest` (#121) fails on a catalog fragment named after an HTML element.
+Each names the offending file and line **and explains the rule in the failure message**,
+because a guard against an invisible failure is also the only place the next person will
+learn it exists.
+
 **Every GET route is requested on every build.** Both template guards above assert on
 fragments and htmx endpoints, so until #105 a template that parsed but threw when rendered
 passed the build and 500'd on first visit — which is how #98 shipped a broken Add material
@@ -563,6 +593,13 @@ already pays, in every local build.
 `FormValidationWebTest` (#107) is the same idea for the other half of a page: it POSTs invalid
 input to all eight form screens and asserts the error actually renders, so a form that
 swallows its errors fails the build.
+
+Both of those also assert, since #121, that **no rendered form posts the same field name
+twice** — the shape that corrupted descriptions, caught over the rendered HTML so the path
+stays closed whatever produces it, not just the fragment collision that opened it. Which
+elements may legitimately share a name — radio groups, submit and reset buttons, disabled
+controls, and the checkboxes of a multi-select, which share a name but carry distinct values —
+is decided once in `controller/web/FormFieldDuplication.kt` and called from both suites.
 
 **Every web test here signs in with form login, which is half the app.** `@WithMockUser` puts
 a `UserDetails` in the security context and Google never does, so #122 shipped three comment
@@ -680,6 +717,12 @@ ask — nobody is reading the run live, so a question ends the run without an an
   Headers, buttons, fields, badges, empty states, alerts and modals all live there. A new
   fragment, or a new parameter on one, must be added to `FragmentCatalogRenderingTest` —
   named parameters make a typo silently `null`, and that test is the only thing that says so.
+- **A catalog fragment must not be named after an HTML element.** `~{file :: name}` is a
+  markup selector, so a fragment named `textarea`, `button` or `header` also matches every
+  literal tag of that name in the same file and renders all of them — duplicate form fields
+  and saved values that grow on every save, with no error anywhere. Suffix it instead
+  (`textareaField`, `actionButton`, `pageHeader`); `FragmentNameAmbiguityTest` fails the
+  build if you do not.
 - **`@Valid` on a handler ⇒ a `BindingResult` parameter directly after it**, plus a branch
   that repopulates the model and returns the view name. Without it Spring throws instead of
   binding and the user gets the Whitelabel 400 page. Every bound field on the request DTO
