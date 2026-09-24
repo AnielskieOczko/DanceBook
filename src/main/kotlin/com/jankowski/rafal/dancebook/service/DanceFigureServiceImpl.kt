@@ -77,6 +77,12 @@ class DanceFigureServiceImpl(
         return danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)
     }
 
+    override fun findFigureIdsWithSteps(figureIds: Collection<UUID>): Set<UUID> {
+        if (figureIds.isEmpty()) return emptySet()
+        log.debug("Retrieving figure IDs with step sets for {} figures", figureIds.size)
+        return danceFigureRepository.findFigureIdsWithSteps(figureIds)
+    }
+
     @Transactional
     override fun create(request: DanceFigureRequest): DanceFigure {
         log.debug("Creating dance figure: {}", request)

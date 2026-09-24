@@ -110,6 +110,19 @@ document.addEventListener('htmx:afterSwap', function(event) {
  * Global click handler for delegated events.
  */
 document.addEventListener('click', function(event) {
+    // Table sort header handler (Figures catalog)
+    const sortBtn = event.target.closest('.js-sort-header');
+    if (sortBtn) {
+        event.preventDefault();
+        const sortBy = sortBtn.getAttribute('data-sort-by');
+        const sortSelect = document.getElementById('filterSortBy');
+        if (sortSelect && sortBy) {
+            sortSelect.value = sortBy;
+            sortSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        return;
+    }
+
     // Bulk action clear selection handler
     const clearBtn = event.target.closest('.js-bulk-clear');
     if (clearBtn) {

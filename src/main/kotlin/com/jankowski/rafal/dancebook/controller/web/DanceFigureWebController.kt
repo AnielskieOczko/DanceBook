@@ -52,7 +52,11 @@ class DanceFigureWebController(
             hasSteps = hasSteps
         )
 
+        val figureIds = figures.mapNotNull { it.id }
+        val figuresWithSteps = if (figureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(figureIds)
+
         model.addAttribute("figures", figures)
+        model.addAttribute("figuresWithSteps", figuresWithSteps)
         if (isHtmxRequest != true) {
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceCategories", danceCategoryService.findAll())
