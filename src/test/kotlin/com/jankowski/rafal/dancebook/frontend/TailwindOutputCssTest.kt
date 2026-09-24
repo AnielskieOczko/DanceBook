@@ -122,6 +122,27 @@ class TailwindOutputCssTest {
     }
 
     @Test
+    fun `view switcher utilities survive into output css`() {
+        assertTrue(
+            css.contains(".view-switcher"),
+            "Expected output.css to contain .view-switcher rule."
+        )
+        assertTrue(
+            css.contains(".view-switcher-item"),
+            "Expected output.css to contain .view-switcher-item rule."
+        )
+        assertTrue(
+            css.contains(".view-switcher-item-active"),
+            "Expected output.css to contain .view-switcher-item-active rule."
+        )
+        val itemTouchTargetRegex = Regex("""\.view-switcher-item\s*\{[^}]*min-height\s*:\s*44px[^}]*\}""")
+        assertTrue(
+            itemTouchTargetRegex.containsMatchIn(css),
+            ".view-switcher-item must define 44px min-height touch target."
+        )
+    }
+
+    @Test
     fun `pinned table utilities survive into output css`() {
         assertTrue(
             css.contains(".table-header-pinned"),

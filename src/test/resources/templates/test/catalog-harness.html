@@ -164,6 +164,15 @@
     <div th:replace="~{fragments/page :: sectionTitle(title='Recent Items', icon='history', cls='extra-cls')}"></div>
 </div>
 
+<!-- 15b. PAGE: viewSwitcher -->
+<div th:fragment="viewSwitcherRequired">
+    <nav th:replace="~{fragments/page :: viewSwitcher}"></nav>
+</div>
+
+<div th:fragment="viewSwitcherAll">
+    <nav th:replace="~{fragments/page :: viewSwitcher(currentView='calendar', cls='extra-cls')}"></nav>
+</div>
+
 <!-- 16. CARD: statCard -->
 <div th:fragment="statCardRequired">
     <div th:replace="~{fragments/card :: statCard(value='150', label='Total Users')}"></div>

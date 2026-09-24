@@ -7,29 +7,12 @@
     <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${#lists.size(events)} + ' sessions logged', toolbar=~{::listToolbar})}">
         <div th:fragment="listToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
-            <div class="flex flex-wrap items-center gap-2 shrink-0">
-                <a href="/training-events/history" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
-                    History
-                </a>
-                <a href="/training-events/timeline" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='timeline', size='md')}"></span>
-                    Timeline
-                </a>
-                <a href="/training-events/stats" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='monitoring', size='md')}"></span>
-                    Stats
-                </a>
-                <a href="/training-events/calendar" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md')}"></span>
-                    Calendar
-                </a>
-                <a href="/training-events/new" class="btn-primary"
-                   th:if="${activeCalendar == null || activeCalendar.enabled}">
-                    <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                    Add Session
-                </a>
-            </div>
+            <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
+            <a href="/training-events/new" class="btn-primary"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">
+                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
+                Add Session
+            </a>
         </div>
     </div>
 
