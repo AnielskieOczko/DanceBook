@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -78,6 +79,29 @@ class DanceFigureWebControllerTest {
         assertEquals(emptyList<DanceFigure>(), model["figures"])
         assertEquals(true, model["selectedHasSteps"])
         verify(danceFigureService).findAll(null, null, null, null, null, true)
+    }
+
+    @Test
+    fun `should populate figuresWithSteps in model from service`() {
+        val model = ConcurrentModel()
+        val figureId1 = UUID.randomUUID()
+        val figureId2 = UUID.randomUUID()
+        val figure1 = DanceFigure().apply { id = figureId1; name = "Figure 1" }
+        val figure2 = DanceFigure().apply { id = figureId2; name = "Figure 2" }
+        val figureList = listOf(figure1, figure2)
+
+        `when`(danceFigureService.findAll(null, null, null, null, null, null)).thenReturn(figureList)
+        `when`(danceFigureService.findFigureIdsWithSteps(listOf(figureId1, figureId2))).thenReturn(setOf(figureId1))
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val viewName = controller.listDanceFigures(model = model)
+
+        assertEquals("dance-figures/list", viewName)
+        assertEquals(figureList, model["figures"])
+        assertEquals(setOf(figureId1), model["figuresWithSteps"])
+        assertFalse(model.containsAttribute("figureIdsWithSteps"))
+        verify(danceFigureService).findFigureIdsWithSteps(listOf(figureId1, figureId2))
     }
 
     @Test

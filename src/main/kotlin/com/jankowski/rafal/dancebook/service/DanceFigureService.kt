@@ -16,6 +16,7 @@ interface DanceFigureService {
     ): List<DanceFigure>
     fun findById(id: UUID): DanceFigure
     fun findByDanceType(danceTypeId: UUID): List<DanceFigure>
+    fun findFigureIdsWithSteps(figureIds: Collection<UUID>): Set<UUID>
     fun create(request: DanceFigureRequest): DanceFigure
     fun update(id: UUID, request: DanceFigureRequest): DanceFigure
     fun delete(id: UUID)

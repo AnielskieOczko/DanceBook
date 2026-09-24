@@ -348,5 +348,27 @@ class DanceFigureServiceTest {
         assertEquals("video", result.links[0].type)
     }
 
+    @Test
+    fun `should return figure ids with steps for given collection of ids`() {
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+        val ids = listOf(id1, id2)
+        val expected = setOf(id1)
+
+        `when`(danceFigureRepository.findFigureIdsWithSteps(ids)).thenReturn(expected)
+
+        val result = danceFigureService.findFigureIdsWithSteps(ids)
+
+        assertEquals(expected, result)
+        verify(danceFigureRepository).findFigureIdsWithSteps(ids)
+    }
+
+    @Test
+    fun `should return empty set when querying figure ids with steps for empty collection`() {
+        val result = danceFigureService.findFigureIdsWithSteps(emptyList())
+
+        assertEquals(emptySet<UUID>(), result)
+    }
+
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
 }
