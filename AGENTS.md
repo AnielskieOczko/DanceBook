@@ -84,7 +84,7 @@ change is invisible in the activity feed.
 `templates/fragments/` is the component vocabulary, and since #98 there is **one source per
 component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `submitRow`),
 `form` (`field`, `selectField`, `textareaField`, `checkbox`, `toggle`, `richText`,
-`errorSummary`, `rawField`), `page` (`pageHeader`, `sectionTitle`), `card`, `table`
+`errorSummary`, `rawField`), `page` (`pageHeader`, `sectionTitle`, `viewSwitcher`), `card`, `table`
 (`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal` and `rich-text`. Do not
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
@@ -181,6 +181,14 @@ chevrons on collapsible sections had stopped rotating because their
 `group-open:rotate-90` rode on that parameter. `FragmentCatalogRenderingTest` asserts a
 passed class reaches the output and `HtmxFragmentRenderingTest` asserts a real template
 still emits the rotation classes, so the pair fails if this recurs.
+
+**An optional parameter you omit is not absent — it inherits from the caller's scope.**
+Thymeleaf resolves an unpassed fragment parameter as an ordinary variable lookup, so it
+finds whatever the enclosing template has in scope under that name. #137 shipped an icon
+inside a `pageHeader` toolbar without a `title`, and every icon picked up the header's
+`title='Training'` as a hover tooltip. Nothing looked wrong until the rendered HTML was
+read. Inside any slot of another fragment, pass `title=null` explicitly, as the view
+switcher does; `TrainingNavAndSwitcherTest` pins it there.
 
 Icons built in JavaScript cannot use a Thymeleaf fragment, so they go through `renderIcon`
 in `static/js/main.js`, which emits the same classes. `main.js` loads in `layout.html` for
@@ -474,6 +482,34 @@ root id.
 every template. Adding a new top-level route means adding a branch to `activeNav()`
 for the navbar to highlight correctly.
 
+### Navigation
+
+Since #137 the nav has **six items, identical on desktop and mobile, in the same order**:
+Dashboard, Notes, Figures, Collections, Choreographies, Training. Profile is reached
+through the avatar, and admin through the gear icon; neither is a nav item. A seventh item
+is a design decision for #46, not something to add alongside a feature. The mobile bar
+has no room for one.
+
+**Training is one section with five views, not five routes.** List, Calendar, Timeline,
+Stats and History each have their own URL, but `activeNav()` maps all of
+`/training-events/**` to `training-events`. Every one of them is titled "Training" and
+renders `fragments/page :: viewSwitcher(currentView=…)` in its header toolbar, where the
+switcher names the view and marks it with `aria-current="page"`. A new training view is a
+switcher entry, not a nav item or an `activeNav()` branch. Before #137 the views
+cross-linked through hand-copied button rows that had drifted apart (History had no
+Calendar link, and Calendar had no History link), and Timeline held a nav slot of its own.
+The switcher is neutral by design. Its `view-switcher*` utilities use surface tokens, not
+the accent, so it never competes with the page's one primary action.
+
+**Mobile labels must fit a sixth of 375px, about 61px each.** Each item is `flex-1`,
+which is what keeps the six evenly spaced. The labels are sentence case at 11px. The
+tracked-out uppercase they used to carry was retired in #93, and it does not fit:
+"COLLECTIONS" measured 84px. "Choreographies" does not fit at any legible size (73px at
+10px), so on mobile it shows **"Choreos"** with `aria-label="Choreographies"` on the link.
+That is the one deliberate label difference between the two navs. Check a label change by
+measuring it in a 375px viewport; a MockMvc test cannot see overflow, and #137's first
+pass claimed a fit that the browser showed was false.
+
 ### Who the current user is
 
 **Resolve the current user through `AppUserService.getCurrentUser()`, and never through
@@ -760,6 +796,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
   slot, `form.html` for a bound field, `table.html` for a dense table)
+- Several views of one section under one nav item → `fragments/page.html :: viewSwitcher`
+  on the five `templates/training-events/*` views, plus `TrainingNavAndSwitcherTest`
 - Bound form that re-renders its own validation errors →
   `controller/web/CustomListWebController.kt` plus `templates/lists/form.html`
 - Dialog → `templates/fragments/modal.html` for a new one, `fragments/confirm-dialog.html`
@@ -795,7 +833,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - **New list/filter endpoint ⇒ follow the HTMX shape** in
   `controller/web/DanceFigureWebController.kt` (fragment selector on `HX-Request`).
 - **New top-level route ⇒ add a branch to `activeNav()`** in
-  `controller/web/NavbarAdvice.kt`.
+  `controller/web/NavbarAdvice.kt`. A new view of an existing section is not a top-level
+  route: under `/training-events` it joins the `viewSwitcher` (see *Navigation*).
 - **A component that exists in `templates/fragments/` ⇒ call it, do not hand-roll it.**
   Headers, buttons, fields, badges, empty states, alerts and modals all live there. A new
   fragment, or a new parameter on one, must be added to `FragmentCatalogRenderingTest` —
