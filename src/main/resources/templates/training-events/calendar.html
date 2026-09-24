@@ -11,27 +11,14 @@
         </th:block>
         <div th:fragment="calendarToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
-            <div class="flex items-center gap-2 shrink-0">
-                <a href="/training-events/timeline" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='timeline', size='md')}"></span>
-                    Timeline
-                </a>
-                <a href="/training-events/stats" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='monitoring', size='md')}"></span>
-                    Stats
-                </a>
-                <a href="/training-events" class="btn-outline">
-                    <span th:replace="~{fragments/icon :: icon(name='list', size='md')}"></span>
-                    Agenda
-                </a>
-                <!-- On a phone the floating + creates on the selected day, so this would be a second
-                     create button competing with it for a very narrow header. -->
-                <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
-                   th:if="${activeCalendar == null || activeCalendar.enabled}">
-                    <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                    Add Session
-                </a>
-            </div>
+            <nav th:replace="~{fragments/page :: viewSwitcher(currentView='calendar')}"></nav>
+            <!-- On a phone the floating + creates on the selected day, so this would be a second
+                 create button competing with it for a very narrow header. -->
+            <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
+               th:if="${activeCalendar == null || activeCalendar.enabled}">
+                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
+                Add Session
+            </a>
         </div>
     </div>
 

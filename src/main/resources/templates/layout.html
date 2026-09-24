@@ -42,7 +42,7 @@
             <a href="/" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'home' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Dashboard</a>
             <a href="/materials" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'materials' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Library</a>
+               th:classappend="${activeNav == 'materials' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Notes</a>
             <a href="/dance-figures" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'dance-figures' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Figures</a>
             <a href="/lists" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
@@ -51,10 +51,6 @@
                th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Choreographies</a>
             <a href="/training-events" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'training-events' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Training</a>
-            <a href="/training-events/timeline" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'training-timeline' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Timeline</a>
-            <a href="/profile" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'profile' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Profile</a>
         </nav>
 
         <!-- Trailing Icons -->
@@ -113,40 +109,40 @@
      ═══════════════════════════════════════════════ -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-1 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
     <!-- Dashboard -->
-    <a href="/" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
+    <a href="/" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
         <span th:replace="~{fragments/icon :: icon(name='grid_view', size='md', filled=${activeNav == 'home'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Dashboard</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1">Dashboard</span>
     </a>
-    <!-- Library -->
-    <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
+    <!-- Notes -->
+    <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'materials' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
         <span th:replace="~{fragments/icon :: icon(name='subscriptions', size='md', filled=${activeNav == 'materials'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Library</span>
-    </a>
-    <!-- Collections -->
-    <a href="/lists" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
-       th:classappend="${activeNav == 'lists' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', filled=${activeNav == 'lists'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Collections</span>
-    </a>
-    <!-- Choreographies -->
-    <a href="/choreographies" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
-       th:classappend="${activeNav == 'choreographies' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
-        <span th:replace="~{fragments/icon :: icon(name='route', size='md', filled=${activeNav == 'choreographies'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Choreos</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1">Notes</span>
     </a>
     <!-- Figures -->
-    <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
+    <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
         <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', filled=${activeNav == 'dance-figures'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Figures</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1">Figures</span>
+    </a>
+    <!-- Collections -->
+    <a href="/lists" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
+       th:classappend="${activeNav == 'lists' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', filled=${activeNav == 'lists'})}"></span>
+        <span class="font-label-sm text-[11px] font-medium mt-1">Collections</span>
+    </a>
+    <!-- Choreographies -->
+    <a href="/choreographies" aria-label="Choreographies" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
+       th:classappend="${activeNav == 'choreographies' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
+        <span th:replace="~{fragments/icon :: icon(name='route', size='md', filled=${activeNav == 'choreographies'})}"></span>
+        <span class="font-label-sm text-[11px] font-medium mt-1" aria-hidden="true">Choreos</span>
     </a>
     <!-- Training -->
-    <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-[44px]"
+    <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'training-events' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}">
         <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', filled=${activeNav == 'training-events'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium uppercase tracking-wider mt-1">Training</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1">Training</span>
     </a>
 </nav>
 

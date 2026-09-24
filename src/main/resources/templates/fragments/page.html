@@ -50,5 +50,47 @@
     <h2 class="text-section font-sans text-on-surface" th:text="${title}">Section Title</h2>
 </div>
 
+<!-- Training View Switcher -->
+<nav th:fragment="viewSwitcher"
+     class="view-switcher"
+     th:classappend="${cls}"
+     aria-label="Training views">
+    <a href="/training-events"
+       class="view-switcher-item"
+       th:classappend="${currentView == 'list' ? 'view-switcher-item-active' : ''}"
+       th:attr="aria-current=${currentView == 'list' ? 'page' : null}">
+        <span th:replace="~{fragments/icon :: icon(name='list', size='sm', title=null)}"></span>
+        <span>List</span>
+    </a>
+    <a href="/training-events/calendar"
+       class="view-switcher-item"
+       th:classappend="${currentView == 'calendar' ? 'view-switcher-item-active' : ''}"
+       th:attr="aria-current=${currentView == 'calendar' ? 'page' : null}">
+        <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='sm', title=null)}"></span>
+        <span>Calendar</span>
+    </a>
+    <a href="/training-events/timeline"
+       class="view-switcher-item"
+       th:classappend="${currentView == 'timeline' ? 'view-switcher-item-active' : ''}"
+       th:attr="aria-current=${currentView == 'timeline' ? 'page' : null}">
+        <span th:replace="~{fragments/icon :: icon(name='timeline', size='sm', title=null)}"></span>
+        <span>Timeline</span>
+    </a>
+    <a href="/training-events/stats"
+       class="view-switcher-item"
+       th:classappend="${currentView == 'stats' ? 'view-switcher-item-active' : ''}"
+       th:attr="aria-current=${currentView == 'stats' ? 'page' : null}">
+        <span th:replace="~{fragments/icon :: icon(name='monitoring', size='sm', title=null)}"></span>
+        <span>Stats</span>
+    </a>
+    <a href="/training-events/history"
+       class="view-switcher-item"
+       th:classappend="${currentView == 'history' ? 'view-switcher-item-active' : ''}"
+       th:attr="aria-current=${currentView == 'history' ? 'page' : null}">
+        <span th:replace="~{fragments/icon :: icon(name='history', size='sm', title=null)}"></span>
+        <span>History</span>
+    </a>
+</nav>
+
 </body>
 </html>

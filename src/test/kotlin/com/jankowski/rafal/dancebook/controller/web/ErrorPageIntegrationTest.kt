@@ -143,7 +143,7 @@ class ErrorPageIntegrationTest {
         assertTrue(body.contains("Page Not Found"), "Response should contain 404 title")
         assertTrue(body.contains("Back to Dashboard"), "Response should contain navigation link back")
         assertTrue(body.contains("CHOREO"), "Response should contain brand header")
-        assertTrue(body.contains("Library"), "Authenticated response should contain top navbar links")
+        assertTrue(body.contains("Notes"), "Authenticated response should contain top navbar links")
     }
 
     @Test

@@ -395,6 +395,20 @@ layer(base);
   @apply flex flex-wrap gap-3;
 }
 
+@utility view-switcher {
+  /* ── Training view switcher ───────────────────── */
+  @apply inline-flex flex-wrap items-center gap-1 p-1 bg-surface-container border border-outline-variant rounded-lg shrink-0;
+}
+
+@utility view-switcher-item {
+  @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-label text-on-surface-variant
+           hover:text-on-surface hover:bg-surface/50 transition-colors min-h-[44px];
+}
+
+@utility view-switcher-item-active {
+  @apply bg-surface text-on-surface font-semibold border border-outline-variant/60;
+}
+
 @utility page-header {
   /* ── Page Header ─────────────────────────────── */
   @apply mb-6;
