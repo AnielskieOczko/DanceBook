@@ -418,6 +418,34 @@ both `#ffffff`, so the opaque base is inert outside the admin screen — but it 
 competes with the orphan tint at equal specificity, where cascade order decides: `.table-row` is
 emitted before `.bg-danger-soft\/50`, so the tint wins.
 
+**The figures catalog is the one dense table that is not the screen at every width** (#132).
+List mode renders both of its forms in the same `figuresTable` fragment — the cards under
+`lg:hidden`, the table under `hidden lg:block` — and CSS picks one at 1024px. That is the answer
+to the objection that sank the stacked list in #131: the controller cannot know the viewport, so
+one response has to carry every width. It is affordable here and was not there because these rows
+have no row-level swap — filters, search and sort replace the whole fragment — so there is no
+`closest tr` to lose. Grid mode stays cards at every width, and the list/grid toggle keeps its
+two options; the table is what "list" means when there is width for one, not a third mode.
+
+Three rules the table established, for the next one that needs them:
+
+- **A sortable header drives the existing sort control; it does not send its own request.** Each
+  `js-sort-header` button carries the `sortBy` it would select, and the delegated handler in
+  `static/js/main.js` writes that into `#filterSortBy` and fires its `change`. The select stays the
+  only source of sort state, so the header and the control cannot disagree, and the server renders
+  `aria-sort` and the next toggle direction from `selectedSortBy`. Giving the header its own
+  `hx-get` would send `sortBy` twice whenever the form is included.
+- **Row actions are inline controls, never the ⋮ dropdown.** The dropdown is absolutely
+  positioned, and the table's `overflow-x` region clips it. Inline buttons also match the admin
+  tables.
+- **A per-row derived value is one query for the page, not one per row.** The Steps column reads a
+  set from `DanceFigureService.findFigureIdsWithSteps(ids)`, which uses the same "has a step set"
+  definition as the Steps Syllabus filter, so the column and the filter cannot disagree either.
+
+The pinned Name cell wraps within `min-w-[200px] max-w-[20rem]` rather than `whitespace-nowrap`:
+catalog names run to 102 characters, and an unwrapped one made the pinned column most of the
+region at 1024px, leaving the columns it exists to keep in view nowhere to scroll.
+
 ### HTMX partial rendering
 
 Web controllers accept `@RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?`
@@ -726,6 +754,9 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - CRUD service with domain events → `service/TrainingEventServiceImpl.kt`
 - HTMX list/filter page → `controller/web/DanceFigureWebController.kt` plus
   `templates/dance-figures/list.html`
+- Dense table with sortable headers and a card form below 1024px →
+  `templates/dance-figures/list.html` (`figuresTable`) plus the `js-sort-header` handler in
+  `static/js/main.js`
 - Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
   slot, `form.html` for a bound field, `table.html` for a dense table)
