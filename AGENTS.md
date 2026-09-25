@@ -67,8 +67,10 @@ A `DanceFigure` owns `DanceFigureStepSet`s (named variants, one flagged `isDefau
 each owning `DanceFigureStep`s tagged with a `role` of `"LEADER"` or `"FOLLOWER"`.
 `DanceFigure.steps` is a convenience getter returning the default set's steps.
 
-Other aggregates: `Material` (video + figures + comments), `CustomList` (user-curated,
-optionally public), `Choreography` → ordered `ChoreographyEntry` list, `AppUser`.
+Other aggregates: `Material` (video + figures + comments, owned, private by default),
+`CustomList` (a saved filter over notes, owned), `Choreography` → ordered
+`ChoreographyEntry` list (owned), `AppUser`. Who can see each of them is decided in one
+place — see *Access control* below.
 
 ### Domain events → activity feed
 
@@ -531,6 +533,73 @@ Compare the `currentUser` that `NavbarAdvice` supplies, by id:
 `${currentUser != null and currentUser.id == c.author.id}`. No `#authentication` remains in the
 templates either.
 
+**Where there may be nobody signed in, use `getCurrentUserOrNull()`.** It returns `null` for
+an anonymous or missing authentication and lets every other exception through.
+`getCurrentUser()` throws `EntityNotFoundException` in that case, which the global handler
+turns into a 404. Do not wrap either in `catch (e: Exception) { null }`: #151's first round did
+that nine times, which quietly turned a database failure into "anonymous, public items only".
+
+### Access control: who can see an item
+
+Since #151, **notes, collections and choreographies are owned and private by default.** Each
+carries an `owner` and a `visibility` (`model/Visibility.kt`: `PRIVATE` or `PUBLIC`); the old
+`is_public` boolean is gone. Comments have no visibility of their own — they are visible
+exactly when their note is. Figures, dance styles and categories have no visibility and are
+seen by everyone.
+
+**There is one access rule, and it is a `Specification`.** `MaterialSpecification`,
+`CustomListSpecification` and `ChoreographySpecification` each expose `visibleTo(user)`:
+the user owns the item, *or* it is `PUBLIC`, *or* a row in the `share` table grants it to them.
+Admins see everything. `CommentSpecification.visibleTo` joins to the note and reuses the note's
+rule, and `ActivityEventSpecification.visibleTo` reuses the note and collection rules inside
+subqueries. **Do not write a second copy** — an in-memory `isVisibleTo`, a JPQL `OR isPublic`
+query, a template check. The first round of #151 had the rule in three places, and the
+repository copies had already lost the share and admin branches before anything had shipped.
+
+**Every lookup that serves a user goes through it, `findById` included.** The service's
+`findById` is `findOne(visibleTo(user).and(byId(id)))`, so a hidden item and a missing item
+are the same `EntityNotFoundException`. Anything that loads an item by id must go through the
+service, never the repository: `CommentServiceImpl` used to load the note straight from
+`MaterialRepository`, which let anyone comment on a note they could not see. The only
+deliberately unfiltered queries are system housekeeping — `findAllDriveFileIds` for the
+storage cleanup job and the admin storage page.
+
+**Hidden is 404; visible-but-not-yours is 403.** `GlobalNotFoundExceptionHandler` maps
+`EntityNotFoundException` to a 404 on pages, htmx fragments and `/api/**`. Before it existed a
+missing id produced a 500. Changing an item you can see but do not own — another user's public
+note, collection or choreography — throws `AccessDeniedException` from the service's
+`checkOwnership`, which is a 403. Only the owner or an admin edits, deletes or changes an
+item's visibility; everyone who can see a note can comment on it. The edit *forms* of an item
+you do not own return 404, and templates hide the edit actions by comparing `currentUser.id`
+with the owner's id (see *Who the current user is*).
+
+**Collections are saved filters, not lists of notes.** A `CustomList` stores a name filter, a
+minimum rating and dance types or categories; its notes are computed when it is viewed, through
+the *viewer's* `visibleTo`. So a note made private drops out of everyone else's view of every
+collection with no extra code, and there is nothing to count as "N private items". The owner of
+a public collection sees a warning when some of *their own* private notes match its filter.
+Choreographies contain only figures and section labels, which are always public.
+
+**The activity feed is filtered in the query, not after loading.** The navbar badge is a
+`COUNT` and the history page is paginated, so filtering loaded rows would make both disagree
+with what is shown. Each `ActivityEvent` also stores `target_visibility`: once a note is
+deleted there is nothing left to join to, and the entry is shown to other users only if the
+note was public when it was deleted. Feed entries about figures and training sessions are not
+filtered — per-user calendars are #154 and #155.
+
+**A new entity that users own gets the same shape:** `owner` + `visibility`, a
+`<Entity>Specification.visibleTo`/`byId` pair that reads the `share` table under its own
+`item_type` string (`MATERIAL`, `CUSTOM_LIST` and `CHOREOGRAPHY` are taken), `findById` through
+them, `checkOwnership` throwing `AccessDeniedException`, and a second-user test
+(`controller/web/AccessControlSecondUserIntegrationTest.kt`) proving user B gets a 404 until
+the item is public. Nothing writes to `share` yet; the rule reads it so sharing with a person
+later means adding rows and a UI, not changing the rule.
+
+**Drive videos are not covered by this.** A private note's video is hidden only because the
+note page that carries its file id returns 404; the files themselves are readable by anyone
+with the link, and `/api/materials/upload-config` hands out the app's Drive token. That is
+#158.
+
 ### LLM providers
 
 `service/LlmProvider.kt` defines a provider interface (`openrouter`, `google-ai`,
@@ -815,6 +884,10 @@ ask — nobody is reading the run live, so a question ends the run without an an
 - Migration plus its Flyway/Testcontainers test → `src/main/resources/db/migration/` and
   `test/.../migration/TrainingRecordBackfillTest.kt`
 - Integration test against a real Postgres → `service/TrainingEventUpdateIntegrationTest.kt`
+- Entity with an owner and a visibility, its `visibleTo` Specification and its `findById` →
+  `repository/MaterialSpecification.kt` plus `service/MaterialServiceImpl.kt`
+- Second-user test (user B gets 404, then sees the item once it is public; 403 on changes) →
+  `controller/web/AccessControlSecondUserIntegrationTest.kt`
 
 **Definition of done**
 
