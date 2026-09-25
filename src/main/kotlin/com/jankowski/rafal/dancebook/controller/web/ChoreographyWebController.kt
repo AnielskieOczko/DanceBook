@@ -5,6 +5,9 @@ import com.jankowski.rafal.dancebook.dto.ChoreographyRequest
 import com.jankowski.rafal.dancebook.service.ChoreographyService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.service.AppUserService
+import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -18,7 +21,8 @@ import java.util.UUID
 class ChoreographyWebController(
     private val choreographyService: ChoreographyService,
     private val danceTypeService: DanceTypeService,
-    private val danceFigureService: DanceFigureService
+    private val danceFigureService: DanceFigureService,
+    private val appUserService: AppUserService
 ) {
 
     companion object {
@@ -88,6 +92,10 @@ class ChoreographyWebController(
     ): String {
         log.debug("Showing builder view for choreography: {}", id)
         val choreography = choreographyService.findById(id)
+        val currentUser = appUserService.getCurrentUser()
+        if (choreography.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find choreography with id $id")
+        }
         model.addAttribute("choreography", choreography)
 
         // Preload figures for the chosen dance type
@@ -108,6 +116,10 @@ class ChoreographyWebController(
     fun showEditMetadataForm(@PathVariable id: UUID, model: Model): String {
         log.debug("Showing metadata edit form for choreography: {}", id)
         val choreography = choreographyService.findById(id)
+        val currentUser = appUserService.getCurrentUser()
+        if (choreography.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find choreography with id $id")
+        }
         val request = ChoreographyRequest(
             name = choreography.name,
             description = choreography.description,

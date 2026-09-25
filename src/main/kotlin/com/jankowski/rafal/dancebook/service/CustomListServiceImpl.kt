@@ -1,19 +1,21 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.CustomListRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.CustomList
+import com.jankowski.rafal.dancebook.model.ListCreatedEvent
+import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.CustomListRepository
+import com.jankowski.rafal.dancebook.repository.CustomListSpecification
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
-import com.jankowski.rafal.dancebook.model.ListCreatedEvent
-import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
-import com.jankowski.rafal.dancebook.repository.CustomListSpecification
-import org.springframework.data.domain.Sort
 
 @Service
 class CustomListServiceImpl(
@@ -38,7 +40,7 @@ class CustomListServiceImpl(
         val currentUser = appUserService.getCurrentUser()
         log.debug("Retrieving collections for user '{}' with filters: typeIds={}, categoryIds={}, nameSearch={}, sortBy={}", currentUser.username, typeIds, categoryIds, nameSearch, sortBy)
         val spec = CustomListSpecification.withFilters(
-            owner = currentUser,
+            user = currentUser,
             typeIds = typeIds,
             categoryIds = categoryIds,
             nameSearch = nameSearch
@@ -56,7 +58,11 @@ class CustomListServiceImpl(
     }
 
     override fun findById(id: UUID): CustomList {
-        return customListRepository.findById(id).orElseThrow {
+        log.debug("Retrieving custom list for id {}", id)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        return customListRepository.findOne(
+            CustomListSpecification.visibleTo(currentUser).and(CustomListSpecification.byId(id))
+        ).orElseThrow {
             EntityNotFoundException("Custom list with id $id not found")
         }
     }
@@ -143,9 +149,9 @@ class CustomListServiceImpl(
         }
     }
 
-    private fun checkOwnership(list: CustomList, currentUser: com.jankowski.rafal.dancebook.model.AppUser) {
+    private fun checkOwnership(list: CustomList, currentUser: AppUser) {
         if (list.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
-            throw IllegalStateException("You don't have permission to modify this list")
+            throw AccessDeniedException("You don't have permission to modify this list")
         }
     }
 }

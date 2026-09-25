@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.model.ListMadePublicEvent
 import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
 import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialVisibilityChangedEvent
 import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
 import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
@@ -49,28 +50,77 @@ class ActivityEventListener(
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onMaterialCreated(event: MaterialCreatedEvent) {
         log.info("Recording MATERIAL_CREATED event for '{}'", event.material.name)
-        save(EventType.MATERIAL_CREATED, event.actor, TargetType.MATERIAL, event.material.id, event.material.name)
+        save(
+            eventType = EventType.MATERIAL_CREATED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            targetVisibility = event.material.visibility.name
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onMaterialUpdated(event: MaterialUpdatedEvent) {
         log.info("Recording MATERIAL_UPDATED event for '{}'", event.material.name)
-        save(EventType.MATERIAL_UPDATED, event.actor, TargetType.MATERIAL, event.material.id, event.material.name)
+        save(
+            eventType = EventType.MATERIAL_UPDATED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            targetVisibility = event.material.visibility.name
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onMaterialDeleted(event: MaterialDeletedEvent) {
-        log.info("Recording MATERIAL_DELETED event for '{}'", event.materialName)
-        save(EventType.MATERIAL_DELETED, event.actor, TargetType.MATERIAL, event.materialId, event.materialName)
+        val vis = if (event.wasPublic) "PUBLIC" else "PRIVATE"
+        log.info("Recording MATERIAL_DELETED event for '{}' (wasPublic={})", event.materialName, event.wasPublic)
+        save(
+            eventType = EventType.MATERIAL_DELETED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.materialId,
+            targetName = event.materialName,
+            targetVisibility = vis
+        )
+        activityEventRepository.updateTargetVisibilityForTarget(TargetType.MATERIAL, event.materialId, vis)
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onMaterialVisibilityChanged(event: MaterialVisibilityChangedEvent) {
+        val vis = event.material.visibility.name
+        log.info("Recording MATERIAL_VISIBILITY_CHANGED event for '{}' to {}", event.material.name, vis)
+        save(
+            eventType = EventType.MATERIAL_VISIBILITY_CHANGED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            metadata = vis,
+            targetVisibility = vis
+        )
+        event.material.id?.let {
+            activityEventRepository.updateTargetVisibilityForTarget(TargetType.MATERIAL, it, vis)
+        }
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onCommentAdded(event: CommentAddedEvent) {
         log.info("Recording COMMENT_ADDED event on material '{}'", event.material.name)
-        save(EventType.COMMENT_ADDED, event.actor, TargetType.MATERIAL, event.material.id, event.material.name)
+        save(
+            eventType = EventType.COMMENT_ADDED,
+            actor = event.actor,
+            targetType = TargetType.MATERIAL,
+            targetId = event.material.id,
+            targetName = event.material.name,
+            targetVisibility = event.material.visibility.name
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -97,7 +147,8 @@ class ActivityEventListener(
             targetType = TargetType.MATERIAL,
             targetId = event.material.id,
             targetName = event.material.name,
-            metadata = event.figureName
+            metadata = event.figureName,
+            targetVisibility = event.material.visibility.name
         )
     }
 
@@ -111,7 +162,8 @@ class ActivityEventListener(
             targetType = TargetType.MATERIAL,
             targetId = event.material.id,
             targetName = event.material.name,
-            metadata = event.figureName
+            metadata = event.figureName,
+            targetVisibility = event.material.visibility.name
         )
     }
 
@@ -125,7 +177,8 @@ class ActivityEventListener(
             targetType = TargetType.MATERIAL,
             targetId = event.material.id,
             targetName = event.material.name,
-            metadata = event.figureName
+            metadata = event.figureName,
+            targetVisibility = event.material.visibility.name
         )
     }
 
@@ -265,7 +318,8 @@ class ActivityEventListener(
         targetType: TargetType,
         targetId: java.util.UUID?,
         targetName: String?,
-        metadata: String? = null
+        metadata: String? = null,
+        targetVisibility: String? = null
     ) {
         val activityEvent = ActivityEvent().apply {
             this.eventType = eventType
@@ -274,6 +328,7 @@ class ActivityEventListener(
             this.targetId = targetId
             this.targetName = targetName
             this.metadata = metadata
+            this.targetVisibility = targetVisibility
         }
         activityEventRepository.save(activityEvent)
     }

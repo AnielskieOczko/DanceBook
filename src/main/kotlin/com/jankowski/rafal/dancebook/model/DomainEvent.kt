@@ -21,6 +21,13 @@ class MaterialUpdatedEvent(
 class MaterialDeletedEvent(
     val materialId: UUID,
     val materialName: String,
+    val wasPublic: Boolean = true,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class MaterialVisibilityChangedEvent(
+    val material: Material,
+    val previousVisibility: Visibility,
     actor: AppUser
 ) : DomainEvent(actor)
 

@@ -12,10 +12,12 @@
             <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
         </a>
         <div class="flex items-center gap-4">
-            <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
-                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                Edit Notes
-            </a>
+            <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
+                <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
+                    <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
+                    Edit Notes
+                </a>
+            </th:block>
         </div>
     </header>
 
@@ -41,9 +43,10 @@
         <div class="space-y-lg">
             <!-- Title & Meta -->
             <div class="space-y-4">
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <span th:if="${material.danceType != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.name}">Style</span>
                     <span th:if="${material.danceType != null && material.danceType.category != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.category.name}">Category</span>
+                    <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? 'Public' : 'Private'}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
                 </div>
                 <h1 class="font-headline-lg text-headline-lg text-on-surface" th:text="${material.name}">Material Name</h1>
                 <th:block th:if="${material.description != null}">

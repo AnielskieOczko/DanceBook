@@ -1,16 +1,6 @@
 package com.jankowski.rafal.dancebook.model
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
-import jakarta.persistence.Version
+import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -23,6 +13,18 @@ class Material {
     var id: UUID? = null
     var name: String = ""
     var description: String? = null
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    var owner: AppUser? = null
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    var visibility: Visibility = Visibility.PRIVATE
+
+    @get:Transient
+    val isPublic: Boolean
+        get() = visibility == Visibility.PUBLIC
+
     @ManyToOne
     @JoinColumn(name = "dance_type_id")
     var danceType: DanceType? = null

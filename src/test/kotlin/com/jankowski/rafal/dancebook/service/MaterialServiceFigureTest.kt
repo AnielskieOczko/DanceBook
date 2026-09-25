@@ -23,6 +23,8 @@ import org.springframework.context.ApplicationEventPublisher
 import java.util.Optional
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.model.Visibility
+
 class MaterialServiceFigureTest {
 
     private lateinit var materialRepository: MaterialRepository
@@ -50,6 +52,7 @@ class MaterialServiceFigureTest {
             displayName = "Test User"
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(currentUser)
 
         materialService = MaterialServiceImpl(
             materialRepository,
@@ -71,6 +74,8 @@ class MaterialServiceFigureTest {
         val material = Material().apply {
             id = materialId
             name = "Waltz Sequence"
+            owner = currentUser
+            visibility = Visibility.PUBLIC
         }
 
         val danceFigure = DanceFigure().apply {
@@ -78,7 +83,7 @@ class MaterialServiceFigureTest {
             name = "Natural Turn"
         }
 
-        `when`(materialRepository.findById(materialId)).thenReturn(Optional.of(material))
+        `when`(materialRepository.findOne(any())).thenReturn(Optional.of(material))
         `when`(danceFigureRepository.findById(danceFigureId)).thenReturn(Optional.of(danceFigure))
 
         val request = FigureRequest(
@@ -121,12 +126,14 @@ class MaterialServiceFigureTest {
         val material = Material().apply {
             id = materialId
             name = "Waltz Sequence"
+            owner = currentUser
+            visibility = Visibility.PUBLIC
             figures.add(figure)
         }
 
         figure.material = material
 
-        `when`(materialRepository.findById(materialId)).thenReturn(Optional.of(material))
+        `when`(materialRepository.findOne(any())).thenReturn(Optional.of(material))
         `when`(danceFigureRepository.findById(danceFigureId)).thenReturn(Optional.of(danceFigure))
 
         val request = FigureRequest(
@@ -165,12 +172,14 @@ class MaterialServiceFigureTest {
         val material = Material().apply {
             id = materialId
             name = "Waltz Sequence"
+            owner = currentUser
+            visibility = Visibility.PUBLIC
             figures.add(figure)
         }
 
         figure.material = material
 
-        `when`(materialRepository.findById(materialId)).thenReturn(Optional.of(material))
+        `when`(materialRepository.findOne(any())).thenReturn(Optional.of(material))
 
         materialService.removeFigure(materialId, figureId)
 

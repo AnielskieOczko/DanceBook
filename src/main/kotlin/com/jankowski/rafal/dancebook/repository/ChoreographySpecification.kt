@@ -1,36 +1,33 @@
 package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
-import com.jankowski.rafal.dancebook.model.CustomList
-import com.jankowski.rafal.dancebook.model.DanceCategory
-import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.Choreography
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Share
 import com.jankowski.rafal.dancebook.model.Visibility
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.From
-import jakarta.persistence.criteria.Join
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
 import java.util.UUID
 
-object CustomListSpecification {
+object ChoreographySpecification {
 
-    fun visibleTo(user: AppUser?): Specification<CustomList> {
+    fun visibleTo(user: AppUser?): Specification<Choreography> {
         return Specification { root, query, cb ->
             visibilityPredicate(root, query, cb, user)
         }
     }
 
-    fun byId(id: UUID): Specification<CustomList> {
+    fun byId(id: UUID): Specification<Choreography> {
         return Specification { root, _, cb ->
             cb.equal(root.get<UUID>("id"), id)
         }
     }
 
     fun visibilityPredicate(
-        from: From<*, CustomList>,
+        from: From<*, Choreography>,
         query: CriteriaQuery<*>?,
         cb: CriteriaBuilder,
         user: AppUser?
@@ -47,7 +44,7 @@ object CustomListSpecification {
             val shareRoot = shareSubquery.from(Share::class.java)
             shareSubquery.select(cb.literal(1L))
             shareSubquery.where(
-                cb.equal(shareRoot.get<String>("itemType"), "CUSTOM_LIST"),
+                cb.equal(shareRoot.get<String>("itemType"), "CHOREOGRAPHY"),
                 cb.equal(shareRoot.get<UUID>("itemId"), from.get<UUID>("id")),
                 cb.equal(shareRoot.get<AppUser>("granteeUser"), user)
             )
@@ -59,36 +56,5 @@ object CustomListSpecification {
             cb.equal(from.get<Visibility>("visibility"), Visibility.PUBLIC),
             sharePredicate
         )
-    }
-
-    fun withFilters(
-        user: AppUser?,
-        typeIds: List<UUID>? = null,
-        categoryIds: List<UUID>? = null,
-        nameSearch: String? = null
-    ): Specification<CustomList> {
-        return Specification { root, query, cb ->
-            val predicates = mutableListOf<Predicate>()
-
-            predicates.add(visibilityPredicate(root, query, cb, user))
-
-            if (!typeIds.isNullOrEmpty()) {
-                val danceTypesJoin: Join<CustomList, DanceType> = root.join("danceTypes")
-                predicates.add(danceTypesJoin.get<UUID>("id").`in`(typeIds))
-            }
-
-            if (!categoryIds.isNullOrEmpty()) {
-                val danceCategoriesJoin: Join<CustomList, DanceCategory> = root.join("danceCategories")
-                predicates.add(danceCategoriesJoin.get<UUID>("id").`in`(categoryIds))
-            }
-
-            if (!nameSearch.isNullOrBlank()) {
-                predicates.add(cb.like(cb.lower(root.get("name")), "%${nameSearch.lowercase()}%"))
-            }
-
-            query?.distinct(true)
-
-            cb.and(*predicates.toTypedArray())
-        }
     }
 }

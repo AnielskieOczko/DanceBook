@@ -118,6 +118,11 @@
             </details>
         </div>
 
+        <!-- Visibility Section -->
+        <div>
+            <div th:replace="~{fragments/form :: toggle(path='isPublic', label='Public Note', hint='Make this note visible to all users on the platform')}"></div>
+        </div>
+
         <!-- Form Actions -->
         <div class="flex justify-end gap-3 pt-6 border-t border-border">
             <a href="/materials" class="btn-outline">Cancel</a>

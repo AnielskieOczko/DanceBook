@@ -54,7 +54,7 @@ class NotificationController(
         return ""
     }
 
-    @GetMapping("/activity-history")
+    @GetMapping("/activity-history", "/notifications/history")
     fun activityHistory(model: Model): String {
         val events = activityEventService.getAllEvents(PageRequest.of(0, 50))
         model.addAttribute("events", events.content)

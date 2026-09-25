@@ -69,9 +69,13 @@ class AppUserServiceImpl(
     }
 
     override fun getCurrentUser(): AppUser {
+        return getCurrentUserOrNull() ?: throw EntityNotFoundException("No user is currently logged in")
+    }
+
+    override fun getCurrentUserOrNull(): AppUser? {
         val authentication = SecurityContextHolder.getContext().authentication
         if (authentication == null || !authentication.isAuthenticated || authentication.principal == "anonymousUser") {
-            throw EntityNotFoundException("No user is currently logged in")
+            return null
         }
 
         val principal = authentication.principal

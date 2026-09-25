@@ -32,6 +32,8 @@ data class MaterialRequest(
     @field:Size(max = 255)
     val driveFileId: String? = null,
     
+    val isPublic: Boolean? = null,
+    
     val version: Long
 )
 
@@ -45,6 +47,8 @@ data class MaterialResponse(
     val sourceLink: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime?,
+    val isPublic: Boolean = false,
+    val visibility: com.jankowski.rafal.dancebook.model.Visibility = com.jankowski.rafal.dancebook.model.Visibility.PRIVATE,
     val version: Long,
 )
 

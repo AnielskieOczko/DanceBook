@@ -11,6 +11,13 @@
         <span class="text-text-primary font-medium truncate" th:text="${customList.name}">List Name</span>
     </nav>
 
+    <!--/* Warning alert for owner when collection has private notes */-->
+    <th:block th:if="${privateNotesWarning}">
+        <div class="mb-6">
+            <div th:replace="~{fragments/alert :: alert(variant='warning', title='Private Notes Warning', text='Some of your notes matching this collection are private and won\'t be shown to other users.')}"></div>
+        </div>
+    </th:block>
+
     <!-- Header -->
     <div class="mb-6 relative rounded-xl overflow-hidden border border-border bg-surface-warm">
         <!-- Cover Image Background -->
@@ -65,7 +72,7 @@
                 </div>
                 
                 <!-- Action Buttons -->
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2" th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or customList.owner?.id == currentUser.id)}">
                     <a th:href="@{/lists/{id}/edit(id=${customList.id})}" 
                        class="flex items-center justify-center w-11 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection" aria-label="Edit Collection">
                         <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>

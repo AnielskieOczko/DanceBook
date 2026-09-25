@@ -154,6 +154,8 @@ class WebRouteSmokeTest {
             name = "Smoke Material ${UUID.randomUUID()}"
             this.danceType = danceType
             driveFileId = "smoke-drive-file"
+            owner = admin
+            visibility = com.jankowski.rafal.dancebook.model.Visibility.PUBLIC
         }
         val figureOccurrence = Figure().apply {
             this.material = material

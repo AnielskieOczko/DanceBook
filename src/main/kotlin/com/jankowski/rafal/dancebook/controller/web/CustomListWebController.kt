@@ -19,13 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.Visibility
+import com.jankowski.rafal.dancebook.service.AppUserService
+import jakarta.persistence.EntityNotFoundException
+
 @Controller
 @RequestMapping("/lists")
 class CustomListWebController(
     private val customListService: CustomListService,
     private val materialService: MaterialService,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val appUserService: AppUserService
 ) {
 
     @GetMapping
@@ -104,9 +112,23 @@ class CustomListWebController(
             pageable = pageable
         )
 
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val isOwner = currentUser != null && list.owner?.id == currentUser.id
+        var privateNotesWarning = false
+        if (list.isPublic && isOwner && currentUser != null) {
+            privateNotesWarning = materialService.hasPrivateNotesMatchingFilter(
+                owner = currentUser,
+                typeIds = typeIds.ifEmpty { null },
+                categoryIds = categoryIds.ifEmpty { null },
+                minRating = list.minRating,
+                nameSearch = list.nameFilter
+            )
+        }
+
         model.addAttribute("customList", list)
         model.addAttribute("materials", materials.content)
         model.addAttribute("currentView", view)
+        model.addAttribute("privateNotesWarning", privateNotesWarning)
 
         return if (isHtmxRequest == true) {
             "materials/list :: materialsTable"
@@ -118,6 +140,10 @@ class CustomListWebController(
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val list = customListService.findById(id)
+        val currentUser = appUserService.getCurrentUser()
+        if (list.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Custom list with id $id not found")
+        }
         val request = CustomListRequest(
             name = list.name,
             nameFilter = list.nameFilter,
