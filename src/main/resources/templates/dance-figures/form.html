@@ -305,6 +305,13 @@
 
         <div th:replace="~{fragments/form :: errorSummary}"></div>
 
+        <!-- Optimistic-locking token: figures are edited by everyone -->
+        <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
+
+        <th:block th:if="${danceFigureId == null}">
+            <div th:replace="~{fragments/alert :: alert(variant='info', text='Figures are shared with every DanceBook user.')}"></div>
+        </th:block>
+
         <!-- TOP SECTION: Metadata Grid (3 Columns on Desktop) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             

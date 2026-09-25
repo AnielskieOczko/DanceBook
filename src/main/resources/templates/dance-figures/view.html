@@ -4,6 +4,10 @@
 
 <section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
+    <div th:if="${deleteError != null}" class="mb-6">
+        <div th:replace="~{fragments/alert :: alert(variant='error', text=${deleteError})}"></div>
+    </div>
+
     <!-- Header Section with Title and Actions -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-outline-variant/30 gap-4">
         <div>
@@ -20,9 +24,9 @@
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span> Edit Figure
             </a>
             
-            <!-- Delete Button (Only for custom figures) -->
-            <form th:if="${!danceFigure.predefined}" th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
-                  data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+            <!-- Delete: creator or admin; syllabus figures admin only -->
+            <form th:if="${danceFigure.isDeletableBy(currentUser)}" th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
+                  data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
                 <button type="submit" class="btn-danger flex items-center gap-1.5">
                     <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span> Delete Figure
                 </button>

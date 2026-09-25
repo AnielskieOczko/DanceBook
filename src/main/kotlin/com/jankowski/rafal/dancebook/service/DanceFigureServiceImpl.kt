@@ -14,9 +14,11 @@ import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureSpecification
 import jakarta.persistence.EntityNotFoundException
+import jakarta.persistence.OptimisticLockException
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -94,13 +96,15 @@ class DanceFigureServiceImpl(
             throw IllegalArgumentException("A figure with the name '${request.name}' already exists for this dance.")
         }
 
+        val currentUser = appUserService.getCurrentUser()
         val danceFigure = DanceFigure().apply {
             this.predefined = false
+            this.createdBy = currentUser
         }
         mapRequestToEntity(danceFigure, request, danceType)
         val saved = danceFigureRepository.save(danceFigure)
         eventPublisher.publishEvent(
-            DanceFigureCreatedEvent(saved, appUserService.getCurrentUser())
+            DanceFigureCreatedEvent(saved, currentUser)
         )
         return saved
      }
@@ -109,6 +113,10 @@ class DanceFigureServiceImpl(
     override fun update(id: UUID, request: DanceFigureRequest): DanceFigure {
         log.debug("Updating dance figure {}: {}", id, request)
         val danceFigure = findById(id)
+        // Anyone may edit any figure, so a stale form must not overwrite someone else's save
+        if (danceFigure.version != request.version) {
+            throw OptimisticLockException(DanceFigureService.CONFLICT_MESSAGE)
+        }
         val danceType = danceTypeService.findById(request.danceTypeId!!)
 
         // Check for duplicates, excluding ourselves
@@ -228,13 +236,22 @@ class DanceFigureServiceImpl(
      override fun delete(id: UUID) {
          log.debug("Deleting dance figure for id {}", id)
          val existing = findById(id)
-         if (existing.predefined) {
-             throw IllegalStateException("Cannot delete predefined standard figures.")
+         val currentUser = appUserService.getCurrentUser()
+         if (!existing.isDeletableBy(currentUser)) {
+             throw AccessDeniedException(
+                 if (existing.predefined) "Only an admin can delete a syllabus figure."
+                 else "Only the figure's creator or an admin can delete it."
+             )
+         }
+         val notes = danceFigureRepository.countOtherUsersNotesUsing(id, currentUser.id!!)
+         val choreographies = danceFigureRepository.countOtherUsersChoreographiesUsing(id, currentUser.id!!)
+         if (notes + choreographies > 0) {
+             throw FigureInUseException(notes, choreographies)
          }
          val formattedName = "${existing.danceType?.name ?: ""} - ${existing.name}"
          danceFigureRepository.delete(existing)
          eventPublisher.publishEvent(
-             DanceFigureDeletedEvent(id, formattedName, appUserService.getCurrentUser())
+             DanceFigureDeletedEvent(id, formattedName, currentUser)
          )
      }
  }
