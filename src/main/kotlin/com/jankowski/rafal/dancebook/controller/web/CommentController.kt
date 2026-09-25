@@ -100,6 +100,7 @@ class CommentController(
         @PathVariable commentId: UUID,
     ) {
         val currentUser = appUserService.getCurrentUser()
+        materialService.findById(materialId)
         commentService.deleteComment(commentId, currentUser)
     }
 

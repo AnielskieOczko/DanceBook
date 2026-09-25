@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.repository.ChoreographySpecification
+import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
+
 @Service
 class ChoreographyServiceImpl(
     private val choreographyRepository: ChoreographyRepository,
@@ -25,14 +29,17 @@ class ChoreographyServiceImpl(
     }
 
     override fun findByCurrentUser(): List<Choreography> {
-        val currentUser = appUserService.getCurrentUser()
-        log.debug("Retrieving choreographies for user '{}'", currentUser.username)
-        return choreographyRepository.findVisibleByUser(currentUser)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        log.debug("Retrieving choreographies for user '{}'", currentUser?.username)
+        return choreographyRepository.findAll(ChoreographySpecification.visibleTo(currentUser), Sort.by(Sort.Direction.DESC, "updatedAt"))
     }
 
     override fun findById(id: UUID): Choreography {
         log.debug("Retrieving choreography for id {}", id)
-        return choreographyRepository.findById(id).orElseThrow {
+        val currentUser = appUserService.getCurrentUserOrNull()
+        return choreographyRepository.findOne(
+            ChoreographySpecification.visibleTo(currentUser).and(ChoreographySpecification.byId(id))
+        ).orElseThrow {
             EntityNotFoundException("Could not find choreography with id $id")
         }
     }
@@ -229,7 +236,7 @@ class ChoreographyServiceImpl(
 
     private fun checkOwnership(choreography: Choreography, currentUser: AppUser) {
         if (choreography.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
-            throw IllegalStateException("You don't have permission to modify this choreography")
+            throw AccessDeniedException("You don't have permission to modify this choreography")
         }
     }
 }

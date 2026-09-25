@@ -1,12 +1,14 @@
 package com.jankowski.rafal.dancebook.controller
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.repository.CommentRepository
+import com.jankowski.rafal.dancebook.repository.CommentSpecification
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
+import com.jankowski.rafal.dancebook.repository.MaterialSpecification
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,16 +25,15 @@ class HomeController(
 
     @GetMapping("/")
     fun home(model: Model): String {
-        model.addAttribute("materialCount", materialRepository.count())
+        val currentUser = appUserService.getCurrentUserOrNull()
+
+        model.addAttribute("materialCount", materialRepository.count(MaterialSpecification.visibleTo(currentUser)))
         model.addAttribute("figureCount", danceFigureRepository.count())
         model.addAttribute("danceTypeCount", danceTypeService.findAll().size)
-        model.addAttribute("commentCount", commentRepository.count())
+        model.addAttribute("commentCount", commentRepository.count(CommentSpecification.visibleTo(currentUser)))
 
-        // Current user display name for greeting
-        val auth = SecurityContextHolder.getContext().authentication
-        if (auth != null && auth.isAuthenticated && auth.principal != "anonymousUser") {
-            val user = appUserService.getCurrentUser()
-            model.addAttribute("displayName", user.displayName ?: user.username)
+        if (currentUser != null) {
+            model.addAttribute("displayName", currentUser.displayName.ifBlank { currentUser.username })
         }
 
         // Recent activity events for timeline

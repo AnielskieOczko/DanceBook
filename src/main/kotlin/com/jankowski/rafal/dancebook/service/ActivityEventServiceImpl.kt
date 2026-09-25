@@ -3,10 +3,13 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.model.ActivityEvent
 import com.jankowski.rafal.dancebook.model.NotificationReadStatus
 import com.jankowski.rafal.dancebook.repository.ActivityEventRepository
+import com.jankowski.rafal.dancebook.repository.ActivityEventSpecification
 import com.jankowski.rafal.dancebook.repository.NotificationReadStatusRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -24,22 +27,29 @@ class ActivityEventServiceImpl(
     }
 
     override fun getUnreadCount(userId: UUID): Long {
-        return activityEventRepository.countUnreadByUser(userId)
+        val user = appUserService.findById(userId)
+        val spec = ActivityEventSpecification.visibleTo(user).and(ActivityEventSpecification.isUnreadFor(user))
+        return activityEventRepository.count(spec)
     }
 
     override fun getUnreadEvents(userId: UUID): List<ActivityEvent> {
-        return activityEventRepository.findUnreadByUser(userId)
+        val user = appUserService.findById(userId)
+        val spec = ActivityEventSpecification.visibleTo(user).and(ActivityEventSpecification.isUnreadFor(user))
+        return activityEventRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "createdAt"))
     }
 
     override fun getRecentEvents(limit: Int): List<ActivityEvent> {
-        return activityEventRepository.findTop10ByOrderByCreatedAtDesc()
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val spec = ActivityEventSpecification.visibleTo(currentUser)
+        val pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"))
+        return activityEventRepository.findAll(spec, pageable).content
     }
 
     @Transactional
     override fun markAllAsRead(userId: UUID) {
         log.debug("Marking all events as read for user {}", userId)
         val user = appUserService.findById(userId)
-        val unread = activityEventRepository.findUnreadByUser(userId)
+        val unread = getUnreadEvents(userId)
 
         unread.forEach { event ->
             val existing = readStatusRepository.findByEventIdAndUserId(event.id!!, userId)
@@ -83,6 +93,13 @@ class ActivityEventServiceImpl(
     }
 
     override fun getAllEvents(pageable: Pageable): Page<ActivityEvent> {
-        return activityEventRepository.findAllByOrderByCreatedAtDesc(pageable)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val spec = ActivityEventSpecification.visibleTo(currentUser)
+        val sortedPageable = if (pageable.sort.isSorted) {
+            pageable
+        } else {
+            PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Direction.DESC, "createdAt"))
+        }
+        return activityEventRepository.findAll(spec, sortedPageable)
     }
 }

@@ -10,7 +10,7 @@ import java.util.UUID
 
 interface MaterialService {
     fun findById(id: UUID): Material
-    fun create(materialRequest: MaterialRequest): Material
+    fun create(request: MaterialRequest): Material
     fun update(id: UUID, request: MaterialRequest): Material
     fun delete(id: UUID)
     fun findAll(): List<Material>
@@ -26,4 +26,11 @@ interface MaterialService {
     fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure
     fun removeFigure(materialId: UUID, figureId: UUID)
     fun findFiguresByMaterial(materialId: UUID): List<Figure>
+    fun hasPrivateNotesMatchingFilter(
+        owner: com.jankowski.rafal.dancebook.model.AppUser,
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        nameSearch: String?
+    ): Boolean
 }

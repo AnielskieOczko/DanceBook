@@ -38,6 +38,8 @@ fun Material.toResponse() = MaterialResponse(
     sourceLink = sourceLink,
     createdAt = createdAt,
     updatedAt = updatedAt,
+    isPublic = isPublic,
+    visibility = visibility,
     version = version,
 )
 
@@ -47,5 +49,10 @@ fun MaterialRequest.toEntity(existingMaterial: Material = Material()) = existing
     rating = this@toEntity.rating
     videoLink = this@toEntity.videoLink
     sourceLink = this@toEntity.sourceLink
+    visibility = if (this@toEntity.isPublic != null) {
+        if (this@toEntity.isPublic == true) com.jankowski.rafal.dancebook.model.Visibility.PUBLIC else com.jankowski.rafal.dancebook.model.Visibility.PRIVATE
+    } else {
+        existingMaterial.visibility
+    }
     version = this@toEntity.version
 }

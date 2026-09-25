@@ -25,8 +25,16 @@ class Choreography {
     @JoinColumn(name = "owner_id", nullable = false)
     var owner: AppUser? = null
 
-    @Column(name = "is_public", nullable = false)
-    var isPublic: Boolean = false
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    var visibility: Visibility = Visibility.PRIVATE
+
+    @get:Transient
+    var isPublic: Boolean
+        get() = visibility == Visibility.PUBLIC
+        set(value) {
+            visibility = if (value) Visibility.PUBLIC else Visibility.PRIVATE
+        }
 
     @OneToMany(mappedBy = "choreography", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("sortOrder ASC")

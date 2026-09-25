@@ -2,11 +2,21 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.Visibility
+import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
+import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
+import com.jankowski.rafal.dancebook.model.MaterialVisibilityChangedEvent
+import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
-import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialSpecification
 import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
@@ -20,12 +30,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
 
-import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
-import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
-import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
-import com.jankowski.rafal.dancebook.model.MaterialFigureAddedEvent
-import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
-import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
+import org.springframework.security.access.AccessDeniedException
 
 @Service
 class MaterialServiceImpl(
@@ -45,7 +50,10 @@ class MaterialServiceImpl(
 
     override fun findById(id: UUID): Material {
         log.debug("Retrieving material for id {}", id)
-        return materialRepository.findById(id).orElseThrow {
+        val currentUser = appUserService.getCurrentUserOrNull()
+        return materialRepository.findOne(
+            MaterialSpecification.visibleTo(currentUser).and(MaterialSpecification.byId(id))
+        ).orElseThrow {
             EntityNotFoundException("Could not find material with id $id")
         }
     }
@@ -53,6 +61,7 @@ class MaterialServiceImpl(
     @Transactional
     override fun create(request: MaterialRequest): Material {
         log.debug("Creating material {}", request)
+        val currentUser = appUserService.getCurrentUser()
         val material = Material()
         material.name = request.name
         material.description = richTextService.clean(request.description)
@@ -60,6 +69,8 @@ class MaterialServiceImpl(
         material.videoLink = request.videoLink
         material.sourceLink = request.sourceLink
         material.driveFileId = request.driveFileId
+        material.owner = currentUser
+        material.visibility = if (request.isPublic == true) Visibility.PUBLIC else Visibility.PRIVATE
         material.updatedAt = LocalDateTime.now()
 
         if (material.danceType?.id != request.danceTypeId) {
@@ -67,7 +78,7 @@ class MaterialServiceImpl(
         }
 
         return materialRepository.save(material).also {
-            eventPublisher.publishEvent(MaterialCreatedEvent(it, appUserService.getCurrentUser()))
+            eventPublisher.publishEvent(MaterialCreatedEvent(it, currentUser))
         }
     }
 
@@ -77,17 +88,24 @@ class MaterialServiceImpl(
         request: MaterialRequest
     ): Material {
         log.debug("Updating material for id {}", id)
+        val currentUser = appUserService.getCurrentUser()
         val existing = findById(id)
+        checkOwnership(existing, currentUser)
 
         if (existing.version != request.version) {
             throw OptimisticLockException("The material was updated by another user. Please refresh.")
         }
+
+        val wasVisibility = existing.visibility
+        val targetVisibility = if (request.isPublic != null) (if (request.isPublic) Visibility.PUBLIC else Visibility.PRIVATE) else wasVisibility
+        val visibilityChanged = wasVisibility != targetVisibility
 
         existing.name = request.name
         existing.description = richTextService.clean(request.description)
         existing.rating = request.rating
         existing.videoLink = request.videoLink
         existing.sourceLink = request.sourceLink
+        existing.visibility = targetVisibility
 
         val oldDriveFileId = existing.driveFileId
         val newDriveFileId = if (request.driveFileId.isNullOrBlank()) null else request.driveFileId
@@ -105,17 +123,23 @@ class MaterialServiceImpl(
         }
 
         return materialRepository.save(existing).also {
-            eventPublisher.publishEvent(MaterialUpdatedEvent(it, appUserService.getCurrentUser()))
+            if (visibilityChanged) {
+                eventPublisher.publishEvent(MaterialVisibilityChangedEvent(it, wasVisibility, currentUser))
+            }
+            eventPublisher.publishEvent(MaterialUpdatedEvent(it, currentUser))
         }
     }
 
     @Transactional
     override fun delete(id: UUID) {
         log.debug("Deleting material for id {}", id)
+        val currentUser = appUserService.getCurrentUser()
         val existing = findById(id)
+        checkOwnership(existing, currentUser)
+
         val driveFileId = existing.driveFileId
         val materialName = existing.name
-        val currentUser = appUserService.getCurrentUser()
+        val wasPublic = existing.visibility == Visibility.PUBLIC
 
         materialRepository.delete(existing)
 
@@ -124,12 +148,13 @@ class MaterialServiceImpl(
             googleDriveService.deleteFile(driveFileId)
         }
 
-        eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, currentUser))
+        eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, wasPublic, currentUser))
     }
 
     override fun findAll(): List<Material> {
         log.debug("Retrieving all materials")
-        return materialRepository.findAll(Sort.by(Sort.Direction.ASC, "name"))
+        val currentUser = appUserService.getCurrentUserOrNull()
+        return materialRepository.findAll(MaterialSpecification.visibleTo(currentUser), Sort.by(Sort.Direction.ASC, "name"))
     }
 
     override fun findAll(
@@ -140,14 +165,17 @@ class MaterialServiceImpl(
         pageable: Pageable
     ): Page<Material> {
         log.debug("Retrieving all materials with filters: typeIds={}, categoryIds={}, minRating={}, nameSearch={}", typeIds, categoryIds, minRating, nameSearch)
-        val spec = MaterialSpecification.withFilters(typeIds, categoryIds, minRating, nameSearch)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val spec = MaterialSpecification.withFilters(currentUser, typeIds, categoryIds, minRating, nameSearch)
         return materialRepository.findAll(spec, pageable)
     }
 
     @Transactional
     override fun addFigure(materialId: UUID, request: FigureRequest): Figure {
         log.debug("Adding figure '{}' to material {}", request.danceFigureId, materialId)
+        val currentUser = appUserService.getCurrentUser()
         val material = findById(materialId)
+        checkOwnership(material, currentUser)
         val df = danceFigureRepository.findById(request.danceFigureId!!)
             .orElseThrow { EntityNotFoundException("DanceFigure not found") }
         val figure = Figure().apply {
@@ -159,7 +187,7 @@ class MaterialServiceImpl(
         material.figures.add(figure)
         materialRepository.save(material)
         eventPublisher.publishEvent(
-            MaterialFigureAddedEvent(material, df.name, appUserService.getCurrentUser())
+            MaterialFigureAddedEvent(material, df.name, currentUser)
         )
         return figure
     }
@@ -167,7 +195,9 @@ class MaterialServiceImpl(
     @Transactional
     override fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure {
         log.debug("Updating figure {} in material {}", figureId, materialId)
+        val currentUser = appUserService.getCurrentUser()
         val material = findById(materialId)
+        checkOwnership(material, currentUser)
         val figure = material.figures.find { it.id == figureId }
             ?: throw EntityNotFoundException("Figure not found in material")
         val df = danceFigureRepository.findById(request.danceFigureId!!)
@@ -177,7 +207,7 @@ class MaterialServiceImpl(
         figure.danceFigure = df
         materialRepository.save(material)
         eventPublisher.publishEvent(
-            MaterialFigureUpdatedEvent(material, df.name, appUserService.getCurrentUser())
+            MaterialFigureUpdatedEvent(material, df.name, currentUser)
         )
         return figure
     }
@@ -185,19 +215,48 @@ class MaterialServiceImpl(
     @Transactional
     override fun removeFigure(materialId: UUID, figureId: UUID) {
         log.debug("Removing figure {} from material {}", figureId, materialId)
+        val currentUser = appUserService.getCurrentUser()
         val material = findById(materialId)
+        checkOwnership(material, currentUser)
         val figure = material.figures.find { it.id == figureId }
             ?: throw EntityNotFoundException("Figure not found in material")
         val figureName = figure.danceFigure?.name ?: "Unknown Figure"
         material.figures.removeIf { it.id == figureId }
         materialRepository.save(material)
         eventPublisher.publishEvent(
-            MaterialFigureDeletedEvent(material, figureName, appUserService.getCurrentUser())
+            MaterialFigureDeletedEvent(material, figureName, currentUser)
         )
     }
 
     override fun findFiguresByMaterial(materialId: UUID): List<Figure> {
         log.debug("Retrieving figures for material {}", materialId)
         return figureRepository.findAllByMaterialIdOrderByStartTimeAsc(materialId)
+    }
+
+    override fun hasPrivateNotesMatchingFilter(
+        owner: AppUser,
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        nameSearch: String?
+    ): Boolean {
+        val privateNotesSpec = org.springframework.data.jpa.domain.Specification<Material> { root, _, cb ->
+            cb.and(
+                cb.equal(root.get<AppUser>("owner"), owner),
+                cb.equal(root.get<Visibility>("visibility"), Visibility.PRIVATE)
+            )
+        }.and(MaterialSpecification.filterCriteria(
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            minRating = minRating,
+            nameSearch = nameSearch
+        ))
+        return materialRepository.count(privateNotesSpec) > 0
+    }
+
+    private fun checkOwnership(material: Material, currentUser: AppUser) {
+        if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw AccessDeniedException("You don't have permission to modify this note")
+        }
     }
 }

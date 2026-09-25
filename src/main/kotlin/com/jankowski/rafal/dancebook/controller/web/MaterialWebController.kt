@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.service.AppUserService
+import jakarta.persistence.EntityNotFoundException
 import java.util.UUID
 
 @Controller
@@ -31,7 +34,8 @@ class MaterialWebController(
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
     private val commentService: CommentService,
-    private val danceFigureService: DanceFigureService
+    private val danceFigureService: DanceFigureService,
+    private val appUserService: AppUserService
 ) {
 
     @GetMapping
@@ -156,6 +160,10 @@ class MaterialWebController(
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val material = materialService.findById(id)
+        val currentUser = appUserService.getCurrentUser()
+        if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find material with id $id")
+        }
         val request = MaterialRequest(
             name = material.name,
             description = material.description,
@@ -165,6 +173,7 @@ class MaterialWebController(
             videoLink = material.videoLink,
             sourceLink = material.sourceLink,
             driveFileId = material.driveFileId,
+            isPublic = material.isPublic,
             version = material.version
         )
         model.addAttribute("material", request)

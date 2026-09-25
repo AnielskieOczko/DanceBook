@@ -20,7 +20,7 @@ import java.util.UUID
 class CommentServiceTest {
 
     private lateinit var commentRepository: CommentRepository
-    private lateinit var materialRepository: MaterialRepository
+    private lateinit var materialService: MaterialService
     private lateinit var eventPublisher: ApplicationEventPublisher
     private lateinit var richTextService: RichTextService
     private lateinit var commentService: CommentServiceImpl
@@ -43,18 +43,18 @@ class CommentServiceTest {
     @BeforeEach
     fun setUp() {
         commentRepository = mock(CommentRepository::class.java)
-        materialRepository = mock(MaterialRepository::class.java)
+        materialService = mock(MaterialService::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
         richTextService = RichTextServiceImpl()
 
         commentService = CommentServiceImpl(
             commentRepository = commentRepository,
-            materialRepository = materialRepository,
+            materialService = materialService,
             eventPublisher = eventPublisher,
             richTextService = richTextService
         )
 
-        `when`(materialRepository.findById(materialId)).thenReturn(Optional.of(testMaterial))
+        `when`(materialService.findById(materialId)).thenReturn(testMaterial)
     }
 
     @Test

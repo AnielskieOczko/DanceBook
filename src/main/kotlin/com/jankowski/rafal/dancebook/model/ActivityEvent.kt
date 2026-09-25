@@ -18,6 +18,7 @@ enum class EventType {
     MATERIAL_CREATED,
     MATERIAL_UPDATED,
     MATERIAL_DELETED,
+    MATERIAL_VISIBILITY_CHANGED,
     COMMENT_ADDED,
     LIST_CREATED,
     LIST_MADE_PUBLIC,
@@ -73,6 +74,9 @@ class ActivityEvent {
 
     @Column(name = "metadata", columnDefinition = "TEXT")
     var metadata: String? = null
+
+    @Column(name = "target_visibility")
+    var targetVisibility: String? = null
 
     @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

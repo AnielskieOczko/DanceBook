@@ -4,12 +4,11 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Comment
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.CommentRepository
-import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import jakarta.persistence.EntityNotFoundException
-import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.security.access.AccessDeniedException
@@ -19,7 +18,7 @@ import com.jankowski.rafal.dancebook.model.CommentAddedEvent
 @Transactional
 class CommentServiceImpl(
     private val commentRepository: CommentRepository,
-    private val materialRepository: MaterialRepository,
+    private val materialService: MaterialService,
     private val eventPublisher: ApplicationEventPublisher,
     private val richTextService: RichTextService
 ): CommentService {
@@ -34,8 +33,7 @@ class CommentServiceImpl(
         author: AppUser
     ): Comment {
         logger.info("Adding comment for material $materialId")
-        val material = materialRepository.findById(materialId)
-            .orElseThrow { EntityNotFoundException("Material with id $materialId does not exist") }
+        val material = materialService.findById(materialId)
 
         val cleanedContent = richTextService.clean(content)
         require(!cleanedContent.isNullOrBlank()) { "Comment content must not be blank" }
@@ -52,8 +50,7 @@ class CommentServiceImpl(
 
     @Transactional
     override fun updateComment(commentId: UUID, content: String, currentUser: AppUser): Comment {
-        val comment = commentRepository.findById(commentId)
-            .orElseThrow { EntityNotFoundException("Comment not found") }
+        val comment = findCommentById(commentId)
 
         // Security check: Only author can edit
         if (comment.author?.id != currentUser.id) {
@@ -67,10 +64,10 @@ class CommentServiceImpl(
         comment.updatedAt = LocalDateTime.now()
         return commentRepository.save(comment)
     }
+
     @Transactional
     override fun deleteComment(commentId: UUID, currentUser: AppUser) {
-        val comment = commentRepository.findById(commentId)
-            .orElseThrow { EntityNotFoundException("Comment not found") }
+        val comment = findCommentById(commentId)
 
         // Security check: Only author or Admin can delete
         if (comment.author?.id != currentUser.id && currentUser.role != Role.ADMIN) {
@@ -79,14 +76,17 @@ class CommentServiceImpl(
 
         commentRepository.delete(comment)
     }
+
     override fun getCommentsForMaterial(materialId: UUID): List<Comment> {
+        materialService.findById(materialId)
         return commentRepository.findByMaterialIdOrderByCreatedAtDesc(materialId)
     }
 
     override fun findCommentById(id: UUID): Comment {
         logger.info("Retrieving comment for id $id")
-        return commentRepository.findById(id).orElseThrow { EntityNotFoundException("Comment not found") }
+        val comment = commentRepository.findById(id).orElseThrow { EntityNotFoundException("Comment not found") }
+        val materialId = comment.material?.id ?: throw EntityNotFoundException("Comment not found")
+        materialService.findById(materialId)
+        return comment
     }
-
-
 }

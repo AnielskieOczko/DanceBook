@@ -1,15 +1,6 @@
 package com.jankowski.rafal.dancebook.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -31,8 +22,16 @@ class CustomList {
 
     var minRating: Short? = null
 
-    @Column(name = "is_public")
-    var isPublic: Boolean = false
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    var visibility: Visibility = Visibility.PRIVATE
+
+    @get:Transient
+    var isPublic: Boolean
+        get() = visibility == Visibility.PUBLIC
+        set(value) {
+            visibility = if (value) Visibility.PUBLIC else Visibility.PRIVATE
+        }
 
     @Column(name = "image_filename")
     var imageFilename: String? = null
