@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.UploadedFile
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.model.MaterialCreatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialDeletedEvent
@@ -18,6 +19,7 @@ import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import com.jankowski.rafal.dancebook.repository.MaterialSpecification
+import com.jankowski.rafal.dancebook.repository.UploadedFileRepository
 import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
 import org.slf4j.LoggerFactory
@@ -25,12 +27,11 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
-
-import org.springframework.security.access.AccessDeniedException
 
 @Service
 class MaterialServiceImpl(
@@ -39,6 +40,7 @@ class MaterialServiceImpl(
     private val danceTypeService: DanceTypeService,
     private val danceFigureRepository: DanceFigureRepository,
     private val googleDriveService: GoogleDriveService,
+    private val uploadedFileRepository: UploadedFileRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val appUserService: AppUserService,
     private val richTextService: RichTextService
@@ -58,10 +60,23 @@ class MaterialServiceImpl(
         }
     }
 
+    override fun downloadVideo(id: UUID, rangeHeader: String?): GoogleDriveService.DriveMediaDownload {
+        log.debug("Streaming video for material id {}", id)
+        val material = findById(id)
+        val driveFileId = material.driveFileId
+            ?: throw EntityNotFoundException("Material with id $id does not have a linked video")
+        return googleDriveService.downloadMedia(driveFileId, rangeHeader)
+    }
+
     @Transactional
     override fun create(request: MaterialRequest): Material {
         log.debug("Creating material {}", request)
         val currentUser = appUserService.getCurrentUser()
+
+        if (!request.driveFileId.isNullOrBlank()) {
+            verifyUploader(request.driveFileId, currentUser)
+        }
+
         val material = Material()
         material.name = request.name
         material.description = richTextService.clean(request.description)
@@ -109,11 +124,17 @@ class MaterialServiceImpl(
 
         val oldDriveFileId = existing.driveFileId
         val newDriveFileId = if (request.driveFileId.isNullOrBlank()) null else request.driveFileId
+
+        if (newDriveFileId != null && newDriveFileId != oldDriveFileId) {
+            verifyUploader(newDriveFileId, currentUser)
+        }
+
         existing.driveFileId = newDriveFileId
 
         if (oldDriveFileId != null && oldDriveFileId != newDriveFileId) {
             log.info("Drive file ID changed from $oldDriveFileId to $newDriveFileId. Deleting old file from Google Drive.")
             googleDriveService.deleteFile(oldDriveFileId)
+            uploadedFileRepository.deleteById(oldDriveFileId)
         }
 
         existing.updatedAt = LocalDateTime.now()
@@ -146,6 +167,7 @@ class MaterialServiceImpl(
         if (driveFileId != null) {
             log.info("Material {} deleted. Physically deleting associated file {} from Google Drive.", id, driveFileId)
             googleDriveService.deleteFile(driveFileId)
+            uploadedFileRepository.deleteById(driveFileId)
         }
 
         eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, wasPublic, currentUser))
@@ -257,6 +279,25 @@ class MaterialServiceImpl(
     private fun checkOwnership(material: Material, currentUser: AppUser) {
         if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw AccessDeniedException("You don't have permission to modify this note")
+        }
+    }
+
+    private fun verifyUploader(driveFileId: String, currentUser: AppUser) {
+        val isUploadedByCurrentUser = uploadedFileRepository.existsByDriveFileIdAndUploaderId(driveFileId, currentUser.id!!)
+            || googleDriveService.getFileUploaderId(driveFileId) == currentUser.id.toString()
+
+        if (!isUploadedByCurrentUser) {
+            throw AccessDeniedException("User does not have permission to attach Drive file $driveFileId")
+        }
+
+        if (!uploadedFileRepository.existsById(driveFileId)) {
+            uploadedFileRepository.save(
+                UploadedFile(
+                    driveFileId = driveFileId,
+                    uploader = currentUser,
+                    createdAt = LocalDateTime.now()
+                )
+            )
         }
     }
 }

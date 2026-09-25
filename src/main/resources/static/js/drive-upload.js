@@ -1,14 +1,13 @@
 /**
- * Google Drive Direct Upload Module (Server-side auth version)
+ * Google Drive Direct Upload Module
  * 
  * Flow:
- * 1. Get access token + folderId from backend (backend uses stored refresh token)
- * 2. Create resumable upload session (via backend or directly with token)
- * 3. Browser uploads file directly to Google Drive using the pre-auth URL
- * 4. Finalize: set public permission via backend
- * 5. Return the Drive file ID
+ * 1. Request upload session from DanceBook backend (no Google tokens sent to browser)
+ * 2. Browser uploads file directly to Google Drive using the pre-auth resumable URL
+ * 3. Finalize: verify uploader on backend and record uploaded file
+ * 4. Return the Drive file ID
  * 
- * NO Google popup, NO user sign-in required.
+ * NO Google credentials ever reach the browser.
  */
 
 const DriveUpload = {
@@ -24,45 +23,37 @@ const DriveUpload = {
         try {
             onProgress(0);
 
-            // 1. Get access token from the backend
-            const configRes = await fetch('/api/materials/upload-config');
-            if (!configRes.ok) {
-                throw new Error('Failed to get upload config from backend');
+            // Read CSRF tokens from meta tags
+            const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+            const authHeaders = { 'Content-Type': 'application/json' };
+            if (csrfToken && csrfHeader) {
+                authHeaders[csrfHeader] = csrfToken;
             }
-            const config = await configRes.json();
 
-            // 2. Create a resumable upload session DIRECTLY with Google
-            // This ensures Google registers the browser's Origin for CORS
-            const metadata = JSON.stringify({
-                name: file.name,
-                parents: [config.folderId]
+            // 1. Create resumable upload session via DanceBook backend
+            const sessionRes = await fetch('/api/materials/upload-session', {
+                method: 'POST',
+                headers: authHeaders,
+                body: JSON.stringify({
+                    fileName: file.name,
+                    mimeType: file.type || 'video/mp4',
+                    fileSize: file.size
+                })
             });
-
-            const sessionRes = await fetch(
-                'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + config.accessToken,
-                        'Content-Type': 'application/json; charset=UTF-8',
-                        'X-Upload-Content-Type': file.type || 'video/mp4',
-                        'X-Upload-Content-Length': file.size
-                    },
-                    body: metadata
-                }
-            );
 
             if (!sessionRes.ok) {
                 const errText = await sessionRes.text();
-                throw new Error('Failed to create upload session with Google: ' + errText);
+                throw new Error('Failed to create upload session: ' + errText);
             }
 
-            const uploadUrl = sessionRes.headers.get('Location');
+            const sessionData = await sessionRes.json();
+            const uploadUrl = sessionData.uploadUrl;
             if (!uploadUrl) {
-                throw new Error('No upload URL returned by Google Drive');
+                throw new Error('No upload URL returned by server');
             }
 
-            // 3. Upload the file directly to Google Drive using the pre-auth URL
+            // 2. Upload the file directly to Google Drive using the pre-auth URL
             const xhr = new XMLHttpRequest();
 
             xhr.upload.addEventListener('progress', (e) => {
@@ -77,15 +68,20 @@ const DriveUpload = {
                     const response = JSON.parse(xhr.responseText);
                     const fileId = response.id;
 
-                    // 4. Finalize: set public permission via backend
+                    // 3. Finalize: verify and record upload on backend
                     try {
-                        await fetch('/api/materials/finalize-upload', {
+                        const finRes = await fetch('/api/materials/finalize-upload', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: authHeaders,
                             body: JSON.stringify({ fileId: fileId })
                         });
+                        if (!finRes.ok) {
+                            onError('Finalize upload failed with status: ' + finRes.status);
+                            return;
+                        }
                     } catch (permErr) {
-                        console.warn('Could not set public permission:', permErr);
+                        onError('Could not finalize upload: ' + permErr.message);
+                        return;
                     }
 
                     onSuccess(fileId);

@@ -3,15 +3,18 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.config.GoogleDriveProperties
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.http.GenericUrl
+import com.google.api.client.http.HttpResponseException
 import com.google.api.client.http.json.JsonHttpContent
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
-import com.google.api.services.drive.model.Permission
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.UserCredentials
+import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.io.File
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.util.UUID
 
 @Service
 class GoogleDriveService(
@@ -58,25 +61,27 @@ class GoogleDriveService(
             .build()
     }
 
-    /**
-     * Returns a fresh access token (auto-refreshes if expired).
-     * Used by the frontend to upload directly to Google Drive.
-     */
-    fun getAccessToken(): String {
-        credentials.refreshIfExpired()
-        return credentials.accessToken.tokenValue
-    }
-
     fun getFolderId(): String = driveProperties.folderId
 
     /**
      * Creates a resumable upload session on Google Drive.
      * Returns the pre-authenticated upload URL that the frontend can PUT to directly.
+     * Attaches the uploader's user ID to appProperties so file ownership can be verified.
      */
-    fun createResumableSession(fileName: String, mimeType: String, fileSize: Long?, origin: String?): String {
+    fun createResumableSession(
+        fileName: String,
+        mimeType: String,
+        fileSize: Long?,
+        origin: String?,
+        uploaderId: UUID
+    ): String {
         val requestFactory = drive.requestFactory
 
-        val metaData = mapOf("name" to fileName, "parents" to listOf(driveProperties.folderId))
+        val metaData = mapOf(
+            "name" to fileName,
+            "parents" to listOf(driveProperties.folderId),
+            "appProperties" to mapOf("uploadedBy" to uploaderId.toString())
+        )
 
         val url = GenericUrl(
             "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable"
@@ -94,24 +99,64 @@ class GoogleDriveService(
     }
 
     /**
-     * Sets public read permission on a file and returns its ID.
-     * Called after frontend finishes uploading to the resumable URL.
+     * Downloads file media from Google Drive with optional Range header support.
+     * Does not buffer the entire stream into memory.
+     */
+    fun downloadMedia(fileId: String, rangeHeader: String?): DriveMediaDownload {
+        val url = GenericUrl("https://www.googleapis.com/drive/v3/files/$fileId?alt=media")
+        val request = drive.requestFactory.buildGetRequest(url).apply {
+            headers.set("Accept-Encoding", "identity")
+            rangeHeader?.let { headers.range = it }
+        }
+        val response = try {
+            request.execute()
+        } catch (e: HttpResponseException) {
+            if (e.statusCode == 404) {
+                throw EntityNotFoundException("Video file not found on Google Drive: $fileId")
+            }
+            if (e.statusCode == 416) {
+                val contentRange = e.headers?.contentRange ?: e.headers?.getFirstHeaderStringValue("Content-Range")
+                return DriveMediaDownload(
+                    statusCode = 416,
+                    contentType = e.headers?.contentType,
+                    contentLength = 0L,
+                    contentRange = contentRange,
+                    stream = ByteArrayInputStream(ByteArray(0))
+                )
+            }
+            throw e
+        }
+        return DriveMediaDownload(
+            statusCode = response.statusCode,
+            contentType = response.contentType,
+            contentLength = response.headers.contentLength,
+            contentRange = response.headers.contentRange,
+            stream = response.content
+        )
+    }
+
+    /**
+     * Reads the appProperties from Google Drive metadata to identify who uploaded the file.
+     */
+    fun getFileUploaderId(fileId: String): String? {
+        return try {
+            val file = drive.files().get(fileId)
+                .setFields("id, appProperties")
+                .setSupportsAllDrives(true)
+                .execute()
+            file.appProperties?.get("uploadedBy")
+        } catch (e: Exception) {
+            logger.warn("Could not retrieve metadata for file {}: {}", fileId, e.message)
+            null
+        }
+    }
+
+    /**
+     * Finalizes upload on server side.
+     * New uploads remain private to the app account (no public 'anyone' permission is added).
      */
     fun finalizeUpload(fileId: String) {
-        logger.info("Setting public permission for file {}", fileId)
-        try {
-            drive.permissions()
-                .create(
-                    fileId,
-                    Permission().apply {
-                        type = "anyone"
-                        role = "reader"
-                    }
-                )
-                .execute()
-        } catch (e: Exception) {
-            logger.warn("Set public read failed for {}: {}", fileId, e.message)
-        }
+        logger.info("Upload finalized for file {}", fileId)
     }
 
     /**
@@ -124,6 +169,40 @@ class GoogleDriveService(
         } catch (e: Exception) {
             logger.error("Failed to delete {}: {}", fileId, e.message)
         }
+    }
+
+    /**
+     * One-off idempotent cleanup of public ('anyone') permissions on existing files in the Drive folder.
+     */
+    fun cleanPermissions(): PermissionCleanupResult {
+        logger.info("Starting one-off cleanup of public permissions in Drive folder {}", driveProperties.folderId)
+        val files = listFilesInFolder()
+        var permissionsRemoved = 0
+        val modifiedFiles = mutableListOf<String>()
+
+        for (file in files) {
+            try {
+                val permList = drive.permissions().list(file.id).setSupportsAllDrives(true).execute()
+                val anyonePerms = permList.permissions?.filter { it.type == "anyone" } ?: emptyList()
+                for (perm in anyonePerms) {
+                    logger.info("Removing public permission {} from file {} ({})", perm.id, file.id, file.name)
+                    drive.permissions().delete(file.id, perm.id).setSupportsAllDrives(true).execute()
+                    permissionsRemoved++
+                    if (!modifiedFiles.contains(file.id)) {
+                        modifiedFiles.add(file.id)
+                    }
+                }
+            } catch (e: Exception) {
+                logger.error("Error inspecting/cleaning permissions for file {}: {}", file.id, e.message)
+            }
+        }
+        logger.info("Public permissions cleanup finished: scanned {} files, removed {} permissions across {} files",
+            files.size, permissionsRemoved, modifiedFiles.size)
+        return PermissionCleanupResult(
+            filesScanned = files.size,
+            permissionsRemoved = permissionsRemoved,
+            modifiedFileIds = modifiedFiles
+        )
     }
 
     fun listFilesInFolder(): List<DriveFileInfo> {
@@ -143,7 +222,7 @@ class GoogleDriveService(
                 results.add(DriveFileInfo(
                     id = file.id,
                     name = file.name,
-                    size = file.getSize(), // getSize() returns Long
+                    size = file.getSize(),
                     createdTime = file.createdTime.value
                 ))
             }
@@ -159,5 +238,21 @@ class GoogleDriveService(
         val createdTime: Long
     )
 
+    data class DriveMediaDownload(
+        val statusCode: Int,
+        val contentType: String?,
+        val contentLength: Long?,
+        val contentRange: String?,
+        val stream: InputStream
+    ) : AutoCloseable {
+        override fun close() {
+            stream.close()
+        }
+    }
 
+    data class PermissionCleanupResult(
+        val filesScanned: Int,
+        val permissionsRemoved: Int,
+        val modifiedFileIds: List<String>
+    )
 }

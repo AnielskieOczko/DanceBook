@@ -156,6 +156,15 @@ tasks.register<JavaExec>("generateReconciliationReport") {
     mainClass.set("com.jankowski.rafal.dancebook.scripts.GenerateReconciliationReportKt")
 }
 
+tasks.register<JavaExec>("cleanDrivePermissions") {
+    group = "application"
+    description = "Removes public (anyone) permissions from Google Drive files"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.CleanDrivePermissionsKt")
+}
+
 springBoot {
     mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
 }

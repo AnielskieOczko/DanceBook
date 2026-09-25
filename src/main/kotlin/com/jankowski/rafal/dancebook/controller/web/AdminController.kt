@@ -199,6 +199,14 @@ class AdminController(
         return "admin/dashboard :: cleanupSuccess"
     }
 
+    // HTMX Endpoint for Permissions Cleanup
+    @PostMapping("/storage/clean-permissions")
+    fun cleanPermissions(model: Model): String {
+        val result = googleDriveService.cleanPermissions()
+        model.addAttribute("permissionResult", result)
+        return "admin/dashboard :: permissionCleanupSuccess"
+    }
+
     @GetMapping("/users/form")
     fun showCreateUserForm(model: Model): String {
         return "admin/dashboard :: createUserForm"
