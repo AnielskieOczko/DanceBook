@@ -32,6 +32,7 @@ class MaterialServiceFigureTest {
     private lateinit var danceTypeService: DanceTypeService
     private lateinit var danceFigureRepository: DanceFigureRepository
     private lateinit var googleDriveService: GoogleDriveService
+    private lateinit var uploadedFileRepository: com.jankowski.rafal.dancebook.repository.UploadedFileRepository
     private lateinit var eventPublisher: ApplicationEventPublisher
     private lateinit var appUserService: AppUserService
     private lateinit var materialService: MaterialServiceImpl
@@ -44,6 +45,7 @@ class MaterialServiceFigureTest {
         danceTypeService = mock(DanceTypeService::class.java)
         danceFigureRepository = mock(DanceFigureRepository::class.java)
         googleDriveService = mock(GoogleDriveService::class.java)
+        uploadedFileRepository = mock(com.jankowski.rafal.dancebook.repository.UploadedFileRepository::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
         appUserService = mock(AppUserService::class.java)
         
@@ -60,6 +62,7 @@ class MaterialServiceFigureTest {
             danceTypeService,
             danceFigureRepository,
             googleDriveService,
+            uploadedFileRepository,
             eventPublisher,
             appUserService,
             RichTextServiceImpl()

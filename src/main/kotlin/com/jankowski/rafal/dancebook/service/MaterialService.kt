@@ -22,6 +22,8 @@ interface MaterialService {
         pageable: Pageable
     ): Page<Material>
 
+    fun downloadVideo(id: UUID, rangeHeader: String?): GoogleDriveService.DriveMediaDownload
+
     fun addFigure(materialId: UUID, request: FigureRequest): Figure
     fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure
     fun removeFigure(materialId: UUID, figureId: UUID)

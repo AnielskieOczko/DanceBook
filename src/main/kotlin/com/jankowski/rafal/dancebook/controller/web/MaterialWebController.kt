@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
 import jakarta.persistence.EntityNotFoundException
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
+import java.io.IOException
 import java.util.UUID
 
 @Controller
@@ -94,6 +97,28 @@ class MaterialWebController(
         model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
+    }
+
+    @GetMapping("/{id}/video")
+    fun streamVideo(
+        @PathVariable id: UUID,
+        @RequestHeader(value = "Range", required = false) rangeHeader: String?,
+        httpResponse: HttpServletResponse
+    ) {
+        val media = materialService.downloadVideo(id, rangeHeader)
+        httpResponse.status = media.statusCode
+        httpResponse.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes")
+        media.contentType?.let { httpResponse.contentType = it }
+        media.contentLength?.let { httpResponse.setContentLengthLong(it) }
+        media.contentRange?.let { httpResponse.setHeader("Content-Range", it) }
+
+        try {
+            media.stream.use { input ->
+                input.copyTo(httpResponse.outputStream)
+            }
+        } catch (_: IOException) {
+            // Client closed connection / paused / seeked away: harmless for video streaming
+        }
     }
 
     @PostMapping("/{id}/figures")

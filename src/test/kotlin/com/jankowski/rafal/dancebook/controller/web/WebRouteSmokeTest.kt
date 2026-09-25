@@ -95,6 +95,9 @@ class WebRouteSmokeTest {
     @BeforeEach
     fun setUp() {
         `when`(googleDriveService.listFilesInFolder()).thenReturn(emptyList())
+        `when`(googleDriveService.downloadMedia(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.nullable(String::class.java))).thenReturn(
+            GoogleDriveService.DriveMediaDownload(200, "video/mp4", 0L, null, java.io.ByteArrayInputStream(ByteArray(0)))
+        )
         ensureFixtures()
     }
 

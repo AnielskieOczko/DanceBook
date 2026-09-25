@@ -62,7 +62,9 @@ class AccessControlSecondUserIntegrationTest {
     @Autowired private lateinit var danceFigureRepository: DanceFigureRepository
     @Autowired private lateinit var danceTypeRepository: DanceTypeRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
+    @Autowired private lateinit var uploadedFileRepository: UploadedFileRepository
     @Autowired private lateinit var passwordEncoder: PasswordEncoder
+    @Autowired private lateinit var dataSource: javax.sql.DataSource
 
     @MockBean private lateinit var googleDriveService: GoogleDriveService
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
@@ -88,6 +90,12 @@ class AccessControlSecondUserIntegrationTest {
     @BeforeEach
     fun setUp() {
         `when`(googleDriveService.listFilesInFolder()).thenReturn(emptyList())
+        `when`(googleDriveService.downloadMedia(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.isNull())).thenReturn(
+            GoogleDriveService.DriveMediaDownload(200, "video/mp4", 100L, null, java.io.ByteArrayInputStream(ByteArray(100)))
+        )
+        `when`(googleDriveService.downloadMedia(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq("bytes=0-10"))).thenReturn(
+            GoogleDriveService.DriveMediaDownload(206, "video/mp4", 11L, "bytes 0-10/100", java.io.ByteArrayInputStream(ByteArray(11)))
+        )
 
         adminUser = appUserRepository.findByUsername("sec-admin") ?: appUserRepository.save(AppUser().apply {
             username = "sec-admin"
@@ -137,10 +145,12 @@ class AccessControlSecondUserIntegrationTest {
             owner = userA
             visibility = Visibility.PRIVATE
             danceType = testDanceType
+            driveFileId = "sec-user-a-video"
             version = 0
             updatedAt = LocalDateTime.now()
         })
         val noteId = note.id!!
+        uploadedFileRepository.save(UploadedFile("sec-user-a-video", userA, LocalDateTime.now()))
 
         // Add a figure to the note
         val fig = Figure().apply {
@@ -157,8 +167,11 @@ class AccessControlSecondUserIntegrationTest {
         val comment = asUser(userA) { commentService.addComment(noteId, "User A private comment", userA) }
         val commentId = comment.id!!
 
-        // 1. User B gets 404 on page, edit, API, comments, fragments
+        // 1. User B gets 404 on page, edit, API, comments, fragments, video
         mockMvc.perform(get("/materials/$noteId").with(user(userB.username).roles("USER")))
+            .andExpect(status().isNotFound)
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userB.username).roles("USER")))
             .andExpect(status().isNotFound)
 
         mockMvc.perform(get("/materials/$noteId/edit").with(user(userB.username).roles("USER")))
@@ -218,19 +231,35 @@ class AccessControlSecondUserIntegrationTest {
             .andExpect(status().isOk)
             .andExpect(content().string(not(containsString("User A Secret Note"))))
 
-        // 4. User A (owner) can view and edit
+        // 4. User A (owner) can view and edit, and stream video with Range support
         mockMvc.perform(get("/materials/$noteId").with(user(userA.username).roles("USER")))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("User A Secret Note")))
             .andExpect(content().string(containsString("Private")))
 
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userA.username).roles("USER")))
+            .andExpect(status().isOk)
+            .andExpect(header().string("Accept-Ranges", "bytes"))
+
+        mockMvc.perform(
+            get("/materials/$noteId/video")
+                .with(user(userA.username).roles("USER"))
+                .header("Range", "bytes=0-10")
+        )
+            .andExpect(status().isPartialContent)
+            .andExpect(header().string("Accept-Ranges", "bytes"))
+            .andExpect(header().string("Content-Range", "bytes 0-10/100"))
+
         mockMvc.perform(get("/materials/$noteId/edit").with(user(userA.username).roles("USER")))
             .andExpect(status().isOk)
 
-        // 5. Admin can view
+        // 5. Admin can view and stream video
         mockMvc.perform(get("/materials/$noteId").with(user(adminUser.username).roles("ADMIN")))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("User A Secret Note")))
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
     }
 
     @Test
@@ -241,24 +270,32 @@ class AccessControlSecondUserIntegrationTest {
             owner = userA
             visibility = Visibility.PRIVATE
             danceType = testDanceType
+            driveFileId = "sec-toggle-video"
             version = 0
             updatedAt = LocalDateTime.now()
         })
         val noteId = note.id!!
+        uploadedFileRepository.save(UploadedFile("sec-toggle-video", userA, LocalDateTime.now()))
 
-        // Initially User B cannot see it
+        // Initially User B cannot see page or video
         mockMvc.perform(get("/materials/$noteId").with(user(userB.username).roles("USER")))
+            .andExpect(status().isNotFound)
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userB.username).roles("USER")))
             .andExpect(status().isNotFound)
 
         // User A publishes it
         note.visibility = Visibility.PUBLIC
         materialRepository.save(note)
 
-        // Now User B can view it and view on /materials
+        // Now User B can view it, play its video, and view on /materials
         mockMvc.perform(get("/materials/$noteId").with(user(userB.username).roles("USER")))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Toggle Visibility Note")))
             .andExpect(content().string(containsString("Public")))
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userB.username).roles("USER")))
+            .andExpect(status().isOk)
 
         mockMvc.perform(get("/materials").with(user(userB.username).roles("USER")))
             .andExpect(status().isOk)
@@ -284,8 +321,11 @@ class AccessControlSecondUserIntegrationTest {
         freshNote.visibility = Visibility.PRIVATE
         materialRepository.save(freshNote)
 
-        // User B loses access everywhere immediately
+        // User B loses access everywhere immediately (page and video)
         mockMvc.perform(get("/materials/$noteId").with(user(userB.username).roles("USER")))
+            .andExpect(status().isNotFound)
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userB.username).roles("USER")))
             .andExpect(status().isNotFound)
 
         mockMvc.perform(get("/materials").with(user(userB.username).roles("USER")))
@@ -299,6 +339,64 @@ class AccessControlSecondUserIntegrationTest {
                 .with(csrf())
                 .param("content", "User B trying to edit")
         ).andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `saving a note with a file id the user did not upload is rejected, and so is finalizing one`() {
+        val fileA = "user-a-uploaded-file-456"
+        uploadedFileRepository.save(UploadedFile(driveFileId = fileA, uploader = userA, createdAt = LocalDateTime.now()))
+        `when`(googleDriveService.getFileUploaderId(fileA)).thenReturn(userA.id.toString())
+
+        // 1. User B tries to finalize User A's file -> 403 Forbidden
+        mockMvc.perform(
+            post("/api/materials/finalize-upload")
+                .with(user(userB.username).roles("USER"))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"fileId":"$fileA"}""")
+        ).andExpect(status().isForbidden)
+
+        // 2. User B tries to save a note with User A's file -> 403 Forbidden
+        mockMvc.perform(
+            post("/materials")
+                .with(user(userB.username).roles("USER"))
+                .with(csrf())
+                .param("name", "User B Imposter Note")
+                .param("driveFileId", fileA)
+                .param("version", "0")
+        ).andExpect(status().isForbidden)
+
+        // 3. User A can save a note with fileA
+        mockMvc.perform(
+            post("/materials")
+                .with(user(userA.username).roles("USER"))
+                .with(csrf())
+                .param("name", "User A Legitimate Note")
+                .param("driveFileId", fileA)
+                .param("version", "0")
+        ).andExpect(status().is3xxRedirection)
+
+        val note = materialRepository.findAll().first { it.name == "User A Legitimate Note" }
+        assertEquals(fileA, note.driveFileId)
+
+        // 4. Updating note keeping existing file succeeds without re-verification
+        mockMvc.perform(
+            post("/materials/${note.id}")
+                .with(user(userA.username).roles("USER"))
+                .with(csrf())
+                .param("name", "User A Renamed Note")
+                .param("driveFileId", fileA)
+                .param("version", note.version.toString())
+        ).andExpect(status().is3xxRedirection)
+
+        // 5. Deleting note deletes file from Drive
+        mockMvc.perform(
+            post("/materials/${note.id}/delete")
+                .with(user(userA.username).roles("USER"))
+                .with(csrf())
+        ).andExpect(status().is3xxRedirection)
+
+        org.mockito.Mockito.verify(googleDriveService).deleteFile(fileA)
     }
 
     @Test
@@ -612,5 +710,87 @@ class AccessControlSecondUserIntegrationTest {
         val updatedNote = materialRepository.findById(note.id!!).get()
         assertEquals(Visibility.PUBLIC, updatedNote.visibility)
         assertTrue(updatedNote.isPublic)
+    }
+
+    @Test
+    fun `streaming video does not hold database connection while stream is being read`() {
+        val note = materialRepository.save(Material().apply {
+            name = "Stream Connection Note"
+            owner = userA
+            visibility = Visibility.PUBLIC
+            danceType = testDanceType
+            driveFileId = "stream-conn-video"
+            version = 0
+            updatedAt = LocalDateTime.now()
+        })
+        val noteId = note.id!!
+        uploadedFileRepository.save(UploadedFile("stream-conn-video", userA, LocalDateTime.now()))
+
+        val hikariDs = dataSource as com.zaxxer.hikari.HikariDataSource
+        val activeConnectionsDuringStream = java.util.concurrent.atomic.AtomicInteger(-1)
+
+        val stubbedStream = object : java.io.InputStream() {
+            private val delegate = java.io.ByteArrayInputStream("streamed-video-bytes".toByteArray())
+
+            override fun read(): Int {
+                activeConnectionsDuringStream.set(hikariDs.hikariPoolMXBean.activeConnections)
+                return delegate.read()
+            }
+
+            override fun read(b: ByteArray, off: Int, len: Int): Int {
+                activeConnectionsDuringStream.set(hikariDs.hikariPoolMXBean.activeConnections)
+                return delegate.read(b, off, len)
+            }
+        }
+
+        `when`(googleDriveService.downloadMedia("stream-conn-video", null)).thenReturn(
+            GoogleDriveService.DriveMediaDownload(
+                statusCode = 200,
+                contentType = "video/mp4",
+                contentLength = 20L,
+                contentRange = null,
+                stream = stubbedStream
+            )
+        )
+
+        mockMvc.perform(get("/materials/$noteId/video").with(user(userA.username).roles("USER")))
+            .andExpect(status().isOk)
+            .andExpect(header().string("Accept-Ranges", "bytes"))
+
+        assertEquals(0, activeConnectionsDuringStream.get(), "Hikari pool should have 0 active connections while streaming video")
+    }
+
+    @Test
+    fun `streaming video with range beyond file end returns 416 with Content-Range`() {
+        val note = materialRepository.save(Material().apply {
+            name = "Range 416 Note"
+            owner = userA
+            visibility = Visibility.PUBLIC
+            danceType = testDanceType
+            driveFileId = "stream-416-video"
+            version = 0
+            updatedAt = LocalDateTime.now()
+        })
+        val noteId = note.id!!
+        uploadedFileRepository.save(UploadedFile("stream-416-video", userA, LocalDateTime.now()))
+
+        `when`(googleDriveService.downloadMedia("stream-416-video", "bytes=99999-")).thenReturn(
+            GoogleDriveService.DriveMediaDownload(
+                statusCode = 416,
+                contentType = null,
+                contentLength = 0L,
+                contentRange = "bytes */100",
+                stream = java.io.ByteArrayInputStream(ByteArray(0))
+            )
+        )
+
+        mockMvc.perform(
+            get("/materials/$noteId/video")
+                .with(user(userA.username).roles("USER"))
+                .header("Range", "bytes=99999-")
+        )
+            .andExpect(status().isRequestedRangeNotSatisfiable)
+            .andExpect(header().string("Accept-Ranges", "bytes"))
+            .andExpect(header().string("Content-Range", "bytes */100"))
     }
 }

@@ -24,8 +24,8 @@
     <!-- Cinematic Video Player -->
     <section class="w-full aspect-video bg-black rounded-xl overflow-hidden relative group">
         <th:block th:if="${material.driveFileId != null}">
-            <iframe th:src="'https://drive.google.com/file/d/' + ${material.driveFileId} + '/preview'"
-                    class="w-full h-full border-0" allowfullscreen allow="autoplay"></iframe>
+            <video th:src="@{/materials/{id}/video(id=${material.id})}"
+                   controls class="w-full h-full" preload="metadata"></video>
         </th:block>
         <th:block th:if="${material.driveFileId == null && material.videoLink != null}">
             <div class="w-full h-full flex flex-col items-center justify-center bg-surface-container-highest">

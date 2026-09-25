@@ -152,6 +152,12 @@
                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                 Run Deletion
             </button>
+            <button hx-post="/admin/storage/clean-permissions" hx-target="#results" hx-swap="innerHTML"
+                    hx-confirm="Are you sure you want to remove public (anyone) permissions from all existing Google Drive files?"
+                    class="btn-secondary">
+                <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
+                Clean Public Permissions
+            </button>
         </div>
         <div id="results"></div>
     </div>
@@ -292,6 +298,10 @@
 
     <div th:fragment="cleanupSuccess" th:if="${deletedCount != null}" class="mt-2">
         <div th:replace="~{fragments/alert :: alert(variant='success', title='Cleanup Successful', text='Permanently deleted ' + ${deletedCount} + ' orphaned file(s) from Google Drive.')}"></div>
+    </div>
+
+    <div th:fragment="permissionCleanupSuccess" th:if="${permissionResult != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='success', title='Permissions Cleanup Complete', text='Scanned ' + ${permissionResult.filesScanned} + ' file(s), removed ' + ${permissionResult.permissionsRemoved} + ' public permission(s) across ' + ${permissionResult.modifiedFileIds.size()} + ' file(s).')}"></div>
     </div>
 
     <div th:fragment="driveSection" th:if="${driveFiles != null}" class="space-y-4">
