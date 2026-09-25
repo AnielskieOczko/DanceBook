@@ -545,7 +545,8 @@ Since #151, **notes, collections and choreographies are owned and private by def
 carries an `owner` and a `visibility` (`model/Visibility.kt`: `PRIVATE` or `PUBLIC`); the old
 `is_public` boolean is gone. Comments have no visibility of their own — they are visible
 exactly when their note is. Figures, dance styles and categories have no visibility and are
-seen by everyone.
+seen by everyone — figures are also *edited* by everyone (see *Figures are community-edited*
+below).
 
 **There is one access rule, and it is a `Specification`.** `MaterialSpecification`,
 `CustomListSpecification` and `ChoreographySpecification` each expose `visibleTo(user)`:
@@ -599,6 +600,47 @@ later means adding rows and a UI, not changing the rule.
 note page that carries its file id returns 404; the files themselves are readable by anyone
 with the link, and `/api/materials/upload-config` hands out the app's Drive token. That is
 #158.
+
+### Figures are community-edited
+
+Since #152 a `DanceFigure` works like a wiki page. It is always public, and **any user can edit
+any figure, syllabus figures included**. The reason is that figures are the shared vocabulary
+that notes and choreographies are built from: a private figure would let one user break
+another user's choreography by hiding a figure it uses. So there is no `visibility`, no
+`visibleTo`, and no `checkOwnership` on edit. Do not add them by analogy with notes.
+
+- **`createdBy`** is recorded on create. V33 backfilled it from the earliest
+  `DANCE_FIGURE_CREATED` activity event. Syllabus imports, and older figures with no such
+  event, stay null.
+- **Syllabus figures are recognised by `predefined`**, which `SyllabusImporterService` sets,
+  and never by `createdBy == null`.
+- **Concurrent edits use optimistic locking.** The entity has a `@Version` and the edit form
+  posts it as a hidden field. The service compares the posted token before saving, the way
+  `MaterialServiceImpl` does. A stale form, or a lost race at commit
+  (`ObjectOptimisticLockingFailureException`), becomes the form-level error
+  `DanceFigureService.CONFLICT_MESSAGE` rather than an overwrite. `DanceFigureRequest.version`
+  is nullable only because the create and inline-create paths have no token. An update with a
+  null version is a conflict, which is correct.
+- **Deleting has three rules**, and they live in two places:
+  - `DanceFigure.isDeletableBy(user)` covers who may delete: the creator or an admin, and only
+    an admin for a syllabus figure. Figures whose creator is null can therefore only be deleted
+    by an admin. Templates call the same method to decide whether to show a delete button, so
+    the rule has one copy.
+  - The service refuses when **another user's** notes or choreographies use the figure, and
+    it counts private ones too. It throws `FigureInUseException`, which the controller turns
+    into a `deleteError` flash on the figure page. The message gives counts only and never
+    names or links the items, because the deleter may not be allowed to see them.
+  - A delete that breaks the permission rules is an `AccessDeniedException` (403).
+- **The deleter's own items keep the database's behaviour.** A note's pins of the figure
+  cascade away, and a choreography entry keeps its place with `dance_figure_id` set to null.
+- `CommunityFiguresIntegrationTest` is the second-user test for all of this.
+
+**A slice test that needs `currentUser` passes it as a flash attribute.** The `@WebMvcTest`
+template tests run with security off, and signing someone in breaks the layout's
+`sec:authorize` ("No visible SecurityExpressionHandler"). Spring skips a `@ModelAttribute`
+method when the model already holds that attribute, so
+`.flashAttr("currentUser", viewer)` supplies the viewer without touching `NavbarAdvice`.
+`DanceFigureDenseTableTemplateTest` does this.
 
 ### LLM providers
 
