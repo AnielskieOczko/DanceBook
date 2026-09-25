@@ -230,11 +230,11 @@ class TrainingSeriesServiceTest {
     fun `should update all occurrences in place including past ones with recorded outcomes`() {
         val series = seriesFor()
         val pastAttended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
             googleEventId = "google-past"
         }
         val futurePlanned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "google-future"
         }
         val pastId = pastAttended.id
@@ -262,8 +262,8 @@ class TrainingSeriesServiceTest {
         assertEquals(futureId, futurePlanned.id)
         assertEquals("google-past", pastAttended.googleEventId)
         assertEquals("google-future", futurePlanned.googleEventId)
-        assertEquals(AttendanceStatus.ATTENDED, pastAttended.attendanceStatus, "recorded outcome is kept")
-        assertEquals(AttendanceStatus.PLANNED, futurePlanned.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, pastAttended.attendanceFor(currentUser), "recorded outcome is kept")
+        assertEquals(AttendanceStatus.PLANNED, futurePlanned.attendanceFor(currentUser))
         assertEquals("All updated", pastAttended.title)
         assertEquals("All updated", futurePlanned.title)
     }
@@ -357,13 +357,13 @@ class TrainingSeriesServiceTest {
     fun `calculateDeleteScopeOptions calculates counts and outcomes correctly`() {
         val series = seriesFor()
         val pastAttended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
         }
         val currentPlanned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
         }
         val futureSkipped = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
-            attendanceStatus = AttendanceStatus.SKIPPED
+            setAttendance(currentUser, AttendanceStatus.SKIPPED)
         }
         `when`(trainingEventRepository.findById(currentPlanned.id!!)).thenReturn(Optional.of(currentPlanned))
         `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(
@@ -393,15 +393,15 @@ class TrainingSeriesServiceTest {
     fun `deleteAll separates surviving events with outcomes from unhappened events to delete`() {
         val series = seriesFor()
         val attended = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
             googleEventId = "google-attended"
         }
         val planned = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "google-planned"
         }
         val cancelled = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
-            attendanceStatus = AttendanceStatus.CANCELLED
+            setAttendance(currentUser, AttendanceStatus.CANCELLED)
             googleEventId = "google-cancelled"
         }
 
@@ -431,11 +431,11 @@ class TrainingSeriesServiceTest {
     fun `deleteAll continues and deletes database rows even if Google Calendar fails on some events`() {
         val series = seriesFor()
         val planned1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "google-fail"
         }
         val planned2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "google-succeed"
         }
 
@@ -629,19 +629,19 @@ class TrainingSeriesServiceTest {
     fun `shortening repeatUntil removes planned occurrences and leaves recorded ones standing as standalone`() {
         val series = seriesFor().apply { endsOn = LocalDate.of(2026, 10, 5) }
         val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
             googleEventId = "g-1"
         }
         val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "g-2"
         }
         val occ3 = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED // Recorded past session outside new range
+            setAttendance(currentUser, AttendanceStatus.ATTENDED) // Recorded past session outside new range
             googleEventId = "g-3"
         }
         val occ4 = occurrence(series, LocalDate.of(2026, 10, 5)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED // Unrecorded session outside new range
+            setAttendance(currentUser, AttendanceStatus.PLANNED) // Unrecorded session outside new range
             googleEventId = "g-4"
         }
 
@@ -685,15 +685,15 @@ class TrainingSeriesServiceTest {
     fun `changing weekday moves every occurrence keeping rows Google event IDs and recorded attendance`() {
         val series = seriesFor() // Mondays: Sep 14, 21, 28
         val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
             googleEventId = "g-1"
         }
         val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "g-2"
         }
         val occ3 = occurrence(series, LocalDate.of(2026, 9, 28)).apply {
-            attendanceStatus = AttendanceStatus.SKIPPED
+            setAttendance(currentUser, AttendanceStatus.SKIPPED)
             googleEventId = "g-3"
         }
         val origId1 = occ1.id
@@ -729,9 +729,9 @@ class TrainingSeriesServiceTest {
         assertEquals("g-1", occ1.googleEventId)
         assertEquals("g-2", occ2.googleEventId)
         assertEquals("g-3", occ3.googleEventId)
-        assertEquals(AttendanceStatus.ATTENDED, occ1.attendanceStatus)
-        assertEquals(AttendanceStatus.PLANNED, occ2.attendanceStatus)
-        assertEquals(AttendanceStatus.SKIPPED, occ3.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, occ1.attendanceFor(currentUser))
+        assertEquals(AttendanceStatus.PLANNED, occ2.attendanceFor(currentUser))
+        assertEquals(AttendanceStatus.SKIPPED, occ3.attendanceFor(currentUser))
 
         // Google Calendar was updated with new times, never deleted
         verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "g-1", occ1)
@@ -744,11 +744,11 @@ class TrainingSeriesServiceTest {
     fun `changing times moves every occurrence keeping rows Google event IDs and attendance`() {
         val series = seriesFor()
         val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply {
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
             googleEventId = "g-1"
         }
         val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply {
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
             googleEventId = "g-2"
         }
 
@@ -895,10 +895,10 @@ class TrainingSeriesServiceTest {
     @Test
     fun `calculatePatternReconcile returns correct counts for created moved removed and dropped recorded`() {
         val series = seriesFor().apply { endsOn = LocalDate.of(2026, 10, 5) } // 4 Mondays: Sep 14, 21, 28, Oct 5
-        val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply { attendanceStatus = AttendanceStatus.ATTENDED }
-        val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply { attendanceStatus = AttendanceStatus.PLANNED }
-        val occ3 = occurrence(series, LocalDate.of(2026, 9, 28)).apply { attendanceStatus = AttendanceStatus.SKIPPED }
-        val occ4 = occurrence(series, LocalDate.of(2026, 10, 5)).apply { attendanceStatus = AttendanceStatus.PLANNED }
+        val occ1 = occurrence(series, LocalDate.of(2026, 9, 14)).apply { setAttendance(currentUser, AttendanceStatus.ATTENDED) }
+        val occ2 = occurrence(series, LocalDate.of(2026, 9, 21)).apply { setAttendance(currentUser, AttendanceStatus.PLANNED) }
+        val occ3 = occurrence(series, LocalDate.of(2026, 9, 28)).apply { setAttendance(currentUser, AttendanceStatus.SKIPPED) }
+        val occ4 = occurrence(series, LocalDate.of(2026, 10, 5)).apply { setAttendance(currentUser, AttendanceStatus.PLANNED) }
 
         `when`(trainingEventRepository.findById(occ1.id!!)).thenReturn(Optional.of(occ1))
         `when`(trainingEventRepository.findAllBySeriesOrderByStartTimeAsc(series)).thenReturn(listOf(occ1, occ2, occ3, occ4))

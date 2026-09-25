@@ -117,6 +117,9 @@ class TrainingEventUpdateIntegrationTest {
      * this binding.
      */
     private fun <T> inOpenSession(block: () -> T): T {
+        if (TransactionSynchronizationManager.hasResource(entityManagerFactory)) {
+            return block()
+        }
         val em = entityManagerFactory.createEntityManager()
         TransactionSynchronizationManager.bindResource(entityManagerFactory, EntityManagerHolder(em))
         try {
@@ -177,14 +180,18 @@ class TrainingEventUpdateIntegrationTest {
 
         // Read inside a bound session: the record's breakdown is lazy, like the event's.
         val (title, minutes) = inOpenSession {
-            val record = trainingRecordRepository.findByTrainingEventId(created.id!!)!!
+            val record = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(created.id!!, owner)!!
             record.title to record.segments.sortedBy { it.sortOrder }.map { it.durationMinutes }
         }
         assertEquals("attended edited", title)
         assertEquals(listOf(20, 25), minutes)
     }
 
-    private fun reload(id: UUID) = trainingEventRepository.findAllByIdIn(listOf(id)).single()
+    private fun reload(id: UUID): TrainingEvent = inOpenSession {
+        val event = trainingEventRepository.findAllByIdIn(listOf(id)).single()
+        event.attendances.size
+        event
+    }
 
     /**
      * The occurrences of the series [seed] belongs to, earliest first.
@@ -245,7 +252,7 @@ class TrainingEventUpdateIntegrationTest {
             trainingEventService.updateAttendance(firstOccurrence.id!!, AttendanceStatus.ATTENDED)
         }
         val recordBefore = inOpenSession {
-            trainingRecordRepository.findByTrainingEventId(firstOccurrence.id!!)!!
+            trainingRecordRepository.findByTrainingEventIdAndCreatedBy(firstOccurrence.id!!, owner)!!
         }
         assertEquals("spring series", recordBefore.title)
         assertNull(recordBefore.orphanedAt)
@@ -262,13 +269,13 @@ class TrainingEventUpdateIntegrationTest {
         assertEquals(originalIds, updatedOccurrences.map { it.id }, "IDs must be preserved")
         assertEquals(originalGoogleIds, updatedOccurrences.map { it.googleEventId }, "Google event IDs must be preserved")
         assertTrue(updatedOccurrences.all { it.title == "spring series renamed" })
-        assertEquals(AttendanceStatus.ATTENDED, reload(firstOccurrence.id!!).attendanceStatus, "attendance must be kept")
+        assertEquals(AttendanceStatus.ATTENDED, reload(firstOccurrence.id!!).attendanceFor(owner), "attendance must be kept")
 
         // Check that the training record for the first occurrence was updated in place and NOT orphaned
         // Read inside one bound session, like the earlier record test: the breakdown is lazy,
         // so loading the record in one session and traversing it in the next cannot work.
         val (recordTitle, recordOrphanedAt, recordMinutes) = inOpenSession {
-            val record = trainingRecordRepository.findByTrainingEventId(firstOccurrence.id!!)!!
+            val record = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(firstOccurrence.id!!, owner)!!
             Triple(
                 record.title,
                 record.orphanedAt,
@@ -369,7 +376,7 @@ class TrainingEventUpdateIntegrationTest {
             trainingEventService.updateAttendance(occ3.id!!, AttendanceStatus.ATTENDED)
         }
         val occ3RecordBefore = inOpenSession {
-            trainingRecordRepository.findByTrainingEventId(occ3.id!!)!!
+            trainingRecordRepository.findByTrainingEventIdAndCreatedBy(occ3.id!!, owner)!!
         }
         assertEquals("autumn technique", occ3RecordBefore.title)
 
@@ -391,11 +398,11 @@ class TrainingEventUpdateIntegrationTest {
         // Occ3 (attended) remains standing as standalone session (series == null)
         val detachedOcc3 = reload(occ3.id!!)
         assertNull(detachedOcc3.series, "recorded session must be detached from series")
-        assertEquals(AttendanceStatus.ATTENDED, detachedOcc3.attendanceStatus, "attendance must be preserved")
+        assertEquals(AttendanceStatus.ATTENDED, detachedOcc3.attendanceFor(owner), "attendance must be preserved")
 
         // Occ3 training record remains intact and not orphaned
         val occ3RecordAfter = inOpenSession {
-            trainingRecordRepository.findByTrainingEventId(occ3.id!!)!!
+            trainingRecordRepository.findByTrainingEventIdAndCreatedBy(occ3.id!!, owner)!!
         }
         assertNull(occ3RecordAfter.orphanedAt, "training record must not be orphaned")
     }
@@ -440,13 +447,13 @@ class TrainingEventUpdateIntegrationTest {
         assertEquals(LocalDate.of(2026, 3, 4), moved1.startTime.toLocalDate())
         assertEquals(LocalTime.of(19, 30), moved1.startTime.toLocalTime())
         assertEquals(LocalTime.of(21, 30), moved1.endTime.toLocalTime())
-        assertEquals(AttendanceStatus.ATTENDED, moved1.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, moved1.attendanceFor(owner))
         assertEquals(origGoogleId1, moved1.googleEventId)
 
         assertEquals(LocalDate.of(2026, 3, 11), moved2.startTime.toLocalDate())
         assertEquals(LocalTime.of(19, 30), moved2.startTime.toLocalTime())
         assertEquals(LocalTime.of(21, 30), moved2.endTime.toLocalTime())
-        assertEquals(AttendanceStatus.PLANNED, moved2.attendanceStatus)
+        assertEquals(AttendanceStatus.PLANNED, moved2.attendanceFor(owner))
         assertEquals(origGoogleId2, moved2.googleEventId)
     }
 }

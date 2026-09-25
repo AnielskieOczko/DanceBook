@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRow
 import com.jankowski.rafal.dancebook.dto.TrainingTimeline
 import com.jankowski.rafal.dancebook.dto.TrainingTimelineEntry
 import com.jankowski.rafal.dancebook.dto.TrainingTimelineMonth
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -18,6 +19,7 @@ import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.nullable
@@ -76,6 +78,17 @@ class TrainingTimelineViewRenderingTest {
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
     @MockBean private lateinit var calendarSyncService: CalendarSyncService
+
+    private lateinit var testUser: AppUser
+
+    @BeforeEach
+    fun setUp() {
+        testUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "tester"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+    }
 
     @Test
     fun `renders the timeline with month headings, palette colours and the today marker`() {
@@ -201,11 +214,12 @@ class TrainingTimelineViewRenderingTest {
             title = "Evening practice"
             startTime = start
             endTime = start.plusMinutes(90)
-            attendanceStatus = status
+            setAttendance(testUser, status)
             eventType = TrainingEventType.TRAINING
+            createdBy = testUser
         }
         return TrainingTimelineEntry(
-            row = TrainingEventRow(event, TrainingEventPalette.swatchFor(event)),
+            row = TrainingEventRow(event, TrainingEventPalette.swatchFor(event, testUser)),
             isFuture = daysAgo < 0,
             startsTodayBoundary = boundary
         )

@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/training-events/timeline")
 class TrainingTimelineWebController(
     private val trainingTimelineService: TrainingTimelineService,
-    private val activeCalendarService: ActiveCalendarService
+    private val activeCalendarService: ActiveCalendarService,
+    private val appUserService: AppUserService
 ) {
 
     @GetMapping
@@ -39,6 +41,7 @@ class TrainingTimelineWebController(
         )
 
         model.addAttribute("timeline", timeline)
+        model.addAttribute("currentUser", appUserService.getCurrentUser())
         // The month already on screen when this window was requested. The first heading is
         // suppressed when it matches, so an appended window continues a month rather than
         // repeating its heading halfway down the page.

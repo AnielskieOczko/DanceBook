@@ -23,13 +23,21 @@ class TrainingCalendarApiControllerTest {
 
     private lateinit var trainingEventService: TrainingEventService
     private lateinit var activeCalendarService: ActiveCalendarService
+    private lateinit var appUserService: com.jankowski.rafal.dancebook.service.AppUserService
+    private lateinit var currentUser: com.jankowski.rafal.dancebook.model.AppUser
     private lateinit var controller: TrainingCalendarApiController
 
     @BeforeEach
     fun setUp() {
         trainingEventService = mock(TrainingEventService::class.java)
         activeCalendarService = mock(ActiveCalendarService::class.java)
-        controller = TrainingCalendarApiController(trainingEventService, activeCalendarService)
+        appUserService = mock(com.jankowski.rafal.dancebook.service.AppUserService::class.java)
+        currentUser = com.jankowski.rafal.dancebook.model.AppUser().apply {
+            id = UUID.randomUUID()
+            username = "test-user"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
+        controller = TrainingCalendarApiController(trainingEventService, activeCalendarService, appUserService)
     }
 
     @Test
@@ -143,7 +151,8 @@ class TrainingCalendarApiControllerTest {
         title = "Monday practice"
         startTime = start
         endTime = start.plusHours(2)
-        attendanceStatus = status
+        setAttendance(currentUser, status)
+        createdBy = currentUser
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)

@@ -55,7 +55,7 @@ class TrainingSeriesPersistenceTest {
             title = "Monday practice"
             startTime = start
             endTime = start.plusMinutes(90)
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(actor, AttendanceStatus.ATTENDED)
             createdBy = actor
         }
     }
@@ -117,11 +117,11 @@ class TrainingSeriesPersistenceTest {
         }
         val surviving = occurrence().apply {
             this.series = series
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(actor, AttendanceStatus.ATTENDED)
         }
         val toDelete = occurrence().apply {
             this.series = series
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(actor, AttendanceStatus.PLANNED)
         }
 
         persistence.deleteAll(series, listOf(surviving), listOf(toDelete), actor)
@@ -163,8 +163,8 @@ class TrainingSeriesPersistenceTest {
 
         verify(trainingSeriesRepository).save(series)
         verify(trainingEventRepository).saveAll(listOf(occ1, occ2))
-        verify(trainingRecordWriter).sync(occ1)
-        verify(trainingRecordWriter).sync(occ2)
+        verify(trainingRecordWriter).syncEventDetails(occ1)
+        verify(trainingRecordWriter).syncEventDetails(occ2)
         val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingBulkUpdatedEvent::class.java)
         verify(eventPublisher).publishEvent(eventCaptor.capture())
         org.junit.jupiter.api.Assertions.assertEquals(2, eventCaptor.value.count)
@@ -183,7 +183,8 @@ class TrainingSeriesPersistenceTest {
 
         assertNull(result.series, "event must be detached")
         verify(trainingEventRepository).save(event)
-        verify(trainingRecordWriter).sync(event)
+        verify(trainingRecordWriter).sync(event, actor, event.attendanceFor(actor))
+        verify(trainingRecordWriter).syncEventDetails(event)
         verify(trainingSeriesRepository).delete(series)
         val eventCaptor = ArgumentCaptor.forClass(com.jankowski.rafal.dancebook.model.TrainingEventUpdatedEvent::class.java)
         verify(eventPublisher).publishEvent(eventCaptor.capture())

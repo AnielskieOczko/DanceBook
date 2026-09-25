@@ -22,7 +22,9 @@ import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.startsWith
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import com.jankowski.rafal.dancebook.model.AppUser
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito.`when`
@@ -101,6 +103,15 @@ class HtmxFragmentRenderingTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
+
+    @BeforeEach
+    fun setUp() {
+        val user = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "htmxuser"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(user)
+    }
 
     @Test
     fun `training-events list htmx returns eventsList fragment with id events-list`() {

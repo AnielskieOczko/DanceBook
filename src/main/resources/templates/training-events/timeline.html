@@ -76,7 +76,7 @@
                                     <span th:each="segment : ${event.segments}" class="badge-secondary"
                                           th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
 
-                                    <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=${event.isAwaitingConfirmation})}"></span>
+                                    <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
                                 </div>
                             </div>
                         </div>

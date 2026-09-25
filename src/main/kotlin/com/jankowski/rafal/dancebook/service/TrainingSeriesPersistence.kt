@@ -73,7 +73,7 @@ class TrainingSeriesPersistence(
     ): List<TrainingEvent> {
         trainingSeriesRepository.save(series)
         val saved = trainingEventRepository.saveAll(occurrences)
-        saved.forEach { trainingRecordWriter.sync(it) }
+        saved.forEach { trainingRecordWriter.syncEventDetails(it) }
         eventPublisher.publishEvent(
             TrainingBulkUpdatedEvent(
                 count = saved.size,
@@ -113,7 +113,7 @@ class TrainingSeriesPersistence(
 
         val savedSurviving = if (survivingOccurrences.isNotEmpty()) {
             val saved = trainingEventRepository.saveAll(survivingOccurrences)
-            saved.forEach { trainingRecordWriter.sync(it) }
+            saved.forEach { trainingRecordWriter.syncEventDetails(it) }
             saved
         } else emptyList()
 
@@ -146,7 +146,8 @@ class TrainingSeriesPersistence(
     ): TrainingEvent {
         event.series = null
         val saved = trainingEventRepository.save(event)
-        trainingRecordWriter.sync(saved)
+        trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
+        trainingRecordWriter.syncEventDetails(saved)
         val remaining = trainingEventRepository.countBySeries(series)
         if (remaining == 0L) {
             trainingSeriesRepository.delete(series)

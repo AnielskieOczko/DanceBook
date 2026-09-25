@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingTimeline
 import com.jankowski.rafal.dancebook.dto.TrainingTimelineEntry
 import com.jankowski.rafal.dancebook.dto.TrainingTimelineMonth
 import com.jankowski.rafal.dancebook.dto.groupByMonth
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import org.slf4j.LoggerFactory
@@ -55,7 +56,7 @@ class TrainingTimelineServiceImpl(
         // One "now" for the whole window, so a render straddling midnight cannot place one
         // session in the future and the next in the past by the same instant.
         val now = LocalDateTime.now()
-        val months = toMonths(events, now, isFirstPage = page == 0)
+        val months = toMonths(events, now, isFirstPage = page == 0, currentUser = currentUser)
 
         return TrainingTimeline(
             months = months,
@@ -87,11 +88,12 @@ class TrainingTimelineServiceImpl(
     private fun toMonths(
         events: List<TrainingEvent>,
         now: LocalDateTime,
-        isFirstPage: Boolean
+        isFirstPage: Boolean,
+        currentUser: AppUser
     ): List<TrainingTimelineMonth> {
         val boundary = if (isFirstPage) events.firstOrNull { !it.startTime.isAfter(now) } else null
 
-        return groupByMonth(events).map { group ->
+        return groupByMonth(events, currentUser).map { group ->
             TrainingTimelineMonth(
                 label = group.label,
                 entries = group.rows.map { row ->

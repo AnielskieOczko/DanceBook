@@ -195,12 +195,18 @@ class TrainingEventServiceTest {
     fun `should not touch the calendar when only attendance changes`() {
         val event = existingEvent("google-123")
         `when`(trainingEventRepository.findById(event.id!!)).thenReturn(Optional.of(event))
-        `when`(trainingEventPersistence.applyUpdate(any(TrainingEvent::class.java), any(AppUser::class.java)))
-            .thenAnswer { it.getArgument<TrainingEvent>(0) }
+        `when`(trainingEventPersistence.updateAttendance(any(TrainingEvent::class.java), any(AppUser::class.java), any(AttendanceStatus::class.java)))
+            .thenAnswer { invocation ->
+                val ev = invocation.getArgument<TrainingEvent>(0)
+                val u = invocation.getArgument<AppUser>(1)
+                val st = invocation.getArgument<AttendanceStatus>(2)
+                ev.setAttendance(u, st)
+                ev
+            }
 
         val result = trainingEventService.updateAttendance(event.id!!, AttendanceStatus.ATTENDED)
 
-        assertEquals(AttendanceStatus.ATTENDED, result.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, result.attendanceFor(currentUser))
         verifyNoInteractions(calendarClient)
     }
 
@@ -365,19 +371,19 @@ class TrainingEventServiceTest {
         val past = TrainingEvent().apply {
             startTime = LocalDateTime.now().minusDays(2)
             endTime = LocalDateTime.now().minusDays(2).plusHours(1)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
         }
-        assertTrue(past.isAwaitingConfirmation)
+        assertTrue(past.isAwaitingConfirmationFor(currentUser))
 
-        past.attendanceStatus = AttendanceStatus.ATTENDED
-        assertFalse(past.isAwaitingConfirmation)
+        past.setAttendance(currentUser, AttendanceStatus.ATTENDED)
+        assertFalse(past.isAwaitingConfirmationFor(currentUser))
 
         val upcoming = TrainingEvent().apply {
             startTime = LocalDateTime.now().plusDays(2)
             endTime = LocalDateTime.now().plusDays(2).plusHours(1)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
         }
-        assertFalse(upcoming.isAwaitingConfirmation)
+        assertFalse(upcoming.isAwaitingConfirmationFor(currentUser))
     }
 
     @Test
@@ -563,12 +569,12 @@ class TrainingEventServiceTest {
         val pastEvent = existingEvent(null).apply {
             startTime = LocalDateTime.now().minusDays(2)
             endTime = LocalDateTime.now().minusDays(2).plusHours(2)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
         }
         val futureEvent = existingEvent(null).apply {
             startTime = LocalDateTime.now().plusDays(2)
             endTime = LocalDateTime.now().plusDays(2).plusHours(2)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(currentUser, AttendanceStatus.PLANNED)
         }
         val ids = listOf(pastEvent.id!!, futureEvent.id!!)
         `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(pastEvent, futureEvent))
@@ -588,7 +594,7 @@ class TrainingEventServiceTest {
         val pastAttended = existingEvent(null).apply {
             startTime = LocalDateTime.now().minusDays(1)
             endTime = LocalDateTime.now().minusDays(1).plusHours(2)
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
         }
         val ids = listOf(pastAttended.id!!)
         `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(pastAttended))

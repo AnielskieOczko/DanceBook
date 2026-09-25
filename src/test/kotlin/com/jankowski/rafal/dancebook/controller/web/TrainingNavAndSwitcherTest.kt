@@ -23,6 +23,7 @@ import com.jankowski.rafal.dancebook.service.TrainingStatsService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -105,6 +106,17 @@ class TrainingNavAndSwitcherTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
+
+    private lateinit var testUser: AppUser
+
+    @BeforeEach
+    fun setUp() {
+        testUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "navuser"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+    }
 
     @AfterEach
     fun tearDown() = TestSecurityContextHolder.clearContext()

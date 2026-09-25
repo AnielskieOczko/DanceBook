@@ -94,7 +94,7 @@ class TrainingSeriesServiceImpl(
         occurrence.description = richTextService.clean(request.description)
         occurrence.material = request.materialId?.let { materialService.findById(it) }
         occurrence.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
-        occurrence.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)
+        occurrence.setAttendance(currentUser, AttendanceStatus.valueOf(request.attendanceStatus))
         occurrence.updatedAt = LocalDateTime.now()
 
         val validSegments = request.segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
@@ -363,7 +363,7 @@ class TrainingSeriesServiceImpl(
     }
 
     private fun hasRecordedOutcome(event: TrainingEvent): Boolean =
-        event.attendanceStatus == AttendanceStatus.ATTENDED || event.attendanceStatus == AttendanceStatus.SKIPPED
+        event.attendances.any { it.status == AttendanceStatus.ATTENDED || it.status == AttendanceStatus.SKIPPED }
 
     /**
      * Creates a calendar event for every date, rolling back the ones already created if any
@@ -412,7 +412,6 @@ class TrainingSeriesServiceImpl(
             description = series.description
             material = series.material
             materialsUrl = series.materialsUrl
-            attendanceStatus = AttendanceStatus.PLANNED
             createdBy = actor
             this.series = series
             createdAt = LocalDateTime.now()

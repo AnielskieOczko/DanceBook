@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Material
@@ -19,6 +20,7 @@ import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -99,6 +101,17 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
+
+    private lateinit var testUser: AppUser
+
+    @BeforeEach
+    fun setUp() {
+        testUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "testuser"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+    }
 
     @Test
     fun `should render the agenda with month headings and a status rail per session`() {
@@ -261,7 +274,8 @@ class TrainingEventViewRenderingTest {
         title = "Monday practice"
         startTime = start
         endTime = start.plusHours(2)
-        attendanceStatus = status
+        setAttendance(testUser, status)
+        createdBy = testUser
     }
 
     /**

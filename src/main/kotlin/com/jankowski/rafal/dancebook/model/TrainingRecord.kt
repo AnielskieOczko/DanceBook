@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -27,12 +28,17 @@ import java.util.UUID
  * session is deleted the record is stamped [orphanedAt] and stands on its own, unchanged for
  * good.
  *
- * One record per session, updated in place. Changing your mind from attended to skipped
+ * One record per session per attendee, updated in place. Changing your mind from attended to skipped
  * rewrites this row rather than appending a correction, so statistics never have to window
  * down to the latest row per session.
  */
 @Entity
-@Table(name = "training_record")
+@Table(
+    name = "training_record",
+    uniqueConstraints = [
+        UniqueConstraint(name = "unique_training_record_event_user", columnNames = ["training_event_id", "created_by_id"])
+    ]
+)
 class TrainingRecord {
 
     @Id
@@ -44,7 +50,7 @@ class TrainingRecord {
      * would either cascade the record away with its session or block the session's delete,
      * and the whole point of this table is that neither happens.
      */
-    @Column(name = "training_event_id", nullable = false, unique = true, updatable = false)
+    @Column(name = "training_event_id", nullable = false, updatable = false)
     var trainingEventId: UUID? = null
 
     /** When the session happened. Snapshotted, so rescheduling a past session cannot move it. */

@@ -204,13 +204,13 @@
                         <span th:each="segment : ${event.segments}" class="badge-secondary"
                               th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
 
-                        <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=${event.isAwaitingConfirmation})}"></span>
+                        <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
                     </div>
 
                     <!-- One-tap confirmation for a past session still marked PLANNED. It sits in
                          the body rather than the action column so a phone is not asked to fit
                          four 48px controls on one row. -->
-                    <div th:if="${event.isAwaitingConfirmation}" class="flex flex-wrap gap-2 mt-3">
+                    <div th:if="${event.isAwaitingConfirmationFor(currentUser)}" class="flex flex-wrap gap-2 mt-3">
                         <form th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
                               hx-target="#events-list" hx-swap="outerHTML">
                             <input type="hidden" name="status" value="ATTENDED">

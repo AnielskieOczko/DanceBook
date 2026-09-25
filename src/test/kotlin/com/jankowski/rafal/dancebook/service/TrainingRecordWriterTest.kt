@@ -55,7 +55,7 @@ class TrainingRecordWriterTest {
             this.title = title
             startTime = start
             endTime = start.plusMinutes(minutes)
-            attendanceStatus = status
+            setAttendance(owner, status)
             eventType = type
             createdBy = owner
             this.segments = segments.mapIndexed { index, (sliceCategory, sliceMinutes) ->
@@ -83,9 +83,9 @@ class TrainingRecordWriterTest {
     fun `marking a session attended writes a record snapshotting the session`() {
         val standard = category("Standard")
         val source = event(AttendanceStatus.ATTENDED, minutes = 120, segments = listOf(standard to 60))
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(null)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(null)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.ATTENDED)
 
         val record = savedRecord()
         assertEquals(source.id, record.trainingEventId)
@@ -105,9 +105,9 @@ class TrainingRecordWriterTest {
     @Test
     fun `marking a session skipped writes a skipped record`() {
         val source = event(AttendanceStatus.SKIPPED)
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(null)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(null)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.SKIPPED)
 
         assertEquals(TrainingOutcome.SKIPPED, savedRecord().outcome)
     }
@@ -124,9 +124,9 @@ class TrainingRecordWriterTest {
             durationMinutes = 30
             createdBy = owner
         }
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(existing)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.ATTENDED)
 
         val record = savedRecord()
         assertEquals(existing.id, record.id, "the same row is rewritten, not a second one appended")
@@ -140,9 +140,9 @@ class TrainingRecordWriterTest {
     fun `marking a session back to planned removes its record`() {
         val source = event(AttendanceStatus.PLANNED)
         val existing = TrainingRecord().apply { trainingEventId = source.id }
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(existing)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.PLANNED)
 
         verify(trainingRecordRepository).delete(existing)
         verify(trainingRecordRepository, never()).save(any(TrainingRecord::class.java))
@@ -152,9 +152,9 @@ class TrainingRecordWriterTest {
     fun `marking a session cancelled removes its record`() {
         val source = event(AttendanceStatus.CANCELLED)
         val existing = TrainingRecord().apply { trainingEventId = source.id }
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(existing)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.CANCELLED)
 
         verify(trainingRecordRepository).delete(existing)
     }
@@ -162,9 +162,9 @@ class TrainingRecordWriterTest {
     @Test
     fun `a planned session with no record writes nothing`() {
         val source = event(AttendanceStatus.PLANNED)
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(null)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(null)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.PLANNED)
 
         verify(trainingRecordRepository, never()).save(any(TrainingRecord::class.java))
         verify(trainingRecordRepository, never()).delete(any(TrainingRecord::class.java))
@@ -178,9 +178,9 @@ class TrainingRecordWriterTest {
             title = "As recorded"
             orphanedAt = LocalDateTime.now()
         }
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(existing)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.ATTENDED)
 
         verify(trainingRecordRepository, never()).save(any(TrainingRecord::class.java))
         assertEquals("As recorded", existing.title)
@@ -194,9 +194,9 @@ class TrainingRecordWriterTest {
             title = "As recorded"
             orphanedAt = LocalDateTime.now()
         }
-        `when`(trainingRecordRepository.findByTrainingEventId(source.id!!)).thenReturn(existing)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(source.id!!, owner)).thenReturn(existing)
 
-        writer.sync(source)
+        writer.sync(source, owner, AttendanceStatus.PLANNED)
 
         verify(trainingRecordRepository, never()).delete(any(TrainingRecord::class.java))
         verify(trainingRecordRepository, never()).save(any(TrainingRecord::class.java))
@@ -254,9 +254,9 @@ class TrainingRecordWriterTest {
             displayName = "Club Training"
         }
         val event = event(AttendanceStatus.ATTENDED).apply { this.calendar = calendar }
-        `when`(trainingRecordRepository.findByTrainingEventId(event.id!!)).thenReturn(null)
+        `when`(trainingRecordRepository.findByTrainingEventIdAndCreatedBy(event.id!!, owner)).thenReturn(null)
 
-        writer.sync(event)
+        writer.sync(event, owner, AttendanceStatus.ATTENDED)
 
         val saved = ArgumentCaptor.forClass(TrainingRecord::class.java)
         verify(trainingRecordRepository).save(saved.capture())

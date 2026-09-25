@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingOutcome
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
+import java.util.UUID
 
 class TrainingEventPaletteTest {
 
@@ -34,41 +36,42 @@ class TrainingEventPaletteTest {
     @Test
     fun `status mapping preserves domain distinction`() {
         val now = LocalDateTime.now()
+        val user = AppUser().apply { id = UUID.randomUUID() }
 
         val planned = TrainingEvent().apply {
             startTime = now.plusDays(1)
             endTime = now.plusDays(1).plusHours(1)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(user, AttendanceStatus.PLANNED)
         }
-        assertEquals(TrainingEventPalette.PLANNED, TrainingEventPalette.swatchFor(planned))
+        assertEquals(TrainingEventPalette.PLANNED, TrainingEventPalette.swatchFor(planned, user))
 
         val awaiting = TrainingEvent().apply {
             startTime = now.minusDays(1)
             endTime = now.minusDays(1).plusHours(1)
-            attendanceStatus = AttendanceStatus.PLANNED
+            setAttendance(user, AttendanceStatus.PLANNED)
         }
-        assertEquals(TrainingEventPalette.UNCONFIRMED, TrainingEventPalette.swatchFor(awaiting))
+        assertEquals(TrainingEventPalette.UNCONFIRMED, TrainingEventPalette.swatchFor(awaiting, user))
 
         val attended = TrainingEvent().apply {
             startTime = now.minusDays(1)
             endTime = now.minusDays(1).plusHours(1)
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(user, AttendanceStatus.ATTENDED)
         }
-        assertEquals(TrainingEventPalette.ATTENDED, TrainingEventPalette.swatchFor(attended))
+        assertEquals(TrainingEventPalette.ATTENDED, TrainingEventPalette.swatchFor(attended, user))
 
         val skipped = TrainingEvent().apply {
             startTime = now.minusDays(1)
             endTime = now.minusDays(1).plusHours(1)
-            attendanceStatus = AttendanceStatus.SKIPPED
+            setAttendance(user, AttendanceStatus.SKIPPED)
         }
-        assertEquals(TrainingEventPalette.SKIPPED, TrainingEventPalette.swatchFor(skipped))
+        assertEquals(TrainingEventPalette.SKIPPED, TrainingEventPalette.swatchFor(skipped, user))
 
         val cancelled = TrainingEvent().apply {
             startTime = now.plusDays(1)
             endTime = now.plusDays(1).plusHours(1)
-            attendanceStatus = AttendanceStatus.CANCELLED
+            setAttendance(user, AttendanceStatus.CANCELLED)
         }
-        assertEquals(TrainingEventPalette.CANCELLED, TrainingEventPalette.swatchFor(cancelled))
+        assertEquals(TrainingEventPalette.CANCELLED, TrainingEventPalette.swatchFor(cancelled, user))
     }
 
     @Test

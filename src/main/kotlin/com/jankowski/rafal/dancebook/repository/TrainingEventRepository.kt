@@ -18,6 +18,9 @@ import java.util.UUID
 @Repository
 interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpecificationExecutor<TrainingEvent> {
 
+    @EntityGraph(attributePaths = ["calendar", "attendances"], type = EntityGraph.EntityGraphType.LOAD)
+    override fun findById(id: UUID): Optional<TrainingEvent>
+
     fun findAllByCreatedByOrderByStartTimeDesc(createdBy: AppUser): List<TrainingEvent>
 
     fun findByGoogleEventId(googleEventId: String): Optional<TrainingEvent>
