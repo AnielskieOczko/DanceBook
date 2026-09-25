@@ -11,6 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.Version
 import java.util.UUID
 
 @Entity
@@ -32,8 +33,17 @@ class DanceFigure {
     @Column(name = "dance_class")
     var danceClass: DanceClass? = null
 
+    /** Syllabus figures are imported with this set; only an admin may delete them. */
     @Column(nullable = false)
     var predefined: Boolean = false
+
+    /** Null for syllabus imports, and for figures whose creator could not be recovered. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_id")
+    var createdBy: AppUser? = null
+
+    @Version
+    var version: Long = 0
 
     @Column(name = "alternative_timing")
     var alternativeTiming: String? = null
@@ -75,6 +85,17 @@ class DanceFigure {
 
     val steps: List<DanceFigureStep>
         get() = stepSets.find { it.isDefault }?.steps ?: stepSets.firstOrNull()?.steps ?: emptyList()
+
+    /**
+     * Figures are edited by everyone, but only the creator or an admin may delete one, and a
+     * syllabus figure only an admin. Whether another user's item still uses the figure is
+     * checked separately, by the service.
+     */
+    fun isDeletableBy(user: AppUser?): Boolean {
+        if (user == null) return false
+        if (user.role == Role.ADMIN) return true
+        return !predefined && createdBy?.id != null && createdBy?.id == user.id
+    }
 
     fun getLeaderSteps(): List<DanceFigureStep> =
         steps.filter { it.role == "LEADER" }.sortedBy { it.stepNumber }

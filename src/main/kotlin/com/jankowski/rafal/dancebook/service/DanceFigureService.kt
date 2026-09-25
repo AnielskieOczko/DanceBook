@@ -6,6 +6,12 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import java.util.UUID
 
 interface DanceFigureService {
+    companion object {
+        /** Shown when a save loses an optimistic-locking race: figures are edited by everyone. */
+        const val CONFLICT_MESSAGE =
+            "Someone else saved this figure while you were editing it. Reload the figure to see their changes, then make yours again."
+    }
+
     fun findAll(
         typeIds: List<UUID>? = null,
         categoryIds: List<UUID>? = null,

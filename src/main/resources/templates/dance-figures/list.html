@@ -169,15 +169,15 @@
                         <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
                             <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
                         </a>
-                        <!-- Delete action for custom figure -->
-                        <form th:if="${!f.predefined}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
-                              data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                        <!-- Delete: creator or admin; syllabus figures admin only -->
+                        <form th:if="${f.isDeletableBy(currentUser)}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
+                              data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
                             <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
                                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
                             </button>
                         </form>
                         <!-- Locked action for predefined figure -->
-                        <div th:if="${f.predefined}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
+                        <div th:if="${f.predefined and !f.isDeletableBy(currentUser)}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
                             <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span> Predefined
                         </div>
                     </div>
@@ -233,15 +233,15 @@
                                 <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
                                     <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
                                 </a>
-                                <!-- Delete action for custom figure -->
-                                <form th:if="${!f.predefined}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
-                                      data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                                <!-- Delete: creator or admin; syllabus figures admin only -->
+                                <form th:if="${f.isDeletableBy(currentUser)}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
+                                      data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
                                     <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
                                         <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
                                     </button>
                                 </form>
                                 <!-- Locked action for predefined figure -->
-                                <div th:if="${f.predefined}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
+                                <div th:if="${f.predefined and !f.isDeletableBy(currentUser)}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
                                     <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span> Predefined
                                 </div>
                             </div>
@@ -375,9 +375,9 @@
                                         <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                                         <span>Edit</span>
                                     </a>
-                                    <th:block th:if="${!f.predefined}">
+                                    <th:block th:if="${f.isDeletableBy(currentUser)}">
                                         <form th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
-                                              data-confirm="Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.">
+                                              data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
                                             <button type="submit" class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
                                                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 <span>Delete</span>

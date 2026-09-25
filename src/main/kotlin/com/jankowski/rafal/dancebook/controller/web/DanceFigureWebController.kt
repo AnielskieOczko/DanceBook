@@ -9,7 +9,10 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
+import com.jankowski.rafal.dancebook.service.FigureInUseException
+import jakarta.persistence.OptimisticLockException
 import jakarta.validation.Valid
+import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.util.UUID
 
 @Controller
@@ -191,7 +195,8 @@ class DanceFigureWebController(
             notes = danceFigure.notes,
             steps = mutableListOf(),
             stepSets = stepSetsRequest,
-            links = linksRequest
+            links = linksRequest,
+            version = danceFigure.version
         )
 
         val availableFigures = danceFigure.danceType?.id?.let {
@@ -226,7 +231,12 @@ class DanceFigureWebController(
         try {
             danceFigureService.update(id, request)
         } catch (e: Exception) {
-            bindingResult.rejectValue("name", "error.danceFigure", e.message ?: "Failed to update figure")
+            when (e) {
+                // Someone else saved first: a form-level error, since no single field is at fault
+                is OptimisticLockException, is ObjectOptimisticLockingFailureException ->
+                    bindingResult.reject("error.danceFigure.conflict", DanceFigureService.CONFLICT_MESSAGE)
+                else -> bindingResult.rejectValue("name", "error.danceFigure", e.message ?: "Failed to update figure")
+            }
             val availableFigures = request.danceTypeId?.let {
                 danceFigureService.findByDanceType(it).filter { it.id != id }
             } ?: emptyList()
@@ -240,8 +250,13 @@ class DanceFigureWebController(
     }
 
     @PostMapping("/{id}/delete")
-    fun deleteDanceFigure(@PathVariable id: UUID): String {
-        danceFigureService.delete(id)
+    fun deleteDanceFigure(@PathVariable id: UUID, redirectAttributes: RedirectAttributes): String {
+        try {
+            danceFigureService.delete(id)
+        } catch (e: FigureInUseException) {
+            redirectAttributes.addFlashAttribute("deleteError", e.message)
+            return "redirect:/dance-figures/$id"
+        }
         return "redirect:/dance-figures"
     }
 

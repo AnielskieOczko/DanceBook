@@ -2,9 +2,11 @@ package com.jankowski.rafal.dancebook.frontend
 
 import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.controller.web.DanceFigureWebController
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -56,7 +58,7 @@ import java.util.UUID
  * 5. Missing values rendered as explicit dashes.
  * 6. Steps column displaying syllabus presence without per-row queries.
  * 7. Source column distinguishing predefined and custom figures.
- * 8. Row actions: Delete offered only on custom figures with proper confirmation; never on predefined figures.
+ * 8. Row actions: Delete offered to the figure's creator with proper confirmation; never on predefined figures for a non-admin.
  * 9. Responsive layout: mobile cards (lg:hidden) and dense table (hidden lg:block).
  */
 @WebMvcTest(
@@ -237,7 +239,8 @@ class DanceFigureDenseTableTemplateTest {
     }
 
     @Test
-    fun `steps and source values render correctly and delete is never offered on predefined rows`() {
+    fun `steps and source values render correctly and delete is offered only where the viewer may delete`() {
+        val viewer = AppUser().apply { id = UUID.randomUUID(); username = "viewer"; role = Role.USER }
         val predefinedFigId = UUID.randomUUID()
         val customFigId = UUID.randomUUID()
 
@@ -264,7 +267,7 @@ class DanceFigureDenseTableTemplateTest {
             endFootL = null,
             startFootF = null,
             endFootF = null
-        )
+        ).apply { createdBy = viewer }
 
         `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any()))
             .thenReturn(listOf(predefinedFigure, customFigure))
@@ -272,7 +275,9 @@ class DanceFigureDenseTableTemplateTest {
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList())))
             .thenReturn(setOf(predefinedFigId))
 
-        val result = mockMvc.perform(get("/dance-figures").with(csrf()))
+        // Security is off in this slice, so hand the viewer in as the model's currentUser;
+        // NavbarAdvice leaves an attribute the model already holds alone
+        val result = mockMvc.perform(get("/dance-figures").with(csrf()).flashAttr("currentUser", viewer))
             .andExpect(status().isOk)
             .andReturn()
 
@@ -317,7 +322,7 @@ class DanceFigureDenseTableTemplateTest {
         val deleteForm = cells2[9].selectFirst("form[action*='/delete']")
         assertNotNull(deleteForm, "Delete form must be present on custom figure")
         assertEquals(
-            "Are you sure you want to delete this custom figure? This will also remove it from any mapped material sequences.",
+            "Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.",
             deleteForm?.attr("data-confirm")
         )
         val deleteBtn = deleteForm?.selectFirst("button[type=submit]")

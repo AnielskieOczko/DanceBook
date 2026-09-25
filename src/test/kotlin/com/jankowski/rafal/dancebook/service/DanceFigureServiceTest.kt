@@ -10,8 +10,10 @@ import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import jakarta.persistence.EntityNotFoundException
+import jakarta.persistence.OptimisticLockException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -19,8 +21,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.security.access.AccessDeniedException
 import java.util.Optional
 import java.util.UUID
 
@@ -32,6 +37,7 @@ class DanceFigureServiceTest {
     private lateinit var appUserService: AppUserService
     private lateinit var danceFigureService: DanceFigureServiceImpl
     private lateinit var currentUser: AppUser
+    private val otherUser = AppUser().apply { id = UUID.randomUUID(); displayName = "Other User" }
 
     @BeforeEach
     fun setUp() {
@@ -174,7 +180,8 @@ class DanceFigureServiceTest {
             name = "New Name",
             danceTypeId = danceTypeId,
             danceClass = DanceClass.D,
-            alternativeTiming = "1&2"
+            alternativeTiming = "1&2",
+            version = 0
         )
 
         `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(existingFigure))
@@ -213,7 +220,8 @@ class DanceFigureServiceTest {
 
         val request = DanceFigureRequest(
             name = "Duplicate Name",
-            danceTypeId = danceTypeId
+            danceTypeId = danceTypeId,
+            version = 0
         )
 
         `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(existingFigure))
@@ -228,38 +236,119 @@ class DanceFigureServiceTest {
     }
 
     @Test
-    fun `should prevent deleting predefined standard figures`() {
+    fun `should let any user edit a figure someone else created`() {
         val figureId = UUID.randomUUID()
-        val predefinedFigure = DanceFigure().apply {
+        val danceTypeId = UUID.randomUUID()
+        val danceType = DanceType().apply { id = danceTypeId; name = "Waltz" }
+        val figure = DanceFigure().apply {
             id = figureId
-            name = "Natural Turn"
-            predefined = true
+            name = "Whisk"
+            this.danceType = danceType
+            createdBy = otherUser
+            version = 3
         }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+        `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
+        `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(listOf(figure))
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
 
-        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(predefinedFigure))
+        danceFigureService.update(figureId, DanceFigureRequest(name = "Whisk", danceTypeId = danceTypeId, notes = "Better", version = 3))
 
-        val exception = assertThrows(IllegalStateException::class.java) {
-            danceFigureService.delete(figureId)
-        }
-
-        assertEquals("Cannot delete predefined standard figures.", exception.message)
+        val captor = ArgumentCaptor.forClass(DanceFigureUpdatedEvent::class.java)
+        verify(eventPublisher).publishEvent(captor.capture())
+        assertEquals(currentUser, captor.value.actor)
     }
 
     @Test
-    fun `should allow deleting custom figures`() {
+    fun `should refuse a save made from a stale form`() {
         val figureId = UUID.randomUUID()
-        val customFigure = DanceFigure().apply {
-            id = figureId
-            name = "My Custom Figure"
-            predefined = false
-            danceType = DanceType().apply { name = "Waltz" }
+        val figure = DanceFigure().apply { id = figureId; name = "Whisk"; version = 4 }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+
+        val exception = assertThrows(OptimisticLockException::class.java) {
+            danceFigureService.update(figureId, DanceFigureRequest(name = "Whisk", danceTypeId = UUID.randomUUID(), version = 3))
         }
 
-        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(customFigure))
+        assertEquals(DanceFigureService.CONFLICT_MESSAGE, exception.message)
+        verify(danceFigureRepository, never()).save(any(DanceFigure::class.java))
+    }
+
+    @Test
+    fun `should record the creator of a new figure`() {
+        val danceTypeId = UUID.randomUUID()
+        `when`(danceTypeService.findById(danceTypeId)).thenReturn(DanceType().apply { id = danceTypeId; name = "Waltz" })
+        `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(emptyList())
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+
+        val result = danceFigureService.create(DanceFigureRequest(name = "Whisk", danceTypeId = danceTypeId))
+
+        assertEquals(currentUser, result.createdBy)
+    }
+
+    @Test
+    fun `should refuse to let a non-admin delete a syllabus figure`() {
+        val figureId = UUID.randomUUID()
+        val figure = DanceFigure().apply { id = figureId; name = "Natural Turn"; predefined = true }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+
+        val exception = assertThrows(AccessDeniedException::class.java) { danceFigureService.delete(figureId) }
+
+        assertEquals("Only an admin can delete a syllabus figure.", exception.message)
+        verify(danceFigureRepository, never()).delete(any(DanceFigure::class.java))
+    }
+
+    @Test
+    fun `should let an admin delete an unused syllabus figure`() {
+        currentUser.role = Role.ADMIN
+        val figureId = UUID.randomUUID()
+        val figure = DanceFigure().apply {
+            id = figureId; name = "Natural Turn"; predefined = true; danceType = DanceType().apply { name = "Waltz" }
+        }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
 
         danceFigureService.delete(figureId)
 
-        verify(danceFigureRepository).delete(customFigure)
+        verify(danceFigureRepository).delete(figure)
+    }
+
+    @Test
+    fun `should refuse to let a user delete a figure someone else created`() {
+        val figureId = UUID.randomUUID()
+        val figure = DanceFigure().apply { id = figureId; name = "Whisk"; createdBy = otherUser }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+
+        assertThrows(AccessDeniedException::class.java) { danceFigureService.delete(figureId) }
+        verify(danceFigureRepository, never()).delete(any(DanceFigure::class.java))
+    }
+
+    @Test
+    fun `should refuse to delete a figure another user's items still use`() {
+        val figureId = UUID.randomUUID()
+        val figure = DanceFigure().apply { id = figureId; name = "Whisk"; createdBy = currentUser }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+        `when`(danceFigureRepository.countOtherUsersNotesUsing(figureId, currentUser.id!!)).thenReturn(2)
+        `when`(danceFigureRepository.countOtherUsersChoreographiesUsing(figureId, currentUser.id!!)).thenReturn(1)
+
+        val exception = assertThrows(FigureInUseException::class.java) { danceFigureService.delete(figureId) }
+
+        assertEquals(
+            "This figure can't be deleted: 2 notes and 1 choreography belonging to other users use it.",
+            exception.message
+        )
+        verify(danceFigureRepository, never()).delete(any(DanceFigure::class.java))
+    }
+
+    @Test
+    fun `should let the creator delete a figure only their own items use`() {
+        val figureId = UUID.randomUUID()
+        val figure = DanceFigure().apply {
+            id = figureId; name = "Whisk"; createdBy = currentUser; danceType = DanceType().apply { name = "Waltz" }
+        }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(figure))
+
+        danceFigureService.delete(figureId)
+
+        verify(danceFigureRepository).delete(figure)
         verify(eventPublisher).publishEvent(any(DanceFigureDeletedEvent::class.java))
     }
 

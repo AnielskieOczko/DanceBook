@@ -29,7 +29,10 @@ data class DanceFigureRequest(
 
     val steps: MutableList<DanceFigureStepRequest> = mutableListOf(),
     val stepSets: MutableList<DanceFigureStepSetRequest> = mutableListOf(),
-    val links: MutableList<DanceFigureLinkRequest> = mutableListOf()
+    val links: MutableList<DanceFigureLinkRequest> = mutableListOf(),
+
+    /** The optimistic-locking token the edit form was rendered with; null on create. */
+    val version: Long? = null
 ) {
     fun getEffectiveStepSets(): List<DanceFigureStepSetRequest> {
         if (stepSets.isNotEmpty() && (stepSets.size > 1 || stepSets[0].steps.isNotEmpty() || stepSets[0].name != "Default")) {
