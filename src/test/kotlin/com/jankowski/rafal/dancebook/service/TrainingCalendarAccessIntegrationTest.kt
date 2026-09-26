@@ -197,4 +197,110 @@ class TrainingCalendarAccessIntegrationTest {
         )
         assertEquals("Admin Renamed Calendar", updated.displayName)
     }
+
+    @Test
+    fun `User B creating a session with User A's private calendar id gets 404 and creates no session in DanceBook or Google`() {
+        // User A creates a PRIVATE calendar
+        `when`(appUserService.getCurrentUser()).thenReturn(userA)
+        val calA = trainingCalendarService.add(
+            TrainingCalendarRequest(
+                googleCalendarId = "user-a-target@group.calendar.google.com",
+                displayName = "User A Private Target",
+                visibility = Visibility.PRIVATE
+            ),
+            userA
+        )
+
+        // Switch to User B
+        `when`(appUserService.getCurrentUser()).thenReturn(userB)
+
+        // 1. User B tries to create a session on User A's private calendar -> EntityNotFoundException (404)
+        assertThrows(EntityNotFoundException::class.java) {
+            trainingEventService.create(
+                TrainingEventRequest(
+                    title = "Unauthorized Session",
+                    date = LocalDate.now(),
+                    startTime = LocalTime.of(14, 0),
+                    endTime = LocalTime.of(15, 0),
+                    calendarId = calA.id,
+                    eventType = TrainingEventType.TRAINING.name
+                )
+            )
+        }
+
+        // Verify no event was created in Google or local DB
+        org.mockito.Mockito.verify(calendarClient, org.mockito.Mockito.never())
+            .createEvent(eq("user-a-target@group.calendar.google.com"), any(TrainingEvent::class.java))
+        assertTrue(trainingEventRepository.findAll().isEmpty(), "No session should be saved in DB")
+
+        // 2. User B creates their own private calendar
+        val calB = trainingCalendarService.add(
+            TrainingCalendarRequest(
+                googleCalendarId = "user-b-cal@group.calendar.google.com",
+                displayName = "User B Private Calendar",
+                visibility = Visibility.PRIVATE
+            ),
+            userB
+        )
+
+        // User B creates a session on their own calendar explicitly
+        `when`(calendarClient.createEvent(
+            eq("user-b-cal@group.calendar.google.com"),
+            any(TrainingEvent::class.java)
+        )).thenAnswer { "google-b-session-" + UUID.randomUUID() }
+
+        val sessionBExplicit = trainingEventService.create(
+            TrainingEventRequest(
+                title = "User B Own Session",
+                date = LocalDate.now(),
+                startTime = LocalTime.of(16, 0),
+                endTime = LocalTime.of(17, 0),
+                calendarId = calB.id,
+                eventType = TrainingEventType.TRAINING.name
+            )
+        )
+        assertNotNull(sessionBExplicit.id)
+        assertEquals(calB.id, sessionBExplicit.calendar?.id)
+        assertNotNull(sessionBExplicit.googleEventId)
+
+        // 3. User B creates a session on their default calendar (calendarId = null)
+        val sessionBDefault = trainingEventService.create(
+            TrainingEventRequest(
+                title = "User B Default Session",
+                date = LocalDate.now(),
+                startTime = LocalTime.of(18, 0),
+                endTime = LocalTime.of(19, 0),
+                calendarId = null,
+                eventType = TrainingEventType.TRAINING.name
+            )
+        )
+        assertNotNull(sessionBDefault.id)
+        assertEquals(calB.id, sessionBDefault.calendar?.id)
+
+        // 4. User A makes calA PUBLIC -> now User B CAN create a session targeting calA
+        `when`(appUserService.getCurrentUser()).thenReturn(userA)
+        trainingCalendarService.setVisibility(calA.id!!, Visibility.PUBLIC, userA)
+
+        `when`(appUserService.getCurrentUser()).thenReturn(userB)
+        `when`(calendarClient.createEvent(
+            eq("user-a-target@group.calendar.google.com"),
+            any(TrainingEvent::class.java)
+        )).thenAnswer { "google-pub-session-" + UUID.randomUUID() }
+
+        val sessionOnPublicCal = trainingEventService.create(
+            TrainingEventRequest(
+                title = "User B on Public Cal A",
+                date = LocalDate.now(),
+                startTime = LocalTime.of(20, 0),
+                endTime = LocalTime.of(21, 0),
+                calendarId = calA.id,
+                eventType = TrainingEventType.TRAINING.name
+            )
+        )
+        assertNotNull(sessionOnPublicCal.id)
+        assertEquals(calA.id, sessionOnPublicCal.calendar?.id)
+    }
+
+    private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
+    private fun <T> eq(value: T): T = org.mockito.Mockito.eq(value) ?: value
 }

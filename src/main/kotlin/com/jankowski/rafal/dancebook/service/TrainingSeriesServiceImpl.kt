@@ -886,8 +886,7 @@ class TrainingSeriesServiceImpl(
         val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
             trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
-                ?: trainingCalendarService.findById(calendarId)
-                ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+                ?: throw EntityNotFoundException("Training calendar with id $calendarId not found")
         } else {
             val userDefault = try {
                 trainingCalendarService.requireDefault(currentUser)

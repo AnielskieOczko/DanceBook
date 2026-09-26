@@ -16,6 +16,7 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import com.jankowski.rafal.dancebook.service.TrainingSeriesService
+import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Controller
@@ -214,6 +215,8 @@ class TrainingEventWebController(
             } else {
                 trainingEventService.create(scopedRequest)
             }
+        } catch (e: EntityNotFoundException) {
+            throw e
         } catch (e: Exception) {
             log.error("Failed to create training event '{}'", request.title, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to create training event")

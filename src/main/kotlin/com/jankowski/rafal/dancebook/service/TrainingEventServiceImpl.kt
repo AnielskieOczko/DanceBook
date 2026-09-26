@@ -13,7 +13,6 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingEventSource
-import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
@@ -85,9 +84,12 @@ class TrainingEventServiceImpl(
         val event = trainingEventRepository.findById(id).orElseThrow {
             EntityNotFoundException("Could not find training event with id $id")
         }
-        val currentUser = try { appUserService.getCurrentUser() } catch (e: Exception) { null }
-        if (currentUser != null) {
-            checkVisibility(event, currentUser)
+        val cal = event.calendar
+        if (cal != null) {
+            val currentUser = try { appUserService.getCurrentUser() } catch (e: Exception) { null }
+            if (trainingCalendarService.findByIdVisibleTo(cal.id!!, currentUser) == null) {
+                throw EntityNotFoundException("Could not find training event with id $id")
+            }
         }
         return event
     }
@@ -536,7 +538,6 @@ class TrainingEventServiceImpl(
         val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
             trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
-                ?: trainingCalendarService.findById(calendarId)
                 ?: throw EntityNotFoundException("Training calendar with id $calendarId not found")
         } else {
             val userDefault = try {
@@ -549,20 +550,7 @@ class TrainingEventServiceImpl(
             userDefault ?: trainingCalendarService.requireDefault()
         }
         require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
-        if (currentUser.role != Role.ADMIN && cal.visibility != Visibility.PUBLIC && cal.owner != null && cal.owner?.id != currentUser.id) {
-            throw IllegalStateException("You don't have permission to add sessions to this calendar")
-        }
         return cal
-    }
-
-    private fun checkVisibility(event: TrainingEvent, currentUser: AppUser) {
-        if (currentUser.role == Role.ADMIN) return
-        val cal = event.calendar
-        if (cal == null || cal.visibility == Visibility.PUBLIC) return
-        if (cal.owner?.id == currentUser.id) return
-        if (event.createdBy?.id == currentUser.id) return
-        if (event.attendances.any { it.user?.id == currentUser.id }) return
-        throw EntityNotFoundException("Could not find training event with id ${event.id}")
     }
 
     private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest, user: AppUser) {

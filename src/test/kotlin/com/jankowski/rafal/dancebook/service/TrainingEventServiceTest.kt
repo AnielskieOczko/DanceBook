@@ -94,6 +94,7 @@ class TrainingEventServiceTest {
 
         `when`(trainingCalendarService.requireDefault()).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.findDefault()).thenReturn(defaultCalendar)
+        `when`(trainingCalendarService.findByIdVisibleTo(eq(defaultCalendar.id!!), any(AppUser::class.java))).thenReturn(defaultCalendar)
 
         trainingEventService = TrainingEventServiceImpl(
             trainingEventRepository,
@@ -389,6 +390,31 @@ class TrainingEventServiceTest {
     }
 
     @Test
+    fun `findById throws EntityNotFoundException when event calendar is not visible`() {
+        val hiddenCal = createCalendar(id = UUID.randomUUID())
+        val event = existingEvent("google-hidden").apply { calendar = hiddenCal }
+        `when`(trainingEventRepository.findById(event.id!!)).thenReturn(Optional.of(event))
+        `when`(trainingCalendarService.findByIdVisibleTo(hiddenCal.id!!, currentUser)).thenReturn(null)
+
+        val exception = assertThrows(EntityNotFoundException::class.java) {
+            trainingEventService.findById(event.id!!)
+        }
+
+        assertEquals("Could not find training event with id ${event.id}", exception.message)
+    }
+
+    @Test
+    fun `findById succeeds when event calendar is visible`() {
+        val event = existingEvent("google-visible")
+        `when`(trainingEventRepository.findById(event.id!!)).thenReturn(Optional.of(event))
+        `when`(trainingCalendarService.findByIdVisibleTo(defaultCalendar.id!!, currentUser)).thenReturn(defaultCalendar)
+
+        val result = trainingEventService.findById(event.id!!)
+
+        assertEquals(event.id, result.id)
+    }
+
+    @Test
     fun `should flag a past planned event as awaiting confirmation`() {
         val past = TrainingEvent().apply {
             startTime = LocalDateTime.now().minusDays(2)
@@ -485,7 +511,7 @@ class TrainingEventServiceTest {
             googleCalendarId = "custom-cal@group.calendar.google.com",
             displayName = "Custom Calendar"
         )
-        `when`(trainingCalendarService.findById(customCalId)).thenReturn(customCalendar)
+        `when`(trainingCalendarService.findByIdVisibleTo(customCalId, currentUser)).thenReturn(customCalendar)
         `when`(calendarClient.createEvent(eq(customCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-custom")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
@@ -498,6 +524,21 @@ class TrainingEventServiceTest {
         assertEquals("google-custom", result.googleEventId)
         verify(calendarClient).createEvent(eq("custom-cal@group.calendar.google.com"), any(TrainingEvent::class.java))
         verify(calendarClient, never()).createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java))
+    }
+
+    @Test
+    fun `creating with explicit calendarId that is not visible is rejected with 404 and does not create event`() {
+        val hiddenCalId = UUID.randomUUID()
+        `when`(trainingCalendarService.findByIdVisibleTo(hiddenCalId, currentUser)).thenReturn(null)
+
+        val request = validRequest(calendarId = hiddenCalId)
+        val exception = assertThrows(EntityNotFoundException::class.java) {
+            trainingEventService.create(request)
+        }
+
+        assertTrue(exception.message!!.contains("not found"))
+        verifyNoInteractions(calendarClient)
+        verifyNoInteractions(trainingEventPersistence)
     }
 
     @Test
@@ -524,7 +565,7 @@ class TrainingEventServiceTest {
             displayName = "Disabled Calendar",
             enabled = false
         )
-        `when`(trainingCalendarService.findById(disabledCalId)).thenReturn(disabledCalendar)
+        `when`(trainingCalendarService.findByIdVisibleTo(disabledCalId, currentUser)).thenReturn(disabledCalendar)
 
         val request = validRequest(calendarId = disabledCalId)
         val exception = assertThrows(IllegalArgumentException::class.java) {
