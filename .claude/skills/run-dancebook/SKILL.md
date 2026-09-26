@@ -96,10 +96,10 @@ Export those variables before `start.sh` and it will use them, not the dummy val
 - **Don't run `docker compose up` from a clone.** The compose project takes its name
   from the directory, so it would try to create a second `dancebook-db` on port 5432.
   `start.sh` starts the existing container by name instead.
-- **Every page logs `Cannot read properties of null (reading 'addEventListener')` from
-  `js/main.js:612`.** It's baseline noise that was already there: the HTMX error-alert
-  listener binds `document.body` before the body exists. Submitting the note form also
-  logs one `Failed to load resource: 404` with no URL. Only other errors are news.
+- **Pages should load with no page errors.** A `pageerror` from `js/main.js` is a real
+  bug, not noise: until #140 one such error stopped the rest of the script, and the rich
+  text toolbar quietly lost its pruning. Submitting the note form does log one
+  `Failed to load resource: 404` with no URL; that one is known.
 - **Routes:** notes are `/materials`, figures `/dance-figures`, training
   `/training-events` (plus `/stats`, `/history`, `/timeline`), and calendars
   `/admin/calendars`. `/training` is a 404.

@@ -306,7 +306,13 @@ two nesting buttons and the file and history groups, leaving the five the safeli
 bold, italic, link, bullet list, numbered list. Pruning on the event rather than at render is
 what makes an htmx-swapped editor come up with the same toolbar as a server-rendered one. A
 `trix-file-accept` listener refuses attachments outright, since nothing downstream would store
-them.
+them. **Listeners in `main.js` must bind to `document`, never `document.body`**: `main.js` loads
+synchronously in `<head>`, where `document.body` is null at evaluation time. Any top-level listener
+attached to `document.body` throws a `TypeError` that halts script execution immediately,
+preventing `trix-initialize` and downstream handlers from ever registering. That left all fourteen
+controls in place as blank grey squares until #140, because our toolbar skin provides icons for only
+the five permitted controls. `RichTextToolbarGuardTest` ensures no listener attaches to `document.body`
+and that all pruning selectors remain in `main.js`.
 
 **Required-ness is enforced by hand, because constraint validation cannot see the value.** The
 real input is hidden, and a hidden input is excluded from constraint validation — so `required`

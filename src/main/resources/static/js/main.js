@@ -609,13 +609,13 @@ function showErrorAlert(message) {
 window.showErrorAlert = showErrorAlert;
 
 // Surface background HTMX failures in the alert container
-document.body.addEventListener('htmx:responseError', function(event) {
+document.addEventListener('htmx:responseError', function(event) {
     const status = event.detail.xhr ? event.detail.xhr.status : null;
     const message = status ? `Request failed (${status}). Please try again.` : 'An unexpected error occurred. Please try again.';
     showErrorAlert(message);
 });
 
-document.body.addEventListener('htmx:sendError', function() {
+document.addEventListener('htmx:sendError', function() {
     showErrorAlert('Network error. Please check your connection and try again.');
 });
 
