@@ -502,8 +502,11 @@ class TrainingEventServiceImpl(
     ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
         return if (calendarId == null) {
-            trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
-                currentUser, to, from
+            // "All calendars" means every calendar the user owns or follows (#155), not only
+            // the sessions they created.
+            trainingEventRepository.findAll(
+                TrainingEventSpecification.withFilters(user = currentUser)
+                    .and(TrainingEventSpecification.overlapping(from, to))
             )
         } else {
             trainingCalendarService.findByIdVisibleTo(calendarId, currentUser) ?: return emptyList()
@@ -650,10 +653,10 @@ class TrainingEventServiceImpl(
         }
     }
 
-    private fun canModify(event: TrainingEvent, user: AppUser): Boolean {
+    override fun canModify(event: TrainingEvent, user: AppUser): Boolean {
         if (user.role == Role.ADMIN) return true
         if (event.calendar?.owner?.id == user.id) return true
-        // Keep createdBy clause only so sessions authored before calendar membership introduced stay editable by their creator
+        // Sessions a user authored before calendar membership (#155) stay editable by them.
         if (event.createdBy?.id == user.id) return true
         return event.calendar?.owner == null && event.createdBy == null
     }

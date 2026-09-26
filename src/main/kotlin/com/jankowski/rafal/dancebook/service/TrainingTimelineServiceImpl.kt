@@ -7,8 +7,10 @@ import com.jankowski.rafal.dancebook.dto.groupByMonth
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -41,13 +43,12 @@ class TrainingTimelineServiceImpl(
 
         // One row beyond the window: if it comes back, there is another window behind this one.
         // Cheaper and simpler than a second count query, and the extra row is never rendered.
-        val pageable = PageRequest.of(page, PAGE_SIZE + 1)
-        val probed = if (calendarId == null) {
-            trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser, pageable)
-        } else {
-            trainingEventRepository
-                .findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(currentUser, calendarId, pageable)
-        }
+        val pageable = PageRequest.of(page, PAGE_SIZE + 1, Sort.by(Sort.Direction.DESC, "startTime"))
+        // Sessions on every calendar the user owns or follows (#155), not only ones they created.
+        val probed = trainingEventRepository.findAll(
+            TrainingEventSpecification.withFilters(user = currentUser, calendarId = calendarId),
+            pageable
+        ).content
         val hasMore = probed.size > PAGE_SIZE
         val window = probed.take(PAGE_SIZE)
 

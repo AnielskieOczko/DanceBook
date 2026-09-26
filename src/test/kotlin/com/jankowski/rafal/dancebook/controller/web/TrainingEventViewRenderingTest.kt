@@ -247,6 +247,48 @@ class TrainingEventViewRenderingTest {
             .andExpect(content().string(org.hamcrest.Matchers.containsString("dayAgendaItemTemplate")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("quickCreateFab")))
             .andExpect(content().string(org.hamcrest.Matchers.containsString("quickCreateSheet")))
+            // The grid opens quick create on a click only when the page says the user may add sessions.
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("data-can-add-session=\"true\"")))
+    }
+
+    @Test
+    fun `should not offer creating sessions on a calendar the user only follows`() {
+        val followed = followedCalendar()
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(followed))
+        `when`(activeCalendarService.active()).thenReturn(followed)
+
+        mockMvc.perform(get("/training-events/calendar").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("data-can-add-session=\"false\"")))
+            .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("id=\"quickCreateFab\""))))
+    }
+
+    @Test
+    fun `should refuse the quick-create fragment on a calendar the user only follows`() {
+        val followed = followedCalendar()
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(followed))
+        `when`(activeCalendarService.active()).thenReturn(followed)
+
+        // Filters are off in this slice, so the AccessDeniedException Spring Security turns into
+        // a 403 surfaces here as the cause of the ServletException.
+        val failure = org.junit.jupiter.api.assertThrows<jakarta.servlet.ServletException> {
+            mockMvc.perform(
+                get("/training-events/quick-create")
+                    .param("start", "2026-09-14T18:00:00")
+                    .param("end", "2026-09-14T19:00:00")
+            )
+        }
+        org.junit.jupiter.api.Assertions.assertTrue(
+            failure.cause is org.springframework.security.access.AccessDeniedException
+        )
+    }
+
+    /** A calendar someone else owns, which the test user sees only as a member. */
+    private fun followedCalendar() = TrainingCalendar().apply {
+        id = UUID.randomUUID()
+        displayName = "Club Calendar"
+        enabled = true
+        owner = AppUser().apply { id = UUID.randomUUID(); username = "club-owner" }
     }
 
     @Test

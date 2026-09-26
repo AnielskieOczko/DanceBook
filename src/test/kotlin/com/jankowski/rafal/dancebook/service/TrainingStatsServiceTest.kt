@@ -143,7 +143,7 @@ class TrainingStatsServiceTest {
     }
 
     private fun given(vararg sessions: Session) {
-        `when`(trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser))
+        `when`(trainingEventRepository.findAll(any(org.springframework.data.jpa.domain.Specification::class.java) ?: org.springframework.data.jpa.domain.Specification<TrainingEvent> { _, _, _ -> null }))
             .thenReturn(sessions.mapNotNull { it.event })
         `when`(trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser))
             .thenReturn(sessions.mapNotNull { it.record }.sortedByDescending { it.occurredAt })

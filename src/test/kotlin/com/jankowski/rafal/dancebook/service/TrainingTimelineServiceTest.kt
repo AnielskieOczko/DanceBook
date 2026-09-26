@@ -223,27 +223,21 @@ class TrainingTimelineServiceTest {
     }
 
     @Test
-    fun `scopes to one calendar when one is active`() {
-        val calendarId = UUID.randomUUID()
-        `when`(
-            trainingEventRepository.findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
-                any(AppUser::class.java) ?: currentUser,
-                eq(calendarId) ?: calendarId,
-                any(Pageable::class.java) ?: Pageable.unpaged()
-            )
-        ).thenReturn(emptyList())
+    fun `reads the window through the calendar membership rule, not the session's creator`() {
+        givenWindow()
 
-        trainingTimelineService.timelineForCurrentUser(page = 0, calendarId = calendarId)
+        trainingTimelineService.timelineForCurrentUser(page = 0, calendarId = UUID.randomUUID())
 
-        verify(trainingEventRepository)
+        // A followed calendar's sessions were created by its owner, so a creator-scoped query
+        // would leave a subscriber's timeline empty (#155).
+        verify(trainingEventRepository).findAll(
+            anySpec(),
+            any(Pageable::class.java) ?: Pageable.unpaged()
+        )
+        verify(trainingEventRepository, never())
             .findAllByCreatedByAndCalendarIdOrderByStartTimeDesc(
                 any(AppUser::class.java) ?: currentUser,
-                eq(calendarId) ?: calendarId,
-                any(Pageable::class.java) ?: Pageable.unpaged()
-            )
-        verify(trainingEventRepository, never())
-            .findAllByCreatedByOrderByStartTimeDesc(
-                any(AppUser::class.java) ?: currentUser,
+                any(UUID::class.java) ?: UUID.randomUUID(),
                 any(Pageable::class.java) ?: Pageable.unpaged()
             )
     }
@@ -256,11 +250,11 @@ class TrainingTimelineServiceTest {
     private fun givenWindow(vararg events: TrainingEvent) {
         val ordered = events.sortedByDescending { it.startTime }
         `when`(
-            trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(
-                any(AppUser::class.java) ?: currentUser,
+            trainingEventRepository.findAll(
+                anySpec(),
                 any(Pageable::class.java) ?: Pageable.unpaged()
             )
-        ).thenReturn(ordered)
+        ).thenReturn(org.springframework.data.domain.PageImpl(ordered))
         `when`(trainingEventRepository.findAllByIdIn(anyCollection()))
             .thenAnswer { invocation ->
                 val ids = invocation.getArgument<Collection<UUID>>(0).toSet()
@@ -288,4 +282,8 @@ class TrainingTimelineServiceTest {
         eventType = TrainingEventType.TRAINING
         createdBy = currentUser
     }
+
+    /** A typed matcher for any session Specification; the raw class would lose its type argument. */
+    private fun anySpec(): org.springframework.data.jpa.domain.Specification<TrainingEvent> =
+        org.mockito.ArgumentMatchers.any<org.springframework.data.jpa.domain.Specification<TrainingEvent>>() ?: org.springframework.data.jpa.domain.Specification { _, _, _ -> null }
 }

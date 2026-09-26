@@ -23,6 +23,10 @@
     const host = document.getElementById('trainingCalendar');
     if (!host || typeof FullCalendar === 'undefined') return;
 
+    // Only a calendar's owner adds sessions to it, so on a calendar the user merely follows a
+    // click or drag across empty days must not open the quick-create card.
+    const canAddSession = host.dataset.canAddSession === 'true';
+
     const popover = document.getElementById('quickCreatePopover');
     const sheet = document.getElementById('quickCreateSheet');
     const sheetBody = document.getElementById('quickCreateSheetBody');
@@ -162,7 +166,7 @@
         firstDay: 1,
         height: 'auto',
         nowIndicator: true,
-        selectable: !narrow.matches,
+        selectable: canAddSession && !narrow.matches,
         editable: !narrow.matches,
         eventDisplay: narrow.matches ? 'none' : 'auto',
         headerToolbar: toolbarFor(narrow.matches),
@@ -512,7 +516,7 @@
         const isNarrow = narrow.matches;
         calendar.batchRendering(function () {
             calendar.setOption('headerToolbar', toolbarFor(isNarrow));
-            calendar.setOption('selectable', !isNarrow);
+            calendar.setOption('selectable', canAddSession && !isNarrow);
             calendar.setOption('editable', !isNarrow);
             calendar.setOption('eventDisplay', isNarrow ? 'none' : 'auto');
             if (isNarrow && calendar.view.type !== 'dayGridMonth') {

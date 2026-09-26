@@ -142,6 +142,10 @@ class TrainingEventWebController(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: LocalDateTime,
         model: Model
     ): String {
+        // The grid only offers this when the page allowed it; a direct request gets the same answer.
+        if (model.getAttribute("canAddSession") != true) {
+            throw AccessDeniedException("You do not have permission to add sessions to this calendar")
+        }
         // Clicking a day in month view selects the whole day, which would prefill
         // midnight-to-midnight. Offer a plausible evening slot instead, the way Google
         // does when you click a date rather than a time.

@@ -107,4 +107,14 @@ object TrainingEventSpecification {
             cb.and(*predicates.toTypedArray())
         }
     }
+
+    /** Sessions that overlap the window `[from, to)`, as the calendar grid asks for them. */
+    fun overlapping(from: LocalDateTime, to: LocalDateTime): Specification<TrainingEvent> {
+        return Specification { root, _, cb ->
+            cb.and(
+                cb.lessThan(root.get("startTime"), to),
+                cb.greaterThan(root.get("endTime"), from)
+            )
+        }
+    }
 }
