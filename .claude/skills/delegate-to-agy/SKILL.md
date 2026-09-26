@@ -19,6 +19,11 @@ should also be done by probing, not by reasoning about what ought to work.
 
 ## Non-negotiables
 
+- **No shell variables in the commands you run.** Fill `<N>` in by hand and write every path
+  out literally: no `"$PWD"`, no `f=…; $f`. With `blockReadsOutsideWorkingDirectories` on,
+  Claude Code cannot tell what a variable expands to, so every such command asks for
+  approval, even in auto mode.
+
 - **Always `--add-dir <worktree-abs-path>`.** Without it agy never attaches to the project:
   it silently works inside `~/.gemini/antigravity-cli/scratch`, writes files there, and
   reports success. This is the single worst failure mode — a green run, an empty diff.
@@ -193,9 +198,9 @@ real price of the issue, and the only honest input to "can Pro sustain this".
 ```bash
 git clone -q . ../DanceBook-agy-<N>
 git -C ../DanceBook-agy-<N> checkout -q -b agy/issue-<N> origin/main
-f=.claude/settings.local.json; [ -f $f ] || echo '{}' > $f
+test -f .claude/settings.local.json || echo '{}' > .claude/settings.local.json
 jq '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + ["../DanceBook-agy-<N>"] | unique)' \
-  $f > $f.tmp && mv $f.tmp $f
+  .claude/settings.local.json > .claude/settings.local.json.tmp && mv .claude/settings.local.json.tmp .claude/settings.local.json
 ```
 
 **Add the clone to `additionalDirectories`.** It sits outside the repo, so without this every
@@ -230,7 +235,7 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ### 4. Run — background, attached
 
 ```bash
-cd ../DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir "$PWD" \
+cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
     -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Then run ./gradlew build. The runtime will send it to the background - that is normal and expected, so do not relaunch it. Wait for its completion notification, fix any failures yourself, and re-run it until it passes. Your final message must end by quoting the last two lines of that build verbatim; if you cannot quote them, you are not finished.' \
     > .agy-run.json 2>&1
@@ -304,7 +309,8 @@ If it reports denied tools, add the action to `permissions.allow`, then resume t
 conversation instead of re-paying the onboarding cost:
 
 ```bash
-date +%s > .agy-start && agy --add-dir "$PWD" --conversation <conversation_id> --output-format json \
+cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
+    --conversation <conversation_id> --output-format json \
     --print-timeout 45m -p='Continue where you left off.' > .agy-run.json 2>&1
 ```
 
