@@ -193,14 +193,22 @@ real price of the issue, and the only honest input to "can Pro sustain this".
 ```bash
 git clone -q . ../DanceBook-agy-<N>
 git -C ../DanceBook-agy-<N> checkout -q -b agy/issue-<N> origin/main
+f=.claude/settings.local.json; [ -f $f ] || echo '{}' > $f
+jq '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + ["../DanceBook-agy-<N>"] | unique)' \
+  $f > $f.tmp && mv $f.tmp $f
 ```
+
+**Add the clone to `additionalDirectories`.** It sits outside the repo, so without this every
+command Claude runs against it asks for approval, even in auto mode. The settings file is
+reloaded live, so it applies to the current session straight away.
 
 **A clone, not a `git worktree`.** The clone *is* the safety model now that the sandbox is
 gone: agy works on a throwaway copy, so a mistake cannot corrupt the real repo's history or
 your working tree, and nothing reaches `main` without review. A worktree would share
 `.git` with the main repo and give up exactly that protection.
 
-Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove`. (If a worktree was
+Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove` — and dropping its
+`additionalDirectories` entry (see `verify-agy-work`). (If a worktree was
 ever registered at that path, `git worktree prune` will not clear it while the directory
 exists; delete `.git/worktrees/DanceBook-agy-<N>` by hand.)
 
