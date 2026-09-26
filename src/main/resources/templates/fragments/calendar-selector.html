@@ -17,14 +17,19 @@
             </option>
         </select>
     </div>
-    <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
-            hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
-        <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
-        <span>Sync now</span>
-    </button>
-    <span class="text-xs text-text-secondary whitespace-nowrap"
-          th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
-          th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
+    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface" title="Manage calendars">
+        <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span>
+    </a>
+    <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}">
+        <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
+                hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
+            <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
+            <span>Sync now</span>
+        </button>
+        <span class="text-xs text-text-secondary whitespace-nowrap"
+              th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
+              th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
+    </th:block>
 </div>
 
 </body>

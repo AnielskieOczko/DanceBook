@@ -15,7 +15,16 @@
          with the sessions it fetched plus the next control. -->
     <div th:fragment="timelinePage" class="space-y-lg">
 
-        <th:block th:if="${timeline.isEmpty and timeline.isFirstPage}">
+        <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
+            <div th:replace="~{fragments/empty :: emptyState(
+                icon='calendar_month',
+                title='No calendars connected',
+                text='Connect your Google Calendar to start tracking training sessions.',
+                actionHref='/training-calendars/new',
+                actionLabel='Connect Calendar')}"></div>
+        </th:block>
+
+        <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && timeline.isEmpty and timeline.isFirstPage}">
             <div th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
         </th:block>
 

@@ -45,8 +45,9 @@ class TrainingCalendarBootstrapIntegrationTest {
         val calendars = trainingCalendarRepository.findAll()
         assertEquals(1, calendars.size)
         val defaultCal = calendars.first()
-        assertEquals("bootstrap-test@group.calendar.google.com", defaultCal.googleCalendarId)
-        assertTrue(defaultCal.isDefault)
+        assertEquals("bootstrap-test@group.calendar.google.com", defaultCal.writeTarget?.googleCalendarId)
+        val adminUser = appUserRepository.findAll().first { it.role == Role.ADMIN }
+        assertTrue(defaultCal.isDefaultFor(adminUser))
 
         // Seed an event with null calendar
         val user = appUserRepository.save(AppUser().apply {
@@ -86,6 +87,7 @@ class TrainingCalendarBootstrapIntegrationTest {
     fun `bootstrap backfills existing events when the calendar row does not exist yet`() {
         // Return to the pre-V29 state: events present, no calendar configured.
         trainingEventRepository.findAll().forEach { it.calendar = null; trainingEventRepository.save(it) }
+        appUserRepository.findAll().forEach { it.defaultCalendar = null; appUserRepository.save(it) }
         trainingCalendarRepository.deleteAll()
         assertEquals(0, trainingCalendarRepository.count())
 
@@ -107,7 +109,8 @@ class TrainingCalendarBootstrapIntegrationTest {
 
         val calendars = trainingCalendarRepository.findAll()
         assertEquals(1, calendars.size)
-        assertTrue(calendars.first().isDefault)
+        val adminUser = appUserRepository.findAll().first { it.role == Role.ADMIN }
+        assertTrue(calendars.first().isDefaultFor(adminUser))
 
         val reloaded = trainingEventRepository.findById(legacyEvent.id!!).get()
         assertNotNull(reloaded.calendar)

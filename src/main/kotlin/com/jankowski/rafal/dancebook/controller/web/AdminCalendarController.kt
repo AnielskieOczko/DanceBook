@@ -28,6 +28,7 @@ class AdminCalendarController(
 
     @GetMapping
     fun list(model: Model): String {
+        model.addAttribute("currentUser", appUserService.getCurrentUser())
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
@@ -59,10 +60,8 @@ class AdminCalendarController(
     @GetMapping("/{id}/cancel")
     fun cancelEdit(@PathVariable id: UUID, model: Model): String {
         val calendar = trainingCalendarService.findById(id)
-        if (calendar == null) {
-            model.addAttribute("calendars", trainingCalendarService.findAll())
-            return "admin/dashboard :: calendarsSection"
-        }
+        val currentUser = appUserService.getCurrentUser()
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("cal", calendar)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarRow"
@@ -90,12 +89,14 @@ class AdminCalendarController(
         }
 
         val trimmedGoogleId = request.googleCalendarId.trim()
-        val googleIdChanged = trimmedGoogleId != existing.googleCalendarId
+        val googleIdChanged = trimmedGoogleId != existing.writeTarget?.googleCalendarId
+        val currentUser = appUserService.getCurrentUser()
 
         if (googleIdChanged) {
             val sessionCount = trainingCalendarService.countSessions(id)
             if (sessionCount > 0) {
                 model.addAttribute("calendarError", "A calendar's Google ID may only be changed while it owns no sessions.")
+                model.addAttribute("currentUser", currentUser)
                 model.addAttribute("calendars", trainingCalendarService.findAll())
                 return "admin/dashboard :: calendarsSection"
             }
@@ -109,12 +110,12 @@ class AdminCalendarController(
             }
 
             val enabled = verificationError == null
-            val wasDefault = existing.isDefault
+            val wasDefault = existing.isDefaultFor(currentUser)
             try {
                 val updated = trainingCalendarService.update(id, request, enabled = enabled)
                 if (enabled) {
                     model.addAttribute("calendarSuccess", "Connected — \"$verifiedSummary\"")
-                } else if (wasDefault && !updated.isDefault) {
+                } else if (wasDefault && !updated.isDefaultFor(currentUser)) {
                     model.addAttribute("calendarError", "$verificationError. This calendar has been disabled and is no longer the default.")
                 } else {
                     model.addAttribute("calendarError", verificationError)
@@ -136,6 +137,7 @@ class AdminCalendarController(
             }
         }
 
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
@@ -150,14 +152,6 @@ class AdminCalendarController(
         if (calendar == null) {
             response?.setHeader("HX-Retarget", "#calendarsSection")
             model.addAttribute("calendarError", "Training calendar with id $id not found")
-            model.addAttribute("calendars", trainingCalendarService.findAll())
-            return "admin/dashboard :: calendarsSection"
-        }
-
-        val totalCount = trainingCalendarService.findAll().size
-        if (calendar.isDefault && totalCount > 1) {
-            response?.setHeader("HX-Retarget", "#calendarsSection")
-            model.addAttribute("calendarError", "Make another calendar the default before deleting this one.")
             model.addAttribute("calendars", trainingCalendarService.findAll())
             return "admin/dashboard :: calendarsSection"
         }
@@ -180,8 +174,8 @@ class AdminCalendarController(
 
     @PostMapping("/{id}/delete")
     fun delete(@PathVariable id: UUID, model: Model): String {
+        val user = appUserService.getCurrentUser()
         try {
-            val user = appUserService.getCurrentUser()
             trainingCalendarService.delete(id, user)
             model.addAttribute("calendarSuccess", "Calendar deleted")
         } catch (e: IllegalArgumentException) {
@@ -189,6 +183,7 @@ class AdminCalendarController(
         } catch (e: IllegalStateException) {
             model.addAttribute("calendarError", e.message)
         }
+        model.addAttribute("currentUser", user)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
@@ -199,6 +194,7 @@ class AdminCalendarController(
         bindingResult: BindingResult,
         model: Model
     ): String {
+        val currentUser = appUserService.getCurrentUser()
         if (bindingResult.hasErrors()) {
             val error = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Invalid calendar data"
             model.addAttribute("calendarError", error)
@@ -215,7 +211,7 @@ class AdminCalendarController(
 
             val enabled = verificationError == null
             try {
-                trainingCalendarService.add(request, enabled = enabled)
+                trainingCalendarService.add(request, actor = currentUser, enabled = enabled)
                 if (enabled) {
                     model.addAttribute("calendarSuccess", "Connected — \"$verifiedSummary\"")
                 } else {
@@ -229,36 +225,44 @@ class AdminCalendarController(
                 model.addAttribute("showAddForm", true)
             }
         }
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
 
     @PostMapping("/{id}/verify")
     fun verify(@PathVariable id: UUID, model: Model): String {
+        val currentUser = appUserService.getCurrentUser()
         val calendar = trainingCalendarService.findById(id)
         if (calendar == null) {
             model.addAttribute("calendarError", "Training calendar with id $id not found")
         } else {
             try {
-                val summary = googleCalendarClient.verifyCalendar(calendar.googleCalendarId)
+                val targetGoogleId = calendar.writeTarget?.googleCalendarId
+                    ?: calendar.sources.firstOrNull()?.googleCalendarId
+                    ?: throw IllegalStateException("Calendar has no sources")
+                val summary = googleCalendarClient.verifyCalendar(targetGoogleId)
                 model.addAttribute("calendarSuccess", "Connected — \"$summary\"")
             } catch (e: Exception) {
                 model.addAttribute("calendarError", e.message ?: "Verification failed")
             }
         }
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
 
     @PostMapping("/{id}/default")
     fun makeDefault(@PathVariable id: UUID, model: Model): String {
+        val currentUser = appUserService.getCurrentUser()
         try {
-            trainingCalendarService.setDefault(id)
+            trainingCalendarService.setDefault(id, currentUser)
         } catch (e: IllegalArgumentException) {
             model.addAttribute("calendarError", e.message)
         } catch (e: IllegalStateException) {
             model.addAttribute("calendarError", e.message)
         }
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }
@@ -269,12 +273,13 @@ class AdminCalendarController(
         @RequestParam(required = false) enabled: Boolean?,
         model: Model
     ): String {
+        val currentUser = appUserService.getCurrentUser()
         try {
             val existing = trainingCalendarService.findById(id)
-            val wasDefault = existing?.isDefault == true
+            val wasDefault = existing?.isDefaultFor(currentUser) == true
             val targetEnabled = enabled ?: !(existing?.enabled ?: false)
             val updated = trainingCalendarService.setEnabled(id, targetEnabled)
-            if (wasDefault && !updated.isDefault) {
+            if (wasDefault && !updated.isDefaultFor(currentUser)) {
                 model.addAttribute("calendarError", "This calendar has been disabled and is no longer the default.")
             }
         } catch (e: IllegalArgumentException) {
@@ -282,6 +287,7 @@ class AdminCalendarController(
         } catch (e: IllegalStateException) {
             model.addAttribute("calendarError", e.message)
         }
+        model.addAttribute("currentUser", currentUser)
         model.addAttribute("calendars", trainingCalendarService.findAll())
         return "admin/dashboard :: calendarsSection"
     }

@@ -4,12 +4,12 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${#lists.size(events)} + ' sessions logged', toolbar=~{::listToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? 'No calendar connected' : (#lists.size(events) + ' sessions logged')}, toolbar=~{::listToolbar})}">
         <div th:fragment="listToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
             <a href="/training-events/new" class="btn-primary"
-               th:if="${activeCalendar == null || activeCalendar.enabled}">
+               th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && (activeCalendar == null || activeCalendar.enabled)}">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                 Add Session
             </a>
@@ -18,7 +18,8 @@
 
     <!-- Filters. Search stays out where it can be reached; the three selects would take the
          whole screen on a phone, so they fold behind a toggle there and sit inline above it. -->
-    <div class="sticky top-[72px] bg-background z-40 -mx-6 px-6 py-3 border-b border-outline-variant/30">
+    <div th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}"
+         class="sticky top-[72px] bg-background z-40 -mx-6 px-6 py-3 border-b border-outline-variant/30">
         <form id="filterForm" th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
               hx-trigger="submit, change from:select" hx-push-url="false"
               class="flex flex-col md:flex-row gap-3">
@@ -75,7 +76,16 @@
     <!-- Agenda list (HTMX swap target) -->
     <div th:fragment="eventsList" id="events-list" class="space-y-lg">
 
-        <th:block th:if="${events == null || events.isEmpty()}">
+        <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
+            <div th:replace="~{fragments/empty :: emptyState(
+                icon='calendar_month',
+                title='No calendars connected',
+                text='Connect your Google Calendar to start tracking training sessions.',
+                actionHref='/training-calendars/new',
+                actionLabel='Connect Calendar')}"></div>
+        </th:block>
+
+        <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && (events == null || events.isEmpty())}">
             <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
         </th:block>
 

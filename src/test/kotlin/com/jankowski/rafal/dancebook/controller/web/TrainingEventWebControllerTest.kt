@@ -79,7 +79,6 @@ class TrainingEventWebControllerTest {
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Default"
-            isDefault = true
             enabled = true
         }
         `when`(trainingCalendarService.findDefault()).thenReturn(defaultCal)
@@ -318,7 +317,6 @@ class TrainingEventWebControllerTest {
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {
             this.id = UUID.randomUUID()
-            googleCalendarId = "club@group.calendar.google.com"
             displayName = "Club"
         }
         `when`(activeCalendarService.active()).thenReturn(calendar)

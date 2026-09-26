@@ -1,5 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.model.CalendarSource
+import com.jankowski.rafal.dancebook.repository.CalendarSourceRepository
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.repository.TrainingCalendarRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -30,6 +32,7 @@ class CalendarSyncServiceTest {
     private lateinit var googleCalendarClient: GoogleCalendarClient
     private lateinit var calendarReconciler: CalendarReconciler
     private lateinit var systemSettingService: SystemSettingService
+    private lateinit var calendarSourceRepository: CalendarSourceRepository
     private lateinit var testClock: MutableClock
     private lateinit var syncService: CalendarSyncServiceImpl
 
@@ -51,6 +54,7 @@ class CalendarSyncServiceTest {
         googleCalendarClient = mock(GoogleCalendarClient::class.java)
         calendarReconciler = mock(CalendarReconciler::class.java)
         systemSettingService = mock(SystemSettingService::class.java)
+        calendarSourceRepository = mock(CalendarSourceRepository::class.java)
         testClock = MutableClock(Instant.parse("2026-09-15T12:00:00Z"))
 
         `when`(systemSettingService.getIntSetting("calendar_sync_interval_seconds", 60)).thenReturn(60)
@@ -60,23 +64,26 @@ class CalendarSyncServiceTest {
             googleCalendarClient,
             calendarReconciler,
             systemSettingService,
+            calendarSourceRepository,
             testClock
         )
 
         cal1 = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Club Calendar"
-            googleCalendarId = "club@google.com"
-            syncToken = "token-club-1"
             enabled = true
+            addSource("club@google.com", isWriteTarget = true).apply {
+                syncToken = "token-club-1"
+            }
         }
 
         cal2 = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Personal Calendar"
-            googleCalendarId = "personal@google.com"
-            syncToken = "token-personal-1"
             enabled = true
+            addSource("personal@google.com", isWriteTarget = true).apply {
+                syncToken = "token-personal-1"
+            }
         }
     }
 
@@ -113,11 +120,11 @@ class CalendarSyncServiceTest {
         assertFalse(report.hasFailures)
         assertEquals(2, report.outcomes.size)
 
-        assertEquals("token-club-2", cal1.syncToken)
+        assertEquals("token-club-2", cal1.writeTarget?.syncToken)
         assertNotNull(cal1.lastSyncedAt)
         verify(trainingCalendarRepository).save(cal1)
 
-        assertEquals("token-personal-2", cal2.syncToken)
+        assertEquals("token-personal-2", cal2.writeTarget?.syncToken)
         assertNotNull(cal2.lastSyncedAt)
         verify(trainingCalendarRepository).save(cal2)
     }
@@ -147,7 +154,7 @@ class CalendarSyncServiceTest {
         assertEquals("Database connection dropped", report.outcomes[0].errorMessage)
 
         // Token must NOT have advanced!
-        assertEquals("token-club-1", cal1.syncToken)
+        assertEquals("token-club-1", cal1.writeTarget?.syncToken)
         assertNull(cal1.lastSyncedAt)
     }
 
@@ -179,11 +186,11 @@ class CalendarSyncServiceTest {
         val outcome1 = report.outcomes.find { it.calendar.id == cal1.id }!!
         assertFalse(outcome1.success)
         assertTrue(outcome1.errorMessage!!.contains("503 Service Unavailable"))
-        assertEquals("token-club-1", cal1.syncToken)
+        assertEquals("token-club-1", cal1.writeTarget?.syncToken)
 
         val outcome2 = report.outcomes.find { it.calendar.id == cal2.id }!!
         assertTrue(outcome2.success)
-        assertEquals("token-personal-2", cal2.syncToken)
+        assertEquals("token-personal-2", cal2.writeTarget?.syncToken)
         verify(trainingCalendarRepository).save(cal2)
     }
 
@@ -214,9 +221,9 @@ class CalendarSyncServiceTest {
         val report = syncService.syncAll()
 
         assertFalse(report.hasFailures)
-        assertEquals("fresh-sync-token", cal1.syncToken)
+        assertEquals("fresh-sync-token", cal1.writeTarget?.syncToken)
         assertNotNull(cal1.lastSyncedAt)
-        verify(trainingCalendarRepository, org.mockito.Mockito.times(2)).save(cal1)
+        verify(trainingCalendarRepository).save(cal1)
     }
 
     @Test
@@ -260,7 +267,7 @@ class CalendarSyncServiceTest {
 
         // 31 seconds later (total 61s > 60s): runs again
         testClock.advance(Duration.ofSeconds(31))
-        cal1.syncToken = "token-club-2"
+        cal1.sources.first().syncToken = "token-club-2"
         val changeSet3 = CalendarChangeSet(
             changes = emptyList(),
             nextSyncToken = "token-club-3",
@@ -300,7 +307,7 @@ class CalendarSyncServiceTest {
         assertNull(syncService.syncIfDue())
 
         // Sync now bypasses throttle!
-        cal1.syncToken = "token-club-2"
+        cal1.sources.first().syncToken = "token-club-2"
         val changeSet2 = CalendarChangeSet(
             changes = emptyList(),
             nextSyncToken = "token-club-3",
@@ -321,7 +328,7 @@ class CalendarSyncServiceTest {
 
         // 51 seconds later (total 61s after "Sync now"): syncIfDue runs again
         testClock.advance(Duration.ofSeconds(51))
-        cal1.syncToken = "token-club-3"
+        cal1.sources.first().syncToken = "token-club-3"
         val changeSet3 = CalendarChangeSet(
             changes = emptyList(),
             nextSyncToken = "token-club-4",

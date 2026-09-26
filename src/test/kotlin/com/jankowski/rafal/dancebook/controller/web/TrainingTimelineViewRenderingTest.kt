@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingTimelineEntry
 import com.jankowski.rafal.dancebook.dto.TrainingTimelineMonth
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
@@ -88,6 +89,13 @@ class TrainingTimelineViewRenderingTest {
             username = "tester"
         }
         `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+        val defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default Calendar"
+            enabled = true
+        }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(defaultCal))
+        `when`(activeCalendarService.active()).thenReturn(null)
     }
 
     @Test

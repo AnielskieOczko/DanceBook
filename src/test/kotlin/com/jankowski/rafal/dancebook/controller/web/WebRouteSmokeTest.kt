@@ -175,13 +175,17 @@ class WebRouteSmokeTest {
             this.material = savedMaterial
         })
 
-        val calendar = trainingCalendarRepository.findByIsDefaultTrue()
+        val calendar = admin.defaultCalendar
             ?: trainingCalendarRepository.save(TrainingCalendar().apply {
-                googleCalendarId = "smoke-cal-${UUID.randomUUID()}"
                 displayName = "Smoke Calendar"
-                isDefault = true
+                owner = admin
+                visibility = com.jankowski.rafal.dancebook.model.Visibility.PRIVATE
                 enabled = true
-            })
+                addSource("smoke-cal-${UUID.randomUUID()}", isWriteTarget = true)
+            }).also {
+                admin.defaultCalendar = it
+                appUserRepository.save(admin)
+            }
 
         val event = TrainingEvent().apply {
             title = "Smoke Event"
@@ -292,6 +296,7 @@ class WebRouteSmokeTest {
                 AdminController::class.java -> fixtures.adminUser.id
                 MaterialWebController::class.java -> fixtures.material.id
                 AdminCalendarController::class.java -> fixtures.calendar.id
+                TrainingCalendarWebController::class.java -> fixtures.calendar.id
                 DanceCategoryWebController::class.java -> fixtures.category.id
                 CustomListWebController::class.java -> fixtures.customList.id
                 ChoreographyWebController::class.java -> fixtures.choreography.id

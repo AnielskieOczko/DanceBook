@@ -250,7 +250,6 @@ class TrainingRecordWriterTest {
     fun `sync copies the session's calendar onto the record`() {
         val calendar = TrainingCalendar().apply {
             id = UUID.randomUUID()
-            googleCalendarId = "club@group.calendar.google.com"
             displayName = "Club Training"
         }
         val event = event(AttendanceStatus.ATTENDED).apply { this.calendar = calendar }

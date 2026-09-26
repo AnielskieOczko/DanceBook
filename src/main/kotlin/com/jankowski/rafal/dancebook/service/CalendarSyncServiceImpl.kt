@@ -1,8 +1,11 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import com.jankowski.rafal.dancebook.repository.CalendarSourceRepository
 import com.jankowski.rafal.dancebook.repository.TrainingCalendarRepository
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.Duration
@@ -19,6 +22,7 @@ class CalendarSyncServiceImpl(
     private val googleCalendarClient: GoogleCalendarClient,
     private val calendarReconciler: CalendarReconciler,
     private val systemSettingService: SystemSettingService,
+    private val calendarSourceRepository: CalendarSourceRepository,
     private val clock: Clock = Clock.systemDefaultZone()
 ) : CalendarSyncService {
 
@@ -94,7 +98,7 @@ class CalendarSyncServiceImpl(
                 val outcome = performSync(calendar)
                 outcomes.add(outcome)
             } catch (e: Exception) {
-                log.error("Failed to sync calendar '{}' ({})", calendar.displayName, calendar.googleCalendarId, e)
+                log.error("Failed to sync calendar '{}' ({})", calendar.displayName, calendar.writeTarget?.googleCalendarId, e)
                 outcomes.add(
                     CalendarSyncOutcome(
                         calendar = calendar,
@@ -123,7 +127,7 @@ class CalendarSyncServiceImpl(
         return try {
             performSync(calendar)
         } catch (e: Exception) {
-            log.error("Failed to sync calendar '{}' ({})", calendar.displayName, calendar.googleCalendarId, e)
+            log.error("Failed to sync calendar '{}' ({})", calendar.displayName, calendar.writeTarget?.googleCalendarId, e)
             CalendarSyncOutcome(calendar, success = false, errorMessage = e.message ?: "Sync failed")
         } finally {
             syncLock.unlock()
@@ -131,36 +135,54 @@ class CalendarSyncServiceImpl(
     }
 
     private fun performSync(calendar: TrainingCalendar): CalendarSyncOutcome {
-        val initialChangeSet = googleCalendarClient.listChanges(calendar.googleCalendarId, calendar.syncToken)
+        var totalAdopted = 0
+        var totalUpdated = 0
+        var totalDeleted = 0
 
-        val (changeSetToApply, nextToken) = if (initialChangeSet.fullResyncRequired) {
-            log.info("Sync token expired for calendar '{}', clearing token and performing full resync", calendar.displayName)
-            calendar.syncToken = null
-            trainingCalendarRepository.save(calendar)
-            val fullChangeSet = googleCalendarClient.listChanges(calendar.googleCalendarId, null)
-            fullChangeSet to fullChangeSet.nextSyncToken
-        } else {
-            initialChangeSet to initialChangeSet.nextSyncToken
+        val sources = calendar.sources
+
+        for (source in sources) {
+            val initialChangeSet = googleCalendarClient.listChanges(source.googleCalendarId, source.syncToken)
+
+            val (changeSetToApply, nextToken) = if (initialChangeSet.fullResyncRequired) {
+                log.info("Sync token expired for source '{}' on calendar '{}', clearing token and performing full resync", source.googleCalendarId, calendar.displayName)
+                source.syncToken = null
+                calendarSourceRepository.save(source)
+                val fullChangeSet = googleCalendarClient.listChanges(source.googleCalendarId, null)
+                fullChangeSet to fullChangeSet.nextSyncToken
+            } else {
+                initialChangeSet to initialChangeSet.nextSyncToken
+            }
+
+            val result = if (source.isWriteTarget) {
+                calendarReconciler.reconcile(calendar, changeSetToApply)
+            } else {
+                calendarReconciler.reconcile(calendar, source, changeSetToApply)
+            }
+
+            source.syncToken = nextToken
+            source.lastSyncedAt = LocalDateTime.now()
+            calendarSourceRepository.save(source)
+
+            totalAdopted += result.adopted
+            totalUpdated += result.updated
+            totalDeleted += result.deleted
         }
 
-        val result = calendarReconciler.reconcile(calendar, changeSetToApply)
-
-        // Advance token only after reconcile succeeds completely
-        calendar.syncToken = nextToken
         calendar.lastSyncedAt = LocalDateTime.now()
         trainingCalendarRepository.save(calendar)
 
         log.info(
-            "Synchronized calendar '{}': {} adopted, {} updated, {} deleted, {} no-op",
-            calendar.displayName, result.adopted, result.updated, result.deleted, result.skippedNoOp
+            "Synchronized calendar '{}': {} adopted, {} updated, {} deleted across {} sources",
+            calendar.displayName, totalAdopted, totalUpdated, totalDeleted, sources.size
         )
 
         return CalendarSyncOutcome(
             calendar = calendar,
             success = true,
-            adoptedCount = result.adopted,
-            updatedCount = result.updated,
-            deletedCount = result.deleted
+            adoptedCount = totalAdopted,
+            updatedCount = totalUpdated,
+            deletedCount = totalDeleted
         )
     }
 }

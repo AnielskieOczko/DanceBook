@@ -1,15 +1,20 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventSource
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.Optional
 
 data class ReconcileResult(
     val adopted: Int = 0,
@@ -28,7 +33,8 @@ data class ReconcileResult(
 class CalendarReconciler(
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingEventPersistence: TrainingEventPersistence,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val trainingEventSourceRepository: TrainingEventSourceRepository
 ) {
 
     internal var nowProvider: () -> LocalDateTime = { LocalDateTime.now() }
@@ -39,7 +45,12 @@ class CalendarReconciler(
 
     @Transactional
     fun reconcile(calendar: TrainingCalendar, changeSet: CalendarChangeSet): ReconcileResult {
-        val rootAdmin = appUserService.getRootAdmin()
+        return reconcile(calendar, calendar.writeTarget, changeSet)
+    }
+
+    @Transactional
+    fun reconcile(calendar: TrainingCalendar, source: CalendarSource?, changeSet: CalendarChangeSet): ReconcileResult {
+        val actor = calendar.owner ?: appUserService.getRootAdmin()
         var adopted = 0
         var updated = 0
         var deleted = 0
@@ -48,7 +59,14 @@ class CalendarReconciler(
         for (change in changeSet.changes) {
             when (change) {
                 is CalendarChange.Upserted -> {
-                    val existingOpt = trainingEventRepository.findByGoogleEventId(change.googleEventId)
+                    var existingOpt = trainingEventRepository.findByGoogleEventId(change.googleEventId)
+                    if (existingOpt.isEmpty) {
+                        existingOpt = trainingEventRepository.findByAnyGoogleEventId(change.googleEventId)
+                    }
+                    if (existingOpt.isEmpty && !change.iCalUid.isNullOrBlank() && calendar.id != null) {
+                        existingOpt = trainingEventRepository.findByCalendarIdAndIcalUid(calendar.id!!, change.iCalUid!!)
+                    }
+
                     if (existingOpt.isPresent) {
                         val existing = existingOpt.get()
                         // Ensure event belongs to the calendar being synced
@@ -58,6 +76,22 @@ class CalendarReconciler(
                                 change.googleEventId, existing.calendar?.id, calendar.id
                             )
                             continue
+                        }
+
+                        // Record source mapping if we have a source
+                        if (source != null && existing.id != null && source.id != null) {
+                            val mapping = trainingEventSourceRepository.findByTrainingEventIdAndCalendarSourceId(existing.id!!, source.id!!)
+                            if (mapping == null) {
+                                trainingEventSourceRepository.save(TrainingEventSource().apply {
+                                    this.trainingEvent = existing
+                                    this.calendarSource = source
+                                    this.googleEventId = change.googleEventId
+                                })
+                            }
+                        }
+
+                        if (existing.icalUid == null && !change.iCalUid.isNullOrBlank()) {
+                            existing.icalUid = change.iCalUid
                         }
 
                         // Rule 3: No-op changes are skipped entirely
@@ -89,27 +123,43 @@ class CalendarReconciler(
                         }
 
                         // Note: Attendance, event type and description are NOT touched (Rules 1 & 2)
-                        trainingEventPersistence.applyUpdate(existing, rootAdmin)
+                        trainingEventPersistence.applyUpdate(existing, actor)
                         updated++
                     } else {
                         // Rule 7: Adoption of unknown event
                         val newEvent = TrainingEvent().apply {
                             this.googleEventId = change.googleEventId
+                            this.icalUid = change.iCalUid
                             this.title = change.title
                             this.startTime = change.start
                             this.endTime = change.end
                             this.description = change.description
                             this.eventType = TrainingEventType.TRAINING
                             this.calendar = calendar
-                            this.createdBy = rootAdmin
-                            this.setAttendance(rootAdmin, AttendanceStatus.PLANNED)
+                            this.createdBy = actor
+                            this.setAttendance(actor, AttendanceStatus.PLANNED)
                         }
-                        trainingEventPersistence.insert(newEvent, rootAdmin)
+                        val inserted = trainingEventPersistence.insert(newEvent, actor)
+
+                        if (source != null && inserted?.id != null && source.id != null) {
+                            trainingEventSourceRepository.save(TrainingEventSource().apply {
+                                this.trainingEvent = inserted
+                                this.calendarSource = source
+                                this.googleEventId = change.googleEventId
+                            })
+                        }
                         adopted++
                     }
                 }
                 is CalendarChange.Cancelled -> {
-                    val existingOpt = trainingEventRepository.findByGoogleEventId(change.googleEventId)
+                    var existingOpt = trainingEventRepository.findByGoogleEventId(change.googleEventId)
+                    if (existingOpt.isEmpty) {
+                        existingOpt = trainingEventRepository.findByAnyGoogleEventId(change.googleEventId)
+                    }
+                    if (existingOpt.isEmpty && !change.iCalUid.isNullOrBlank() && calendar.id != null) {
+                        existingOpt = trainingEventRepository.findByCalendarIdAndIcalUid(calendar.id!!, change.iCalUid!!)
+                    }
+
                     if (existingOpt.isPresent) {
                         val existing = existingOpt.get()
                         if (existing.calendar?.id != calendar.id) {
@@ -120,7 +170,7 @@ class CalendarReconciler(
                             continue
                         }
                         // Rule 4: Deletion routes to TrainingEventPersistence.remove, which orphans its training record
-                        trainingEventPersistence.remove(existing, rootAdmin)
+                        trainingEventPersistence.remove(existing, actor)
                         deleted++
                     } else {
                         // Unknown cancellation is ignored (Rule 4)
@@ -138,7 +188,18 @@ class CalendarReconciler(
             val now = nowProvider()
             val graceCutoff = now.minusMinutes(1)
 
-            val localEvents = trainingEventRepository.findAllByCalendarId(calendarId)
+            val localEvents = if (source != null && source.id != null) {
+                val sourceMappings = trainingEventSourceRepository.findAllByCalendarSourceId(source.id!!)
+                val eventIds = sourceMappings.mapNotNull { it.trainingEvent?.id }.toSet()
+                if (eventIds.isNotEmpty()) {
+                    trainingEventRepository.findAllByIdIn(eventIds)
+                } else {
+                    trainingEventRepository.findAllByCalendarId(calendarId)
+                }
+            } else {
+                trainingEventRepository.findAllByCalendarId(calendarId)
+            }
+
             for (event in localEvents) {
                 val googleId = event.googleEventId
                 // Condition 1: Must belong to this calendar
@@ -170,7 +231,7 @@ class CalendarReconciler(
                     "Inferring deletion for event {} ('{}', googleId={}) absent from complete window on calendar '{}'",
                     event.id, event.title, googleId, calendar.displayName
                 )
-                trainingEventPersistence.remove(event, rootAdmin)
+                trainingEventPersistence.remove(event, actor)
                 deleted++
             }
         }

@@ -111,8 +111,8 @@ class TrainingSeriesServiceImpl(
 
         occurrence.series = null
 
-        val cal = occurrence.calendar ?: trainingCalendarService.findDefault()
-        val googleCalId = cal?.googleCalendarId
+        val cal = occurrence.calendar ?: trainingCalendarService.findDefault(currentUser)
+        val googleCalId = cal?.writeTarget?.googleCalendarId
         val googleEventId = occurrence.googleEventId
         if (googleCalId != null) {
             if (googleEventId != null) {
@@ -233,7 +233,7 @@ class TrainingSeriesServiceImpl(
         var failedCount = 0
         future.forEach { event ->
             event.googleEventId?.let { id ->
-                val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
                 if (googleCalId != null) {
                     try {
                         calendarClient.deleteEvent(googleCalId, id)
@@ -269,7 +269,7 @@ class TrainingSeriesServiceImpl(
         var failedCount = 0
         toDelete.forEach { event ->
             event.googleEventId?.let { id ->
-                val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
                 if (googleCalId != null) {
                     try {
                         calendarClient.deleteEvent(googleCalId, id)
@@ -375,12 +375,13 @@ class TrainingSeriesServiceImpl(
         actor: AppUser,
         calendar: TrainingCalendar
     ): List<TrainingEvent> {
+        val targetGoogleCalId = calendar.requireWriteTarget().googleCalendarId
         val created = mutableListOf<TrainingEvent>()
         try {
             dates.forEach { date ->
                 val event = occurrenceFor(series, date, actor)
                 event.calendar = calendar
-                event.googleEventId = calendarClient.createEvent(calendar.googleCalendarId, event)
+                event.googleEventId = calendarClient.createEvent(targetGoogleCalId, event)
                 created.add(event)
             }
         } catch (e: Exception) {
@@ -390,7 +391,7 @@ class TrainingSeriesServiceImpl(
             )
             created.forEach { event ->
                 event.googleEventId?.let { id ->
-                    runCatching { calendarClient.deleteEvent(calendar.googleCalendarId, id) }
+                    runCatching { calendarClient.deleteEvent(targetGoogleCalId, id) }
                         .onFailure { log.error("Compensating delete failed for {}; orphan calendar event", id, it) }
                 }
             }
@@ -533,7 +534,7 @@ class TrainingSeriesServiceImpl(
         applyResolvedSegmentsToSeries(series, resolvedSegments)
 
         val now = LocalDateTime.now()
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
 
         // Every occurrence is pushed to Google before anything is written locally, so a failure
         // part-way leaves the calendar showing the edit for the occurrences already sent while
@@ -551,7 +552,7 @@ class TrainingSeriesServiceImpl(
                 event.updatedAt = now
                 applyResolvedSegmentsToEvent(event, resolvedSegments)
 
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: defaultGoogleCalId
                 val googleEventId = event.googleEventId
                 if (googleCalId != null) {
                     if (googleEventId != null) {
@@ -622,8 +623,8 @@ class TrainingSeriesServiceImpl(
         val survivingCount = minOf(m, n)
         val surviving = occurrences.subList(0, survivingCount)
 
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
-        val seriesCalendar = occurrences.firstOrNull()?.calendar ?: trainingCalendarService.findDefault()
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
+        val seriesCalendar = occurrences.firstOrNull()?.calendar ?: trainingCalendarService.findDefault(currentUser)
 
         // Snapshot surviving occurrences before pushing to Google Calendar so we can rollback on failure
         val snapshots = surviving.map { event ->
@@ -647,7 +648,7 @@ class TrainingSeriesServiceImpl(
         fun rollbackGoogleCalendar() {
             for (event in createdGoogleEvents) {
                 event.googleEventId?.let { id ->
-                    val googleCalId = event.calendar?.googleCalendarId ?: seriesCalendar?.googleCalendarId ?: defaultGoogleCalId
+                    val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: seriesCalendar?.writeTarget?.googleCalendarId ?: defaultGoogleCalId
                     if (googleCalId != null) {
                         runCatching { calendarClient.deleteEvent(googleCalId, id) }
                             .onFailure { log.error("Failed to delete Google event {} during rollback", id, it) }
@@ -657,7 +658,7 @@ class TrainingSeriesServiceImpl(
             }
             for ((event, snapshot) in updatedGoogleEvents) {
                 restoreSnapshot(event, snapshot)
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: defaultGoogleCalId
                 val googleEventId = event.googleEventId
                 if (googleCalId != null && googleEventId != null) {
                     runCatching { calendarClient.updateEvent(googleCalId, googleEventId, event) }
@@ -683,7 +684,7 @@ class TrainingSeriesServiceImpl(
                 event.updatedAt = now
                 applyResolvedSegmentsToEvent(event, resolvedSegments)
 
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: defaultGoogleCalId
                 if (googleCalId != null) {
                     if (event.googleEventId != null) {
                         calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
@@ -710,8 +711,9 @@ class TrainingSeriesServiceImpl(
                         calendar = seriesCalendar
                         applyResolvedSegmentsToEvent(this, resolvedSegments)
                     }
-                    if (seriesCalendar?.googleCalendarId != null) {
-                        newEvent.googleEventId = calendarClient.createEvent(seriesCalendar.googleCalendarId, newEvent)
+                    val targetGoogleCalId = seriesCalendar?.writeTarget?.googleCalendarId
+                    if (targetGoogleCalId != null) {
+                        newEvent.googleEventId = calendarClient.createEvent(targetGoogleCalId, newEvent)
                         if (newEvent.googleEventId != null) {
                             createdGoogleEvents.add(newEvent)
                         }
@@ -766,7 +768,7 @@ class TrainingSeriesServiceImpl(
 
         for (event in toDelete) {
             event.googleEventId?.let { id ->
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId ?: defaultGoogleCalId
                 if (googleCalId != null) {
                     try {
                         calendarClient.deleteEvent(googleCalId, id)
@@ -881,11 +883,20 @@ class TrainingSeriesServiceImpl(
     }
 
     private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
+        val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
-            trainingCalendarService.findById(calendarId)
+            trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
+                ?: trainingCalendarService.findById(calendarId)
                 ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
         } else {
-            trainingCalendarService.requireDefault()
+            val userDefault = try {
+                trainingCalendarService.requireDefault(currentUser)
+            } catch (e: CalendarSyncException) {
+                throw e
+            } catch (e: Exception) {
+                null
+            }
+            userDefault ?: trainingCalendarService.requireDefault()
         }
         require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
         return cal

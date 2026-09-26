@@ -25,6 +25,11 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
 
     fun findByGoogleEventId(googleEventId: String): Optional<TrainingEvent>
 
+    fun findByCalendarIdAndIcalUid(calendarId: UUID, icalUid: String): Optional<TrainingEvent>
+
+    @Query("select distinct e from TrainingEvent e left join e.eventSources es where e.googleEventId = :googleEventId or es.googleEventId = :googleEventId")
+    fun findByAnyGoogleEventId(googleEventId: String): Optional<TrainingEvent>
+
     /**
      * Occurrences of a series at or after a cut-off, used by "this and following" to
      * regenerate the future while leaving completed sessions untouched.
@@ -40,6 +45,18 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
     fun findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
         createdBy: AppUser,
         calendarId: UUID,
+        startBefore: LocalDateTime,
+        endAfter: LocalDateTime
+    ): List<TrainingEvent>
+
+    fun findAllByCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+        calendarId: UUID,
+        startBefore: LocalDateTime,
+        endAfter: LocalDateTime
+    ): List<TrainingEvent>
+
+    fun findAllByCalendarIdInAndStartTimeLessThanAndEndTimeGreaterThan(
+        calendarIds: Collection<UUID>,
         startBefore: LocalDateTime,
         endAfter: LocalDateTime
     ): List<TrainingEvent>

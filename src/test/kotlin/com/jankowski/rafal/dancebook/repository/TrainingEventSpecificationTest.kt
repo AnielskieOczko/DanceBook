@@ -42,9 +42,9 @@ class TrainingEventSpecificationTest {
 
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
 
-    private fun calendar(name: String) = trainingCalendarRepository.save(
+    private fun calendar(name: String, owner: AppUser) = trainingCalendarRepository.save(
         TrainingCalendar().apply {
-            googleCalendarId = "$name-${UUID.randomUUID()}@group.calendar.google.com"
+            this.owner = owner
             displayName = name
             enabled = true
         }
@@ -69,8 +69,8 @@ class TrainingEventSpecificationTest {
             password = "x"
             role = Role.USER
         })
-        val club = calendar("Club")
-        val home = calendar("Home")
+        val club = calendar("Club", owner)
+        val home = calendar("Home", owner)
         val clubEvent = event("Club session", owner, club)
         val homeEvent = event("Home drill", owner, home)
 

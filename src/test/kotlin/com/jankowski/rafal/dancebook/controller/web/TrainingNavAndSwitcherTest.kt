@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingHistory
 import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.dto.TrainingTimeline
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -116,6 +117,13 @@ class TrainingNavAndSwitcherTest {
             username = "navuser"
         }
         `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+        val defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default Calendar"
+            enabled = true
+        }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(defaultCal))
+        `when`(activeCalendarService.active()).thenReturn(null)
     }
 
     @AfterEach

@@ -111,6 +111,13 @@ class TrainingEventViewRenderingTest {
             username = "testuser"
         }
         `when`(appUserService.getCurrentUser()).thenReturn(testUser)
+        val defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default Calendar"
+            enabled = true
+        }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(defaultCal))
+        `when`(activeCalendarService.active()).thenReturn(null)
     }
 
     @Test
@@ -542,7 +549,6 @@ class TrainingEventViewRenderingTest {
         val calWithSync = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Synced Calendar"
-            isDefault = true
             enabled = true
             lastSyncedAt = LocalDateTime.of(2026, 9, 15, 14, 45)
         }
@@ -566,7 +572,6 @@ class TrainingEventViewRenderingTest {
         val calWithoutSync = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Unsynced Calendar"
-            isDefault = true
             enabled = true
             lastSyncedAt = null
         }

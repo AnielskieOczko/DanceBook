@@ -4,9 +4,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.util.UUID
@@ -29,6 +32,10 @@ class AppUser {
 
     @Enumerated(EnumType.STRING)
     var role: Role = Role.USER
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_calendar_id")
+    var defaultCalendar: TrainingCalendar? = null
 
     @Column(updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

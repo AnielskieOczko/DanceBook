@@ -1,8 +1,13 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import com.jankowski.rafal.dancebook.model.Visibility
+import com.jankowski.rafal.dancebook.repository.ShareRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import jakarta.servlet.http.HttpSession
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -10,7 +15,8 @@ import java.util.UUID
 class ActiveCalendarServiceImpl(
     private val session: HttpSession,
     private val trainingCalendarService: TrainingCalendarService,
-    private val trainingEventRepository: TrainingEventRepository
+    private val trainingEventRepository: TrainingEventRepository,
+    private val appUserService: AppUserService
 ) : ActiveCalendarService {
 
     companion object {
@@ -18,13 +24,24 @@ class ActiveCalendarServiceImpl(
         const val ALL = "ALL"
     }
 
+    private fun resolveCurrentUser(): AppUser? {
+        return try {
+            appUserService.getCurrentUser()
+        } catch (e: Exception) {
+            appUserService.getCurrentUserOrNull()
+        }
+    }
+
     override fun active(): TrainingCalendar? {
+        val currentUser = resolveCurrentUser()
         val stored = session.getAttribute(SESSION_KEY) as? String
-            ?: return trainingCalendarService.findDefault()
+            ?: return trainingCalendarService.findDefault(currentUser)
         if (stored == ALL) return null
-        // A calendar deleted while selected falls back rather than leaving a dead context.
-        return trainingCalendarService.findById(UUID.fromString(stored))
-            ?: trainingCalendarService.findDefault()
+        val calendar = trainingCalendarService.findById(UUID.fromString(stored))
+        if (calendar != null && (currentUser == null || isVisibleTo(calendar, currentUser))) {
+            return calendar
+        }
+        return trainingCalendarService.findDefault(currentUser)
     }
 
     override fun setActive(calendarId: UUID?) {
@@ -32,15 +49,16 @@ class ActiveCalendarServiceImpl(
     }
 
     override fun selectable(): List<TrainingCalendar> {
+        val currentUser = resolveCurrentUser()
+        val visibleCalendars = trainingCalendarService.findAllVisibleTo(currentUser)
         val inUse = trainingEventRepository.calendarIdsInUse().toSet()
-        return trainingCalendarService.findAll().filter { it.enabled || it.id in inUse }
+        return visibleCalendars.filter { it.enabled || it.id in inUse }
     }
 
     override fun creationTarget(): TrainingCalendar {
-        val active = active() ?: return trainingCalendarService.requireDefault()
+        val currentUser = resolveCurrentUser()
+        val active = active() ?: return trainingCalendarService.requireDefault(currentUser)
         if (!active.enabled) {
-            // Deliberately not a silent fall back to the default: the session was asked for in
-            // the calendar on screen, and filing it elsewhere without saying so is worse.
             throw CalendarSyncException(
                 "${active.displayName} is disabled — choose another calendar to create a session."
             )
@@ -49,6 +67,7 @@ class ActiveCalendarServiceImpl(
     }
 
     override fun validateCreationTarget(calendarId: UUID?): TrainingCalendar {
+        val currentUser = resolveCurrentUser()
         val active = active()
         if (active != null) {
             if (!active.enabled) {
@@ -76,6 +95,8 @@ class ActiveCalendarServiceImpl(
 
         // Under "All calendars":
         if (calendarId == null) {
+            val def = trainingCalendarService.findDefault(currentUser)
+            if (def != null && def.enabled) return def
             throw CalendarSyncException(
                 "No target calendar specified — choose a calendar to create a session."
             )
@@ -88,5 +109,12 @@ class ActiveCalendarServiceImpl(
             )
         }
         return target
+    }
+
+    private fun isVisibleTo(calendar: TrainingCalendar, user: AppUser): Boolean {
+        if (user.role == Role.ADMIN) return true
+        if (calendar.visibility == Visibility.PUBLIC) return true
+        if (calendar.owner?.id == user.id) return true
+        return false
     }
 }

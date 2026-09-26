@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='training-events'" class="max-w-2xl mx-auto py-12 space-y-8">
+
+    <div th:replace="~{fragments/page :: pageHeader(
+        title=${isNew ? 'Connect Training Calendar' : 'Edit Calendar'},
+        subtitle=${isNew ? 'Link a Google Calendar to track and schedule training sessions.' : 'Update calendar settings and manage linked Google Calendar sources.'})}"></div>
+
+    <div th:if="${calendarError != null}">
+        <div th:replace="~{fragments/alert :: alert(variant='danger', text=${calendarError})}"></div>
+    </div>
+    <div th:if="${calendarSuccess != null}">
+        <div th:replace="~{fragments/alert :: alert(variant='success', text=${calendarSuccess})}"></div>
+    </div>
+
+    <!-- Instructions for linking (v1) -->
+    <div th:if="${isNew}" class="card p-6 bg-surface-container-low border border-border space-y-3">
+        <div class="flex items-start gap-3">
+            <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-primary shrink-0 mt-0.5')}"></span>
+            <div class="space-y-2 text-sm text-on-surface-variant">
+                <p class="font-semibold text-on-surface">How to connect your Google Calendar:</p>
+                <ol class="list-decimal list-inside space-y-1">
+                    <li>Open <strong>Google Calendar settings</strong> for the calendar you want to connect.</li>
+                    <li>Under <em>Share with specific people or groups</em>, share it with DanceBook's service account.</li>
+                    <li>Grant <strong>"Make changes to events"</strong> so DanceBook can save new sessions to this calendar.</li>
+                    <li>Copy the <strong>Calendar ID</strong> from the <em>Integrate calendar</em> section and paste it below.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Calendar Form -->
+    <form th:action="@{${isNew ? '/training-calendars' : '/training-calendars/' + calendar.id}}"
+          th:object="${trainingCalendar}" method="post" class="card p-8">
+
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
+        <div class="space-y-6">
+            <div th:replace="~{fragments/form :: field(path='displayName', label='Calendar Name', required=true, placeholder='e.g. Personal Training, Competition Prep')}"></div>
+
+            <th:block th:if="${isNew}">
+                <div th:replace="~{fragments/form :: field(path='googleCalendarId', label='Google Calendar ID', required=true, placeholder='e.g. name@gmail.com or xxx@group.calendar.google.com')}"></div>
+            </th:block>
+
+            <div th:replace="~{fragments/form :: field(path='color', label='Color (Hex or name)', required=false, placeholder='e.g. #3b82f6')}"></div>
+        </div>
+
+        <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">
+            <a href="/training-calendars" class="btn-outline">Cancel</a>
+            <button type="submit" class="btn-primary" th:text="${isNew ? 'Connect Calendar' : 'Save Calendar'}">Save Calendar</button>
+        </div>
+    </form>
+
+    <!-- Secondary Sources Management (Edit mode only) -->
+    <div th:if="${!isNew}" class="card p-8 space-y-6">
+        <div>
+            <h3 class="text-lg font-semibold text-on-surface">Linked Google Calendars</h3>
+            <p class="text-sm text-on-surface-variant mt-1">
+                Sessions created in DanceBook go to the write target only. Events from all linked Google calendars are synced in.
+            </p>
+        </div>
+
+        <!-- Sources Table -->
+        <div class="overflow-x-auto border border-border rounded-lg">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="border-b border-border bg-surface-container-low text-xs font-semibold text-on-surface-variant uppercase">
+                        <th class="py-2.5 px-4">Google Calendar ID</th>
+                        <th class="py-2.5 px-4">Role</th>
+                        <th class="py-2.5 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                    <tr th:each="src : ${calendar.sources}" class="hover:bg-surface-container-lowest">
+                        <td class="py-3 px-4 font-mono text-xs">
+                            <span th:text="${src.googleCalendarId}">source@gmail.com</span>
+                            <span th:if="${src.displayName != null && src.displayName != src.googleCalendarId}"
+                                  class="text-on-surface-variant block font-sans" th:text="${src.displayName}">Label</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <th:block th:if="${src.isWriteTarget}">
+                                <span th:replace="~{fragments/badge :: badge(label='Write Target', variant='success')}"></span>
+                            </th:block>
+                            <th:block th:unless="${src.isWriteTarget}">
+                                <span th:replace="~{fragments/badge :: badge(label='Inbound Only', variant='neutral')}"></span>
+                            </th:block>
+                        </td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <form th:unless="${src.isWriteTarget}"
+                                  th:action="@{/training-calendars/{id}/sources/{sourceId}/write-target(id=${calendar.id}, sourceId=${src.id})}"
+                                  method="post" class="inline">
+                                <button type="submit" class="btn-ghost btn-sm" title="Set this Google Calendar as the destination for new sessions">Set as Write Target</button>
+                            </form>
+                            <form th:if="${!src.isWriteTarget && calendar.sources.size() > 1}"
+                                  th:action="@{/training-calendars/{id}/sources/{sourceId}/delete(id=${calendar.id}, sourceId=${src.id})}"
+                                  method="post" class="inline">
+                                <button type="submit" class="btn-ghost btn-sm text-error" title="Disconnect this source">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add Source Form -->
+        <form th:action="@{/training-calendars/{id}/sources(id=${calendar.id})}" method="post"
+              class="border-t border-border pt-6 space-y-4">
+            <h4 class="font-medium text-sm text-on-surface">Add Inbound Google Calendar</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="text" name="googleCalendarId" required placeholder="Google Calendar ID" class="form-input">
+                <input type="text" name="displayName" placeholder="Label (optional)" class="form-input">
+            </div>
+            <button type="submit" class="btn-outline btn-sm">Add Google Source</button>
+        </form>
+    </div>
+
+</section>
+</html>
