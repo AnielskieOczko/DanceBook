@@ -40,7 +40,7 @@
             text=(${stats.period.name() == 'ALL_TIME'}
                 ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
                 : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'),
-            actionHref=(${activeCalendar == null || activeCalendar.enabled} ? '/training-events/new' : null),
+            actionHref=(${canAddSession} ? '/training-events/new' : null),
             actionLabel='Add Session')}"></div>
     </th:block>
 

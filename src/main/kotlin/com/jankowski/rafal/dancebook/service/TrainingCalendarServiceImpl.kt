@@ -3,11 +3,13 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.config.GoogleCalendarProperties
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.CalendarMemberState
 import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
+import com.jankowski.rafal.dancebook.repository.CalendarMemberRepository
 import com.jankowski.rafal.dancebook.repository.CalendarSourceRepository
 import com.jankowski.rafal.dancebook.repository.ShareRepository
 import com.jankowski.rafal.dancebook.repository.TrainingCalendarRepository
@@ -31,7 +33,9 @@ class TrainingCalendarServiceImpl(
     private val appUserService: AppUserService,
     private val appUserRepository: AppUserRepository,
     private val calendarSourceRepository: CalendarSourceRepository,
-    private val googleCalendarClient: GoogleCalendarClient
+    private val googleCalendarClient: GoogleCalendarClient,
+    private val calendarMemberRepository: CalendarMemberRepository,
+    private val shareRepository: ShareRepository
 ) : TrainingCalendarService {
 
     companion object {
@@ -44,6 +48,20 @@ class TrainingCalendarServiceImpl(
     override fun findAllVisibleTo(user: AppUser?): List<TrainingCalendar> =
         trainingCalendarRepository.findAll(
             TrainingCalendarSpecification.visibleTo(user),
+            Sort.by(Sort.Direction.ASC, "displayName")
+        )
+
+    override fun findAllForUser(user: AppUser): List<TrainingCalendar> {
+        val owned = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(user)
+        val memberships = calendarMemberRepository.findAllByUserAndStateOrderByCreatedAtDesc(user, CalendarMemberState.ACTIVE)
+            .mapNotNull { it.calendar }
+        val combined = (owned + memberships).distinctBy { it.id }
+        return combined.sortedBy { it.displayName.lowercase() }
+    }
+
+    override fun findAllPublic(): List<TrainingCalendar> =
+        trainingCalendarRepository.findAll(
+            TrainingCalendarSpecification.publicCalendars(),
             Sort.by(Sort.Direction.ASC, "displayName")
         )
 
@@ -66,13 +84,13 @@ class TrainingCalendarServiceImpl(
             if (def != null && def.enabled && isVisibleTo(def, targetUser)) {
                 return def
             }
-            // Fall back in-memory to first enabled calendar owned by user
-            val owned = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(targetUser)
-            val fallback = owned.firstOrNull { it.enabled } ?: owned.firstOrNull()
+            // Fall back in-memory to first enabled calendar user belongs to
+            val userCals = findAllForUser(targetUser)
+            val fallback = userCals.firstOrNull { it.enabled } ?: userCals.firstOrNull()
             if (fallback != null) {
                 return fallback
             }
-            // If user has no owned calendars, check visible calendars (e.g. public)
+            // If user has no calendars, check visible calendars (e.g. public)
             val visible = findAllVisibleTo(targetUser)
             return visible.firstOrNull { it.enabled } ?: visible.firstOrNull()
         }
@@ -208,7 +226,7 @@ class TrainingCalendarServiceImpl(
 
         if (enabled != null) {
             if (!enabled && calendar.isDefaultFor(actor)) {
-                val remaining = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(actor)
+                val remaining = findAllForUser(actor)
                     .filter { it.id != id }
                 actor.defaultCalendar = remaining.firstOrNull { it.enabled }
                 appUserRepository.save(actor)
@@ -234,7 +252,7 @@ class TrainingCalendarServiceImpl(
 
         // Fall back default calendar if deleted calendar was the user's default
         if (actor.defaultCalendar?.id == id) {
-            val remaining = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(actor)
+            val remaining = findAllForUser(actor)
                 .filter { it.id != id }
             actor.defaultCalendar = remaining.firstOrNull { it.enabled } ?: remaining.firstOrNull()
             appUserRepository.save(actor)
@@ -244,7 +262,7 @@ class TrainingCalendarServiceImpl(
         val otherUsers = appUserRepository.findAllByDefaultCalendar(calendar)
         for (otherUser in otherUsers) {
             if (otherUser.id != actor.id) {
-                val userCals = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(otherUser)
+                val userCals = findAllForUser(otherUser).filter { it.id != id }
                 val fallback = userCals.firstOrNull { it.enabled }
                     ?: findAllVisibleTo(otherUser).filter { it.id != id }.firstOrNull { it.enabled }
                     ?: userCals.firstOrNull()
@@ -292,7 +310,7 @@ class TrainingCalendarServiceImpl(
         checkOwnership(calendar, actor)
 
         if (!enabled && calendar.isDefaultFor(actor)) {
-            val remaining = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(actor)
+            val remaining = findAllForUser(actor)
                 .filter { it.id != id }
             actor.defaultCalendar = remaining.firstOrNull { it.enabled }
             appUserRepository.save(actor)
@@ -315,10 +333,19 @@ class TrainingCalendarServiceImpl(
             val otherUsers = appUserRepository.findAllByDefaultCalendar(calendar)
             for (otherUser in otherUsers) {
                 if (otherUser.id != actor.id && otherUser.role != Role.ADMIN) {
-                    val userCals = trainingCalendarRepository.findAllByOwnerOrderByDisplayNameAsc(otherUser)
-                    otherUser.defaultCalendar = userCals.firstOrNull { it.enabled }
-                        ?: findAllVisibleTo(otherUser).filter { it.id != id }.firstOrNull { it.enabled }
-                    appUserRepository.save(otherUser)
+                    val isMember = calendar.id?.let { calId ->
+                        otherUser.id?.let { uid ->
+                            calendarMemberRepository.existsByCalendarIdAndUserIdAndState(
+                                calId, uid, CalendarMemberState.ACTIVE
+                            )
+                        }
+                    } ?: false
+                    if (!isMember) {
+                        val userCals = findAllForUser(otherUser).filter { it.id != id }
+                        otherUser.defaultCalendar = userCals.firstOrNull { it.enabled }
+                            ?: findAllVisibleTo(otherUser).filter { it.id != id }.firstOrNull { it.enabled }
+                        appUserRepository.save(otherUser)
+                    }
                 }
             }
         }
@@ -498,10 +525,29 @@ class TrainingCalendarServiceImpl(
         }
     }
 
-    private fun isVisibleTo(calendar: TrainingCalendar, user: AppUser?): Boolean {
+    override fun isVisibleTo(calendar: TrainingCalendar, user: AppUser?): Boolean {
         if (user?.role == Role.ADMIN) return true
         if (calendar.visibility == Visibility.PUBLIC) return true
-        if (user != null && calendar.owner?.id == user.id) return true
+        if (user != null) {
+            if (calendar.owner?.id == user.id) return true
+            val calId = calendar.id
+            val uid = user.id
+            if (calId != null && uid != null) {
+                if (calendarMemberRepository.existsByCalendarIdAndUserIdAndState(calId, uid, CalendarMemberState.ACTIVE)) {
+                    return true
+                }
+                if (shareRepository.existsByItemTypeAndItemIdAndGranteeUserId("TRAINING_CALENDAR", calId, uid)) {
+                    return true
+                }
+            }
+        }
         return false
+    }
+
+    override fun isMemberOf(calendar: TrainingCalendar, user: AppUser): Boolean {
+        if (calendar.owner?.id == user.id) return true
+        val calId = calendar.id ?: return false
+        val uid = user.id ?: return false
+        return calendarMemberRepository.existsByCalendarIdAndUserIdAndState(calId, uid, CalendarMemberState.ACTIVE)
     }
 }

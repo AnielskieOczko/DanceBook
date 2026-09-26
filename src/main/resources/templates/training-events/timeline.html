@@ -25,7 +25,7 @@
         </th:block>
 
         <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && timeline.isEmpty and timeline.isFirstPage}">
-            <div th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+            <div th:replace="~{fragments/empty :: emptyState(icon='timeline', title='No training logged yet', text='Once you log a session it will show up here, newest first.', actionHref=${canAddSession ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
         </th:block>
 
         <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">

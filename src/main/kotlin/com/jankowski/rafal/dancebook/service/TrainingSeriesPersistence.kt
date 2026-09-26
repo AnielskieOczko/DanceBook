@@ -180,6 +180,7 @@ class TrainingSeriesPersistence(
                         seriesTitle = seriesToClean.title,
                         deletedCount = ids.size,
                         seriesRemoved = seriesRemoved,
+                        calendarId = occurrences.firstOrNull()?.calendar?.id,
                         actor = actor
                     )
                 )
@@ -213,6 +214,7 @@ class TrainingSeriesPersistence(
                 seriesTitle = series.title,
                 deletedCount = toDelete.size,
                 seriesRemoved = true,
+                calendarId = surviving.firstOrNull()?.calendar?.id ?: toDelete.firstOrNull()?.calendar?.id,
                 actor = actor
             )
         )

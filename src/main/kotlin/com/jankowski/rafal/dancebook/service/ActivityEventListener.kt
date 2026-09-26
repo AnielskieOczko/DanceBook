@@ -209,21 +209,42 @@ class ActivityEventListener(
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onTrainingEventCreated(event: TrainingEventCreatedEvent) {
         log.info("Recording TRAINING_EVENT_CREATED event for '{}'", event.trainingEvent.title)
-        save(EventType.TRAINING_EVENT_CREATED, event.actor, TargetType.TRAINING_EVENT, event.trainingEvent.id, event.trainingEvent.title)
+        save(
+            eventType = EventType.TRAINING_EVENT_CREATED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = event.trainingEvent.id,
+            targetName = event.trainingEvent.title,
+            calendarId = event.trainingEvent.calendar?.id
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onTrainingEventUpdated(event: TrainingEventUpdatedEvent) {
         log.info("Recording TRAINING_EVENT_UPDATED event for '{}'", event.trainingEvent.title)
-        save(EventType.TRAINING_EVENT_UPDATED, event.actor, TargetType.TRAINING_EVENT, event.trainingEvent.id, event.trainingEvent.title)
+        save(
+            eventType = EventType.TRAINING_EVENT_UPDATED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = event.trainingEvent.id,
+            targetName = event.trainingEvent.title,
+            calendarId = event.trainingEvent.calendar?.id
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     fun onTrainingEventDeleted(event: TrainingEventDeletedEvent) {
         log.info("Recording TRAINING_EVENT_DELETED event for '{}'", event.trainingEventTitle)
-        save(EventType.TRAINING_EVENT_DELETED, event.actor, TargetType.TRAINING_EVENT, event.trainingEventId, event.trainingEventTitle)
+        save(
+            eventType = EventType.TRAINING_EVENT_DELETED,
+            actor = event.actor,
+            targetType = TargetType.TRAINING_EVENT,
+            targetId = event.trainingEventId,
+            targetName = event.trainingEventTitle,
+            calendarId = event.calendarId
+        )
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -239,7 +260,8 @@ class ActivityEventListener(
             targetType = TargetType.TRAINING_EVENT,
             targetId = event.firstOccurrence.id,
             targetName = event.firstOccurrence.title,
-            metadata = event.occurrenceCount.toString()
+            metadata = event.occurrenceCount.toString(),
+            calendarId = event.firstOccurrence.calendar?.id
         )
     }
 
@@ -257,7 +279,8 @@ class ActivityEventListener(
             targetType = TargetType.TRAINING_EVENT,
             targetId = null,
             targetName = event.seriesTitle,
-            metadata = metadata
+            metadata = metadata,
+            calendarId = event.calendarId
         )
     }
 
@@ -319,7 +342,8 @@ class ActivityEventListener(
         targetId: java.util.UUID?,
         targetName: String?,
         metadata: String? = null,
-        targetVisibility: String? = null
+        targetVisibility: String? = null,
+        calendarId: java.util.UUID? = null
     ) {
         val activityEvent = ActivityEvent().apply {
             this.eventType = eventType
@@ -329,6 +353,7 @@ class ActivityEventListener(
             this.targetName = targetName
             this.metadata = metadata
             this.targetVisibility = targetVisibility
+            this.calendarId = calendarId
         }
         activityEventRepository.save(activityEvent)
     }

@@ -78,6 +78,9 @@ class ActivityEvent {
     @Column(name = "target_visibility")
     var targetVisibility: String? = null
 
+    @Column(name = "calendar_id")
+    var calendarId: UUID? = null
+
     @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
 }

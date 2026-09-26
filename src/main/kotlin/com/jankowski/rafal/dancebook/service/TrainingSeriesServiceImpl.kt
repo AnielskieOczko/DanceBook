@@ -19,6 +19,7 @@ import com.jankowski.rafal.dancebook.model.TrainingSeriesSegment
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -877,16 +878,25 @@ class TrainingSeriesServiceImpl(
         }
 
     private fun checkOwnership(event: TrainingEvent, currentUser: AppUser) {
-        if (event.createdBy?.id != currentUser.id && currentUser.role != Role.ADMIN) {
-            throw IllegalStateException("You don't have permission to modify this training event")
+        if (currentUser.role == Role.ADMIN) return
+        val canModify = event.calendar?.owner?.id == currentUser.id ||
+                // Keep createdBy clause only so that sessions authored before calendar membership introduced stay editable by their creator
+                event.createdBy?.id == currentUser.id ||
+                (event.calendar?.owner == null && event.createdBy == null)
+        if (!canModify) {
+            throw AccessDeniedException("You don't have permission to modify this training event")
         }
     }
 
     private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
         val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
-            trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
+            val resolved = trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
                 ?: throw EntityNotFoundException("Training calendar with id $calendarId not found")
+            if (currentUser.role != Role.ADMIN && resolved.owner != null && resolved.owner?.id != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to add sessions to this calendar")
+            }
+            resolved
         } else {
             val userDefault = try {
                 trainingCalendarService.requireDefault(currentUser)
@@ -895,7 +905,11 @@ class TrainingSeriesServiceImpl(
             } catch (e: Exception) {
                 null
             }
-            userDefault ?: trainingCalendarService.requireDefault()
+            val resolved = userDefault ?: trainingCalendarService.requireDefault()
+            if (currentUser.role != Role.ADMIN && resolved.owner != null && resolved.owner?.id != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to add sessions to this calendar")
+            }
+            resolved
         }
         require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
         return cal

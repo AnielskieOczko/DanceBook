@@ -95,6 +95,7 @@ class TrainingEventUpdatedEvent(
 class TrainingEventDeletedEvent(
     val trainingEventId: UUID,
     val trainingEventTitle: String,
+    val calendarId: UUID? = null,
     actor: AppUser
 ) : DomainEvent(actor)
 
@@ -115,6 +116,7 @@ class TrainingSeriesDeletedEvent(
     val seriesTitle: String,
     val deletedCount: Int,
     val seriesRemoved: Boolean,
+    val calendarId: UUID? = null,
     actor: AppUser
 ) : DomainEvent(actor)
 

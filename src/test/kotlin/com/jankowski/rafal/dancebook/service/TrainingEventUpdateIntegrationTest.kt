@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
@@ -61,6 +62,8 @@ class TrainingEventUpdateIntegrationTest {
     @Autowired private lateinit var trainingRecordRepository: TrainingRecordRepository
     @Autowired private lateinit var trainingSeriesService: TrainingSeriesService
 
+    @Autowired private lateinit var trainingCalendarService: TrainingCalendarService
+
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
 
@@ -80,6 +83,14 @@ class TrainingEventUpdateIntegrationTest {
             predefined = false
         })
         `when`(appUserService.getCurrentUser()).thenReturn(owner)
+        // Only a calendar's owner adds sessions to it (#155), so the tester needs one of their own.
+        trainingCalendarService.add(
+            TrainingCalendarRequest(
+                googleCalendarId = "edit-${UUID.randomUUID()}@group.calendar.google.com",
+                displayName = "Edit Test Calendar"
+            ),
+            owner
+        )
         // A fresh id per call, like the real API: thenReturn would hand every occurrence of a
         // series the same google_event_id and trip its unique constraint.
         `when`(calendarClient.createEvent(any(""), any(TrainingEvent()))).thenAnswer { "google-${UUID.randomUUID()}" }

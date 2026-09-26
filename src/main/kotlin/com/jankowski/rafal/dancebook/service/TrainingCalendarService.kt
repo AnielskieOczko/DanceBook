@@ -13,11 +13,19 @@ interface TrainingCalendarService {
 
     fun findAllVisibleTo(user: AppUser?): List<TrainingCalendar>
 
+    fun findAllForUser(user: AppUser): List<TrainingCalendar>
+
+    fun findAllPublic(): List<TrainingCalendar>
+
     fun findAllEnabled(): List<TrainingCalendar>
 
     fun findById(id: UUID): TrainingCalendar?
 
     fun findByIdVisibleTo(id: UUID, user: AppUser?): TrainingCalendar?
+
+    fun isVisibleTo(calendar: TrainingCalendar, user: AppUser?): Boolean
+
+    fun isMemberOf(calendar: TrainingCalendar, user: AppUser): Boolean
 
     fun findDefault(user: AppUser? = null): TrainingCalendar?
 

@@ -9,7 +9,7 @@
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
             <a href="/training-events/new" class="btn-primary"
-               th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && (activeCalendar == null || activeCalendar.enabled)}">
+               th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession}">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                 Add Session
             </a>
@@ -86,7 +86,7 @@
         </th:block>
 
         <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && (events == null || events.isEmpty())}">
-            <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${activeCalendar == null || activeCalendar.enabled ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+            <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${canAddSession ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
         </th:block>
 
         <!-- Feedback message following a bulk action -->
@@ -131,38 +131,40 @@
                         class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
                     Mark Skipped
                 </button>
-                <button type="button"
-                        th:hx-post="@{/training-events/bulk-edit-type-dialog}"
-                        hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML"
-                        hx-include=".js-session-checkbox:checked, #filterForm"
-                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                    Change Type
-                </button>
-                <button type="button"
-                        th:hx-post="@{/training-events/bulk-edit-styles-dialog}"
-                        hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML"
-                        hx-include=".js-session-checkbox:checked, #filterForm"
-                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                    Set Styles
-                </button>
-                <button type="button"
-                        th:hx-post="@{/training-events/bulk-edit-material-dialog}"
-                        hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML"
-                        hx-include=".js-session-checkbox:checked, #filterForm"
-                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                    Set Note
-                </button>
-                <button type="button"
-                        th:hx-post="@{/training-events/bulk-delete-dialog}"
-                        hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML"
-                        hx-include=".js-session-checkbox:checked, #filterForm"
-                        class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap text-danger border-danger/30 hover:bg-danger-soft">
-                    Delete
-                </button>
+                <th:block th:if="${activeCalendar == null || activeCalendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}">
+                    <button type="button"
+                            th:hx-post="@{/training-events/bulk-edit-type-dialog}"
+                            hx-target="#confirmModalContainer"
+                            hx-swap="innerHTML"
+                            hx-include=".js-session-checkbox:checked, #filterForm"
+                            class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                        Change Type
+                    </button>
+                    <button type="button"
+                            th:hx-post="@{/training-events/bulk-edit-styles-dialog}"
+                            hx-target="#confirmModalContainer"
+                            hx-swap="innerHTML"
+                            hx-include=".js-session-checkbox:checked, #filterForm"
+                            class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                        Set Styles
+                    </button>
+                    <button type="button"
+                            th:hx-post="@{/training-events/bulk-edit-material-dialog}"
+                            hx-target="#confirmModalContainer"
+                            hx-swap="innerHTML"
+                            hx-include=".js-session-checkbox:checked, #filterForm"
+                            class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
+                        Set Note
+                    </button>
+                    <button type="button"
+                            th:hx-post="@{/training-events/bulk-delete-dialog}"
+                            hx-target="#confirmModalContainer"
+                            hx-swap="innerHTML"
+                            hx-include=".js-session-checkbox:checked, #filterForm"
+                            class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap text-danger border-danger/30 hover:bg-danger-soft">
+                        Delete
+                    </button>
+                </th:block>
                 <button type="button" class="js-bulk-clear btn-icon text-on-surface-variant hover:text-on-surface ml-1"
                         title="Clear selection" aria-label="Clear selection">
                     <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
@@ -182,7 +184,7 @@
                 </p>
             </div>
 
-            <div th:each="row : ${group.rows}" th:with="event=${row.event}"
+            <div th:each="row : ${group.rows}" th:with="event=${row.event}, canManage=${event.calendar == null || event.calendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}"
                  class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
 
                 <input type="checkbox" name="sessionIds" th:value="${event.id}"
@@ -235,7 +237,7 @@
                 </div>
 
                 <!-- Edit and delete: inline on a pointer, behind an overflow menu on a phone. -->
-                <div class="hidden md:flex items-center gap-2 shrink-0">
+                <div th:if="${canManage}" class="hidden md:flex items-center gap-2 shrink-0">
                     <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-outline btn-sm flex items-center gap-1.5" title="Edit">
                         <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                         <span>Edit</span>
@@ -260,7 +262,7 @@
                     </form>
                 </div>
 
-                <div class="relative md:hidden shrink-0">
+                <div th:if="${canManage}" class="relative md:hidden shrink-0">
                     <button type="button" class="js-menu-btn btn-icon" aria-label="More actions">
                         <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md')}"></span>
                     </button>

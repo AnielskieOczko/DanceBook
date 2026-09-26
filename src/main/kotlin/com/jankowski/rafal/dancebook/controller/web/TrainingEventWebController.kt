@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.dto.groupByMonth
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -19,6 +20,7 @@ import com.jankowski.rafal.dancebook.service.TrainingSeriesService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -174,6 +176,8 @@ class TrainingEventWebController(
         try {
             trainingEventService.reschedule(id, start, end)
             ResponseEntity.ok(mapOf("status" to "ok"))
+        } catch (e: AccessDeniedException) {
+            throw e
         } catch (e: Exception) {
             // The calendar reverts the drag on a non-2xx, so the message has to come back
             // in the body for the page to explain why.
@@ -217,6 +221,8 @@ class TrainingEventWebController(
             }
         } catch (e: EntityNotFoundException) {
             throw e
+        } catch (e: AccessDeniedException) {
+            throw e
         } catch (e: Exception) {
             log.error("Failed to create training event '{}'", request.title, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to create training event")
@@ -241,6 +247,12 @@ class TrainingEventWebController(
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val currentUser = appUserService.getCurrentUser()
         val event = trainingEventService.findById(id)
+        if (currentUser.role != Role.ADMIN) {
+            val ownerId = event.calendar?.owner?.id ?: event.createdBy?.id
+            if (ownerId != null && ownerId != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to edit this training event")
+            }
+        }
         val series = event.series
         model.addAttribute(
             "trainingEvent",
@@ -304,6 +316,8 @@ class TrainingEventWebController(
                     }
                 }
             }
+        } catch (e: AccessDeniedException) {
+            throw e
         } catch (e: Exception) {
             log.error("Failed to update training event {}", id, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to update training event")
@@ -333,7 +347,14 @@ class TrainingEventWebController(
             return "fragments/confirm-dialog :: confirmModal"
         }
 
+        val currentUser = appUserService.getCurrentUser()
         val event = trainingEventService.findById(id)
+        if (currentUser.role != Role.ADMIN) {
+            val ownerId = event.calendar?.owner?.id ?: event.createdBy?.id
+            if (ownerId != null && ownerId != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to edit this training event")
+            }
+        }
         val series = event.series
 
         if (series == null) {
@@ -764,7 +785,14 @@ class TrainingEventWebController(
         @PathVariable id: UUID,
         model: Model
     ): String {
+        val currentUser = appUserService.getCurrentUser()
         val event = trainingEventService.findById(id)
+        if (currentUser.role != Role.ADMIN) {
+            val ownerId = event.calendar?.owner?.id ?: event.createdBy?.id
+            if (ownerId != null && ownerId != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to delete this training event")
+            }
+        }
         val series = event.series
         if (series == null) {
             model.addAttribute("dialogTitle", "Delete Session")

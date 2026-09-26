@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.security.access.AccessDeniedException
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
@@ -368,7 +369,7 @@ class TrainingSeriesServiceTest {
         }
         `when`(trainingEventRepository.findById(owned.id!!)).thenReturn(Optional.of(owned))
 
-        assertThrows(IllegalStateException::class.java) {
+        assertThrows(AccessDeniedException::class.java) {
             service.deleteThisAndFollowing(owned.id!!)
         }
         verifyNoInteractions(trainingSeriesPersistence)

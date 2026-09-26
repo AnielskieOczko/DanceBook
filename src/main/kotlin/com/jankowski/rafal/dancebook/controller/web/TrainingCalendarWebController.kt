@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.CalendarMemberService
 import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
 import jakarta.persistence.EntityNotFoundException
@@ -26,15 +27,23 @@ import java.util.UUID
 class TrainingCalendarWebController(
     private val trainingCalendarService: TrainingCalendarService,
     private val googleCalendarClient: GoogleCalendarClient,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val calendarMemberService: CalendarMemberService
 ) {
 
     @GetMapping
     fun list(model: Model): String {
         val currentUser = appUserService.getCurrentUser()
         val calendars = trainingCalendarService.findAllVisibleTo(currentUser)
+        val pendingInvites = calendarMemberService.getPendingInvitesFor(currentUser)
+        val publicCalendars = trainingCalendarService.findAllPublic().filter { it.owner?.id != currentUser.id }
+        // A HashSet, not toSet(): Kotlin's EmptySet is internal, so SpEL cannot call contains() on it.
+        val subscribedCalendarIds = calendars.filter { it.owner?.id != currentUser.id && calendarMemberService.isMember(it.id!!, currentUser) }.mapNotNull { it.id }.toHashSet()
         model.addAttribute("calendars", calendars)
         model.addAttribute("currentUser", currentUser)
+        model.addAttribute("pendingInvites", pendingInvites)
+        model.addAttribute("publicCalendars", publicCalendars)
+        model.addAttribute("subscribedCalendarIds", subscribedCalendarIds)
         return "training-calendars/index"
     }
 
@@ -101,6 +110,7 @@ class TrainingCalendarWebController(
             )
         }
         model.addAttribute("calendar", calendar)
+        model.addAttribute("members", calendarMemberService.findMembers(id, currentUser))
         model.addAttribute("isNew", false)
         return "training-calendars/form"
     }
@@ -122,6 +132,7 @@ class TrainingCalendarWebController(
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("calendar", calendar)
+            model.addAttribute("members", calendarMemberService.findMembers(id, currentUser))
             model.addAttribute("isNew", false)
             return "training-calendars/form"
         }
@@ -133,6 +144,7 @@ class TrainingCalendarWebController(
         } catch (e: Exception) {
             bindingResult.reject("error", e.message ?: "Failed to update calendar")
             model.addAttribute("calendar", calendar)
+            model.addAttribute("members", calendarMemberService.findMembers(id, currentUser))
             model.addAttribute("isNew", false)
             return "training-calendars/form"
         }
@@ -191,6 +203,120 @@ class TrainingCalendarWebController(
         trainingCalendarService.setVisibility(id, Visibility.PRIVATE, currentUser)
         redirectAttributes.addFlashAttribute("calendarSuccess", "Calendar \"${calendar.displayName}\" is now private.")
         return "redirect:/training-calendars"
+    }
+
+    @GetMapping("/{id}/unpublish-dialog")
+    fun showUnpublishDialog(@PathVariable id: UUID, model: Model): String {
+        val currentUser = appUserService.getCurrentUser()
+        val calendar = trainingCalendarService.findByIdVisibleTo(id, currentUser)
+            ?: throw EntityNotFoundException("Training calendar with id $id not found")
+        if (currentUser.role != Role.ADMIN && calendar.owner?.id != currentUser.id) {
+            throw EntityNotFoundException("Training calendar with id $id not found")
+        }
+
+        model.addAttribute("dialogTitle", "Make Calendar Private")
+        model.addAttribute(
+            "dialogMessage",
+            "This will remove \"${calendar.displayName}\" from the public directory. Existing members and subscribers will keep their access. Are you sure you want to make it private?"
+        )
+        model.addAttribute("confirmLabel", "Make Private")
+        model.addAttribute("confirmUrl", "/training-calendars/$id/unpublish")
+        return "fragments/confirm-dialog :: confirmModal"
+    }
+
+    @PostMapping("/{id}/subscribe")
+    fun subscribe(@PathVariable id: UUID, redirectAttributes: RedirectAttributes): String {
+        val currentUser = appUserService.getCurrentUser()
+        val calendar = trainingCalendarService.findByIdVisibleTo(id, currentUser)
+            ?: throw EntityNotFoundException("Training calendar with id $id not found")
+        try {
+            calendarMemberService.subscribe(id, currentUser)
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Subscribed to \"${calendar.displayName}\".")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to subscribe")
+        }
+        return "redirect:/training-calendars"
+    }
+
+    @PostMapping("/{id}/unsubscribe")
+    fun unsubscribe(@PathVariable id: UUID, redirectAttributes: RedirectAttributes): String {
+        val currentUser = appUserService.getCurrentUser()
+        val calendar = trainingCalendarService.findById(id)
+            ?: throw EntityNotFoundException("Training calendar with id $id not found")
+        try {
+            calendarMemberService.unsubscribe(id, currentUser)
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Unsubscribed from \"${calendar.displayName}\".")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to unsubscribe")
+        }
+        return "redirect:/training-calendars"
+    }
+
+    @PostMapping("/invites/{memberId}/accept")
+    fun acceptInvite(@PathVariable memberId: UUID, redirectAttributes: RedirectAttributes): String {
+        val currentUser = appUserService.getCurrentUser()
+        try {
+            val member = calendarMemberService.acceptInvite(memberId, currentUser)
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Accepted invitation to \"${member.calendar?.displayName}\".")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to accept invite")
+        }
+        return "redirect:/training-calendars"
+    }
+
+    @PostMapping("/invites/{memberId}/decline")
+    fun declineInvite(@PathVariable memberId: UUID, redirectAttributes: RedirectAttributes): String {
+        val currentUser = appUserService.getCurrentUser()
+        try {
+            calendarMemberService.declineInvite(memberId, currentUser)
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Declined invitation.")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to decline invite")
+        }
+        return "redirect:/training-calendars"
+    }
+
+    @PostMapping("/{id}/members/invite")
+    fun inviteMember(
+        @PathVariable id: UUID,
+        @RequestParam identifier: String,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val currentUser = appUserService.getCurrentUser()
+        val calendar = trainingCalendarService.findByIdVisibleTo(id, currentUser)
+            ?: throw EntityNotFoundException("Training calendar with id $id not found")
+        if (currentUser.role != Role.ADMIN && calendar.owner?.id != currentUser.id) {
+            throw EntityNotFoundException("Training calendar with id $id not found")
+        }
+        try {
+            val member = calendarMemberService.inviteMember(id, identifier.trim(), currentUser)
+            val name = member.user?.displayName ?: member.invitedEmail ?: identifier
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Invited $name.")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to invite member")
+        }
+        return "redirect:/training-calendars/$id/edit"
+    }
+
+    @PostMapping("/{id}/members/{memberId}/delete")
+    fun removeMember(
+        @PathVariable id: UUID,
+        @PathVariable memberId: UUID,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val currentUser = appUserService.getCurrentUser()
+        val calendar = trainingCalendarService.findByIdVisibleTo(id, currentUser)
+            ?: throw EntityNotFoundException("Training calendar with id $id not found")
+        if (currentUser.role != Role.ADMIN && calendar.owner?.id != currentUser.id) {
+            throw EntityNotFoundException("Training calendar with id $id not found")
+        }
+        try {
+            calendarMemberService.removeMember(id, memberId, currentUser)
+            redirectAttributes.addFlashAttribute("calendarSuccess", "Member removed.")
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("calendarError", e.message ?: "Failed to remove member")
+        }
+        return "redirect:/training-calendars/$id/edit"
     }
 
     @PostMapping("/{id}/sources")

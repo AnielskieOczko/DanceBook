@@ -39,6 +39,8 @@ class TrainingCalendarAccessIntegrationTest {
 
     @Autowired private lateinit var trainingCalendarService: TrainingCalendarService
     @Autowired private lateinit var trainingCalendarRepository: TrainingCalendarRepository
+    @Autowired private lateinit var calendarMemberService: CalendarMemberService
+    @Autowired private lateinit var calendarMemberRepository: com.jankowski.rafal.dancebook.repository.CalendarMemberRepository
     @Autowired private lateinit var trainingEventService: TrainingEventService
     @Autowired private lateinit var trainingEventRepository: TrainingEventRepository
     @Autowired private lateinit var trainingRecordRepository: TrainingRecordRepository
@@ -56,6 +58,7 @@ class TrainingCalendarAccessIntegrationTest {
     fun setUp() {
         trainingRecordRepository.deleteAll()
         trainingEventRepository.deleteAll()
+        calendarMemberRepository.deleteAll()
         appUserRepository.findAll().forEach {
             it.defaultCalendar = null
             appUserRepository.save(it)
@@ -150,10 +153,12 @@ class TrainingCalendarAccessIntegrationTest {
         `when`(appUserService.getCurrentUser()).thenReturn(userA)
         trainingCalendarService.setVisibility(calA.id!!, Visibility.PUBLIC, userA)
 
-        // 6. User B now CAN see, select, and read sessions
+        // 6. User B subscribes to the PUBLIC calendar -> now CAN see, select, and read sessions
         `when`(appUserService.getCurrentUser()).thenReturn(userB)
+        calendarMemberService.subscribe(calA.id!!, userB)
+
         val selectableForBNow = activeCalendarService.selectable()
-        assertTrue(selectableForBNow.any { it.id == calA.id }, "User B must see PUBLIC calendar in selectable list")
+        assertTrue(selectableForBNow.any { it.id == calA.id }, "User B must see subscribed PUBLIC calendar in selectable list")
 
         val sessionReadByB = trainingEventService.findById(sessionId)
         assertNotNull(sessionReadByB)
@@ -183,8 +188,11 @@ class TrainingCalendarAccessIntegrationTest {
         // Switch to Admin
         `when`(appUserService.getCurrentUser()).thenReturn(adminUser)
 
+        // The selector is a personal view, so it holds only the admin's own calendars (#155);
+        // the admin override covers opening and managing a calendar, not feeding their views.
         val selectableForAdmin = activeCalendarService.selectable()
-        assertTrue(selectableForAdmin.any { it.id == calA.id }, "Admin can see any calendar in selectable list")
+        assertFalse(selectableForAdmin.any { it.id == calA.id }, "Another user's private calendar stays out of the admin's selector")
+        assertNotNull(trainingCalendarService.findByIdVisibleTo(calA.id!!, adminUser), "Admin can still open it")
 
         // Admin can update calendar
         val updated = trainingCalendarService.update(
@@ -277,28 +285,31 @@ class TrainingCalendarAccessIntegrationTest {
         assertNotNull(sessionBDefault.id)
         assertEquals(calB.id, sessionBDefault.calendar?.id)
 
-        // 4. User A makes calA PUBLIC -> now User B CAN create a session targeting calA
+        // 4. User A makes calA PUBLIC -> User B subscribes, but only the owner adds sessions (#155): 403
         `when`(appUserService.getCurrentUser()).thenReturn(userA)
         trainingCalendarService.setVisibility(calA.id!!, Visibility.PUBLIC, userA)
 
         `when`(appUserService.getCurrentUser()).thenReturn(userB)
+        calendarMemberService.subscribe(calA.id!!, userB)
         `when`(calendarClient.createEvent(
             eq("user-a-target@group.calendar.google.com"),
             any(TrainingEvent::class.java)
         )).thenAnswer { "google-pub-session-" + UUID.randomUUID() }
 
-        val sessionOnPublicCal = trainingEventService.create(
-            TrainingEventRequest(
-                title = "User B on Public Cal A",
-                date = LocalDate.now(),
-                startTime = LocalTime.of(20, 0),
-                endTime = LocalTime.of(21, 0),
-                calendarId = calA.id,
-                eventType = TrainingEventType.TRAINING.name
+        assertThrows(AccessDeniedException::class.java) {
+            trainingEventService.create(
+                TrainingEventRequest(
+                    title = "User B on Public Cal A",
+                    date = LocalDate.now(),
+                    startTime = LocalTime.of(20, 0),
+                    endTime = LocalTime.of(21, 0),
+                    calendarId = calA.id,
+                    eventType = TrainingEventType.TRAINING.name
+                )
             )
-        )
-        assertNotNull(sessionOnPublicCal.id)
-        assertEquals(calA.id, sessionOnPublicCal.calendar?.id)
+        }
+        org.mockito.Mockito.verify(calendarClient, org.mockito.Mockito.never())
+            .createEvent(eq("user-a-target@group.calendar.google.com"), any(TrainingEvent::class.java))
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)

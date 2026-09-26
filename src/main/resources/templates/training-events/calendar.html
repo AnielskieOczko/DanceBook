@@ -15,7 +15,7 @@
             <!-- On a phone the floating + creates on the selected day, so this would be a second
                  create button competing with it for a very narrow header. -->
             <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
-               th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && (activeCalendar == null || activeCalendar.enabled)}">
+               th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession}">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
                 Add Session
             </a>
@@ -81,7 +81,7 @@
         <p id="calendarError" class="hidden form-error"></p>
 
         <button id="quickCreateFab" type="button" class="tc-fab md:hidden"
-                th:if="${activeCalendar == null || activeCalendar.enabled}"
+                th:if="${canAddSession}"
                 aria-label="Add a session on the selected day">
             <span th:replace="~{fragments/icon :: icon(name='add', size='lg')}"></span>
         </button>

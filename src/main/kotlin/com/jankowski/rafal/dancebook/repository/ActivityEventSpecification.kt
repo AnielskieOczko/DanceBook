@@ -2,11 +2,15 @@ package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.ActivityEvent
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.CalendarMember
+import com.jankowski.rafal.dancebook.model.CalendarMemberState
 import com.jankowski.rafal.dancebook.model.CustomList
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.NotificationReadStatus
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TargetType
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
+import com.jankowski.rafal.dancebook.model.TrainingEvent
 import org.springframework.data.jpa.domain.Specification
 import java.util.UUID
 
@@ -21,7 +25,7 @@ object ActivityEventSpecification {
                 return@Specification cb.conjunction()
             }
 
-            val isActor = if (user != null) cb.equal(root.get<AppUser>("actor"), user) else cb.disjunction()
+            val isActor = if (user != null) cb.equal(root.get<AppUser>("actor").get<UUID>("id"), user.id) else cb.disjunction()
 
             // Subqueries for live Material
             val liveMaterialSubquery = query.subquery(Long::class.java)
@@ -73,12 +77,61 @@ object ActivityEventSpecification {
                 cb.or(isLiveVisibleList, isDeletedPublicList)
             )
 
-            val otherTypesPredicate = cb.or(
-                cb.equal(root.get<TargetType>("targetType"), TargetType.DANCE_FIGURE),
-                cb.equal(root.get<TargetType>("targetType"), TargetType.TRAINING_EVENT)
-            )
+            val trainingPredicate = if (user != null) {
+                val liveEventSubquery = query.subquery(Long::class.java)
+                val eventRoot = liveEventSubquery.from(TrainingEvent::class.java)
+                val cal = eventRoot.get<TrainingCalendar>("calendar")
+                liveEventSubquery.select(cb.literal(1L))
 
-            cb.or(isActor, materialPredicate, listPredicate, otherTypesPredicate)
+                val liveMemberSubquery = liveEventSubquery.subquery(Long::class.java)
+                val liveMemberRoot = liveMemberSubquery.from(CalendarMember::class.java)
+                liveMemberSubquery.select(cb.literal(1L))
+                liveMemberSubquery.where(
+                    cb.equal(liveMemberRoot.get<TrainingCalendar>("calendar").get<UUID>("id"), cal.get<UUID>("id")),
+                    cb.equal(liveMemberRoot.get<AppUser>("user").get<UUID>("id"), user.id),
+                    cb.equal(liveMemberRoot.get<CalendarMemberState>("state"), CalendarMemberState.ACTIVE)
+                )
+
+                liveEventSubquery.where(
+                    cb.equal(eventRoot.get<UUID>("id"), root.get<UUID>("targetId")),
+                    cb.or(
+                        cb.equal(cal.get<AppUser>("owner").get<UUID>("id"), user.id),
+                        cb.exists(liveMemberSubquery)
+                    )
+                )
+                val isLiveVisibleEvent = cb.exists(liveEventSubquery)
+
+                val calSubquery = query.subquery(Long::class.java)
+                val calRoot = calSubquery.from(TrainingCalendar::class.java)
+                calSubquery.select(cb.literal(1L))
+
+                val delMemberSubquery = calSubquery.subquery(Long::class.java)
+                val delMemberRoot = delMemberSubquery.from(CalendarMember::class.java)
+                delMemberSubquery.select(cb.literal(1L))
+                delMemberSubquery.where(
+                    cb.equal(delMemberRoot.get<TrainingCalendar>("calendar").get<UUID>("id"), calRoot.get<UUID>("id")),
+                    cb.equal(delMemberRoot.get<AppUser>("user").get<UUID>("id"), user.id),
+                    cb.equal(delMemberRoot.get<CalendarMemberState>("state"), CalendarMemberState.ACTIVE)
+                )
+
+                calSubquery.where(
+                    cb.equal(root.get<UUID>("calendarId"), calRoot.get<UUID>("id")),
+                    cb.or(
+                        cb.equal(calRoot.get<AppUser>("owner").get<UUID>("id"), user.id),
+                        cb.exists(delMemberSubquery)
+                    )
+                )
+                val isCalendarVisibleEvent = cb.exists(calSubquery)
+
+                cb.and(
+                    cb.equal(root.get<TargetType>("targetType"), TargetType.TRAINING_EVENT),
+                    cb.or(isLiveVisibleEvent, isCalendarVisibleEvent)
+                )
+            } else cb.disjunction()
+
+            val danceFigurePredicate = cb.equal(root.get<TargetType>("targetType"), TargetType.DANCE_FIGURE)
+
+            cb.or(isActor, materialPredicate, listPredicate, trainingPredicate, danceFigurePredicate)
         }
     }
 

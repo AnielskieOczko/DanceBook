@@ -18,7 +18,7 @@ import java.util.UUID
 @Repository
 interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpecificationExecutor<TrainingEvent> {
 
-    @EntityGraph(attributePaths = ["calendar", "attendances"], type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = ["calendar", "calendar.owner", "attendances"], type = EntityGraph.EntityGraphType.LOAD)
     override fun findById(id: UUID): Optional<TrainingEvent>
 
     fun findAllByCreatedByOrderByStartTimeDesc(createdBy: AppUser): List<TrainingEvent>
@@ -90,12 +90,28 @@ interface TrainingEventRepository : JpaRepository<TrainingEvent, UUID>, JpaSpeci
      * The second half of that two-step fetch: the same sessions again, with segments and their
      * categories attached. An `IN` query has no inherent order, so the caller re-sorts.
      */
-    @EntityGraph(attributePaths = ["segments", "segments.danceCategory"])
+    @EntityGraph(attributePaths = ["segments", "segments.danceCategory", "calendar", "calendar.owner"])
     fun findAllByIdIn(ids: Collection<UUID>): List<TrainingEvent>
 
     /** Calendar ids that at least one session points at; drives which calendars stay selectable. */
     @Query("select distinct e.calendar.id from TrainingEvent e where e.calendar is not null")
     fun calendarIdsInUse(): List<UUID>
+
+    /**
+     * Calendar ids that at least one session points at, scoped to sessions accessible to [user].
+     * Drives which disabled calendars stay selectable for this user (#63).
+     */
+    @Query("""
+        select distinct e.calendar.id from TrainingEvent e
+        left join e.attendances a on a.user = :user
+        where e.calendar is not null
+          and (
+            e.calendar.owner = :user
+            or e.createdBy = :user
+            or a.id is not null
+          )
+    """)
+    fun calendarIdsInUseFor(user: AppUser): List<UUID>
 
     /** Number of sessions belonging to a specific calendar. */
     fun countByCalendarId(calendarId: UUID): Long

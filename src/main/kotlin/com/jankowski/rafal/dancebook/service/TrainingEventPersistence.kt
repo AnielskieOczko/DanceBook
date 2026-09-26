@@ -149,6 +149,6 @@ class TrainingEventPersistence(
                 trainingSeriesRepository.delete(series)
             }
         }
-        eventPublisher.publishEvent(TrainingEventDeletedEvent(id, title, actor))
+        eventPublisher.publishEvent(TrainingEventDeletedEvent(id, title, event.calendar?.id, actor))
     }
 }
