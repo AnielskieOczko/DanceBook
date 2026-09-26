@@ -678,7 +678,8 @@ This groundwork lets two people share a session once calendars are shared (#154,
 - **Who can reach a session.** Lists, the timeline and stats are still scoped to sessions the
   current user created. Since #154 the calendar *range* view of a selected calendar shows every
   session on it when the calendar is visible to the user (see *Calendars are owned* below), and
-  a session's detail page is reachable through its calendar. Only the owner or an admin can
+  a session's detail page is reachable only through its calendar: since #170, having created
+  the session or holding an attendance row on it grants nothing on its own. Only the owner or an admin can
   record attendance, singly or in bulk, and the write always goes to the *acting* user's row.
   As a result, an admin marking someone else's session records the admin's own attendance, not
   the owner's. The first round of #153 had widened lists to "created by me, or I have an
@@ -731,11 +732,14 @@ Owners manage their calendars on `/training-calendars` (`TrainingCalendarWebCont
   already had sessions or attendance on it, turned each `google_calendar_id` into that
   calendar's write-target source, and backfilled defaults for owners and for users of calendars
   that became public.
-- **Known gaps (#170):** creating a session resolves its calendar with a fallback
-  to the unfiltered `findById`, so another user's private calendar can be named by id; and a
-  session's detail page is checked by `TrainingEventServiceImpl.checkVisibility`, a second,
-  in-memory copy of the calendar rule. Both should go through `findByIdVisibleTo`. Calendar
-  members and subscriptions are #155.
+- **Sessions reach calendars only through the rule (#170).** Creating a session, singly or as
+  a series, resolves an explicit calendar id with `findByIdVisibleTo` and nothing else, so a
+  calendar the user cannot see is a 404 and nothing is written to DanceBook or Google. The web
+  controller rethrows `EntityNotFoundException` rather than turning it into a form error.
+  `TrainingEventServiceImpl.findById` checks the session's calendar the same way; there is no
+  in-memory copy of the rule. Non-owners can still add sessions to a `PUBLIC` calendar, and a
+  private calendar with no owner is reachable only by admins. Calendar members and
+  subscriptions are #155.
 
 ### LLM providers
 
