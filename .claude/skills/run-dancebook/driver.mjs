@@ -105,9 +105,9 @@ for (const line of commands) {
       case 'select': { const [sel, v] = splitSelector(arg); await page.selectOption(sel, [{ value: v }]).catch(() => page.selectOption(sel, [{ label: v }])); break; }
       case 'check': await page.check(splitSelector(arg)[0]); break;
       case 'press': await page.keyboard.press(arg); break;
-      case 'wait-for': await page.waitForSelector(arg, { state: 'visible' }); break;
+      case 'wait-for': await page.waitForSelector(splitSelector(arg)[0], { state: 'visible' }); break;
       case 'text': {
-        const sel = arg || ((await page.$('main')) ? 'main' : 'body');
+        const sel = (arg && splitSelector(arg)[0]) || ((await page.$('main')) ? 'main' : 'body');
         const t = (await page.innerText(sel)).replace(/\n{3,}/g, '\n\n').trim();
         console.log(t.length > 4000 ? `${t.slice(0, 4000)}\n... (${t.length} chars, truncated)` : t);
         break;
