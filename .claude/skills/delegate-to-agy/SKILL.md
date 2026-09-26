@@ -222,7 +222,7 @@ These scratch files are already in `.gitignore`, so they stay out of the diff.
 ### 4. Run — background, attached
 
 ```bash
-cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
+cd ../DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir "$PWD" \
     --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
     -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Then run ./gradlew build. The runtime will send it to the background - that is normal and expected, so do not relaunch it. Wait for its completion notification, fix any failures yourself, and re-run it until it passes. Your final message must end by quoting the last two lines of that build verbatim; if you cannot quote them, you are not finished.' \
     > .agy-run.json 2>&1
@@ -245,6 +245,28 @@ meant, which a real build would have caught in 20 seconds. Its transcript shows 
 changelog entry for 1.2.7 reads "Fixed headless (`-p`) runs occasionally skipping the
 background-task waiting notice" — which is why issue #85 on 1.2.7 did receive its
 `BUILD SUCCESSFUL in 56s` and quote it. *Occasionally* is the problem the gate removes.
+
+### Watching progress — for free
+
+```bash
+.claude/skills/delegate-to-agy/agy-status.sh          # every clone; add an issue number for one
+watch -n 10 .claude/skills/delegate-to-agy/agy-status.sh
+```
+
+It reads only files on disk: `.agy-start`, the `## Steps` checklist agy ticks in
+`.agy-plan.md`, `git diff` in the clone, the running `agy` process, and agy's
+`steps/` and `tasks/*.log` under `~/.gemini/antigravity-cli/brain/<conversation>/`. No model
+is called, so it costs neither Claude nor Gemini usage. `--line` prints one line per active
+(or finished in the last 30 minutes) run and nothing otherwise; point Claude Code's
+`statusLine` at it in `.claude/settings.local.json` to see progress under the prompt.
+
+"build" is the last **full** `./gradlew build` (the Stop gate's rule: `:build`, `:check` and
+`:test` in one log); "gradle" is the last Gradle run of any kind. A step count that stops
+moving for minutes while the run is still alive means agy is waiting on a background task.
+
+**Do not poll it from Claude.** Checking progress by calling the script from this
+conversation pays Claude tokens for every look, which is what delegation exists to avoid;
+the status line and `watch` show it without entering the conversation.
 
 ### 5. Validate — do not trust `status`
 
@@ -274,7 +296,7 @@ If it reports denied tools, add the action to `permissions.allow`, then resume t
 conversation instead of re-paying the onboarding cost:
 
 ```bash
-agy --add-dir "$PWD" --conversation <conversation_id> --output-format json \
+date +%s > .agy-start && agy --add-dir "$PWD" --conversation <conversation_id> --output-format json \
     --print-timeout 45m -p='Continue where you left off.' > .agy-run.json 2>&1
 ```
 

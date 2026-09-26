@@ -928,7 +928,13 @@ wait to be told where the code lives; go and find it.
    change and why, the tests you will write, and any ambiguity in the spec together with
    the reading you chose. Keep it under ~40 lines of prose and bullets, with **no code
    snippets** — a human reviewer reads this file, nothing executes it.
-3. **Implement.** Write the change and its tests together.
+   Put the work under a `## Steps` heading as a Markdown checklist (`- [ ] …`), about 4–10
+   items in the order you will do them, the last being a green `./gradlew build`.
+3. **Implement.** Write the change and its tests together. **Tick each step (`- [x]`) in
+   `.agy-plan.md` as soon as it is done**, not at the end: the checklist is how the person
+   who delegated the work sees your progress while you run. Add a step if you discover
+   one; never delete a step you did not do, leave it unticked and say why under
+   `## Decisions`.
 4. **Verify.** Run `./gradlew build` until it passes, fixing your own failures. Resolving
    your own compile errors is the entire reason the work was delegated to you.
    The build takes far longer than the 10s your command tool will wait, so the runtime
