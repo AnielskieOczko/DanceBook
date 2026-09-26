@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -44,6 +45,26 @@ class TrainingSeriesServiceTest {
     private lateinit var currentUser: AppUser
     private lateinit var defaultCalendar: TrainingCalendar
 
+    private fun createCalendar(
+        id: UUID = UUID.randomUUID(),
+        displayName: String = "Test Calendar",
+        enabled: Boolean = true,
+        googleCalendarId: String? = "test@group.calendar.google.com"
+    ): TrainingCalendar {
+        val cal = TrainingCalendar().apply {
+            this.id = id
+            this.displayName = displayName
+            this.enabled = enabled
+        }
+        if (googleCalendarId != null) {
+            cal.addSource(googleCalendarId, isWriteTarget = true)
+        }
+        return cal
+    }
+
+    private val TrainingCalendar.googleCalendarId: String
+        get() = writeTarget?.googleCalendarId ?: sources.firstOrNull()?.googleCalendarId ?: ""
+
     @BeforeEach
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
@@ -60,13 +81,13 @@ class TrainingSeriesServiceTest {
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
 
-        defaultCalendar = TrainingCalendar().apply {
-            id = UUID.randomUUID()
+        defaultCalendar = createCalendar(
+            displayName = "Default Calendar",
             googleCalendarId = "default-cal@group.calendar.google.com"
-            displayName = "Default Calendar"
-            isDefault = true
-        }
+        )
+        `when`(trainingCalendarService.requireDefault(currentUser)).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.requireDefault()).thenReturn(defaultCalendar)
+        `when`(trainingCalendarService.findDefault(currentUser)).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.findDefault()).thenReturn(defaultCalendar)
 
         service = TrainingSeriesServiceImpl(
@@ -519,13 +540,14 @@ class TrainingSeriesServiceTest {
     @Test
     fun `creating series with explicit calendarId assigns chosen calendar to every occurrence`() {
         val customCalId = UUID.randomUUID()
-        val customCal = TrainingCalendar().apply {
-            id = customCalId
+        val customCal = createCalendar(
+            id = customCalId,
+            displayName = "Custom Series Calendar",
+            enabled = true,
             googleCalendarId = "custom-series-cal@group.calendar.google.com"
-            displayName = "Custom Series Calendar"
-            enabled = true
-        }
+        )
         `when`(trainingCalendarService.findById(customCalId)).thenReturn(customCal)
+        `when`(trainingCalendarService.findByIdVisibleTo(eq(customCalId), any(AppUser::class.java))).thenReturn(customCal)
 
         var counter = 0
         `when`(calendarClient.createEvent(eq(customCal.googleCalendarId), any(TrainingEvent::class.java)))
@@ -559,13 +581,14 @@ class TrainingSeriesServiceTest {
     @Test
     fun `creating series with disabled calendar is rejected`() {
         val disabledCalId = UUID.randomUUID()
-        val disabledCal = TrainingCalendar().apply {
-            id = disabledCalId
+        val disabledCal = createCalendar(
+            id = disabledCalId,
+            displayName = "Disabled Calendar",
+            enabled = false,
             googleCalendarId = "disabled-series-cal@group.calendar.google.com"
-            displayName = "Disabled Calendar"
-            enabled = false
-        }
+        )
         `when`(trainingCalendarService.findById(disabledCalId)).thenReturn(disabledCal)
+        `when`(trainingCalendarService.findByIdVisibleTo(eq(disabledCalId), any(AppUser::class.java))).thenReturn(disabledCal)
 
         val request = weeklyRequest(until = LocalDate.of(2026, 9, 28), calendarId = disabledCalId)
         val exception = assertThrows(IllegalArgumentException::class.java) {

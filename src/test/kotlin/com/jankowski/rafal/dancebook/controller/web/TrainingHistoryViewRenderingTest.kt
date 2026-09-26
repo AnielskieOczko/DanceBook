@@ -17,9 +17,11 @@ import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingHistoryService
 import org.hamcrest.Matchers.containsString
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
+import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientWebSecurityAutoConfiguration
@@ -76,6 +78,17 @@ class TrainingHistoryViewRenderingTest {
     @MockBean private lateinit var activityEventService: ActivityEventService
     @MockBean private lateinit var systemSettingService: SystemSettingService
     @MockBean private lateinit var calendarSyncService: CalendarSyncService
+
+    @BeforeEach
+    fun setUp() {
+        val defaultCal = TrainingCalendar().apply {
+            id = UUID.randomUUID()
+            displayName = "Default Calendar"
+            enabled = true
+        }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(defaultCal))
+        `when`(activeCalendarService.active()).thenReturn(null)
+    }
 
     private fun record(
         title: String,

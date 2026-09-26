@@ -15,6 +15,12 @@ class TrainingEvent {
     @Column(name = "google_event_id", unique = true)
     var googleEventId: String? = null
 
+    @Column(name = "ical_uid")
+    var icalUid: String? = null
+
+    @OneToMany(mappedBy = "trainingEvent", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var eventSources: MutableList<TrainingEventSource> = mutableListOf()
+
     @Column(nullable = false)
     var title: String = ""
 

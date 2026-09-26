@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import com.jankowski.rafal.dancebook.model.CalendarSource
+import com.jankowski.rafal.dancebook.repository.CalendarSourceRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -52,6 +54,7 @@ class CalendarSyncIntegrationTest {
     @Autowired private lateinit var trainingEventRepository: TrainingEventRepository
     @Autowired private lateinit var trainingRecordRepository: TrainingRecordRepository
     @Autowired private lateinit var trainingCalendarRepository: TrainingCalendarRepository
+    @Autowired private lateinit var calendarSourceRepository: CalendarSourceRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
@@ -79,17 +82,30 @@ class CalendarSyncIntegrationTest {
 
         `when`(appUserService.getCurrentUser()).thenReturn(testAdmin)
         `when`(appUserService.getRootAdmin()).thenReturn(testAdmin)
+        `when`(calendarClient.verifyCalendar(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyBoolean()))
+            .thenReturn("Verified")
 
         `when`(calendarClient.createEvent(any(""), any(TrainingEvent()))).thenAnswer { "google-${UUID.randomUUID()}" }
 
-        defaultCal = trainingCalendarRepository.findByIsDefaultTrue()
+        defaultCal = trainingCalendarRepository.findByGoogleCalendarId("integration-test-calendar")
+            ?: trainingCalendarRepository.findAll().firstOrNull()
             ?: trainingCalendarRepository.save(TrainingCalendar().apply {
-                googleCalendarId = "default-cal-${UUID.randomUUID()}@group.calendar.google.com"
                 displayName = "Default Test Calendar"
-                isDefault = true
+                visibility = com.jankowski.rafal.dancebook.model.Visibility.PRIVATE
                 enabled = true
+                addSource("default-cal-${UUID.randomUUID()}@group.calendar.google.com", isWriteTarget = true)
             })
-        defaultCal.syncToken = null
+        defaultCal.owner = testAdmin
+        defaultCal.enabled = true
+        defaultCal = trainingCalendarRepository.save(defaultCal)
+        testAdmin.defaultCalendar = defaultCal
+        appUserRepository.save(testAdmin)
+
+        trainingCalendarRepository.findAll()
+            .filter { it.id != defaultCal.id }
+            .forEach { trainingCalendarRepository.delete(it) }
+
+        defaultCal.writeTarget?.syncToken = null
         trainingCalendarRepository.save(defaultCal)
     }
 
@@ -98,10 +114,12 @@ class CalendarSyncIntegrationTest {
         trainingEventRepository.deleteAll()
         trainingRecordRepository.deleteAll()
         trainingCalendarRepository.findAll()
-            .filter { !it.isDefault }
+            .filter { it.id != defaultCal.id }
             .forEach { trainingCalendarRepository.delete(it) }
-        defaultCal.syncToken = null
-        trainingCalendarRepository.save(defaultCal)
+        defaultCal.writeTarget?.let {
+            it.syncToken = null
+            calendarSourceRepository.save(it)
+        }
     }
 
     private fun <T> any(dummy: T): T {
@@ -143,7 +161,9 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, defaultCal.syncToken)).thenReturn(changeSet)
+        val defaultGoogleId = defaultCal.writeTarget!!.googleCalendarId
+        val defaultSyncToken = defaultCal.writeTarget?.syncToken
+        `when`(calendarClient.listChanges(defaultGoogleId, defaultSyncToken)).thenReturn(changeSet)
 
         // 3. Run sync
         val report = calendarSyncService.syncAll()
@@ -200,7 +220,9 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, defaultCal.syncToken)).thenReturn(changeSet)
+        val defaultGoogleId = defaultCal.writeTarget!!.googleCalendarId
+        val defaultSyncToken = defaultCal.writeTarget?.syncToken
+        `when`(calendarClient.listChanges(defaultGoogleId, defaultSyncToken)).thenReturn(changeSet)
 
         val report = calendarSyncService.syncAll()
         assertFalse(report.hasFailures)
@@ -214,11 +236,12 @@ class CalendarSyncIntegrationTest {
 
     @Test
     fun `adding second calendar and syncing adopts its events leaving first calendar untouched`() {
+        val cal2GoogleId = "cal2-${UUID.randomUUID()}@group.calendar.google.com"
         val cal2 = trainingCalendarRepository.save(TrainingCalendar().apply {
-            googleCalendarId = "cal2-${UUID.randomUUID()}@group.calendar.google.com"
+            owner = testAdmin
             displayName = "Second Calendar"
-            isDefault = false
             enabled = true
+            addSource(cal2GoogleId, isWriteTarget = true)
         })
 
         val cal1ChangeSet = CalendarChangeSet(
@@ -228,15 +251,17 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, defaultCal.syncToken)).thenReturn(cal1ChangeSet)
+        val defaultGoogleId = defaultCal.writeTarget!!.googleCalendarId
+        val defaultSyncToken = defaultCal.writeTarget?.syncToken
+        `when`(calendarClient.listChanges(defaultGoogleId, defaultSyncToken)).thenReturn(cal1ChangeSet)
 
-        val cal2GoogleId = "cal2-google-event-${UUID.randomUUID()}"
+        val cal2GoogleIdEvent = "cal2-google-event-${UUID.randomUUID()}"
         val cal2Start = LocalDateTime.of(2026, 9, 20, 14, 0)
         val cal2End = LocalDateTime.of(2026, 9, 20, 16, 0)
         val cal2ChangeSet = CalendarChangeSet(
             changes = listOf(
                 CalendarChange.Upserted(
-                    googleEventId = cal2GoogleId,
+                    googleEventId = cal2GoogleIdEvent,
                     title = "External Workshop",
                     start = cal2Start,
                     end = cal2End,
@@ -248,12 +273,12 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(cal2.googleCalendarId, cal2.syncToken)).thenReturn(cal2ChangeSet)
+        `when`(calendarClient.listChanges(cal2GoogleId, cal2.writeTarget?.syncToken)).thenReturn(cal2ChangeSet)
 
         val report = calendarSyncService.syncAll()
         assertFalse(report.hasFailures)
 
-        val adoptedEvent = trainingEventRepository.findByGoogleEventId(cal2GoogleId).orElse(null)
+        val adoptedEvent = trainingEventRepository.findByGoogleEventId(cal2GoogleIdEvent).orElse(null)
         assertNotNull(adoptedEvent)
         assertEquals("External Workshop", adoptedEvent!!.title)
         assertEquals(cal2.id, adoptedEvent.calendar?.id)
@@ -304,11 +329,12 @@ class CalendarSyncIntegrationTest {
         )
 
         // 3. Event on another calendar -> guard: calendar scoping
+        val otherCalGoogleId = "other-cal-${UUID.randomUUID()}@group.calendar.google.com"
         val otherCal = trainingCalendarRepository.save(TrainingCalendar().apply {
-            googleCalendarId = "other-cal-${UUID.randomUUID()}@group.calendar.google.com"
+            owner = testAdmin
             displayName = "Other Calendar Guard"
-            isDefault = false
             enabled = true
+            addSource(otherCalGoogleId, isWriteTarget = true)
         })
         val otherCalRequest = TrainingEventRequest(
             title = "Other Calendar Session",
@@ -358,8 +384,9 @@ class CalendarSyncIntegrationTest {
         // Leave created_at and updated_at as now() (within grace period)
 
         // Simulate expired token on defaultCal
-        defaultCal.syncToken = "expired-token-${UUID.randomUUID()}"
-        trainingCalendarRepository.save(defaultCal)
+        val writeTarget = defaultCal.writeTarget!!
+        writeTarget.syncToken = "expired-token-${UUID.randomUUID()}"
+        calendarSourceRepository.save(writeTarget)
 
         val expired410ChangeSet = CalendarChangeSet(
             changes = emptyList(),
@@ -368,7 +395,7 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, defaultCal.syncToken))
+        `when`(calendarClient.listChanges(writeTarget.googleCalendarId, writeTarget.syncToken))
             .thenReturn(expired410ChangeSet)
 
         val windowStart = LocalDateTime.now().minusYears(1)
@@ -379,7 +406,7 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = true,
             windowStart = windowStart
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, null))
+        `when`(calendarClient.listChanges(writeTarget.googleCalendarId, null))
             .thenReturn(fullChangeSet)
 
         val outcome = calendarSyncService.syncCalendar(defaultCal.id!!)
@@ -407,7 +434,7 @@ class CalendarSyncIntegrationTest {
 
         // 4. Token advanced
         val refreshedCal = trainingCalendarRepository.findById(defaultCal.id!!).get()
-        assertEquals("new-fresh-token", refreshedCal.syncToken)
+        assertEquals("new-fresh-token", refreshedCal.writeTarget?.syncToken)
     }
 
     @Test
@@ -430,8 +457,9 @@ class CalendarSyncIntegrationTest {
             pastTimestamp, pastTimestamp, eventId
         )
 
-        defaultCal.syncToken = "sync-token-for-incomplete-${UUID.randomUUID()}"
-        trainingCalendarRepository.save(defaultCal)
+        val incompleteWriteTarget = defaultCal.writeTarget!!
+        incompleteWriteTarget.syncToken = "sync-token-for-incomplete-${UUID.randomUUID()}"
+        calendarSourceRepository.save(incompleteWriteTarget)
 
         val expired410 = CalendarChangeSet(
             changes = emptyList(),
@@ -440,7 +468,7 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = null
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, defaultCal.syncToken))
+        `when`(calendarClient.listChanges(incompleteWriteTarget.googleCalendarId, incompleteWriteTarget.syncToken))
             .thenReturn(expired410)
 
         val incompleteChangeSet = CalendarChangeSet(
@@ -450,7 +478,7 @@ class CalendarSyncIntegrationTest {
             isCompleteWindow = false,
             windowStart = LocalDateTime.now().minusYears(1)
         )
-        `when`(calendarClient.listChanges(defaultCal.googleCalendarId, null))
+        `when`(calendarClient.listChanges(incompleteWriteTarget.googleCalendarId, null))
             .thenReturn(incompleteChangeSet)
 
         val outcome = calendarSyncService.syncCalendar(defaultCal.id!!)

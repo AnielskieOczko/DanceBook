@@ -100,11 +100,25 @@ class GoogleCalendarClientImpl(
         }
     }
 
-    override fun verifyCalendar(calendarId: String): String {
+    override fun verifyCalendar(calendarId: String, requireWrite: Boolean): String {
         require(calendarId.isNotBlank()) { "calendarId must not be blank" }
         return translating("verify") {
             val summary = calendar.calendars().get(calendarId).execute().summary
             logger.info("Verified calendar {} ('{}')", calendarId, summary)
+            if (requireWrite) {
+                try {
+                    val listEntry = calendar.calendarList().get(calendarId).execute()
+                    if (listEntry?.accessRole !in listOf("writer", "owner")) {
+                        throw CalendarSyncException(
+                            "Calendar '$calendarId' is read-only. It must be shared with 'Make changes to events' permission."
+                        )
+                    }
+                } catch (e: GoogleJsonResponseException) {
+                    if (e.statusCode != 404) {
+                        throw asSyncException("verify write access for", e)
+                    }
+                }
+            }
             summary ?: calendarId
         }
     }
@@ -174,7 +188,7 @@ class GoogleCalendarClientImpl(
         val eventId = event.id ?: return null
 
         if (event.status == "cancelled") {
-            return CalendarChange.Cancelled(eventId)
+            return CalendarChange.Cancelled(eventId, event.iCalUID)
         }
 
         val start = parseEventDateTime(event.start) ?: return null
@@ -187,6 +201,7 @@ class GoogleCalendarClientImpl(
 
         return CalendarChange.Upserted(
             googleEventId = eventId,
+            iCalUid = event.iCalUID,
             title = event.summary ?: "",
             start = start,
             end = adjustedEnd,

@@ -12,20 +12,26 @@ class TrainingCalendar {
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: UUID? = null
 
-    @Column(name = "google_calendar_id", nullable = false, unique = true)
-    var googleCalendarId: String = ""
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    var owner: AppUser? = null
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    var visibility: Visibility = Visibility.PRIVATE
+
+    @Column(name = "color")
+    var color: String? = null
 
     @Column(name = "display_name", nullable = false)
     var displayName: String = ""
 
-    @Column(name = "sync_token", columnDefinition = "TEXT")
-    var syncToken: String? = null
+    @OneToMany(mappedBy = "calendar", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("createdAt ASC")
+    var sources: MutableList<CalendarSource> = mutableListOf()
 
     @Column(name = "last_synced_at")
     var lastSyncedAt: LocalDateTime? = null
-
-    @Column(name = "is_default", nullable = false)
-    var isDefault: Boolean = false
 
     @Column(nullable = false)
     var enabled: Boolean = true
@@ -35,4 +41,31 @@ class TrainingCalendar {
 
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    @get:Transient
+    val isPublic: Boolean
+        get() = visibility == Visibility.PUBLIC
+
+    @get:Transient
+    val writeTarget: CalendarSource?
+        get() = sources.firstOrNull { it.isWriteTarget }
+
+    fun requireWriteTarget(): CalendarSource =
+        writeTarget ?: throw IllegalStateException("Training calendar '$displayName' has no write target.")
+
+    fun addSource(googleCalendarId: String, displayName: String? = null, isWriteTarget: Boolean = false): CalendarSource {
+        val source = CalendarSource().apply {
+            this.calendar = this@TrainingCalendar
+            this.googleCalendarId = googleCalendarId
+            this.displayName = displayName
+            this.isWriteTarget = isWriteTarget
+        }
+        sources.add(source)
+        return source
+    }
+
+    fun isDefaultFor(user: AppUser?): Boolean {
+        if (user == null) return false
+        return user.defaultCalendar?.id == id
+    }
 }

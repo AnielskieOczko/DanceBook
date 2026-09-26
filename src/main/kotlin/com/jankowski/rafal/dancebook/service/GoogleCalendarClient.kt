@@ -17,7 +17,7 @@ interface GoogleCalendarClient {
     fun deleteEvent(calendarId: String, googleEventId: String)
 
     /** Verifies the calendar is reachable and returns Google's own summary for the calendar. */
-    fun verifyCalendar(calendarId: String): String
+    fun verifyCalendar(calendarId: String, requireWrite: Boolean = false): String
 
     /**
      * Lists changes on the given calendar since [syncToken], or performs a full listing if [syncToken] is null.
@@ -27,16 +27,21 @@ interface GoogleCalendarClient {
 
 sealed class CalendarChange {
     abstract val googleEventId: String
+    open val iCalUid: String? = null
 
     data class Upserted(
         override val googleEventId: String,
+        override val iCalUid: String? = null,
         val title: String,
         val start: java.time.LocalDateTime,
         val end: java.time.LocalDateTime,
         val description: String?
     ) : CalendarChange()
 
-    data class Cancelled(override val googleEventId: String) : CalendarChange()
+    data class Cancelled(
+        override val googleEventId: String,
+        override val iCalUid: String? = null
+    ) : CalendarChange()
 }
 
 data class CalendarChangeSet(

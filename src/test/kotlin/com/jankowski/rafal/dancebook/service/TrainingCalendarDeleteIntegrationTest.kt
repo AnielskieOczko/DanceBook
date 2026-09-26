@@ -73,7 +73,7 @@ class TrainingCalendarDeleteIntegrationTest {
     }
 
     @Test
-    fun `calendar delete orphans session records without dropping stats and refuses default while another exists`() {
+    fun `calendar delete orphans session records without dropping stats and falls back to another calendar when default is deleted`() {
         // 1. Create default calendar A and second calendar B
         val calA = trainingCalendarService.add(
             TrainingCalendarRequest("cal-a-${UUID.randomUUID()}@group.calendar.google.com", "Primary Default Calendar")
@@ -81,7 +81,7 @@ class TrainingCalendarDeleteIntegrationTest {
         val calB = trainingCalendarService.add(
             TrainingCalendarRequest("cal-b-${UUID.randomUUID()}@group.calendar.google.com", "Secondary Team Calendar")
         )
-        assertTrue(calA.isDefault)
+        assertTrue(calA.isDefaultFor(testUser))
 
         // 2. Create an attended training session in calendar B
         val sessionRequest = TrainingEventRequest(
@@ -106,11 +106,11 @@ class TrainingCalendarDeleteIntegrationTest {
         assertTrue(statsBefore.counts.attended >= 1)
         val minutesBefore = statsBefore.totalMinutesTrained
 
-        // 3. Attempt to delete default calendar A while calendar B exists -> refused
-        val refuseEx = assertThrows(IllegalStateException::class.java) {
-            trainingCalendarService.delete(calA.id!!, testUser)
-        }
-        assertEquals("Make another calendar the default before deleting this one.", refuseEx.message)
+        // 3. Delete default calendar A while calendar B exists -> falls back to calendar B
+        trainingCalendarService.delete(calA.id!!, testUser)
+        assertNull(trainingCalendarService.findById(calA.id!!))
+        val reloadedUser = appUserRepository.findById(testUser.id!!).get()
+        assertEquals(calB.id, reloadedUser.defaultCalendar?.id)
 
         // 4. Delete calendar B
         clearInvocations(calendarClient)
@@ -138,8 +138,8 @@ class TrainingCalendarDeleteIntegrationTest {
         assertEquals(statsBefore.counts.attended, statsAfter.counts.attended)
         assertEquals(minutesBefore, statsAfter.totalMinutesTrained)
 
-        // 5. Deleting the last remaining calendar (calA) is permitted
-        trainingCalendarService.delete(calA.id!!, testUser)
-        assertNull(trainingCalendarService.findById(calA.id!!))
+        // Default calendar is cleared when last calendar is deleted
+        val finalUser = appUserRepository.findById(testUser.id!!).get()
+        assertNull(finalUser.defaultCalendar)
     }
 }

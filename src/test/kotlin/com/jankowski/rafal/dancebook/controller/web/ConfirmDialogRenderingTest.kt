@@ -167,7 +167,6 @@ class ConfirmDialogRenderingTest {
         val calendar = TrainingCalendar().apply {
             this.id = id
             displayName = "Club Calendar"
-            isDefault = false
         }
         `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
         `when`(trainingCalendarService.findAll()).thenReturn(listOf(calendar, TrainingCalendar()))

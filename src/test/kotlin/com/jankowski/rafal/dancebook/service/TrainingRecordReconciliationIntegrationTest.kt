@@ -165,9 +165,8 @@ class TrainingRecordReconciliationIntegrationTest {
         val user = createUser("existing")
 
         val cal = trainingCalendarRepository.save(TrainingCalendar().apply {
-            googleCalendarId = "custom-${UUID.randomUUID().toString().take(8)}@group.calendar.google.com"
+            owner = user
             displayName = "Custom Calendar"
-            isDefault = false
             enabled = true
         })
 
@@ -198,9 +197,8 @@ class TrainingRecordReconciliationIntegrationTest {
 
         // A non-default calendar
         val secondaryCal = trainingCalendarRepository.save(TrainingCalendar().apply {
-            googleCalendarId = "secondary-${UUID.randomUUID().toString().take(8)}@group.calendar.google.com"
+            owner = user
             displayName = "Secondary Practice"
-            isDefault = false
             enabled = true
         })
 

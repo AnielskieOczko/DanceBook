@@ -25,20 +25,20 @@ class TrainingCalendarMigrationTest {
     private fun connect(): Connection =
         DriverManager.getConnection(postgres.jdbcUrl, postgres.username, postgres.password)
 
-    private fun flyway() = Flyway.configure()
-        .dataSource(postgres.jdbcUrl, postgres.username, postgres.password)
-        .locations("classpath:db/migration")
-        .load()
+    private fun flyway(target: String? = null): Flyway {
+        val config = Flyway.configure()
+            .dataSource(postgres.jdbcUrl, postgres.username, postgres.password)
+            .locations("classpath:db/migration")
+        if (target != null) {
+            config.target(MigrationVersion.fromVersion(target))
+        }
+        return config.load()
+    }
 
     @Test
     fun `V29 adds training_calendar and nullable calendar_id, enforcing unique default and restrict delete`() {
         // Migrate to V28
-        Flyway.configure()
-            .dataSource(postgres.jdbcUrl, postgres.username, postgres.password)
-            .locations("classpath:db/migration")
-            .target(MigrationVersion.fromVersion("28"))
-            .load()
-            .migrate()
+        flyway("28").migrate()
 
         val userId = UUID.randomUUID()
         val eventId = UUID.randomUUID()
@@ -63,7 +63,7 @@ class TrainingCalendarMigrationTest {
         }
 
         // Migrate to V29
-        flyway().migrate()
+        flyway("29").migrate()
 
         val cal1Id = UUID.randomUUID()
         val cal2Id = UUID.randomUUID()

@@ -501,14 +501,14 @@
 
     <tr th:fragment="calendarRow" th:id="'calendar-row-' + ${cal.id}" class="table-row">
         <td class="table-cell table-cell-pinned font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
-        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-[20rem]" th:text="${cal.googleCalendarId}">cal-id</td>
+        <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-[20rem]" th:text="${cal.writeTarget?.googleCalendarId}">cal-id</td>
         <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
         <td class="table-cell">
-            <span th:if="${cal.isDefault}" class="badge-primary inline-flex items-center gap-1">
+            <span th:if="${cal.isDefaultFor(currentUser)}" class="badge-primary inline-flex items-center gap-1">
                 <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true)}"></span>
                 Default
             </span>
-            <button th:if="${!cal.isDefault}" type="button"
+            <button th:if="${!cal.isDefaultFor(currentUser)}" type="button"
                     th:hx-post="@{/admin/calendars/{id}/default(id=${cal.id})}"
                     hx-target="#calendarsSection" hx-swap="outerHTML"
                     class="btn-outline btn-sm">
@@ -538,15 +538,7 @@
                         class="btn-outline btn-sm">
                     Edit
                 </button>
-                <button th:if="${cal.isDefault && (calendars == null || calendars.size() > 1)}"
-                        type="button"
-                        th:hx-post="@{/admin/calendars/{id}/delete(id=${cal.id})}"
-                        hx-target="#calendarsSection" hx-swap="outerHTML"
-                        class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
-                    Delete
-                </button>
-                <button th:unless="${cal.isDefault && (calendars == null || calendars.size() > 1)}"
-                        type="button"
+                <button type="button"
                         th:hx-get="@{/admin/calendars/{id}/delete-dialog(id=${cal.id})}"
                         hx-target="#confirmModalContainer" hx-swap="innerHTML"
                         class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
@@ -567,15 +559,15 @@
                     <div>
                         <label class="form-label text-xs">Google Calendar ID</label>
                         <th:block th:if="${sessionCount > 0}">
-                            <input type="text" th:value="${calendar.googleCalendarId}" disabled class="form-input text-sm font-mono opacity-60 bg-surface-container cursor-not-allowed">
-                            <input type="hidden" name="googleCalendarId" th:value="${calendar.googleCalendarId}">
+                            <input type="text" th:value="${calendar.writeTarget?.googleCalendarId}" disabled class="form-input text-sm font-mono opacity-60 bg-surface-container cursor-not-allowed">
+                            <input type="hidden" name="googleCalendarId" th:value="${calendar.writeTarget?.googleCalendarId}">
                             <p class="text-xs text-text-secondary mt-1.5 flex items-center gap-1">
                                 <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
                                 Google Calendar ID cannot be changed while calendar owns <span th:text="${sessionCount}">0</span> session(s).
                             </p>
                         </th:block>
                         <th:block th:if="${sessionCount == 0}">
-                            <input type="text" name="googleCalendarId" th:value="${calendar.googleCalendarId}" required class="form-input text-sm font-mono">
+                            <input type="text" name="googleCalendarId" th:value="${calendar.writeTarget?.googleCalendarId}" required class="form-input text-sm font-mono">
                             <p class="text-xs text-text-secondary mt-1.5">
                                 Google Calendar ID can be updated because this calendar owns no sessions.
                             </p>

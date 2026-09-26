@@ -24,6 +24,7 @@ class AdminCalendarControllerTest {
     private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var googleCalendarClient: GoogleCalendarClient
     private lateinit var appUserService: AppUserService
+    private lateinit var currentUser: AppUser
     private lateinit var controller: AdminCalendarController
 
     @BeforeEach
@@ -31,6 +32,11 @@ class AdminCalendarControllerTest {
         trainingCalendarService = mock(TrainingCalendarService::class.java)
         googleCalendarClient = mock(GoogleCalendarClient::class.java)
         appUserService = mock(AppUserService::class.java)
+        currentUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "admin"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
         controller = AdminCalendarController(trainingCalendarService, googleCalendarClient, appUserService)
     }
 
@@ -72,7 +78,7 @@ class AdminCalendarControllerTest {
 
         assertEquals("admin/dashboard :: calendarsSection", view)
         verify(googleCalendarClient).verifyCalendar("cal@google.com")
-        verify(trainingCalendarService).add(request, enabled = true)
+        verify(trainingCalendarService).add(request, actor = currentUser, enabled = true)
         assertEquals(calendars, model["calendars"])
         assertEquals("Connected — \"Calendar Summary\"", model["calendarSuccess"])
     }
@@ -91,7 +97,7 @@ class AdminCalendarControllerTest {
         val view = controller.add(request, bindingResult, model)
 
         assertEquals("admin/dashboard :: calendarsSection", view)
-        verify(trainingCalendarService).add(request, enabled = false)
+        verify(trainingCalendarService).add(request, actor = currentUser, enabled = false)
         assertEquals("Google Calendar verify failed (403): not shared with this app's Google account", model["calendarError"])
         assertEquals(calendars, model["calendars"])
     }
@@ -102,7 +108,7 @@ class AdminCalendarControllerTest {
         val request = TrainingCalendarRequest("dup@google.com", "Duplicate")
         val bindingResult = BeanPropertyBindingResult(request, "request")
         `when`(googleCalendarClient.verifyCalendar("dup@google.com")).thenReturn("Duplicate")
-        `when`(trainingCalendarService.add(request, enabled = true)).thenThrow(
+        `when`(trainingCalendarService.add(request, actor = currentUser, enabled = true)).thenThrow(
             IllegalArgumentException("A calendar with Google Calendar ID 'dup@google.com' already exists.")
         )
         val calendars = listOf(TrainingCalendar())
@@ -122,8 +128,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "cal@google.com"
             displayName = "My Calendar"
+            addSource("cal@google.com", isWriteTarget = true)
         }
         `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
         `when`(googleCalendarClient.verifyCalendar("cal@google.com")).thenReturn("My Calendar Google Summary")
@@ -143,8 +149,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "missing@google.com"
             displayName = "Missing Calendar"
+            addSource("missing@google.com", isWriteTarget = true)
         }
         `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
         `when`(googleCalendarClient.verifyCalendar("missing@google.com")).thenThrow(
@@ -170,7 +176,7 @@ class AdminCalendarControllerTest {
         val view = controller.makeDefault(id, model)
 
         assertEquals("admin/dashboard :: calendarsSection", view)
-        verify(trainingCalendarService).setDefault(id)
+        verify(trainingCalendarService).setDefault(id, currentUser)
         assertEquals(calendars, model["calendars"])
     }
 
@@ -178,7 +184,7 @@ class AdminCalendarControllerTest {
     fun `makeDefault error sets calendarError and returns calendarsSection`() {
         val model = ConcurrentModel()
         val id = UUID.randomUUID()
-        `when`(trainingCalendarService.setDefault(id)).thenThrow(
+        `when`(trainingCalendarService.setDefault(id, currentUser)).thenThrow(
             IllegalArgumentException("Calendar not found")
         )
         val calendars = listOf(TrainingCalendar())
@@ -228,17 +234,19 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            isDefault = true
             enabled = true
         }
+        currentUser.defaultCalendar = existing
         val updated = TrainingCalendar().apply {
             this.id = id
-            isDefault = false
             enabled = false
         }
         val calendars = listOf(updated)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
-        `when`(trainingCalendarService.setEnabled(id, false)).thenReturn(updated)
+        `when`(trainingCalendarService.setEnabled(id, false)).thenAnswer {
+            currentUser.defaultCalendar = null
+            updated
+        }
         `when`(trainingCalendarService.findAll()).thenReturn(calendars)
 
         val view = controller.setEnabled(id, false, model)
@@ -305,8 +313,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "cal@google.com"
             displayName = "Old Name"
+            addSource("cal@google.com", isWriteTarget = true)
         }
         val calendars = listOf(existing)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
@@ -329,8 +337,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "old@google.com"
             displayName = "Calendar"
+            addSource("old@google.com", isWriteTarget = true)
         }
         val calendars = listOf(existing)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
@@ -353,8 +361,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "old@google.com"
             displayName = "Calendar"
+            addSource("old@google.com", isWriteTarget = true)
         }
         val calendars = listOf(existing)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
@@ -378,8 +386,8 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "old@google.com"
             displayName = "Calendar"
+            addSource("old@google.com", isWriteTarget = true)
         }
         val calendars = listOf(existing)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
@@ -405,10 +413,10 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "old@google.com"
             displayName = "Default Calendar"
-            isDefault = true
+            addSource("old@google.com", isWriteTarget = true)
         }
+        currentUser.defaultCalendar = existing
         val calendars = listOf(existing, TrainingCalendar())
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
         `when`(trainingCalendarService.countSessions(id)).thenReturn(0L)
@@ -438,16 +446,15 @@ class AdminCalendarControllerTest {
         val id = UUID.randomUUID()
         val existing = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "old@google.com"
             displayName = "Only Default Calendar"
-            isDefault = true
+            addSource("old@google.com", isWriteTarget = true)
         }
+        currentUser.defaultCalendar = existing
         val updated = TrainingCalendar().apply {
             this.id = id
-            googleCalendarId = "unreachable@google.com"
             displayName = "Only Default Calendar"
             enabled = false
-            isDefault = false
+            addSource("unreachable@google.com", isWriteTarget = true)
         }
         val calendars = listOf(updated)
         `when`(trainingCalendarService.findById(id)).thenReturn(existing)
@@ -455,7 +462,10 @@ class AdminCalendarControllerTest {
         `when`(googleCalendarClient.verifyCalendar("unreachable@google.com")).thenThrow(
             CalendarSyncException("Could not reach Google Calendar (404)")
         )
-        `when`(trainingCalendarService.update(id, TrainingCalendarRequest("unreachable@google.com", "Only Default Calendar"), enabled = false)).thenReturn(updated)
+        `when`(trainingCalendarService.update(id, TrainingCalendarRequest("unreachable@google.com", "Only Default Calendar"), enabled = false)).thenAnswer {
+            currentUser.defaultCalendar = null
+            updated
+        }
         `when`(trainingCalendarService.findAll()).thenReturn(calendars)
 
         val request = TrainingCalendarRequest("unreachable@google.com", "Only Default Calendar")
@@ -477,7 +487,6 @@ class AdminCalendarControllerTest {
         val calendar = TrainingCalendar().apply {
             this.id = id
             displayName = "Team Calendar"
-            isDefault = false
         }
         `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
         `when`(trainingCalendarService.findAll()).thenReturn(listOf(calendar, TrainingCalendar()))
@@ -495,16 +504,16 @@ class AdminCalendarControllerTest {
     }
 
     @Test
-    fun `showDeleteDialog refuses default calendar when another exists`() {
+    fun `showDeleteDialog allows default calendar when another exists`() {
         val model = ConcurrentModel()
         val id = UUID.randomUUID()
         val calendar = TrainingCalendar().apply {
             this.id = id
-            isDefault = true
+            displayName = "Default Cal"
         }
         val other = TrainingCalendar().apply {
             this.id = UUID.randomUUID()
-            isDefault = false
+            displayName = "Other Cal"
         }
         val calendars = listOf(calendar, other)
         `when`(trainingCalendarService.findById(id)).thenReturn(calendar)
@@ -512,8 +521,8 @@ class AdminCalendarControllerTest {
 
         val view = controller.showDeleteDialog(id, model = model)
 
-        assertEquals("admin/dashboard :: calendarsSection", view)
-        assertEquals("Make another calendar the default before deleting this one.", model["calendarError"])
+        assertEquals("fragments/confirm-dialog :: confirmModal", view)
+        assertEquals("Delete Training Calendar", model["dialogTitle"])
     }
 
     @Test

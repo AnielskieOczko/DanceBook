@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -9,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -28,6 +30,7 @@ class CalendarReconcilerTest {
     private lateinit var trainingEventRepository: TrainingEventRepository
     private lateinit var trainingEventPersistence: TrainingEventPersistence
     private lateinit var appUserService: AppUserService
+    private lateinit var trainingEventSourceRepository: TrainingEventSourceRepository
     private lateinit var reconciler: CalendarReconciler
 
     private lateinit var targetCalendar: TrainingCalendar
@@ -39,26 +42,39 @@ class CalendarReconcilerTest {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
         trainingEventPersistence = mock(TrainingEventPersistence::class.java)
         appUserService = mock(AppUserService::class.java)
+        trainingEventSourceRepository = mock(TrainingEventSourceRepository::class.java)
 
         reconciler = CalendarReconciler(
             trainingEventRepository,
             trainingEventPersistence,
-            appUserService
+            appUserService,
+            trainingEventSourceRepository
         )
 
         targetCalendar = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Target Calendar"
-            googleCalendarId = "target-cal@group.calendar.google.com"
-            isDefault = true
             enabled = true
+        }.also { cal ->
+            val src = CalendarSource().apply {
+                this.calendar = cal
+                googleCalendarId = "target-cal@group.calendar.google.com"
+                isWriteTarget = true
+            }
+            cal.sources.add(src)
         }
 
         otherCalendar = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Other Calendar"
-            googleCalendarId = "other-cal@group.calendar.google.com"
             enabled = true
+        }.also { cal ->
+            val src = CalendarSource().apply {
+                this.calendar = cal
+                googleCalendarId = "other-cal@group.calendar.google.com"
+                isWriteTarget = true
+            }
+            cal.sources.add(src)
         }
 
         rootAdmin = AppUser().apply {

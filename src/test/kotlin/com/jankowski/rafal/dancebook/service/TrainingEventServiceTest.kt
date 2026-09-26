@@ -7,10 +7,12 @@ import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import jakarta.persistence.EntityNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -43,9 +45,27 @@ class TrainingEventServiceTest {
     private lateinit var danceCategoryService: DanceCategoryService
     private lateinit var materialService: MaterialService
     private lateinit var entityManager: jakarta.persistence.EntityManager
+    private lateinit var trainingEventSourceRepository: TrainingEventSourceRepository
     private lateinit var trainingEventService: TrainingEventServiceImpl
     private lateinit var currentUser: AppUser
     private lateinit var defaultCalendar: TrainingCalendar
+
+    private fun createCalendar(
+        id: UUID = UUID.randomUUID(),
+        googleCalendarId: String? = null,
+        displayName: String = "Test Calendar",
+        enabled: Boolean = true
+    ): TrainingCalendar {
+        val cal = TrainingCalendar().apply {
+            this.id = id
+            this.displayName = displayName
+            this.enabled = enabled
+        }
+        if (googleCalendarId != null) {
+            cal.addSource(googleCalendarId, isWriteTarget = true)
+        }
+        return cal
+    }
 
     @BeforeEach
     fun setUp() {
@@ -57,6 +77,7 @@ class TrainingEventServiceTest {
         danceCategoryService = mock(DanceCategoryService::class.java)
         materialService = mock(MaterialService::class.java)
         entityManager = mock(jakarta.persistence.EntityManager::class.java)
+        trainingEventSourceRepository = mock(TrainingEventSourceRepository::class.java)
 
         currentUser = AppUser().apply {
             id = UUID.randomUUID()
@@ -65,12 +86,12 @@ class TrainingEventServiceTest {
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
 
-        defaultCalendar = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            googleCalendarId = "default-cal@group.calendar.google.com"
+        defaultCalendar = createCalendar(
+            googleCalendarId = "default-cal@group.calendar.google.com",
             displayName = "Default Calendar"
-            isDefault = true
-        }
+        )
+        currentUser.defaultCalendar = defaultCalendar
+
         `when`(trainingCalendarService.requireDefault()).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.findDefault()).thenReturn(defaultCalendar)
 
@@ -83,14 +104,15 @@ class TrainingEventServiceTest {
             danceCategoryService,
             materialService,
             entityManager,
-            RichTextServiceImpl()
+            RichTextServiceImpl(),
+            trainingEventSourceRepository
         )
     }
 
     @Test
     fun `should create training event and store the returned google event id`() {
         val request = validRequest()
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-123")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -102,14 +124,14 @@ class TrainingEventServiceTest {
         assertEquals("google-123", result.googleEventId)
         assertEquals(TrainingEventType.TRAINING, result.eventType)
         assertEquals(currentUser, result.createdBy)
-        verify(calendarClient).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+        verify(calendarClient).createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java))
         verify(trainingEventPersistence).insert(any(TrainingEvent::class.java), any(AppUser::class.java))
     }
 
     @Test
     fun `should not persist anything when the calendar create fails`() {
         val request = validRequest()
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenThrow(RuntimeException("Google API unavailable"))
 
         val exception = assertThrows(RuntimeException::class.java) {
@@ -123,7 +145,7 @@ class TrainingEventServiceTest {
     @Test
     fun `should delete the calendar event when the local write fails after creating it`() {
         val request = validRequest()
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-orphan")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenThrow(RuntimeException("DB down"))
@@ -134,17 +156,17 @@ class TrainingEventServiceTest {
 
         assertEquals("DB down", exception.message)
         // The compensating delete is what stops an unmanageable orphan calendar event.
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-orphan")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-orphan")
     }
 
     @Test
     fun `should still rethrow when the compensating delete itself fails`() {
         val request = validRequest()
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-orphan")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenThrow(RuntimeException("DB down"))
-        `when`(calendarClient.deleteEvent(defaultCalendar.googleCalendarId, "google-orphan"))
+        `when`(calendarClient.deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-orphan"))
             .thenThrow(RuntimeException("Google also down"))
 
         val exception = assertThrows(RuntimeException::class.java) {
@@ -162,7 +184,7 @@ class TrainingEventServiceTest {
 
         trainingEventService.delete(event.id!!)
 
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-gone")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-gone")
         verify(trainingEventPersistence).remove(event, currentUser)
     }
 
@@ -187,7 +209,7 @@ class TrainingEventServiceTest {
         val result = trainingEventService.update(event.id!!, validRequest(title = "Renamed practice"))
 
         assertEquals("Renamed practice", result.title)
-        verify(calendarClient).updateEvent(eq(defaultCalendar.googleCalendarId), eq("google-123"), any(TrainingEvent::class.java))
+        verify(calendarClient).updateEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), eq("google-123"), any(TrainingEvent::class.java))
         verify(trainingEventPersistence).applyUpdate(any(TrainingEvent::class.java), any(AppUser::class.java))
     }
 
@@ -239,7 +261,7 @@ class TrainingEventServiceTest {
 
         trainingEventService.delete(event.id!!)
 
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-123")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-123")
     }
 
     @Test
@@ -259,7 +281,7 @@ class TrainingEventServiceTest {
             endDate = LocalDate.of(2026, 9, 12),
             endTime = LocalTime.of(16, 0)
         )
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-camp")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -276,7 +298,7 @@ class TrainingEventServiceTest {
         val latin = category("Latin")
         `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
         `when`(danceCategoryService.findById(latin.id!!)).thenReturn(latin)
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-mixed")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -319,7 +341,7 @@ class TrainingEventServiceTest {
     fun `should allow a style breakdown shorter than the session to leave room for breaks`() {
         val standard = category("Standard")
         `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-break")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -336,7 +358,7 @@ class TrainingEventServiceTest {
     fun `should skip incomplete style rows the user never filled in`() {
         val standard = category("Standard")
         `when`(danceCategoryService.findById(standard.id!!)).thenReturn(standard)
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-partial")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -389,7 +411,7 @@ class TrainingEventServiceTest {
     @Test
     fun `creates in the default calendar`() {
         val request = validRequest()
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-default")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -397,21 +419,13 @@ class TrainingEventServiceTest {
         val created = trainingEventService.create(request)
 
         assertEquals(defaultCalendar, created.calendar)
-        verify(calendarClient).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+        verify(calendarClient).createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java))
     }
 
     @Test
     fun `updates in the event's own calendar while the default is a different one`() {
-        val ownCalendar = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            googleCalendarId = "own-cal@group.calendar.google.com"
-            isDefault = false
-        }
-        val newDefault = TrainingCalendar().apply {
-            id = UUID.randomUUID()
-            googleCalendarId = "new-default@group.calendar.google.com"
-            isDefault = true
-        }
+        val ownCalendar = createCalendar(googleCalendarId = "own-cal@group.calendar.google.com")
+        val newDefault = createCalendar(googleCalendarId = "new-default@group.calendar.google.com")
         `when`(trainingCalendarService.requireDefault()).thenReturn(newDefault)
 
         val event = existingEvent("google-own").apply { calendar = ownCalendar }
@@ -436,7 +450,7 @@ class TrainingEventServiceTest {
         val updated = trainingEventService.update(event.id!!, validRequest(title = "Updated Legacy"))
 
         assertEquals(defaultCalendar, updated.calendar)
-        verify(calendarClient).updateEvent(eq(defaultCalendar.googleCalendarId), eq("google-legacy"), any(TrainingEvent::class.java))
+        verify(calendarClient).updateEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), eq("google-legacy"), any(TrainingEvent::class.java))
 
         val captor = ArgumentCaptor.forClass(TrainingEvent::class.java)
         verify(trainingEventPersistence).applyUpdate(capture(captor, TrainingEvent()), any(AppUser::class.java))
@@ -466,14 +480,13 @@ class TrainingEventServiceTest {
     @Test
     fun `creating with explicit calendarId uses that calendar, not the default`() {
         val customCalId = UUID.randomUUID()
-        val customCalendar = TrainingCalendar().apply {
-            id = customCalId
-            googleCalendarId = "custom-cal@group.calendar.google.com"
+        val customCalendar = createCalendar(
+            id = customCalId,
+            googleCalendarId = "custom-cal@group.calendar.google.com",
             displayName = "Custom Calendar"
-            enabled = true
-        }
+        )
         `when`(trainingCalendarService.findById(customCalId)).thenReturn(customCalendar)
-        `when`(calendarClient.createEvent(eq(customCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(customCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-custom")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -484,12 +497,12 @@ class TrainingEventServiceTest {
         assertEquals(customCalendar, result.calendar)
         assertEquals("google-custom", result.googleEventId)
         verify(calendarClient).createEvent(eq("custom-cal@group.calendar.google.com"), any(TrainingEvent::class.java))
-        verify(calendarClient, never()).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+        verify(calendarClient, never()).createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java))
     }
 
     @Test
     fun `creating with null calendarId uses the default calendar`() {
-        `when`(calendarClient.createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java)))
+        `when`(calendarClient.createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java)))
             .thenReturn("google-def")
         `when`(trainingEventPersistence.insert(any(TrainingEvent::class.java), any(AppUser::class.java)))
             .thenAnswer { it.getArgument<TrainingEvent>(0) }
@@ -499,18 +512,18 @@ class TrainingEventServiceTest {
 
         assertEquals(defaultCalendar, result.calendar)
         verify(trainingCalendarService).requireDefault()
-        verify(calendarClient).createEvent(eq(defaultCalendar.googleCalendarId), any(TrainingEvent::class.java))
+        verify(calendarClient).createEvent(eq(defaultCalendar.requireWriteTarget().googleCalendarId), any(TrainingEvent::class.java))
     }
 
     @Test
     fun `creating with disabled calendar is rejected`() {
         val disabledCalId = UUID.randomUUID()
-        val disabledCalendar = TrainingCalendar().apply {
-            id = disabledCalId
-            googleCalendarId = "disabled-cal@group.calendar.google.com"
-            displayName = "Disabled Calendar"
+        val disabledCalendar = createCalendar(
+            id = disabledCalId,
+            googleCalendarId = "disabled-cal@group.calendar.google.com",
+            displayName = "Disabled Calendar",
             enabled = false
-        }
+        )
         `when`(trainingCalendarService.findById(disabledCalId)).thenReturn(disabledCalendar)
 
         val request = validRequest(calendarId = disabledCalId)
@@ -528,21 +541,36 @@ class TrainingEventServiceTest {
         val calendarId = UUID.randomUUID()
         val from = LocalDateTime.now()
         val to = from.plusDays(7)
+        `when`(trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)).thenReturn(defaultCalendar)
         `when`(
             trainingEventRepository
-                .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
-                    currentUser, calendarId, to, from
+                .findAllByCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                    calendarId, to, from
                 )
         ).thenReturn(emptyList())
 
         trainingEventService.findInRange(from, to, calendarId)
 
         verify(trainingEventRepository)
-            .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
-                currentUser, calendarId, to, from
+            .findAllByCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                calendarId, to, from
             )
         verify(trainingEventRepository, never())
             .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
+    }
+
+    @Test
+    fun `findInRange returns empty when calendar is not visible`() {
+        val calendarId = UUID.randomUUID()
+        val from = LocalDateTime.now()
+        val to = from.plusDays(7)
+        `when`(trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)).thenReturn(null)
+
+        val result = trainingEventService.findInRange(from, to, calendarId)
+
+        assertTrue(result.isEmpty())
+        verify(trainingEventRepository, never())
+            .findAllByCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(any(UUID::class.java), any(LocalDateTime::class.java), any(LocalDateTime::class.java))
     }
 
     @Test
@@ -673,8 +701,8 @@ class TrainingEventServiceTest {
         assertEquals(2, result.deletedCount)
         assertEquals(0, result.failedCount)
         assertEquals("Deleted 2 sessions.", result.message)
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-2")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-2")
         verify(trainingEventPersistence).bulkRemove(listOf(event1, event2), currentUser)
     }
 
@@ -685,16 +713,16 @@ class TrainingEventServiceTest {
         val event3 = existingEvent("google-3")
         val ids = listOf(event1.id!!, event2.id!!, event3.id!!)
         `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2, event3))
-        doThrow(RuntimeException("Google API 500 error")).`when`(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
+        doThrow(RuntimeException("Google API 500 error")).`when`(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-fail")
 
         val result = trainingEventService.bulkDelete(ids)
 
         assertEquals(2, result.deletedCount)
         assertEquals(1, result.failedCount)
         assertEquals("Deleted 2 sessions (1 session could not be deleted).", result.message)
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-1")
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-fail")
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-3")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-fail")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-3")
         verify(trainingEventPersistence).bulkRemove(listOf(event1, event3), currentUser)
     }
 
@@ -728,8 +756,8 @@ class TrainingEventServiceTest {
         assertEquals(1, result.deletedCount)
         assertEquals(0, result.failedCount)
         assertEquals("Deleted 1 session.", result.message)
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-own")
-        verify(calendarClient, never()).deleteEvent(defaultCalendar.googleCalendarId, "google-foreign")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-own")
+        verify(calendarClient, never()).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-foreign")
         verify(trainingEventPersistence).bulkRemove(listOf(ownEvent), currentUser)
     }
 
@@ -748,7 +776,7 @@ class TrainingEventServiceTest {
 
         assertEquals(1, result.deletedCount)
         assertEquals(0, result.failedCount)
-        verify(calendarClient).deleteEvent(defaultCalendar.googleCalendarId, "google-foreign")
+        verify(calendarClient).deleteEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-foreign")
         verify(trainingEventPersistence).bulkRemove(listOf(foreignEvent), currentUser)
     }
 
@@ -795,8 +823,8 @@ class TrainingEventServiceTest {
         assertEquals("Updated event type for 2 sessions.", result.message)
         assertEquals(TrainingEventType.WORKSHOP, event1.eventType)
         assertEquals(TrainingEventType.WORKSHOP, event2.eventType)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-2", event2)
         verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "event type", currentUser)
     }
 
@@ -807,7 +835,7 @@ class TrainingEventServiceTest {
         val ids = listOf(event1.id!!, event2.id!!)
         `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
         doThrow(RuntimeException("Google 500")).`when`(calendarClient)
-            .updateEvent(defaultCalendar.googleCalendarId, "google-fail", event2)
+            .updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-fail", event2)
 
         val result = trainingEventService.bulkUpdateEventType(ids, TrainingEventType.WORKSHOP)
 
@@ -842,8 +870,8 @@ class TrainingEventServiceTest {
 
         assertEquals(1, result.updatedCount)
         assertEquals("Updated event type for 1 session.", result.message)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-own", ownEvent)
-        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-foreign", foreignEvent)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-own", ownEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-foreign", foreignEvent)
         verify(trainingEventPersistence).bulkUpdate(listOf(ownEvent), "event type", currentUser)
     }
 
@@ -879,8 +907,8 @@ class TrainingEventServiceTest {
         assertEquals("Updated style breakdown for 2 sessions.", result.message)
         assertEquals(1, event1.segments.size)
         assertEquals(60, event1.segments[0].durationMinutes)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-2", event2)
         verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "style breakdown", currentUser)
     }
 
@@ -906,8 +934,8 @@ class TrainingEventServiceTest {
             "Updated style breakdown for 1 session (1 session was skipped because the style breakdown exceeds its duration).",
             result.message
         )
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-long", longEvent)
-        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-short", shortEvent)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-long", longEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-short", shortEvent)
         verify(trainingEventPersistence).bulkUpdate(listOf(longEvent), "style breakdown", currentUser)
     }
 
@@ -961,8 +989,8 @@ class TrainingEventServiceTest {
         assertEquals("https://example.com/video", event1.materialsUrl)
         assertEquals(material, event2.material)
         assertEquals("https://example.com/video", event2.materialsUrl)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-2", event2)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-2", event2)
         verify(trainingEventPersistence).bulkUpdate(listOf(event1, event2), "material", currentUser)
     }
 
@@ -987,7 +1015,7 @@ class TrainingEventServiceTest {
         assertEquals("Updated material for 1 session.", result.message)
         assertEquals(null, event1.material)
         assertEquals(null, event1.materialsUrl)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-1", event1)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-1", event1)
         verify(trainingEventPersistence).bulkUpdate(listOf(event1), "material", currentUser)
     }
 
@@ -1001,7 +1029,7 @@ class TrainingEventServiceTest {
         val ids = listOf(event1.id!!, event2.id!!)
         `when`(trainingEventRepository.findAllByIdIn(ids)).thenReturn(listOf(event1, event2))
         doThrow(RuntimeException("Google 500")).`when`(calendarClient)
-            .updateEvent(defaultCalendar.googleCalendarId, "google-fail", event2)
+            .updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-fail", event2)
 
         val result = trainingEventService.bulkUpdateMaterial(
             sessionIds = ids,
@@ -1032,8 +1060,8 @@ class TrainingEventServiceTest {
         )
 
         assertEquals(1, result.updatedCount)
-        verify(calendarClient).updateEvent(defaultCalendar.googleCalendarId, "google-own", ownEvent)
-        verify(calendarClient, never()).updateEvent(defaultCalendar.googleCalendarId, "google-foreign", foreignEvent)
+        verify(calendarClient).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-own", ownEvent)
+        verify(calendarClient, never()).updateEvent(defaultCalendar.requireWriteTarget().googleCalendarId, "google-foreign", foreignEvent)
         verify(trainingEventPersistence).bulkUpdate(listOf(ownEvent), "material", currentUser)
     }
 

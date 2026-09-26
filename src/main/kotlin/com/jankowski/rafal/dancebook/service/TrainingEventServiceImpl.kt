@@ -12,11 +12,15 @@ import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
+import com.jankowski.rafal.dancebook.model.TrainingEventSource
+import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSpecification
 import jakarta.persistence.EntityManager
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -38,7 +42,8 @@ class TrainingEventServiceImpl(
     private val danceCategoryService: DanceCategoryService,
     private val materialService: MaterialService,
     private val entityManager: EntityManager,
-    private val richTextService: RichTextService
+    private val richTextService: RichTextService,
+    private val trainingEventSourceRepository: TrainingEventSourceRepository
 ) : TrainingEventService {
 
     companion object {
@@ -56,6 +61,13 @@ class TrainingEventServiceImpl(
         val currentUser = appUserService.getCurrentUser()
         log.debug("Retrieving training events for user '{}'", currentUser.username)
 
+        if (calendarId != null) {
+            val cal = trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
+            if (cal == null) {
+                return emptyList()
+            }
+        }
+
         val specification = TrainingEventSpecification.withFilters(
             createdBy = currentUser,
             eventTypes = eventTypes,
@@ -70,9 +82,14 @@ class TrainingEventServiceImpl(
 
     override fun findById(id: UUID): TrainingEvent {
         log.debug("Retrieving training event for id {}", id)
-        return trainingEventRepository.findById(id).orElseThrow {
+        val event = trainingEventRepository.findById(id).orElseThrow {
             EntityNotFoundException("Could not find training event with id $id")
         }
+        val currentUser = try { appUserService.getCurrentUser() } catch (e: Exception) { null }
+        if (currentUser != null) {
+            checkVisibility(event, currentUser)
+        }
+        return event
     }
 
     override fun create(request: TrainingEventRequest): TrainingEvent {
@@ -87,16 +104,26 @@ class TrainingEventServiceImpl(
 
         val cal = resolveCalendar(request.calendarId)
         event.calendar = cal
-        val googleEventId = calendarClient.createEvent(cal.googleCalendarId, event)
+        val targetGoogleCalId = cal.requireWriteTarget().googleCalendarId
+        val googleEventId = calendarClient.createEvent(targetGoogleCalId, event)
         event.googleEventId = googleEventId
 
         return try {
-            trainingEventPersistence.insert(event, currentUser)
+            val inserted = trainingEventPersistence.insert(event, currentUser)
+            val writeTarget = cal.writeTarget
+            if (writeTarget != null && inserted.id != null && !googleEventId.isNullOrBlank()) {
+                trainingEventSourceRepository.save(TrainingEventSource().apply {
+                    this.trainingEvent = inserted
+                    this.calendarSource = writeTarget
+                    this.googleEventId = googleEventId
+                })
+            }
+            inserted
         } catch (e: Exception) {
             // The calendar event exists but the local row does not. Roll the calendar back
             // so we don't leave an orphan the app can never see or manage again.
             log.error("Local write failed after creating calendar event {} — compensating", googleEventId, e)
-            runCatching { calendarClient.deleteEvent(cal.googleCalendarId, googleEventId) }
+            runCatching { calendarClient.deleteEvent(targetGoogleCalId, googleEventId) }
                 .onFailure { log.error("Compensating delete failed for {}; orphan calendar event left behind", googleEventId, it) }
             throw e
         }
@@ -104,20 +131,23 @@ class TrainingEventServiceImpl(
 
     override fun update(id: UUID, request: TrainingEventRequest): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
-        val event = findById(id)
+        val event = trainingEventRepository.findById(id).orElseThrow {
+            EntityNotFoundException("Could not find training event with id $id")
+        }
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' updating training event '{}'", currentUser.username, event.title)
         applyRequest(event, request, currentUser)
 
         val cal = calendarOf(event)
+        val targetGoogleCalId = cal.requireWriteTarget().googleCalendarId
         val googleEventId = event.googleEventId
         if (googleEventId != null) {
-            calendarClient.updateEvent(cal.googleCalendarId, googleEventId, event)
+            calendarClient.updateEvent(targetGoogleCalId, googleEventId, event)
         } else {
             // Only reachable if a previous create was interrupted between the two writes.
             log.warn("Training event {} has no google event id; creating one now", id)
-            event.googleEventId = calendarClient.createEvent(cal.googleCalendarId, event)
+            event.googleEventId = calendarClient.createEvent(targetGoogleCalId, event)
         }
 
         return try {
@@ -135,7 +165,9 @@ class TrainingEventServiceImpl(
 
     override fun updateAttendance(id: UUID, status: AttendanceStatus): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
-        val event = findById(id)
+        val event = trainingEventRepository.findById(id).orElseThrow {
+            EntityNotFoundException("Could not find training event with id $id")
+        }
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' marking training event '{}' as {}", currentUser.username, event.title, status)
@@ -190,13 +222,14 @@ class TrainingEventServiceImpl(
         // Only delete sessions belonging to the current user (or if admin)
         val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
 
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
         var failedCount = 0
 
         for (event in ownedEvents) {
             try {
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId
+                    ?: defaultGoogleCalId
                 if (event.googleEventId != null) {
                     if (googleCalId != null) {
                         calendarClient.deleteEvent(googleCalId, event.googleEventId!!)
@@ -240,7 +273,7 @@ class TrainingEventServiceImpl(
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
         val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
 
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
         var failedCount = 0
 
@@ -248,7 +281,8 @@ class TrainingEventServiceImpl(
             try {
                 event.eventType = eventType
                 event.updatedAt = LocalDateTime.now()
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId
+                    ?: defaultGoogleCalId
                 if (event.googleEventId != null) {
                     if (googleCalId != null) {
                         calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
@@ -306,7 +340,7 @@ class TrainingEventServiceImpl(
             totalSegmentMinutes <= slotMinutes
         }
 
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
         var failedCount = 0
 
@@ -314,7 +348,8 @@ class TrainingEventServiceImpl(
             try {
                 applySegmentsList(event, requested)
                 event.updatedAt = LocalDateTime.now()
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId
+                    ?: defaultGoogleCalId
                 if (event.googleEventId != null) {
                     if (googleCalId != null) {
                         calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
@@ -373,7 +408,7 @@ class TrainingEventServiceImpl(
         val resolvedMaterial = if (!clearMaterial && materialId != null) materialService.findById(materialId) else null
         val resolvedUrl = if (!clearMaterial) materialsUrl?.takeIf { it.isNotBlank() } else null
 
-        val defaultGoogleCalId = trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
         var failedCount = 0
 
@@ -382,7 +417,8 @@ class TrainingEventServiceImpl(
                 event.material = resolvedMaterial
                 event.materialsUrl = resolvedUrl
                 event.updatedAt = LocalDateTime.now()
-                val googleCalId = event.calendar?.googleCalendarId ?: defaultGoogleCalId
+                val googleCalId = event.calendar?.writeTarget?.googleCalendarId
+                    ?: defaultGoogleCalId
                 if (event.googleEventId != null) {
                     if (googleCalId != null) {
                         calendarClient.updateEvent(googleCalId, event.googleEventId!!, event)
@@ -416,7 +452,9 @@ class TrainingEventServiceImpl(
 
     override fun reschedule(id: UUID, start: LocalDateTime, end: LocalDateTime): TrainingEvent {
         val currentUser = appUserService.getCurrentUser()
-        val event = findById(id)
+        val event = trainingEventRepository.findById(id).orElseThrow {
+            EntityNotFoundException("Could not find training event with id $id")
+        }
         checkOwnership(event, currentUser)
         require(end.isAfter(start)) { "End time must be after the start time" }
 
@@ -435,7 +473,8 @@ class TrainingEventServiceImpl(
         event.updatedAt = LocalDateTime.now()
 
         val cal = calendarOf(event)
-        event.googleEventId?.let { calendarClient.updateEvent(cal.googleCalendarId, it, event) }
+        val targetGoogleCalId = cal.requireWriteTarget().googleCalendarId
+        event.googleEventId?.let { calendarClient.updateEvent(targetGoogleCalId, it, event) }
         return trainingEventPersistence.applyUpdate(event, currentUser)
     }
 
@@ -451,19 +490,24 @@ class TrainingEventServiceImpl(
                 currentUser, to, from
             )
         } else {
-            trainingEventRepository.findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
-                currentUser, calendarId, to, from
+            trainingCalendarService.findByIdVisibleTo(calendarId, currentUser) ?: return emptyList()
+            trainingEventRepository.findAllByCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                calendarId, to, from
             )
         }
     }
 
     override fun delete(id: UUID) {
         val currentUser = appUserService.getCurrentUser()
-        val event = findById(id)
+        val event = trainingEventRepository.findById(id).orElseThrow {
+            EntityNotFoundException("Could not find training event with id $id")
+        }
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' deleting training event '{}'", currentUser.username, event.title)
-        val googleCalId = event.calendar?.googleCalendarId ?: trainingCalendarService.findDefault()?.googleCalendarId
+        val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
+        val googleCalId = event.calendar?.writeTarget?.googleCalendarId
+            ?: defaultGoogleCalId
         if (event.googleEventId != null) {
             if (googleCalId != null) {
                 calendarClient.deleteEvent(googleCalId, event.googleEventId!!)
@@ -478,18 +522,47 @@ class TrainingEventServiceImpl(
      * An existing session is written to its own calendar; a row that predates the backfill
      * adopts the default and records it, so the next write is unambiguous.
      */
-    private fun calendarOf(event: TrainingEvent): TrainingCalendar =
-        (event.calendar ?: trainingCalendarService.requireDefault()).also { event.calendar = it }
+    private fun calendarOf(event: TrainingEvent): TrainingCalendar {
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val defaultCal = try {
+            currentUser?.let { trainingCalendarService.findDefault(it) }
+        } catch (e: Exception) {
+            null
+        } ?: trainingCalendarService.findDefault()
+        return (event.calendar ?: defaultCal ?: trainingCalendarService.requireDefault(currentUser)).also { event.calendar = it }
+    }
 
     private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
+        val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
-            trainingCalendarService.findById(calendarId)
-                ?: throw IllegalArgumentException("Training calendar with id $calendarId not found")
+            trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
+                ?: trainingCalendarService.findById(calendarId)
+                ?: throw EntityNotFoundException("Training calendar with id $calendarId not found")
         } else {
-            trainingCalendarService.requireDefault()
+            val userDefault = try {
+                trainingCalendarService.requireDefault(currentUser)
+            } catch (e: CalendarSyncException) {
+                throw e
+            } catch (e: Exception) {
+                null
+            }
+            userDefault ?: trainingCalendarService.requireDefault()
         }
         require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
+        if (currentUser.role != Role.ADMIN && cal.visibility != Visibility.PUBLIC && cal.owner != null && cal.owner?.id != currentUser.id) {
+            throw IllegalStateException("You don't have permission to add sessions to this calendar")
+        }
         return cal
+    }
+
+    private fun checkVisibility(event: TrainingEvent, currentUser: AppUser) {
+        if (currentUser.role == Role.ADMIN) return
+        val cal = event.calendar
+        if (cal == null || cal.visibility == Visibility.PUBLIC) return
+        if (cal.owner?.id == currentUser.id) return
+        if (event.createdBy?.id == currentUser.id) return
+        if (event.attendances.any { it.user?.id == currentUser.id }) return
+        throw EntityNotFoundException("Could not find training event with id ${event.id}")
     }
 
     private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest, user: AppUser) {

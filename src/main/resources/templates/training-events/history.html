@@ -11,7 +11,16 @@
         </div>
     </div>
 
-    <th:block th:if="${history.isEmpty}">
+    <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
+        <div th:replace="~{fragments/empty :: emptyState(
+            icon='calendar_month',
+            title='No calendars connected',
+            text='Connect your Google Calendar to start tracking training sessions.',
+            actionHref='/training-calendars/new',
+            actionLabel='Connect Calendar')}"></div>
+    </th:block>
+
+    <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && history.isEmpty}">
         <div th:replace="~{fragments/empty :: emptyState(icon='history', title='No confirmed training yet', text='Mark a session attended or skipped and it is recorded here for good — deleting the session afterwards will not take it away.', actionHref='/training-events', actionLabel='Go to sessions')}"></div>
     </th:block>
 

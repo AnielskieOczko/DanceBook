@@ -11,6 +11,16 @@
         </div>
     </div>
 
+    <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
+        <div th:replace="~{fragments/empty :: emptyState(
+            icon='calendar_month',
+            title='No calendars connected',
+            text='Connect your Google Calendar to start tracking training sessions.',
+            actionHref='/training-calendars/new',
+            actionLabel='Connect Calendar')}"></div>
+    </th:block>
+
+    <th:block th:unless="${selectableCalendars == null || selectableCalendars.isEmpty()}">
     <!-- Period selector. Plain links, so the charts initialise once per page load
          instead of having to be destroyed and rebuilt on an HTMX swap. -->
     <div class="chip-group">
@@ -98,6 +108,7 @@
             </div>
         </div>
     </div>
+    </th:block>
 
     <!-- Chart.js comes from unpkg because script-src allows that origin and nothing else
          external; a jsdelivr or cdnjs URL would be blocked with no visible error. -->
