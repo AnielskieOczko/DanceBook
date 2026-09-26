@@ -586,7 +586,7 @@ Choreographies contain only figures and section labels, which are always public.
 with what is shown. Each `ActivityEvent` also stores `target_visibility`: once a note is
 deleted there is nothing left to join to, and the entry is shown to other users only if the
 note was public when it was deleted. Feed entries about figures and training sessions are not
-filtered — per-user calendars are #154 and #155.
+filtered yet — calendar visibility (#154) is not applied to the feed.
 
 **A new entity that users own gets the same shape:** `owner` + `visibility`, a
 `<Entity>Specification.visibleTo`/`byId` pair that reads the `share` table under its own
@@ -669,8 +669,10 @@ This groundwork lets two people share a session once calendars are shared (#154,
   their outcomes. `orphan` stamps every attendee's record when a session is deleted.
   `TrainingRecordRepository` has no single-record lookup by session, because more than one
   record can now exist per session.
-- **Who can reach a session has not changed.** Lists, the calendar range, the timeline and
-  stats are still scoped to sessions the current user created. Only the owner or an admin can
+- **Who can reach a session.** Lists, the timeline and stats are still scoped to sessions the
+  current user created. Since #154 the calendar *range* view of a selected calendar shows every
+  session on it when the calendar is visible to the user (see *Calendars are owned* below), and
+  a session's detail page is reachable through its calendar. Only the owner or an admin can
   record attendance, singly or in bulk, and the write always goes to the *acting* user's row.
   As a result, an admin marking someone else's session records the admin's own attendance, not
   the owner's. The first round of #153 had widened lists to "created by me, or I have an
@@ -689,6 +691,45 @@ This groundwork lets two people share a session once calendars are shared (#154,
   pins the backfill, and `TrainingAttendancePerUserIntegrationTest` covers two users on one
   session: separate outcomes, stats and history, a refused non-owner, and both records orphaned
   on delete.
+
+### Calendars are owned, with sources and a per-user default
+
+Since #154 a `TrainingCalendar` has an `owner`, a `visibility` (`PRIVATE` by default) and a
+`color`, and follows the owned-entity shape above: `TrainingCalendarSpecification.visibleTo`
+and `byId`, `TrainingCalendarService.findByIdVisibleTo`, and `checkOwnership` on every change.
+Owners manage their calendars on `/training-calendars` (`TrainingCalendarWebController`);
+`/admin/calendars` remains the admin view.
+
+- **A calendar gathers Google calendars as `CalendarSource` rows**, one to many, replacing the
+  old one-to-one `google_calendar_id`. **Exactly one source is the write target**
+  (`is_write_target`, enforced by a partial unique index): sessions created in DanceBook, and
+  deletions made in DanceBook, go there. The other sources are inbound only. Use
+  `calendar.requireWriteTarget()`; `writeTarget` is null rather than guessing the first source.
+- **Linking checks Google first.** Adding a source or changing the write target calls
+  `GoogleCalendarClient.verifyCalendar(id, requireWrite)` with the app-level client, and saves
+  nothing if DanceBook cannot read the calendar (or write it, for the write target). In v1 a
+  user links a calendar by sharing it with DanceBook's Google account; per-user OAuth is later.
+- **Inbound sync runs per source**, each with its own sync token. `training_event_source`
+  records which source an event came from and its Google event id there, and an event present
+  in several sources is merged into one session by `iCalUID`, so it appears once. The Google
+  mirror guarantee still holds per source: a deletion in any source is mirrored.
+- **The default calendar is per user**: `app_user.default_calendar_id` replaced the global
+  `is_default`. Ask `calendar.isDefaultFor(user)`. Deleting or disabling your default moves it
+  to another of your calendars. `findDefault` falls back without saving; the default is only
+  persisted by write actions.
+- **A new user has no calendars.** With no visible calendar, every Training view shows a
+  "No calendars connected" empty state and hides Add Session and Sync now.
+- **Publishing asks for confirmation**: every DanceBook user will see all events from those
+  Google calendars.
+- **V35** gave existing calendars to the first admin, made a calendar `PUBLIC` when other users
+  already had sessions or attendance on it, turned each `google_calendar_id` into that
+  calendar's write-target source, and backfilled defaults for owners and for users of calendars
+  that became public.
+- **Known gaps (#170):** creating a session resolves its calendar with a fallback
+  to the unfiltered `findById`, so another user's private calendar can be named by id; and a
+  session's detail page is checked by `TrainingEventServiceImpl.checkVisibility`, a second,
+  in-memory copy of the calendar rule. Both should go through `findByIdVisibleTo`. Calendar
+  members and subscriptions are #155.
 
 ### LLM providers
 
@@ -959,6 +1000,8 @@ ask — nobody is reading the run live, so a question ends the run without an an
   `templates/dance-figures/list.html` (`figuresTable`) plus the `js-sort-header` handler in
   `static/js/main.js`
 - Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
+- User-owned settings page with an htmx confirmation dialog →
+  `controller/web/TrainingCalendarWebController.kt` plus `templates/training-calendars/`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
   slot, `form.html` for a bound field, `table.html` for a dense table)
 - Several views of one section under one nav item → `fragments/page.html :: viewSwitcher`
