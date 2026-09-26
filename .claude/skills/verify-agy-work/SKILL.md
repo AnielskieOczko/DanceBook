@@ -116,7 +116,7 @@ Then **resume the same conversation** — this reuses the cached context instead
 re-paying ~31k tokens of onboarding:
 
 ```bash
-cd ../DanceBook-agy-<N> && agy --add-dir "$PWD" \
+cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
     --conversation <conversation_id> --output-format json --print-timeout 45m \
     -p='Read .agy-review.md and address every numbered item. Update .agy-plan.md to match what you actually did. Then re-run ./gradlew build. The runtime will send it to the background - that is normal, so do not relaunch it; wait for its completion notification and fix failures until it passes. End your reply by quoting the last two lines of that build verbatim.' \
     > .agy-run.json 2>&1
@@ -153,6 +153,6 @@ throwaway clone. Then delete the clone and take it out of the session's director
 
 ```bash
 rm -rf ../DanceBook-agy-<N>
-f=.claude/settings.local.json
-jq '.permissions.additionalDirectories -= ["../DanceBook-agy-<N>"]' $f > $f.tmp && mv $f.tmp $f
+jq '.permissions.additionalDirectories -= ["../DanceBook-agy-<N>"]' .claude/settings.local.json > .claude/settings.local.json.tmp \
+  && mv .claude/settings.local.json.tmp .claude/settings.local.json
 ```
