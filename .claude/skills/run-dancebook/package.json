@@ -1,0 +1,9 @@
+{
+  "name": "run-dancebook",
+  "private": true,
+  "description": "Headless browser driver for the run-dancebook skill",
+  "type": "module",
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}
