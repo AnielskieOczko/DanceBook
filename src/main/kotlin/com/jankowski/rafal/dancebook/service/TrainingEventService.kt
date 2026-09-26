@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.BulkAttendanceResult
 import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
 import com.jankowski.rafal.dancebook.dto.BulkEditResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -39,6 +40,9 @@ interface TrainingEventService {
     fun update(id: UUID, request: TrainingEventRequest): TrainingEvent
 
     fun updateAttendance(id: UUID, status: AttendanceStatus): TrainingEvent
+
+    /** Whether [user] may edit, move or delete [event]: the calendar's owner, its author, or an admin. */
+    fun canModify(event: TrainingEvent, user: AppUser): Boolean
 
     fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult
 

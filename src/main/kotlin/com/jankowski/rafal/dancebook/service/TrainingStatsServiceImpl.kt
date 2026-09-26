@@ -57,13 +57,11 @@ class TrainingStatsServiceImpl(
             trainingRecordRepository
                 .findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
         }
-        val allEvents = if (calendarId == null) {
-            trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser)
-        } else {
-            trainingEventRepository.findAll(
-                TrainingEventSpecification.withFilters(user = currentUser, calendarId = calendarId)
-            ).distinctBy { it.icalUid ?: it.id }
-        }
+        // Sessions on every calendar the user owns or follows (#155). The same Google event in
+        // two followed calendars is counted once.
+        val allEvents = trainingEventRepository.findAll(
+            TrainingEventSpecification.withFilters(user = currentUser, calendarId = calendarId)
+        ).distinctBy { it.icalUid ?: it.id }
         log.debug("Computing {} training stats for user '{}'", period, currentUser.username)
 
         // One "today" for the whole computation: a render straddling midnight must not judge

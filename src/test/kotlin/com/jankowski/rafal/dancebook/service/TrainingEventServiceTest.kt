@@ -617,17 +617,18 @@ class TrainingEventServiceTest {
     }
 
     @Test
-    fun `findInRange stays unscoped under All calendars`() {
+    fun `findInRange under All calendars covers every calendar the user owns or follows`() {
         val from = LocalDateTime.now()
         val to = from.plusDays(7)
-        `when`(
-            trainingEventRepository
-                .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
-        ).thenReturn(emptyList())
+        `when`(trainingEventRepository.findAll(anySpec()))
+            .thenReturn(emptyList())
 
         trainingEventService.findInRange(from, to, null)
 
-        verify(trainingEventRepository)
+        // Through the membership rule, not "sessions I created", or a followed calendar's
+        // sessions would be missing from the grid (#155).
+        verify(trainingEventRepository).findAll(anySpec())
+        verify(trainingEventRepository, never())
             .findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(currentUser, to, from)
         verify(trainingEventRepository, never())
             .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
@@ -1149,4 +1150,8 @@ class TrainingEventServiceTest {
 
     // Mockito.eq returns null, which Kotlin rejects for a non-null parameter type.
     private fun <T> eq(value: T): T = org.mockito.Mockito.eq(value) ?: value
+
+    /** A typed matcher for any session Specification; the raw class would lose its type argument. */
+    private fun anySpec(): org.springframework.data.jpa.domain.Specification<TrainingEvent> =
+        org.mockito.ArgumentMatchers.any<org.springframework.data.jpa.domain.Specification<TrainingEvent>>() ?: org.springframework.data.jpa.domain.Specification { _, _, _ -> null }
 }

@@ -591,8 +591,10 @@ Choreographies contain only figures and section labels, which are always public.
 `COUNT` and the history page is paginated, so filtering loaded rows would make both disagree
 with what is shown. Each `ActivityEvent` also stores `target_visibility`: once a note is
 deleted there is nothing left to join to, and the entry is shown to other users only if the
-note was public when it was deleted. Feed entries about figures and training sessions are not
-filtered yet — calendar visibility (#154) is not applied to the feed.
+note was public when it was deleted. Feed entries about training sessions are filtered by
+calendar membership (#155): each one stores the session's `calendar_id`, and a user sees it
+only for a calendar they own or actively belong to, so a deleted session still has something
+to match. Figures are public, so their entries are not filtered.
 
 **A new entity that users own gets the same shape:** `owner` + `visibility`, a
 `<Entity>Specification.visibleTo`/`byId` pair that reads the `share` table under its own
@@ -675,17 +677,17 @@ This groundwork lets two people share a session once calendars are shared (#154,
   their outcomes. `orphan` stamps every attendee's record when a session is deleted.
   `TrainingRecordRepository` has no single-record lookup by session, because more than one
   record can now exist per session.
-- **Who can reach a session.** Lists, the timeline and stats are still scoped to sessions the
-  current user created. Since #154 the calendar *range* view of a selected calendar shows every
-  session on it when the calendar is visible to the user (see *Calendars are owned* below), and
-  a session's detail page is reachable only through its calendar: since #170, having created
-  the session or holding an attendance row on it grants nothing on its own. Only the owner or an admin can
-  record attendance, singly or in bulk, and the write always goes to the *acting* user's row.
-  As a result, an admin marking someone else's session records the admin's own attendance, not
-  the owner's. The first round of #153 had widened lists to "created by me, or I have an
-  attendance row" and dropped the ownership check, which let anyone pull any session into
-  their own views. Member access belongs to #155, through calendar membership, not attendance
-  rows.
+- **Who can reach a session.** Since #155 a session is reached through its calendar, never
+  through who created it or who holds an attendance row on it. The list, the calendar grid,
+  the timeline, stats and the dashboard all go through `TrainingEventSpecification.withFilters(
+  user = …)`: sessions on calendars the user owns or actively belongs to, plus their own older
+  sessions with no calendar. A session's detail page checks its calendar with
+  `findByIdVisibleTo` (#170). Owners and active members record attendance, singly or in bulk,
+  and the write always goes to the *acting* user's row; an admin may too, and records their
+  own attendance, not the owner's. The first round of #153 had widened lists to "created by me,
+  or I have an attendance row", which let anyone pull any session into their own views, and
+  the first round of #155 had put the grid, stats and timeline back to "created by me", which
+  left a subscriber's views empty.
 - **Google Calendar sync never reads or writes attendance.** `CalendarReconciler` creates
   sessions without a status, and a synced update or delete reaches history only through
   `syncEventDetails` and `orphan`.
@@ -737,9 +739,53 @@ Owners manage their calendars on `/training-calendars` (`TrainingCalendarWebCont
   calendar the user cannot see is a 404 and nothing is written to DanceBook or Google. The web
   controller rethrows `EntityNotFoundException` rather than turning it into a form error.
   `TrainingEventServiceImpl.findById` checks the session's calendar the same way; there is no
-  in-memory copy of the rule. Non-owners can still add sessions to a `PUBLIC` calendar, and a
-  private calendar with no owner is reachable only by admins. Calendar members and
-  subscriptions are #155.
+  in-memory copy of the rule. A calendar that is visible but not yours is then refused with a
+  403: only its owner (or an admin) adds sessions to it, since #155. A private calendar with
+  no owner is reachable only by admins.
+
+### Calendar members and subscriptions
+
+Since #155 a calendar can be shared. `calendar_member` (V36, `model/CalendarMember.kt`) holds a
+`role` (`OWNER` or `VIEWER`; `EDITOR` is later) and a `state` (`INVITED` or `ACTIVE`), with
+`CalendarMemberService` for every change. **`training_calendar.owner` stays the only record of
+ownership**: the owner has no member row, so ask `calendar.owner` and do not add one.
+
+- **Two rules, not one.** `TrainingCalendarSpecification.visibleTo` says who may *open* a
+  calendar: owner, active members, share grantees, anyone for `PUBLIC`, and admins.
+  `memberOf` and `TrainingCalendarService.findAllForUser` / `isMemberOf` say which calendars
+  are *yours*: owned or actively joined. Only yours feed the agenda, grid, timeline, stats,
+  dashboard and selector, for admins too; the admin override covers opening and managing a
+  calendar, not filling their personal views. `ActiveCalendarService.active()` drops a stored
+  selection that is no longer yours.
+- **Invites.** The owner invites by username or email on the calendar's edit page. An email
+  with no account becomes a row with `invited_email` and no user, and
+  `CalendarInviteLoginListener` claims it on that person's next login. No email is sent.
+  Pending invites are accepted or declined on `/training-calendars`.
+- **Subscriptions.** `/training-calendars` lists public calendars with Subscribe, which
+  creates an `ACTIVE` viewer row directly. Unsubscribing or being removed keeps the user's
+  training records, and moves their default calendar if it was that one. Making a public
+  calendar private asks for confirmation and keeps its subscribers as members.
+- **What members can do.** Members see the sessions and record their own attendance. Only the
+  owner (or an admin) creates, edits, moves, deletes or bulk-edits sessions: `canModify` in
+  `TrainingEventServiceImpl` is the rule, and it also lets the author of a session edit it,
+  so sessions created before #155 on a calendar that V35 gave to the admin stay editable by
+  their author. The pages hide what a member cannot do. `TrainingCalendarContextAdvice`
+  supplies `canAddSession`, which gates every Add Session button, the phone's floating +, and
+  the grid's click-to-create through `data-can-add-session` on `#trainingCalendar`.
+  `GET /training-events/quick-create` refuses without it. The feed sends FullCalendar a
+  per-session `editable` from `canModify`, so a followed calendar's sessions cannot be
+  dragged.
+- **The selector's in-use list is per user** (#63). A disabled calendar stays selectable only
+  while the user's own sessions or attendance are on it (`calendarIdsInUseFor`).
+- **The same Google event in two followed calendars** is counted once in stats, by `icalUid`,
+  after loading.
+- **V36** made every non-owner who already had sessions, attendance, records or a share on a
+  calendar an `ACTIVE` member, so nobody lost access when calendars stopped being reachable
+  through who created a session. `CalendarMemberIntegrationTest` covers invites, email claims,
+  subscriptions, member permissions, removal, #63 and the feed;
+  `CalendarMemberServiceTest` covers the service's refusals.
+- **Membership changes publish no domain events yet**, so invites, subscriptions and removals
+  do not appear in the activity feed.
 
 ### LLM providers
 
@@ -769,6 +815,11 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
   in. This broke the Add material page for two releases (#103), because the template parses,
   the application starts and the build passes — it only fails when the page is requested.
   `ThymeleafRestrictedExpressionTest` scans every template for the pattern.
+- **Give SpEL a `HashSet`, not `toSet()`, when a template calls `contains`.** An empty Kotlin
+  `toSet()` returns `kotlin.collections.EmptySet`, an internal class, and SpEL cannot call
+  `contains` on it: the page throws `SpelEvaluationException` only for a user whose set is
+  empty. This took down `/training-calendars` for users with no subscriptions during #155.
+  `WebRouteSmokeTest` requests every route and caught it.
 - **Tailwind scans templates, `static/js`, and `src/main/kotlin`.** There is no
   `tailwind.config.js` and no safelist: `frontend/input.css` pins its own sources with
   `@import 'tailwindcss' source(none)` plus three `@source` globs. A class reaches the

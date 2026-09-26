@@ -142,6 +142,22 @@ class TrainingCalendarApiControllerTest {
         assertEquals(listOf("Standard 60min"), result[0].extendedProps.styles)
     }
 
+    @Test
+    fun `should let only sessions the user may modify be dragged`() {
+        val own = event(AttendanceStatus.PLANNED, LocalDateTime.of(2026, 9, 14, 18, 0))
+        val followed = event(AttendanceStatus.PLANNED, LocalDateTime.of(2026, 9, 15, 18, 0))
+        `when`(trainingEventService.findInRange(any(LocalDateTime::class.java), any(LocalDateTime::class.java), eq(null)))
+            .thenReturn(listOf(own, followed))
+        `when`(trainingEventService.canModify(own, currentUser)).thenReturn(true)
+        `when`(trainingEventService.canModify(followed, currentUser)).thenReturn(false)
+
+        val feed = controller.calendarFeed("2026-09-01T00:00:00", "2026-10-01T00:00:00")
+
+        // A session on a calendar the user only follows would 403 on drop, so it is not draggable.
+        assertTrue(feed[0].editable)
+        assertFalse(feed[1].editable)
+    }
+
     private fun event(
         status: AttendanceStatus,
         start: LocalDateTime,

@@ -59,6 +59,7 @@ class TrainingCalendarApiController(
             backgroundColor = swatch.tint,
             borderColor = swatch.color,
             textColor = TrainingEventPalette.TEXT_COLOR,
+            editable = trainingEventService.canModify(this, user),
             extendedProps = CalendarEventProps(
                 status = swatch.key,
                 statusLabel = swatch.label,
@@ -92,6 +93,8 @@ data class CalendarEventResponse(
     val backgroundColor: String,
     val borderColor: String,
     val textColor: String,
+    /** FullCalendar's per-event drag switch: false for a session on a calendar the user only follows. */
+    val editable: Boolean,
     val extendedProps: CalendarEventProps
 )
 

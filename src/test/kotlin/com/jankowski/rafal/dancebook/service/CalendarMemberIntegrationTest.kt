@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.model.*
@@ -50,6 +51,8 @@ class CalendarMemberIntegrationTest {
     @Autowired private lateinit var appUserRepository: AppUserRepository
     @Autowired private lateinit var calendarInviteLoginListener: CalendarInviteLoginListener
     @Autowired private lateinit var activityEventRepository: ActivityEventRepository
+    @Autowired private lateinit var trainingTimelineService: TrainingTimelineService
+    @Autowired private lateinit var trainingStatsService: TrainingStatsService
 
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
@@ -240,6 +243,48 @@ class CalendarMemberIntegrationTest {
         // Member's default calendar falls back (no longer points to cal)
         val reloadedMember = appUserRepository.findById(memberUser.id!!).get()
         assertNotEquals(cal.id, reloadedMember.defaultCalendar?.id)
+    }
+
+    @Test
+    fun `should feed a followed calendar's sessions into the grid, timeline and stats under All calendars`() {
+        `when`(appUserService.getCurrentUser()).thenReturn(ownerUser)
+        val cal = trainingCalendarService.add(
+            TrainingCalendarRequest(
+                googleCalendarId = "followed-cal@group.calendar.google.com",
+                displayName = "Followed Practice",
+                visibility = Visibility.PUBLIC
+            ),
+            ownerUser
+        )
+        val session = trainingEventService.create(
+            TrainingEventRequest(
+                title = "Followed Practice #1",
+                date = LocalDate.now().plusDays(1),
+                startTime = LocalTime.of(18, 0),
+                endTime = LocalTime.of(20, 0),
+                calendarId = cal.id,
+                eventType = TrainingEventType.TRAINING.name
+            )
+        )
+
+        // The session was created by the owner, so a creator-scoped query would never show it
+        // to the subscriber. "All calendars" is every calendar the member owns or follows.
+        `when`(appUserService.getCurrentUser()).thenReturn(memberUser)
+        calendarMemberService.subscribe(cal.id!!, memberUser)
+
+        val grid = trainingEventService.findInRange(LocalDateTime.now(), LocalDateTime.now().plusDays(3), null)
+        assertTrue(grid.any { it.id == session.id }, "calendar grid under All calendars")
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0, calendarId = null)
+        assertTrue(timeline.months.flatMap { it.entries }.any { it.event.id == session.id }, "timeline")
+
+        val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME, null)
+        assertEquals(1, stats.counts.upcoming, "upcoming sessions in stats and the dashboard")
+
+        // Unsubscribing takes them out again.
+        calendarMemberService.unsubscribe(cal.id!!, memberUser)
+        val gridAfter = trainingEventService.findInRange(LocalDateTime.now(), LocalDateTime.now().plusDays(3), null)
+        assertFalse(gridAfter.any { it.id == session.id })
     }
 
     @Test
