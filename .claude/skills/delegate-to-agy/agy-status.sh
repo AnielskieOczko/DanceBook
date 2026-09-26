@@ -23,8 +23,10 @@ PARENT=$(dirname "$REPO")
 now=$(date +%s)
 mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || echo 0; }
 ago() { local s=$1; if [ "$s" -lt 60 ]; then echo "${s}s"; elif [ "$s" -lt 3600 ]; then echo "$((s/60))m"; else echo "$((s/3600))h$(( (s%3600)/60 ))m"; fi; }
-bar() { local done=$1 total=$2 width=10 filled; filled=$(( total > 0 ? done * width / total : 0 )); [ $filled -gt $width ] && filled=$width
-  printf '%s%s' "$(printf '▓%.0s' $(seq 1 $filled) 2>/dev/null | head -c $((filled*3)))" "$(printf '░%.0s' $(seq 1 $((width-filled))) 2>/dev/null)"; }
+bar() { local done=$1 total=$2 width=10 filled i out=""; filled=$(( total > 0 ? done * width / total : 0 ))
+  [ $filled -gt $width ] && filled=$width
+  for ((i = 0; i < width; i++)); do if [ $i -lt $filled ]; then out+="▓"; else out+="░"; fi; done
+  printf '%s' "$out"; }
 
 # Which agy conversation belongs to a clone. Cached in .agy-conversation once found.
 conversation_for() {
