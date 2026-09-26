@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Attendance
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -27,6 +28,13 @@ object TrainingEventSpecification {
         return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
 
+            val attendance = if (createdBy != null && (!attendanceStatuses.isNullOrEmpty() || awaitingConfirmation == true)) {
+                val att = root.join<TrainingEvent, Attendance>("attendances", JoinType.LEFT)
+                att.on(cb.equal(att.get<AppUser>("user"), createdBy))
+                query?.distinct(true)
+                att
+            } else null
+
             if (createdBy != null) {
                 predicates.add(cb.equal(root.get<AppUser>("createdBy"), createdBy))
             }
@@ -44,8 +52,13 @@ object TrainingEventSpecification {
                 query?.distinct(true)
             }
 
-            if (!attendanceStatuses.isNullOrEmpty()) {
-                predicates.add(root.get<AttendanceStatus>("attendanceStatus").`in`(attendanceStatuses))
+            if (!attendanceStatuses.isNullOrEmpty() && attendance != null) {
+                val statusPath = attendance.get<AttendanceStatus>("status")
+                if (AttendanceStatus.PLANNED in attendanceStatuses) {
+                    predicates.add(cb.or(statusPath.`in`(attendanceStatuses), cb.isNull(statusPath)))
+                } else {
+                    predicates.add(statusPath.`in`(attendanceStatuses))
+                }
             }
 
             if (!titleSearch.isNullOrBlank()) {
@@ -53,10 +66,12 @@ object TrainingEventSpecification {
             }
 
             if (awaitingConfirmation == true) {
-                // Mirrors TrainingEvent.isAwaitingConfirmation, expressed in SQL because a
-                // Specification filters at the database rather than on loaded entities. A
-                // change to that rule needs the same change here.
-                predicates.add(cb.equal(root.get<AttendanceStatus>("attendanceStatus"), AttendanceStatus.PLANNED))
+                // Mirrors TrainingEvent.isAwaitingConfirmationFor, expressed in SQL because a
+                // Specification filters at the database rather than on loaded entities.
+                if (attendance != null) {
+                    val statusPath = attendance.get<AttendanceStatus>("status")
+                    predicates.add(cb.or(cb.equal(statusPath, AttendanceStatus.PLANNED), cb.isNull(statusPath)))
+                }
                 predicates.add(cb.lessThan(root.get("endTime"), LocalDateTime.now()))
             }
 

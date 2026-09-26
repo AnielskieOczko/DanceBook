@@ -129,7 +129,7 @@ class CalendarSyncIntegrationTest {
         assertNotNull(googleEventId)
 
         // Verify training record was created and is not orphaned
-        val initialRecord = trainingRecordRepository.findByTrainingEventId(eventId)
+        val initialRecord = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, testAdmin)
         assertNotNull(initialRecord)
         assertEquals(TrainingOutcome.ATTENDED, initialRecord!!.outcome)
         assertEquals(120, initialRecord.durationMinutes)
@@ -153,7 +153,7 @@ class CalendarSyncIntegrationTest {
         val eventAfterSync = trainingEventRepository.findById(eventId)
         assertTrue(eventAfterSync.isEmpty, "training_event row must be deleted")
 
-        val recordAfterSync = trainingRecordRepository.findByTrainingEventId(eventId)
+        val recordAfterSync = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, testAdmin)
         assertNotNull(recordAfterSync, "training_record must survive session deletion")
         assertTrue(recordAfterSync!!.isOrphaned, "training_record must be marked orphaned")
         assertNotNull(recordAfterSync.orphanedAt)
@@ -178,7 +178,7 @@ class CalendarSyncIntegrationTest {
         val eventId = created.id!!
         val googleEventId = created.googleEventId!!
 
-        val initialRecord = trainingRecordRepository.findByTrainingEventId(eventId)
+        val initialRecord = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, testAdmin)
         assertNotNull(initialRecord)
         assertEquals(60, initialRecord!!.durationMinutes)
 
@@ -205,7 +205,7 @@ class CalendarSyncIntegrationTest {
         val report = calendarSyncService.syncAll()
         assertFalse(report.hasFailures)
 
-        val updatedRecord = trainingRecordRepository.findByTrainingEventId(eventId)
+        val updatedRecord = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, testAdmin)
         assertNotNull(updatedRecord)
         assertEquals(120, updatedRecord!!.durationMinutes)
         assertEquals(newStart, updatedRecord.occurredAt)
@@ -282,7 +282,7 @@ class CalendarSyncIntegrationTest {
             pastTimestamp, pastTimestamp, absentEventId
         )
 
-        val absentRecordBefore = trainingRecordRepository.findByTrainingEventId(absentEventId)
+        val absentRecordBefore = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(absentEventId, testAdmin)
         assertNotNull(absentRecordBefore)
         assertFalse(absentRecordBefore!!.isOrphaned)
 
@@ -391,7 +391,7 @@ class CalendarSyncIntegrationTest {
         assertTrue(trainingEventRepository.findById(absentEventId).isEmpty, "Absent event must be deleted")
 
         // 2. Training record of absent event is orphaned and preserved!
-        val absentRecordAfter = trainingRecordRepository.findByTrainingEventId(absentEventId)
+        val absentRecordAfter = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(absentEventId, testAdmin)
         assertNotNull(absentRecordAfter, "Training record must survive session deletion")
         assertTrue(absentRecordAfter!!.isOrphaned, "Training record must be marked orphaned")
         assertNotNull(absentRecordAfter.orphanedAt)
@@ -459,7 +459,7 @@ class CalendarSyncIntegrationTest {
         assertEquals(0, outcome.deletedCount)
 
         assertTrue(trainingEventRepository.findById(eventId).isPresent, "Event must survive incomplete sync")
-        val record = trainingRecordRepository.findByTrainingEventId(eventId)
+        val record = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, testAdmin)
         assertNotNull(record)
         assertFalse(record!!.isOrphaned)
     }

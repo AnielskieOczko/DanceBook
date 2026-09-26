@@ -43,7 +43,7 @@ class TrainingEventPersistence(
         val saved = trainingEventRepository.save(event)
         // In this transaction, not in an after-commit listener: statistics are read from the
         // record, and a lost record is a lost hour of training.
-        trainingRecordWriter.sync(saved)
+        trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
         eventPublisher.publishEvent(TrainingEventCreatedEvent(saved, actor))
         return saved
     }
@@ -51,7 +51,18 @@ class TrainingEventPersistence(
     @Transactional
     fun applyUpdate(event: TrainingEvent, actor: AppUser): TrainingEvent {
         val saved = trainingEventRepository.save(event)
-        trainingRecordWriter.sync(saved)
+        trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
+        trainingRecordWriter.syncEventDetails(saved)
+        eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
+        return saved
+    }
+
+    @Transactional
+    fun updateAttendance(event: TrainingEvent, actor: AppUser, status: AttendanceStatus): TrainingEvent {
+        event.setAttendance(actor, status)
+        event.updatedAt = LocalDateTime.now()
+        val saved = trainingEventRepository.save(event)
+        trainingRecordWriter.sync(saved, actor, status)
         eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
         return saved
     }
@@ -70,11 +81,11 @@ class TrainingEventPersistence(
 
         val now = LocalDateTime.now()
         events.forEach { event ->
-            event.attendanceStatus = status
+            event.setAttendance(actor, status)
             event.updatedAt = now
         }
         val saved = trainingEventRepository.saveAll(events)
-        saved.forEach { trainingRecordWriter.sync(it) }
+        saved.forEach { trainingRecordWriter.sync(it, actor, status) }
         eventPublisher.publishEvent(TrainingBulkAttendanceUpdatedEvent(saved.size, status, actor))
         return saved
     }
@@ -92,7 +103,10 @@ class TrainingEventPersistence(
         if (events.isEmpty()) return emptyList()
 
         val saved = trainingEventRepository.saveAll(events)
-        saved.forEach { trainingRecordWriter.sync(it) }
+        saved.forEach {
+            trainingRecordWriter.sync(it, actor, it.attendanceFor(actor))
+            trainingRecordWriter.syncEventDetails(it)
+        }
         eventPublisher.publishEvent(TrainingBulkUpdatedEvent(saved.size, updateType, actor))
         return saved
     }

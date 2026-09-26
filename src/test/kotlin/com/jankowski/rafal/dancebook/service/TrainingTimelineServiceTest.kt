@@ -55,7 +55,7 @@ class TrainingTimelineServiceTest {
 
         val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
 
-        val statuses = timeline.months.flatMap { it.entries }.map { it.event.attendanceStatus }
+        val statuses = timeline.months.flatMap { it.entries }.map { it.event.attendanceFor(currentUser) }
         assertEquals(
             listOf(AttendanceStatus.PLANNED, AttendanceStatus.ATTENDED, AttendanceStatus.SKIPPED),
             statuses
@@ -284,7 +284,7 @@ class TrainingTimelineServiceTest {
         title = "Session"
         startTime = start
         endTime = start.plusMinutes(minutes)
-        attendanceStatus = status
+        setAttendance(currentUser, status)
         eventType = TrainingEventType.TRAINING
         createdBy = currentUser
     }

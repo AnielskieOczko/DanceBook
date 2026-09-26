@@ -188,7 +188,7 @@ class WebRouteSmokeTest {
             startTime = LocalDateTime.now().minusHours(1)
             endTime = LocalDateTime.now().plusHours(1)
             eventType = TrainingEventType.TRAINING
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(admin, AttendanceStatus.ATTENDED)
             this.calendar = calendar
             createdBy = admin
         }

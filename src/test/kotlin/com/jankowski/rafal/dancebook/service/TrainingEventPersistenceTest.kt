@@ -63,7 +63,7 @@ class TrainingEventPersistenceTest {
             title = "Monday practice"
             startTime = start
             endTime = start.plusMinutes(90)
-            attendanceStatus = status
+            setAttendance(actor, status)
             createdBy = actor
         }
     }
@@ -75,7 +75,7 @@ class TrainingEventPersistenceTest {
 
         persistence.insert(toSave, actor)
 
-        verify(trainingRecordWriter).sync(toSave)
+        verify(trainingRecordWriter).sync(toSave, actor, toSave.attendanceFor(actor))
     }
 
     @Test
@@ -85,7 +85,7 @@ class TrainingEventPersistenceTest {
 
         persistence.applyUpdate(toSave, actor)
 
-        verify(trainingRecordWriter).sync(toSave)
+        verify(trainingRecordWriter).sync(toSave, actor, toSave.attendanceFor(actor))
     }
 
     @Test
@@ -111,10 +111,10 @@ class TrainingEventPersistenceTest {
         val updated = persistence.bulkUpdateAttendance(events, AttendanceStatus.ATTENDED, actor)
 
         assertEquals(2, updated.size)
-        assertEquals(AttendanceStatus.ATTENDED, event1.attendanceStatus)
-        assertEquals(AttendanceStatus.ATTENDED, event2.attendanceStatus)
-        verify(trainingRecordWriter).sync(event1)
-        verify(trainingRecordWriter).sync(event2)
+        assertEquals(AttendanceStatus.ATTENDED, event1.attendanceFor(actor))
+        assertEquals(AttendanceStatus.ATTENDED, event2.attendanceFor(actor))
+        verify(trainingRecordWriter).sync(event1, actor, AttendanceStatus.ATTENDED)
+        verify(trainingRecordWriter).sync(event2, actor, AttendanceStatus.ATTENDED)
 
         val captor = ArgumentCaptor.forClass(TrainingBulkAttendanceUpdatedEvent::class.java)
         verify(eventPublisher).publishEvent(captor.capture())
@@ -176,8 +176,8 @@ class TrainingEventPersistenceTest {
         assertEquals(2, updated.size)
         val order: InOrder = inOrder(trainingEventRepository, trainingRecordWriter)
         order.verify(trainingEventRepository).saveAll(events)
-        order.verify(trainingRecordWriter).sync(event1)
-        order.verify(trainingRecordWriter).sync(event2)
+        order.verify(trainingRecordWriter).sync(event1, actor, event1.attendanceFor(actor))
+        order.verify(trainingRecordWriter).sync(event2, actor, event2.attendanceFor(actor))
 
         val captor = ArgumentCaptor.forClass(TrainingBulkUpdatedEvent::class.java)
         verify(eventPublisher).publishEvent(captor.capture())

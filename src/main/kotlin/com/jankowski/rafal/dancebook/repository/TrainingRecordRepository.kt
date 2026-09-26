@@ -10,8 +10,11 @@ import java.util.UUID
 @Repository
 interface TrainingRecordRepository : JpaRepository<TrainingRecord, UUID> {
 
-    /** The record of one session, if it has been confirmed. `training_event_id` is unique. */
-    fun findByTrainingEventId(trainingEventId: UUID): TrainingRecord?
+    /** The record of one session for one user, if it has been confirmed. */
+    fun findByTrainingEventIdAndCreatedBy(trainingEventId: UUID, createdBy: AppUser): TrainingRecord?
+
+    /** All records recorded against a session (across all attendees). */
+    fun findAllByTrainingEventId(trainingEventId: UUID): List<TrainingRecord>
 
     /**
      * The records of a batch of sessions, for the bulk deletes that orphan a whole series at

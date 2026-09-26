@@ -83,7 +83,7 @@ class TrainingEventServiceImpl(
             createdBy = currentUser
             createdAt = LocalDateTime.now()
         }
-        applyRequest(event, request)
+        applyRequest(event, request, currentUser)
 
         val cal = resolveCalendar(request.calendarId)
         event.calendar = cal
@@ -108,7 +108,7 @@ class TrainingEventServiceImpl(
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' updating training event '{}'", currentUser.username, event.title)
-        applyRequest(event, request)
+        applyRequest(event, request, currentUser)
 
         val cal = calendarOf(event)
         val googleEventId = event.googleEventId
@@ -139,12 +139,9 @@ class TrainingEventServiceImpl(
         checkOwnership(event, currentUser)
 
         log.debug("User '{}' marking training event '{}' as {}", currentUser.username, event.title, status)
-        event.attendanceStatus = status
-        event.updatedAt = LocalDateTime.now()
-
         // Attendance is app-only metadata Google Calendar has no field for, so this path
         // deliberately does not touch the calendar.
-        return trainingEventPersistence.applyUpdate(event, currentUser)
+        return trainingEventPersistence.updateAttendance(event, currentUser, status)
     }
 
     override fun bulkUpdateAttendance(sessionIds: List<UUID>, status: AttendanceStatus): BulkAttendanceResult {
@@ -154,13 +151,13 @@ class TrainingEventServiceImpl(
 
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
-
-        // Only modify sessions belonging to the current user (or if admin)
-        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+        val accessibleEvents = events.filter {
+            it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN
+        }
 
         val now = LocalDateTime.now()
         // Only past sessions can have attendance set. A session has happened if its end time is not after now.
-        val (pastEvents, futureEvents) = ownedEvents.partition { !it.endTime.isAfter(now) }
+        val (pastEvents, futureEvents) = accessibleEvents.partition { !it.endTime.isAfter(now) }
 
         if (pastEvents.isNotEmpty()) {
             log.debug("User '{}' marking {} sessions as {}", currentUser.username, pastEvents.size, status)
@@ -454,10 +451,9 @@ class TrainingEventServiceImpl(
                 currentUser, to, from
             )
         } else {
-            trainingEventRepository
-                .findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
-                    currentUser, calendarId, to, from
-                )
+            trainingEventRepository.findAllByCreatedByAndCalendarIdAndStartTimeLessThanAndEndTimeGreaterThan(
+                currentUser, calendarId, to, from
+            )
         }
     }
 
@@ -496,7 +492,7 @@ class TrainingEventServiceImpl(
         return cal
     }
 
-    private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest) {
+    private fun applyRequest(event: TrainingEvent, request: TrainingEventRequest, user: AppUser) {
         val date = requireNotNull(request.date) { "Date is required" }
         val startTime = requireNotNull(request.startTime) { "Start time is required" }
         val endTime = requireNotNull(request.endTime) { "End time is required" }
@@ -512,7 +508,7 @@ class TrainingEventServiceImpl(
         event.description = richTextService.clean(request.description)
         event.material = request.materialId?.let { materialService.findById(it) }
         event.materialsUrl = request.materialsUrl?.takeIf { it.isNotBlank() }
-        event.attendanceStatus = AttendanceStatus.valueOf(request.attendanceStatus)
+        event.setAttendance(user, AttendanceStatus.valueOf(request.attendanceStatus))
         event.updatedAt = LocalDateTime.now()
 
         applySegments(event, request)

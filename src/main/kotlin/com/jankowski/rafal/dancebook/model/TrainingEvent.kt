@@ -47,9 +47,10 @@ class TrainingEvent {
     @Column(name = "materials_url", length = 1000)
     var materialsUrl: String? = null
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "attendance_status", nullable = false)
-    var attendanceStatus: AttendanceStatus = AttendanceStatus.PLANNED
+    @OneToMany(mappedBy = "trainingEvent", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("createdAt ASC")
+    @org.hibernate.annotations.BatchSize(size = 50)
+    var attendances: MutableSet<Attendance> = mutableSetOf()
 
     /**
      * The repeating definition this occurrence came from, or null for a one-off — and also
@@ -79,7 +80,13 @@ class TrainingEvent {
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
     /**
-     * A past event still marked PLANNED was never confirmed either way. The status is
+     * Attendance status for the given user, or [AttendanceStatus.PLANNED] when no attendance record exists.
+     */
+    fun attendanceFor(user: AppUser): AttendanceStatus =
+        attendances.firstOrNull { it.user?.id == user.id }?.status ?: AttendanceStatus.PLANNED
+
+    /**
+     * A past event still marked PLANNED for [user] was never confirmed either way. The status is
      * derived at read time rather than reconciled by a job, so nothing silently mutates
      * user records and the statistics in later phases read the same derivation.
      *
@@ -87,8 +94,29 @@ class TrainingEvent {
      * needs its own copy of this rule to run as a database predicate. A change here needs
      * the same change there.
      */
-    val isAwaitingConfirmation: Boolean
-        get() = attendanceStatus == AttendanceStatus.PLANNED && endTime.isBefore(LocalDateTime.now())
+    @JvmOverloads
+    fun isAwaitingConfirmationFor(user: AppUser, now: LocalDateTime = LocalDateTime.now()): Boolean =
+        attendanceFor(user) == AttendanceStatus.PLANNED && endTime.isBefore(now)
+
+    /**
+     * Sets or updates attendance status for a specific user.
+     */
+    fun setAttendance(user: AppUser, status: AttendanceStatus) {
+        val existing = attendances.firstOrNull { it.user?.id == user.id }
+        if (existing != null) {
+            existing.status = status
+            existing.updatedAt = LocalDateTime.now()
+        } else {
+            val attendance = Attendance().apply {
+                this.trainingEvent = this@TrainingEvent
+                this.user = user
+                this.status = status
+                this.createdAt = LocalDateTime.now()
+                this.updatedAt = LocalDateTime.now()
+            }
+            attendances.add(attendance)
+        }
+    }
 
     /**
      * Wall-clock session length in minutes. This is "total time trained"; per-style time

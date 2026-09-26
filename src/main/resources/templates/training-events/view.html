@@ -43,12 +43,12 @@
             </span>
             <span th:each="segment : ${event.segments}" class="badge-secondary"
                   th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
-            <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=${event.isAwaitingConfirmation})}"></span>
+            <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
             <span class="badge-neutral" th:text="${event.durationMinutes} + ' min'">120 min</span>
         </div>
 
         <!-- Confirm a past session that was never marked either way -->
-        <div th:if="${event.isAwaitingConfirmation}" class="flex items-center gap-3 pt-2">
+        <div th:if="${event.isAwaitingConfirmationFor(currentUser)}" class="flex items-center gap-3 pt-2">
             <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post">
                 <input type="hidden" name="status" value="ATTENDED">
                 <button type="submit" class="btn-primary">I attended</button>

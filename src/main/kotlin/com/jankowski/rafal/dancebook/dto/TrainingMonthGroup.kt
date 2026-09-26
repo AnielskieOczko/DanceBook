@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -39,12 +40,12 @@ data class TrainingMonthGroup(
  * Lives here rather than in a controller because two pages now draw the same grouping, and a
  * second copy is what would let their month headings or colours drift apart.
  */
-fun groupByMonth(events: List<TrainingEvent>): List<TrainingMonthGroup> =
+fun groupByMonth(events: List<TrainingEvent>, user: AppUser): List<TrainingMonthGroup> =
     events.groupBy { YearMonth.from(it.startTime) }
         .map { (month, monthEvents) ->
             TrainingMonthGroup(
                 label = month.format(MONTH_LABEL),
-                rows = monthEvents.map { TrainingEventRow(it, TrainingEventPalette.swatchFor(it)) },
+                rows = monthEvents.map { TrainingEventRow(it, TrainingEventPalette.swatchFor(it, user)) },
                 totalMinutes = monthEvents.sumOf { it.durationMinutes }
             )
         }

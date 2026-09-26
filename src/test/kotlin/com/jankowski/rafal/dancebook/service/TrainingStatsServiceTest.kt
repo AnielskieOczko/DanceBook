@@ -80,7 +80,7 @@ class TrainingStatsServiceTest {
             id = UUID.randomUUID()
             startTime = start
             endTime = start.plusMinutes(minutes)
-            attendanceStatus = status
+            setAttendance(currentUser, status)
             eventType = type
             createdBy = currentUser
         }
@@ -515,17 +515,17 @@ class TrainingStatsServiceTest {
     @Test
     fun `scopes to one calendar when one is active`() {
         val calendarId = UUID.randomUUID()
-        val dummySpec = Specification<TrainingEvent> { _, _, _ -> null }
+        val dummySpec = org.springframework.data.jpa.domain.Specification<TrainingEvent> { _, _, _ -> null }
         `when`(trainingRecordRepository.findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId))
             .thenReturn(emptyList())
-        `when`(trainingEventRepository.findAll(any(Specification::class.java) ?: dummySpec))
+        `when`(trainingEventRepository.findAll(any(org.springframework.data.jpa.domain.Specification::class.java) ?: dummySpec))
             .thenReturn(emptyList())
 
         trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME, calendarId)
 
         verify(trainingRecordRepository).findAllByCreatedByAndCalendarIdOrderByOccurredAtDesc(currentUser, calendarId)
         verify(trainingRecordRepository, never()).findAllByCreatedByOrderByOccurredAtDesc(currentUser)
-        verify(trainingEventRepository).findAll(any(Specification::class.java) ?: dummySpec)
+        verify(trainingEventRepository).findAll(any(org.springframework.data.jpa.domain.Specification::class.java) ?: dummySpec)
         verify(trainingEventRepository, never()).findAllByCreatedByOrderByStartTimeDesc(currentUser)
     }
 

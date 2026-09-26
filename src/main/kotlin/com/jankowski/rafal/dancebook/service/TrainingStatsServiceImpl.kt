@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingStats
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingOutcome
@@ -71,7 +72,7 @@ class TrainingStatsServiceImpl(
         val recordsInPeriod = allRecords.filter { period.contains(it.occurredAt, today) }
         val eventsInPeriod = allEvents.filter { period.contains(it.startTime, today) }
         val attended = recordsInPeriod.filter { it.outcome == TrainingOutcome.ATTENDED }
-        val counts = countsOf(recordsInPeriod, eventsInPeriod)
+        val counts = countsOf(recordsInPeriod, eventsInPeriod, currentUser)
 
         return TrainingStats(
             period = period,
@@ -96,16 +97,17 @@ class TrainingStatsServiceImpl(
      * The buckets therefore stay disjoint: a session appears either as a record or as an
      * event, never as both, and an orphaned record appears with no event at all.
      */
-    private fun countsOf(records: List<TrainingRecord>, events: List<TrainingEvent>): SessionCounts {
+    private fun countsOf(records: List<TrainingRecord>, events: List<TrainingEvent>, user: AppUser): SessionCounts {
         var upcoming = 0
         var unconfirmed = 0
         var cancelled = 0
         for (event in events) {
+            val status = event.attendanceFor(user)
             when {
-                event.isAwaitingConfirmation -> unconfirmed++
-                event.attendanceStatus == AttendanceStatus.ATTENDED -> Unit
-                event.attendanceStatus == AttendanceStatus.SKIPPED -> Unit
-                event.attendanceStatus == AttendanceStatus.CANCELLED -> cancelled++
+                event.isAwaitingConfirmationFor(user) -> unconfirmed++
+                status == AttendanceStatus.ATTENDED -> Unit
+                status == AttendanceStatus.SKIPPED -> Unit
+                status == AttendanceStatus.CANCELLED -> cancelled++
                 else -> upcoming++
             }
         }

@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap
 import com.jankowski.rafal.dancebook.dto.BulkSegmentsRequest
+import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import java.time.DayOfWeek
@@ -54,7 +55,8 @@ class TrainingEventWebController(
     private val activeCalendarService: ActiveCalendarService,
     private val trainingCalendarService: TrainingCalendarService,
     private val calendarSyncService: CalendarSyncService,
-    private val materialService: MaterialService
+    private val materialService: MaterialService,
+    private val appUserService: AppUserService
 ) {
 
     companion object {
@@ -227,12 +229,14 @@ class TrainingEventWebController(
     fun showDetails(@PathVariable id: UUID, model: Model): String {
         val event = trainingEventService.findById(id)
         model.addAttribute("event", event)
+        model.addAttribute("currentUser", appUserService.getCurrentUser())
         model.addAttribute("pageTitle", event.title)
         return "training-events/view"
     }
 
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
+        val currentUser = appUserService.getCurrentUser()
         val event = trainingEventService.findById(id)
         val series = event.series
         model.addAttribute(
@@ -253,7 +257,7 @@ class TrainingEventWebController(
                 description = event.description,
                 materialId = event.material?.id,
                 materialsUrl = event.materialsUrl,
-                attendanceStatus = event.attendanceStatus.name,
+                attendanceStatus = event.attendanceFor(currentUser).name,
                 repeat = if (series != null) "WEEKLY" else "NONE",
                 // The series keeps its existing horizon when an edit is applied to every
                 // occurrence. Without it the regeneration has no end date to work to and
@@ -808,8 +812,10 @@ class TrainingEventWebController(
      * `events` would render the fragment with no month headings at all.
      */
     private fun populateEventsList(model: Model, events: List<TrainingEvent>) {
+        val currentUser = appUserService.getCurrentUser()
         model.addAttribute("events", events)
-        model.addAttribute("monthGroups", groupByMonth(events))
+        model.addAttribute("monthGroups", groupByMonth(events, currentUser))
+        model.addAttribute("currentUser", currentUser)
     }
 
     /** Drives the "Filters" badge on the collapsed mobile filter panel. */

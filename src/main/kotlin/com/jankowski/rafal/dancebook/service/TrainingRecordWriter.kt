@@ -1,5 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingOutcome
 import com.jankowski.rafal.dancebook.model.TrainingRecord
@@ -28,10 +30,10 @@ class TrainingRecordWriter(
     }
 
     /**
-     * Writes, updates or removes the record for [event] according to its attendance status.
+     * Writes, updates or removes the record for [event] and [user] according to attendance [status].
      *
      * Attended and skipped are confirmed outcomes and get a record; planned and cancelled do
-     * not, and marking a session back to either removes the record — that is a correction of
+     * not, and marking a session back to either removes the user's record — that is a correction of
      * a mis-mark, not a piece of history.
      *
      * The orphaned check runs before the outcome branch, deliberately, and not the other way
@@ -41,22 +43,22 @@ class TrainingRecordWriter(
      * table exists to prevent. An orphaned record is never touched again, whatever the event
      * says.
      */
-    fun sync(event: TrainingEvent) {
+    fun sync(event: TrainingEvent, user: AppUser, status: AttendanceStatus) {
         val eventId = requireNotNull(event.id) {
             "A training event must be saved before its record can be written"
         }
-        val existing = trainingRecordRepository.findByTrainingEventId(eventId)
+        val existing = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(eventId, user)
 
         if (existing != null && existing.isOrphaned) {
-            log.warn("Training record for session {} is orphaned; leaving it frozen", eventId)
+            log.warn("Training record for session {} user {} is orphaned; leaving it frozen", eventId, user.username)
             return
         }
 
-        val outcome = TrainingOutcome.from(event.attendanceStatus)
+        val outcome = TrainingOutcome.from(status)
 
         if (outcome == null) {
             existing?.let {
-                log.debug("Session {} is no longer confirmed; removing its training record", eventId)
+                log.debug("Session {} for user {} is no longer confirmed; removing its training record", eventId, user.username)
                 trainingRecordRepository.delete(it)
             }
             return
@@ -64,7 +66,7 @@ class TrainingRecordWriter(
 
         val record = existing ?: TrainingRecord().apply {
             trainingEventId = eventId
-            createdBy = event.createdBy
+            createdBy = user
             createdAt = LocalDateTime.now()
         }
         record.occurredAt = event.startTime
@@ -78,6 +80,30 @@ class TrainingRecordWriter(
         applySegments(record, event)
 
         trainingRecordRepository.save(record)
+    }
+
+    /**
+     * Updates session details (title, occurredAt, duration, calendar, styles) across all
+     * non-orphaned training records for this event without changing their recorded outcomes.
+     */
+    fun syncEventDetails(event: TrainingEvent) {
+        val eventId = event.id ?: return
+        val records = trainingRecordRepository.findAllByTrainingEventId(eventId)
+            .filterNot { it.isOrphaned }
+        if (records.isEmpty()) return
+
+        val now = LocalDateTime.now()
+        records.forEach { record ->
+            record.occurredAt = event.startTime
+            record.durationMinutes = event.durationMinutes.toInt()
+            record.title = event.title
+            record.eventType = event.eventType
+            record.calendarId = event.calendar?.id
+            record.calendarName = event.calendar?.displayName
+            record.updatedAt = now
+            applySegments(record, event)
+        }
+        trainingRecordRepository.saveAll(records)
     }
 
     /**

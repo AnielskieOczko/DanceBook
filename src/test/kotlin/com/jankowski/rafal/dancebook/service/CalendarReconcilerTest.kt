@@ -112,7 +112,7 @@ class CalendarReconcilerTest {
         assertEquals(end, saved.endTime)
         assertEquals("Bring water", saved.description)
         assertEquals(TrainingEventType.TRAINING, saved.eventType)
-        assertEquals(AttendanceStatus.PLANNED, saved.attendanceStatus)
+        assertEquals(AttendanceStatus.PLANNED, saved.attendanceFor(rootAdmin))
         assertEquals(targetCalendar.id, saved.calendar?.id)
         assertEquals(rootAdmin, saved.createdBy)
         assertTrue(saved.segments.isEmpty())
@@ -130,7 +130,7 @@ class CalendarReconcilerTest {
             endTime = LocalDateTime.of(2026, 9, 15, 19, 0)
             description = "Original Description\nType: WORKSHOP"
             eventType = TrainingEventType.WORKSHOP
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(rootAdmin, AttendanceStatus.ATTENDED)
             calendar = targetCalendar
             createdBy = rootAdmin
             updatedAt = oldUpdatedAt
@@ -173,7 +173,7 @@ class CalendarReconcilerTest {
         assertEquals("Original Description\nType: WORKSHOP", existing.description)
         // Event type and attendance status are preserved (Rule 1)
         assertEquals(TrainingEventType.WORKSHOP, existing.eventType)
-        assertEquals(AttendanceStatus.ATTENDED, existing.attendanceStatus)
+        assertEquals(AttendanceStatus.ATTENDED, existing.attendanceFor(rootAdmin))
     }
 
     @Test

@@ -100,9 +100,9 @@ class CalendarReconciler(
                             this.endTime = change.end
                             this.description = change.description
                             this.eventType = TrainingEventType.TRAINING
-                            this.attendanceStatus = AttendanceStatus.PLANNED
                             this.calendar = calendar
                             this.createdBy = rootAdmin
+                            this.setAttendance(rootAdmin, AttendanceStatus.PLANNED)
                         }
                         trainingEventPersistence.insert(newEvent, rootAdmin)
                         adopted++

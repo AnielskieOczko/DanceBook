@@ -5,7 +5,9 @@ import com.jankowski.rafal.dancebook.dto.BulkDeleteResult
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingMonthGroup
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.SeriesScope
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
@@ -54,6 +56,8 @@ class TrainingEventWebControllerTest {
     private lateinit var trainingCalendarService: TrainingCalendarService
     private lateinit var calendarSyncService: CalendarSyncService
     private lateinit var materialService: com.jankowski.rafal.dancebook.service.MaterialService
+    private lateinit var appUserService: AppUserService
+    private lateinit var currentUser: AppUser
     private lateinit var controller: TrainingEventWebController
     private lateinit var defaultCal: TrainingCalendar
 
@@ -66,6 +70,12 @@ class TrainingEventWebControllerTest {
         trainingCalendarService = mock(TrainingCalendarService::class.java)
         calendarSyncService = mock(CalendarSyncService::class.java)
         materialService = mock(com.jankowski.rafal.dancebook.service.MaterialService::class.java)
+        appUserService = mock(AppUserService::class.java)
+        currentUser = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "testuser"
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
         defaultCal = TrainingCalendar().apply {
             id = UUID.randomUUID()
             displayName = "Default"
@@ -82,7 +92,8 @@ class TrainingEventWebControllerTest {
             activeCalendarService,
             trainingCalendarService,
             calendarSyncService,
-            materialService
+            materialService,
+            appUserService
         )
     }
 
@@ -156,7 +167,7 @@ class TrainingEventWebControllerTest {
             startTime = LocalDateTime.of(2026, 9, 10, 18, 0)
             endTime = LocalDateTime.of(2026, 9, 10, 20, 0)
             eventType = TrainingEventType.CAMP
-            attendanceStatus = AttendanceStatus.ATTENDED
+            setAttendance(currentUser, AttendanceStatus.ATTENDED)
         }
         val ownCal = TrainingCalendar().apply {
             this.id = UUID.randomUUID()

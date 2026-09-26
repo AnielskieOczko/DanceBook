@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingOutcome
@@ -66,12 +67,15 @@ object TrainingEventPalette {
 
     fun chartColor(index: Int): String = CHART_COLORS[Math.floorMod(index, CHART_COLORS.size)]
 
-    fun swatchFor(event: TrainingEvent): Swatch = when {
-        event.isAwaitingConfirmation -> UNCONFIRMED
-        event.attendanceStatus == AttendanceStatus.ATTENDED -> ATTENDED
-        event.attendanceStatus == AttendanceStatus.SKIPPED -> SKIPPED
-        event.attendanceStatus == AttendanceStatus.CANCELLED -> CANCELLED
-        else -> PLANNED
+    fun swatchFor(event: TrainingEvent, user: AppUser): Swatch {
+        val status = event.attendanceFor(user)
+        return when {
+            event.isAwaitingConfirmationFor(user) -> UNCONFIRMED
+            status == AttendanceStatus.ATTENDED -> ATTENDED
+            status == AttendanceStatus.SKIPPED -> SKIPPED
+            status == AttendanceStatus.CANCELLED -> CANCELLED
+            else -> PLANNED
+        }
     }
 
     /**

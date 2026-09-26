@@ -12,6 +12,9 @@ import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeParseException
 
+import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.service.AppUserService
+
 /**
  * Feeds the FullCalendar view.
  *
@@ -25,20 +28,25 @@ import java.time.format.DateTimeParseException
 @RequestMapping("/api/training-events")
 class TrainingCalendarApiController(
     private val trainingEventService: TrainingEventService,
-    private val activeCalendarService: ActiveCalendarService
+    private val activeCalendarService: ActiveCalendarService,
+    private val appUserService: AppUserService
 ) {
 
     @GetMapping("/calendar")
     fun calendarFeed(
         @RequestParam start: String,
         @RequestParam end: String
-    ): List<CalendarEventResponse> =
-        trainingEventService.findInRange(
+    ): List<CalendarEventResponse> {
+        val currentUser = appUserService.getCurrentUser()
+        return trainingEventService.findInRange(
             parseFlexible(start), parseFlexible(end), activeCalendarService.active()?.id
-        ).map { it.toCalendarEvent() }
+        ).map { it.toCalendarEvent(currentUser) }
+    }
 
-    private fun TrainingEvent.toCalendarEvent(): CalendarEventResponse {
-        val swatch = TrainingEventPalette.swatchFor(this)
+    private fun TrainingEvent.toCalendarEvent(user: AppUser): CalendarEventResponse {
+        val swatch = TrainingEventPalette.swatchFor(this, user)
+        val attStatus = attendanceFor(user)
+        val unconfirmed = isAwaitingConfirmationFor(user)
 
         return CalendarEventResponse(
             id = id.toString(),
@@ -54,8 +62,8 @@ class TrainingCalendarApiController(
             extendedProps = CalendarEventProps(
                 status = swatch.key,
                 statusLabel = swatch.label,
-                attendanceStatus = attendanceStatus.name,
-                awaitingConfirmation = isAwaitingConfirmation,
+                attendanceStatus = attStatus.name,
+                awaitingConfirmation = unconfirmed,
                 eventType = eventType.name,
                 styles = segments.map { "${it.danceCategory?.name} ${it.durationMinutes}min" },
                 repeating = series != null

@@ -97,7 +97,7 @@ class TrainingCalendarDeleteIntegrationTest {
         val sessionId = savedSession.id!!
 
         // Verify record is created and linked
-        val recordBeforeDelete = trainingRecordRepository.findByTrainingEventId(sessionId)
+        val recordBeforeDelete = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(sessionId, testUser)
         assertNotNull(recordBeforeDelete)
         assertNull(recordBeforeDelete!!.orphanedAt)
         assertEquals("Secondary Team Calendar", recordBeforeDelete.calendarName)
@@ -126,7 +126,7 @@ class TrainingCalendarDeleteIntegrationTest {
         assertTrue(trainingEventRepository.findById(sessionId).isEmpty)
 
         // Training record is orphaned, not deleted
-        val recordAfterDelete = trainingRecordRepository.findByTrainingEventId(sessionId)
+        val recordAfterDelete = trainingRecordRepository.findByTrainingEventIdAndCreatedBy(sessionId, testUser)
         assertNotNull(recordAfterDelete)
         assertTrue(recordAfterDelete!!.isOrphaned)
         assertNotNull(recordAfterDelete.orphanedAt)
