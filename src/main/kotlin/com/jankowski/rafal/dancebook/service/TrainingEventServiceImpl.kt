@@ -21,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.UUID
@@ -68,7 +69,7 @@ class TrainingEventServiceImpl(
         }
 
         val specification = TrainingEventSpecification.withFilters(
-            createdBy = currentUser,
+            user = currentUser,
             eventTypes = eventTypes,
             categoryIds = categoryIds,
             attendanceStatuses = attendanceStatuses,
@@ -170,7 +171,17 @@ class TrainingEventServiceImpl(
         val event = trainingEventRepository.findById(id).orElseThrow {
             EntityNotFoundException("Could not find training event with id $id")
         }
-        checkOwnership(event, currentUser)
+        val cal = event.calendar
+        if (cal != null) {
+            if (trainingCalendarService.findByIdVisibleTo(cal.id!!, currentUser) == null) {
+                throw EntityNotFoundException("Could not find training event with id $id")
+            }
+            if (currentUser.role != Role.ADMIN && !trainingCalendarService.isMemberOf(cal, currentUser)) {
+                throw AccessDeniedException("Only calendar members can record attendance.")
+            }
+        } else if (event.createdBy?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find training event with id $id")
+        }
 
         log.debug("User '{}' marking training event '{}' as {}", currentUser.username, event.title, status)
         // Attendance is app-only metadata Google Calendar has no field for, so this path
@@ -186,7 +197,13 @@ class TrainingEventServiceImpl(
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
         val accessibleEvents = events.filter {
-            it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN
+            if (currentUser.role == Role.ADMIN) {
+                true
+            } else if (it.calendar != null) {
+                trainingCalendarService.isMemberOf(it.calendar!!, currentUser)
+            } else {
+                it.createdBy == null || it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN
+            }
         }
 
         val now = LocalDateTime.now()
@@ -220,9 +237,7 @@ class TrainingEventServiceImpl(
 
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
-
-        // Only delete sessions belonging to the current user (or if admin)
-        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+        val ownedEvents = events.filter { canModify(it, currentUser) }
 
         val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
@@ -273,7 +288,7 @@ class TrainingEventServiceImpl(
 
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
-        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+        val ownedEvents = events.filter { canModify(it, currentUser) }
 
         val defaultGoogleCalId = trainingCalendarService.findDefault(currentUser)?.writeTarget?.googleCalendarId
         val succeededEvents = mutableListOf<TrainingEvent>()
@@ -332,7 +347,7 @@ class TrainingEventServiceImpl(
 
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
-        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+        val ownedEvents = events.filter { canModify(it, currentUser) }
 
         val requested = segments.filter { it.categoryId != null && (it.durationMinutes ?: 0) > 0 }
         val totalSegmentMinutes = requested.sumOf { it.durationMinutes ?: 0 }
@@ -405,7 +420,7 @@ class TrainingEventServiceImpl(
 
         val currentUser = appUserService.getCurrentUser()
         val events = trainingEventRepository.findAllByIdIn(sessionIds)
-        val ownedEvents = events.filter { it.createdBy?.id == currentUser.id || currentUser.role == Role.ADMIN }
+        val ownedEvents = events.filter { canModify(it, currentUser) }
 
         val resolvedMaterial = if (!clearMaterial && materialId != null) materialService.findById(materialId) else null
         val resolvedUrl = if (!clearMaterial) materialsUrl?.takeIf { it.isNotBlank() } else null
@@ -486,7 +501,6 @@ class TrainingEventServiceImpl(
         calendarId: UUID?
     ): List<TrainingEvent> {
         val currentUser = appUserService.getCurrentUser()
-        // Null means "All calendars", which keeps the original unscoped query.
         return if (calendarId == null) {
             trainingEventRepository.findAllByCreatedByAndStartTimeLessThanAndEndTimeGreaterThan(
                 currentUser, to, from
@@ -537,8 +551,12 @@ class TrainingEventServiceImpl(
     private fun resolveCalendar(calendarId: UUID?): TrainingCalendar {
         val currentUser = appUserService.getCurrentUser()
         val cal = if (calendarId != null) {
-            trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
+            val resolved = trainingCalendarService.findByIdVisibleTo(calendarId, currentUser)
                 ?: throw EntityNotFoundException("Training calendar with id $calendarId not found")
+            if (currentUser.role != Role.ADMIN && resolved.owner != null && resolved.owner?.id != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to add sessions to this calendar")
+            }
+            resolved
         } else {
             val userDefault = try {
                 trainingCalendarService.requireDefault(currentUser)
@@ -547,7 +565,11 @@ class TrainingEventServiceImpl(
             } catch (e: Exception) {
                 null
             }
-            userDefault ?: trainingCalendarService.requireDefault()
+            val resolved = userDefault ?: trainingCalendarService.requireDefault()
+            if (currentUser.role != Role.ADMIN && resolved.owner != null && resolved.owner?.id != currentUser.id) {
+                throw AccessDeniedException("You do not have permission to add sessions to this calendar")
+            }
+            resolved
         }
         require(cal.enabled) { "Training calendar '${cal.displayName}' is disabled" }
         return cal
@@ -628,9 +650,17 @@ class TrainingEventServiceImpl(
         }
     }
 
+    private fun canModify(event: TrainingEvent, user: AppUser): Boolean {
+        if (user.role == Role.ADMIN) return true
+        if (event.calendar?.owner?.id == user.id) return true
+        // Keep createdBy clause only so sessions authored before calendar membership introduced stay editable by their creator
+        if (event.createdBy?.id == user.id) return true
+        return event.calendar?.owner == null && event.createdBy == null
+    }
+
     private fun checkOwnership(event: TrainingEvent, currentUser: AppUser) {
-        if (event.createdBy?.id != currentUser.id && currentUser.role != Role.ADMIN) {
-            throw IllegalStateException("You don't have permission to modify this training event")
+        if (!canModify(event, currentUser)) {
+            throw AccessDeniedException("You don't have permission to modify this training event")
         }
     }
 }

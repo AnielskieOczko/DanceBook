@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import com.jankowski.rafal.dancebook.repository.TrainingEventSourceRepository
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.security.access.AccessDeniedException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -95,6 +96,7 @@ class TrainingEventServiceTest {
         `when`(trainingCalendarService.requireDefault()).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.findDefault()).thenReturn(defaultCalendar)
         `when`(trainingCalendarService.findByIdVisibleTo(eq(defaultCalendar.id!!), any(AppUser::class.java))).thenReturn(defaultCalendar)
+        `when`(trainingCalendarService.isMemberOf(defaultCalendar, currentUser)).thenReturn(true)
 
         trainingEventService = TrainingEventServiceImpl(
             trainingEventRepository,
@@ -242,7 +244,7 @@ class TrainingEventServiceTest {
         val event = existingEvent("google-123").apply { createdBy = owner }
         `when`(trainingEventRepository.findById(event.id!!)).thenReturn(Optional.of(event))
 
-        val exception = assertThrows(IllegalStateException::class.java) {
+        val exception = assertThrows(AccessDeniedException::class.java) {
             trainingEventService.delete(event.id!!)
         }
 
@@ -678,12 +680,14 @@ class TrainingEventServiceTest {
     }
 
     @Test
-    fun `bulkUpdateAttendance never modifies sessions belonging to another user`() {
+    fun `bulkUpdateAttendance never modifies sessions on a calendar the user does not belong to`() {
         val otherUser = AppUser().apply {
             id = UUID.randomUUID()
             username = "other"
         }
+        val foreignCalendar = createCalendar(displayName = "Someone else's calendar")
         val foreignEvent = existingEvent(null).apply {
+            calendar = foreignCalendar
             createdBy = otherUser
             startTime = LocalDateTime.now().minusDays(1)
             endTime = LocalDateTime.now().minusDays(1).plusHours(2)

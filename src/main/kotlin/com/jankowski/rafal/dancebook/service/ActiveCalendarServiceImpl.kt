@@ -25,10 +25,10 @@ class ActiveCalendarServiceImpl(
     }
 
     private fun resolveCurrentUser(): AppUser? {
-        return try {
+        return appUserService.getCurrentUserOrNull() ?: try {
             appUserService.getCurrentUser()
         } catch (e: Exception) {
-            appUserService.getCurrentUserOrNull()
+            null
         }
     }
 
@@ -38,7 +38,7 @@ class ActiveCalendarServiceImpl(
             ?: return trainingCalendarService.findDefault(currentUser)
         if (stored == ALL) return null
         val calendar = trainingCalendarService.findById(UUID.fromString(stored))
-        if (calendar != null && (currentUser == null || isVisibleTo(calendar, currentUser))) {
+        if (calendar != null && (currentUser == null || trainingCalendarService.isMemberOf(calendar, currentUser))) {
             return calendar
         }
         return trainingCalendarService.findDefault(currentUser)
@@ -50,9 +50,14 @@ class ActiveCalendarServiceImpl(
 
     override fun selectable(): List<TrainingCalendar> {
         val currentUser = resolveCurrentUser()
-        val visibleCalendars = trainingCalendarService.findAllVisibleTo(currentUser)
-        val inUse = trainingEventRepository.calendarIdsInUse().toSet()
-        return visibleCalendars.filter { it.enabled || it.id in inUse }
+        if (currentUser == null) {
+            val visibleCalendars = trainingCalendarService.findAllVisibleTo(null)
+            val inUse = trainingEventRepository.calendarIdsInUse().toSet()
+            return visibleCalendars.filter { it.enabled || it.id in inUse }
+        }
+        val calendars = trainingCalendarService.findAllForUser(currentUser)
+        val inUse = trainingEventRepository.calendarIdsInUseFor(currentUser).toSet()
+        return calendars.filter { it.enabled || it.id in inUse }
     }
 
     override fun creationTarget(): TrainingCalendar {
@@ -109,12 +114,5 @@ class ActiveCalendarServiceImpl(
             )
         }
         return target
-    }
-
-    private fun isVisibleTo(calendar: TrainingCalendar, user: AppUser): Boolean {
-        if (user.role == Role.ADMIN) return true
-        if (calendar.visibility == Visibility.PUBLIC) return true
-        if (calendar.owner?.id == user.id) return true
-        return false
     }
 }

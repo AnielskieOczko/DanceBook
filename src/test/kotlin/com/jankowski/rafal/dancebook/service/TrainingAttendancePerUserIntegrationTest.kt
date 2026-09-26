@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import jakarta.persistence.EntityNotFoundException
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -115,9 +116,9 @@ class TrainingAttendancePerUserIntegrationTest {
         assertEquals(0, statsA.counts.skipped)
         assertEquals(0, statsA.counts.unconfirmed)
 
-        // Switch to User B: non-owner access to service.updateAttendance is forbidden
+        // Switch to User B: a session on a calendar they cannot see is a 404 (#155)
         `when`(appUserService.getCurrentUser()).thenReturn(userB)
-        assertThrows(IllegalStateException::class.java) {
+        assertThrows(EntityNotFoundException::class.java) {
             trainingEventService.updateAttendance(event.id!!, AttendanceStatus.SKIPPED)
         }
 

@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.TrainingCalendarRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventRequest
 import com.jankowski.rafal.dancebook.dto.TrainingEventSegmentRequest
 import com.jankowski.rafal.dancebook.model.AppUser
@@ -62,6 +63,8 @@ class TrainingEventBulkEditIntegrationTest {
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var entityManagerFactory: EntityManagerFactory
 
+    @Autowired private lateinit var trainingCalendarService: TrainingCalendarService
+
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
 
@@ -81,6 +84,14 @@ class TrainingEventBulkEditIntegrationTest {
             predefined = false
         })
         `when`(appUserService.getCurrentUser()).thenReturn(owner)
+        // Only a calendar's owner adds sessions to it (#155), so the tester needs one of their own.
+        trainingCalendarService.add(
+            TrainingCalendarRequest(
+                googleCalendarId = "bulk-${UUID.randomUUID()}@group.calendar.google.com",
+                displayName = "Bulk Test Calendar"
+            ),
+            owner
+        )
         `when`(calendarClient.createEvent(any(""), any(TrainingEvent())))
             .thenAnswer { "google-${UUID.randomUUID()}" }
     }

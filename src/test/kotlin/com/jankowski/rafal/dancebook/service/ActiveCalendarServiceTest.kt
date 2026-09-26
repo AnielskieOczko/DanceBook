@@ -1,9 +1,11 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
 import jakarta.servlet.http.HttpSession
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -38,6 +40,7 @@ class ActiveCalendarServiceTest {
     fun setUp() {
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(currentUser)
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
+        `when`(trainingCalendarService.isMemberOf(org.mockito.ArgumentMatchers.any(TrainingCalendar::class.java) ?: calendar("dummy"), org.mockito.ArgumentMatchers.any(AppUser::class.java) ?: currentUser)).thenReturn(true)
         service = ActiveCalendarServiceImpl(session, trainingCalendarService, trainingEventRepository, appUserService)
     }
 
@@ -78,6 +81,7 @@ class ActiveCalendarServiceTest {
         val disabled = calendar("Retired", isEnabled = false)
         `when`(session.getAttribute("activeCalendarId")).thenReturn(disabled.id.toString())
         `when`(trainingCalendarService.findById(disabled.id!!)).thenReturn(disabled)
+        `when`(trainingCalendarService.isMemberOf(disabled, currentUser)).thenReturn(true)
 
         val error = assertThrows(CalendarSyncException::class.java) { service.creationTarget() }
         assertEquals(
@@ -87,11 +91,23 @@ class ActiveCalendarServiceTest {
     }
 
     @Test
+    fun `active falls back to default if user is not a member of the stored calendar`() {
+        val notMemberCal = calendar("Public Not Joined")
+        val default = calendar("Primary")
+        `when`(session.getAttribute("activeCalendarId")).thenReturn(notMemberCal.id.toString())
+        `when`(trainingCalendarService.findById(notMemberCal.id!!)).thenReturn(notMemberCal)
+        `when`(trainingCalendarService.isMemberOf(notMemberCal, currentUser)).thenReturn(false)
+        `when`(trainingCalendarService.findDefault(currentUser)).thenReturn(default)
+
+        assertEquals(default.id, service.active()?.id)
+    }
+
+    @Test
     fun `selectable includes enabled calendars and excludes a disabled one with no sessions`() {
         val enabled = calendar("Club")
         val disabledUnused = calendar("Typo", isEnabled = false)
-        `when`(trainingCalendarService.findAllVisibleTo(currentUser)).thenReturn(listOf(enabled, disabledUnused))
-        `when`(trainingEventRepository.calendarIdsInUse()).thenReturn(emptyList())
+        `when`(trainingCalendarService.findAllForUser(currentUser)).thenReturn(listOf(enabled, disabledUnused))
+        `when`(trainingEventRepository.calendarIdsInUseFor(currentUser)).thenReturn(emptyList())
 
         assertEquals(listOf(enabled.id), service.selectable().map { it.id })
     }
@@ -100,9 +116,38 @@ class ActiveCalendarServiceTest {
     fun `selectable keeps a disabled calendar that still owns sessions`() {
         val enabled = calendar("Club")
         val disabledUsed = calendar("Retired", isEnabled = false)
-        `when`(trainingCalendarService.findAllVisibleTo(currentUser)).thenReturn(listOf(enabled, disabledUsed))
-        `when`(trainingEventRepository.calendarIdsInUse()).thenReturn(listOf(disabledUsed.id!!))
+        `when`(trainingCalendarService.findAllForUser(currentUser)).thenReturn(listOf(enabled, disabledUsed))
+        `when`(trainingEventRepository.calendarIdsInUseFor(currentUser)).thenReturn(listOf(disabledUsed.id!!))
         assertEquals(listOf(enabled.id, disabledUsed.id), service.selectable().map { it.id })
+    }
+
+    @Test
+    fun `selectable for admin excludes another user's private calendar`() {
+        val adminCal = calendar("Admin's Calendar")
+        val otherUserCal = calendar("Other's Private Calendar")
+        `when`(trainingCalendarService.findAllForUser(currentUser)).thenReturn(listOf(adminCal))
+        `when`(trainingEventRepository.calendarIdsInUseFor(currentUser)).thenReturn(emptyList())
+
+        val result = service.selectable()
+        assertEquals(listOf(adminCal.id), result.map { it.id })
+        assertFalse(result.any { it.id == otherUserCal.id })
+    }
+
+    @Test
+    fun `selectable for regular user excludes disabled calendar where only another user has sessions`() {
+        val regularUser = com.jankowski.rafal.dancebook.model.AppUser().apply {
+            id = UUID.randomUUID()
+            username = "regular"
+            role = com.jankowski.rafal.dancebook.model.Role.USER
+        }
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(regularUser)
+
+        val enabled = calendar("Club")
+        val disabledOtherUser = calendar("Other's Old Calendar", isEnabled = false)
+        `when`(trainingCalendarService.findAllForUser(regularUser)).thenReturn(listOf(enabled, disabledOtherUser))
+        `when`(trainingEventRepository.calendarIdsInUseFor(regularUser)).thenReturn(emptyList())
+
+        assertEquals(listOf(enabled.id), service.selectable().map { it.id })
     }
 
     @Test

@@ -11,12 +11,16 @@ import com.jankowski.rafal.dancebook.model.TrainingEventType
 import jakarta.persistence.criteria.JoinType
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
+import com.jankowski.rafal.dancebook.model.CalendarMember
+import com.jankowski.rafal.dancebook.model.CalendarMemberState
+import com.jankowski.rafal.dancebook.model.Role
 import java.time.LocalDateTime
 import java.util.UUID
 
 object TrainingEventSpecification {
 
     fun withFilters(
+        user: AppUser? = null,
         createdBy: AppUser? = null,
         eventTypes: List<TrainingEventType>? = null,
         categoryIds: List<UUID>? = null,
@@ -28,14 +32,39 @@ object TrainingEventSpecification {
         return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
 
-            val attendance = if (createdBy != null && (!attendanceStatuses.isNullOrEmpty() || awaitingConfirmation == true)) {
+            val attendanceUser = user ?: createdBy
+            val attendance = if (attendanceUser != null && (!attendanceStatuses.isNullOrEmpty() || awaitingConfirmation == true)) {
                 val att = root.join<TrainingEvent, Attendance>("attendances", JoinType.LEFT)
-                att.on(cb.equal(att.get<AppUser>("user"), createdBy))
+                att.on(cb.equal(att.get<AppUser>("user"), attendanceUser))
                 query?.distinct(true)
                 att
             } else null
 
-            if (createdBy != null) {
+            if (calendarId != null) {
+                // Scoped to a specific calendar
+                predicates.add(cb.equal(root.get<TrainingCalendar>("calendar").get<UUID>("id"), calendarId))
+            }
+
+            if (user != null) {
+                // Personal view for this user: calendars they own or actively belong to
+                val cal = root.get<TrainingCalendar>("calendar")
+                val calOwnerPredicate = cb.equal(cal.get<AppUser>("owner"), user)
+
+                val memberSubquery = query?.subquery(Long::class.java)
+                val memberPredicate = if (memberSubquery != null) {
+                    val memberRoot = memberSubquery.from(CalendarMember::class.java)
+                    memberSubquery.select(cb.literal(1L))
+                    memberSubquery.where(
+                        cb.equal(memberRoot.get<TrainingCalendar>("calendar"), cal),
+                        cb.equal(memberRoot.get<AppUser>("user"), user),
+                        cb.equal(memberRoot.get<CalendarMemberState>("state"), CalendarMemberState.ACTIVE)
+                    )
+                    cb.exists(memberSubquery)
+                } else cb.disjunction()
+
+                val legacyNullCalPredicate = cb.and(cb.isNull(cal), cb.equal(root.get<AppUser>("createdBy"), user))
+                predicates.add(cb.or(calOwnerPredicate, memberPredicate, legacyNullCalPredicate))
+            } else if (createdBy != null) {
                 predicates.add(cb.equal(root.get<AppUser>("createdBy"), createdBy))
             }
 
@@ -73,12 +102,6 @@ object TrainingEventSpecification {
                     predicates.add(cb.or(cb.equal(statusPath, AttendanceStatus.PLANNED), cb.isNull(statusPath)))
                 }
                 predicates.add(cb.lessThan(root.get("endTime"), LocalDateTime.now()))
-            }
-
-            if (calendarId != null) {
-                // Null means "All calendars" and adds no predicate at all, so the common case
-                // keeps its existing query plan.
-                predicates.add(cb.equal(root.get<TrainingCalendar>("calendar").get<UUID>("id"), calendarId))
             }
 
             cb.and(*predicates.toTypedArray())

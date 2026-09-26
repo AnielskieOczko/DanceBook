@@ -61,8 +61,8 @@ class TrainingStatsServiceImpl(
             trainingEventRepository.findAllByCreatedByOrderByStartTimeDesc(currentUser)
         } else {
             trainingEventRepository.findAll(
-                TrainingEventSpecification.withFilters(createdBy = currentUser, calendarId = calendarId)
-            )
+                TrainingEventSpecification.withFilters(user = currentUser, calendarId = calendarId)
+            ).distinctBy { it.icalUid ?: it.id }
         }
         log.debug("Computing {} training stats for user '{}'", period, currentUser.username)
 

@@ -36,6 +36,8 @@ class TrainingCalendarServiceTest {
     private lateinit var appUserRepository: AppUserRepository
     private lateinit var calendarSourceRepository: CalendarSourceRepository
     private lateinit var googleCalendarClient: GoogleCalendarClient
+    private lateinit var calendarMemberRepository: com.jankowski.rafal.dancebook.repository.CalendarMemberRepository
+    private lateinit var shareRepository: com.jankowski.rafal.dancebook.repository.ShareRepository
     private val currentUser = AppUser().apply { id = UUID.randomUUID(); username = "admin"; role = Role.ADMIN }
     private lateinit var service: TrainingCalendarServiceImpl
 
@@ -50,6 +52,8 @@ class TrainingCalendarServiceTest {
         appUserRepository = mock(AppUserRepository::class.java)
         calendarSourceRepository = mock(CalendarSourceRepository::class.java)
         googleCalendarClient = mock(GoogleCalendarClient::class.java)
+        calendarMemberRepository = mock(com.jankowski.rafal.dancebook.repository.CalendarMemberRepository::class.java)
+        shareRepository = mock(com.jankowski.rafal.dancebook.repository.ShareRepository::class.java)
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(currentUser)
         `when`(appUserService.getRootAdmin()).thenReturn(currentUser)
@@ -63,7 +67,9 @@ class TrainingCalendarServiceTest {
             appUserService,
             appUserRepository,
             calendarSourceRepository,
-            googleCalendarClient
+            googleCalendarClient,
+            calendarMemberRepository,
+            shareRepository
         )
     }
 
@@ -114,7 +120,9 @@ class TrainingCalendarServiceTest {
             appUserService,
             appUserRepository,
             calendarSourceRepository,
-            googleCalendarClient
+            googleCalendarClient,
+            calendarMemberRepository,
+            shareRepository
         )
 
         blankService.bootstrapDefaultCalendar()
