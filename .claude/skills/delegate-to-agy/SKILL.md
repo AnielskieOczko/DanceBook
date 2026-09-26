@@ -93,6 +93,13 @@ and are *not* read; agy's real project scope is keyed to its own `--project` ent
 The worktree's parent must be in `trustedWorkspaces` (`/Volumes/my-data/Developer/Projects`
 covers every `../DanceBook-agy-<N>`).
 
+The same parent must be in Claude Code's `permissions.additionalDirectories` in
+`.claude/settings.local.json`. Every clone sits outside the repo, and with
+`blockReadsOutsideWorkingDirectories` on, each command Claude runs against a clone that is
+not covered asks for approval, even in auto mode. Listing the parent once covers every
+clone, so no per-clone add or remove step is needed. The cost is that Claude may also read
+the other projects under that folder without asking.
+
 `.agents/hooks.json` registers a `Stop` hook, `.agents/hooks/agy-stop-gate.py`, which is
 what actually makes agy verify its own work. agy's `Stop` hook receives `fullyIdle` ("true
 if all background tasks are done") and can return `{"decision":"continue"}` to block
@@ -198,22 +205,15 @@ real price of the issue, and the only honest input to "can Pro sustain this".
 ```bash
 git clone -q . ../DanceBook-agy-<N>
 git -C ../DanceBook-agy-<N> checkout -q -b agy/issue-<N> origin/main
-test -f .claude/settings.local.json || echo '{}' > .claude/settings.local.json
-jq '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + ["../DanceBook-agy-<N>"] | unique)' \
-  .claude/settings.local.json > .claude/settings.local.json.tmp && mv .claude/settings.local.json.tmp .claude/settings.local.json
 ```
-
-**Add the clone to `additionalDirectories`.** It sits outside the repo, so without this every
-command Claude runs against it asks for approval, even in auto mode. The settings file is
-reloaded live, so it applies to the current session straight away.
 
 **A clone, not a `git worktree`.** The clone *is* the safety model now that the sandbox is
 gone: agy works on a throwaway copy, so a mistake cannot corrupt the real repo's history or
 your working tree, and nothing reaches `main` without review. A worktree would share
 `.git` with the main repo and give up exactly that protection.
 
-Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove` — and dropping its
-`additionalDirectories` entry (see `verify-agy-work`). (If a worktree was
+Cleanup is `rm -rf ../DanceBook-agy-<N>` — no `git worktree remove` (see
+`verify-agy-work`). (If a worktree was
 ever registered at that path, `git worktree prune` will not clear it while the directory
 exists; delete `.git/worktrees/DanceBook-agy-<N>` by hand.)
 

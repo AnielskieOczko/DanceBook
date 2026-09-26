@@ -149,10 +149,11 @@ gh issue edit <N> --remove-label ready-for-agent --add-label ready-for-human
 The workspace is a clone, so bring the work back yourself: branch off `main` in the main
 repo, copy the changed files across, commit, push and open the PR. Re-run the tests on
 that branch before pushing — you are verifying the code in its real destination, not the
-throwaway clone. Then delete the clone and take it out of the session's directories:
+throwaway clone. Then delete the clone:
 
 ```bash
 rm -rf ../DanceBook-agy-<N>
-jq '.permissions.additionalDirectories -= ["../DanceBook-agy-<N>"]' .claude/settings.local.json > .claude/settings.local.json.tmp \
-  && mv .claude/settings.local.json.tmp .claude/settings.local.json
 ```
+
+The clone's parent folder stays in `additionalDirectories` permanently (see the
+prerequisites in `delegate-to-agy`), so there is no per-clone entry to remove.
