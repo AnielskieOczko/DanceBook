@@ -642,6 +642,54 @@ method when the model already holds that attribute, so
 `.flashAttr("currentUser", viewer)` supplies the viewer without touching `NavbarAdvice`.
 `DanceFigureDenseTableTemplateTest` does this.
 
+### Attendance is per user
+
+Since #153 a training session has **no attendance of its own**. Each person's status lives in
+the `attendance` table, one row per `(training_event_id, user_id)` (`model/Attendance.kt`,
+mapped as `TrainingEvent.attendances`). The `training_event.attendance_status` column is gone.
+This groundwork lets two people share a session once calendars are shared (#154, #155).
+
+- **Always ask for a specific user.** Read with `event.attendanceFor(user)` and
+  `event.isAwaitingConfirmationFor(user)`, and write with `event.setAttendance(user, status)`.
+  All three take a non-null `AppUser` and match by id. **A missing row means `PLANNED`**, so a
+  new attendee never needs a backfill. There is deliberately no user-less accessor. The first
+  round of #153 had one that fell back to `createdBy`, and it would have shown one person
+  another person's status without any error. Templates pass `currentUser` (see *Who the
+  current user is*). `TrainingEventPalette.swatchFor(event, user)` takes the user for the same
+  reason.
+- **The unconfirmed rule still has two copies.** `isAwaitingConfirmationFor` has a SQL mirror
+  in `TrainingEventSpecification`. That mirror left-joins the attendance row for the user whose
+  sessions are listed and treats a missing row as `PLANNED`. A change to one needs the same
+  change to the other.
+- **`training_record` is unique on `(training_event_id, created_by_id)`**, and `created_by` is
+  the attendee, not the session's creator. `TrainingRecordWriter.sync(event, user, status)`
+  writes, updates or removes one attendee's record, and nothing can call it without saying
+  whose record it is. `syncEventDetails(event)` copies title, time, duration, calendar and
+  styles onto every attendee's non-orphaned record when the session changes, and never touches
+  their outcomes. `orphan` stamps every attendee's record when a session is deleted.
+  `TrainingRecordRepository` has no single-record lookup by session, because more than one
+  record can now exist per session.
+- **Who can reach a session has not changed.** Lists, the calendar range, the timeline and
+  stats are still scoped to sessions the current user created. Only the owner or an admin can
+  record attendance, singly or in bulk, and the write always goes to the *acting* user's row.
+  As a result, an admin marking someone else's session records the admin's own attendance, not
+  the owner's. The first round of #153 had widened lists to "created by me, or I have an
+  attendance row" and dropped the ownership check, which let anyone pull any session into
+  their own views. Member access belongs to #155, through calendar membership, not attendance
+  rows.
+- **Google Calendar sync never reads or writes attendance.** `CalendarReconciler` creates
+  sessions without a status, and a synced update or delete reaches history only through
+  `syncEventDetails` and `orphan`.
+- **Loading:** `attendances` is `EAGER` with `@BatchSize(50)`. `TrainingEventRepository.findById`
+  overrides the default with an entity graph that loads `calendar` and `attendances`. The
+  single-session paths (delete, reschedule, the detail page) use the calendar outside a
+  transaction, while `calendar` itself stays `LAZY` for lists.
+- **V34** moved every existing status to the session's `created_by`, and records already
+  belonged to them, so no existing user's numbers changed. `TrainingAttendanceMigrationTest`
+  pins the backfill, and `TrainingAttendancePerUserIntegrationTest` covers two users on one
+  session: separate outcomes, stats and history, a refused non-owner, and both records orphaned
+  on delete.
+
 ### LLM providers
 
 `service/LlmProvider.kt` defines a provider interface (`openrouter`, `google-ai`,
