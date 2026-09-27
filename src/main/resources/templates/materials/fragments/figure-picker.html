@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Figure Picker Dialog (rendered inside #confirmModalContainer) -->
+<dialog th:fragment="figurePickerDialog"
+        id="figurePickerDialog"
+        class="rounded-xl border border-outline-variant bg-surface p-0 shadow-ambient backdrop:bg-black/50 w-full max-w-lg m-auto overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface">
+        <div class="flex items-center gap-2">
+            <span th:replace="~{fragments/icon :: icon(name='push_pin', size='md', cls='text-primary')}"></span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Pin Figure</h3>
+        </div>
+        <form method="dialog" class="ml-auto">
+            <button type="submit" class="btn-icon p-1 min-h-0 min-w-0" aria-label="Close">
+                <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="p-4 sm:p-6 border-b border-outline-variant bg-surface-container/20 space-y-3">
+        <!-- Search input -->
+        <div class="relative group">
+            <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
+            <input type="text"
+                   name="query"
+                   id="figureSearchQuery"
+                   th:value="${query}"
+                   autocomplete="off"
+                   placeholder="Search catalog by name..."
+                   class="w-full bg-surface border border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary rounded-lg py-2.5 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
+                   th:hx-get="@{/materials/{id}/figures/search(id=${material.id})}"
+                   hx-trigger="input changed delay:200ms, search"
+                   hx-target="#figurePickerResults"
+                   hx-include="#figureSearchQuery, #filterAllStyles" />
+        </div>
+
+        <!-- Style Filter -->
+        <div id="figureSearchFilters" class="flex flex-wrap items-center justify-between gap-2 text-label-sm">
+            <th:block th:if="${material.danceType != null}">
+                <label class="inline-flex items-center gap-2 cursor-pointer text-on-surface-variant hover:text-on-surface transition-colors select-none">
+                    <input type="checkbox"
+                           name="allStyles"
+                           id="filterAllStyles"
+                           value="true"
+                           th:checked="${allStyles}"
+                           class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4"
+                           th:hx-get="@{/materials/{id}/figures/search(id=${material.id})}"
+                           hx-trigger="change"
+                           hx-target="#figurePickerResults"
+                           hx-include="#figureSearchQuery, #filterAllStyles" />
+                    <span>Search all dance styles</span>
+                </label>
+                <span class="text-xs text-on-surface-variant/80 truncate max-w-[200px]" th:text="'Note style: ' + ${material.danceType.name}"></span>
+            </th:block>
+            <th:block th:if="${material.danceType == null}">
+                <input type="hidden" name="allStyles" id="filterAllStyles" value="true" />
+                <span class="text-xs text-on-surface-variant">Searching all dance styles</span>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- Results List (HTMX swappable) -->
+    <div id="figurePickerResults" class="p-4 sm:p-6 max-h-[50vh] overflow-y-auto space-y-2 divide-y divide-outline-variant/30">
+        <th:block th:replace="~{materials/fragments/figure-picker :: figurePickerResults}"></th:block>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex items-center justify-end px-6 py-3 border-t border-outline-variant bg-surface">
+        <form method="dialog">
+            <button type="submit" class="btn-outline btn-sm">Done</button>
+        </form>
+    </div>
+</dialog>
+
+<!-- Figure Picker Results Fragment -->
+<div th:fragment="figurePickerResults" id="figurePickerResultsList" class="space-y-2">
+    <div th:if="${#lists.isEmpty(figures)}" class="py-8 text-center text-sm text-on-surface-variant">
+        No figures found.
+    </div>
+
+    <div th:each="fig : ${figures}"
+         class="js-figure-row flex items-center justify-between gap-3 p-3 rounded-lg hover:bg-surface-container/50 transition-colors">
+        <div class="min-w-0 flex-1">
+            <div class="font-medium text-body-md text-on-surface truncate" th:text="${fig.name}">Figure Name</div>
+            <div class="flex flex-wrap items-center gap-1.5 mt-1 text-label-sm">
+                <span th:if="${fig.danceType != null}"
+                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]"
+                      th:text="${fig.danceType.name}">Style</span>
+                <span th:if="${fig.danceClass != null}"
+                      class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface text-[11px] font-medium"
+                      th:text="${'Class ' + fig.danceClass}">Class H</span>
+                <span th:if="${fig.alternativeTiming != null and !#strings.isEmpty(#strings.trim(fig.alternativeTiming))}"
+                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]"
+                      th:text="${fig.alternativeTiming.trim()}">12&amp;3</span>
+            </div>
+        </div>
+
+        <div class="js-figure-action shrink-0">
+            <th:block th:if="${pinnedFigureIds != null and #sets.contains(pinnedFigureIds, fig.id)}">
+                <span class="inline-flex items-center gap-1 text-label-sm text-on-surface-variant font-medium py-1 px-2.5 rounded bg-surface-container">
+                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='text-primary')}"></span>
+                    <span>Pinned</span>
+                </span>
+            </th:block>
+            <th:block th:if="${pinnedFigureIds == null or !#sets.contains(pinnedFigureIds, fig.id)}">
+                <form th:action="@{/materials/{mId}/figures(mId=${material.id})}"
+                      method="post"
+                      th:hx-post="@{/materials/{mId}/figures(mId=${material.id})}"
+                      hx-target="closest .js-figure-action"
+                      hx-swap="outerHTML">
+                    <input type="hidden" name="danceFigureId" th:value="${fig.id}" />
+                    <button type="submit"
+                            class="btn-primary btn-sm flex items-center gap-1"
+                            title="Pin figure"
+                            aria-label="Pin figure">
+                        <span th:replace="~{fragments/icon :: icon(name='push_pin', size='sm')}"></span>
+                        <span>Pin</span>
+                    </button>
+                </form>
+            </th:block>
+        </div>
+    </div>
+</div>
+
+<!-- HTMX Response on Pin -->
+<div th:fragment="figurePinResponse" class="inline-flex items-center gap-1 text-label-sm text-on-surface-variant font-medium py-1 px-2.5 rounded bg-surface-container">
+    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='text-primary')}"></span>
+    <span>Pinned</span>
+    <th:block th:replace="~{materials/view :: pinnedFiguresSection(oobSwap=true)}"></th:block>
+</div>
+
+</body>
+</html>

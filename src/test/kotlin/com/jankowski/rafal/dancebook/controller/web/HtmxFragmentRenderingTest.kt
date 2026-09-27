@@ -288,4 +288,90 @@ class HtmxFragmentRenderingTest {
             .andExpect(content().string(containsString("id=\"bulkEditMaterialModal\"")))
             .andExpect(content().string(startsWith("<dialog")))
     }
+
+    @Test
+    fun `materials figure-picker dialog htmx returns figurePickerDialog fragment as native dialog with id figurePickerDialog`() {
+        val materialId = UUID.randomUUID()
+        val material = com.jankowski.rafal.dancebook.model.Material().apply {
+            id = materialId
+            name = "Test Material"
+            danceType = null
+        }
+        `when`(materialService.findById(materialId)).thenReturn(material)
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+
+        mockMvc.perform(
+            get("/materials/$materialId/figures/picker")
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/fragments/figure-picker :: figurePickerDialog"))
+            .andExpect(content().string(containsString("id=\"figurePickerDialog\"")))
+            .andExpect(content().string(startsWith("<dialog")))
+    }
+
+    @Test
+    fun `materials figure search htmx returns figurePickerResults fragment`() {
+        val materialId = UUID.randomUUID()
+        val material = com.jankowski.rafal.dancebook.model.Material().apply {
+            id = materialId
+            name = "Test Material"
+            danceType = null
+        }
+        `when`(materialService.findById(materialId)).thenReturn(material)
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+
+        mockMvc.perform(
+            get("/materials/$materialId/figures/search")
+                .param("query", "turn")
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/fragments/figure-picker :: figurePickerResults"))
+            .andExpect(content().string(containsString("id=\"figurePickerResultsList\"")))
+            .andExpect(content().string(startsWith("<div")))
+    }
+
+    @Test
+    fun `materials delete figure htmx returns pinnedFiguresSection fragment with id pinnedFiguresSection`() {
+        val materialId = UUID.randomUUID()
+        val figureId = UUID.randomUUID()
+        val material = com.jankowski.rafal.dancebook.model.Material().apply {
+            id = materialId
+            name = "Test Material"
+        }
+        `when`(materialService.findById(materialId)).thenReturn(material)
+        `when`(materialService.findFiguresByMaterial(materialId)).thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/materials/$materialId/figures/$figureId/delete")
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/view :: pinnedFiguresSection"))
+            .andExpect(content().string(containsString("id=\"pinnedFiguresSection\"")))
+            .andExpect(content().string(startsWith("<div")))
+    }
+
+    @Test
+    fun `dance-figure create inline returns figureSelectFragment from materials fragments`() {
+        val danceTypeId = UUID.randomUUID()
+        `when`(danceFigureService.findByDanceType(danceTypeId)).thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/dance-figures/inline")
+                .param("name", "Inline Figure")
+                .param("danceTypeId", danceTypeId.toString())
+                .header("HX-Request", "true")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/fragments/figure-select :: figureSelectFragment"))
+            .andExpect(content().string(containsString("id=\"figureSelectFragment\"")))
+            .andExpect(content().string(startsWith("<div")))
+    }
 }
+
