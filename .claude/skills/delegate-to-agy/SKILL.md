@@ -228,9 +228,43 @@ gh issue view <N> --json number,title,body \
 
 Then append two lines by hand: follow the *Agent delegation contract* in `AGENTS.md`, and
 version control is handled outside the session. Nothing else — no plan, no file list, no
-restatement of rules agy already reads in `AGENTS.md`.
+restatement of rules agy already reads in `AGENTS.md`. The one addition is a design mock,
+when the issue has one (below).
 
 These scratch files are already in `.gitignore`, so they stay out of the diff.
+
+#### UI work with a design mock: put the mock in the clone
+
+agy cannot open a claude.ai artifact, and with `gh` denied it cannot read the design issue
+that links one either. A mock that exists only as a link, or as prose in the issue, leaves
+agy to invent the layout. So when the issue (or a comment on it) names a mock:
+
+1. Read only the artboards the issue builds from, with the Artifact tool: `read` with the
+   mock's `url` and `paths` such as `["project/Main.dc.html"]`. List them first with
+   `scope: "files"` if the artboard names are not obvious. The files land in the scratchpad.
+2. Copy each into the clone under `.agy-mock/` with a descriptive name
+   (`mobile-note-without-media.html`), and keep it out of git. `.agy-mock/` is not in
+   `.gitignore`, so add it to the clone's own exclude file:
+
+   ```bash
+   printf '.agy-mock/\n' >> ../DanceBook-agy-<N>/.git/info/exclude
+   ```
+
+3. Append a `## Design mock` section to `.agy-task.md` that names each file and what it
+   shows. Tell agy to match layout, order, spacing and type sizes, to translate the mock's
+   inline hex colours and fonts into the project's tokens instead of hard-coding them, and
+   to record any deliberate deviation in `.agy-plan.md`.
+4. In the same section, list what the mock shows that belongs to **other** issues, as
+   not to build. A mock usually covers several issues at once (the #146 note-view mock
+   carries #141, #142, #144 and #145), and agy will otherwise build everything it can see.
+
+Mention `.agy-mock/` in the run prompt as well ("open both design mock files in
+`.agy-mock/`"), so agy reads them rather than skimming past the section. Verification still
+compares screenshots of the running app against the mock: having the source does not make
+the result pixel-exact.
+
+Issue #141 is the worked example: the first run started from a text summary of the mock and
+was stopped and restarted once the artboards were in the clone.
 
 ### 4. Run — background, attached
 
