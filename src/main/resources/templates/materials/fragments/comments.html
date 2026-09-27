@@ -1,5 +1,8 @@
-<div th:fragment="comment-list" id="comment-section" class="space-y-8">
-    <h2 class="font-headline-md text-headline-md text-on-surface">Director's Notes</h2>
+<div th:fragment="comment-list" id="comment-section" class="space-y-6">
+    <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+        <span>Comments</span>
+        <span class="font-normal text-on-surface-variant" th:text="${comments != null ? #lists.size(comments) : 0}">0</span>
+    </h2>
 
     <!-- Error Alert -->
     <div th:if="${commentError != null}">
@@ -7,7 +10,7 @@
     </div>
 
     <!-- Input Area -->
-    <div class="mb-8">
+    <div>
         <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
               hx-target="#comment-section"
               hx-swap="outerHTML"
@@ -16,9 +19,9 @@
                 <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
             <div class="flex-1">
-                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder='Add a note or timestamp...', id='comment-content')}"></div>
+                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder='Add a comment...', id='comment-content')}"></div>
                 <div class="flex justify-end mt-2">
-                    <button type="submit" class="font-label-sm text-label-sm text-primary uppercase tracking-wider hover:opacity-70 transition-colors">Post Note</button>
+                    <button type="submit" class="btn-primary btn-sm">Post comment</button>
                 </div>
             </div>
         </form>
@@ -29,8 +32,8 @@
         <th:block th:each="c : ${comments}">
             <div th:replace="~{materials/fragments/comments :: comment-item}"></div>
         </th:block>
-        <div th:if="${#lists.isEmpty(comments)}" class="text-sm text-outline italic">
-            No notes shared for this sequence yet.
+        <div th:if="${#lists.isEmpty(comments)}" class="text-sm text-on-surface-variant italic">
+            No comments yet.
         </div>
     </div>
 </div>
@@ -51,18 +54,20 @@
         <div th:replace="~{fragments/rich-text :: content(value=${c.content}, cls='font-body-md leading-relaxed mt-1')}"></div>
         
         <!-- Actions -->
-        <div class="flex gap-4 mt-3">
+        <div class="flex gap-3 mt-2">
             <button th:if="${currentUser != null and currentUser.id == c.author.id}"
                     th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
-                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-primary transition-colors"><span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit</button>
+                    type="button"
+                    class="text-xs font-medium text-on-surface-variant hover:text-on-surface transition-colors">Edit</button>
             <button th:if="${(currentUser != null and currentUser.id == c.author.id) or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
-                    hx-confirm="Remove this note?"
-                    class="flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider hover:text-error transition-colors"><span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete</button>
+                    hx-confirm="Delete this comment?"
+                    type="button"
+                    class="text-xs font-medium text-on-surface-variant hover:text-error transition-colors">Delete</button>
         </div>
     </div>
 </div>
@@ -85,8 +90,8 @@
                         th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
                         hx-target="closest .group"
                         hx-swap="outerHTML"
-                        class="font-label-sm text-[10px] text-outline uppercase tracking-widest">Cancel</button>
-                <button type="submit" class="font-label-sm text-[10px] text-primary uppercase tracking-widest">Save</button>
+                        class="btn-secondary btn-sm">Cancel</button>
+                <button type="submit" class="btn-primary btn-sm">Save</button>
             </div>
         </form>
     </div>

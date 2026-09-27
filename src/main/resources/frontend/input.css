@@ -1181,8 +1181,10 @@ trix-editor a {
 }
 
 /* ── Rich Text Prose Display ────────────────────── */
-.rich-text {
-  font-family: inherit;
+@layer components {
+  .rich-text {
+    font-family: inherit;
+  }
 }
 
 .rich-text ul {
