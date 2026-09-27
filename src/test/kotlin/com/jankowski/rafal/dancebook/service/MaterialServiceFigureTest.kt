@@ -190,4 +190,27 @@ class MaterialServiceFigureTest {
         verify(materialRepository).save(material)
         verify(eventPublisher).publishEvent(any(MaterialFigureDeletedEvent::class.java))
     }
+
+    @Test
+    fun `findFigureCounts returns empty map when ids list is empty without querying repository`() {
+        val result = materialService.findFigureCounts(emptyList())
+        assertEquals(emptyMap<UUID, Int>(), result)
+        org.mockito.Mockito.verifyNoInteractions(figureRepository)
+    }
+
+    @Test
+    fun `findFigureCounts batches figure counts for multiple materials`() {
+        val id1 = UUID.randomUUID()
+        val id2 = UUID.randomUUID()
+        val counts = listOf(
+            com.jankowski.rafal.dancebook.dto.MaterialFigureCount(id1, 3L),
+            com.jankowski.rafal.dancebook.dto.MaterialFigureCount(id2, 1L)
+        )
+        `when`(figureRepository.countFiguresByMaterialIds(listOf(id1, id2))).thenReturn(counts)
+
+        val result = materialService.findFigureCounts(listOf(id1, id2))
+
+        assertEquals(mapOf(id1 to 3, id2 to 1), result)
+        verify(figureRepository).countFiguresByMaterialIds(listOf(id1, id2))
+    }
 }

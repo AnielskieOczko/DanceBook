@@ -28,6 +28,7 @@ interface MaterialService {
     fun updateFigure(materialId: UUID, figureId: UUID, request: FigureRequest): Figure
     fun removeFigure(materialId: UUID, figureId: UUID)
     fun findFiguresByMaterial(materialId: UUID): List<Figure>
+    fun findFigureCounts(materialIds: Collection<UUID>): Map<UUID, Int>
     fun hasPrivateNotesMatchingFilter(
         owner: com.jankowski.rafal.dancebook.model.AppUser,
         typeIds: List<UUID>?,

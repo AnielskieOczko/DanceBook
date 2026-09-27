@@ -59,7 +59,10 @@ class MaterialWebController(
             nameSearch = nameSearch,
             pageable = pageable
         )
+        val materialIds = materialsPage.content.mapNotNull { it.id }
+        val figureCounts = if (materialIds.isEmpty()) emptyMap() else materialService.findFigureCounts(materialIds)
         model.addAttribute("materials", materialsPage.content)
+        model.addAttribute("figureCounts", figureCounts)
         // Optimisation: We only need to fetch dropdown choices if we are rendering the full page.
         // HTMX requests only swap the table fragment, which doesn't contain the dropdowns!
         if (isHtmxRequest != true) {

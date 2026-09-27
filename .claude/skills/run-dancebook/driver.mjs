@@ -39,6 +39,8 @@ const HELP = `commands:
   url                       print the current URL
   errors                    print console errors and failed or 5xx requests so far
   eval <js>                 evaluate an expression in the page and print the result
+  viewport <w> <h>          resize the page, e.g. viewport 375 800 to check the mobile layout
+  dialog accept|dismiss     answer later confirm() dialogs this way (default dismiss); each is printed
   sleep <ms>                last resort; prefer wait-for`;
 
 const input = process.argv.length > 2
@@ -54,6 +56,9 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 page.setDefaultTimeout(15000);
+
+let dialogMode = 'dismiss';
+page.on('dialog', async (d) => { console.log(`dialog (${dialogMode}): ${d.message()}`); await (dialogMode === 'accept' ? d.accept() : d.dismiss()); });
 
 const problems = [];
 page.on('console', (m) => { if (m.type() === 'error') problems.push(`console: ${m.text()}`); });
@@ -121,6 +126,8 @@ for (const line of commands) {
       case 'url': console.log(page.url()); break;
       case 'errors': console.log(problems.length ? problems.join('\n') : 'no console errors or failed requests'); break;
       case 'eval': console.log(JSON.stringify(await page.evaluate(arg), null, 2)); break;
+      case 'dialog': dialogMode = arg === 'accept' ? 'accept' : 'dismiss'; break;
+      case 'viewport': { const [w, h] = arg.split(/\s+/).map(Number); await page.setViewportSize({ width: w, height: h || 900 }); break; }
       case 'sleep': await page.waitForTimeout(Number(arg)); break;
       default: throw new Error(`unknown command "${cmd}" - try help`);
     }
