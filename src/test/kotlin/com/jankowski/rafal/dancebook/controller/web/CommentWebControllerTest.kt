@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.model.Comment
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.service.*
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -238,4 +239,49 @@ class CommentWebControllerTest {
             .andExpect(content().string(containsString("<trix-editor id=\"comment-edit-$commentId\"")))
             .andExpect(content().string(containsString("value=\"&lt;div&gt;Good &lt;strong&gt;timing&lt;/strong&gt; on chasse&lt;/div&gt;\"")))
     }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `posting comment renders comment list with updated heading and submit button`() {
+        val richContent = "<div>Great <strong>frame</strong>!</div>"
+        `when`(commentService.addComment(materialId, richContent, testUser)).thenReturn(
+            Comment().apply {
+                id = UUID.randomUUID()
+                material = testMaterial
+                author = testUser
+                content = richContent
+                createdAt = LocalDateTime.now()
+            }
+        )
+
+        mockMvc.perform(
+            post("/materials/$materialId/comments")
+                .param("content", richContent)
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Comments")))
+            .andExpect(content().string(containsString("Post comment")))
+            .andExpect(content().string(containsString("Delete this comment?")))
+            .andExpect(content().string(not(containsString("Director"))))
+            .andExpect(content().string(not(containsString("Post Note"))))
+            .andExpect(content().string(not(containsString("Remove this note?"))))
+    }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `empty comments list renders No comments yet and no sequence or Director wording`() {
+        `when`(commentService.getCommentsForMaterial(materialId)).thenReturn(emptyList())
+
+        mockMvc.perform(
+            post("/materials/$materialId/comments")
+                .param("content", "something")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("No comments yet.")))
+            .andExpect(content().string(not(containsString("sequence"))))
+            .andExpect(content().string(not(containsString("Director"))))
+    }
 }
+

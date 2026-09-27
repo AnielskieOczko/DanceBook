@@ -3,142 +3,179 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'" class="space-y-lg -mt-4 md:-mt-8">
+<section th:with="activeNav='materials'" class="max-w-[760px] mx-auto space-y-8 -mt-4 md:-mt-8">
 
     <!-- Contextual Sub-Header -->
-    <header class="flex items-center justify-between py-4 border-b border-surface-variant mb-6">
-        <a href="/materials" class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors group">
-            <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-1 transition-transform')}"></span>
-            <span class="font-label-sm text-label-sm uppercase tracking-wider">Library</span>
+    <header class="flex items-center justify-between pb-4 border-b border-outline-variant">
+        <a href="/materials" class="min-h-[44px] flex items-center gap-1.5 text-sm md:text-base font-medium text-on-surface-variant hover:text-on-surface transition-colors group">
+            <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-0.5 transition-transform')}"></span>
+            <span>Notes</span>
         </a>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
             <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
-                <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary">
+                <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary btn-sm flex items-center gap-1.5">
                     <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                    Edit Notes
+                    <span>Edit note</span>
                 </a>
             </th:block>
         </div>
     </header>
 
-    <!-- Cinematic Video Player -->
-    <section class="w-full aspect-video bg-black rounded-xl overflow-hidden relative group">
-        <th:block th:if="${material.driveFileId != null}">
-            <video th:src="@{/materials/{id}/video(id=${material.id})}"
-                   controls class="w-full h-full" preload="metadata"></video>
-        </th:block>
-        <th:block th:if="${material.driveFileId == null && material.videoLink != null}">
-            <div class="w-full h-full flex flex-col items-center justify-center bg-surface-container-highest">
-                <a th:href="${material.videoLink}" target="_blank" rel="noopener" class="flex flex-col items-center gap-4 text-primary hover:text-primary-hover transition-colors">
-                    <span th:replace="~{fragments/icon :: icon(name='play_circle', size='lg')}"></span>
-                    <span class="text-body-lg font-medium">Watch External Video</span>
-                </a>
+    <!-- Article Content -->
+    <article class="space-y-4">
+        <!-- Tags: plain sentence-case chips -->
+        <div class="flex flex-wrap items-center gap-2 text-xs text-on-surface-variant">
+            <span th:if="${material.danceType != null}"
+                  class="px-2 py-0.5 bg-surface-container rounded"
+                  th:text="${material.danceType.name}">Style</span>
+            <span th:if="${material.danceType != null and material.danceType.category != null}"
+                  class="px-2 py-0.5 bg-surface-container rounded"
+                  th:text="${material.danceType.category.name}">Category</span>
+            <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? 'Public' : 'Private'}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
+        </div>
+
+        <!-- Title in Source Serif 4 -->
+        <h1 class="font-serif text-[30px] md:text-[42px] leading-[1.2] md:leading-[1.15] font-semibold tracking-[-0.01em] md:tracking-[-0.015em] text-on-surface m-0"
+            th:text="${material.name}">Material Name</h1>
+
+        <!-- Meta items -->
+        <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-on-surface-variant">
+            <span th:if="${material.rating != null}" class="flex items-center gap-1">
+                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-on-surface')}"></span>
+                <span><span class="font-semibold text-on-surface" th:text="${material.rating}">4</span>/5</span>
+            </span>
+            <span th:if="${material.createdAt != null}"
+                  th:text="'Created ' + ${#temporals.format(material.createdAt, 'd MMM yyyy')}">Created 16 Sep 2026</span>
+            <span th:if="${material.updatedAt != null}"
+                  th:text="'Updated ' + ${#temporals.format(material.updatedAt, 'd MMM yyyy')}">Updated 22 Sep 2026</span>
+        </div>
+
+        <!-- Note text in Source Serif 4 -->
+        <th:block th:if="${material.description != null}">
+            <div class="pt-2">
+                <div th:replace="~{fragments/rich-text :: content(value=${material.description}, cls='prose-text')}"></div>
             </div>
         </th:block>
-    </section>
+    </article>
 
-    <!-- Content Stack -->
-    <div class="space-y-lg mt-lg">
-        <!-- Details & Figures (Full Width) -->
-        <div class="space-y-lg">
-            <!-- Title & Meta -->
-            <div class="space-y-4">
-                <div class="flex flex-wrap items-center gap-2">
-                    <span th:if="${material.danceType != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.name}">Style</span>
-                    <span th:if="${material.danceType != null && material.danceType.category != null}" class="px-3 py-1 bg-surface-container rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" th:text="${material.danceType.category.name}">Category</span>
-                    <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? 'Public' : 'Private'}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
-                </div>
-                <h1 class="font-headline-lg text-headline-lg text-on-surface" th:text="${material.name}">Material Name</h1>
-                <th:block th:if="${material.description != null}">
-                    <div th:replace="~{fragments/rich-text :: content(value=${material.description}, cls='font-body-md leading-relaxed max-w-3xl')}"></div>
-                </th:block>
-            </div>
+    <!-- Pinned Figures Section -->
+    <div id="pinnedFiguresSection" th:fragment="pinnedFiguresSection" th:attr="hx-swap-oob=${oobSwap == true ? 'outerHTML' : null}" class="pt-7 border-t border-outline-variant space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                <span>Figures</span>
+                <span th:if="${figures != null && !#lists.isEmpty(figures)}" class="text-sm font-normal text-on-surface-variant" th:text="${#lists.size(figures)}"></span>
+            </h2>
+            <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
+                <button type="button"
+                        th:hx-get="@{/materials/{id}/figures/picker(id=${material.id})}"
+                        hx-target="#confirmModalContainer"
+                        hx-swap="innerHTML"
+                        class="btn-secondary btn-sm flex items-center gap-1.5"
+                        aria-label="Pin figure">
+                    <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
+                    <span>Pin figure</span>
+                </button>
+            </th:block>
+        </div>
 
-            <!-- Pinned Figures Section -->
-            <div id="pinnedFiguresSection" th:fragment="pinnedFiguresSection" th:attr="hx-swap-oob=${oobSwap == true ? 'outerHTML' : null}" class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-                        <span th:replace="~{fragments/icon :: icon(name='push_pin', size='md', cls='text-primary')}"></span>
-                        <span>Figures</span>
-                        <span th:if="${figures != null && !#lists.isEmpty(figures)}" class="text-sm font-normal text-on-surface-variant" th:text="'(' + ${#lists.size(figures)} + ')'"></span>
-                    </h2>
-                    <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
-                        <button type="button"
-                                th:hx-get="@{/materials/{id}/figures/picker(id=${material.id})}"
-                                hx-target="#confirmModalContainer"
-                                hx-swap="innerHTML"
-                                class="btn-secondary btn-sm flex items-center gap-1.5"
-                                aria-label="Pin figure">
-                            <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
-                            <span>Pin figure</span>
-                        </button>
-                    </th:block>
-                </div>
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm">
+            No figures pinned to this note yet.
+        </div>
 
-                <!-- Empty state -->
-                <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm">
-                    No figures pinned to this note yet.
-                </div>
+        <!-- Pinned figures grid -->
+        <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div th:each="f : ${figures}"
+                 class="group relative flex items-start justify-between p-3.5 rounded-lg border border-outline-variant bg-surface hover:border-outline hover:shadow-xs transition-all">
+                <div class="min-w-0 flex-1 pr-2">
+                    <a th:if="${f.danceFigure != null}"
+                       th:href="@{/dance-figures/{id}(id=${f.danceFigure.id})}"
+                       class="font-body-md text-on-surface font-medium hover:text-primary transition-colors block line-clamp-2 break-words"
+                       th:text="${f.name}">
+                        Figure Name
+                    </a>
+                    <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block line-clamp-2 break-words" th:text="${f.name}">Figure Name</span>
 
-                <!-- Pinned figures grid -->
-                <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div th:each="f : ${figures}"
-                         class="group relative flex items-start justify-between p-3.5 rounded-lg border border-outline-variant bg-surface hover:border-outline hover:shadow-xs transition-all">
-                        <div class="min-w-0 flex-1 pr-2">
-                            <a th:if="${f.danceFigure != null}"
-                               th:href="@{/dance-figures/{id}(id=${f.danceFigure.id})}"
-                               class="font-body-md text-on-surface font-medium hover:text-primary transition-colors block line-clamp-2 break-words"
-                               th:text="${f.name}">
-                                Figure Name
-                            </a>
-                            <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block line-clamp-2 break-words" th:text="${f.name}">Figure Name</span>
-
-                            <!-- Metadata chips: Style, Class, Alternative Timing (only if present) -->
-                            <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-label-sm">
-                                <!-- Dance Style -->
-                                <span th:if="${f.danceFigure?.danceType != null}"
-                                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
-                                      th:text="${f.danceFigure.danceType.name}">Style</span>
-                                <!-- Dance Class -->
-                                <span th:if="${f.danceFigure?.danceClass != null}"
-                                      class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface font-label-sm text-[11px] font-medium"
-                                      th:text="${'Class ' + f.danceFigure.danceClass}">Class H</span>
-                                <!-- Alternative Timing (only if present and not empty/blank) -->
-                                <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}"
-                                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
-                                      th:text="${f.danceFigure.alternativeTiming.trim()}">12&amp;3</span>
-                            </div>
-                        </div>
-
-                        <!-- Unpin button (owner/admin only) -->
-                        <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
-                            <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
-                                  method="post"
-                                  th:hx-post="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
-                                  hx-target="#pinnedFiguresSection"
-                                  hx-swap="outerHTML"
-                                  class="shrink-0">
-                                <button type="submit"
-                                        class="text-outline-variant hover:text-error transition-colors p-2.5 rounded-lg hover:bg-surface-container flex items-center justify-center min-w-[44px] min-h-[44px]"
-                                        title="Unpin figure"
-                                        aria-label="Unpin figure">
-                                    <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
-                                </button>
-                            </form>
-                        </th:block>
+                    <!-- Metadata chips: Style, Class, Alternative Timing (only if present) -->
+                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-label-sm">
+                        <!-- Dance Style -->
+                        <span th:if="${f.danceFigure?.danceType != null}"
+                              class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
+                              th:text="${f.danceFigure.danceType.name}">Style</span>
+                        <!-- Dance Class -->
+                        <span th:if="${f.danceFigure?.danceClass != null}"
+                              class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface font-label-sm text-[11px] font-medium"
+                              th:text="${'Class ' + f.danceFigure.danceClass}">Class H</span>
+                        <!-- Alternative Timing (only if present and not empty/blank) -->
+                        <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}"
+                              class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
+                              th:text="${f.danceFigure.alternativeTiming.trim()}">12&amp;3</span>
                     </div>
                 </div>
+
+                <!-- Unpin button (owner/admin only) -->
+                <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
+                    <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
+                          method="post"
+                          th:hx-post="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
+                          hx-target="#pinnedFiguresSection"
+                          hx-swap="outerHTML"
+                          class="shrink-0">
+                        <button type="submit"
+                                class="text-outline-variant hover:text-error transition-colors p-2.5 rounded-lg hover:bg-surface-container flex items-center justify-center min-w-[44px] min-h-[44px]"
+                                title="Unpin figure"
+                                aria-label="Unpin figure">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                        </button>
+                    </form>
+                </th:block>
             </div>
         </div>
-
-        <!-- Divider -->
-        <hr class="border-surface-variant my-8" />
-
-        <!-- Director's Notes (Comments Section moved to bottom) -->
-        <div class="max-w-4xl">
-            <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
-        </div>
     </div>
+
+    <!--/* Video and source Section (only rendered when video or source is present) */-->
+    <th:block th:if="${(material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))) or (material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))) or (material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink)))}">
+        <section class="pt-7 border-t border-outline-variant space-y-4">
+            <h2 class="font-headline-md text-headline-md text-on-surface">Video and source</h2>
+
+            <!--/* Drive Video Player (if Drive file exists) */-->
+            <th:block th:if="${material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))}">
+                <div class="w-full aspect-video bg-black rounded-lg overflow-hidden">
+                    <video th:src="@{/materials/{id}/video(id=${material.id})}"
+                           controls class="w-full h-full" preload="metadata"></video>
+                </div>
+            </th:block>
+
+            <!--/* Links list (if Video Link or Source Link exists) */-->
+            <th:block th:if="${(material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))) or (material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink)))}">
+                <dl class="grid grid-cols-1 sm:grid-cols-[140px_minmax(0,1fr)] gap-y-3 sm:gap-x-5 text-sm">
+                    <th:block th:if="${material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))}">
+                        <dt class="text-on-surface-variant font-medium">Video</dt>
+                        <dd class="flex flex-col gap-0.5 min-w-0">
+                            <a th:href="${material.videoLink}" target="_blank" rel="noopener"
+                               class="font-medium text-primary hover:text-primary-hover break-all transition-colors"
+                               th:text="${material.videoLink}">Video link</a>
+                            <span class="text-xs text-on-surface-variant">A video to watch for this note</span>
+                        </dd>
+                    </th:block>
+                    <th:block th:if="${material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink))}">
+                        <dt class="text-on-surface-variant font-medium">Source</dt>
+                        <dd class="flex flex-col gap-0.5 min-w-0">
+                            <a th:href="${material.sourceLink}" target="_blank" rel="noopener"
+                               class="font-medium text-primary hover:text-primary-hover break-all transition-colors"
+                               th:text="${material.sourceLink}">Source link</a>
+                            <span class="text-xs text-on-surface-variant">Where this material came from</span>
+                        </dd>
+                    </th:block>
+                </dl>
+            </th:block>
+        </section>
+    </th:block>
+
+    <!-- Comments Section -->
+    <section class="pt-7 border-t border-outline-variant">
+        <div th:replace="~{materials/fragments/comments :: comment-list}"></div>
+    </section>
 
     <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
 </section>
