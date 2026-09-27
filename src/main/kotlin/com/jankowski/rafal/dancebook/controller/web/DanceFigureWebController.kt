@@ -285,7 +285,7 @@ class DanceFigureWebController(
         model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("inlineError", inlineError)
 
-        return "materials/view :: figureSelectFragment"
+        return "materials/fragments/figure-select :: figureSelectFragment"
     }
 
     @GetMapping("/api")

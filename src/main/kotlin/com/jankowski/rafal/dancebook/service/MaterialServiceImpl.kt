@@ -200,6 +200,13 @@ class MaterialServiceImpl(
         checkOwnership(material, currentUser)
         val df = danceFigureRepository.findById(request.danceFigureId!!)
             .orElseThrow { EntityNotFoundException("DanceFigure not found") }
+
+        val existing = material.figures.find { it.danceFigure?.id == request.danceFigureId }
+        if (existing != null) {
+            log.debug("Figure '{}' already pinned to material {}", request.danceFigureId, materialId)
+            return existing
+        }
+
         val figure = Figure().apply {
             startTime = request.startTime
             endTime = request.endTime

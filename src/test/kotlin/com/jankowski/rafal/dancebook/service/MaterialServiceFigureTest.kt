@@ -109,6 +109,81 @@ class MaterialServiceFigureTest {
     }
 
     @Test
+    fun `should pin figure with default 0-0 timing without time fields`() {
+        val materialId = UUID.randomUUID()
+        val danceFigureId = UUID.randomUUID()
+
+        val material = Material().apply {
+            id = materialId
+            name = "Note on Waltz"
+            owner = currentUser
+            visibility = Visibility.PUBLIC
+        }
+
+        val danceFigure = DanceFigure().apply {
+            id = danceFigureId
+            name = "Reverse Turn"
+        }
+
+        `when`(materialRepository.findOne(any())).thenReturn(Optional.of(material))
+        `when`(danceFigureRepository.findById(danceFigureId)).thenReturn(Optional.of(danceFigure))
+
+        // Default FigureRequest has startTime=0, endTime=0
+        val request = FigureRequest(danceFigureId = danceFigureId)
+
+        val result = materialService.addFigure(materialId, request)
+
+        assertNotNull(result)
+        assertEquals(danceFigure, result.danceFigure)
+        assertEquals("Reverse Turn", result.name)
+        assertEquals(0, result.startTime)
+        assertEquals(0, result.endTime)
+        assertEquals(1, material.figures.size)
+        verify(materialRepository).save(material)
+        verify(eventPublisher).publishEvent(any(MaterialFigureAddedEvent::class.java))
+    }
+
+    @Test
+    fun `pinning duplicate figure has no effect and never adds duplicate`() {
+        val materialId = UUID.randomUUID()
+        val danceFigureId = UUID.randomUUID()
+
+        val danceFigure = DanceFigure().apply {
+            id = danceFigureId
+            name = "Natural Turn"
+        }
+
+        val existingFigure = Figure().apply {
+            id = UUID.randomUUID()
+            this.danceFigure = danceFigure
+            startTime = 0
+            endTime = 0
+        }
+
+        val material = Material().apply {
+            id = materialId
+            name = "Waltz Sequence"
+            owner = currentUser
+            visibility = Visibility.PUBLIC
+            figures.add(existingFigure)
+        }
+        existingFigure.material = material
+
+        `when`(materialRepository.findOne(any())).thenReturn(Optional.of(material))
+        `when`(danceFigureRepository.findById(danceFigureId)).thenReturn(Optional.of(danceFigure))
+
+        val request = FigureRequest(danceFigureId = danceFigureId)
+
+        val result = materialService.addFigure(materialId, request)
+
+        assertEquals(existingFigure, result)
+        assertEquals(1, material.figures.size)
+        // Verify repository save and event publisher were NOT called for duplicate
+        org.mockito.Mockito.verify(materialRepository, org.mockito.Mockito.never()).save(material)
+        org.mockito.Mockito.verify(eventPublisher, org.mockito.Mockito.never()).publishEvent(any(MaterialFigureAddedEvent::class.java))
+    }
+
+    @Test
     fun `should update figure timing and trigger update event`() {
         val materialId = UUID.randomUUID()
         val figureId = UUID.randomUUID()

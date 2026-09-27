@@ -54,137 +54,78 @@
                 </th:block>
             </div>
 
-            <!-- Figures List (Bento Grid Style) -->
-            <div class="space-y-6">
-                <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3">
-                    <span th:replace="~{fragments/icon :: icon(name='format_list_bulleted', size='md', cls='text-primary')}"></span>
-                    Key Figures
-                </h2>
-                
-                <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-outline">
-                    No figures tracked for this sequence yet.
+            <!-- Pinned Figures Section -->
+            <div id="pinnedFiguresSection" th:fragment="pinnedFiguresSection" th:attr="hx-swap-oob=${oobSwap == true ? 'outerHTML' : null}" class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                        <span th:replace="~{fragments/icon :: icon(name='push_pin', size='md', cls='text-primary')}"></span>
+                        <span>Figures</span>
+                        <span th:if="${figures != null && !#lists.isEmpty(figures)}" class="text-sm font-normal text-on-surface-variant" th:text="'(' + ${#lists.size(figures)} + ')'"></span>
+                    </h2>
+                    <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
+                        <button type="button"
+                                th:hx-get="@{/materials/{id}/figures/picker(id=${material.id})}"
+                                hx-target="#confirmModalContainer"
+                                hx-swap="innerHTML"
+                                class="btn-secondary btn-sm flex items-center gap-1.5"
+                                aria-label="Pin figure">
+                            <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
+                            <span>Pin figure</span>
+                        </button>
+                    </th:block>
                 </div>
 
-                <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div th:each="f : ${figures}" class="p-4 border border-outline-variant rounded-lg bg-surface flex gap-4 items-center hover:border-outline transition-colors cursor-pointer group">
-                        <div class="w-16 h-16 rounded bg-surface-container overflow-hidden shrink-0 relative flex items-center justify-center">
-                            <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-outline/30 group-hover:text-primary/50 transition-colors')}"></span>
-                            <div class="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span th:replace="~{fragments/icon :: icon(name='play_arrow', size='sm', cls='text-white')}"></span>
+                <!-- Empty state -->
+                <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm">
+                    No figures pinned to this note yet.
+                </div>
+
+                <!-- Pinned figures grid -->
+                <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div th:each="f : ${figures}"
+                         class="group relative flex items-start justify-between p-3.5 rounded-lg border border-outline-variant bg-surface hover:border-outline hover:shadow-xs transition-all">
+                        <div class="min-w-0 flex-1 pr-2">
+                            <a th:if="${f.danceFigure != null}"
+                               th:href="@{/dance-figures/{id}(id=${f.danceFigure.id})}"
+                               class="font-body-md text-on-surface font-medium hover:text-primary transition-colors block line-clamp-2 break-words"
+                               th:text="${f.name}">
+                                Figure Name
+                            </a>
+                            <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block line-clamp-2 break-words" th:text="${f.name}">Figure Name</span>
+
+                            <!-- Metadata chips: Style, Class, Alternative Timing (only if present) -->
+                            <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-label-sm">
+                                <!-- Dance Style -->
+                                <span th:if="${f.danceFigure?.danceType != null}"
+                                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
+                                      th:text="${f.danceFigure.danceType.name}">Style</span>
+                                <!-- Dance Class -->
+                                <span th:if="${f.danceFigure?.danceClass != null}"
+                                      class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface font-label-sm text-[11px] font-medium"
+                                      th:text="${'Class ' + f.danceFigure.danceClass}">Class H</span>
+                                <!-- Alternative Timing (only if present and not empty/blank) -->
+                                <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}"
+                                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
+                                      th:text="${f.danceFigure.alternativeTiming.trim()}">12&amp;3</span>
                             </div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider block mb-1" th:text="${f.startTime + ' – ' + f.endTime}">0:00</span>
-                            <h3 class="font-body-md text-on-surface font-medium truncate" th:text="${f.danceFigure != null && f.danceFigure.alternativeTiming != null ? f.name + ' [' + f.danceFigure.alternativeTiming + ']' : f.name}">Figure Name</h3>
-                        </div>
-                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                            <button type="button" 
-                                    class="js-edit-figure-btn text-outline-variant hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-                                    th:data-id="${f.id}"
-                                    th:data-dance-figure-id="${f.danceFigure?.id}"
-                                    th:data-start-time="${f.startTime}"
-                                    th:data-end-time="${f.endTime}"
-                                    title="Edit figure" aria-label="Edit figure">
-                                <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
-                            </button>
+
+                        <!-- Unpin button (owner/admin only) -->
+                        <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
                             <form th:action="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
-                                  method="post" data-confirm="Delete this figure?"
-                                  class="inline">
-                                <button type="submit" class="text-outline-variant hover:text-error transition-colors flex items-center gap-1 text-sm min-h-[44px] px-2" title="Delete figure">
-                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
-                                    <span>Delete</span>
+                                  method="post"
+                                  th:hx-post="@{/materials/{mId}/figures/{fId}/delete(mId=${material.id}, fId=${f.id})}"
+                                  hx-target="#pinnedFiguresSection"
+                                  hx-swap="outerHTML"
+                                  class="shrink-0">
+                                <button type="submit"
+                                        class="text-outline-variant hover:text-error transition-colors p-2.5 rounded-lg hover:bg-surface-container flex items-center justify-center min-w-[44px] min-h-[44px]"
+                                        title="Unpin figure"
+                                        aria-label="Unpin figure">
+                                    <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
                                 </button>
                             </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add/Edit Figure Form -->
-            <div id="figureFormContainer" class="p-4 sm:p-6 border border-surface-variant rounded-xl bg-surface-container/20 space-y-6">
-                <h3 id="figureFormHeader" class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-3">
-                    <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md', cls='text-primary', id='figureFormHeaderIcon')}"></span>
-                    <span id="figureFormHeaderText">Add Figure to Sequence</span>
-                </h3>
-
-                <form th:action="@{/materials/{id}/figures(id=${material.id})}" method="post" class="space-y-4">
-                    <input type="hidden" name="id" id="editFigureId" />
-                    <div id="figureSelectFragment" th:fragment="figureSelectFragment" class="flex flex-col gap-2">
-                        <label for="danceFigureId" class="form-label">Select Figure</label>
-                        <div class="relative flex items-center gap-2">
-                            <select name="danceFigureId" id="danceFigureId" required class="form-select flex-1 min-w-0">
-                                <option value="">Select a figure...</option>
-                                <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
-                                    Figure Name
-                                </option>
-                            </select>
-                            <button type="button" class="js-toggle-inline-figure w-11 h-11 rounded-lg border border-primary text-primary hover:bg-primary/10 flex items-center justify-center shrink-0 transition-colors" title="Create a new figure inline" aria-label="Create a new figure inline">
-                                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                            </button>
-                        </div>
-                        <span th:if="${inlineError != null}" class="text-error font-body-sm text-[12px] block mt-1" th:text="${inlineError}">Error message</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-2">
-                            <label for="startTime" class="form-label">Start Time (seconds)</label>
-                            <input type="number" name="startTime" id="startTime" min="0" required class="form-input" value="0"/>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label for="endTime" class="form-label">End Time (seconds)</label>
-                            <input type="number" name="endTime" id="endTime" min="0" required class="form-input" value="0"/>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button type="submit" id="submitFigureBtn" class="btn-primary flex-1">
-                            Save to Sequence
-                        </button>
-                        <button type="button" id="cancelEditFigureBtn" class="btn-outline hidden">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Hidden inline new figure registration form -->
-                <div id="inlineNewFigureForm" class="hidden p-4 rounded-xl border border-surface-variant bg-surface-container/50 space-y-4">
-                    <h4 class="font-label-md text-label-md uppercase tracking-wider text-primary">Create New Figure in Dictionary</h4>
-                    <input type="hidden" name="danceTypeId" id="newFigureDanceTypeId" th:value="${material.danceType?.id}"/>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="flex flex-col gap-2">
-                            <label for="newFigureName" class="form-label">Figure Name</label>
-                            <input type="text" name="name" id="newFigureName" placeholder="e.g. Double Spin" class="form-input"/>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label for="newFigureClass" class="form-label">Dancer Class (Optional)</label>
-                            <select name="danceClass" id="newFigureClass" class="form-select">
-                                <option value="">None (Social/General)</option>
-                                <option value="H">H</option>
-                                <option value="G">G</option>
-                                <option value="F">F</option>
-                                <option value="E">E</option>
-                                <option value="D">D</option>
-                                <option value="C">C</option>
-                                <option value="B">B</option>
-                                <option value="A">A</option>
-                                <option value="S">S</option>
-                            </select>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label for="newFigureAltTiming" class="form-label">Alternative Timing (Optional)</label>
-                            <input type="text" name="alternativeTiming" id="newFigureAltTiming" placeholder="e.g. 12&3" class="form-input"/>
-                        </div>
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button type="button" class="js-toggle-inline-figure btn-outline">Cancel</button>
-                        <button type="button"
-                                th:attr="hx-post=@{/dance-figures/inline}"
-                                hx-include="#newFigureName, #newFigureClass, #newFigureAltTiming, #newFigureDanceTypeId"
-                                hx-target="#figureSelectFragment"
-                                hx-swap="outerHTML"
-                                class="js-save-inline-figure btn-primary">
-                            Save Figure
-                        </button>
+                        </th:block>
                     </div>
                 </div>
             </div>

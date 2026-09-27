@@ -91,13 +91,9 @@ class MaterialWebController(
         val material = materialService.findById(id)
         val figures = materialService.findFiguresByMaterial(id)
         val comments = commentService.getCommentsForMaterial(id)
-        val availableFigures = material.danceType?.id?.let {
-            danceFigureService.findByDanceType(it)
-        } ?: emptyList()
         model.addAttribute("material", material)
         model.addAttribute("figures", figures)
         model.addAttribute("comments", comments)
-        model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
     }
@@ -124,40 +120,100 @@ class MaterialWebController(
         }
     }
 
-    @PostMapping("/{id}/figures")
+    @GetMapping("/{materialId}/figures/picker")
+    fun showFigurePicker(
+        @PathVariable materialId: UUID,
+        model: Model
+    ): String {
+        val material = materialService.findById(materialId)
+        val danceTypeId = material.danceType?.id
+        val figures = if (danceTypeId != null) {
+            danceFigureService.findAll(
+                typeIds = listOf(danceTypeId),
+                sortBy = "name_asc"
+            )
+        } else {
+            danceFigureService.findAll(sortBy = "name_asc")
+        }
+        val pinnedFigureIds = material.figures.mapNotNull { it.danceFigure?.id }.toSet()
+        model.addAttribute("material", material)
+        model.addAttribute("figures", figures)
+        model.addAttribute("pinnedFigureIds", pinnedFigureIds)
+        model.addAttribute("allStyles", danceTypeId == null)
+        model.addAttribute("query", "")
+        return "materials/fragments/figure-picker :: figurePickerDialog"
+    }
+
+    @GetMapping("/{materialId}/figures/search")
+    fun searchFigures(
+        @PathVariable materialId: UUID,
+        @RequestParam(required = false, defaultValue = "") query: String,
+        @RequestParam(required = false, defaultValue = "false") allStyles: Boolean,
+        model: Model
+    ): String {
+        val material = materialService.findById(materialId)
+        val danceTypeId = if (allStyles) null else material.danceType?.id
+        val figures = danceFigureService.findAll(
+            typeIds = danceTypeId?.let { listOf(it) },
+            nameSearch = query.takeIf { it.isNotBlank() },
+            sortBy = "name_asc"
+        )
+        val pinnedFigureIds = material.figures.mapNotNull { it.danceFigure?.id }.toSet()
+        model.addAttribute("material", material)
+        model.addAttribute("figures", figures)
+        model.addAttribute("pinnedFigureIds", pinnedFigureIds)
+        model.addAttribute("allStyles", allStyles)
+        model.addAttribute("query", query)
+        return "materials/fragments/figure-picker :: figurePickerResults"
+    }
+
+    @PostMapping("/{materialId}/figures")
     fun addFigure(
-        @PathVariable id: UUID,
+        @PathVariable materialId: UUID,
         @Valid @ModelAttribute("figureRequest") request: FigureRequest,
         bindingResult: BindingResult,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model
     ): String {
         if (bindingResult.hasErrors()) {
-            val material = materialService.findById(id)
-            val figures = materialService.findFiguresByMaterial(id)
-            val comments = commentService.getCommentsForMaterial(id)
-            val availableFigures = material.danceType?.id?.let {
-                danceFigureService.findByDanceType(it)
-            } ?: emptyList()
+            val material = materialService.findById(materialId)
+            val figures = materialService.findFiguresByMaterial(materialId)
+            val comments = commentService.getCommentsForMaterial(materialId)
             model.addAttribute("material", material)
             model.addAttribute("figures", figures)
             model.addAttribute("comments", comments)
-            model.addAttribute("availableFigures", availableFigures)
             return "materials/view"
         }
         if (request.id != null) {
-            materialService.updateFigure(id, request.id, request)
+            materialService.updateFigure(materialId, request.id, request)
         } else {
-            materialService.addFigure(id, request)
+            materialService.addFigure(materialId, request)
         }
-        return "redirect:/materials/$id"
+        if (isHtmxRequest == true) {
+            val material = materialService.findById(materialId)
+            val figures = materialService.findFiguresByMaterial(materialId)
+            model.addAttribute("material", material)
+            model.addAttribute("figures", figures)
+            return "materials/fragments/figure-picker :: figurePinResponse"
+        }
+        return "redirect:/materials/$materialId"
     }
 
     @PostMapping("/{materialId}/figures/{figureId}/delete")
     fun deleteFigure(
         @PathVariable materialId: UUID,
-        @PathVariable figureId: UUID
+        @PathVariable figureId: UUID,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
+        model: Model
     ): String {
         materialService.removeFigure(materialId, figureId)
+        if (isHtmxRequest == true) {
+            val material = materialService.findById(materialId)
+            val figures = materialService.findFiguresByMaterial(materialId)
+            model.addAttribute("material", material)
+            model.addAttribute("figures", figures)
+            return "materials/view :: pinnedFiguresSection"
+        }
         return "redirect:/materials/$materialId"
     }
 
