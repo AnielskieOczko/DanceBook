@@ -87,11 +87,11 @@
                         <div class="min-w-0 flex-1 pr-2">
                             <a th:if="${f.danceFigure != null}"
                                th:href="@{/dance-figures/{id}(id=${f.danceFigure.id})}"
-                               class="font-body-md text-on-surface font-medium hover:text-primary transition-colors block truncate"
+                               class="font-body-md text-on-surface font-medium hover:text-primary transition-colors block line-clamp-2 break-words"
                                th:text="${f.name}">
                                 Figure Name
                             </a>
-                            <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block truncate" th:text="${f.name}">Figure Name</span>
+                            <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block line-clamp-2 break-words" th:text="${f.name}">Figure Name</span>
 
                             <!-- Metadata chips: Style, Class, Alternative Timing (only if present) -->
                             <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-label-sm">

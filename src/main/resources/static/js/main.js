@@ -25,7 +25,9 @@ document.addEventListener('htmx:afterRequest', function(event) {
             }, 50);
         }
     }
-    if (target && target.closest('#confirmModalContainer')) {
+    // One-shot confirm dialogs close after their request; a dialog marked
+    // data-keep-open (e.g. the figure picker) makes several and stays open.
+    if (target && target.closest('#confirmModalContainer') && !target.closest('[data-keep-open]')) {
         if (event.detail.successful) {
             const container = document.getElementById('confirmModalContainer');
             if (container) container.innerHTML = '';

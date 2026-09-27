@@ -8,10 +8,11 @@
 <!-- Figure Picker Dialog (rendered inside #confirmModalContainer) -->
 <dialog th:fragment="figurePickerDialog"
         id="figurePickerDialog"
-        class="rounded-xl border border-outline-variant bg-surface p-0 shadow-ambient backdrop:bg-black/50 w-full max-w-lg m-auto overflow-hidden">
+        data-keep-open
+        class="rounded-xl border border-outline-variant bg-surface p-0 shadow-ambient backdrop:bg-black/50 w-[calc(100%-2rem)] max-w-[32rem] m-auto overflow-hidden">
     
     <!-- Modal Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface">
+    <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-outline-variant bg-surface">
         <div class="flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='push_pin', size='md', cls='text-primary')}"></span>
             <h3 class="font-headline-sm text-headline-sm text-on-surface">Pin Figure</h3>
@@ -72,7 +73,7 @@
     </div>
 
     <!-- Modal Footer -->
-    <div class="flex items-center justify-end px-6 py-3 border-t border-outline-variant bg-surface">
+    <div class="flex items-center justify-end px-4 sm:px-6 py-3 border-t border-outline-variant bg-surface">
         <form method="dialog">
             <button type="submit" class="btn-outline btn-sm">Done</button>
         </form>
@@ -88,7 +89,7 @@
     <div th:each="fig : ${figures}"
          class="js-figure-row flex items-center justify-between gap-3 p-3 rounded-lg hover:bg-surface-container/50 transition-colors">
         <div class="min-w-0 flex-1">
-            <div class="font-medium text-body-md text-on-surface truncate" th:text="${fig.name}">Figure Name</div>
+            <div class="font-medium text-body-md text-on-surface line-clamp-2 break-words" th:text="${fig.name}">Figure Name</div>
             <div class="flex flex-wrap items-center gap-1.5 mt-1 text-label-sm">
                 <span th:if="${fig.danceType != null}"
                       class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]"
