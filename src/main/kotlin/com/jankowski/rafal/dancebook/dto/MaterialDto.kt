@@ -78,3 +78,8 @@ data class DanceCategoryRequest(
     val image: org.springframework.web.multipart.MultipartFile? = null
 )
 
+data class MaterialFigureCount(
+    val materialId: UUID,
+    val count: Long
+)
+

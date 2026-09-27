@@ -255,6 +255,13 @@ class MaterialServiceImpl(
         return figureRepository.findAllByMaterialIdOrderByStartTimeAsc(materialId)
     }
 
+    override fun findFigureCounts(materialIds: Collection<UUID>): Map<UUID, Int> {
+        if (materialIds.isEmpty()) return emptyMap()
+        log.debug("Retrieving figure counts for {} materials", materialIds.size)
+        return figureRepository.countFiguresByMaterialIds(materialIds)
+            .associate { it.materialId to it.count.toInt() }
+    }
+
     override fun hasPrivateNotesMatchingFilter(
         owner: AppUser,
         typeIds: List<UUID>?,
