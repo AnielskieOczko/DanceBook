@@ -59,9 +59,27 @@ This trips people up constantly:
 
 - **`DanceFigure`** — a catalog entry in the syllabus (name, dance type, dance class,
   starting/ending feet and positions, preceding/following figure names, notes).
-- **`Figure`** — a *timestamped occurrence* of a `DanceFigure` inside a `Material`
-  (a video), carrying only `startTime`/`endTime`; its `name` delegates to the linked
-  `DanceFigure`.
+- **`Figure`** — a note's *pin* of a `DanceFigure`: "this note is about that figure".
+  Its `name` delegates to the linked `DanceFigure`. It still carries
+  `startTime`/`endTime` from when it tagged a moment in the note's video, but see below.
+
+**Pinning has no times in the UI** (#142). The note page's **Pin figure** button opens a
+picker dialog (`materials/fragments/figure-picker.html`, served by
+`GET /materials/{materialId}/figures/picker` and `…/figures/search`). It searches the catalog
+by name, is narrowed to the note's dance style by default, and can be widened to all styles.
+A pin posts only `danceFigureId`, so new pins store the default `0`/`0`. `addFigure` ignores a
+figure that is already pinned. Pinned figures render as cards with name, style, class and
+alternative timing, and unpin in place. **The columns, the figure-times handling in the
+service and controller, and `POST /dance-figures/inline` are kept on purpose**, so timed
+figures and inline creation can come back without being rebuilt. Don't delete them as dead
+code. The inline endpoint's fragment now lives in `materials/fragments/figure-select.html`,
+and nothing on the note page renders it.
+
+**The pin path variable is `{materialId}`, not `{id}`.** Spring's data binder copies URI
+template variables into a `@ModelAttribute` whose property has the same name, unless the
+request already sends that parameter. `FigureRequest` has an `id`, and the picker's form sends
+none. Under `{id}`, the note's id landed in `request.id` and turned every pin into an
+`updateFigure` call. Keep path variables clear of the request DTO's property names.
 
 A `DanceFigure` owns `DanceFigureStepSet`s (named variants, one flagged `isDefault`),
 each owning `DanceFigureStep`s tagged with a `role` of `"LEADER"` or `"FOLLOWER"`.
@@ -348,7 +366,12 @@ call for a new case.
 The mechanism is worth knowing before you add one. A controller returns the dialog fragment,
 htmx swaps it into `#confirmModalContainer` in `layout.html`, and a single `htmx:afterSwap`
 listener calls `showModal()` on whatever dialog just landed; a `close` listener empties the
-container afterwards. That is the entire JavaScript. **Focus trapping, Escape, the inert
+container afterwards. An `htmx:afterRequest` listener also empties it after any successful
+request made from inside it, which is how a confirm dialog closes once its action succeeds.
+**A dialog that makes several requests while it stays open needs `data-keep-open`** on the
+`<dialog>`, as the figure picker has (#142). Without it, the first search or pin wipes the
+dialog. The MockMvc tests cannot see this, because it only happens in the browser. That is the
+entire JavaScript. **Focus trapping, Escape, the inert
 backdrop and the close button are the browser's**, so do not reimplement them — the ~60 lines
 that used to do it by hand were deleted, and they never trapped focus anyway: Tab walked
 behind the dialog into the page underneath. A close button is `<form method="dialog">`, which
@@ -913,7 +936,9 @@ into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset impo
 - **Do not use `max-w-{xs,sm,md,lg,xl}`.** The named spacing scale defines
   `--spacing-md` and friends, and a `--spacing-<name>` token shadows the stock
   `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
-  `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`.
+  `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`. The build
+  and the tests cannot see this. #142's figure picker shipped `max-w-lg`, passed a green
+  build, and opened as a 48px strip until someone looked at it at 375px.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
   the policy allowlists only `unpkg.com` (HTMX, SortableJS, Trix), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.
