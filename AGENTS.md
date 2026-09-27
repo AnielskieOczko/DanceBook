@@ -434,7 +434,8 @@ both `#ffffff`, so the opaque base is inert outside the admin screen — but it 
 competes with the orphan tint at equal specificity, where cascade order decides: `.table-row` is
 emitted before `.bg-danger-soft\/50`, so the tint wins.
 
-**The figures catalog is the one dense table that is not the screen at every width** (#132).
+**The figures catalog and the notes list are the dense tables that are not the screen at every
+width** (#132, then #143 for notes).
 List mode renders both of its forms in the same `figuresTable` fragment — the cards under
 `lg:hidden`, the table under `hidden lg:block` — and CSS picks one at 1024px. That is the answer
 to the objection that sank the stacked list in #131: the controller cannot know the viewport, so
@@ -461,6 +462,28 @@ Three rules the table established, for the next one that needs them:
 The pinned Name cell wraps within `min-w-[200px] max-w-[20rem]` rather than `whitespace-nowrap`:
 catalog names run to 102 characters, and an unwrapped one made the pinned column most of the
 region at 1024px, leaving the columns it exists to keep in view nowhere to scroll.
+
+**The notes list (`materials/list.html`) follows the same shape** (#143). In list view the page
+shows cards below 1024px and, from 1024px up, a table with the columns Title (pinned) · Style ·
+Category · Rating · Figures · Media · Created · Actions. Title, Rating and Created sort through
+`#filterSortBy`. Grid view stays cards at every width. Four details are specific to notes:
+
+- **Figure counts come from one grouped query.** The controller passes
+  `figureCounts` from `MaterialService.findFigureCounts(ids)`, which is backed by
+  `FigureRepository.countFiguresByMaterialIds`. A `Figure` is a note's pin of a catalog figure, so
+  the count is the number of pinned figures. A note with no pins has no entry in the map, so
+  templates read `figureCounts[m.id] ?: 0`.
+- **`/lists/{id}` reuses this template without passing `figureCounts`.** Every read of the map is
+  therefore guarded with `figureCounts != null`, falling back to `#lists.size(m.figures)`. Indexing
+  the map directly throws a SpEL error on that route, and `WebRouteSmokeTest` catches it. Pass
+  the counts from `CustomListWebController` to remove the per-row fallback there.
+- **Notes can be deleted from the list.** Delete posts to `/materials/{id}/delete` with
+  `data-confirm="Are you sure you want to delete this note?"`. It appears in the table's inline
+  actions and in the ⋮ menu of both card views. Before #143, no template offered note deletion.
+  The buttons are shown only to the owner or an admin, and `MaterialService.delete` enforces the
+  same rule.
+- **Wording follows the UI name.** The page is titled "Notes", the count reads "1 note" or
+  "N notes", and the action is "New note". No `materials/` template says "movement".
 
 ### HTMX partial rendering
 
