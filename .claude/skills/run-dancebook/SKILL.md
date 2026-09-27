@@ -71,7 +71,9 @@ driver stops, saves `shots/error.png` and exits 1.
 | `wait-for <selector>` | Waits until the element is visible. Use it after anything that triggers an HTMX swap. |
 | `text [selector]` | Prints the visible text of `main` (the default) or of the selector. |
 | `screenshot [name]` | Saves a full-page PNG. |
-| `url`, `eval <js>`, `press <key>`, `errors`, `help` | `errors` lists console errors, page errors, 4xx sub-resources and any 5xx. |
+| `viewport <w> <h>` | Resizes the page (it starts at 1280×900). Use `viewport 375 800` for mobile and `viewport 1024 900` for the smallest desktop layout. |
+| `dialog accept\|dismiss` | Sets how later `confirm()` dialogs are answered, and prints each one. The default is `dismiss`, so a `data-confirm` delete is cancelled unless you set `accept` first. |
+| `url`, `eval <js>`, `press <key>`, `errors`, `help` | `errors` lists console errors, page errors, 4xx sub-resources and any 5xx. One console `404` with no URL on every page is the missing `/favicon.ico`. |
 
 ## Run (human path)
 
