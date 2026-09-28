@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Suggestions panel: shown when the LLM found 1–3 matching figures -->
+<section th:fragment="suggestionsPanel"
+         aria-labelledby="sugg-title"
+         class="rounded-xl bg-surface-container/50 border border-outline-variant p-4 space-y-3">
+
+    <div class="flex items-center gap-2">
+        <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm', cls='text-primary flex-shrink-0')}"></span>
+        <h3 id="sugg-title" class="m-0 text-sm font-semibold text-on-surface">Suggested from this note</h3>
+    </div>
+
+    <div th:each="s : ${suggestions}" class="flex gap-3 items-start">
+        <div class="flex-grow min-w-0 flex flex-col gap-0.5">
+            <span class="text-[15px] font-semibold leading-snug text-on-surface"
+                  th:text="${s.figure.name}">Figure Name</span>
+            <span class="text-[13px] text-on-surface-variant leading-snug">
+                <th:block th:if="${s.figure.danceClass != null}"
+                          th:text="${'Class ' + s.figure.danceClass + '. '}"></th:block>Note says <q class="text-on-surface" th:text="${s.reason}">quoted phrase</q>
+            </span>
+        </div>
+        <div class="js-suggestion-action shrink-0">
+            <form th:action="@{/materials/{mId}/figures(mId=${material.id})}"
+                  method="post"
+                  th:hx-post="@{/materials/{mId}/figures(mId=${material.id})}"
+                  hx-target="closest .js-suggestion-action"
+                  hx-swap="outerHTML">
+                <input type="hidden" name="danceFigureId" th:value="${s.figure.id}" />
+                <button type="submit"
+                        class="btn-primary btn-sm flex items-center gap-1"
+                        title="Pin figure"
+                        aria-label="Pin figure">
+                    <span th:replace="~{fragments/icon :: icon(name='push_pin', size='sm')}"></span>
+                    <span>Pin</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Empty state: LLM found no clear matches -->
+<div th:fragment="suggestionsEmpty">
+    <div th:replace="~{fragments/alert :: alert(variant='info', text='No figures in the catalog clearly match this note.')}"></div>
+</div>
+
+<!-- Error state: provider failure or access error -->
+<div th:fragment="suggestionsError">
+    <div th:replace="~{fragments/alert :: alert(variant='error', text=${suggestError})}"></div>
+</div>
+
+</body>
+</html>

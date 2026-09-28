@@ -68,6 +68,7 @@ class MaterialFigurePinningWebTest {
     @MockBean private lateinit var danceFigureService: DanceFigureService
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var noteRewriteService: NoteRewriteService
+    @MockBean private lateinit var figureSuggestionService: FigureSuggestionService
     // Global NavbarAdvice and interceptor dependencies
     @MockBean private lateinit var customListService: CustomListService
     @MockBean private lateinit var activityEventService: ActivityEventService

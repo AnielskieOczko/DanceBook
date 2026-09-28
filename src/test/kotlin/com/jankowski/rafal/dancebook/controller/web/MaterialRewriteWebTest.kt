@@ -15,6 +15,7 @@ import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.service.FigureSuggestionService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
@@ -85,6 +86,7 @@ class MaterialRewriteWebTest {
     @MockBean private lateinit var danceFigureService: DanceFigureService
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var noteRewriteService: NoteRewriteService
+    @MockBean private lateinit var figureSuggestionService: FigureSuggestionService
 
     // NavbarAdvice dependencies
     @MockBean private lateinit var customListService: CustomListService

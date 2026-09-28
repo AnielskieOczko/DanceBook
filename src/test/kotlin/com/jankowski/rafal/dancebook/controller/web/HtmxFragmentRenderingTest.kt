@@ -13,6 +13,7 @@ import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.service.FigureSuggestionService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
@@ -91,6 +92,7 @@ class HtmxFragmentRenderingTest {
     // MaterialWebController
     @MockBean private lateinit var commentService: CommentService
     @MockBean private lateinit var noteRewriteService: NoteRewriteService
+    @MockBean private lateinit var figureSuggestionService: FigureSuggestionService
 
     // CustomListWebController
     @MockBean private lateinit var customListService: CustomListService
