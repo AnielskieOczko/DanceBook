@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.jankowski.rafal.dancebook.config.OpenRouterProperties
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -140,30 +141,44 @@ class FigureSuggestionService(
             trimmed
         }
 
-        val arrayNode = try {
-            val node = objectMapper.readTree(jsonText)
-            if (!node.isArray) {
-                log.warn("LLM returned non-array JSON for figure suggestions: {}", jsonText.take(200))
-                return emptyList()
-            }
-            node
+        val root = try {
+            objectMapper.readTree(jsonText)
         } catch (e: Exception) {
             log.warn("Could not parse LLM figure suggestion response as JSON: {}", jsonText.take(200))
-            return emptyList()
+            throw IllegalStateException("The figure suggestion response was not JSON", e)
         }
+        // An unreadable answer says nothing about the note, so it must not be reported as
+        // "no match": it fails, and the user gets an error they can retry.
+        val elements = suggestionElements(root)
+            ?: run {
+                log.warn("LLM returned figure suggestions in an unexpected shape: {}", jsonText.take(200))
+                throw IllegalStateException("The figure suggestion response had an unexpected shape")
+            }
 
         val results = mutableListOf<FigureSuggestion>()
-        for (elem in arrayNode) {
+        for (elem in elements) {
             if (results.size >= 3) break
             val idStr = elem.get("id")?.asText()?.trim() ?: continue
-            val reason = elem.get("reason")?.asText()?.trim() ?: continue
+            val reason = elem.get("reason")?.asText()?.trim()?.takeIf { it.isNotEmpty() }
             val id = try { UUID.fromString(idStr) } catch (_: IllegalArgumentException) { continue }
             val figure = candidateMap[id] ?: continue  // discard out-of-list ids
             results += FigureSuggestion(figure = figure, reason = reason)
         }
 
-        log.info("Figure suggestions: {} returned, {} valid after filtering", arrayNode.size(), results.size)
+        log.info("Figure suggestions: {} returned, {} valid after filtering", elements.size, results.size)
         return results
+    }
+
+    /**
+     * The suggestion objects in [root], tolerating the shapes models actually return besides
+     * the requested array: a single bare suggestion (Qwen answered a one-match note with
+     * `{"id": "…"}`), or the array wrapped in an object. Null when there is none of these.
+     */
+    private fun suggestionElements(root: JsonNode): List<JsonNode>? = when {
+        root.isArray -> root.toList()
+        root.isObject && root.has("id") -> listOf(root)
+        root.isObject -> root.elements().asSequence().firstOrNull { it.isArray }?.toList()
+        else -> null
     }
 }
 
@@ -171,9 +186,10 @@ class FigureSuggestionService(
  * One figure suggestion returned by [FigureSuggestionService.suggest].
  *
  * @param figure The catalog figure being suggested.
- * @param reason A short phrase quoted from the note that matched this figure.
+ * @param reason A short phrase quoted from the note that matched this figure, when the
+ *   model gave one.
  */
 data class FigureSuggestion(
     val figure: DanceFigure,
-    val reason: String
+    val reason: String?
 )

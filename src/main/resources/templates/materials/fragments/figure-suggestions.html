@@ -19,9 +19,10 @@
         <div class="flex-grow min-w-0 flex flex-col gap-0.5">
             <span class="text-[15px] font-semibold leading-snug text-on-surface"
                   th:text="${s.figure.name}">Figure Name</span>
-            <span class="text-[13px] text-on-surface-variant leading-snug">
+            <span th:if="${s.figure.danceClass != null or s.reason != null}"
+                  class="text-[13px] text-on-surface-variant leading-snug">
                 <th:block th:if="${s.figure.danceClass != null}"
-                          th:text="${'Class ' + s.figure.danceClass + '. '}"></th:block>Note says <q class="text-on-surface" th:text="${s.reason}">quoted phrase</q>
+                          th:text="${'Class ' + s.figure.danceClass + '. '}"></th:block><th:block th:if="${s.reason != null}">Note says <q class="text-on-surface" th:text="${s.reason}">quoted phrase</q></th:block>
             </span>
         </div>
         <div class="js-suggestion-action shrink-0">

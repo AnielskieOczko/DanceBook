@@ -225,14 +225,56 @@ class FigureSuggestionServiceTest {
     // ── suggest: malformed LLM responses ─────────────────────────────────────
 
     @Test
-    fun `suggest returns empty list when LLM response is not JSON`() {
+    fun `suggest fails rather than reporting no match when the LLM response is not JSON`() {
         val candidates = listOf(figure(UUID.randomUUID(), "Some Figure"))
         `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
             .thenReturn(llmResponse("Sorry, I cannot help with that."))
 
-        val result = service().suggest("<p>Some note</p>", candidates, emptySet())
+        assertThrows<IllegalStateException> {
+            service().suggest("<p>Some note</p>", candidates, emptySet())
+        }
+    }
 
-        assertTrue(result.isEmpty())
+    @Test
+    fun `suggest fails rather than reporting no match when the JSON has no suggestions in it`() {
+        val candidates = listOf(figure(UUID.randomUUID(), "Some Figure"))
+        `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
+            .thenReturn(llmResponse("""{"answer":"none"}"""))
+
+        assertThrows<IllegalStateException> {
+            service().suggest("<p>Some note</p>", candidates, emptySet())
+        }
+    }
+
+    @Test
+    fun `suggest accepts a single suggestion object without a reason, as Qwen returned for a Hockey Stick note`() {
+        // The exact content qwen3.8-27b returned in dev: one bare object, no array, no reason.
+        val hockeyStickId = UUID.fromString("38b87dea-3300-41c9-8608-a9035f185437")
+        val candidates = listOf(figure(hockeyStickId, "Hockey Stick"), figure(UUID.randomUUID(), "Alemana"))
+        `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
+            .thenReturn(llmResponse("""{"id":"38b87dea-3300-41c9-8608-a9035f185437"}"""))
+
+        val result = service().suggest(
+            "<p>The Hockey Stick lives or dies on the connection through the left hand.</p>",
+            candidates,
+            emptySet()
+        )
+
+        assertEquals(listOf(hockeyStickId), result.map { it.figure.id })
+        assertEquals(null, result[0].reason)
+    }
+
+    @Test
+    fun `suggest accepts suggestions wrapped in an object`() {
+        val walkId = UUID.randomUUID()
+        val candidates = listOf(figure(walkId, "Samba Walk"))
+        `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
+            .thenReturn(llmResponse("""{"suggestions":[{"id":"$walkId","reason":"samba walks"}]}"""))
+
+        val result = service().suggest("<p>Samba walks</p>", candidates, emptySet())
+
+        assertEquals(listOf(walkId), result.map { it.figure.id })
+        assertEquals("samba walks", result[0].reason)
     }
 
     @Test

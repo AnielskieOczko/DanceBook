@@ -170,6 +170,23 @@ class MaterialFigureSuggestWebTest {
     }
 
     @Test
+    fun `a suggestion without a reason renders without an empty quote`() {
+        val figure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Hockey Stick"
+        }
+        `when`(figureSuggestionService.isAvailable()).thenReturn(true)
+        `when`(figureSuggestionService.suggestForMaterial(material))
+            .thenReturn(listOf(FigureSuggestion(figure = figure, reason = null)))
+
+        mockMvc.perform(get("/materials/$materialId/figures/suggest").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("materials/fragments/figure-suggestions :: suggestionsPanel"))
+            .andExpect(content().string(containsString("Hockey Stick")))
+            .andExpect(content().string(not(containsString("Note says"))))
+    }
+
+    @Test
     fun `GET suggest returns suggestionsEmpty when LLM finds no matches`() {
         `when`(figureSuggestionService.isAvailable()).thenReturn(true)
         `when`(figureSuggestionService.suggestForMaterial(material))
