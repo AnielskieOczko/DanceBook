@@ -86,6 +86,8 @@ class NoteRewriteServiceTest {
         assertEquals(sanitisedProposal, result)
         assertEquals(cleanInput, captor.value.userPrompt)
         assertTrue(captor.value.systemPrompt.contains("<a href=\"...\">"))
+        assertEquals("qwen/qwen3.8-27b:free", captor.value.model)
+        assertEquals(listOf("modelrun/fp4"), captor.value.extras["providerOnly"])
         verify(richTextService).clean(rawDescription)
         verify(richTextService).clean("<p>Cleaned note with <a href=\"https://example.com/step\">video</a></p>")
     }

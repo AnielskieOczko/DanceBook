@@ -50,16 +50,18 @@ class NoteRewriteService(
             Do not include anything outside that JSON object.
         """.trimIndent()
 
-        log.info("Requesting note rewrite via OpenRouter, model={}", openRouterProperties.defaultModel)
+        log.info("Requesting note rewrite via OpenRouter, model={}, providers={}", openRouterProperties.rewriteModel, openRouterProperties.rewriteProviders)
 
         val llmResponse = llmProviderRouter.callLlm(
             provider = "openrouter",
             request = LlmRequest(
                 systemPrompt = systemPrompt,
                 userPrompt = cleanInput,
-                model = openRouterProperties.defaultModel,
-                maxTokens = 2048,
-                temperature = 0.4
+                model = openRouterProperties.rewriteModel,
+                // Qwen thinks before answering; leave room so the reply is not cut off.
+                maxTokens = 8192,
+                temperature = 0.4,
+                extras = mapOf("providerOnly" to openRouterProperties.rewriteProviders)
             )
         )
 
