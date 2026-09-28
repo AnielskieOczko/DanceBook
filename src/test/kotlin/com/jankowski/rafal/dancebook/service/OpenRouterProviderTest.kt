@@ -100,6 +100,25 @@ class OpenRouterProviderTest {
     }
 
     @Test
+    fun `payload pins the request to the listed providers with fallbacks disabled`() {
+        val payload = provider.buildPayload(
+            LlmRequest(
+                "sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free",
+                extras = mapOf("providerOnly" to listOf("modelrun/fp4"))
+            )
+        )
+
+        assertEquals(mapOf("only" to listOf("modelrun/fp4"), "allow_fallbacks" to false), payload["provider"])
+    }
+
+    @Test
+    fun `payload leaves routing to OpenRouter when no provider is pinned`() {
+        val payload = provider.buildPayload(LlmRequest("sys", "user", "nvidia/nemotron-3-nano-30b-a3b:free"))
+
+        assertTrue("provider" !in payload)
+    }
+
+    @Test
     fun `should throw exception when LLM response is truncated due to token limit`() {
         val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
         `when`(mockResponse.statusCode()).thenReturn(200)

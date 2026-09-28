@@ -47,8 +47,28 @@ class OpenRouterProvider(
         log.info("Ingested OpenRouter API key. Length: {}, Masked: {}", cleanApiKey.length, maskedKey)
         log.info("Calling OpenRouter LLM using model: {}", model)
 
+        val requestBody = objectMapper.writeValueAsString(buildPayload(request))
+
+        val httpRequest = HttpRequest.newBuilder()
+            .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer $cleanApiKey")
+            .header("HTTP-Referer", "https://github.com/apify/agent-skills")
+            .header("X-Title", "DanceBook Figures Parser")
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .timeout(Duration.ofSeconds(properties.timeoutSeconds))
+            .build()
+
+        return send(httpRequest)
+    }
+
+    /**
+     * Builds the chat-completions body. `extras["providerOnly"]` (a list of endpoint slugs
+     * such as `modelrun/fp4`) pins the request to those providers with fallbacks disabled.
+     */
+    internal fun buildPayload(request: LlmRequest): Map<String, Any> {
         val payload = mutableMapOf<String, Any>(
-            "model" to model,
+            "model" to request.model,
             "messages" to listOf(
                 mapOf("role" to "system", "content" to request.systemPrompt),
                 mapOf("role" to "user", "content" to request.userPrompt)
@@ -72,18 +92,20 @@ class OpenRouterProvider(
             }
         }
 
-        val requestBody = objectMapper.writeValueAsString(payload)
+        val providerOnly = (request.extras["providerOnly"] as? List<*>)
+            ?.map { it.toString() }
+            ?.filter { it.isNotBlank() }
+        if (!providerOnly.isNullOrEmpty()) {
+            payload["provider"] = mapOf(
+                "only" to providerOnly,
+                "allow_fallbacks" to false
+            )
+        }
 
-        val httpRequest = HttpRequest.newBuilder()
-            .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer $cleanApiKey")
-            .header("HTTP-Referer", "https://github.com/apify/agent-skills")
-            .header("X-Title", "DanceBook Figures Parser")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .timeout(Duration.ofSeconds(properties.timeoutSeconds))
-            .build()
+        return payload
+    }
 
+    private fun send(httpRequest: HttpRequest): LlmResponse {
         try {
             val response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString())
             log.info("OpenRouter API Response Status: {}, Body: {}", response.statusCode(), response.body())

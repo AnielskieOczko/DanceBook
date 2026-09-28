@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.CommentService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
+import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -26,6 +27,7 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import java.io.IOException
 import java.util.UUID
@@ -38,8 +40,13 @@ class MaterialWebController(
     private val danceCategoryService: DanceCategoryService,
     private val commentService: CommentService,
     private val danceFigureService: DanceFigureService,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val noteRewriteService: NoteRewriteService
 ) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(MaterialWebController::class.java)
+    }
 
     @GetMapping
     fun listMaterials(
@@ -262,10 +269,53 @@ class MaterialWebController(
         )
         model.addAttribute("material", request)
         model.addAttribute("materialId", id)
+        model.addAttribute("llmAvailable", noteRewriteService.isAvailable() && !material.description.isNullOrBlank())
         populateDropdowns(model)
         val types = request.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
         model.addAttribute("danceTypes", types)
         return "materials/form"
+    }
+
+    @PostMapping("/{id}/rewrite")
+    fun rewriteWithAi(
+        @PathVariable id: UUID,
+        @RequestParam(required = false) currentText: String?,
+        model: Model
+    ): String {
+        val material = materialService.findById(id)
+        val currentUser = appUserService.getCurrentUser()
+        if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find material with id $id")
+        }
+
+        val text = currentText?.takeIf { it.isNotBlank() }
+            ?: material.description
+
+        if (text.isNullOrBlank()) {
+            model.addAttribute("rewriteError", "The note has no text to rewrite.")
+            return "materials/fragments/ai-rewrite-panel :: rewriteError"
+        }
+
+        if (!noteRewriteService.isAvailable()) {
+            model.addAttribute("rewriteError", "No LLM provider is configured.")
+            return "materials/fragments/ai-rewrite-panel :: rewriteError"
+        }
+
+        return try {
+            val proposal = noteRewriteService.rewrite(text)
+            // Pass the raw stored text as originalHtml so the rich-text fragment's
+            // @richTextService.render() handles plain-text-to-HTML conversion correctly.
+            // Pass the sanitised proposal HTML as proposalHtml — render() is idempotent
+            // on already-sanitised content.
+            model.addAttribute("originalHtml", text)
+            model.addAttribute("proposalHtml", proposal)
+            model.addAttribute("proposalRaw", proposal)
+            "materials/fragments/ai-rewrite-panel :: rewritePanel"
+        } catch (e: Exception) {
+            log.warn("AI rewrite failed for material {}: {}", id, e.message, e)
+            model.addAttribute("rewriteError", "The AI rewrite didn't work this time. Your text hasn't changed.")
+            "materials/fragments/ai-rewrite-panel :: rewriteError"
+        }
     }
 
     @PostMapping("/{id}")
@@ -303,3 +353,4 @@ class MaterialWebController(
         model.addAttribute("danceCategories", danceCategoryService.findAll())
     }
 }
+

@@ -221,6 +221,12 @@ class AccessControlSecondUserIntegrationTest {
                 .with(csrf())
         ).andExpect(status().isNotFound)
 
+        mockMvc.perform(
+            post("/materials/$noteId/rewrite")
+                .with(user(userB.username).roles("USER"))
+                .with(csrf())
+        ).andExpect(status().isNotFound)
+
         // 2. Absent from User B's library list
         mockMvc.perform(get("/materials").with(user(userB.username).roles("USER")))
             .andExpect(status().isOk)

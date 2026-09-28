@@ -13,7 +13,15 @@ data class OpenRouterProperties(
         "google/gemma-4-31b-it:free",
         "google/gemma-4-26b-a4b-it:free",
         "moonshotai/kimi-k2.6:free",
-        "z-ai/glm-4.5-air:free"
+        "z-ai/glm-4.5-air:free",
+        "qwen/qwen3.8-27b:free"
     ),
-    val timeoutSeconds: Long = 120
+    val timeoutSeconds: Long = 120,
+    /** Model used by the note rewrite (#144). */
+    val rewriteModel: String = "qwen/qwen3.8-27b:free",
+    /**
+     * OpenRouter endpoints the note rewrite may run on, with fallbacks disabled so the
+     * request never silently lands on a different provider. Empty lets OpenRouter route.
+     */
+    val rewriteProviders: List<String> = listOf("modelrun/fp4")
 )
