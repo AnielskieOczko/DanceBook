@@ -5,7 +5,7 @@ description: Use when handing implementation work to Google Antigravity (agy) - 
 
 # Delegate an issue to Antigravity (`agy`)
 
-Claude writes the **specification**; `agy` (Gemini 3.8 Flash) works out the implementation
+Claude writes the **specification**; `agy` (Gemini 3.8 Flash by default, or Claude Sonnet 4.6 on its separate quota) works out the implementation
 and writes the code. This skill covers spec-writing and the handoff — verification is
 `verify-agy-work`.
 
@@ -196,9 +196,31 @@ Require the `ready-for-agent` label and acceptance criteria, and stop if either 
 missing. Also stop if the body *prescribes an implementation* — an inherited issue written
 under the old workflow should be rewritten as a spec first, not handed over as-is.
 
-The `/usage` slash command works headlessly and **costs zero tokens**. Record the Gemini
-weekly and 5-hour remaining fractions before and after the run — the difference is the
-real price of the issue, and the only honest input to "can Pro sustain this".
+The `/usage` slash command works headlessly and **costs zero tokens**. It prints two quota
+groups: **Gemini Models**, and **Claude and GPT models**. Each group has its own weekly and
+5-hour limits. Record the remaining fractions before and after the run. The difference is
+the real price of the issue, and the only honest input to "can Pro sustain this".
+
+**Choose the model group here, once per issue.** `agy models` lists the ids:
+
+| Group | Model | When |
+|---|---|---|
+| Gemini | `gemini-3.8-flash-high` | Default, when the Gemini quota can carry the whole issue |
+| Claude and GPT | `claude-sonnet-4-6` | When the Gemini quota is low (roughly under 20% weekly for a feature-sized issue) |
+| Claude and GPT | `claude-opus-4-6-thinking` | Only for an unusually hard issue, since it uses up that quota fastest |
+
+Pick a group whose quota covers the first run **and** the fix rounds. Then keep the same
+`--model` for every run on the issue, resumes included. The user believes that resuming a
+conversation on a different model makes agy reprocess the whole conversation, which would
+cost more than it saves. That is **unverified**. Probe it before relying on a switch
+mid-issue. If the quota runs out mid-run, wait for the reset rather than changing model.
+
+Write the choice into the clone once it exists (step 2), so a later session resumes on the
+same model:
+
+```bash
+printf 'claude-sonnet-4-6\n' > ../DanceBook-agy-<N>/.agy-model
+```
 
 ### 2. Isolate — a clone, not a worktree
 
@@ -270,13 +292,17 @@ was stopped and restarted once the artboards were in the clone.
 
 ```bash
 cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
-    --model gemini-3.8-flash-high --output-format json --print-timeout 45m \
+    --model <model> --output-format json --print-timeout 45m \
     -p='Read .agy-task.md. Follow the Agent delegation contract in AGENTS.md: orient yourself in the codebase, write .agy-plan.md before you edit anything, then implement it fully with tests. Then run ./gradlew build. The runtime will send it to the background - that is normal and expected, so do not relaunch it. Wait for its completion notification, fix any failures yourself, and re-run it until it passes. Your final message must end by quoting the last two lines of that build verbatim; if you cannot quote them, you are not finished.' \
     > .agy-run.json 2>&1
 ```
 
-**Default to `-high`.** agy is doing the thinking now, not the typing; `-medium` is for
-genuinely mechanical issues where the shape of the change is not in question.
+`<model>` is the id chosen in preflight and saved in `.agy-model`. Write it out literally,
+not as `$(cat .agy-model)`.
+
+**On Gemini, default to `-high`.** agy is doing the thinking now, not the typing; `-medium`
+is for genuinely mechanical issues where the shape of the change is not in question. The
+Claude models carry no effort suffix.
 
 **The prompt demands a verbatim build result, and the `Stop` gate enforces it.** Asking for
 a quote gives the model a finish condition it cannot satisfy by stopping early; the gate
@@ -344,9 +370,12 @@ conversation instead of re-paying the onboarding cost:
 
 ```bash
 cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && date +%s > .agy-start && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
-    --conversation <conversation_id> --output-format json \
+    --conversation <conversation_id> --model <model> --output-format json \
     --print-timeout 45m -p='Continue where you left off.' > .agy-run.json 2>&1
 ```
+
+Pass the same `--model` as the first run (it's in `.agy-model`). Without `--model`, it is
+not established which model a resume uses.
 
 ### 6. Publish agy's plan to the issue
 
