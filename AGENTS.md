@@ -355,6 +355,17 @@ a stored bullet list rendered as flat lines until `.rich-text` got its own.
 `TailwindOutputCssTest` asserts both blocks survive into `output.css`, because a rendering test
 asserts on HTML and cannot see a missing rule.
 
+**To send the editor's text with an htmx request that isn't a form submit, write it into
+`event.detail.parameters` in `htmx:configRequest`, not into a form field.** htmx has
+already collected the request's parameters (the enclosing form and any `hx-include`) by
+the time `configRequest` fires. A field filled in during that event therefore reaches
+only the *next* request. The Rewrite with AI button (#144) first shipped that way: the
+first click sent an empty field, so the server rewrote the last saved text, and later
+clicks sent the text from the previous click. Its handler in `main.js` now sets
+`parameters['currentText']` from the Trix hidden input. Trix 2.1.19's UMD build does not
+export `serializeToContentType`, so that hidden input is the way to read the current
+value.
+
 ### Dialogs
 
 **Every dialog is a native `<dialog>`, and nothing about opening or closing one is written
@@ -840,6 +851,40 @@ ownership**: the owner has no member row, so ask `calendar.owner` and do not add
 provider by implementing the interface and registering it as a `@Service` — the router
 picks it up automatically. `GuidedFigureParseService` uses this to parse syllabus pages
 into `DanceFigureRequest`s; `SyllabusImporterService` does the bulk dataset import.
+
+**`OpenRouterProvider` accepts only models on `openrouter.allowed-free-models`**, and throws
+`IllegalArgumentException` for anything else, so a new model id must be added to that list
+in `OpenRouterProperties` before a caller can use it. **Every request is sent with
+`response_format: json_object`**, so a caller that wants prose back has to ask for it
+inside a JSON envelope and unwrap it itself. The note rewrite does this with
+`{"rewrite": "<html>"}`. **A caller can pin the request to specific OpenRouter endpoints**
+by passing `extras["providerOnly"]` with a list of endpoint slugs such as `modelrun/fp4`.
+The provider then adds `"provider": {"only": [...], "allow_fallbacks": false}`, so the
+request fails rather than landing on a different endpoint. With nothing pinned, the
+request body is unchanged and OpenRouter routes it.
+
+**Rewrite with AI on the note edit form (#144)** goes through `NoteRewriteService`. It
+runs on its own model, not on `openrouter.default-model`: `openrouter.rewrite-model`
+(`qwen/qwen3.8-27b:free`) pinned to `openrouter.rewrite-providers` (`modelrun/fp4`). So
+changing the default model for figure parsing does not move the rewrite, and the reverse
+is also true. The service sends the note's sanitised HTML rather than plain text, so links
+and lists survive. It runs the reply through `RichTextService.clean` before anyone sees
+it, so the proposal matches what saving would store. It sets `max_tokens` to 8192 because
+Qwen reasons before answering, and a reply cut off at the limit (`finish_reason=length`)
+fails as truncated. The endpoint is `POST /materials/{id}/rewrite`. Like the edit form,
+it is limited to the owner or an ADMIN, and anyone else gets 404. It returns
+`materials/fragments/ai-rewrite-panel :: rewritePanel`, or `:: rewriteError` with a fixed
+message; the provider's own error is logged at WARN and never shown. **Nothing is saved
+on the server.** Accept and Decline run only in the browser, in `main.js`: Accept loads
+the proposal into Trix with `editor.loadHTML`, so the note is saved only when the form is
+submitted, carrying its usual `version`. The button appears only when
+`NoteRewriteService.isAvailable()` (an OpenRouter key is set) and the saved note has
+text.
+
+**A free model on a pinned endpoint returns 429 at busy times.** The error's metadata says
+`limit_source: upstream_provider_shared_pool`: the provider's free pool is saturated, not
+this account's quota. With fallbacks off there is nowhere else for the request to go, so
+the user gets the rewrite's readable error and can retry. That is expected, not a bug.
 
 ## Constraints and gotchas
 
