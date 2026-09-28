@@ -34,7 +34,6 @@
                         th:attr="hx-post='/materials/' + ${materialId} + '/rewrite',
                                  hx-target='#ai-rewrite-target',
                                  hx-swap='innerHTML',
-                                 hx-include='#ai-rewrite-current-text',
                                  hx-indicator='#ai-rewrite-btn'"
                         hx-disabled-elt="this">
                     <span th:replace="~{fragments/icon :: icon(name='auto_fix_high', size='sm', cls='text-primary')}"></span>
@@ -43,8 +42,7 @@
                         <span th:replace="~{fragments/icon :: icon(name='autorenew', size='sm', cls='animate-spin text-primary')}"></span>
                     </span>
                 </button>
-                <!-- Hidden field carries the current Trix editor content to the rewrite endpoint -->
-                <input type="hidden" id="ai-rewrite-current-text" name="currentText"/>
+                <!--/* main.js adds the editor's current text to the request as currentText */-->
             </div>
         </th:block>
 
