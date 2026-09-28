@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Proposal panel: shown after LLM responds successfully -->
+<section th:fragment="rewritePanel"
+         id="ai-rewrite-panel"
+         aria-labelledby="rw-title"
+         class="border border-primary rounded-xl overflow-hidden">
+
+    <!-- Header strip -->
+    <div class="px-5 py-3.5 bg-primary-soft flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2.5">
+            <th:block>
+                <span th:replace="~{fragments/icon :: icon(name='auto_fix_high', size='md', cls='text-primary flex-shrink-0')}"></span>
+            </th:block>
+            <div class="flex flex-col gap-0.5">
+                <h2 id="rw-title" class="m-0 text-[15px] font-semibold text-on-surface">Proposed rewrite of the note text</h2>
+                <span class="text-[13px] text-on-surface-variant">Same facts, counts and figure names, rewritten for clarity. Nothing is saved until you save the note.</span>
+            </div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+            <button type="button"
+                    id="ai-rewrite-decline"
+                    class="btn-outline min-h-[40px] px-4 text-sm font-medium">
+                Decline
+            </button>
+            <button type="button"
+                    id="ai-rewrite-accept"
+                    class="btn-primary min-h-[40px] px-4 text-sm font-medium"
+                    th:attr="data-proposal=${proposalRaw}">
+                Accept rewrite
+            </button>
+        </div>
+    </div>
+
+    <!-- Side-by-side content: two columns on md+, stacked on narrow -->
+    <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Your text -->
+        <div class="p-5 md:border-r border-border flex flex-col gap-3">
+            <h3 class="m-0 text-[13px] font-medium text-on-surface-variant">Your text</h3>
+            <div th:replace="~{fragments/rich-text :: content(value=${originalHtml}, cls='text-on-surface-variant text-[15px] leading-relaxed')}"></div>
+        </div>
+        <!-- Proposed -->
+        <div class="p-5 flex flex-col gap-3">
+            <h3 class="m-0 text-[13px] font-medium text-primary">Proposed</h3>
+            <div th:replace="~{fragments/rich-text :: content(value=${proposalHtml}, cls='font-serif text-[17px] leading-relaxed')}"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Error state: inlined alert rendered inside the panel placeholder -->
+<div th:fragment="rewriteError" id="ai-rewrite-error">
+    <div th:replace="~{fragments/alert :: alert(variant='error', text=${rewriteError})}"></div>
+</div>
+
+</body>
+</html>

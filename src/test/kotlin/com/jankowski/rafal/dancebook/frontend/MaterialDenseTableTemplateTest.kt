@@ -18,6 +18,7 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
+import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.jsoup.Jsoup
@@ -97,6 +98,7 @@ class MaterialDenseTableTemplateTest {
     @MockBean private lateinit var commentService: CommentService
     @MockBean private lateinit var danceFigureService: DanceFigureService
     @MockBean private lateinit var appUserService: AppUserService
+    @MockBean private lateinit var noteRewriteService: NoteRewriteService
 
     // Global NavbarAdvice dependencies
     @MockBean private lateinit var customListService: CustomListService

@@ -725,3 +725,52 @@ document.addEventListener('htmx:configRequest', function(event) {
 
 
 
+// ── AI note rewrite ──────────────────────────────────────────────────────────
+//
+// Before HTMX fires the rewrite POST, sync the Trix editor content into the
+// hidden #ai-rewrite-current-text field so the server sees the user's latest
+// (possibly unsaved) text rather than what was loaded from the database.
+document.addEventListener('htmx:configRequest', function(event) {
+    const btn = event.detail.elt;
+    if (!btn || btn.id !== 'ai-rewrite-btn') return;
+    const trixEditor = document.querySelector('trix-editor');
+    const hiddenInput = document.getElementById('ai-rewrite-current-text');
+    if (trixEditor && hiddenInput) {
+        const inputId = trixEditor.getAttribute('input');
+        const trixHiddenInput = inputId ? document.getElementById(inputId) : null;
+        hiddenInput.value = trixHiddenInput ? trixHiddenInput.value : '';
+    }
+});
+
+// Delegated handler for Accept rewrite: copies the sanitised HTML into the
+// Trix editor and removes the proposal panel.
+document.addEventListener('click', function(event) {
+    const btn = event.target.closest('#ai-rewrite-accept');
+    if (!btn) return;
+    const proposal = btn.getAttribute('data-proposal');
+    if (!proposal) return;
+
+    const trixEditor = document.querySelector('trix-editor');
+    if (trixEditor) {
+        const inputId = trixEditor.getAttribute('input');
+        const trixHiddenInput = inputId ? document.getElementById(inputId) : null;
+        if (trixHiddenInput) {
+            trixHiddenInput.value = proposal;
+            // Trix reads from its input on load but not on programmatic change;
+            // loadHTML tells it to update its internal document.
+            if (typeof trixEditor.editor !== 'undefined') {
+                trixEditor.editor.loadHTML(proposal);
+            }
+        }
+    }
+    const panel = document.getElementById('ai-rewrite-target');
+    if (panel) panel.innerHTML = '';
+});
+
+// Delegated handler for Decline: removes the proposal panel without touching the editor.
+document.addEventListener('click', function(event) {
+    const btn = event.target.closest('#ai-rewrite-decline');
+    if (!btn) return;
+    const panel = document.getElementById('ai-rewrite-target');
+    if (panel) panel.innerHTML = '';
+});

@@ -25,6 +25,32 @@
         <!-- Description -->
         <div th:replace="~{fragments/form :: richText(path='description', label='Description', rows=3, placeholder='Brief notes about this material...', id='description')}"></div>
 
+        <!--/* Rewrite with AI: only shown on edit form when LLM is configured and note has text */-->
+        <th:block th:if="${llmAvailable}">
+            <div class="flex items-center gap-3">
+                <button type="button"
+                        id="ai-rewrite-btn"
+                        class="btn-outline flex items-center gap-2 text-sm"
+                        th:attr="hx-post='/materials/' + ${materialId} + '/rewrite',
+                                 hx-target='#ai-rewrite-target',
+                                 hx-swap='innerHTML',
+                                 hx-include='#ai-rewrite-current-text',
+                                 hx-indicator='#ai-rewrite-btn'"
+                        hx-disabled-elt="this">
+                    <span th:replace="~{fragments/icon :: icon(name='auto_fix_high', size='sm', cls='text-primary')}"></span>
+                    <span id="ai-rewrite-btn-label">Rewrite with AI</span>
+                    <span class="htmx-indicator" aria-hidden="true">
+                        <span th:replace="~{fragments/icon :: icon(name='autorenew', size='sm', cls='animate-spin text-primary')}"></span>
+                    </span>
+                </button>
+                <!-- Hidden field carries the current Trix editor content to the rewrite endpoint -->
+                <input type="hidden" id="ai-rewrite-current-text" name="currentText"/>
+            </div>
+        </th:block>
+
+        <!-- HTMX swap target for the proposal panel (empty until rewrite fires) -->
+        <div id="ai-rewrite-target"></div>
+
         <!-- Dance Category & Type (two columns, Category first) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
