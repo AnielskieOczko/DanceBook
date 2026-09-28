@@ -117,13 +117,15 @@ re-paying ~31k tokens of onboarding:
 
 ```bash
 cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && agy --add-dir /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> \
-    --conversation <conversation_id> --output-format json --print-timeout 45m \
+    --conversation <conversation_id> --model <model> --output-format json --print-timeout 45m \
     -p='Read .agy-review.md and address every numbered item. Update .agy-plan.md to match what you actually did. Then re-run ./gradlew build. The runtime will send it to the background - that is normal, so do not relaunch it; wait for its completion notification and fix failures until it passes. End your reply by quoting the last two lines of that build verbatim.' \
     > .agy-run.json 2>&1
 ```
 
 `--add-dir` is required on resumes too — without it agy edits a scratch directory and
-reports success against files it never touched. Record quota before and after with
+reports success against files it never touched. `<model>` is the id in the clone's
+`.agy-model` (read it with `cat`, then write it out literally). Every run on an issue stays
+on one model group; see "Choose the model group" in `delegate-to-agy`. Record quota before and after with
 `python3 .claude/skills/delegate-to-agy/usage.py`.
 
 Background it, then re-validate with `delegate-to-agy/validate-run.py` and return to step 1.
