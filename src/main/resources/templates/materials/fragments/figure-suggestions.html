@@ -49,8 +49,24 @@
 </div>
 
 <!-- Error state: provider failure or access error -->
-<div th:fragment="suggestionsError">
+<div th:fragment="suggestionsError" class="space-y-3">
     <div th:replace="~{fragments/alert :: alert(variant='error', text=${suggestError})}"></div>
+    <!--/* Only a provider failure is worth retrying; it re-runs the same request into #figureSuggestions */-->
+    <button th:if="${suggestRetry == true}"
+            type="button"
+            id="figure-suggest-retry-btn"
+            class="btn-outline btn-sm flex items-center gap-1.5"
+            th:hx-get="@{/materials/{id}/figures/suggest(id=${material.id})}"
+            hx-target="#figureSuggestions"
+            hx-swap="innerHTML"
+            hx-indicator="#figure-suggest-retry-btn"
+            hx-disabled-elt="this">
+        <span th:replace="~{fragments/icon :: icon(name='refresh', size='sm', cls='text-primary')}"></span>
+        <span>Try again</span>
+        <span class="htmx-indicator" aria-hidden="true">
+            <span th:replace="~{fragments/icon :: icon(name='autorenew', size='sm', cls='animate-spin text-primary')}"></span>
+        </span>
+    </button>
 </div>
 
 </body>

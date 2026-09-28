@@ -197,6 +197,28 @@ class MaterialFigureSuggestWebTest {
     }
 
     @Test
+    fun `provider failure offers a Try again button that re-runs the suggestion`() {
+        `when`(figureSuggestionService.isAvailable()).thenReturn(true)
+        `when`(figureSuggestionService.suggestForMaterial(material))
+            .thenThrow(RuntimeException("OpenRouter returned 500"))
+
+        mockMvc.perform(get("/materials/$materialId/figures/suggest").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"figure-suggest-retry-btn\"")))
+            .andExpect(content().string(containsString("hx-get=\"/materials/$materialId/figures/suggest\"")))
+            .andExpect(content().string(containsString("hx-target=\"#figureSuggestions\"")))
+    }
+
+    @Test
+    fun `errors that a retry cannot fix offer no Try again button`() {
+        `when`(figureSuggestionService.isAvailable()).thenReturn(false)
+
+        mockMvc.perform(get("/materials/$materialId/figures/suggest").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(not(containsString("figure-suggest-retry-btn"))))
+    }
+
+    @Test
     fun `GET suggest returns suggestionsError when no LLM provider is configured`() {
         `when`(figureSuggestionService.isAvailable()).thenReturn(false)
 

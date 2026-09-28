@@ -251,9 +251,9 @@ class MaterialWebController(
             return "materials/fragments/figure-suggestions :: suggestionsError"
         }
 
+        model.addAttribute("material", material)
         return try {
             val suggestions = figureSuggestionService.suggestForMaterial(material)
-            model.addAttribute("material", material)
             model.addAttribute("suggestions", suggestions)
             if (suggestions.isEmpty()) {
                 "materials/fragments/figure-suggestions :: suggestionsEmpty"
@@ -263,6 +263,7 @@ class MaterialWebController(
         } catch (e: Exception) {
             log.warn("Figure suggestion failed for material {}: {}", materialId, e.message, e)
             model.addAttribute("suggestError", "The suggestion service didn't respond. Try again in a moment.")
+            model.addAttribute("suggestRetry", true)
             "materials/fragments/figure-suggestions :: suggestionsError"
         }
     }
