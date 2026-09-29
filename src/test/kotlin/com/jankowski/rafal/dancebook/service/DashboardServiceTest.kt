@@ -10,8 +10,6 @@ import com.jankowski.rafal.dancebook.model.Choreography
 import com.jankowski.rafal.dancebook.model.CustomList
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceFigure
-import com.jankowski.rafal.dancebook.model.DanceFigureStep
-import com.jankowski.rafal.dancebook.model.DanceFigureStepSet
 import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -287,20 +285,9 @@ class DashboardServiceTest {
 
     // ---- recent notes ---------------------------------------------------------------------
 
-    private fun figure(name: String, vararg timings: String) = DanceFigure().apply {
+    private fun figure(name: String, alternativeTiming: String? = null) = DanceFigure().apply {
         this.name = name
-        stepSets = mutableListOf(
-            DanceFigureStepSet().apply {
-                isDefault = true
-                steps = timings.mapIndexed { index, timing ->
-                    DanceFigureStep().apply {
-                        stepNumber = index + 1
-                        this.timing = timing
-                        role = "LEADER"
-                    }
-                }.toMutableList()
-            }
-        )
+        this.alternativeTiming = alternativeTiming
     }
 
     private fun note(vararg pins: DanceFigure) = Material().apply {
@@ -315,7 +302,7 @@ class DashboardServiceTest {
     @Test
     fun `a recent note shows each pinned figure with its timing`() {
         `when`(materialRepository.findRecentByOwner(user, PageRequest.of(0, 3)))
-            .thenReturn(listOf(note(figure("Feather Step", "S", "Q", "Q"))))
+            .thenReturn(listOf(note(figure("Feather Step", " S Q Q "))))
 
         val card = service().dashboardForCurrentUser().recentNotes.single()
 
@@ -328,12 +315,12 @@ class DashboardServiceTest {
     @Test
     fun `a pinned figure with no timing is listed without a value, never as an empty list`() {
         `when`(materialRepository.findRecentByOwner(user, PageRequest.of(0, 3))).thenReturn(
-            listOf(note(figure("No Steps"), figure("Blank Steps", " ", "")))
+            listOf(note(figure("No Timing"), figure("Blank Timing", "  ")))
         )
 
         val figures = service().dashboardForCurrentUser().recentNotes.single().figures
 
-        assertEquals(listOf("No Steps", "Blank Steps"), figures.map { it.name })
+        assertEquals(listOf("No Timing", "Blank Timing"), figures.map { it.name })
         assertTrue(figures.all { it.timing == null })
     }
 

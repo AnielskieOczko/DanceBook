@@ -181,18 +181,14 @@ class DashboardServiceImpl(
         }
 
     /**
-     * A figure without a timing is still listed, without a value: an empty step set must not
-     * render as `[]`.
+     * The timing is the figure's `alternativeTiming`, the same field the note page's pinned-figure
+     * chip shows, so a figure reads the same on both screens. A figure without one is still
+     * listed, without a value: a missing timing must not render as `[]`.
      */
     private fun pinnedFigures(note: Material): List<PinnedFigure> =
         note.figures.mapNotNull { pin ->
             val figure = pin.danceFigure ?: return@mapNotNull null
-            val timing = figure.getLeaderSteps().ifEmpty { figure.steps }
-                .map { it.timing.trim() }
-                .filter { it.isNotEmpty() }
-                .joinToString(" ")
-                .ifEmpty { null }
-            PinnedFigure(name = figure.name, timing = timing)
+            PinnedFigure(name = figure.name, timing = figure.alternativeTiming?.trim()?.ifEmpty { null })
         }
 
     private fun excerptOf(description: String?): String {
