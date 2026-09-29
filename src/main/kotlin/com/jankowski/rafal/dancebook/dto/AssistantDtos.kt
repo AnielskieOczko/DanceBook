@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.AssistantRole
 import java.util.UUID
 
 /** Where the assistant widget was opened. The client sends this pair and nothing else about the page. */
@@ -46,4 +47,28 @@ data class ToolResult(
     val total: Int,
     val items: List<ResultCard>,
     val message: String? = null
+)
+
+/** One bubble in the thread. Cards belong to an assistant bubble: what its tools found. */
+data class AssistantMessageView(
+    val role: AssistantRole,
+    val text: String,
+    val cards: List<ResultCard> = emptyList(),
+    val error: Boolean = false
+)
+
+/**
+ * The result of one send: the messages to add to the thread. [persisted] is true when the
+ * user's message was stored, which is what lets the page clear its input.
+ */
+data class AssistantTurn(
+    val conversationId: UUID?,
+    val messages: List<AssistantMessageView>,
+    val persisted: Boolean
+)
+
+data class ConversationView(
+    val id: UUID,
+    val title: String,
+    val messages: List<AssistantMessageView>
 )
