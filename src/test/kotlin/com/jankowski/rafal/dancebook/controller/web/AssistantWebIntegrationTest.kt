@@ -100,9 +100,9 @@ class AssistantWebIntegrationTest {
         send(alice, "Which notes mention sway?")
             .andExpect(status().isOk)
             .andExpect(header().string("HX-Trigger", "assistant-sent"))
+            .andExpect(content().string(containsString("data-conversation-id=")))
             .andExpect(content().string(containsString("Which notes mention sway?")))
             .andExpect(content().string(containsString("Two notes mention sway.")))
-            .andExpect(content().string(containsString("id=\"assistantConversationId\"")))
 
         val saved = conversations.findByOwnerIdOrderByUpdatedAtDesc(alice.id!!).single()
         assertEquals("Which notes mention sway?", saved.title)
@@ -119,7 +119,7 @@ class AssistantWebIntegrationTest {
         mockMvc.perform(get("/assistant/conversations/$id").with(as1).header("HX-Request", "true"))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Two notes mention sway.")))
-            .andExpect(content().string(containsString(id.toString())))
+            .andExpect(content().string(containsString("data-conversation-id=\"$id\"")))
 
         mockMvc.perform(post("/assistant/conversations/$id/rename").with(csrf()).with(as1).param("title", "Sway notes"))
             .andExpect(status().isOk).andExpect(content().string(containsString("Sway notes")))
@@ -176,7 +176,7 @@ class AssistantWebIntegrationTest {
         mockMvc.perform(get("/assistant/start").param("pageType", "FIGURE").with(user(alice.username).roles("USER")))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Which of my notes mention this figure?")))
-            .andExpect(content().string(containsString("id=\"assistantConversationId\"")))
+            .andExpect(content().string(containsString("data-conversation-id=\"\"")))
     }
 
     @Test

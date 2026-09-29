@@ -83,6 +83,10 @@ class AssistantServiceImpl(
         } catch (e: AssistantUnavailableException) {
             log.warn("Assistant could not answer: {}", e.message)
             AssistantMessageView(AssistantRole.ASSISTANT, AssistantService.ERROR_TEXT, error = true)
+        } catch (e: RuntimeException) {
+            // An invented tool name, a malformed reply, a failed write: the user still gets a sentence, not a 500.
+            log.error("Assistant turn failed", e)
+            AssistantMessageView(AssistantRole.ASSISTANT, AssistantService.ERROR_TEXT, error = true)
         }
         return AssistantTurn(id, listOf(userView, assistantView), true)
     }
@@ -111,7 +115,7 @@ class AssistantServiceImpl(
         for (round in 1..AssistantService.MAX_TOOL_ROUNDS) {
             val response = gateway.call(prompt, remaining())
             if (!response.hasToolCalls()) {
-                text = response.result.output.text
+                text = response.result?.output?.text
                 break
             }
             val calls = response.result.output.toolCalls
@@ -123,7 +127,7 @@ class AssistantServiceImpl(
         if (text == null) {
             // Out of rounds, or the last round still wanted a tool: one more call with no tools.
             val noTools = GoogleGenAiChatOptions.builder().internalToolExecutionEnabled(false).build()
-            text = gateway.call(Prompt(prompt.instructions, noTools), remaining()).result.output.text
+            text = gateway.call(Prompt(prompt.instructions, noTools), remaining()).result?.output?.text
         }
 
         val finalText = text?.trim()?.takeIf { it.isNotEmpty() } ?: AssistantService.GAVE_UP_TEXT

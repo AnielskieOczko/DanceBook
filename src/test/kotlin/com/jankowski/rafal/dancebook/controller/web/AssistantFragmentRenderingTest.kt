@@ -70,7 +70,7 @@ class AssistantFragmentRenderingTest {
         mockMvc.perform(get("/assistant/start").param("pageType", "HOME").header("HX-Request", "true"))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"assistantStart\"")))
-            .andExpect(content().string(containsString("hx-swap-oob=\"true\"")))
+            .andExpect(content().string(containsString("data-conversation-id=\"\"")))
     }
 
     @Test
@@ -96,7 +96,7 @@ class AssistantFragmentRenderingTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("sway?")))
             .andExpect(content().string(containsString("href=\"/materials/n1\"")))
-            .andExpect(content().string(containsString("id=\"assistantConversationId\"")))
+            .andExpect(content().string(containsString("data-conversation-id=\"$id\"")))
     }
 
     @Test
@@ -118,5 +118,34 @@ class AssistantFragmentRenderingTest {
         mockMvc.perform(get("/assistant/conversations/$id").header("HX-Request", "true"))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"assistantConversation\"")))
+            .andExpect(content().string(containsString("data-conversation-id=\"$id\"")))
+    }
+
+    @Test
+    fun `delete asks through hx-confirm, because data-confirm cannot stop an htmx form`() {
+        val c = AssistantConversation().apply { id = UUID.randomUUID(); title = "Sway notes"; updatedAt = LocalDateTime.of(2026, 9, 29, 10, 0) }
+        `when`(conversationService.list()).thenReturn(listOf(c))
+        mockMvc.perform(get("/assistant/conversations").param("pageType", "HOME").header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("hx-confirm=\"Delete this conversation?")))
+            .andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-confirm"))))
+    }
+
+    @Test
+    fun `deleting the conversation the composer holds resets the composer, deleting another does not`() {
+        val id = UUID.randomUUID()
+        mockMvc.perform(
+            post("/assistant/conversations/$id/delete").with(csrf()).header("HX-Request", "true")
+                .param("conversationId", id.toString())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("data-reset-conversation=\"true\"")))
+
+        mockMvc.perform(
+            post("/assistant/conversations/$id/delete").with(csrf()).header("HX-Request", "true")
+                .param("conversationId", UUID.randomUUID().toString())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-reset-conversation"))))
     }
 }

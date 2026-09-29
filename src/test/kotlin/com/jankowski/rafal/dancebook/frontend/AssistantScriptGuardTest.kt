@@ -64,4 +64,25 @@ class AssistantScriptGuardTest {
         assertTrue(script.contains("surface.addEventListener('close'"))
         assertTrue(script.contains("if (surface.open) { composerInput.focus(); return; }"))
     }
+
+    @Test
+    fun `the composer's conversation id is read from a marker in the swapped fragment, not from an out-of-band swap`() {
+        assertTrue(script.contains("[data-conversation-id]"))
+        assertTrue(script.contains("[data-reset-conversation]"))
+        assertFalse(Files.readString(Path.of("src/main/resources/templates/assistant/fragments.html")).contains("hx-swap-oob"))
+    }
+
+    @Test
+    fun `a failed request leaves an error in the thread, because main js writes to main which a phone sheet covers`() {
+        assertTrue(script.contains("htmx:responseError"))
+        assertTrue(script.contains("htmx:sendError"))
+        assertTrue(script.contains("closest('#assistantComposer')"))
+    }
+
+    @Test
+    fun `a reply does not wipe text typed while waiting, and a send is not started while one is in flight`() {
+        assertTrue(script.contains("htmx:beforeRequest"))
+        assertTrue(script.contains("composerInput.value === sentText"))
+        assertTrue(script.contains("composer.classList.contains('htmx-request')"))
+    }
 }

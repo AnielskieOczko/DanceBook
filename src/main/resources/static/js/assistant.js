@@ -38,6 +38,7 @@
     function ask(text) {
         const message = (text || '').trim();
         if (!message) return;
+        if (composer.classList.contains('htmx-request')) return; // one send at a time
         openSurface();
         composerInput.value = message;
         composer.requestSubmit();
@@ -57,14 +58,43 @@
 
     bar.addEventListener('submit', function (event) {
         event.preventDefault();
+        if (composer.classList.contains('htmx-request')) return; // keep the text; a send is in flight
         const message = barInput.value;
         barInput.value = '';
         ask(message);
     });
 
+    // The server says which conversation the composer is in (an empty id means a new one).
+    document.addEventListener('assistant-conversation', function (event) {
+        const holder = document.getElementById('assistantConversationId');
+        if (holder) holder.value = (event.detail && event.detail.id) || '';
+    });
+
+    // What this request sent, so the reply clears the box only if nothing new was typed meanwhile.
+    let sentText = '';
+    document.addEventListener('htmx:beforeRequest', function (event) {
+        if (event.target === composer) sentText = composerInput.value;
+    });
+
+    // A failed request must leave a message in the thread: main.js reports into <main>, which the
+    // phone's modal sheet covers. Built with textContent, never innerHTML.
+    function threadError() {
+        const box = document.createElement('div');
+        box.setAttribute('role', 'alert');
+        box.className = 'p-4 rounded-md border bg-error/10 border-error text-error text-sm';
+        box.textContent = "The assistant couldn't answer just now. Try again.";
+        thread.appendChild(box);
+        thread.scrollTop = thread.scrollHeight;
+    }
+    ['htmx:responseError', 'htmx:sendError'].forEach(function (name) {
+        document.addEventListener(name, function (event) {
+            if (event.target && event.target.closest && event.target.closest('#assistantComposer')) threadError();
+        });
+    });
+
     // The server stored the user's message: clear the box, drop the greeting, follow the thread.
     document.addEventListener('assistant-sent', function () {
-        composerInput.value = '';
+        if (composerInput.value === sentText) composerInput.value = '';
         const greeting = thread.querySelector('[data-assistant-empty]');
         if (greeting) greeting.remove();
         thread.scrollTop = thread.scrollHeight;
@@ -72,6 +102,13 @@
 
     document.addEventListener('htmx:afterSwap', function (event) {
         if (thread.contains(event.target) || event.target === thread) {
+            // The server renders which conversation the composer is in (empty = none) as a marker in
+            // what it sent. Read from the swapped content: an out-of-band input or a response header
+            // is lost when htmx replaces the element that made the request.
+            const markers = thread.querySelectorAll('[data-conversation-id]');
+            const holder = document.getElementById('assistantConversationId');
+            if (markers.length && holder) holder.value = markers[markers.length - 1].getAttribute('data-conversation-id');
+            if (thread.querySelector('[data-reset-conversation]') && holder) holder.value = '';
             thread.scrollTop = thread.scrollHeight;
         }
     });

@@ -6,7 +6,7 @@
 <body>
 
 <!-- Empty conversation: greeting and suggestion chips. Also resets the composer's conversation id (out of band). -->
-<div th:fragment="start" id="assistantStart" data-assistant-empty class="flex flex-col gap-4 py-2">
+<div th:fragment="start" id="assistantStart" data-assistant-empty data-conversation-id="" class="flex flex-col gap-4 py-2">
     <p class="text-[15px] leading-relaxed text-on-surface-variant">
         Ask about your notes, the figure catalog or your training sessions.
         I can search and read them; I can't change anything yet.
@@ -18,30 +18,26 @@
                     th:text="${chip}">Find a figure</button>
         </th:block>
     </div>
-    <input type="hidden" id="assistantConversationId" name="conversationId" value="" hx-swap-oob="true">
 </div>
 
 <!-- The messages of one send. Swapped beforeend into #assistantThread. -->
 <th:block th:fragment="turn">
+    <span th:if="${turn.conversationId != null}" hidden th:attr="data-conversation-id=${turn.conversationId}"></span>
     <th:block th:each="m : ${turn.messages}">
         <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error})}"></div>
-    </th:block>
-    <th:block th:if="${turn.conversationId != null}">
-        <input type="hidden" id="assistantConversationId" name="conversationId" th:value="${turn.conversationId}" hx-swap-oob="true">
     </th:block>
 </th:block>
 
 <!-- A saved conversation reopened: replaces the thread. -->
-<div th:fragment="conversation" id="assistantConversation" class="flex flex-col gap-4">
+<div th:fragment="conversation" id="assistantConversation" class="flex flex-col gap-4" th:attr="data-conversation-id=${view.id}">
     <div class="text-xs font-semibold text-on-surface-variant" th:text="${view.title}">Title</div>
     <th:block th:each="m : ${view.messages}">
         <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error})}"></div>
     </th:block>
-    <input type="hidden" id="assistantConversationId" name="conversationId" th:value="${view.id}" hx-swap-oob="true">
 </div>
 
 <!-- The user's conversations, newest first. Continue, rename, delete. -->
-<div th:fragment="history" id="assistantHistory" class="flex flex-col gap-2">
+<div th:fragment="history" id="assistantHistory" class="flex flex-col gap-2" th:attr="data-reset-conversation=${resetConversationId == true ? 'true' : null}">
     <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold">Conversations</h3>
         <button type="button"
@@ -78,7 +74,8 @@
                 <form method="post"
                       th:attr="hx-post=@{/assistant/conversations/{id}/delete(id=${c.id})}"
                       hx-target="#assistantThread" hx-swap="innerHTML"
-                      data-confirm="Delete this conversation? This cannot be undone.">
+                      hx-include="#assistantConversationId"
+                      hx-confirm="Delete this conversation? This cannot be undone.">
                     <input type="hidden" name="pageType" th:value="${pageType}">
                     <button type="submit" class="text-sm font-semibold text-error" aria-label="Delete conversation">Delete</button>
                 </form>

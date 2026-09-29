@@ -87,9 +87,13 @@ class AssistantWebController(
     fun delete(
         @PathVariable id: UUID,
         @RequestParam(defaultValue = "OTHER") pageType: PageContextType,
+        @RequestParam(required = false) conversationId: UUID?,
         model: Model
     ): String {
         conversationService.delete(id)
+        // The composer still holds the id of the conversation it was talking to; if that is the
+        // one just deleted, the next send would be a 404, so the fragment tells the page to let go of it.
+        model.addAttribute("resetConversationId", conversationId == id)
         return historyFragment(pageType, model, null)
     }
 
