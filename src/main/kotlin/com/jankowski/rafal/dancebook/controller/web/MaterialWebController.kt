@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.CommentService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
+import com.jankowski.rafal.dancebook.service.FigureSuggestionService
 import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
@@ -41,7 +42,8 @@ class MaterialWebController(
     private val commentService: CommentService,
     private val danceFigureService: DanceFigureService,
     private val appUserService: AppUserService,
-    private val noteRewriteService: NoteRewriteService
+    private val noteRewriteService: NoteRewriteService,
+    private val figureSuggestionService: FigureSuggestionService
 ) {
 
     companion object {
@@ -148,6 +150,10 @@ class MaterialWebController(
         model.addAttribute("pinnedFigureIds", pinnedFigureIds)
         model.addAttribute("allStyles", danceTypeId == null)
         model.addAttribute("query", "")
+        model.addAttribute(
+            "suggestionsAvailable",
+            figureSuggestionService.isAvailable() && !material.description.isNullOrBlank()
+        )
         return "materials/fragments/figure-picker :: figurePickerDialog"
     }
 
@@ -222,6 +228,44 @@ class MaterialWebController(
             return "materials/view :: pinnedFiguresSection"
         }
         return "redirect:/materials/$materialId"
+    }
+
+    @GetMapping("/{materialId}/figures/suggest")
+    fun suggestFigures(
+        @PathVariable materialId: UUID,
+        model: Model
+    ): String {
+        val material = materialService.findById(materialId)
+        val currentUser = appUserService.getCurrentUser()
+        if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
+            throw EntityNotFoundException("Could not find material with id $materialId")
+        }
+
+        if (!figureSuggestionService.isAvailable()) {
+            model.addAttribute("suggestError", "No LLM provider is configured.")
+            return "materials/fragments/figure-suggestions :: suggestionsError"
+        }
+
+        if (material.description.isNullOrBlank()) {
+            model.addAttribute("suggestError", "The note has no text to search for figures.")
+            return "materials/fragments/figure-suggestions :: suggestionsError"
+        }
+
+        model.addAttribute("material", material)
+        return try {
+            val suggestions = figureSuggestionService.suggestForMaterial(material)
+            model.addAttribute("suggestions", suggestions)
+            if (suggestions.isEmpty()) {
+                "materials/fragments/figure-suggestions :: suggestionsEmpty"
+            } else {
+                "materials/fragments/figure-suggestions :: suggestionsPanel"
+            }
+        } catch (e: Exception) {
+            log.warn("Figure suggestion failed for material {}: {}", materialId, e.message, e)
+            model.addAttribute("suggestError", "The suggestion service didn't respond. Try again in a moment.")
+            model.addAttribute("suggestRetry", true)
+            "materials/fragments/figure-suggestions :: suggestionsError"
+        }
     }
 
     @GetMapping("/new")

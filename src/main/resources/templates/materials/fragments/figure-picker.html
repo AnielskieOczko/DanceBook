@@ -67,6 +67,26 @@
         </div>
     </div>
 
+    <!--/* Suggestions from the note's text (#145): on demand only, the LLM runs when the button is clicked */-->
+    <div th:if="${suggestionsAvailable == true}"
+         id="figureSuggestions"
+         class="px-4 sm:px-6 pt-4">
+        <button type="button"
+                id="figure-suggest-btn"
+                class="btn-outline btn-sm flex items-center gap-1.5"
+                th:hx-get="@{/materials/{id}/figures/suggest(id=${material.id})}"
+                hx-target="#figureSuggestions"
+                hx-swap="innerHTML"
+                hx-indicator="#figure-suggest-btn"
+                hx-disabled-elt="this">
+            <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm', cls='text-primary')}"></span>
+            <span>Suggest figures</span>
+            <span class="htmx-indicator" aria-hidden="true">
+                <span th:replace="~{fragments/icon :: icon(name='autorenew', size='sm', cls='animate-spin text-primary')}"></span>
+            </span>
+        </button>
+    </div>
+
     <!-- Results List (HTMX swappable) -->
     <div id="figurePickerResults" class="p-4 sm:p-6 max-h-[50vh] overflow-y-auto space-y-2 divide-y divide-outline-variant/30">
         <th:block th:replace="~{materials/fragments/figure-picker :: figurePickerResults}"></th:block>

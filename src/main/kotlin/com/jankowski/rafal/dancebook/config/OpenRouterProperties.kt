@@ -23,5 +23,9 @@ data class OpenRouterProperties(
      * OpenRouter endpoints the note rewrite may run on, with fallbacks disabled so the
      * request never silently lands on a different provider. Empty lets OpenRouter route.
      */
-    val rewriteProviders: List<String> = listOf("modelrun/fp4")
+    val rewriteProviders: List<String> = listOf("modelrun/fp4"),
+    /** Model used to suggest figures to pin from a note's text (#145). */
+    val figureSuggestionModel: String = "qwen/qwen3.8-27b:free",
+    /** OpenRouter endpoints the figure suggestion may run on; see [rewriteProviders]. */
+    val figureSuggestionProviders: List<String> = listOf("modelrun/fp4")
 )
