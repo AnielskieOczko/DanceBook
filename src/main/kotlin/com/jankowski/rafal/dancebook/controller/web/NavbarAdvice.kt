@@ -20,6 +20,17 @@ class NavbarAdvice(
     private val systemSettingService: SystemSettingService
 ) {
 
+    /** Optional: absent in `@WebMvcTest` slices, and null-safe when the assistant is off. */
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    var assistantNavSupport: com.jankowski.rafal.dancebook.service.AssistantNavSupport? = null
+
+    @ModelAttribute("assistantNav")
+    fun assistantNav(request: HttpServletRequest): Any? {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth == null || !auth.isAuthenticated || auth.principal == "anonymousUser") return null
+        return assistantNavSupport?.forPath(request.requestURI)
+    }
+
     @ModelAttribute("navLists")
     fun navLists(): List<Any> {
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication

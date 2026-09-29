@@ -102,6 +102,17 @@ class CatalogHarnessController {
         )
         model.addAttribute("event", event)
 
+        model.addAttribute(
+            "sampleCards",
+            listOf(
+                com.jankowski.rafal.dancebook.dto.ResultCard(
+                    kind = "note", id = "n1", title = "Rise and fall on the Natural Turn",
+                    subtitle = "Waltz · 11 Sep 2026", snippet = "sway to the right on two",
+                    url = "/materials/n1", chips = listOf("Natural Turn · 1 2 3")
+                )
+            )
+        )
+
         return "test/catalog-harness :: $fragmentName"
     }
 
@@ -198,6 +209,8 @@ class FragmentCatalogRenderingTest {
             "modalRequired",
             "richTextContentRequired",
             "richTextExcerptRequired",
+            "assistantCardRequired",
+            "assistantMessageRequired",
 
             // All parameters populated
             "iconAll",
@@ -227,6 +240,9 @@ class FragmentCatalogRenderingTest {
             "modalAll",
             "richTextContentAll",
             "richTextExcerptAll",
+            "assistantCardAll",
+            "assistantMessageAll",
+            "assistantMessageError",
 
             // Standalone field without backing form object
             "fieldStandalone",
@@ -258,6 +274,30 @@ class FragmentCatalogRenderingTest {
             .andExpect(content().string(containsString("Errors found")))
             .andExpect(content().string(containsString("Name is required")))
             .andExpect(content().string(containsString("Category must be chosen")))
+    }
+
+    @Test
+    fun `assistant message passes its card through as a linked card and passes a class through`() {
+        mockMvc.perform(get("/test/catalog/assistantMessageAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("href=\"/materials/n1\"")))
+            .andExpect(content().string(containsString("Rise and fall on the Natural Turn")))
+            .andExpect(content().string(containsString("extra-cls")))
+    }
+
+    @Test
+    fun `assistant error bubble renders through the alert fragment, not as a plain answer`() {
+        mockMvc.perform(get("/test/catalog/assistantMessageError").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("role=\"alert\"")))
+    }
+
+    @Test
+    fun `a user bubble is escaped text`() {
+        mockMvc.perform(get("/test/catalog/assistantMessageRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Which notes mention sway?")))
+            .andExpect(content().string(not(containsString("role=\"alert\""))))
     }
 
     @Test

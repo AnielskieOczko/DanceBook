@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- A linked result card: something a tool found. Parameters: kind, heading, url; optional subtitle, snippet, chips, cls.
+     The parameter is `heading`, not `title`: the icon fragment also has a `title`, and an omitted parameter
+     inherits from the caller's scope, which would turn every card's icon into a tooltip. -->
+<a th:fragment="assistantCard"
+   th:href="${url}"
+   class="card flex flex-col gap-1.5 p-3.5 text-on-surface hover:border-outline transition-colors"
+   th:classappend="${cls}">
+    <div class="flex items-center gap-2">
+        <span th:replace="~{fragments/icon :: icon(name=${kind == 'note' ? 'description' : (kind == 'figure' ? 'accessibility_new' : 'calendar_month')}, size='md', cls='text-primary')}"></span>
+        <span class="flex-1 min-w-0 truncate text-[15px] font-semibold" th:text="${heading}">Heading</span>
+    </div>
+    <div th:if="${subtitle != null}" class="text-xs text-on-surface-variant" th:text="${subtitle}">Subtitle</div>
+    <div th:if="${snippet != null}" class="text-[13px] leading-relaxed text-on-surface-variant" th:text="${snippet}">Snippet</div>
+    <div th:if="${chips != null and !#lists.isEmpty(chips)}" class="flex flex-wrap gap-1.5">
+        <th:block th:each="chip : ${chips}">
+            <span th:replace="~{fragments/badge :: badge(label=${chip}, variant='primary')}"></span>
+        </th:block>
+    </div>
+</a>
+
+<!-- One bubble. role is USER or ASSISTANT. An assistant bubble may carry cards (ResultCard list); error swaps in the alert. -->
+<div th:fragment="assistantMessage" class="flex" th:classappend="${(role == 'USER' ? 'justify-end' : '') + (cls != null ? ' ' + cls : '')}">
+    <div th:if="${role == 'USER'}"
+         class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap"
+         th:text="${text}">Hello</div>
+    <div th:if="${role != 'USER'}" class="flex w-full min-w-0 flex-col gap-2.5">
+        <th:block th:if="${error == true}">
+            <div th:replace="~{fragments/alert :: alert(variant='error', text=${text})}"></div>
+        </th:block>
+        <th:block th:if="${error != true}">
+            <div class="text-[15px] leading-relaxed whitespace-pre-wrap" th:text="${text}">Answer</div>
+        </th:block>
+        <th:block th:if="${cards != null}" th:each="c : ${cards}">
+            <a th:replace="~{fragments/assistant :: assistantCard(kind=${c.kind}, heading=${c.title}, subtitle=${c.subtitle}, snippet=${c.snippet}, url=${c.url}, chips=${c.chips})}"></a>
+        </th:block>
+    </div>
+</div>
+
+</body>
+</html>
