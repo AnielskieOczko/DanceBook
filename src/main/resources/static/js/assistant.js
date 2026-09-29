@@ -15,6 +15,12 @@
     const wide = window.matchMedia('(min-width: 768px)');
     let firstOpen = true;
 
+    // On desktop the open panel has its own composer, so the floating bar steps aside rather than overlap it.
+    function syncBar() {
+        bar.hidden = surface.open && wide.matches;
+    }
+    surface.addEventListener('close', syncBar);
+
     function openSurface() {
         if (!surface.open) {
             // Desktop: a side panel the page stays usable next to. Phone: a full-height modal sheet.
@@ -24,6 +30,7 @@
             firstOpen = false;
             thread.dispatchEvent(new CustomEvent('assistant-open'));
         }
+        syncBar();
         composerInput.focus();
     }
 
@@ -76,6 +83,7 @@
         if (target && (target.isContentEditable || target.closest('input, textarea, select, trix-editor, [contenteditable="true"]'))) return;
         if (!wide.matches) return;
         event.preventDefault();
+        if (surface.open) { composerInput.focus(); return; }
         barInput.focus();
     });
 

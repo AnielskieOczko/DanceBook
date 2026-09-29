@@ -57,4 +57,11 @@ class AssistantScriptGuardTest {
         assertTrue(layout.contains("@{/js/assistant.js}"))
         assertTrue(layout.contains("assistant/widget :: widget"))
     }
+
+    @Test
+    fun `the floating bar steps aside while the desktop panel is open, and the slash key then focuses the composer`() {
+        assertTrue(script.contains("bar.hidden = surface.open && wide.matches"))
+        assertTrue(script.contains("surface.addEventListener('close'"))
+        assertTrue(script.contains("if (surface.open) { composerInput.focus(); return; }"))
+    }
 }
