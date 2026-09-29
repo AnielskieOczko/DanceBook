@@ -27,3 +27,23 @@ data class ResolvedPage(
             PageContextType.OTHER -> null
         }
 }
+
+/** One thing a tool found, small enough to give the model and to draw as a linked card. */
+data class ResultCard(
+    /** `note`, `figure` or `session`. Picks the icon. */
+    val kind: String,
+    val id: String,
+    val title: String,
+    val subtitle: String? = null,
+    val snippet: String? = null,
+    /** The real page. Always built server-side from the id, never taken from a model or a client. */
+    val url: String,
+    val chips: List<String> = emptyList()
+)
+
+/** What every read tool returns: at most 10 cards, the true total, and a note for the model when something was off. */
+data class ToolResult(
+    val total: Int,
+    val items: List<ResultCard>,
+    val message: String? = null
+)

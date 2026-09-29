@@ -29,6 +29,9 @@ interface MaterialService {
     fun removeFigure(materialId: UUID, figureId: UUID)
     fun findFiguresByMaterial(materialId: UUID): List<Figure>
     fun findFigureCounts(materialIds: Collection<UUID>): Map<UUID, Int>
+    /** Notes the current user can see whose title or text contain every word of [query], newest first. */
+    fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int): List<Material>
+
     fun hasPrivateNotesMatchingFilter(
         owner: com.jankowski.rafal.dancebook.model.AppUser,
         typeIds: List<UUID>?,
