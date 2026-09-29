@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- The latest notes, each with the figures pinned to it and their timing. Scrolls sideways on a
+     phone and sits in a grid from 1024px. A figure with no timing is listed without a value. -->
+<section th:fragment="homeRecentNotes" id="home-recent-notes" aria-labelledby="home-recent-notes-title" class="flex flex-col gap-3">
+    <div class="flex items-baseline justify-between">
+        <h2 id="home-recent-notes-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0">Recent notes</h2>
+        <a href="/materials" class="text-[13px] font-semibold text-primary hover:underline">All notes</a>
+    </div>
+
+    <div th:if="${!dashboard.recentNotes.isEmpty()}"
+         class="flex gap-3 overflow-x-auto snap-x -mx-6 px-6 pb-1 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-3 lg:overflow-visible">
+        <article th:each="note : ${dashboard.recentNotes}"
+                 class="card rounded-2xl p-4 flex flex-col gap-2.5 shrink-0 w-[272px] snap-start lg:w-auto">
+            <p class="text-xs text-on-surface-variant m-0" th:text="${note.metaLabel}">Foxtrot · 2 days ago</p>
+            <h3 class="font-serif text-lg leading-tight font-normal m-0">
+                <a th:href="@{/materials/{id}(id=${note.id})}" class="text-on-surface hover:underline" th:text="${note.title}">Feather Step</a>
+            </h3>
+            <p th:if="${!note.excerpt.isEmpty()}"
+               class="text-[13px] leading-snug text-on-surface-variant m-0 line-clamp-2"
+               th:text="${note.excerpt}">Head drops on step 2.</p>
+            <ul th:if="${!note.figures.isEmpty()}"
+                class="flex flex-col gap-1.5 border-t border-outline-variant pt-2.5 mt-auto list-none m-0 p-0">
+                <li th:each="figure : ${note.figures}" class="flex justify-between gap-3 text-[13px]">
+                    <span class="font-medium" th:text="${figure.name}">Feather Step</span>
+                    <span th:if="${figure.timing != null}" class="font-semibold text-primary whitespace-nowrap" th:text="${figure.timing}">S Q Q</span>
+                </li>
+            </ul>
+        </article>
+    </div>
+
+    <div th:if="${dashboard.recentNotes.isEmpty()}" class="card rounded-2xl">
+        <div th:replace="~{fragments/empty :: emptyState(icon='edit_note', title='Write your first note', text='Notes are where what you learn in class stays useful.', actionHref='/materials/new', actionLabel='Write a note')}"></div>
+    </div>
+</section>
+
+</body>
+</html>

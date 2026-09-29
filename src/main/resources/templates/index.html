@@ -2,191 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='home'" class="flex flex-col gap-xl">
+<!-- The home page, built around wrapping up a session (#147). Each block is a fragment under
+     templates/home/, so the attendance answer can swap the wrap-up section without re-rendering
+     the page. On a phone the blocks stack in DOM order; from 1024px they fill a three-column grid. -->
+<section class="flex flex-col gap-6 lg:gap-8">
 
-    <!-- Welcome Section -->
-    <div th:replace="~{fragments/page :: pageHeader(title=${displayName != null ? 'Good morning, ' + displayName + '.' : 'Good morning.'}, subtitle='Your creative space is perfectly poised. Review your materials and pick up where you left off in your latest dance journey.', cls='order-1')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${dashboard.greeting}, subtitle=${dashboard.dateLabel}, titleCls='!font-serif !font-normal', toolbar=~{home/new-menu :: homeNewMenu})}"></div>
 
-    <!-- Stats Grid (Bento Style) -->
-    <section class="grid grid-cols-1 md:grid-cols-4 gap-gutter order-3 lg:order-2">
-        <!-- Card 1: Materials -->
-        <a href="/materials" class="card p-md flex flex-col gap-md group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span th:replace="~{fragments/icon :: icon(name='movie', size='md')}"></span>
-            </div>
-            <div>
-                <p class="text-meta text-on-surface-variant font-semibold">Materials</p>
-                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${materialCount}">124 <span class="font-body-md text-body-md text-outline font-normal">Videos</span></p>
-            </div>
-        </a>
-        <!-- Card 2: Figures -->
-        <a href="/dance-figures" class="card p-md flex flex-col gap-md group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md')}"></span>
-            </div>
-            <div>
-                <p class="text-meta text-on-surface-variant font-semibold">Figures</p>
-                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${figureCount}">42 <span class="font-body-md text-body-md text-outline font-normal">Techniques</span></p>
-            </div>
-        </a>
-        <!-- Card 3: Styles -->
-        <a href="/dance-categories" class="card p-md flex flex-col gap-md group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span th:replace="~{fragments/icon :: icon(name='category', size='md')}"></span>
-            </div>
-            <div>
-                <p class="text-meta text-on-surface-variant font-semibold">Styles</p>
-                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${danceTypeCount}">8 <span class="font-body-md text-body-md text-outline font-normal">Genres</span></p>
-            </div>
-        </a>
-        <!-- Card 4: Comments -->
-        <div class="card p-md flex flex-col gap-md group cursor-pointer">
-            <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface group-hover:bg-primary group-hover:text-surface transition-colors">
-                <span th:replace="~{fragments/icon :: icon(name='chat', size='md')}"></span>
-            </div>
-            <div>
-                <p class="text-meta text-on-surface-variant font-semibold">Feedback</p>
-                <p class="font-headline-lg text-headline-lg text-on-surface mt-xs" th:text="${commentCount}">23 <span class="font-body-md text-body-md text-outline font-normal">Notes</span></p>
-            </div>
-        </div>
-    </section>
+    <div th:replace="~{home/week :: homeWeek}"></div>
 
-    <!-- Quick Actions & Timeline Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter order-2 lg:order-3">
-        <!-- Timeline -->
-        <section class="order-2 lg:order-1 lg:col-span-8 space-y-md">
-            <div class="flex items-center justify-between">
-                <h3 class="text-section font-heading text-on-surface">Recent Activity</h3>
-                <a href="/activity-history" class="font-label-sm text-label-sm text-outline uppercase tracking-wider hover:text-on-surface transition-colors">View History</a>
-            </div>
-            <div class="card p-md md:p-margin">
-                <div th:if="${recentEvents != null && !recentEvents.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
-                    <div th:each="event : ${recentEvents}" class="relative pl-8">
-                        <!-- Timeline Dot -->
-                        <div class="absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-surface-container-lowest"
-                             th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' ? 'bg-error' : 'bg-primary-container'}"></div>
-
-                        <!-- Event Content -->
-                        <div class="flex items-start gap-3">
-                            <!-- Icon -->
-                            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                                 th:classappend="${event.eventType.name() == 'MATERIAL_DELETED' || event.eventType.name() == 'MATERIAL_FIGURE_DELETED' || event.eventType.name() == 'DANCE_FIGURE_DELETED' || event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'bg-error-container text-on-error-container' : 'bg-primary-container text-on-primary-container'}">
-                                <span th:replace="~{fragments/icon :: icon(name=${event.eventType.name() == 'MATERIAL_CREATED' ? 'add_circle' :
-                                                  event.eventType.name() == 'MATERIAL_UPDATED' ? 'edit' :
-                                                  event.eventType.name() == 'MATERIAL_DELETED' ? 'delete' :
-                                                  event.eventType.name() == 'COMMENT_ADDED' ? 'chat_bubble' :
-                                                  event.eventType.name() == 'LIST_CREATED' ? 'layers' :
-                                                  event.eventType.name() == 'LIST_MADE_PUBLIC' ? 'public' :
-                                                  event.eventType.name() == 'MATERIAL_FIGURE_ADDED' ? 'playlist_add' :
-                                                  event.eventType.name() == 'MATERIAL_FIGURE_UPDATED' ? 'playlist_add_check' :
-                                                  event.eventType.name() == 'MATERIAL_FIGURE_DELETED' ? 'playlist_remove' :
-                                                  event.eventType.name() == 'DANCE_FIGURE_CREATED' ? 'star' :
-                                                  event.eventType.name() == 'DANCE_FIGURE_UPDATED' ? 'edit_note' :
-                                                   event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'event_available' :
-                                                    event.eventType.name() == 'TRAINING_EVENT_UPDATED' ? 'edit_calendar' :
-                                                    event.eventType.name() == 'TRAINING_EVENT_DELETED' ? 'event_busy' :
-                                                     event.eventType.name() == 'TRAINING_SERIES_CREATED' ? 'event_repeat' :
-                                                     event.eventType.name() == 'TRAINING_SERIES_DELETED' ? 'event_busy' :
-                                                      event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED' ? 'fact_check' :
-                                                      event.eventType.name() == 'TRAINING_BULK_DELETED' ? 'event_busy' :
-                                                      event.eventType.name() == 'TRAINING_BULK_UPDATED' ? 'edit_calendar' : 'unpublished'}, size='sm')}"></span>
-                            </div>
-
-                            <!-- Text -->
-                            <div class="flex-1">
-                                <p class="font-body-md text-body-md text-on-surface">
-                                    <span class="font-medium" th:text="${event.actor.displayName}">User</span>
-                                    <span th:switch="${event.eventType.name()}">
-                                        <span th:case="'MATERIAL_CREATED'"> created material </span>
-                                        <span th:case="'MATERIAL_UPDATED'"> updated material </span>
-                                        <span th:case="'MATERIAL_DELETED'"> deleted material </span>
-                                        <span th:case="'COMMENT_ADDED'"> commented on </span>
-                                        <span th:case="'LIST_CREATED'"> created collection </span>
-                                        <span th:case="'LIST_MADE_PUBLIC'"> shared collection </span>
-                                        <span th:case="'MATERIAL_FIGURE_ADDED'"> added figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' to </span>
-                                        <span th:case="'MATERIAL_FIGURE_UPDATED'"> updated figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' in </span>
-                                        <span th:case="'MATERIAL_FIGURE_DELETED'"> removed figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' from </span>
-                                        <span th:case="'DANCE_FIGURE_CREATED'"> created figure </span>
-                                        <span th:case="'DANCE_FIGURE_UPDATED'"> updated figure </span>
-                                        <span th:case="'DANCE_FIGURE_DELETED'"> deleted figure </span>
-                                        <span th:case="'TRAINING_EVENT_CREATED'"> scheduled training </span>
-                                        <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
-                                        <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
-                                        <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
-                                        <span th:case="'TRAINING_SERIES_DELETED'">
-                                            <span th:if="${event.metadata != null}"> cancelled <span th:text="${event.metadata}"></span> following sessions of </span>
-                                            <span th:unless="${event.metadata != null}"> cancelled series </span>
-                                        </span>
-                                        <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'"> marked </span>
-                                        <span th:case="'TRAINING_BULK_DELETED'"> cancelled </span>
-                                        <span th:case="'TRAINING_BULK_UPDATED'"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
-                                    </span>
-                                    <!-- Link for Material / CustomList -->
-                                    <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_SERIES_DELETED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
-                                       th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
-                                       class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
-                                    <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
-                                          class="font-semibold truncate" th:text="${event.targetName}">Waltz Basics</span>
-                                    <!-- Link/Text for DanceFigure -->
-                                    <a th:if="${event.eventType.name().startsWith('DANCE_FIGURE_') && event.eventType.name() != 'DANCE_FIGURE_DELETED'}"
-                                       th:href="@{/dance-figures}"
-                                       class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Natural Turn</a>
-                                    <span th:if="${event.eventType.name() == 'DANCE_FIGURE_DELETED'}"
-                                          class="font-semibold truncate" th:text="${event.targetName}">Natural Turn</span>
-                                    <!-- Link/Text for TrainingEvent -->
-                                    <a th:if="${event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_EVENT_DELETED' && event.targetId != null}"
-                                       th:href="@{/training-events/{id}(id=${event.targetId})}"
-                                       class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
-                                    <span th:if="${event.eventType.name() == 'TRAINING_EVENT_DELETED'}"
-                                          class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
-                                    <!-- Link/Text for TrainingSeries -->
-                                    <a th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId != null}"
-                                       th:href="@{/training-events/{id}(id=${event.targetId})}"
-                                       class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
-                                    <span th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId == null}"
-                                          class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
-                                    <span th:if="${event.eventType.name() == 'TRAINING_SERIES_DELETED'}"
-                                          class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
-                                    <!-- Link/Text for Bulk Attendance -->
-                                    <a th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"
-                                       th:href="@{/training-events}"
-                                       class="font-semibold text-primary hover:underline truncate"><span th:text="${event.metadata ?: 'multiple'}"></span> sessions</a>
-                                    <span th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"> as <span th:text="${event.targetName}">attended</span></span>
-                                    <!-- Link/Text for Bulk Delete -->
-                                    <a th:if="${event.eventType.name() == 'TRAINING_BULK_DELETED'}"
-                                       th:href="@{/training-events}"
-                                       class="font-semibold text-primary hover:underline truncate"><span th:text="${event.metadata ?: 'multiple'}"></span> training sessions</a>
-                                    <!-- Link/Text for Bulk Update -->
-                                    <a th:if="${event.eventType.name() == 'TRAINING_BULK_UPDATED'}"
-                                       th:href="@{/training-events}"
-                                       class="font-semibold text-primary hover:underline truncate"><span th:text="${event.targetName}">multiple sessions</span></a>
-                                 </p>
-                                 <p class="font-label-sm text-label-sm text-outline mt-1"
-                                    th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${recentEvents == null || recentEvents.isEmpty()}" class="text-center py-8">
-                    <p class="font-body-md text-body-md text-outline">No activity yet. Start by creating your first material!</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Workspace Quick Actions -->
-        <section class="order-1 lg:order-2 lg:col-span-4 space-y-md">
-            <h3 class="text-section text-on-surface">Workspace</h3>
-            <div class="bg-surface-container-low rounded-xl p-md space-y-4">
-                <a href="/materials/new" class="btn-primary w-full">
-                    <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                    New Material
-                </a>
-                <a href="/lists/new" class="btn-outline w-full">
-                    <span th:replace="~{fragments/icon :: icon(name='layers', size='md')}"></span>
-                    Create Collection
-                </a>
-            </div>
-        </section>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div class="min-w-0 lg:col-span-2 lg:row-start-1"><div th:replace="~{home/wrap-up :: homeWrapUp}"></div></div>
+        <div class="min-w-0 lg:col-span-2 lg:row-start-2"><div th:replace="~{home/recent-notes :: homeRecentNotes}"></div></div>
+        <div class="min-w-0 lg:col-start-3 lg:row-start-1"><div th:replace="~{home/month :: homeMonth}"></div></div>
+        <div class="min-w-0 lg:col-start-3 lg:row-start-2"><div th:replace="~{home/continue :: homeContinue}"></div></div>
     </div>
 
 </section>

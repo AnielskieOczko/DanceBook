@@ -90,6 +90,7 @@ class MaterialViewRenderingTest {
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var noteRewriteService: NoteRewriteService
     @MockBean private lateinit var figureSuggestionService: FigureSuggestionService
+    @MockBean private lateinit var trainingEventService: com.jankowski.rafal.dancebook.service.TrainingEventService
 
     // NavbarAdvice dependencies
     @MockBean private lateinit var customListService: CustomListService

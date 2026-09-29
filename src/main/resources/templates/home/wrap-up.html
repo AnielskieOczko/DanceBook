@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- The hero. Newest unconfirmed session first, older ones as compact rows. With nothing waiting it
+     shows the next upcoming session, and with neither, an empty state. The attendance forms swap
+     this whole section (#home-wrap-up) in place. -->
+<section th:fragment="homeWrapUp"
+         id="home-wrap-up"
+         aria-labelledby="home-wrap-up-title"
+         th:with="wrapUp=${dashboard.wrapUp}"
+         class="flex flex-col gap-3">
+
+    <h2 id="home-wrap-up-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0"
+        th:text="${wrapUp.hero != null ? 'To wrap up' : 'Next session'}">To wrap up</h2>
+
+    <th:block th:if="${wrapUpError != null}">
+        <div th:replace="~{fragments/alert :: alert(variant='error', title='Could not save', text=${wrapUpError})}"></div>
+    </th:block>
+
+    <!-- Hero: the newest session still waiting for an answer -->
+    <article th:if="${wrapUp.hero != null}"
+             class="bg-primary text-on-primary rounded-2xl p-5 lg:p-6 flex flex-col gap-3.5">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+            <div class="flex flex-col gap-1">
+                <p class="text-[13px] opacity-80 m-0" th:text="${wrapUp.hero.dateLabel + ' · ' + wrapUp.hero.timeLabel}">Tuesday 23 Sep · 19:00–20:30</p>
+                <h3 class="font-serif text-2xl leading-tight font-normal m-0">
+                    <a th:href="@{/training-events/{id}(id=${wrapUp.hero.id})}" class="text-on-primary hover:underline"
+                       th:text="${wrapUp.hero.title}">Standard group class</a>
+                </h3>
+            </div>
+            <ul th:if="${!wrapUp.hero.segments.isEmpty()}" class="flex flex-wrap gap-1.5 list-none m-0 p-0">
+                <li th:each="segment : ${wrapUp.hero.segments}"
+                    class="text-xs px-2.5 py-1 rounded-[10px] bg-on-primary/15"
+                    th:text="${segment.label + ' · ' + segment.durationLabel}">Waltz · 45m</li>
+            </ul>
+        </div>
+
+        <div class="grid grid-cols-2 lg:flex gap-2">
+            <form th:action="@{/home/sessions/{id}/attendance(id=${wrapUp.hero.id})}"
+                  th:hx-post="@{/home/sessions/{id}/attendance(id=${wrapUp.hero.id})}"
+                  hx-target="#home-wrap-up" hx-swap="outerHTML" method="post" class="contents">
+                <input type="hidden" name="status" value="ATTENDED">
+                <button type="submit"
+                        class="min-h-[44px] px-5 rounded-xl bg-surface text-primary text-sm font-semibold flex items-center justify-center gap-1.5 cursor-pointer hover:bg-surface-container">
+                    <span th:replace="~{fragments/icon :: icon(name='check', size='md')}"></span>Attended
+                </button>
+            </form>
+            <form th:action="@{/home/sessions/{id}/attendance(id=${wrapUp.hero.id})}"
+                  th:hx-post="@{/home/sessions/{id}/attendance(id=${wrapUp.hero.id})}"
+                  hx-target="#home-wrap-up" hx-swap="outerHTML" method="post" class="contents">
+                <input type="hidden" name="status" value="SKIPPED">
+                <button type="submit"
+                        class="min-h-[44px] px-5 rounded-xl border border-on-primary/40 text-on-primary text-sm font-medium cursor-pointer hover:bg-on-primary/10">
+                    Skipped
+                </button>
+            </form>
+            <a th:if="${wrapUp.hero.noteId == null}"
+               th:href="@{/materials/new(fromSession=${wrapUp.hero.id})}"
+               class="col-span-2 lg:ml-auto min-h-[44px] px-5 rounded-xl border border-on-primary/40 bg-on-primary/10 text-on-primary text-sm font-medium flex items-center justify-center gap-2 hover:bg-on-primary/20">
+                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md')}"></span>Write a note from this session
+            </a>
+            <a th:if="${wrapUp.hero.noteId != null}"
+               th:href="@{/materials/{id}(id=${wrapUp.hero.noteId})}"
+               class="col-span-2 lg:ml-auto min-h-[44px] px-5 rounded-xl border border-on-primary/40 bg-on-primary/10 text-on-primary text-sm font-medium flex items-center justify-center gap-2 hover:bg-on-primary/20">
+                <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>Open note
+            </a>
+        </div>
+    </article>
+
+    <!-- Older sessions still waiting -->
+    <article th:each="waiting : ${wrapUp.older}"
+             class="card rounded-2xl px-4 py-3 flex items-center gap-3">
+        <div class="flex-1 min-w-0">
+            <a th:href="@{/training-events/{id}(id=${waiting.id})}"
+               class="block text-[15px] font-semibold text-on-surface hover:underline truncate"
+               th:text="${waiting.title}">Private lesson</a>
+            <p class="text-[13px] text-on-surface-variant m-0" th:text="${waiting.dateLabel + ' · ' + waiting.timeLabel}">Wed 24 Sep · 18:00–19:00</p>
+        </div>
+        <a th:if="${waiting.noteId != null}" th:href="@{/materials/{id}(id=${waiting.noteId})}"
+           class="btn-icon" aria-label="Open note" title="Open note">
+            <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>
+        </a>
+        <a th:if="${waiting.noteId == null}" th:href="@{/materials/new(fromSession=${waiting.id})}"
+           class="btn-icon" aria-label="Write a note from this session" title="Write a note from this session">
+            <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md')}"></span>
+        </a>
+        <form th:action="@{/home/sessions/{id}/attendance(id=${waiting.id})}"
+              th:hx-post="@{/home/sessions/{id}/attendance(id=${waiting.id})}"
+              hx-target="#home-wrap-up" hx-swap="outerHTML" method="post">
+            <input type="hidden" name="status" value="ATTENDED">
+            <button type="submit" aria-label="Mark attended" title="Mark attended"
+                    class="w-11 h-11 rounded-full border border-primary/30 bg-primary-soft text-primary flex items-center justify-center cursor-pointer">
+                <span th:replace="~{fragments/icon :: icon(name='check', size='md')}"></span>
+            </button>
+        </form>
+        <form th:action="@{/home/sessions/{id}/attendance(id=${waiting.id})}"
+              th:hx-post="@{/home/sessions/{id}/attendance(id=${waiting.id})}"
+              hx-target="#home-wrap-up" hx-swap="outerHTML" method="post">
+            <input type="hidden" name="status" value="SKIPPED">
+            <button type="submit" aria-label="Mark skipped" title="Mark skipped"
+                    class="w-11 h-11 rounded-full border border-outline-variant bg-surface text-on-surface-variant flex items-center justify-center cursor-pointer">
+                <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
+            </button>
+        </form>
+    </article>
+
+    <!-- Nothing waiting: the next upcoming session -->
+    <article th:if="${wrapUp.hero == null and wrapUp.next != null}"
+             class="card rounded-2xl p-5 flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
+            <p class="text-[13px] text-on-surface-variant m-0" th:text="${wrapUp.next.dateLabel + ' · ' + wrapUp.next.timeLabel}">Saturday 27 Sep · 10:00–11:00</p>
+            <h3 class="font-serif text-2xl leading-tight font-normal m-0">
+                <a th:href="@{/training-events/{id}(id=${wrapUp.next.id})}" class="text-on-surface hover:underline"
+                   th:text="${wrapUp.next.title}">Practice</a>
+            </h3>
+        </div>
+        <ul th:if="${!wrapUp.next.segments.isEmpty()}" class="flex flex-wrap gap-1.5 list-none m-0 p-0">
+            <li th:each="segment : ${wrapUp.next.segments}"
+                class="text-xs px-2.5 py-1 rounded-[10px] bg-surface-container text-on-surface-variant"
+                th:text="${segment.label + ' · ' + segment.durationLabel}">Quickstep · 30m</li>
+        </ul>
+        <p class="text-sm text-on-surface-variant m-0">You are all caught up.</p>
+        <a th:if="${wrapUp.next.noteId != null}" th:href="@{/materials/{id}(id=${wrapUp.next.noteId})}"
+           class="btn-outline min-h-[44px] self-start">
+            <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>Open note
+        </a>
+    </article>
+
+    <!-- Nothing waiting and nothing planned -->
+    <div th:if="${wrapUp.hero == null and wrapUp.next == null}" class="card rounded-2xl">
+        <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='Schedule your first session', text='Sessions you plan show up here, ready to wrap up once they are over.', actionHref='/training-events/new', actionLabel='Schedule a session')}"></div>
+    </div>
+</section>
+
+</body>
+</html>

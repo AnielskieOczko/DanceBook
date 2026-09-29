@@ -10,7 +10,7 @@
      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
      th:classappend="${cls}">
     <div class="page-header mb-0">
-        <h1 class="page-title text-3xl flex items-center gap-2">
+        <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
             <th:block th:if="${icon != null}">
                 <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
             </th:block>

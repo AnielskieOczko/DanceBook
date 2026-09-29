@@ -11,12 +11,14 @@ import java.time.LocalDateTime
  * on every period but [ALL_TIME].
  */
 enum class StatsPeriod(val label: String) {
+    THIS_MONTH("This month"),
     LAST_30_DAYS("Last 30 days"),
     THIS_YEAR("This year"),
     ALL_TIME("All time");
 
     /** The earliest day this period admits, or null when it admits everything. */
     fun earliestDay(today: LocalDate): LocalDate? = when (this) {
+        THIS_MONTH -> today.withDayOfMonth(1)
         LAST_30_DAYS -> today.minusDays(30)
         THIS_YEAR -> today.withDayOfYear(1)
         ALL_TIME -> null

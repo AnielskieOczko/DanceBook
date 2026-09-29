@@ -33,8 +33,15 @@ data class MaterialRequest(
     val driveFileId: String? = null,
     
     val isPublic: Boolean? = null,
-    
-    val version: Long
+
+    val version: Long,
+
+    /**
+     * Set only when the note is written from a training session (#147): on create, the new note
+     * is linked to that session. The web form carries it as a hidden field; it is not stored on
+     * the note itself.
+     */
+    val trainingEventId: UUID? = null
 )
 
 data class MaterialResponse(

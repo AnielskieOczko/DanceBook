@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- The most recently touched choreographies and collections. Hidden entirely when there are none:
+     a new user has nothing to continue, and the header's New menu already offers both. -->
+<section th:fragment="homeContinue"
+         th:if="${!dashboard.continueItems.isEmpty()}"
+         id="home-continue"
+         aria-labelledby="home-continue-title"
+         class="flex flex-col gap-2">
+    <h2 id="home-continue-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0 mb-1">Continue</h2>
+    <ul class="flex flex-col list-none m-0 p-0">
+        <li th:each="item : ${dashboard.continueItems}" class="border-b border-outline-variant last:border-b-0">
+            <a th:href="${item.href}" class="flex items-center gap-3 min-h-[44px] py-3 text-on-surface hover:text-primary">
+                <span class="flex-1 min-w-0">
+                    <span class="block text-[15px] font-medium truncate" th:text="${item.name}">Waltz competition routine</span>
+                    <span class="block text-[13px] text-on-surface-variant" th:text="${item.kind.label + ' · ' + item.detail}">Choreography · 14 figures · edited 2 days ago</span>
+                </span>
+                <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='text-outline')}"></span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.jankowski.rafal.dancebook.repository
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Material
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
@@ -15,4 +17,11 @@ interface MaterialRepository : JpaRepository<Material, UUID>, JpaSpecificationEx
 
     @Query("SELECT m.driveFileId FROM Material m WHERE m.driveFileId IS NOT NULL")
     fun findAllDriveFileIds(): Set<String>
+
+    /**
+     * The owner's notes, most recently touched first. `updatedAt` is nullable on older rows,
+     * and Postgres sorts NULLs first under DESC, so it falls back to `createdAt`.
+     */
+    @Query("SELECT m FROM Material m WHERE m.owner = :owner ORDER BY COALESCE(m.updatedAt, m.createdAt) DESC")
+    fun findRecentByOwner(owner: AppUser, pageable: Pageable): List<Material>
 }
