@@ -81,6 +81,13 @@ request already sends that parameter. `FigureRequest` has an `id`, and the picke
 none. Under `{id}`, the note's id landed in `request.id` and turned every pin into an
 `updateFigure` call. Keep path variables clear of the request DTO's property names.
 
+**The picker can suggest figures from the note's text** (#145): a **Suggest figures** button
+at the top of the dialog, above the results. How it works is under *LLM providers* below.
+The suggestions render inside the dialog on purpose. `figurePinResponse` swaps
+`#pinnedFiguresSection` out of band on every pin, so anything placed inside that section is
+wiped by the first pin. The first build put the suggestions there, and pinning one removed
+the other two.
+
 A `DanceFigure` owns `DanceFigureStepSet`s (named variants, one flagged `isDefault`),
 each owning `DanceFigureStep`s tagged with a `role` of `"LEADER"` or `"FOLLOWER"`.
 `DanceFigure.steps` is a convenience getter returning the default set's steps.
@@ -880,6 +887,29 @@ the proposal into Trix with `editor.loadHTML`, so the note is saved only when th
 submitted, carrying its usual `version`. The button appears only when
 `NoteRewriteService.isAvailable()` (an OpenRouter key is set) and the saved note has
 text.
+
+**Suggest figures in the pin dialog (#145)** goes through `FigureSuggestionService`. It also
+has its own model settings: `openrouter.figure-suggestion-model` and
+`openrouter.figure-suggestion-providers`, with the same defaults as the rewrite. The
+candidates are the catalog figures in the note's dance style, or every figure when the note
+has no style, minus the figures already pinned. They go to the model as `id`/`name` pairs,
+alongside the note's plain text. **Only ids from that candidate list survive**, anything
+else the model returns is dropped, and at most three are kept. Nothing is pinned
+automatically: each suggestion's **Pin** posts to the ordinary pin endpoint. The endpoint
+is `GET /materials/{materialId}/figures/suggest`, limited to the owner or an ADMIN. It returns
+`materials/fragments/figure-suggestions :: suggestionsPanel`, `:: suggestionsEmpty` ("No
+figures in the catalog clearly match this note.") or `:: suggestionsError`. A provider
+failure also shows **Try again**. The errors a retry cannot fix (no key, no note text) don't.
+The button appears only when an OpenRouter key is set and the note has text.
+
+**The suggestion parser tolerates the shapes the model actually returns, and never reports
+an unreadable reply as "no match".** Qwen answered a note that plainly named the Hockey
+Stick with a single bare `{"id": "…"}`: no array and no `reason`. The strict parser then
+returned nothing, and the user was told no figure matched. The parser now accepts an array,
+a single suggestion object, or an array wrapped in an object. Anything else fails, with
+Try again. When a suggestion has no `reason`, the quote falls back to the figure's name as
+the note writes it, if the note contains the name as a whole word or phrase. Otherwise the
+row shows no quote. Only a genuinely empty result produces `suggestionsEmpty`.
 
 **A free model on a pinned endpoint returns 429 at busy times.** The error's metadata says
 `limit_source: upstream_provider_shared_pool`: the provider's free pool is saturated, not
