@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- The single "+ New" entry point that replaced the two fixed quick actions. -->
+<div th:fragment="homeNewMenu" class="relative" id="home-new-menu">
+    <details class="group">
+        <summary class="btn-primary list-none cursor-pointer [&::-webkit-details-marker]:hidden min-h-[44px]">
+            <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
+            <span>New</span>
+        </summary>
+        <div class="absolute right-0 top-full mt-2 w-56 z-40 card shadow-ambient py-2">
+            <a href="/materials/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md', cls='text-primary')}"></span>Note
+            </a>
+            <a href="/training-events/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', cls='text-primary')}"></span>Session
+            </a>
+            <a href="/dance-figures/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span>Figure
+            </a>
+            <a href="/choreographies/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-primary')}"></span>Choreography
+            </a>
+            <a href="/lists/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-primary')}"></span>Collection
+            </a>
+        </div>
+    </details>
+</div>
+
+</body>
+</html>

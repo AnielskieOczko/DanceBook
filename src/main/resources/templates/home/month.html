@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Time trained, sessions attended and attendance rate for the current month. The whole card links
+     to the stats page. `oob` is set only by the attendance response, which refreshes this card. -->
+<section th:fragment="homeMonth"
+         id="home-month"
+         aria-labelledby="home-month-title"
+         th:attr="hx-swap-oob=${oob != null ? 'true' : null}"
+         class="flex flex-col gap-3">
+    <h2 id="home-month-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0">This month</h2>
+    <a href="/training-events/stats?period=THIS_MONTH"
+       class="card rounded-2xl p-4 flex flex-col gap-3.5 text-on-surface hover:border-outline">
+        <dl class="grid grid-cols-3 gap-2 m-0">
+            <div class="flex flex-col-reverse gap-0.5">
+                <dd class="text-[22px] font-semibold m-0" th:text="${dashboard.month.trainedLabel}">11h 30m</dd>
+                <dt class="text-xs text-on-surface-variant">trained</dt>
+            </div>
+            <div class="flex flex-col-reverse gap-0.5">
+                <dd class="text-[22px] font-semibold m-0" th:text="${dashboard.month.attended}">9</dd>
+                <dt class="text-xs text-on-surface-variant">sessions attended</dt>
+            </div>
+            <div class="flex flex-col-reverse gap-0.5">
+                <dd class="text-[22px] font-semibold m-0"
+                    th:text="${dashboard.month.attendanceRatePercent != null ? dashboard.month.attendanceRatePercent + '%' : '–'}">90%</dd>
+                <dt class="text-xs text-on-surface-variant">attendance</dt>
+            </div>
+        </dl>
+        <!-- Category breakdown: desktop only, and only once there is time to break down -->
+        <div th:if="${!dashboard.month.byCategory.isEmpty()}" class="hidden lg:flex flex-col gap-2">
+            <div class="flex h-2 rounded overflow-hidden gap-0.5" role="img" aria-label="Time by dance style this month">
+                <span th:each="slice : ${dashboard.month.byCategory}"
+                      th:style="${'flex-grow:' + slice.minutes + ';background:' + slice.color}"></span>
+            </div>
+            <ul class="flex flex-wrap gap-x-3.5 gap-y-1 text-xs text-on-surface-variant list-none m-0 p-0">
+                <li th:each="slice : ${dashboard.month.byCategory}" class="flex items-center gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full" th:style="${'background:' + slice.color}"></span>
+                    <span th:text="${slice.label + ' ' + slice.durationLabel}">Standard 5h</span>
+                </li>
+            </ul>
+        </div>
+    </a>
+</section>
+
+</body>
+</html>

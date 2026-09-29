@@ -26,11 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.TrainingEventService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import java.io.IOException
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 @Controller
@@ -43,11 +46,15 @@ class MaterialWebController(
     private val danceFigureService: DanceFigureService,
     private val appUserService: AppUserService,
     private val noteRewriteService: NoteRewriteService,
-    private val figureSuggestionService: FigureSuggestionService
+    private val figureSuggestionService: FigureSuggestionService,
+    private val trainingEventService: TrainingEventService
 ) {
 
     companion object {
         private val log = LoggerFactory.getLogger(MaterialWebController::class.java)
+
+        /** "Standard group class — 23 Sep 2026", the title a note written from a session starts with. */
+        private val SESSION_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
     }
 
     @GetMapping
@@ -268,10 +275,29 @@ class MaterialWebController(
         }
     }
 
+    /**
+     * `fromSession` is the home page's "Write a note from this session" (#147): the form opens
+     * prefilled with the session's title and date and its first segment's style, and the saved
+     * note is linked back to the session. A session the user cannot see is ignored, and the
+     * form opens blank.
+     */
     @GetMapping("/new")
-    fun showCreateForm(model: Model): String {
-        model.addAttribute("material", MaterialRequest(name = "", version = 0))
-        model.addAttribute("danceTypes", emptyList<DanceType>())
+    fun showCreateForm(@RequestParam(required = false) fromSession: UUID?, model: Model): String {
+        val session = fromSession?.let { runCatching { trainingEventService.findById(it) }.getOrNull() }
+        val categoryId = session?.segments?.firstNotNullOfOrNull { it.danceCategory?.id }
+        model.addAttribute(
+            "material",
+            MaterialRequest(
+                name = session?.let { "${it.title} — ${it.startTime.format(SESSION_DATE_FORMAT)}" } ?: "",
+                danceCategoryId = categoryId,
+                version = 0,
+                trainingEventId = session?.id
+            )
+        )
+        model.addAttribute(
+            "danceTypes",
+            categoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
+        )
         populateDropdowns(model)
         return "materials/form"
     }
@@ -288,7 +314,13 @@ class MaterialWebController(
             model.addAttribute("danceTypes", types)
             return "materials/form"
         }
-        materialService.create(request)
+        val material = materialService.create(request)
+        val sessionId = request.trainingEventId
+        if (sessionId != null) {
+            linkToSession(sessionId, material.id!!)
+            // The note page is where figures get pinned, so land there rather than on the list.
+            return "redirect:/materials/${material.id}"
+        }
         return "redirect:/materials"
     }
 
@@ -391,6 +423,29 @@ class MaterialWebController(
         val types = danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList()
         model.addAttribute("danceTypes", types)
         return "materials/form :: danceTypeOptions"
+    }
+
+    /**
+     * Goes through the training service's material update rather than setting the column
+     * directly, so the permission check and the Google Calendar write are the ones the bulk
+     * "attach note" action already uses. The session's external link is passed back unchanged,
+     * because that update replaces both. A failed link leaves the saved note in place and is
+     * only logged: the note is the user's work and must not be lost to it.
+     */
+    private fun linkToSession(sessionId: UUID, materialId: UUID) {
+        try {
+            val session = trainingEventService.findById(sessionId)
+            val result = trainingEventService.bulkUpdateMaterial(
+                sessionIds = listOf(sessionId),
+                materialId = materialId,
+                materialsUrl = session.materialsUrl
+            )
+            if (result.updatedCount == 0) {
+                log.warn("Note {} was saved but not linked to session {}: {}", materialId, sessionId, result.message)
+            }
+        } catch (e: Exception) {
+            log.warn("Note {} was saved but could not be linked to session {}", materialId, sessionId, e)
+        }
     }
 
     private fun populateDropdowns(model: Model) {

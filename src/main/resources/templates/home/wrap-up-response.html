@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- What an attendance answer swaps in: the wrap-up section itself, plus the week strip and month
+     card out of band, since both change with the answer. -->
+<th:block th:fragment="wrapUpResponse">
+    <th:block th:replace="~{home/wrap-up :: homeWrapUp}"></th:block>
+    <th:block th:replace="~{home/week :: homeWeek}"></th:block>
+    <th:block th:replace="~{home/month :: homeMonth}"></th:block>
+</th:block>
+
+</body>
+</html>

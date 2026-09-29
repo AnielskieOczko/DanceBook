@@ -161,7 +161,7 @@ class TrainingNavAndSwitcherTest {
     }
 
     @Test
-    fun `desktop and mobile nav show exactly six items in same order with same labels`() {
+    fun `desktop nav shows six items and the phone tab bar shows four, with the rest behind the avatar menu`() {
         val principal = User("dancer", "password", listOf(SimpleGrantedAuthority("ROLE_USER")))
         val auth = UsernamePasswordAuthenticationToken(principal, "password", principal.authorities)
         TestSecurityContextHolder.setContext(SecurityContextImpl(auth))
@@ -214,32 +214,33 @@ class TrainingNavAndSwitcherTest {
         val avatarLink = doc.selectFirst("header a[href='/profile']")
         assertNotNull(avatarLink, "Header avatar must link to /profile")
 
-        // Mobile bottom nav
+        // Mobile bottom nav: four tabs since #147. Everything else is behind the avatar menu.
         val mobileLinks = doc.select("nav.md\\:hidden a")
-        assertEquals(6, mobileLinks.size, "Mobile bottom nav must contain exactly 6 links")
+        assertEquals(4, mobileLinks.size, "Mobile bottom nav must contain exactly 4 links")
 
         val expectedMobile = listOf(
-            Triple("/", "Dashboard", "Dashboard"),
-            Triple("/materials", "Notes", "Notes"),
-            Triple("/dance-figures", "Figures", "Figures"),
-            Triple("/lists", "Collections", "Collections"),
-            Triple("/choreographies", "Choreos", "Choreographies"),
-            Triple("/training-events", "Training", "Training")
+            "/" to "Home",
+            "/training-events" to "Training",
+            "/materials" to "Notes",
+            "/dance-figures" to "Figures"
         )
 
-        expectedMobile.forEachIndexed { index, (expectedHref, expectedText, expectedAria) ->
+        expectedMobile.forEachIndexed { index, (expectedHref, expectedText) ->
             val link = mobileLinks[index]
             assertEquals(expectedHref, link.attr("href"))
             assertEquals(expectedText, link.select("span.font-label-sm").text().trim())
-            if (expectedText != expectedAria) {
-                assertEquals(expectedAria, link.attr("aria-label"), "Accessible name for $expectedText must be $expectedAria")
-            }
             assertTrue(link.hasClass("min-h-[44px]"), "Mobile nav link $expectedText must have 44px min touch target")
         }
 
-        // Mobile training link is active
-        val mobileTrainingLink = mobileLinks[5]
+        // Mobile training link is active, and says so to assistive technology
+        val mobileTrainingLink = mobileLinks[1]
         assertTrue(mobileTrainingLink.hasClass("bottom-nav-item-active"))
+        assertEquals("page", mobileTrainingLink.attr("aria-current"))
+
+        // The destinations that lost a tab stay reachable from the phone's profile menu
+        val menuLinks = doc.select("#profile-menu a").map { it.attr("href") }
+        assertTrue(menuLinks.containsAll(listOf("/profile", "/choreographies", "/lists")),
+            "Profile menu must offer Profile, Choreographies and Collections, was $menuLinks")
     }
 
     @Test

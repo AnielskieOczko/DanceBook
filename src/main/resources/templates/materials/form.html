@@ -16,6 +16,8 @@
 
         <!-- Hidden version field for optimistic locking -->
         <input type="hidden" th:field="*{version}"/>
+        <!-- Set when the note is written from a training session; links the saved note to it -->
+        <input type="hidden" th:field="*{trainingEventId}"/>
 
         <div th:replace="~{fragments/form :: errorSummary}"></div>
 
