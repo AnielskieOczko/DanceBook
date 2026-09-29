@@ -126,12 +126,13 @@ class FigureSuggestionService(
             )
         )
 
-        return parseSuggestions(llmResponse.content, candidateMap)
+        return parseSuggestions(llmResponse.content, candidateMap, plainText)
     }
 
     private fun parseSuggestions(
         content: String,
-        candidateMap: Map<UUID, DanceFigure>
+        candidateMap: Map<UUID, DanceFigure>,
+        noteText: String
     ): List<FigureSuggestion> {
         val trimmed = content.trim()
         // Strip markdown code fences if the model wraps its response
@@ -162,11 +163,21 @@ class FigureSuggestionService(
             val reason = elem.get("reason")?.asText()?.trim()?.takeIf { it.isNotEmpty() }
             val id = try { UUID.fromString(idStr) } catch (_: IllegalArgumentException) { continue }
             val figure = candidateMap[id] ?: continue  // discard out-of-list ids
-            results += FigureSuggestion(figure = figure, reason = reason)
+            results += FigureSuggestion(figure = figure, reason = reason ?: nameAsWritten(figure, noteText))
         }
 
         log.info("Figure suggestions: {} returned, {} valid after filtering", elements.size, results.size)
         return results
+    }
+
+    /**
+     * The quote for a suggestion the model gave no reason for: the figure's name as the note
+     * writes it, when the note names it as a whole word or phrase (any case). Null otherwise.
+     */
+    private fun nameAsWritten(figure: DanceFigure, noteText: String): String? {
+        val name = figure.name?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        val pattern = Regex("(?<![\\p{L}\\p{N}])${Regex.escape(name)}(?![\\p{L}\\p{N}])", RegexOption.IGNORE_CASE)
+        return pattern.find(noteText)?.value
     }
 
     /**

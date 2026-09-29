@@ -255,12 +255,40 @@ class FigureSuggestionServiceTest {
             .thenReturn(llmResponse("""{"id":"38b87dea-3300-41c9-8608-a9035f185437"}"""))
 
         val result = service().suggest(
-            "<p>The Hockey Stick lives or dies on the connection through the left hand.</p>",
+            "<p>The hockey stick lives or dies on the connection through the left hand.</p>",
             candidates,
             emptySet()
         )
 
         assertEquals(listOf(hockeyStickId), result.map { it.figure.id })
+        // No reason from the model, so the figure's name is quoted as the note writes it.
+        assertEquals("hockey stick", result[0].reason)
+    }
+
+    @Test
+    fun `a suggestion without a reason has no quote when the note does not name the figure`() {
+        val alemanaId = UUID.randomUUID()
+        `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
+            .thenReturn(llmResponse("""[{"id":"$alemanaId"}]"""))
+
+        val result = service().suggest(
+            "<p>She turns under the raised arm.</p>",
+            listOf(figure(alemanaId, "Alemana")),
+            emptySet()
+        )
+
+        assertEquals(listOf(alemanaId), result.map { it.figure.id })
+        assertEquals(null, result[0].reason)
+    }
+
+    @Test
+    fun `the name fallback only matches whole words`() {
+        val volta = UUID.randomUUID()
+        `when`(llmProviderRouter.callLlm(anyStr(), anyLlmRequest()))
+            .thenReturn(llmResponse("""[{"id":"$volta"}]"""))
+
+        val result = service().suggest("<p>Revolta practice.</p>", listOf(figure(volta, "Volta")), emptySet())
+
         assertEquals(null, result[0].reason)
     }
 
