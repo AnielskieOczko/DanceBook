@@ -44,7 +44,7 @@ import java.util.UUID
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
-@TestPropertySource(properties = ["google.calendar.calendar-id=integration-test-calendar"])
+@TestPropertySource(properties = ["google.calendar.calendar-id=integration-test-calendar", "google.ai.api-key="])
 class WebRouteSmokeTest {
 
     companion object {

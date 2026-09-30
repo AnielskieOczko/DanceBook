@@ -192,6 +192,14 @@ class MaterialServiceImpl(
         return materialRepository.findAll(spec, pageable)
     }
 
+    override fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int): List<Material> {
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val spec = MaterialSpecification.withTextSearch(currentUser, query, figureId, danceTypeId)
+        return materialRepository.findAll(
+            spec, org.springframework.data.domain.PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"))
+        ).content
+    }
+
     @Transactional
     override fun addFigure(materialId: UUID, request: FigureRequest): Figure {
         log.debug("Adding figure '{}' to material {}", request.danceFigureId, materialId)

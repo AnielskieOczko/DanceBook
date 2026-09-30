@@ -59,6 +59,12 @@
                 <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
             </a>
 
+            <button type="button" th:if="${assistantNav != null}" data-assistant-open
+                    class="flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors"
+                    aria-label="Open assistant" title="Assistant (press /)">
+                <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md')}"></span>
+            </button>
+
             <!-- Notification Bell -->
             <div class="relative" id="notification-bell-wrapper">
                 <button id="notification-bell"
@@ -160,6 +166,11 @@
         <span class="font-label-sm text-[11px] font-medium mt-1">Figures</span>
     </a>
 </nav>
+
+<th:block th:if="${assistantNav != null}">
+    <div th:replace="~{assistant/widget :: widget}"></div>
+    <script th:src="@{/js/assistant.js}" defer></script>
+</th:block>
 
 <!-- Shared confirm modal container for server-rendered dialogs -->
 <div id="confirmModalContainer"></div>

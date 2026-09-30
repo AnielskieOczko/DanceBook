@@ -281,5 +281,27 @@
     <p th:replace="~{fragments/rich-text :: excerpt(value='Hello world excerpt that is a bit longer', max=20, cls='extra-cls')}"></p>
 </div>
 
+<!-- ASSISTANT: assistantCard -->
+<div th:fragment="assistantCardRequired">
+    <a th:replace="~{fragments/assistant :: assistantCard(kind='note', heading='Rise and fall on the Natural Turn', url='/materials/1')}"></a>
+</div>
+
+<div th:fragment="assistantCardAll">
+    <a th:replace="~{fragments/assistant :: assistantCard(kind='figure', heading='Natural Turn', subtitle='Waltz · Class D', snippet='sway to the right on two', url='/dance-figures/1', chips=${ {'1 2 3', 'Whisk'} }, cls='extra-cls')}"></a>
+</div>
+
+<!-- ASSISTANT: assistantMessage -->
+<div th:fragment="assistantMessageRequired">
+    <div th:replace="~{fragments/assistant :: assistantMessage(role='USER', text='Which notes mention sway?')}"></div>
+</div>
+
+<div th:fragment="assistantMessageAll">
+    <div th:replace="~{fragments/assistant :: assistantMessage(role='ASSISTANT', text='Two notes mention sway.', cards=${sampleCards}, cls='extra-cls')}"></div>
+</div>
+
+<div th:fragment="assistantMessageError">
+    <div th:replace="~{fragments/assistant :: assistantMessage(role='ASSISTANT', text='The assistant could not answer just now.', error=true)}"></div>
+</div>
+
 </body>
 </html>

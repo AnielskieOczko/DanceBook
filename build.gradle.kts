@@ -29,6 +29,12 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.ai:spring-ai-bom:1.1.8")
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -47,6 +53,11 @@ dependencies {
 
     // Google Calendar API (training calendar sync, same stored-refresh-token model)
     implementation("com.google.apis:google-api-services-calendar:v3-rev20260517-2.0.0")
+
+    // Spring AI: the assistant. The core artifact, not the starter: the starter's
+    // auto-configuration fails at boot when no API key is set, and the assistant must be
+    // absent (not broken) without one.
+    implementation("org.springframework.ai:spring-ai-google-genai")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

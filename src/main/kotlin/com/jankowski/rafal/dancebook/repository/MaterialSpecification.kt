@@ -2,7 +2,9 @@ package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceCategory
+import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Share
@@ -89,6 +91,47 @@ object MaterialSpecification {
 
             if (predicates.isEmpty()) cb.conjunction() else cb.and(*predicates.toTypedArray())
         }
+    }
+
+    /**
+     * Free-text search over a note's title and text: every word must appear in one of the two.
+     * [figureId] keeps only notes that pin that catalog figure, [danceTypeId] only that style.
+     * Combine with [visibleTo]; this alone applies no access rule.
+     */
+    fun textSearch(query: String?, figureId: UUID?, danceTypeId: UUID?): Specification<Material> {
+        return Specification { root, criteria, cb ->
+            val predicates = mutableListOf<Predicate>()
+
+            query.orEmpty().lowercase().split(Regex("\\s+")).filter { it.isNotBlank() }.take(6).forEach { term ->
+                val like = "%" + term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
+                predicates.add(
+                    cb.or(
+                        cb.like(cb.lower(root.get("name")), like, '\\'),
+                        cb.like(cb.lower(cb.coalesce(root.get<String>("description"), "")), like, '\\')
+                    )
+                )
+            }
+
+            danceTypeId?.let {
+                predicates.add(cb.equal(root.get<DanceType>("danceType").get<UUID>("id"), it))
+            }
+
+            figureId?.let {
+                val pins = criteria!!.subquery(Long::class.java)
+                val pin = pins.from(Figure::class.java)
+                pins.select(cb.literal(1L)).where(
+                    cb.equal(pin.get<Material>("material"), root),
+                    cb.equal(pin.get<DanceFigure>("danceFigure").get<UUID>("id"), it)
+                )
+                predicates.add(cb.exists(pins))
+            }
+
+            cb.and(*predicates.toTypedArray())
+        }
+    }
+
+    fun withTextSearch(user: AppUser?, query: String?, figureId: UUID?, danceTypeId: UUID?): Specification<Material> {
+        return visibleTo(user).and(textSearch(query, figureId, danceTypeId))
     }
 
     fun withFilters(

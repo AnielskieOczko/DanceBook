@@ -15,5 +15,9 @@ data class GoogleAiProperties(
         "gemma-4-26b-a4b-it",
         "gemma-4-31b-it"
     ),
-    val timeoutSeconds: Long = 120
+    val timeoutSeconds: Long = 120,
+    /** The chat model behind the assistant (Spring AI). Independent of the LlmProvider models. */
+    val assistantModel: String = "gemini-2.5-flash",
+    /** Total time one assistant turn may spend waiting on the provider. */
+    val assistantTimeoutSeconds: Long = 30
 )
