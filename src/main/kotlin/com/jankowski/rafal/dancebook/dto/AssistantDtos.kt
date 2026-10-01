@@ -46,7 +46,9 @@ data class ResultCard(
 data class ToolResult(
     val total: Int,
     val items: List<ResultCard>,
-    val message: String? = null
+    val message: String? = null,
+    /** Set by the draft tools: the id of the draft the turn created, which the reply shows as a card. */
+    val draftId: String? = null
 )
 
 /** One bubble in the thread. Cards belong to an assistant bubble: what its tools found. */
