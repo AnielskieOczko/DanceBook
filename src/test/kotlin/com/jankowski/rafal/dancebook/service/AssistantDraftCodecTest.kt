@@ -47,4 +47,15 @@ class AssistantDraftCodecTest {
 
         assertEquals(request, codec.read(codec.toPayload(request), DanceFigureRequest::class.java))
     }
+
+    @Test
+    fun `a figure draft reads back whatever order the database returns its keys in`() {
+        // Postgres jsonb reorders object keys (shorter first, then alphabetical), so a computed property can arrive first.
+        val request = DanceFigureRequest(name = "Heel Turn", danceTypeId = UUID.randomUUID())
+        val inDbOrder = LinkedHashMap<String, Any?>()
+        inDbOrder["effectiveStepSets"] = emptyList<Any>()
+        inDbOrder.putAll(codec.toPayload(request).filterKeys { it != "effectiveStepSets" })
+
+        assertEquals(request, codec.read(inDbOrder, DanceFigureRequest::class.java))
+    }
 }
