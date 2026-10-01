@@ -2,7 +2,10 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
+import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
+import org.springframework.beans.factory.annotation.Autowired
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.MaterialService
@@ -49,6 +52,11 @@ class MaterialWebController(
     private val figureSuggestionService: FigureSuggestionService,
     private val trainingEventService: TrainingEventService
 ) {
+
+    /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
+    @Autowired(required = false)
+    var assistantDrafts: AssistantDraftService? = null
+
 
     companion object {
         private val log = LoggerFactory.getLogger(MaterialWebController::class.java)
@@ -282,7 +290,13 @@ class MaterialWebController(
      * form opens blank.
      */
     @GetMapping("/new")
-    fun showCreateForm(@RequestParam(required = false) fromSession: UUID?, model: Model): String {
+    fun showCreateForm(
+        @RequestParam(required = false) fromSession: UUID?,
+        @RequestParam(required = false) fromDraft: UUID?,
+        model: Model
+    ): String {
+        val drafted = fromDraft?.let { assistantDrafts?.noteForForm(it) }
+        if (drafted != null) return showDraftForm(drafted, model)
         val session = fromSession?.let { runCatching { trainingEventService.findById(it) }.getOrNull() }
         val categoryId = session?.segments?.firstNotNullOfOrNull { it.danceCategory?.id }
         model.addAttribute(
@@ -302,6 +316,30 @@ class MaterialWebController(
         return "materials/form"
     }
 
+    /**
+     * The form for a note the assistant drafted ("Edit in form"). The form has no figure picker,
+     * so the draft's pins show as chips and travel as one hidden field, and the attendance choice
+     * as another, both applied when this form is saved. A figure or session the user can no longer
+     * read is left out of both the chips and the hidden field.
+     */
+    private fun showDraftForm(draft: MaterialRequest, model: Model): String {
+        val figures = draft.figureIds.mapNotNull { runCatching { danceFigureService.findById(it) }.getOrNull() }
+        val session = draft.trainingEventId?.let { runCatching { trainingEventService.findById(it) }.getOrNull() }
+        model.addAttribute(
+            "material",
+            draft.copy(
+                figureIds = figures.mapNotNull { it.id },
+                trainingEventId = session?.id,
+                markAttended = draft.markAttended && session != null
+            )
+        )
+        model.addAttribute("draftFigures", figures)
+        model.addAttribute("draftSession", session)
+        model.addAttribute("danceTypes", draft.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>())
+        populateDropdowns(model)
+        return "materials/form"
+    }
+
     @PostMapping
     fun createMaterial(
         @Valid @ModelAttribute("material") request: MaterialRequest,
@@ -315,13 +353,14 @@ class MaterialWebController(
             return "materials/form"
         }
         val material = materialService.create(request)
+        applyDraftExtras(material.id!!, request)
         val sessionId = request.trainingEventId
         if (sessionId != null) {
             linkToSession(sessionId, material.id!!)
             // The note page is where figures get pinned, so land there rather than on the list.
             return "redirect:/materials/${material.id}"
         }
-        return "redirect:/materials"
+        return if (request.figureIds.isNotEmpty()) "redirect:/materials/${material.id}" else "redirect:/materials"
     }
 
     @GetMapping("/{id}/edit")
@@ -423,6 +462,29 @@ class MaterialWebController(
         val types = danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList()
         model.addAttribute("danceTypes", types)
         return "materials/form :: danceTypeOptions"
+    }
+
+    /**
+     * What an assistant draft carries that the form cannot edit: figures to pin, and attendance for
+     * the linked session. Like the session link, each is best effort: the note is already saved
+     * and is the user's work, so a failed pin or attendance is logged, not allowed to lose it.
+     */
+    private fun applyDraftExtras(materialId: UUID, request: MaterialRequest) {
+        request.figureIds.distinct().forEach { figureId ->
+            try {
+                materialService.addFigure(materialId, FigureRequest(danceFigureId = figureId))
+            } catch (e: Exception) {
+                log.warn("Note {} was saved but figure {} could not be pinned", materialId, figureId, e)
+            }
+        }
+        val sessionId = request.trainingEventId
+        if (request.markAttended && sessionId != null) {
+            try {
+                trainingEventService.updateAttendance(sessionId, AttendanceStatus.ATTENDED)
+            } catch (e: Exception) {
+                log.warn("Note {} was saved but session {} could not be marked attended", materialId, sessionId, e)
+            }
+        }
     }
 
     /**

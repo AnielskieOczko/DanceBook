@@ -12,6 +12,7 @@ import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.TrainingCalendarService
@@ -21,6 +22,7 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -61,6 +63,11 @@ class TrainingEventWebController(
     private val materialService: MaterialService,
     private val appUserService: AppUserService
 ) {
+
+    /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
+    @Autowired(required = false)
+    var assistantDrafts: AssistantDraftService? = null
+
 
     companion object {
         private val log = LoggerFactory.getLogger(TrainingEventWebController::class.java)
@@ -190,7 +197,10 @@ class TrainingEventWebController(
         }
 
     @GetMapping("/new")
-    fun showCreateForm(model: Model): String {
+    fun showCreateForm(
+        @RequestParam(required = false) fromDraft: UUID?,
+        model: Model
+    ): String {
         populateFormOptions(model)
         val targetCalendar = try {
             activeCalendarService.creationTarget()
@@ -199,7 +209,12 @@ class TrainingEventWebController(
             null
         }
         model.addAttribute("targetCalendar", targetCalendar)
-        model.addAttribute("trainingEvent", TrainingEventRequest(calendarId = targetCalendar?.id))
+        // A draft is aimed at the calendar the user would create into right now, not the one it was drafted for.
+        val drafted = fromDraft?.let { assistantDrafts?.sessionForForm(it) }
+        model.addAttribute(
+            "trainingEvent",
+            drafted?.copy(calendarId = targetCalendar?.id) ?: TrainingEventRequest(calendarId = targetCalendar?.id)
+        )
         return "training-events/form"
     }
 
