@@ -66,15 +66,22 @@ class AssistantDraftServiceImpl(
 
     override fun save(id: UUID): DraftView {
         val draft = store.claim(id)
-        try {
-            val saved = when (draft.kind) {
+        val saved = try {
+            when (draft.kind) {
                 DraftKind.NOTE -> saveNote(draft)
                 DraftKind.TRAINING_EVENT -> saveSession(draft)
                 DraftKind.FIGURE -> saveFigure(draft)
             }
-            store.finish(id, saved.entityId, saved.notice)
         } catch (e: RuntimeException) {
             store.release(id, problemText(e))
+            return view(id)
+        }
+        // Outside the try on purpose: the entity exists now, so a failure here must never release the
+        // draft back to PENDING, which would offer Save again and create a duplicate.
+        try {
+            store.finish(id, saved.entityId, saved.notice)
+        } catch (e: RuntimeException) {
+            log.error("Draft {} created {} but could not record it; leaving the draft saved", id, saved.entityId, e)
         }
         return view(id)
     }

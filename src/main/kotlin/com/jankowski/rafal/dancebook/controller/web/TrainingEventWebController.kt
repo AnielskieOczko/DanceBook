@@ -211,11 +211,21 @@ class TrainingEventWebController(
         model.addAttribute("targetCalendar", targetCalendar)
         // A draft is aimed at the calendar the user would create into right now, not the one it was drafted for.
         val drafted = fromDraft?.let { assistantDrafts?.sessionForForm(it) }
+        addDraftNote(drafted?.materialId, model)
         model.addAttribute(
             "trainingEvent",
             drafted?.copy(calendarId = targetCalendar?.id) ?: TrainingEventRequest(calendarId = targetCalendar?.id)
         )
         return "training-events/form"
+    }
+
+    /**
+     * A session drafted by the assistant can link a note. The form has no note field, so the note is shown
+     * and carried as a hidden `materialId`; without it, "Edit in form" would quietly drop the link.
+     */
+    private fun addDraftNote(materialId: UUID?, model: Model) {
+        val note = materialId?.let { runCatching { materialService.findById(it) }.getOrNull() }
+        model.addAttribute("draftNote", note)
     }
 
     @PostMapping
@@ -226,6 +236,7 @@ class TrainingEventWebController(
     ): String {
         if (bindingResult.hasErrors()) {
             populateFormOptions(model)
+            addDraftNote(request.materialId, model)
             model.addAttribute("targetCalendar", runCatching { activeCalendarService.creationTarget() }.getOrNull())
             return "training-events/form"
         }
@@ -246,6 +257,7 @@ class TrainingEventWebController(
             log.error("Failed to create training event '{}'", request.title, e)
             bindingResult.rejectValue("title", "error.trainingEvent", e.message ?: "Failed to create training event")
             populateFormOptions(model)
+            addDraftNote(request.materialId, model)
             model.addAttribute("targetCalendar", runCatching { activeCalendarService.creationTarget() }.getOrNull())
             return "training-events/form"
         }

@@ -121,6 +121,13 @@ class AssistantDraftToolsTest {
     }
 
     @Test
+    fun `when ids are left out the model is told not to draft again, so one request never makes two cards`() {
+        val result = note(figures = listOf(UUID.randomUUID().toString()), session = null, attended = false)
+
+        assertTrue(result.message!!.contains("Do not create another draft"), result.message)
+    }
+
+    @Test
     fun `a figure id that is not even a uuid is dropped, not fatal`() {
         val result = note(figures = listOf("natural-turn"), session = null, attended = false)
 

@@ -229,4 +229,33 @@ class MaterialFromDraftWebTest {
         verify(materialService, never()).addFigure(savedNote.id!!, FigureRequest(danceFigureId = figure.id))
         verify(trainingEventService, never()).updateAttendance(session.id!!, AttendanceStatus.ATTENDED)
     }
+
+    @Test
+    fun `a validation error on the prefilled form keeps the chips and the carried pins and attendance`() {
+        val doc = Jsoup.parse(
+            mockMvc.perform(
+                post("/materials").param("name", "x").param("version", "0")
+                    .param("trainingEventId", session.id.toString())
+                    .param("figureIds", figure.id.toString()).param("markAttended", "true").with(csrf())
+            ).andExpect(status().isOk).andReturn().response.contentAsString
+        )
+
+        assertEquals(figure.id.toString(), doc.selectFirst("input[name=figureIds]")?.attr("value"))
+        assertEquals("true", doc.selectFirst("input[name=markAttended]")?.attr("value"))
+        assertTrue(doc.select("[data-draft-figures]").text().contains("Feather Step"))
+    }
+
+    @Test
+    fun `several carried figures bind from the one comma-separated field and are all pinned`() {
+        val second = DanceFigure().apply { id = UUID.randomUUID(); name = "Reverse Turn" }
+        `when`(danceFigureService.findById(second.id!!)).thenReturn(second)
+
+        mockMvc.perform(
+            post("/materials").param("name", "Tuesday class").param("version", "0")
+                .param("figureIds", "${figure.id},${second.id}").with(csrf())
+        ).andExpect(status().is3xxRedirection)
+
+        verify(materialService).addFigure(savedNote.id!!, FigureRequest(danceFigureId = figure.id))
+        verify(materialService).addFigure(savedNote.id!!, FigureRequest(danceFigureId = second.id))
+    }
 }

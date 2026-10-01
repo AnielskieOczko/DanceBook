@@ -18,6 +18,14 @@
         <!-- Error Summary -->
         <div th:replace="~{fragments/form :: errorSummary}"></div>
 
+        <!-- From an assistant draft ("Edit in form"): the form has no note field, so the linked note is shown and carried. -->
+        <th:block th:if="${draftNote != null}">
+            <input type="hidden" name="materialId" th:value="${draftNote.id}"/>
+            <div data-draft-note class="text-sm text-on-surface-variant">
+                Linked note: <span class="font-semibold text-on-surface" th:text="${draftNote.name}">Quickstep drills</span>
+            </div>
+        </th:block>
+
         <!-- Target / Owning Calendar Statement -->
         <th:block th:if="${calendarError}">
             <div th:replace="~{fragments/alert :: alert(variant='error', text=${calendarError})}"></div>

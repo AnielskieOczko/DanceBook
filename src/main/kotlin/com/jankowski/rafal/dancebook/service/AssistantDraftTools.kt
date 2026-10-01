@@ -227,7 +227,9 @@ class AssistantDraftTools(
         val problems = validator.validate(request).map { "${it.propertyPath}: ${it.message}" }.sorted()
         if (problems.isNotEmpty()) return fail(turn, tool, problems)
         val id = drafts.create(turn.conversationId, kind, codec.toPayload(request))
-        val left = if (dropped.isEmpty()) "" else " Left out: ${dropped.joinToString("; ")}."
+        val left = if (dropped.isEmpty()) "" else
+            " Left out: ${dropped.joinToString("; ")}. Do not create another draft for this request: " +
+                "tell the user what was left out, so they can add it when they review the card."
         return ToolResult(
             1, emptyList(),
             "Draft created. The user now sees it as a card with Save and Edit in form; nothing is saved yet. " +

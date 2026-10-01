@@ -95,6 +95,7 @@ class TrainingEventViewRenderingTest {
     @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
     @MockBean private lateinit var activeCalendarService: ActiveCalendarService
     @MockBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockBean private lateinit var assistantDrafts: com.jankowski.rafal.dancebook.service.AssistantDraftService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService
@@ -342,6 +343,36 @@ class TrainingEventViewRenderingTest {
         ).andReturn().response.contentAsString
 
         assertTrue(html.contains("_csrf"), "quick-create form posts without a CSRF token: $html")
+    }
+
+    @Test
+    fun `the create form opened from a draft keeps the linked note, shown and carried, so saving does not lose it`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club Training"; enabled = true }
+        `when`(activeCalendarService.creationTarget()).thenReturn(club)
+        val draftId = UUID.randomUUID()
+        val noteId = UUID.randomUUID()
+        `when`(materialService.findById(noteId)).thenReturn(Material().apply { id = noteId; name = "Quickstep drills" })
+        `when`(assistantDrafts.sessionForForm(draftId)).thenReturn(
+            com.jankowski.rafal.dancebook.dto.TrainingEventRequest(
+                title = "Practice", date = java.time.LocalDate.of(2026, 10, 3), startTime = java.time.LocalTime.of(10, 0),
+                endTime = java.time.LocalTime.of(12, 0), materialId = noteId
+            )
+        )
+
+        val doc = Jsoup.parse(
+            mockMvc.perform(get("/training-events/new").param("fromDraft", draftId.toString()).with(csrf()))
+                .andExpect(status().isOk).andReturn().response.contentAsString
+        )
+
+        assertEquals(noteId.toString(), doc.selectFirst("input[name=materialId]")?.attr("value"))
+        assertTrue(doc.select("[data-draft-note]").text().contains("Quickstep drills"))
+    }
+
+    @Test
+    fun `a blank create form carries no linked note`() {
+        val doc = Jsoup.parse(mockMvc.perform(get("/training-events/new").with(csrf())).andReturn().response.contentAsString)
+
+        assertEquals(null, doc.selectFirst("input[name=materialId]"))
     }
 
     @Test

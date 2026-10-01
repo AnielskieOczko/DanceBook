@@ -350,6 +350,12 @@ class MaterialWebController(
             populateDropdowns(model)
             val types = request.danceCategoryId?.let { danceTypeService.findByCategoryId(it) } ?: emptyList<DanceType>()
             model.addAttribute("danceTypes", types)
+            // A prefilled form must keep the drafted pins and attendance through a validation error, or the
+            // second submit would quietly lose them.
+            if (request.figureIds.isNotEmpty() || request.markAttended) {
+                model.addAttribute("draftFigures", request.figureIds.mapNotNull { runCatching { danceFigureService.findById(it) }.getOrNull() })
+                model.addAttribute("draftSession", request.trainingEventId?.let { runCatching { trainingEventService.findById(it) }.getOrNull() })
+            }
             return "materials/form"
         }
         val material = materialService.create(request)

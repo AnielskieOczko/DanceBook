@@ -154,6 +154,18 @@ class AssistantDraftServiceImplTest {
     }
 
     @Test
+    fun `a finish that fails after the entity exists never reopens the draft, so Save cannot make a duplicate`() {
+        val request = noteRequest(attended = false, figures = emptyList(), session = null)
+        val draft = claimed(DraftKind.NOTE, request)
+        `when`(materialService.create(request)).thenReturn(createdNote)
+        doThrow(IllegalStateException("connection lost")).`when`(store).finish(draft.id!!, createdNote.id!!, null)
+
+        service.save(draft.id!!)
+
+        assertFalse(called(store, "release"), "the note exists; releasing would offer Save again")
+    }
+
+    @Test
     fun `a failure before the note exists releases the draft with the error`() {
         val request = noteRequest(attended = false, figures = emptyList())
         val draft = claimed(DraftKind.NOTE, request)
