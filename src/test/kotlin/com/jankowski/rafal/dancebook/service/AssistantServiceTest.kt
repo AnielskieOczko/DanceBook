@@ -59,11 +59,21 @@ class AssistantServiceTest {
         )
     }
 
-    private fun service(model: ScriptedChatModel, timeout: Duration = Duration.ofSeconds(5), limiter: AssistantRateLimiter = AssistantRateLimiter(clock)) =
-        AssistantServiceImpl(
-            AssistantModelGateway(model), ToolCallingManager.builder().build(), tools, conversations,
-            pageContexts, appUserService, limiter, jacksonObjectMapper(), clock, timeout
+    private fun service(model: org.springframework.ai.chat.model.ChatModel, timeout: Duration = Duration.ofSeconds(5), limiter: AssistantRateLimiter = AssistantRateLimiter(clock)): AssistantServiceImpl {
+        val mapper = DraftTestSupport.mapper()
+        val drafts = FakeAssistantDraftService()
+        val turns = AssistantTurnScope()
+        val danceTypeService = mock(DanceTypeService::class.java)
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+        val draftTools = AssistantDraftTools(
+            turns, AssistantGrounding(conversations, mapper), drafts, AssistantDraftCodec(mapper), DraftTestSupport.validator(),
+            danceTypeService, mock(DanceCategoryService::class.java), mock(ActiveCalendarService::class.java)
         )
+        return AssistantServiceImpl(
+            AssistantModelGateway(model), ToolCallingManager.builder().build(), tools, draftTools, drafts, turns, conversations,
+            pageContexts, appUserService, limiter, mapper, clock, timeout
+        )
+    }
 
     private val home = PageContext(PageContextType.HOME)
 
@@ -186,10 +196,7 @@ class AssistantServiceTest {
                 return ScriptedChatModel.text("late")()
             }
         }
-        val service = AssistantServiceImpl(
-            AssistantModelGateway(slow), ToolCallingManager.builder().build(), tools, conversations,
-            pageContexts, appUserService, AssistantRateLimiter(clock), jacksonObjectMapper(), clock, Duration.ofMillis(150)
-        )
+        val service = service(slow, Duration.ofMillis(150))
         val turn = service.send(null, "hello?", home)
         assertTrue(turn.messages[1].error)
         assertEquals(listOf(AssistantRole.USER), conversations.stored.map { it.role })

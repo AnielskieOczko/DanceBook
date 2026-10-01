@@ -56,7 +56,9 @@ data class AssistantMessageView(
     val role: AssistantRole,
     val text: String,
     val cards: List<ResultCard> = emptyList(),
-    val error: Boolean = false
+    val error: Boolean = false,
+    /** The draft cards this reply's tools produced (#149), in the order they were made. */
+    val drafts: List<DraftView> = emptyList()
 )
 
 /**
