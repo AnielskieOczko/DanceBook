@@ -50,6 +50,15 @@
             openSurface();
             return;
         }
+        const prefill = event.target.closest('[data-assistant-prefill]');
+        if (prefill) {
+            // Wrapping up needs the user's words (what was covered), so this only starts the sentence.
+            openSurface();
+            composerInput.value = prefill.getAttribute('data-assistant-prefill');
+            composerInput.focus();
+            composerInput.setSelectionRange(composerInput.value.length, composerInput.value.length);
+            return;
+        }
         const prompt = event.target.closest('[data-assistant-prompt]');
         if (prompt) {
             ask(prompt.getAttribute('data-assistant-prompt'));
