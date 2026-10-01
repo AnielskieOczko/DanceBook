@@ -4,6 +4,8 @@ import com.jankowski.rafal.dancebook.config.ConditionalOnAssistant
 import com.jankowski.rafal.dancebook.dto.PageContext
 import com.jankowski.rafal.dancebook.dto.PageContextType
 import com.jankowski.rafal.dancebook.service.AssistantChips
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
+import com.jankowski.rafal.dancebook.service.DraftNotPendingException
 import com.jankowski.rafal.dancebook.service.AssistantConversationService
 import com.jankowski.rafal.dancebook.service.AssistantService
 import jakarta.servlet.http.HttpServletResponse
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -29,7 +32,8 @@ import java.util.UUID
 @RequestMapping("/assistant")
 class AssistantWebController(
     private val assistantService: AssistantService,
-    private val conversationService: AssistantConversationService
+    private val conversationService: AssistantConversationService,
+    private val draftService: AssistantDraftService
 ) {
 
     @GetMapping("/start")
@@ -95,6 +99,44 @@ class AssistantWebController(
         // one just deleted, the next send would be a 404, so the fragment tells the page to let go of it.
         model.addAttribute("resetConversationId", conversationId == id)
         return historyFragment(pageType, model, null)
+    }
+
+    /**
+     * Save. Answers 200 with the card in every case that has something to show: saved, or
+     * still pending with the error in it, because htmx does not swap a 4xx and the user would
+     * see nothing. A draft that was already handled is a 409 to anything that is not htmx.
+     * Someone else's draft is a 404, as everywhere else.
+     */
+    @PostMapping("/drafts/{id}/save")
+    fun saveDraft(
+        @PathVariable id: UUID,
+        @RequestHeader("HX-Request", required = false) htmx: Boolean?,
+        response: HttpServletResponse,
+        model: Model
+    ): String {
+        val card = try {
+            draftService.save(id)
+        } catch (e: DraftNotPendingException) {
+            if (htmx != true) response.status = HttpStatus.CONFLICT.value()
+            draftService.view(id)
+        }
+        model.addAttribute("draft", card)
+        return "assistant/fragments :: draftCard"
+    }
+
+    /** Edit in form: the draft is discarded and the browser goes to the create form, prefilled from it. */
+    @PostMapping("/drafts/{id}/edit")
+    fun editDraft(
+        @PathVariable id: UUID,
+        @RequestHeader("HX-Request", required = false) htmx: Boolean?
+    ): org.springframework.http.ResponseEntity<Void> {
+        val url = draftService.openInForm(id)
+        val builder = if (htmx == true) {
+            org.springframework.http.ResponseEntity.ok().header("HX-Redirect", url)
+        } else {
+            org.springframework.http.ResponseEntity.status(HttpStatus.SEE_OTHER).header("Location", url)
+        }
+        return builder.build()
     }
 
     private fun historyFragment(pageType: PageContextType, model: Model, error: String?): String {

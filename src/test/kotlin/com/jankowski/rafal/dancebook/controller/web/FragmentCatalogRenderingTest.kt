@@ -113,6 +113,30 @@ class CatalogHarnessController {
             )
         )
 
+        val draftId = java.util.UUID.fromString("00000000-0000-0000-0000-00000000d001")
+        fun draft(
+            status: com.jankowski.rafal.dancebook.model.DraftStatus,
+            notice: String? = null,
+            full: Boolean = false,
+            saved: Boolean = false
+        ) = com.jankowski.rafal.dancebook.dto.DraftView(
+            id = draftId,
+            kind = com.jankowski.rafal.dancebook.model.DraftKind.NOTE,
+            status = status,
+            heading = "Tuesday class",
+            fields = if (full) listOf(
+                com.jankowski.rafal.dancebook.dto.DraftField("Text", "Head drops on step two."),
+                com.jankowski.rafal.dancebook.dto.DraftField("Session", "Standard group class")
+            ) else emptyList(),
+            figures = if (full) listOf(com.jankowski.rafal.dancebook.dto.DraftFigureLine("Feather Step", "S Q Q", "/dance-figures/f1")) else emptyList(),
+            savedUrl = if (saved) "/materials/m1" else null,
+            notice = notice
+        )
+        model.addAttribute("sampleDraft", draft(com.jankowski.rafal.dancebook.model.DraftStatus.PENDING))
+        model.addAttribute("sampleDraftFull", draft(com.jankowski.rafal.dancebook.model.DraftStatus.PENDING, notice = "Name is too short", full = true))
+        model.addAttribute("sampleDraftSaved", draft(com.jankowski.rafal.dancebook.model.DraftStatus.SAVED, notice = "Saved, but not linked", full = true, saved = true))
+        model.addAttribute("sampleDraftDiscarded", draft(com.jankowski.rafal.dancebook.model.DraftStatus.DISCARDED, full = true))
+
         return "test/catalog-harness :: $fragmentName"
     }
 
@@ -211,6 +235,7 @@ class FragmentCatalogRenderingTest {
             "richTextExcerptRequired",
             "assistantCardRequired",
             "assistantMessageRequired",
+            "assistantDraftRequired",
 
             // All parameters populated
             "iconAll",
@@ -243,6 +268,9 @@ class FragmentCatalogRenderingTest {
             "assistantCardAll",
             "assistantMessageAll",
             "assistantMessageError",
+            "assistantDraftAll",
+            "assistantDraftSaved",
+            "assistantDraftDiscarded",
 
             // Standalone field without backing form object
             "fieldStandalone",
@@ -298,6 +326,40 @@ class FragmentCatalogRenderingTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Which notes mention sway?")))
             .andExpect(content().string(not(containsString("role=\"alert\""))))
+    }
+
+    @Test
+    fun `a pending draft card shows its fields, each figure with its timing, Save and Edit in form`() {
+        mockMvc.perform(get("/test/catalog/assistantDraftAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"assistant-draft-00000000-0000-0000-0000-00000000d001\"")))
+            .andExpect(content().string(containsString("Tuesday class")))
+            .andExpect(content().string(containsString("Head drops on step two.")))
+            .andExpect(content().string(containsString("Standard group class")))
+            .andExpect(content().string(containsString("Feather Step")))
+            .andExpect(content().string(containsString("S Q Q")))
+            .andExpect(content().string(containsString("/assistant/drafts/00000000-0000-0000-0000-00000000d001/save")))
+            .andExpect(content().string(containsString("/assistant/drafts/00000000-0000-0000-0000-00000000d001/edit")))
+            .andExpect(content().string(containsString("Name is too short")))
+            .andExpect(content().string(containsString("extra-cls")))
+    }
+
+    @Test
+    fun `a saved draft card is a link to what was created and has no Save button`() {
+        mockMvc.perform(get("/test/catalog/assistantDraftSaved").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("href=\"/materials/m1\"")))
+            .andExpect(content().string(containsString("Saved, but not linked")))
+            .andExpect(content().string(not(containsString("/save"))))
+    }
+
+    @Test
+    fun `a discarded draft card is greyed out and has no buttons`() {
+        mockMvc.perform(get("/test/catalog/assistantDraftDiscarded").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("opacity-60")))
+            .andExpect(content().string(not(containsString("/save"))))
+            .andExpect(content().string(not(containsString("/edit"))))
     }
 
     @Test

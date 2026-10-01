@@ -25,7 +25,7 @@
     </div>
 </a>
 
-<!-- One bubble. role is USER or ASSISTANT. An assistant bubble may carry cards (ResultCard list); error swaps in the alert. -->
+<!-- One bubble. role is USER or ASSISTANT. An assistant bubble may carry cards (ResultCard list) and drafts (DraftView list); error swaps in the alert. -->
 <div th:fragment="assistantMessage" class="flex" th:classappend="${(role == 'USER' ? 'justify-end' : '') + (cls != null ? ' ' + cls : '')}">
     <div th:if="${role == 'USER'}"
          class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap"
@@ -40,8 +40,63 @@
         <th:block th:if="${cards != null}" th:each="c : ${cards}">
             <a th:replace="~{fragments/assistant :: assistantCard(kind=${c.kind}, heading=${c.title}, subtitle=${c.subtitle}, snippet=${c.snippet}, url=${c.url}, chips=${c.chips})}"></a>
         </th:block>
+        <th:block th:if="${drafts != null}" th:each="d : ${drafts}">
+            <div th:replace="~{fragments/assistant :: assistantDraft(draft=${d})}"></div>
+        </th:block>
     </div>
 </div>
+
+<!-- A draft the assistant prepared. Parameters: draft (a DraftView); optional cls.
+     PENDING: every field, each figure with its timing, Save and Edit in form. SAVED: a link to what was created.
+     DISCARDED (opened in the form): greyed out. A notice is an error while PENDING, a caveat once SAVED.
+     Nothing here writes anything; the two buttons post to /assistant/drafts/{id}/save and /edit. -->
+<article th:fragment="assistantDraft"
+         th:id="${'assistant-draft-' + draft.id}"
+         data-assistant-draft
+         class="card flex flex-col gap-3 p-4"
+         th:classappend="${(draft.status.name() == 'DISCARDED' ? 'opacity-60' : '') + (cls != null ? ' ' + cls : '')}">
+    <div class="flex items-center gap-2">
+        <span th:replace="~{fragments/icon :: icon(name=${draft.kind.name() == 'NOTE' ? 'description' : (draft.kind.name() == 'FIGURE' ? 'accessibility_new' : 'calendar_month')}, size='md', cls='text-primary', title=null)}"></span>
+        <h3 class="flex-1 min-w-0 truncate text-[15px] font-semibold m-0" th:text="${draft.heading}">Heading</h3>
+        <th:block th:if="${draft.status.name() == 'PENDING'}"><span th:replace="~{fragments/badge :: badge(label='Draft', variant='primary')}"></span></th:block>
+        <th:block th:if="${draft.status.name() == 'SAVED'}"><span th:replace="~{fragments/badge :: badge(label='Saved', variant='success')}"></span></th:block>
+        <th:block th:if="${draft.status.name() == 'DISCARDED'}"><span th:replace="~{fragments/badge :: badge(label='Opened in the form', variant='secondary')}"></span></th:block>
+    </div>
+
+    <dl th:if="${!#lists.isEmpty(draft.fields)}" class="m-0 flex flex-col gap-1.5 text-[13px]">
+        <div th:each="f : ${draft.fields}" class="flex gap-2">
+            <dt class="w-24 shrink-0 text-on-surface-variant" th:text="${f.label}">Label</dt>
+            <dd class="m-0 min-w-0 flex-1 whitespace-pre-wrap" th:text="${f.value}">Value</dd>
+        </div>
+    </dl>
+
+    <div th:if="${!#lists.isEmpty(draft.figures)}" class="flex flex-col gap-1.5">
+        <span class="text-[13px] text-on-surface-variant">Figures</span>
+        <ul class="m-0 flex list-none flex-col gap-1 p-0">
+            <li th:each="fig : ${draft.figures}" class="flex items-center gap-2 text-[13px]">
+                <a th:href="${fig.url}" class="min-w-0 flex-1 truncate text-on-surface hover:underline" th:text="${fig.name}">Figure</a>
+                <span th:if="${fig.timing != null}" class="font-semibold text-primary whitespace-nowrap" th:text="${fig.timing}">S Q Q</span>
+            </li>
+        </ul>
+    </div>
+
+    <th:block th:if="${draft.notice != null}">
+        <div th:replace="~{fragments/alert :: alert(variant=${draft.status.name() == 'PENDING' ? 'error' : 'warning'}, text=${draft.notice})}"></div>
+    </th:block>
+
+    <th:block th:if="${draft.status.name() == 'SAVED' and draft.savedUrl != null}">
+        <a th:href="${draft.savedUrl}" class="text-sm font-semibold text-primary hover:underline">Open what was created</a>
+    </th:block>
+
+    <div th:if="${draft.status.name() == 'PENDING'}" class="flex flex-wrap gap-2">
+        <button type="button" class="btn-primary"
+                th:attr="hx-post=@{/assistant/drafts/{id}/save(id=${draft.id})}"
+                hx-target="closest [data-assistant-draft]" hx-swap="outerHTML" hx-disabled-elt="this">Save</button>
+        <button type="button" class="btn-outline"
+                th:attr="hx-post=@{/assistant/drafts/{id}/edit(id=${draft.id})}"
+                hx-swap="none" hx-disabled-elt="this">Edit in form</button>
+    </div>
+</article>
 
 </body>
 </html>

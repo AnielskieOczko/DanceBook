@@ -303,5 +303,22 @@
     <div th:replace="~{fragments/assistant :: assistantMessage(role='ASSISTANT', text='The assistant could not answer just now.', error=true)}"></div>
 </div>
 
+<!-- ASSISTANT: assistantDraft -->
+<div th:fragment="assistantDraftRequired">
+    <div th:replace="~{fragments/assistant :: assistantDraft(draft=${sampleDraft})}"></div>
+</div>
+
+<div th:fragment="assistantDraftAll">
+    <div th:replace="~{fragments/assistant :: assistantDraft(draft=${sampleDraftFull}, cls='extra-cls')}"></div>
+</div>
+
+<div th:fragment="assistantDraftSaved">
+    <div th:replace="~{fragments/assistant :: assistantDraft(draft=${sampleDraftSaved})}"></div>
+</div>
+
+<div th:fragment="assistantDraftDiscarded">
+    <div th:replace="~{fragments/assistant :: assistantDraft(draft=${sampleDraftDiscarded})}"></div>
+</div>
+
 </body>
 </html>
