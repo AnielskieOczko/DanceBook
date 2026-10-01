@@ -64,15 +64,21 @@ access-control epic) apply to the assistant automatically once they exist.
   - `tool_payload` (jsonb, nullable: the tool name, arguments and result)
   - `created_at`
 - `assistant_draft`:
-  - `id`, `message_id` (FK)
+  - `id`, `conversation_id` (FK, cascade on delete: ownership runs through the conversation)
+  - `message_id` (FK, nullable: the tool message that produced it, set just after that message
+    is stored)
   - `kind`: `NOTE`, `TRAINING_EVENT` or `FIGURE`
   - `payload` (jsonb: the validated request DTO)
   - `status`: `PENDING`, `SAVED` or `DISCARDED`
   - `saved_entity_id` (nullable)
+  - `notice` (nullable: the error of a failed Save, or the caveat of a Save that went through)
   - `created_at`
 
-  **A draft can be saved at most once.** Saving checks and moves the status in the same
-  transaction.
+  **A draft can be saved at most once.** Saving claims the draft in its own short transaction
+  (a row lock, then `PENDING` → `SAVED`), runs the service calls that the form runs outside
+  that transaction, because the training service writes to Google Calendar and this codebase
+  keeps that I/O out of database transactions, and then records the created id. If the service
+  calls fail, the draft is released back to `PENDING` with the error in `notice`.
 
 ## The loop
 
@@ -119,6 +125,14 @@ JSON, which the reply renders as result cards that link to the real pages.
 from a tool result in this conversation, and any other id is dropped before the draft is
 stored. Drafts are validated with the same Bean Validation as the forms. When validation fails,
 the model gets the error back and can retry once. If that fails too, it asks the user.
+
+**Edit in form (decided in #149).** The create forms open prefilled from the draft:
+`/materials/new?fromDraft=<id>`, and likewise for sessions and figures. The draft is looked up
+through the owner-scoped draft service, so another user's draft id opens a blank form. The note
+form has no figure picker, so a note draft's pinned figures and its `markAttended` choice show
+on the form as read-only chips and travel as hidden fields (`figureIds`, `markAttended` on the
+bound request). The form's own Save then applies them exactly as the draft's Save would.
+Opening a draft in the form marks it `DISCARDED`, so it greys out and cannot be saved twice.
 
 ## UI
 
