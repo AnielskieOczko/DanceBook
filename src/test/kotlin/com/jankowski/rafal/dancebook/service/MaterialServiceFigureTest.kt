@@ -35,6 +35,7 @@ class MaterialServiceFigureTest {
     private lateinit var uploadedFileRepository: com.jankowski.rafal.dancebook.repository.UploadedFileRepository
     private lateinit var eventPublisher: ApplicationEventPublisher
     private lateinit var appUserService: AppUserService
+    private lateinit var commentRepository: com.jankowski.rafal.dancebook.repository.CommentRepository
     private lateinit var materialService: MaterialServiceImpl
     private lateinit var currentUser: AppUser
 
@@ -48,6 +49,7 @@ class MaterialServiceFigureTest {
         uploadedFileRepository = mock(com.jankowski.rafal.dancebook.repository.UploadedFileRepository::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
         appUserService = mock(AppUserService::class.java)
+        commentRepository = mock(com.jankowski.rafal.dancebook.repository.CommentRepository::class.java)
         
         currentUser = AppUser().apply {
             id = UUID.randomUUID()
@@ -65,7 +67,8 @@ class MaterialServiceFigureTest {
             uploadedFileRepository,
             eventPublisher,
             appUserService,
-            RichTextServiceImpl()
+            RichTextServiceImpl(),
+            commentRepository
         )
     }
 

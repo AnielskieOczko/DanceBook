@@ -50,7 +50,8 @@ class MaterialWebController(
     private val appUserService: AppUserService,
     private val noteRewriteService: NoteRewriteService,
     private val figureSuggestionService: FigureSuggestionService,
-    private val trainingEventService: TrainingEventService
+    private val trainingEventService: TrainingEventService,
+    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null
 ) {
 
     /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
@@ -115,9 +116,12 @@ class MaterialWebController(
         val material = materialService.findById(id)
         val figures = materialService.findFiguresByMaterial(id)
         val comments = commentService.getCommentsForMaterial(id)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val relatedNotes = knowledgeRetrievalService?.findRelatedNotesForMaterial(id, currentUser, 3) ?: emptyList()
         model.addAttribute("material", material)
         model.addAttribute("figures", figures)
         model.addAttribute("comments", comments)
+        model.addAttribute("relatedNotes", relatedNotes)
         model.addAttribute("figureRequest", FigureRequest())
         return "materials/view"
     }

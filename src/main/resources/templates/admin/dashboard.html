@@ -90,6 +90,40 @@
         </div>
     </div>
 
+    <!-- Knowledge Index Maintenance -->
+    <div class="card mb-8 overflow-hidden" id="knowledgeIndexSection">
+        <div class="px-6 py-4 border-b border-border bg-surface-warm">
+            <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
+                <span th:replace="~{fragments/icon :: icon(name='hub', size='md', cls='text-primary')}"></span>
+                Knowledge Index (RAG)
+            </h2>
+            <p class="text-sm text-text-secondary mt-1">Full-text and vector embeddings index over notes, comments, figures, and choreographies.</p>
+        </div>
+        <div class="p-6">
+            <th:block th:if="${isKnowledgeIndexStale}">
+                <div class="mb-4">
+                    <div th:replace="~{fragments/alert :: alert(variant='warning', title='Index Stale', text='The embedding model or schema has changed since chunks were last indexed. A rebuild is recommended.')}"></div>
+                </div>
+            </th:block>
+            <th:block th:if="${knowledgeStatus != null && !knowledgeStatus.isComplete}">
+                <div class="mb-4">
+                    <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding Incomplete', text=${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ' chunks embedded. Some chunks are awaiting vector embedding.')}"></div>
+                </div>
+            </th:block>
+            <div class="flex items-center gap-4">
+                <button hx-post="/admin/knowledge/rebuild" hx-target="#knowledgeRebuildResults" hx-swap="innerHTML" class="btn-primary" hx-indicator="#knowledge-rebuild-indicator">
+                    <span th:replace="~{fragments/icon :: icon(name='refresh', size='sm')}"></span>
+                    Rebuild Knowledge Index
+                </button>
+                <div id="knowledge-rebuild-indicator" class="htmx-indicator flex items-center gap-2 text-text-secondary text-sm">
+                    <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary')}"></span>
+                    <span>Re-indexing and generating embeddings...</span>
+                </div>
+            </div>
+            <div id="knowledgeRebuildResults" class="mt-4"></div>
+        </div>
+    </div>
+
     <!-- System Settings -->
     <div class="card p-6 mb-8">
 
@@ -459,6 +493,38 @@
 
     <div th:fragment="importFailure" th:if="${importError != null}" class="mt-2">
         <div th:replace="~{fragments/alert :: alert(variant='error', title='Import Failed', text=${importError})}"></div>
+    </div>
+
+    <div th:fragment="rebuildStatus" id="knowledgeRebuildStatus" class="mt-2">
+        <th:block th:if="${rebuildReport != null && (knowledgeStatus == null || !knowledgeStatus.isComplete)}">
+            <div hx-get="/admin/knowledge/status" hx-trigger="load delay:2s" hx-target="#knowledgeRebuildStatus" hx-swap="outerHTML">
+                <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding in Progress', text=${rebuildReport.embeddedChunks} + ' of ' + ${rebuildReport.totalChunks} + ' chunks embedded (' + ${rebuildReport.indexedNotes} + ' notes, ' + ${rebuildReport.indexedComments} + ' comments, ' + ${rebuildReport.indexedFigures} + ' figures, ' + ${rebuildReport.indexedChoreographies} + ' choreographies indexed in ' + ${rebuildReport.durationMs} + ' ms). Background worker is generating vectors.')}"></div>
+                <div class="flex items-center gap-2 mt-2 text-sm text-text-secondary">
+                    <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='sm', cls='animate-spin text-primary')}"></span>
+                    <span>Embedding chunks in background...</span>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${rebuildReport == null && knowledgeStatus != null && !knowledgeStatus.isComplete}">
+            <div hx-get="/admin/knowledge/status" hx-trigger="load delay:2s" hx-target="#knowledgeRebuildStatus" hx-swap="outerHTML">
+                <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding in Progress', text=${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ' chunks embedded. Background worker is generating vectors.')}"></div>
+                <div class="flex items-center gap-2 mt-2 text-sm text-text-secondary">
+                    <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='sm', cls='animate-spin text-primary')}"></span>
+                    <span>Embedding chunks in background...</span>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${knowledgeStatus != null && knowledgeStatus.isComplete}">
+            <div th:replace="~{fragments/alert :: alert(variant='success', title='Knowledge Index Rebuilt', text='All ' + ${knowledgeStatus.totalChunks} + ' chunks embedded (' + ${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ').')}"></div>
+        </th:block>
+    </div>
+
+    <div th:fragment="rebuildSuccess" th:if="${rebuildReport != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='success', title='Knowledge Index Rebuilt', text='Successfully indexed ' + ${rebuildReport.indexedNotes} + ' notes, ' + ${rebuildReport.indexedComments} + ' comments, ' + ${rebuildReport.indexedFigures} + ' figures, ' + ${rebuildReport.indexedChoreographies} + ' choreographies (' + ${rebuildReport.embeddedChunks} + ' of ' + ${rebuildReport.totalChunks} + ' chunks embedded) in ' + ${rebuildReport.durationMs} + ' ms.')}"></div>
+    </div>
+
+    <div th:fragment="rebuildFailure" th:if="${rebuildError != null}" class="mt-2">
+        <div th:replace="~{fragments/alert :: alert(variant='error', title='Rebuild Failed', text=${rebuildError})}"></div>
     </div>
 
     <div th:fragment="calendarsSection" id="calendarsSection">

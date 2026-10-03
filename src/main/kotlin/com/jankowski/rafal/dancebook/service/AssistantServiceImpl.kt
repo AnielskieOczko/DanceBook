@@ -143,8 +143,15 @@ class AssistantServiceImpl(
         conversations.append(conversationId, AssistantRole.ASSISTANT, finalText)
         val since = conversations.messages(conversationId).takeLastWhile { it.role != AssistantRole.USER }.filter { it.role == AssistantRole.TOOL }
         return AssistantMessageView(
-            AssistantRole.ASSISTANT, finalText, since.flatMap { cardsOf(it) }, drafts = drafts.views(since.mapNotNull { draftIdOf(it) })
+            AssistantRole.ASSISTANT, renderMarkdownLinks(finalText), since.flatMap { cardsOf(it) }, drafts = drafts.views(since.mapNotNull { draftIdOf(it) })
         )
+    }
+
+    private fun renderMarkdownLinks(raw: String): String {
+        val linkRegex = Regex("""\[([^\]]+)\]\((/[^)]+)\)""")
+        return linkRegex.replace(raw) { m ->
+            """<a href="${m.groupValues[2]}">${m.groupValues[1]}</a>"""
+        }
     }
 
     private fun record(conversationId: UUID, calls: List<AiAssistantMessage.ToolCall>, results: ToolResponseMessage) {
@@ -193,7 +200,7 @@ class AssistantServiceImpl(
                 }
                 AssistantRole.TOOL -> { pending += cardsOf(m); draftIdOf(m)?.let { pendingDrafts += it } }
                 AssistantRole.ASSISTANT -> {
-                    views += AssistantMessageView(m.role, m.content, pending.toList(), drafts = drafts.views(pendingDrafts))
+                    views += AssistantMessageView(m.role, renderMarkdownLinks(m.content), pending.toList(), drafts = drafts.views(pendingDrafts))
                     pending = mutableListOf(); pendingDrafts = mutableListOf()
                 }
             }
@@ -212,6 +219,7 @@ class AssistantServiceImpl(
             Today is ${LocalDate.now(clock)}. The user's name is $userName.
             $where
             Use the tools to search and read the user's notes, the figure catalog and their training sessions. Do not guess: if you need a fact, call a tool. Never invent ids, titles or dates.
+            When asked a question about dance knowledge, technical figure details, notes, or coach feedback, use search_knowledge to find relevant passages. Answers built from search_knowledge must cite the retrieved sources as links formatted like [Note Title](/materials/{id}) or [Figure Name](/dance-figures/{id}). If no relevant passage is found or search_knowledge returns no items, say: "Nothing found in your notes." rather than guessing or answering from general knowledge.
             To create something, call draft_note, draft_training_event or draft_figure. They only prepare a draft: the user sees a card and nothing is saved until they press Save. After drafting, say so in one sentence and do not repeat the fields. You cannot edit or delete existing notes, sessions or figures; if asked, say so and suggest doing it in the app.
             Every id in a draft (figure, note, session) must come from a tool result in this conversation. Search first, in an earlier step, and never send an id you did not get from a tool.
             If a draft tool says no draft was created, fix what it names and call it once more. If it still fails, ask the user for what is missing.

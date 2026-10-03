@@ -62,12 +62,14 @@ class AssistantReadToolsTest {
     }
 
     @Test
-    fun `there are exactly five tools, and the model can see their argument names`() {
+    fun `there are exactly six tools, and the model can see their argument names`() {
         val names = tools.callbacks.map { it.toolDefinition.name() }.sorted()
-        assertEquals(listOf("get_figure", "get_note", "list_sessions", "search_figures", "search_notes"), names)
+        assertEquals(listOf("get_figure", "get_note", "list_sessions", "search_figures", "search_knowledge", "search_notes"), names)
         val schema = tools.callbacks.first { it.toolDefinition.name() == "search_figures" }.toolDefinition.inputSchema()
         assertTrue(schema.contains("query"), schema)
         assertTrue(schema.contains("danceType"), schema)
+        val knowledgeSchema = tools.callbacks.first { it.toolDefinition.name() == "search_knowledge" }.toolDefinition.inputSchema()
+        assertTrue(knowledgeSchema.contains("question"), knowledgeSchema)
     }
 
     @Test

@@ -15,6 +15,8 @@ import com.jankowski.rafal.dancebook.model.MaterialFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.MaterialFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialUpdatedEvent
 import com.jankowski.rafal.dancebook.model.MaterialVisibilityChangedEvent
+import com.jankowski.rafal.dancebook.model.Comment
+import com.jankowski.rafal.dancebook.repository.CommentRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.FigureRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
@@ -43,7 +45,8 @@ class MaterialServiceImpl(
     private val uploadedFileRepository: UploadedFileRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val appUserService: AppUserService,
-    private val richTextService: RichTextService
+    private val richTextService: RichTextService,
+    private val commentRepository: CommentRepository
 ) : MaterialService {
 
     companion object {
@@ -161,6 +164,7 @@ class MaterialServiceImpl(
         val driveFileId = existing.driveFileId
         val materialName = existing.name
         val wasPublic = existing.visibility == Visibility.PUBLIC
+        val commentIds = commentRepository.findIdsByMaterialId(id)
 
         materialRepository.delete(existing)
 
@@ -170,7 +174,7 @@ class MaterialServiceImpl(
             uploadedFileRepository.deleteById(driveFileId)
         }
 
-        eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, wasPublic, currentUser))
+        eventPublisher.publishEvent(MaterialDeletedEvent(id, materialName, wasPublic, currentUser, commentIds))
     }
 
     override fun findAll(): List<Material> {

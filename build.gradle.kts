@@ -58,6 +58,7 @@ dependencies {
     // auto-configuration fails at boot when no API key is set, and the assistant must be
     // absent (not broken) without one.
     implementation("org.springframework.ai:spring-ai-google-genai")
+    implementation("org.springframework.ai:spring-ai-google-genai-embedding")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

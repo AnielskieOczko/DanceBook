@@ -13,6 +13,7 @@ class RichTextServiceImpl : RichTextService {
         .addTags("p", "div", "br", "strong", "b", "em", "i", "ul", "ol", "li", "a")
         .addAttributes("a", "href")
         .addProtocols("a", "href", "http", "https", "mailto")
+        .preserveRelativeLinks(true)
 
     override fun clean(raw: String?): String? {
         if (raw.isNullOrBlank()) return null

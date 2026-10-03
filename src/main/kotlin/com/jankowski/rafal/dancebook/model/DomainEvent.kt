@@ -22,7 +22,8 @@ class MaterialDeletedEvent(
     val materialId: UUID,
     val materialName: String,
     val wasPublic: Boolean = true,
-    actor: AppUser
+    actor: AppUser,
+    val commentIds: List<UUID> = emptyList()
 ) : DomainEvent(actor)
 
 class MaterialVisibilityChangedEvent(
@@ -145,4 +146,40 @@ class TrainingBulkUpdatedEvent(
     val updateType: String,
     actor: AppUser
 ) : DomainEvent(actor)
+
+class ChoreographyCreatedEvent(
+    val choreography: Choreography,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class ChoreographyUpdatedEvent(
+    val choreography: Choreography,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class ChoreographyDeletedEvent(
+    val choreographyId: UUID,
+    val choreographyName: String,
+    val wasPublic: Boolean = false,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class ChoreographyVisibilityChangedEvent(
+    val choreography: Choreography,
+    val previousVisibility: Visibility,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class CommentUpdatedEvent(
+    val comment: Comment,
+    val material: Material,
+    actor: AppUser
+) : DomainEvent(actor)
+
+class CommentDeletedEvent(
+    val commentId: UUID,
+    val materialId: UUID,
+    actor: AppUser
+) : DomainEvent(actor)
+
 

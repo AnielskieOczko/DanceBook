@@ -287,4 +287,16 @@ class AssistantServiceTest {
         assertFalse(turn.messages[1].error)
         assertEquals(AssistantService.GAVE_UP_TEXT, turn.messages[1].text)
     }
+
+    @Test
+    fun `markdown citation links in assistant answers are converted to clickable html anchor links`() {
+        val noteId = UUID.randomUUID()
+        val textWithCitation = "According to your notes, see [Sway Details](/materials/$noteId) for more info."
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text(textWithCitation)))
+
+        val turn = service(model).send(null, "tell me about sway", home)
+
+        val assistantText = turn.messages[1].text
+        assertTrue(assistantText.contains("""<a href="/materials/$noteId">Sway Details</a>"""), assistantText)
+    }
 }
