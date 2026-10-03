@@ -9,7 +9,7 @@
 <div th:fragment="start" id="assistantStart" data-assistant-empty data-conversation-id="" class="flex flex-col gap-4 py-2">
     <p class="text-[15px] leading-relaxed text-on-surface-variant">
         Ask about your notes, the figure catalog or your training sessions.
-        I can search and read them; I can't change anything yet.
+        I can search them, and draft new notes, sessions and figures for you to confirm before anything is saved.
     </p>
     <div class="flex flex-wrap gap-2">
         <th:block th:each="chip : ${chips}">
@@ -24,7 +24,7 @@
 <th:block th:fragment="turn">
     <span th:if="${turn.conversationId != null}" hidden th:attr="data-conversation-id=${turn.conversationId}"></span>
     <th:block th:each="m : ${turn.messages}">
-        <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error})}"></div>
+        <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error}, drafts=${m.drafts})}"></div>
     </th:block>
 </th:block>
 
@@ -32,7 +32,7 @@
 <div th:fragment="conversation" id="assistantConversation" class="flex flex-col gap-4" th:attr="data-conversation-id=${view.id}">
     <div class="text-xs font-semibold text-on-surface-variant" th:text="${view.title}">Title</div>
     <th:block th:each="m : ${view.messages}">
-        <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error})}"></div>
+        <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error}, drafts=${m.drafts})}"></div>
     </th:block>
 </div>
 
@@ -83,6 +83,11 @@
         </li>
     </ul>
 </div>
+
+<!-- One draft card, swapped in place by Save. The controller puts `draft` (a DraftView) in the model. -->
+<th:block th:fragment="draftCard">
+    <div th:replace="~{fragments/assistant :: assistantDraft(draft=${draft})}"></div>
+</th:block>
 
 </body>
 </html>

@@ -41,7 +41,17 @@ data class MaterialRequest(
      * is linked to that session. The web form carries it as a hidden field; it is not stored on
      * the note itself.
      */
-    val trainingEventId: UUID? = null
+    val trainingEventId: UUID? = null,
+
+    /**
+     * Create only. Catalog figures to pin once the note exists. Set when the note comes from an
+     * assistant draft (#149): the create form has no figure picker, so it shows them as chips and
+     * carries them as one comma-separated hidden field. Not stored on the note itself.
+     */
+    val figureIds: List<UUID> = emptyList(),
+
+    /** Create only. Record [trainingEventId]'s session as attended, for a note written from a draft. */
+    val markAttended: Boolean = false
 )
 
 data class MaterialResponse(

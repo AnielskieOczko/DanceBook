@@ -35,6 +35,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import java.util.UUID
@@ -58,6 +60,7 @@ class AssistantFragmentRenderingTest {
 
     @MockBean private lateinit var assistantService: AssistantService
     @MockBean private lateinit var conversationService: AssistantConversationService
+    @MockBean private lateinit var draftService: com.jankowski.rafal.dancebook.service.AssistantDraftService
     @MockBean private lateinit var customListService: CustomListService
     @MockBean private lateinit var appUserService: AppUserService
     @MockBean private lateinit var activityEventService: ActivityEventService
@@ -147,5 +150,77 @@ class AssistantFragmentRenderingTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-reset-conversation"))))
+    }
+
+    private val draftId = UUID.randomUUID()
+
+    private fun card(status: com.jankowski.rafal.dancebook.model.DraftStatus, notice: String? = null) =
+        com.jankowski.rafal.dancebook.dto.DraftView(
+            draftId, com.jankowski.rafal.dancebook.model.DraftKind.NOTE, status, "Tuesday class",
+            emptyList(), emptyList(), if (status == com.jankowski.rafal.dancebook.model.DraftStatus.SAVED) "/materials/m1" else null, notice
+        )
+
+    @Test
+    fun `save swaps in the card as it is after the save`() {
+        `when`(draftService.save(draftId)).thenReturn(card(com.jankowski.rafal.dancebook.model.DraftStatus.SAVED))
+
+        mockMvc.perform(post("/assistant/drafts/$draftId/save").with(csrf()).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"assistant-draft-$draftId\"")))
+            .andExpect(content().string(containsString("href=\"/materials/m1\"")))
+    }
+
+    @Test
+    fun `a failed save still answers 200 with the pending card and its error, because htmx does not swap a 4xx`() {
+        `when`(draftService.save(draftId)).thenReturn(card(com.jankowski.rafal.dancebook.model.DraftStatus.PENDING, "Name is too short"))
+
+        mockMvc.perform(post("/assistant/drafts/$draftId/save").with(csrf()).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Name is too short")))
+            .andExpect(content().string(containsString("/assistant/drafts/$draftId/save")))
+    }
+
+    @Test
+    fun `saving an already saved draft shows its saved card to htmx and is a 409 to anything else`() {
+        `when`(draftService.save(draftId)).thenThrow(com.jankowski.rafal.dancebook.service.DraftNotPendingException(com.jankowski.rafal.dancebook.model.DraftStatus.SAVED))
+        `when`(draftService.view(draftId)).thenReturn(card(com.jankowski.rafal.dancebook.model.DraftStatus.SAVED))
+
+        mockMvc.perform(post("/assistant/drafts/$draftId/save").with(csrf()).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("href=\"/materials/m1\"")))
+        mockMvc.perform(post("/assistant/drafts/$draftId/save").with(csrf()))
+            .andExpect(status().isConflict)
+    }
+
+    @Test
+    fun `edit in form sends htmx to the prefilled form and everything else too`() {
+        `when`(draftService.openInForm(draftId)).thenReturn("/materials/new?fromDraft=$draftId")
+
+        mockMvc.perform(post("/assistant/drafts/$draftId/edit").with(csrf()).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(header().string("HX-Redirect", "/materials/new?fromDraft=$draftId"))
+        mockMvc.perform(post("/assistant/drafts/$draftId/edit").with(csrf()))
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/materials/new?fromDraft=$draftId"))
+    }
+
+    @Test
+    fun `a turn with a draft renders its card in the thread`() {
+        val id = UUID.randomUUID()
+        `when`(assistantService.send(id, "note it", com.jankowski.rafal.dancebook.dto.PageContext())).thenReturn(
+            AssistantTurn(
+                id,
+                listOf(
+                    AssistantMessageView(AssistantRole.USER, "note it"),
+                    AssistantMessageView(AssistantRole.ASSISTANT, "Drafted.", drafts = listOf(card(com.jankowski.rafal.dancebook.model.DraftStatus.PENDING)))
+                ),
+                true
+            )
+        )
+
+        mockMvc.perform(post("/assistant/messages").with(csrf()).header("HX-Request", "true").param("conversationId", id.toString()).param("text", "note it"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"assistant-draft-$draftId\"")))
+            .andExpect(content().string(containsString("Tuesday class")))
     }
 }

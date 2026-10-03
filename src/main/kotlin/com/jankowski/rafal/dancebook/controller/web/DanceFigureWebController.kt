@@ -6,7 +6,9 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
+import org.springframework.beans.factory.annotation.Autowired
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.FigureInUseException
@@ -34,6 +36,11 @@ class DanceFigureWebController(
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService
 ) {
+
+    /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
+    @Autowired(required = false)
+    var assistantDrafts: AssistantDraftService? = null
+
 
     @GetMapping
     fun listDanceFigures(
@@ -85,12 +92,15 @@ class DanceFigureWebController(
     @GetMapping("/new")
     fun showCreateForm(
         @RequestParam(required = false) danceTypeId: UUID?,
+        @RequestParam(required = false) fromDraft: UUID?,
         model: Model
     ): String {
-        val availableFigures = danceTypeId?.let {
+        val drafted = fromDraft?.let { assistantDrafts?.figureForForm(it) }
+        val form = drafted ?: DanceFigureRequest(danceTypeId = danceTypeId)
+        val availableFigures = form.danceTypeId?.let {
             danceFigureService.findByDanceType(it)
         } ?: emptyList()
-        model.addAttribute("danceFigure", DanceFigureRequest(danceTypeId = danceTypeId))
+        model.addAttribute("danceFigure", form)
         model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("danceTypes", danceTypeService.findAll())
         model.addAttribute("danceClasses", DanceClass.values())

@@ -58,6 +58,14 @@
                     Skipped
                 </button>
             </form>
+            <th:block th:if="${assistantNav != null}">
+                <!--/* Single-quoted attribute so the literal substitution can hold double quotes; Thymeleaf escapes them in the output. */-->
+                <button type="button"
+                        th:attr='data-assistant-prefill=|Wrap up "${wrapUp.hero.title}" (${wrapUp.hero.dateLabel}): |'
+                        class="col-span-2 lg:col-span-1 min-h-[44px] px-5 rounded-xl border border-on-primary/40 text-on-primary text-sm font-medium flex items-center justify-center gap-2 cursor-pointer hover:bg-on-primary/10">
+                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', title=null)}"></span>Wrap up with the assistant
+                </button>
+            </th:block>
             <a th:if="${wrapUp.hero.noteId == null}"
                th:href="@{/materials/new(fromSession=${wrapUp.hero.id})}"
                class="col-span-2 lg:ml-auto min-h-[44px] px-5 rounded-xl border border-on-primary/40 bg-on-primary/10 text-on-primary text-sm font-medium flex items-center justify-center gap-2 hover:bg-on-primary/20">

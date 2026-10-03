@@ -85,4 +85,13 @@ class AssistantScriptGuardTest {
         assertTrue(script.contains("composerInput.value === sentText"))
         assertTrue(script.contains("composer.classList.contains('htmx-request')"))
     }
+
+    @Test
+    fun `a prefill chip opens the assistant and fills the composer without sending`() {
+        assertTrue(script.contains("[data-assistant-prefill]"))
+        val branch = script.substringAfter("[data-assistant-prefill]").substringBefore("const prompt")
+        assertTrue(branch.contains("openSurface()"), "it opens the surface")
+        assertTrue(branch.contains("composerInput.value"), "it fills the composer")
+        assertFalse(branch.contains("requestSubmit"), "it must not send: the user still has to say what happened")
+    }
 }

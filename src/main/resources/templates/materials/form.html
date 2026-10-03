@@ -19,6 +19,30 @@
         <!-- Set when the note is written from a training session; links the saved note to it -->
         <input type="hidden" th:field="*{trainingEventId}"/>
 
+        <!-- From an assistant draft ("Edit in form"): this form has no figure picker, so the drafted pins and
+             the attendance choice are shown here and carried as hidden fields, applied when it is saved. -->
+        <th:block th:if="${draftFigures != null and !#lists.isEmpty(draftFigures)}">
+            <input type="hidden" name="figureIds" th:value="${#strings.listJoin(material.figureIds, ',')}"/>
+            <div data-draft-figures class="flex flex-col gap-2">
+                <span class="form-label">Figures from the assistant</span>
+                <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+                    <li th:each="fig : ${draftFigures}" class="flex items-center gap-2 rounded-full border border-outline px-3 py-1 text-sm">
+                        <span th:text="${fig.name}">Feather Step</span>
+                        <span th:if="${fig.alternativeTiming != null and !#strings.isEmpty(fig.alternativeTiming)}"
+                              class="font-semibold text-primary" th:text="${fig.alternativeTiming}">S Q Q</span>
+                    </li>
+                </ul>
+                <p class="text-xs text-on-surface-variant m-0">They are pinned to the note when you save it.</p>
+            </div>
+        </th:block>
+        <th:block th:if="${draftSession != null}">
+            <div data-draft-session class="text-sm text-on-surface-variant">
+                Written from <span class="font-semibold text-on-surface" th:text="${draftSession.title}">Standard group class</span>
+                <span th:if="${material.markAttended}">; it will be marked attended when you save.</span>
+            </div>
+            <input type="hidden" name="markAttended" th:if="${material.markAttended}" value="true"/>
+        </th:block>
+
         <div th:replace="~{fragments/form :: errorSummary}"></div>
 
         <!-- Name -->

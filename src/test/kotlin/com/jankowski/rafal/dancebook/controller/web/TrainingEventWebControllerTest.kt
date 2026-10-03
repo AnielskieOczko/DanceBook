@@ -16,6 +16,7 @@ import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.model.TrainingSeries
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.CalendarSyncException
 import com.jankowski.rafal.dancebook.service.CalendarSyncOutcome
 import com.jankowski.rafal.dancebook.service.CalendarSyncService
@@ -207,7 +208,7 @@ class TrainingEventWebControllerTest {
         val model = ConcurrentModel()
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
-        val viewName = controller.showCreateForm(model)
+        val viewName = controller.showCreateForm(null, model)
 
         assertEquals("training-events/form", viewName)
         assertNull(model["calendars"])
@@ -228,7 +229,7 @@ class TrainingEventWebControllerTest {
         `when`(activeCalendarService.creationTarget()).thenReturn(club)
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
-        val viewName = controller.showCreateForm(model)
+        val viewName = controller.showCreateForm(null, model)
 
         assertEquals("training-events/form", viewName)
         assertEquals(club, model["targetCalendar"])
@@ -244,7 +245,7 @@ class TrainingEventWebControllerTest {
         )
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
-        val viewName = controller.showCreateForm(model)
+        val viewName = controller.showCreateForm(null, model)
 
         assertEquals("training-events/form", viewName)
         assertEquals("Retired is disabled — choose another calendar to create a session.", model["calendarError"])
@@ -1290,5 +1291,27 @@ class TrainingEventWebControllerTest {
         assertEquals(LocalTime.of(20, 0), model["seriesEndTime"])
         assertNotNull(model["dayOfWeekOptions"])
     }
-}
 
+    @Test
+    fun `the session form opens prefilled from an assistant draft, aimed at the creation calendar`() {
+        val draftId = UUID.randomUUID()
+        val drafts = mock(AssistantDraftService::class.java)
+        `when`(drafts.sessionForForm(draftId)).thenReturn(
+            TrainingEventRequest(
+                title = "Practice", date = LocalDate.of(2026, 10, 3),
+                startTime = LocalTime.of(10, 0), endTime = LocalTime.of(12, 0),
+                calendarId = UUID.randomUUID()
+            )
+        )
+        controller.assistantDrafts = drafts
+        val model = ConcurrentModel()
+
+        val view = controller.showCreateForm(draftId, model)
+
+        assertEquals("training-events/form", view)
+        val form = model["trainingEvent"] as TrainingEventRequest
+        assertEquals("Practice", form.title)
+        assertEquals(LocalTime.of(10, 0), form.startTime)
+        assertEquals(defaultCal.id, form.calendarId, "the draft is aimed at the calendar the user would create into now")
+    }
+}

@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
@@ -179,5 +180,37 @@ class DanceFigureWebControllerTest {
         assertEquals(figureId, figureNameMap["Back Whisk"])
         assertEquals(otherFigureId, figureNameMap["Natural Spin Turn"])
     }
-}
 
+    @Test
+    fun `the figure form opens prefilled from an assistant draft`() {
+        val draftId = UUID.randomUUID()
+        val drafts = mock(AssistantDraftService::class.java)
+        val typeId = UUID.randomUUID()
+        `when`(danceFigureService.findByDanceType(typeId)).thenReturn(emptyList())
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+        `when`(drafts.figureForForm(draftId)).thenReturn(
+            DanceFigureRequest(name = "Heel Turn", danceTypeId = typeId, alternativeTiming = "1 2 3")
+        )
+        controller.assistantDrafts = drafts
+        val model = ConcurrentModel()
+
+        val view = controller.showCreateForm(null, draftId, model)
+
+        assertEquals("dance-figures/form", view)
+        val form = model.getAttribute("danceFigure") as DanceFigureRequest
+        assertEquals("Heel Turn", form.name)
+        assertEquals("1 2 3", form.alternativeTiming)
+    }
+
+    @Test
+    fun `a missing or foreign figure draft opens the blank form`() {
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+        val drafts = mock(AssistantDraftService::class.java)
+        controller.assistantDrafts = drafts
+        val model = ConcurrentModel()
+
+        controller.showCreateForm(null, UUID.randomUUID(), model)
+
+        assertEquals("", (model.getAttribute("danceFigure") as DanceFigureRequest).name)
+    }
+}

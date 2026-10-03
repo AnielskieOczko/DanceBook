@@ -24,6 +24,18 @@ import com.jankowski.rafal.dancebook.service.CustomListService
 import com.jankowski.rafal.dancebook.service.DashboardService
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
+import com.jankowski.rafal.dancebook.dto.PageContext
+import com.jankowski.rafal.dancebook.dto.PageContextType
+import com.jankowski.rafal.dancebook.service.AssistantNav
+import com.jankowski.rafal.dancebook.service.AssistantNavSupport
+import org.jsoup.Jsoup
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextImpl
+import org.springframework.security.test.context.TestSecurityContextHolder
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
@@ -70,13 +82,23 @@ import java.util.UUID
     ]
 )
 @AutoConfigureMockMvc(addFilters = false)
+@org.springframework.context.annotation.Import(HomeDashboardRenderingTest.SecurityExpressionConfig::class)
 class HomeDashboardRenderingTest {
+
+    /** The layout uses `sec:authorize` for a signed-in user, which needs this handler. */
+    @org.springframework.boot.test.context.TestConfiguration
+    class SecurityExpressionConfig {
+        @org.springframework.context.annotation.Bean
+        fun webSecurityExpressionHandler() =
+            org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler()
+    }
 
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var dashboardService: DashboardService
     @MockBean private lateinit var trainingEventService: TrainingEventService
+    @MockBean private lateinit var assistantNavSupport: AssistantNavSupport
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
     @MockBean private lateinit var customListService: CustomListService
@@ -303,5 +325,41 @@ class HomeDashboardRenderingTest {
         ).andExpect(status().isBadRequest)
 
         verify(trainingEventService, never()).updateAttendance(heroId, AttendanceStatus.CANCELLED)
+    }
+
+    @AfterEach
+    fun clearSecurityContext() {
+        TestSecurityContextHolder.clearContext()
+    }
+
+    /** `NavbarAdvice` only supplies `assistantNav` for an authenticated principal; with the filters off the test has to provide one. */
+    private fun signedIn() {
+        val dancer = com.jankowski.rafal.dancebook.model.AppUser().apply { id = UUID.randomUUID(); username = "dancer"; displayName = "Dancer" }
+        `when`(appUserService.getCurrentUser()).thenReturn(dancer)
+        TestSecurityContextHolder.setContext(
+            SecurityContextImpl(UsernamePasswordAuthenticationToken("dancer", "x", listOf(SimpleGrantedAuthority("ROLE_USER"))))
+        )
+    }
+
+    @Test
+    fun `the wrap-up hero offers to wrap the session up with the assistant, prefilled and not sent`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(populatedView())
+        `when`(assistantNavSupport.forPath("/")).thenReturn(AssistantNav(PageContext(PageContextType.HOME), "Home"))
+        signedIn()
+
+        val doc = Jsoup.parse(mockMvc.perform(get("/").with(csrf())).andExpect(status().isOk).andReturn().response.contentAsString)
+
+        val chip = doc.selectFirst("#home-wrap-up [data-assistant-prefill]")!!
+        assertEquals("Wrap up \"Standard group class\" (Tuesday 23 Sep): ", chip.attr("data-assistant-prefill"))
+    }
+
+    @Test
+    fun `without the assistant the hero has no wrap-up chip`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(populatedView())
+        signedIn()
+
+        val doc = Jsoup.parse(mockMvc.perform(get("/").with(csrf())).andExpect(status().isOk).andReturn().response.contentAsString)
+
+        assertNull(doc.selectFirst("[data-assistant-prefill]"))
     }
 }
