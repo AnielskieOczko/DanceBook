@@ -61,6 +61,7 @@ class AdminController(
         model.addAttribute("totalUsers", appUserRepository.count())
         model.addAttribute("totalMaterials", materialRepository.count())
         model.addAttribute("isKnowledgeIndexStale", knowledgeIndexService?.isStale() ?: false)
+        model.addAttribute("knowledgeStatus", knowledgeIndexService?.getStatus())
         
         // System Settings
         model.addAttribute("pollInterval", systemSettingService.getIntSetting("polling_interval_minutes", 5))
@@ -311,11 +312,21 @@ class AdminController(
     fun rebuildKnowledgeIndex(model: Model): String {
         return try {
             val report = knowledgeIndexService?.rebuildAll()
+            val status = knowledgeIndexService?.getStatus()
             model.addAttribute("rebuildReport", report)
-            "admin/dashboard :: rebuildSuccess"
+            model.addAttribute("knowledgeStatus", status)
+            "admin/dashboard :: rebuildStatus"
         } catch (e: Exception) {
             model.addAttribute("rebuildError", e.message ?: "Unknown error during knowledge index rebuild")
             "admin/dashboard :: rebuildFailure"
         }
+    }
+
+    // HTMX Endpoint for Polling Knowledge Index Status
+    @GetMapping("/knowledge/status")
+    fun knowledgeStatus(model: Model): String {
+        val status = knowledgeIndexService?.getStatus()
+        model.addAttribute("knowledgeStatus", status)
+        return "admin/dashboard :: rebuildStatus"
     }
 }

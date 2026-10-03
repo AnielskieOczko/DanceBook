@@ -22,6 +22,7 @@ interface KnowledgeIndexService {
 
     fun isStale(): Boolean
     fun rebuildAll(): RebuildReport
+    fun getStatus(): KnowledgeIndexStatus
 }
 
 data class RebuildReport(
@@ -30,5 +31,14 @@ data class RebuildReport(
     val indexedFigures: Int,
     val indexedChoreographies: Int,
     val totalChunks: Int,
+    val embeddedChunks: Int = 0,
     val durationMs: Long
 )
+
+data class KnowledgeIndexStatus(
+    val totalChunks: Int,
+    val embeddedChunks: Int,
+    val isStale: Boolean
+) {
+    val isComplete: Boolean get() = totalChunks == 0 || embeddedChunks >= totalChunks
+}

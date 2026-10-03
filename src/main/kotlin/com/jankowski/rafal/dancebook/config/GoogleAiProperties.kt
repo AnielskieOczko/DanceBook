@@ -23,5 +23,7 @@ data class GoogleAiProperties(
     /** The embedding model behind knowledge retrieval (Spring AI). */
     val embeddingModel: String = "gemini-embedding-001",
     /** Vector dimension for embeddings. */
-    val embeddingDimensions: Int = 768
+    val embeddingDimensions: Int = 768,
+    /** Maximum embedding requests per minute. Defaults to 90 (below free tier limit of 100). */
+    val embeddingRequestsPerMinute: Int = 90
 )

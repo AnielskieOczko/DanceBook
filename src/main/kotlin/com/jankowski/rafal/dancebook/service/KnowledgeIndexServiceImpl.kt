@@ -12,15 +12,21 @@ import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
 import org.springframework.ai.embedding.EmbeddingModel
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import org.springframework.transaction.support.TransactionSynchronization
+import org.springframework.transaction.support.TransactionSynchronizationManager
+import org.springframework.transaction.support.TransactionTemplate
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 
 @Service
 class KnowledgeIndexServiceImpl(
@@ -32,24 +38,20 @@ class KnowledgeIndexServiceImpl(
     private val richTextService: RichTextService,
     private val embeddingModel: EmbeddingModel,
     private val googleAiProperties: GoogleAiProperties,
-    private val transactionTemplate: org.springframework.transaction.support.TransactionTemplate
+    private val transactionTemplate: TransactionTemplate
 ) : KnowledgeIndexService {
 
     companion object {
         private val log = LoggerFactory.getLogger(KnowledgeIndexServiceImpl::class.java)
         private const val MAX_CHUNK_CHARS = 1500
-        private const val MAX_RETRIES = 5
     }
 
-    data class QueueItem(
-        val sourceType: KnowledgeSourceType,
-        val sourceId: UUID,
-        val attempt: Int = 1,
-        val nextRetryTime: Long = System.currentTimeMillis()
-    )
-
-    private val queue = ConcurrentLinkedQueue<QueueItem>()
-    private val inFlight = ConcurrentHashMap.newKeySet<Pair<KnowledgeSourceType, UUID>>()
+    private val isWorkerRunning = AtomicBoolean(false)
+    private val lastRequestTimestamp = AtomicLong(0L)
+    private val failureCounts = ConcurrentHashMap<UUID, Int>()
+    private val failureBackoffs = ConcurrentHashMap<UUID, Long>()
+    private val consecutive429Count = AtomicInteger(0)
+    private val globalBackoffUntil = AtomicLong(0L)
 
     private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { r ->
         Thread(r, "knowledge-index-worker").apply { isDaemon = true }
@@ -60,79 +62,228 @@ class KnowledgeIndexServiceImpl(
         executor.shutdown()
     }
 
-    override fun queueIndex(sourceType: KnowledgeSourceType, sourceId: UUID) {
-        val key = sourceType to sourceId
-        if (inFlight.add(key)) {
-            queue.add(QueueItem(sourceType, sourceId))
-        }
+    @EventListener(ApplicationReadyEvent::class)
+    fun onApplicationReady() {
+        log.info("Checking for knowledge chunks awaiting embedding on application ready...")
         triggerProcessing()
+    }
+
+    override fun queueIndex(sourceType: KnowledgeSourceType, sourceId: UUID) {
+        try {
+            transactionTemplate.execute {
+                when (sourceType) {
+                    KnowledgeSourceType.NOTE -> indexMaterial(sourceId)
+                    KnowledgeSourceType.NOTE_COMMENT -> indexComment(sourceId)
+                    KnowledgeSourceType.FIGURE -> indexFigure(sourceId)
+                    KnowledgeSourceType.CHOREOGRAPHY -> indexChoreography(sourceId)
+                }
+            }
+        } catch (e: Exception) {
+            log.error("Failed to extract knowledge chunks for {} {}: {}", sourceType, sourceId, e.message, e)
+        }
+        triggerProcessingAfterCommit()
     }
 
     override fun processQueueAsync() {
         triggerProcessing()
     }
 
+    override fun processQueue() {
+        runEmbeddingLoop()
+    }
+
+    private fun triggerProcessingAfterCommit() {
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(
+                object : TransactionSynchronization {
+                    override fun afterCommit() {
+                        triggerProcessing()
+                    }
+                }
+            )
+        } else {
+            triggerProcessing()
+        }
+    }
+
     private fun triggerProcessing() {
+        if (!isWorkerRunning.compareAndSet(false, true)) {
+            return
+        }
         executor.execute {
             try {
-                processQueue()
+                runEmbeddingLoop()
             } catch (t: Throwable) {
                 log.error("Unexpected error in knowledge index worker", t)
+            } finally {
+                isWorkerRunning.set(false)
+                checkAndScheduleNextRun()
             }
         }
     }
 
-    override fun processQueue() {
-        val now = System.currentTimeMillis()
-        val retryLater = mutableListOf<QueueItem>()
-        var earliestRetryDelayMs: Long? = null
+    private fun checkAndScheduleNextRun() {
+        val pendingCount = knowledgeChunkRepository.countAwaitingEmbedding()
+        if (pendingCount > 0) {
+            val now = System.currentTimeMillis()
+            val globalBackoff = globalBackoffUntil.get()
+            failureBackoffs.entries.removeIf { it.value <= now }
+            val activeBackoffs = failureBackoffs.values.filter { it > now }
+            val nextBackoff = if (activeBackoffs.size >= pendingCount) {
+                val earliestChunkBackoff = activeBackoffs.minOrNull() ?: now
+                maxOf(globalBackoff, earliestChunkBackoff)
+            } else {
+                globalBackoff
+            }
 
-        while (true) {
-            val item = queue.poll() ?: break
-            if (item.nextRetryTime > now) {
-                retryLater.add(item)
-                val delay = item.nextRetryTime - now
-                earliestRetryDelayMs = minOf(earliestRetryDelayMs ?: Long.MAX_VALUE, delay)
+            if (nextBackoff > now) {
+                val delay = nextBackoff - now
+                executor.schedule({ triggerProcessing() }, maxOf(50L, delay), TimeUnit.MILLISECONDS)
+            } else {
+                executor.execute { triggerProcessing() }
+            }
+        }
+    }
+
+    private fun runEmbeddingLoop() {
+        while (!Thread.currentThread().isInterrupted) {
+            val now = System.currentTimeMillis()
+            val globalBackoff = globalBackoffUntil.get()
+            if (globalBackoff > now) {
+                val waitMs = globalBackoff - now
+                try {
+                    Thread.sleep(minOf(waitMs, 5000L))
+                } catch (ie: InterruptedException) {
+                    Thread.currentThread().interrupt()
+                    break
+                }
                 continue
             }
 
-            val key = item.sourceType to item.sourceId
-            try {
-                transactionTemplate.execute {
-                    when (item.sourceType) {
-                        KnowledgeSourceType.NOTE -> indexMaterial(item.sourceId)
-                        KnowledgeSourceType.NOTE_COMMENT -> indexComment(item.sourceId)
-                        KnowledgeSourceType.FIGURE -> indexFigure(item.sourceId)
-                        KnowledgeSourceType.CHOREOGRAPHY -> indexChoreography(item.sourceId)
-                    }
+            val currentTime = System.currentTimeMillis()
+            val backedOffIds = failureBackoffs.filterValues { it > currentTime }.keys
+            val pendingChunks = knowledgeChunkRepository.findChunksAwaitingEmbedding(
+                limit = 20,
+                excludeIds = backedOffIds
+            )
+            if (pendingChunks.isEmpty()) {
+                val earliest = failureBackoffs.values.filter { it > currentTime }.minOrNull()
+                if (earliest != null && earliest > currentTime) {
+                    val delay = earliest - currentTime
+                    executor.schedule({ triggerProcessing() }, maxOf(50L, delay), TimeUnit.MILLISECONDS)
                 }
-                inFlight.remove(key)
-            } catch (e: Exception) {
-                log.error("Failed to index {} {} (attempt {}): {}", item.sourceType, item.sourceId, item.attempt, e.message, e)
-                if (item.attempt < MAX_RETRIES) {
-                    val backoffMs = (1L shl item.attempt) * 1000L
-                    val retryItem = item.copy(attempt = item.attempt + 1, nextRetryTime = now + backoffMs)
-                    retryLater.add(retryItem)
-                    earliestRetryDelayMs = minOf(earliestRetryDelayMs ?: Long.MAX_VALUE, backoffMs)
-                } else {
-                    inFlight.remove(key)
-                    log.error("Giving up on indexing {} {} after {} attempts", item.sourceType, item.sourceId, item.attempt, e)
+                break
+            }
+
+            val eligibleChunks = pendingChunks.filter { chunk ->
+                val retryAfter = failureBackoffs[chunk.id] ?: 0L
+                retryAfter <= currentTime
+            }
+
+            if (eligibleChunks.isEmpty()) {
+                val earliest = failureBackoffs.values.filter { it > currentTime }.minOrNull()
+                if (earliest != null && earliest > currentTime) {
+                    val delay = earliest - currentTime
+                    executor.schedule({ triggerProcessing() }, maxOf(50L, delay), TimeUnit.MILLISECONDS)
+                }
+                break
+            }
+
+            for (chunk in eligibleChunks) {
+                if (Thread.currentThread().isInterrupted) break
+
+                val gb = globalBackoffUntil.get()
+                if (gb > System.currentTimeMillis()) {
+                    break
+                }
+
+                paceRateLimit()
+
+                try {
+                    val embedding = embeddingModel.embed(chunk.content)
+                    knowledgeChunkRepository.updateEmbedding(chunk.id, embedding, googleAiProperties.embeddingModel)
+                    failureCounts.remove(chunk.id)
+                    failureBackoffs.remove(chunk.id)
+                    consecutive429Count.set(0)
+                } catch (e: Exception) {
+                    if (isRateLimitException(e)) {
+                        val delayMs = extractRetryDelayMs(e) ?: run {
+                            val count = consecutive429Count.incrementAndGet()
+                            minOf(60_000L, 2000L * (1L shl minOf(count - 1, 5)))
+                        }
+                        globalBackoffUntil.set(System.currentTimeMillis() + delayMs)
+                        log.warn("Rate limit (429) on chunk {}. Backing off provider for {}ms: {}", chunk.id, delayMs, e.message)
+                        break
+                    } else {
+                        val attempts = failureCounts.compute(chunk.id) { _, count -> (count ?: 0) + 1 }!!
+                        val backoff = minOf(60_000L, 1000L * (1L shl minOf(attempts - 1, 6)))
+                        failureBackoffs[chunk.id] = System.currentTimeMillis() + backoff
+                        log.warn("Failed embedding chunk {} (attempt {}): {}. Retrying in {}ms", chunk.id, attempts, e.message, backoff)
+                    }
                 }
             }
         }
+    }
 
-        queue.addAll(retryLater)
-
-        earliestRetryDelayMs?.let { delay ->
-            val safeDelay = maxOf(50L, delay)
-            executor.schedule({
-                try {
-                    processQueue()
-                } catch (t: Throwable) {
-                    log.error("Unexpected error in scheduled retry", t)
-                }
-            }, safeDelay, TimeUnit.MILLISECONDS)
+    private fun paceRateLimit() {
+        val rpm = googleAiProperties.embeddingRequestsPerMinute
+        if (rpm > 0) {
+            val minIntervalMs = 60_000L / rpm
+            val now = System.currentTimeMillis()
+            val elapsed = now - lastRequestTimestamp.get()
+            if (elapsed < minIntervalMs) {
+                val sleepMs = minIntervalMs - elapsed
+                Thread.sleep(sleepMs)
+            }
         }
+        lastRequestTimestamp.set(System.currentTimeMillis())
+    }
+
+    internal fun isRateLimitException(e: Throwable): Boolean {
+        var curr: Throwable? = e
+        while (curr != null) {
+            val msg = curr.message.orEmpty()
+            val className = curr.javaClass.name
+            if (msg.contains("429") ||
+                msg.contains("RESOURCE_EXHAUSTED", ignoreCase = true) ||
+                msg.contains("Too Many Requests", ignoreCase = true) ||
+                msg.contains("quota", ignoreCase = true) ||
+                msg.contains("rate limit", ignoreCase = true) ||
+                msg.contains("retry in", ignoreCase = true) ||
+                msg.contains("retry after", ignoreCase = true) ||
+                className.contains("TooManyRequests", ignoreCase = true)
+            ) {
+                return true
+            }
+            if (curr is org.springframework.web.client.HttpStatusCodeException && curr.statusCode.value() == 429) {
+                return true
+            }
+            curr = curr.cause
+        }
+        return false
+    }
+
+    internal fun extractRetryDelayMs(e: Throwable): Long? {
+        val patterns = listOf(
+            Regex("""(?i)retry\s+(?:after|in)\s+(\d+(?:\.\d+)?)\s*s?"""),
+            Regex("""(?i)retry[_\s]delay[:\s]+(\d+(?:\.\d+)?)\s*s?""")
+        )
+
+        var curr: Throwable? = e
+        while (curr != null) {
+            val msg = curr.message.orEmpty()
+            for (pattern in patterns) {
+                val match = pattern.find(msg)
+                if (match != null) {
+                    val seconds = match.groupValues[1].toDoubleOrNull()
+                    if (seconds != null && seconds > 0) {
+                        return kotlin.math.ceil(seconds * 1000).toLong()
+                    }
+                }
+            }
+            curr = curr.cause
+        }
+        return null
     }
 
     @Transactional
@@ -181,7 +332,7 @@ class KnowledgeIndexServiceImpl(
             )
         }
 
-        saveChunksWithEmbeddings(KnowledgeSourceType.NOTE, material.id!!, chunks)
+        saveChunks(KnowledgeSourceType.NOTE, material.id!!, chunks)
     }
 
     @Transactional
@@ -206,7 +357,7 @@ class KnowledgeIndexServiceImpl(
             visibility = comment.material?.visibility ?: Visibility.PRIVATE
         )
 
-        saveChunksWithEmbeddings(KnowledgeSourceType.NOTE_COMMENT, comment.id!!, listOf(chunk))
+        saveChunks(KnowledgeSourceType.NOTE_COMMENT, comment.id!!, listOf(chunk))
     }
 
     @Transactional
@@ -249,7 +400,7 @@ class KnowledgeIndexServiceImpl(
             visibility = Visibility.PUBLIC
         )
 
-        saveChunksWithEmbeddings(KnowledgeSourceType.FIGURE, figure.id!!, listOf(chunk))
+        saveChunks(KnowledgeSourceType.FIGURE, figure.id!!, listOf(chunk))
     }
 
     @Transactional
@@ -283,25 +434,19 @@ class KnowledgeIndexServiceImpl(
             visibility = choreography.visibility
         )
 
-        saveChunksWithEmbeddings(KnowledgeSourceType.CHOREOGRAPHY, choreography.id!!, listOf(chunk))
+        saveChunks(KnowledgeSourceType.CHOREOGRAPHY, choreography.id!!, listOf(chunk))
     }
 
-    private fun saveChunksWithEmbeddings(
+    private fun saveChunks(
         sourceType: KnowledgeSourceType,
         sourceId: UUID,
         chunks: List<KnowledgeChunk>
     ) {
         knowledgeChunkRepository.deleteBySource(sourceType, sourceId)
-
         for (chunk in chunks) {
-            var embedding: FloatArray? = null
-            try {
-                embedding = embeddingModel.embed(chunk.content)
-            } catch (e: Exception) {
-                log.warn("Embedding API call failed for {} {}: {}. Full-text index active.", sourceType, sourceId, e.message)
-            }
-            knowledgeChunkRepository.save(chunk.copy(embedding = embedding))
+            knowledgeChunkRepository.save(chunk.copy(embedding = null))
         }
+        triggerProcessingAfterCommit()
     }
 
     override fun deleteChunks(sourceType: KnowledgeSourceType, sourceId: UUID) {
@@ -326,6 +471,17 @@ class KnowledgeIndexServiceImpl(
 
     override fun isStale(): Boolean {
         return knowledgeChunkRepository.countStale(googleAiProperties.embeddingModel) > 0
+    }
+
+    override fun getStatus(): KnowledgeIndexStatus {
+        val total = knowledgeChunkRepository.countAll().toInt()
+        val embedded = knowledgeChunkRepository.countEmbedded(googleAiProperties.embeddingModel).toInt()
+        val stale = isStale()
+        return KnowledgeIndexStatus(
+            totalChunks = total,
+            embeddedChunks = embedded,
+            isStale = stale
+        )
     }
 
     @Transactional
@@ -360,11 +516,22 @@ class KnowledgeIndexServiceImpl(
         }
 
         val totalChunks = knowledgeChunkRepository.countAll().toInt()
+        val embeddedChunks = knowledgeChunkRepository.countEmbedded(googleAiProperties.embeddingModel).toInt()
         val duration = System.currentTimeMillis() - start
-        log.info("Rebuild completed in {}ms: {} notes, {} comments, {} figures, {} choreographies, {} chunks",
+        log.info("Rebuild chunk extraction completed in {}ms: {} notes, {} comments, {} figures, {} choreographies, {} chunks",
             duration, noteCount, commentCount, figureCount, choreographyCount, totalChunks)
 
-        return RebuildReport(noteCount, commentCount, figureCount, choreographyCount, totalChunks, duration)
+        triggerProcessingAfterCommit()
+
+        return RebuildReport(
+            indexedNotes = noteCount,
+            indexedComments = commentCount,
+            indexedFigures = figureCount,
+            indexedChoreographies = choreographyCount,
+            totalChunks = totalChunks,
+            embeddedChunks = embeddedChunks,
+            durationMs = duration
+        )
     }
 
     private fun splitParagraphs(text: String, maxChars: Int): List<String> {
@@ -382,7 +549,6 @@ class KnowledgeIndexServiceImpl(
                 current.clear()
             }
             if (p.length > maxChars) {
-                // Large paragraph split by sentence or newline
                 val sentences = p.split(Regex("(?<=[.!?])\\s+"))
                 for (s in sentences) {
                     if (current.isNotEmpty() && current.length + s.length + 1 > maxChars) {

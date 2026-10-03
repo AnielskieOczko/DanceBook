@@ -47,7 +47,13 @@ class KnowledgeChunkRepository(
             VALUES (?, ?, ?, ?, ?, cast(? as vector), ?, ?, ?, ?)
             ON CONFLICT (source_type, source_id, chunk_index) DO UPDATE
             SET content = EXCLUDED.content,
-                embedding = EXCLUDED.embedding,
+                embedding = CASE
+                    WHEN knowledge_chunk.content = EXCLUDED.content
+                         AND knowledge_chunk.embedding_model = EXCLUDED.embedding_model
+                         AND EXCLUDED.embedding IS NULL
+                    THEN knowledge_chunk.embedding
+                    ELSE EXCLUDED.embedding
+                END,
                 embedding_model = EXCLUDED.embedding_model,
                 owner_id = EXCLUDED.owner_id,
                 visibility = EXCLUDED.visibility,
@@ -136,17 +142,51 @@ class KnowledgeChunkRepository(
         )
     }
 
-    fun findChunksAwaitingEmbedding(limit: Int = 100): List<KnowledgeChunk> {
+    fun findChunksAwaitingEmbedding(limit: Int = 100, excludeIds: Collection<UUID> = emptyList()): List<KnowledgeChunk> {
+        if (excludeIds.isEmpty()) {
+            return jdbcTemplate.query(
+                "SELECT * FROM knowledge_chunk WHERE embedding IS NULL ORDER BY updated_at ASC LIMIT ?",
+                rowMapper,
+                limit
+            )
+        }
+        val safeExclude = if (excludeIds.size > 1000) excludeIds.take(1000) else excludeIds
+        val placeholders = safeExclude.joinToString(",") { "?" }
+        val params = mutableListOf<Any>()
+        params.addAll(safeExclude)
+        params.add(limit)
         return jdbcTemplate.query(
-            "SELECT * FROM knowledge_chunk WHERE embedding IS NULL ORDER BY updated_at ASC LIMIT ?",
+            "SELECT * FROM knowledge_chunk WHERE embedding IS NULL AND id NOT IN ($placeholders) ORDER BY updated_at ASC LIMIT ?",
             rowMapper,
-            limit
+            *params.toTypedArray()
         )
+    }
+
+    fun countEmbedded(modelName: String? = null): Long {
+        return if (modelName != null) {
+            jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM knowledge_chunk WHERE embedding IS NOT NULL AND embedding_model = ?",
+                Long::class.java,
+                modelName
+            ) ?: 0L
+        } else {
+            jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM knowledge_chunk WHERE embedding IS NOT NULL",
+                Long::class.java
+            ) ?: 0L
+        }
+    }
+
+    fun countAwaitingEmbedding(): Long {
+        return jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM knowledge_chunk WHERE embedding IS NULL",
+            Long::class.java
+        ) ?: 0L
     }
 
     fun countStale(modelName: String): Long {
         return jdbcTemplate.queryForObject(
-            "SELECT COUNT(*) FROM knowledge_chunk WHERE embedding_model != ? OR embedding IS NULL",
+            "SELECT COUNT(*) FROM knowledge_chunk WHERE embedding_model != ?",
             Long::class.java,
             modelName
         ) ?: 0L

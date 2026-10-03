@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
 import org.springframework.ai.document.Document
 import org.springframework.ai.embedding.Embedding
@@ -42,15 +43,24 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
 import com.jankowski.rafal.dancebook.model.KnowledgeChunk
 import com.jankowski.rafal.dancebook.repository.CommentRepository
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 @Testcontainers
+@AutoConfigureMockMvc
 @TestPropertySource(properties = [
     "google.calendar.calendar-id=integration-test-calendar",
-    "google.ai.api-key=test-key"
+    "google.ai.api-key=test-key",
+    "google.ai.embedding-requests-per-minute=60000"
 ])
 @Import(RagIntegrationTest.RagTestConfig::class)
 class RagIntegrationTest {
@@ -58,7 +68,7 @@ class RagIntegrationTest {
     @TestConfiguration
     class RagTestConfig {
         class TestEmbeddingModel : EmbeddingModel {
-            var beforeEmbedHook: (() -> Unit)? = null
+            var beforeEmbedHook: ((String) -> Unit)? = null
 
             override fun call(request: EmbeddingRequest): EmbeddingResponse =
                 EmbeddingResponse(request.instructions.mapIndexed { idx, text ->
@@ -68,7 +78,7 @@ class RagIntegrationTest {
             override fun embed(document: Document): FloatArray = embed(document.text ?: "")
 
             override fun embed(text: String): FloatArray {
-                beforeEmbedHook?.invoke()
+                beforeEmbedHook?.invoke(text)
                 val vec = FloatArray(768)
                 val lower = text.lowercase()
                 if ("sway" in lower) vec[0] = 0.8f
@@ -119,6 +129,7 @@ class RagIntegrationTest {
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
     @Autowired private lateinit var testEmbeddingModel: EmbeddingModel
     @Autowired private lateinit var knowledgeIndexEventListener: KnowledgeIndexEventListener
+    @Autowired private lateinit var mockMvc: MockMvc
 
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
@@ -132,6 +143,13 @@ class RagIntegrationTest {
         displayName = name
         password = "x"
         role = Role.USER
+    })
+
+    private fun newAdmin(name: String) = appUserRepository.save(AppUser().apply {
+        username = "$name-${UUID.randomUUID()}"
+        displayName = name
+        password = "x"
+        role = Role.ADMIN
     })
 
     @BeforeEach
@@ -148,6 +166,10 @@ class RagIntegrationTest {
 
         `when`(appUserService.getCurrentUser()).thenReturn(userA)
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(userA)
+        `when`(appUserService.findById(any(UUID::class.java) ?: UUID.randomUUID())).thenAnswer { inv ->
+            val id = inv.getArgument<UUID>(0)
+            appUserRepository.findById(id).orElse(null)
+        }
     }
 
     @Test
@@ -223,6 +245,12 @@ class RagIntegrationTest {
         knowledgeIndexService.indexMaterial(note.id!!)
         knowledgeIndexService.indexFigure(figure.id!!)
 
+        for (i in 1..40) {
+            val c = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, figure.id!!)
+            if (c?.embedding != null) break
+            Thread.sleep(25)
+        }
+
         val emb = testEmbeddingModel.embed("Natural Spin Turn")
         val results = knowledgeChunkRepository.hybridSearch(
             query = "Natural Spin Turn",
@@ -245,6 +273,11 @@ class RagIntegrationTest {
             danceType = waltz
         })
         knowledgeIndexService.indexMaterial(note.id!!)
+        for (i in 1..50) {
+            val chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+            if (chunks.isNotEmpty() && chunks.first().embedding != null) break
+            Thread.sleep(50)
+        }
 
         assertFalse(knowledgeIndexService.isStale(), "Index should initially be fresh")
 
@@ -291,6 +324,12 @@ class RagIntegrationTest {
         knowledgeIndexService.indexMaterial(note2.id!!)
         knowledgeIndexService.indexFigure(figure.id!!)
 
+        for (i in 1..40) {
+            val c = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.NOTE, note2.id!!)
+            if (c?.embedding != null) break
+            Thread.sleep(25)
+        }
+
         // Related notes for Note 1
         val relatedToNote1 = knowledgeRetrievalService.findRelatedNotesForMaterial(note1.id!!, currentUser = userA, limit = 3)
         assertFalse(relatedToNote1.any { it.id == note1.id }, "Related notes must not include the item itself")
@@ -311,6 +350,12 @@ class RagIntegrationTest {
             danceType = waltz
         })
         knowledgeIndexService.indexMaterial(note.id!!)
+
+        for (i in 1..40) {
+            val c = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.NOTE, note.id!!)
+            if (c?.embedding != null) break
+            Thread.sleep(25)
+        }
 
         val result = assistantReadTools.searchKnowledge("standing foot heel turn")
         assertTrue(result.items.isNotEmpty(), "Should find passage")
@@ -353,17 +398,19 @@ class RagIntegrationTest {
             assertTrue(embedStartedLatch.await(5, TimeUnit.SECONDS), "Worker thread should start embedding in background")
 
             val chunksBefore = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
-            assertTrue(chunksBefore.isEmpty(), "Chunk should not be committed yet while embedding is blocked")
+            assertTrue(chunksBefore.isNotEmpty() && chunksBefore.first().embedding == null,
+                "Chunk should be stored first with null vector while embedding is blocked")
 
             unblockLatch.countDown()
 
             var chunksAfter = emptyList<KnowledgeChunk>()
             for (i in 1..40) {
                 chunksAfter = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
-                if (chunksAfter.isNotEmpty()) break
+                if (chunksAfter.isNotEmpty() && chunksAfter.first().embedding != null) break
                 Thread.sleep(50)
             }
             assertEquals(1, chunksAfter.size, "Chunk must appear once embedding completes")
+            assertTrue(chunksAfter.first().embedding != null)
         } finally {
             model.beforeEmbedHook = null
             unblockLatch.countDown()
@@ -395,10 +442,11 @@ class RagIntegrationTest {
             var chunks = emptyList<KnowledgeChunk>()
             for (i in 1..80) {
                 chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
-                if (chunks.isNotEmpty()) break
+                if (chunks.isNotEmpty() && chunks.first().embedding != null) break
                 Thread.sleep(50)
             }
             assertEquals(1, chunks.size, "Chunk should be indexed after automatic retry by scheduler")
+            assertTrue(chunks.first().embedding != null)
             assertFalse(failOnce, "Embedding should have failed once and then succeeded")
         } finally {
             model.beforeEmbedHook = null
@@ -481,7 +529,7 @@ class RagIntegrationTest {
             isPublic = true,
             version = created.version
         )
-        val updated = materialService.update(created.id!!, updateReq)
+        materialService.update(created.id!!, updateReq)
 
         var updatedChunks = emptyList<KnowledgeChunk>()
         for (i in 1..40) {
@@ -496,5 +544,305 @@ class RagIntegrationTest {
 
         val afterDelete = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, created.id!!)
         assertTrue(afterDelete.isEmpty(), "Chunks must be deleted immediately upon service delete event")
+    }
+
+    @Test
+    fun `rebuild over several hundred chunks returns promptly and ends with every chunk embedded without quota error`() {
+        val timestamps = java.util.concurrent.ConcurrentLinkedQueue<Long>()
+        val quotaViolated = java.util.concurrent.atomic.AtomicBoolean(false)
+        val model = testEmbeddingModel as RagTestConfig.TestEmbeddingModel
+
+        val notes = (1..200).map { i ->
+            Material().apply {
+                owner = userA
+                name = "Fast Rebuild Note $i"
+                description = "technique and practice content $i"
+                visibility = Visibility.PUBLIC
+                danceType = waltz
+            }
+        }
+        materialRepository.saveAll(notes)
+
+        model.beforeEmbedHook = {
+            val now = System.currentTimeMillis()
+            timestamps.add(now)
+            while (timestamps.peek() != null && now - timestamps.peek() > 1000) {
+                timestamps.poll()
+            }
+            if (timestamps.size > 500) {
+                quotaViolated.set(true)
+                throw RuntimeException("429 RESOURCE_EXHAUSTED: quota exceeded")
+            }
+        }
+
+        try {
+            val start = System.currentTimeMillis()
+            val report = knowledgeIndexService.rebuildAll()
+            val rebuildDuration = System.currentTimeMillis() - start
+
+            assertTrue(rebuildDuration < 3000, "rebuildAll must return promptly, took ${rebuildDuration}ms")
+            assertTrue(report.totalChunks >= 200, "Rebuild should report at least 200 chunks")
+            assertFalse(quotaViolated.get(), "Quota must not be violated")
+
+            var pending = 1L
+            for (i in 1..100) {
+                pending = knowledgeChunkRepository.countAwaitingEmbedding()
+                if (pending == 0L) break
+                Thread.sleep(50)
+            }
+            assertEquals(0L, pending, "All chunks must end up embedded")
+            assertEquals(report.totalChunks.toLong(), knowledgeChunkRepository.countEmbedded(), "Every chunk must have a vector")
+        } finally {
+            model.beforeEmbedHook = null
+        }
+    }
+
+    @Test
+    fun `a chunk whose embedding call fails once or twice ends up with a vector without any further user action`() {
+        val note = materialRepository.save(Material().apply {
+            owner = userA
+            name = "Flaky Embedding Note"
+            description = "Note testing transient failure retry."
+            visibility = Visibility.PUBLIC
+            danceType = waltz
+        })
+
+        var failAttemptsLeft = 2
+        val model = testEmbeddingModel as RagTestConfig.TestEmbeddingModel
+        model.beforeEmbedHook = {
+            if (failAttemptsLeft > 0) {
+                failAttemptsLeft--
+                throw RuntimeException("Simulated transient network timeout")
+            }
+        }
+
+        try {
+            knowledgeIndexService.queueIndex(KnowledgeSourceType.NOTE, note.id!!)
+
+            var chunk: KnowledgeChunk? = null
+            for (i in 1..100) {
+                val chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+                if (chunks.isNotEmpty() && chunks.first().embedding != null) {
+                    chunk = chunks.first()
+                    break
+                }
+                Thread.sleep(50)
+            }
+
+            assertEquals(0, failAttemptsLeft, "Should have failed twice and retried")
+            assertTrue(chunk != null && chunk.embedding != null, "Chunk must end up with a vector without user action")
+        } finally {
+            model.beforeEmbedHook = null
+        }
+    }
+
+    @Test
+    fun `extractRetryDelayMs parses decimal seconds from verbatim Google quota message`() {
+        val service = knowledgeIndexService as KnowledgeIndexServiceImpl
+        val ex = RuntimeException("You exceeded your current quota ... Please retry in 27.794566691s..")
+        val delay = service.extractRetryDelayMs(ex)
+        assertEquals(27795L, delay)
+    }
+
+    @Test
+    fun `provider 429 slows the worker down and does not lose chunks`() {
+        val note = materialRepository.save(Material().apply {
+            owner = userA
+            name = "Quota Note"
+            description = "Note testing 429 rate limit backoff."
+            visibility = Visibility.PUBLIC
+            danceType = waltz
+        })
+
+        var threw429 = false
+        val model = testEmbeddingModel as RagTestConfig.TestEmbeddingModel
+        model.beforeEmbedHook = {
+            if (!threw429) {
+                threw429 = true
+                throw RuntimeException("You exceeded your current quota ... Please retry in 27.794566691s..")
+            }
+        }
+
+        try {
+            val start = System.currentTimeMillis()
+            knowledgeIndexService.queueIndex(KnowledgeSourceType.NOTE, note.id!!)
+
+            var chunk: KnowledgeChunk? = null
+            for (i in 1..800) {
+                val chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+                if (chunks.isNotEmpty() && chunks.first().embedding != null) {
+                    chunk = chunks.first()
+                    break
+                }
+                Thread.sleep(50)
+            }
+
+            val elapsed = System.currentTimeMillis() - start
+            assertTrue(threw429, "Should have encountered 429")
+            assertTrue(elapsed >= 27_000, "Worker should have slowed down / backed off on 429 for ~28s as requested by provider, took ${elapsed}ms")
+            assertTrue(chunk != null && chunk.embedding != null, "Chunk must not be lost and must have its vector filled")
+        } finally {
+            model.beforeEmbedHook = null
+        }
+    }
+
+    @Test
+    fun `head-of-line blocking is prevented when oldest chunks fail and newer chunks are embedded`() {
+        val note = materialRepository.save(Material().apply {
+            owner = userA
+            name = "Head of Line Note"
+            description = "Parent note for chunks"
+            visibility = Visibility.PUBLIC
+            danceType = waltz
+        })
+
+        // Create 25 chunks awaiting embedding (embedding = null).
+        // The oldest 21 chunks will fail embedding permanently.
+        // The newest 4 chunks will succeed.
+        val now = java.time.LocalDateTime.now()
+        for (i in 0 until 25) {
+            val chunk = KnowledgeChunk(
+                id = UUID.randomUUID(),
+                sourceType = KnowledgeSourceType.NOTE,
+                sourceId = note.id!!,
+                chunkIndex = i,
+                content = if (i < 21) "failing-chunk-$i" else "healthy-chunk-$i",
+                embedding = null,
+                embeddingModel = "text-embedding-004",
+                ownerId = userA.id,
+                visibility = Visibility.PUBLIC,
+                updatedAt = now.minusMinutes((25 - i).toLong())
+            )
+            knowledgeChunkRepository.save(chunk)
+        }
+
+        val model = testEmbeddingModel as RagTestConfig.TestEmbeddingModel
+        model.beforeEmbedHook = { text ->
+            if (text.contains("failing-chunk")) {
+                throw RuntimeException("Permanent error embedding corrupt chunk")
+            }
+        }
+
+        try {
+            knowledgeIndexService.processQueueAsync()
+
+            var embeddedHealthyChunks = 0
+            for (attempt in 1..100) {
+                val chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+                val healthy = chunks.filter { it.content.contains("healthy-chunk") }
+                embeddedHealthyChunks = healthy.count { it.embedding != null }
+                if (embeddedHealthyChunks == 4) break
+                Thread.sleep(50)
+            }
+
+            assertEquals(4, embeddedHealthyChunks, "All 4 healthy chunks should be embedded despite 21 failing chunks ahead of them")
+
+            val chunks = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+            val failing = chunks.filter { it.content.contains("failing-chunk") }
+            assertEquals(21, failing.count { it.embedding == null }, "Failing chunks should remain un-embedded in backoff")
+        } finally {
+            model.beforeEmbedHook = null
+        }
+    }
+
+    @Test
+    fun `after a restart chunks without a vector are embedded`() {
+        val note = materialRepository.save(Material().apply {
+            owner = userA
+            name = "Restart Note"
+            description = "Note with chunk inserted without vector."
+            visibility = Visibility.PUBLIC
+            danceType = waltz
+        })
+
+        val chunk = KnowledgeChunk(
+            sourceType = KnowledgeSourceType.NOTE,
+            sourceId = note.id!!,
+            chunkIndex = 0,
+            content = "Note: Restart Note\n\nContent awaiting vector after restart",
+            embedding = null,
+            embeddingModel = "gemini-embedding-001",
+            ownerId = userA.id,
+            visibility = Visibility.PUBLIC
+        )
+        knowledgeChunkRepository.save(chunk)
+
+        assertEquals(1, knowledgeChunkRepository.countAwaitingEmbedding(), "Should have 1 chunk awaiting embedding")
+
+        (knowledgeIndexService as KnowledgeIndexServiceImpl).onApplicationReady()
+
+        var pending = 1L
+        for (i in 1..80) {
+            pending = knowledgeChunkRepository.countAwaitingEmbedding()
+            if (pending == 0L) break
+            Thread.sleep(50)
+        }
+
+        assertEquals(0L, pending, "All pending chunks must be embedded after startup recovery")
+        val saved = knowledgeChunkRepository.findBySource(KnowledgeSourceType.NOTE, note.id!!)
+        assertTrue(saved.isNotEmpty() && saved.first().embedding != null, "Vector must be filled in")
+    }
+
+    @Test
+    fun `admin knowledge rebuild reports honest status with warning when N less than M and updates on status poll`() {
+        val admin = newAdmin("AdminUser")
+        `when`(appUserService.getCurrentUser()).thenReturn(admin)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(admin)
+
+        materialRepository.save(Material().apply {
+            owner = admin
+            name = "Admin Truth Note"
+            description = "Testing honest rebuild reporting."
+            visibility = Visibility.PUBLIC
+            danceType = waltz
+        })
+
+        val latch = CountDownLatch(1)
+        val model = testEmbeddingModel as RagTestConfig.TestEmbeddingModel
+        model.beforeEmbedHook = {
+            latch.await(3, TimeUnit.SECONDS)
+        }
+
+        try {
+            val rebuildResult = mockMvc.perform(
+                post("/admin/knowledge/rebuild")
+                    .with(user(admin.username).roles("ADMIN"))
+                    .with(csrf())
+            )
+                .andExpect(status().isOk)
+                .andReturn().response.contentAsString
+
+            assertTrue(rebuildResult.contains("Embedding in Progress"),
+                "Must report embedding in progress with honest warning: $rebuildResult")
+            assertTrue(rebuildResult.contains("/admin/knowledge/status"),
+                "Must include polling endpoint: $rebuildResult")
+            assertFalse(rebuildResult.contains("All 1 chunks embedded"),
+                "Must never report full success while chunks are waiting: $rebuildResult")
+
+            latch.countDown()
+
+            for (i in 1..80) {
+                if (knowledgeChunkRepository.countAwaitingEmbedding() == 0L) break
+                Thread.sleep(50)
+            }
+
+            val statusResult = mockMvc.perform(
+                get("/admin/knowledge/status")
+                    .with(user(admin.username).roles("ADMIN"))
+                    .with(csrf())
+            )
+                .andExpect(status().isOk)
+                .andReturn().response.contentAsString
+
+            assertTrue(statusResult.contains("Knowledge Index Rebuilt"),
+                "Must report complete success: $statusResult")
+            assertTrue(statusResult.contains("chunks embedded"),
+                "Must state chunk counts: $statusResult")
+            assertFalse(statusResult.contains("hx-get=\"/admin/knowledge/status\""),
+                "Must stop polling once complete: $statusResult")
+        } finally {
+            model.beforeEmbedHook = null
+            latch.countDown()
+        }
     }
 }
