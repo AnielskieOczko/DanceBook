@@ -19,5 +19,9 @@ data class GoogleAiProperties(
     /** The chat model behind the assistant (Spring AI). Independent of the LlmProvider models. */
     val assistantModel: String = "gemini-2.5-flash",
     /** Total time one assistant turn may spend waiting on the provider. */
-    val assistantTimeoutSeconds: Long = 30
+    val assistantTimeoutSeconds: Long = 30,
+    /** The embedding model behind knowledge retrieval (Spring AI). */
+    val embeddingModel: String = "text-embedding-004",
+    /** Vector dimension for embeddings. */
+    val embeddingDimensions: Int = 768
 )

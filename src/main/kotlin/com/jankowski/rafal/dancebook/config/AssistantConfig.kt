@@ -40,4 +40,35 @@ class AssistantConfig {
     @Bean
     @ConditionalOnAssistant
     fun assistantModelGateway(chatModel: ChatModel): AssistantModelGateway = AssistantModelGateway(chatModel)
+
+    @Bean
+    @ConditionalOnAssistant
+    fun assistantEmbeddingModel(googleAi: GoogleAiProperties): org.springframework.ai.embedding.EmbeddingModel {
+        val details = org.springframework.ai.google.genai.GoogleGenAiEmbeddingConnectionDetails.builder()
+            .apiKey(googleAi.apiKey)
+            .build()
+        val options = org.springframework.ai.google.genai.text.GoogleGenAiTextEmbeddingOptions.builder()
+            .model(googleAi.embeddingModel)
+            .dimensions(googleAi.embeddingDimensions)
+            .build()
+        return org.springframework.ai.google.genai.text.GoogleGenAiTextEmbeddingModel(details, options, RetryUtils.SHORT_RETRY_TEMPLATE)
+    }
+
+    @Bean
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(org.springframework.ai.embedding.EmbeddingModel::class)
+    fun fallbackEmbeddingModel(googleAi: GoogleAiProperties): org.springframework.ai.embedding.EmbeddingModel {
+        return object : org.springframework.ai.embedding.EmbeddingModel {
+            override fun call(request: org.springframework.ai.embedding.EmbeddingRequest): org.springframework.ai.embedding.EmbeddingResponse {
+                val list = request.instructions.mapIndexed { idx, _ ->
+                    org.springframework.ai.embedding.Embedding(FloatArray(googleAi.embeddingDimensions), idx)
+                }
+                return org.springframework.ai.embedding.EmbeddingResponse(list)
+            }
+            override fun embed(document: org.springframework.ai.document.Document): FloatArray =
+                FloatArray(googleAi.embeddingDimensions)
+            override fun embed(text: String): FloatArray =
+                FloatArray(googleAi.embeddingDimensions)
+            override fun dimensions(): Int = googleAi.embeddingDimensions
+        }
+    }
 }

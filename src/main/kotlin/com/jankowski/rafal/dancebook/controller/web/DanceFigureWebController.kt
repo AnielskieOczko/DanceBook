@@ -34,7 +34,9 @@ import java.util.UUID
 class DanceFigureWebController(
     private val danceFigureService: DanceFigureService,
     private val danceTypeService: DanceTypeService,
-    private val danceCategoryService: DanceCategoryService
+    private val danceCategoryService: DanceCategoryService,
+    private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService? = null,
+    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null
 ) {
 
     /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
@@ -144,9 +146,12 @@ class DanceFigureWebController(
             danceFigureService.findByDanceType(it)
         } ?: emptyList()
         val figureNameMap = styleFigures.associate { it.name to it.id }
+        val currentUser = appUserService?.getCurrentUserOrNull()
+        val relatedNotes = knowledgeRetrievalService?.findRelatedNotesForFigure(id, currentUser, 3) ?: emptyList()
 
         model.addAttribute("danceFigure", danceFigure)
         model.addAttribute("figureNameMap", figureNameMap)
+        model.addAttribute("relatedNotes", relatedNotes)
         return "dance-figures/view"
     }
 

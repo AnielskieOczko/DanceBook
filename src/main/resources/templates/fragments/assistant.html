@@ -35,7 +35,7 @@
             <div th:replace="~{fragments/alert :: alert(variant='error', text=${text})}"></div>
         </th:block>
         <th:block th:if="${error != true}">
-            <div class="text-[15px] leading-relaxed whitespace-pre-wrap" th:text="${text}">Answer</div>
+            <div th:replace="~{fragments/rich-text :: content(value=${text}, cls='text-[15px] leading-relaxed whitespace-pre-wrap')}"></div>
         </th:block>
         <th:block th:if="${cards != null}" th:each="c : ${cards}">
             <a th:replace="~{fragments/assistant :: assistantCard(kind=${c.kind}, heading=${c.title}, subtitle=${c.subtitle}, snippet=${c.snippet}, url=${c.url}, chips=${c.chips})}"></a>

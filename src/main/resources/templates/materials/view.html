@@ -172,6 +172,34 @@
         </section>
     </th:block>
 
+    <!-- Related Notes Section -->
+    <th:block th:if="${relatedNotes != null and !#lists.isEmpty(relatedNotes)}">
+        <section id="relatedNotesSection" class="pt-7 border-t border-outline-variant space-y-4">
+            <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                <span th:replace="~{fragments/icon :: icon(name='hub', size='md', cls='text-primary')}"></span>
+                <span>Related notes</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <th:block th:each="relNote : ${relatedNotes}">
+                    <a th:href="@{/materials/{id}(id=${relNote.id})}"
+                       class="card p-4 hover:border-outline transition-colors flex flex-col justify-between gap-3 text-on-surface">
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-base text-on-surface" th:text="${relNote.name}">Note title</h3>
+                            <div th:if="${relNote.danceType != null}" class="text-xs text-on-surface-variant" th:text="${relNote.danceType.name}">Waltz</div>
+                            <div th:if="${relNote.description != null}" class="text-xs text-on-surface-variant line-clamp-2">
+                                <span th:replace="~{fragments/rich-text :: excerpt(value=${relNote.description}, max=100)}"></span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 text-xs font-medium text-primary">
+                            <span>Open note</span>
+                            <span th:replace="~{fragments/icon :: icon(name='arrow_forward', size='sm')}"></span>
+                        </div>
+                    </a>
+                </th:block>
+            </div>
+        </section>
+    </th:block>
+
     <!-- Comments Section -->
     <section class="pt-7 border-t border-outline-variant">
         <div th:replace="~{materials/fragments/comments :: comment-list}"></div>

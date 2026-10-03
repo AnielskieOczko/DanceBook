@@ -21,7 +21,8 @@ class ChoreographyServiceImpl(
     private val appUserService: AppUserService,
     private val danceTypeService: DanceTypeService,
     private val danceFigureService: DanceFigureService,
-    private val richTextService: RichTextService
+    private val richTextService: RichTextService,
+    private val eventPublisher: org.springframework.context.ApplicationEventPublisher
 ) : ChoreographyService {
 
     companion object {
@@ -61,7 +62,9 @@ class ChoreographyServiceImpl(
             updatedAt = LocalDateTime.now()
         }
 
-        return choreographyRepository.save(choreography)
+        val saved = choreographyRepository.save(choreography)
+        eventPublisher.publishEvent(ChoreographyCreatedEvent(saved, currentUser))
+        return saved
     }
 
     @Transactional
@@ -70,6 +73,7 @@ class ChoreographyServiceImpl(
         val choreography = findById(id)
         checkOwnership(choreography, currentUser)
 
+        val wasVisibility = choreography.visibility
         log.debug("User '{}' updating choreography '{}'", currentUser.username, choreography.name)
         val danceType = danceTypeService.findById(request.danceTypeId!!)
 
@@ -79,7 +83,12 @@ class ChoreographyServiceImpl(
         choreography.isPublic = request.isPublic
         choreography.updatedAt = LocalDateTime.now()
 
-        return choreographyRepository.save(choreography)
+        val saved = choreographyRepository.save(choreography)
+        if (wasVisibility != saved.visibility) {
+            eventPublisher.publishEvent(ChoreographyVisibilityChangedEvent(saved, wasVisibility, currentUser))
+        }
+        eventPublisher.publishEvent(ChoreographyUpdatedEvent(saved, currentUser))
+        return saved
     }
 
     @Transactional
@@ -88,8 +97,10 @@ class ChoreographyServiceImpl(
         val choreography = findById(id)
         checkOwnership(choreography, currentUser)
 
+        val wasPublic = choreography.isPublic
         log.debug("User '{}' deleting choreography '{}'", currentUser.username, choreography.name)
         choreographyRepository.delete(choreography)
+        eventPublisher.publishEvent(ChoreographyDeletedEvent(id, choreography.name, wasPublic, currentUser))
     }
 
     @Transactional
@@ -154,7 +165,9 @@ class ChoreographyServiceImpl(
         choreography.entries.add(newEntry)
         choreography.updatedAt = LocalDateTime.now()
 
-        return choreographyRepository.saveAndFlush(choreography)
+        val saved = choreographyRepository.saveAndFlush(choreography)
+        eventPublisher.publishEvent(ChoreographyUpdatedEvent(saved, currentUser))
+        return saved
     }
 
     @Transactional
@@ -175,7 +188,9 @@ class ChoreographyServiceImpl(
         }
         choreography.updatedAt = LocalDateTime.now()
 
-        return choreographyRepository.saveAndFlush(choreography)
+        val saved = choreographyRepository.saveAndFlush(choreography)
+        eventPublisher.publishEvent(ChoreographyUpdatedEvent(saved, currentUser))
+        return saved
     }
 
     @Transactional
@@ -208,7 +223,9 @@ class ChoreographyServiceImpl(
         choreography.entries.sortBy { it.sortOrder }
         choreography.updatedAt = LocalDateTime.now()
 
-        return choreographyRepository.saveAndFlush(choreography)
+        val saved = choreographyRepository.saveAndFlush(choreography)
+        eventPublisher.publishEvent(ChoreographyUpdatedEvent(saved, currentUser))
+        return saved
     }
 
     @Transactional
@@ -231,7 +248,9 @@ class ChoreographyServiceImpl(
         }
 
         choreography.updatedAt = LocalDateTime.now()
-        return choreographyRepository.saveAndFlush(choreography)
+        val saved = choreographyRepository.saveAndFlush(choreography)
+        eventPublisher.publishEvent(ChoreographyUpdatedEvent(saved, currentUser))
+        return saved
     }
 
     private fun checkOwnership(choreography: Choreography, currentUser: AppUser) {

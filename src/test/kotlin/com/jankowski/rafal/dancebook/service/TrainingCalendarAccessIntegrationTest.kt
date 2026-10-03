@@ -34,7 +34,7 @@ class TrainingCalendarAccessIntegrationTest {
     companion object {
         @Container
         @ServiceConnection
-        val postgres = PostgreSQLContainer("postgres:16-alpine")
+        val postgres = PostgreSQLContainer(org.testcontainers.utility.DockerImageName.parse("pgvector/pgvector:pg16").asCompatibleSubstituteFor("postgres"))
     }
 
     @Autowired private lateinit var trainingCalendarService: TrainingCalendarService

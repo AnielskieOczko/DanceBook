@@ -52,13 +52,15 @@ class AdminController(
     private val objectMapper: ObjectMapper,
     private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService,
     private val systemSettingService: SystemSettingService,
-    private val syllabusImporterService: SyllabusImporterService
+    private val syllabusImporterService: SyllabusImporterService,
+    private val knowledgeIndexService: com.jankowski.rafal.dancebook.service.KnowledgeIndexService? = null
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
         // Provide basic stats to the template
         model.addAttribute("totalUsers", appUserRepository.count())
         model.addAttribute("totalMaterials", materialRepository.count())
+        model.addAttribute("isKnowledgeIndexStale", knowledgeIndexService?.isStale() ?: false)
         
         // System Settings
         model.addAttribute("pollInterval", systemSettingService.getIntSetting("polling_interval_minutes", 5))
@@ -301,6 +303,19 @@ class AdminController(
         } catch (e: Exception) {
             model.addAttribute("importError", e.message ?: "Unknown error occurred")
             return "admin/dashboard :: importFailure"
+        }
+    }
+
+    // HTMX Endpoint for Knowledge Index Rebuild
+    @PostMapping("/knowledge/rebuild")
+    fun rebuildKnowledgeIndex(model: Model): String {
+        return try {
+            val report = knowledgeIndexService?.rebuildAll()
+            model.addAttribute("rebuildReport", report)
+            "admin/dashboard :: rebuildSuccess"
+        } catch (e: Exception) {
+            model.addAttribute("rebuildError", e.message ?: "Unknown error during knowledge index rebuild")
+            "admin/dashboard :: rebuildFailure"
         }
     }
 }

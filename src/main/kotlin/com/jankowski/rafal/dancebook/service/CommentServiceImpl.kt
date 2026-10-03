@@ -13,6 +13,8 @@ import java.time.LocalDateTime
 import java.util.UUID
 import org.springframework.security.access.AccessDeniedException
 import com.jankowski.rafal.dancebook.model.CommentAddedEvent
+import com.jankowski.rafal.dancebook.model.CommentUpdatedEvent
+import com.jankowski.rafal.dancebook.model.CommentDeletedEvent
 
 @Service
 @Transactional
@@ -62,7 +64,9 @@ class CommentServiceImpl(
 
         comment.content = cleanedContent
         comment.updatedAt = LocalDateTime.now()
-        return commentRepository.save(comment)
+        val saved = commentRepository.save(comment)
+        eventPublisher.publishEvent(CommentUpdatedEvent(saved, comment.material!!, currentUser))
+        return saved
     }
 
     @Transactional
@@ -74,7 +78,9 @@ class CommentServiceImpl(
             throw AccessDeniedException("Not authorized to delete this comment")
         }
 
+        val materialId = comment.material?.id ?: UUID.randomUUID()
         commentRepository.delete(comment)
+        eventPublisher.publishEvent(CommentDeletedEvent(commentId, materialId, currentUser))
     }
 
     override fun getCommentsForMaterial(materialId: UUID): List<Comment> {

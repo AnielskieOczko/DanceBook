@@ -18,7 +18,7 @@ class AccessControlBackfillTest {
 
     companion object {
         @Container
-        val postgres = PostgreSQLContainer("postgres:16-alpine")
+        val postgres = PostgreSQLContainer(org.testcontainers.utility.DockerImageName.parse("pgvector/pgvector:pg16").asCompatibleSubstituteFor("postgres"))
     }
 
     private fun connect(): Connection =

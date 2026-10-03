@@ -5,9 +5,14 @@ import com.jankowski.rafal.dancebook.dto.ResultCard
 import com.jankowski.rafal.dancebook.dto.ToolResult
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
+import com.jankowski.rafal.dancebook.repository.CommentRepository
+import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.ai.embedding.EmbeddingModel
 import org.springframework.ai.support.ToolCallbacks
 import org.springframework.ai.tool.ToolCallback
 import org.springframework.ai.tool.annotation.Tool
@@ -38,7 +43,11 @@ class AssistantReadTools(
     private val trainingEventService: TrainingEventService,
     private val appUserService: AppUserService,
     private val richTextService: RichTextService,
-    private val clock: Clock
+    private val clock: Clock,
+    private val knowledgeChunkRepository: KnowledgeChunkRepository? = null,
+    private val embeddingModel: EmbeddingModel? = null,
+    private val choreographyRepository: ChoreographyRepository? = null,
+    private val commentRepository: CommentRepository? = null
 ) {
 
     companion object {
@@ -63,6 +72,28 @@ class AssistantReadTools(
     ): ToolResult {
         val typeIds = resolveStyle(danceType) ?: return unknownStyle(danceType!!)
         val cls = resolveClass(danceClass) ?: return ToolResult(0, emptyList(), "There is no syllabus class '$danceClass'. Use a letter from H to S.")
+
+        val user = appUserService.getCurrentUserOrNull()
+        if (knowledgeChunkRepository != null) {
+            val queryEmbedding = try { embeddingModel?.embed(query) } catch (e: Exception) { null }
+            val searchResults = knowledgeChunkRepository.hybridSearch(
+                query = query,
+                queryEmbedding = queryEmbedding,
+                sourceTypes = listOf(KnowledgeSourceType.FIGURE),
+                currentUser = user,
+                limit = 20
+            )
+            if (searchResults.isNotEmpty()) {
+                val figureMap = danceFigureService.findAll(typeIds.takeIf { it.isNotEmpty() }, null, cls.value, null, null, null)
+                    .associateBy { it.id }
+                val figureIds = searchResults.map { it.chunk.sourceId }.distinct()
+                val found = figureIds.mapNotNull { figureMap[it] }
+                if (found.isNotEmpty()) {
+                    return ToolResult(found.size, found.take(MAX_RESULTS).map { figureCard(it) })
+                }
+            }
+        }
+
         val found = danceFigureService.findAll(
             typeIds.takeIf { it.isNotEmpty() }, null, cls.value, query.trim(), null, null
         )
@@ -81,9 +112,128 @@ class AssistantReadTools(
     ): ToolResult {
         val figure = figureId?.takeIf { it.isNotBlank() }?.let { parse(it) ?: return badId() }
         val typeIds = resolveStyle(danceType) ?: return unknownStyle(danceType!!)
-        val notes = materialService.searchNotes(query?.trim(), figure, typeIds.firstOrNull(), MAX_RESULTS)
         val terms = AssistantCards.terms(query)
+        val user = appUserService.getCurrentUserOrNull()
+
+        if (knowledgeChunkRepository != null && !query.isNullOrBlank()) {
+            val queryEmbedding = try { embeddingModel?.embed(query) } catch (e: Exception) { null }
+            val searchResults = knowledgeChunkRepository.hybridSearch(
+                query = query,
+                queryEmbedding = queryEmbedding,
+                sourceTypes = listOf(KnowledgeSourceType.NOTE, KnowledgeSourceType.NOTE_COMMENT),
+                currentUser = user,
+                limit = 20
+            )
+            val noteIds = searchResults.mapNotNull {
+                when (it.chunk.sourceType) {
+                    KnowledgeSourceType.NOTE -> it.chunk.sourceId
+                    KnowledgeSourceType.NOTE_COMMENT -> commentRepository?.findById(it.chunk.sourceId)?.orElse(null)?.material?.id
+                    else -> null
+                }
+            }.distinct()
+
+            val fetched = noteIds.mapNotNull { id ->
+                try { materialService.findById(id) } catch (e: Exception) { null }
+            }.filter { note ->
+                (figure == null || note.figures.any { it.danceFigure?.id == figure }) &&
+                (typeIds.isEmpty() || note.danceType?.id in typeIds)
+            }
+            if (fetched.isNotEmpty()) {
+                return ToolResult(fetched.size, fetched.take(MAX_RESULTS).map { noteCard(it, terms) })
+            }
+        }
+
+        val notes = materialService.searchNotes(query?.trim(), figure, typeIds.firstOrNull(), MAX_RESULTS)
         return ToolResult(notes.size, notes.map { noteCard(it, terms) })
+    }
+
+    @Tool(
+        name = "search_knowledge",
+        description = "Search the knowledge base (notes, figure technical details, comments, and choreographies) for passages relevant to a question. Returns relevant passages with their title, source type, and link. Answers built from this tool must cite these sources as links, or state that nothing was found."
+    )
+    fun searchKnowledge(
+        @ToolParam(description = "The question or topic to search for in knowledge and notes") question: String
+    ): ToolResult {
+        if (question.isBlank()) return ToolResult(0, emptyList(), "Please provide a question to search.")
+        if (knowledgeChunkRepository == null) return ToolResult(0, emptyList(), "Nothing found in your notes.")
+
+        val user = appUserService.getCurrentUserOrNull()
+        val queryEmbedding = try { embeddingModel?.embed(question) } catch (e: Exception) { null }
+        val searchResults = knowledgeChunkRepository.hybridSearch(
+            query = question,
+            queryEmbedding = queryEmbedding,
+            sourceTypes = null,
+            currentUser = user,
+            limit = 5
+        )
+        if (searchResults.isEmpty()) {
+            return ToolResult(0, emptyList(), "Nothing found in your notes.")
+        }
+
+        val cards = searchResults.mapNotNull { res ->
+            val chunk = res.chunk
+            when (chunk.sourceType) {
+                KnowledgeSourceType.NOTE -> {
+                    val m = try { materialService.findById(chunk.sourceId) } catch (e: Exception) { null }
+                    if (m != null) {
+                        ResultCard(
+                            kind = "note",
+                            id = m.id.toString(),
+                            title = m.name,
+                            subtitle = listOfNotNull(m.danceType?.name, "Note").joinToString(" · "),
+                            snippet = chunk.content,
+                            url = "/materials/${m.id}"
+                        )
+                    } else null
+                }
+                KnowledgeSourceType.FIGURE -> {
+                    val f = try { danceFigureService.findById(chunk.sourceId) } catch (e: Exception) { null }
+                    if (f != null) {
+                        ResultCard(
+                            kind = "figure",
+                            id = f.id.toString(),
+                            title = f.name,
+                            subtitle = listOfNotNull(f.danceType?.name, f.danceClass?.displayName, "Figure").joinToString(" · "),
+                            snippet = chunk.content,
+                            url = "/dance-figures/${f.id}"
+                        )
+                    } else null
+                }
+                KnowledgeSourceType.CHOREOGRAPHY -> {
+                    val c = choreographyRepository?.findById(chunk.sourceId)?.orElse(null)
+                    if (c != null) {
+                        ResultCard(
+                            kind = "choreography",
+                            id = c.id.toString(),
+                            title = c.name,
+                            subtitle = listOfNotNull(c.danceType?.name, "Choreography").joinToString(" · "),
+                            snippet = chunk.content,
+                            url = "/choreographies/${c.id}"
+                        )
+                    } else null
+                }
+                KnowledgeSourceType.NOTE_COMMENT -> {
+                    val comment = commentRepository?.findById(chunk.sourceId)?.orElse(null)
+                    val m = comment?.material
+                    if (m != null) {
+                        ResultCard(
+                            kind = "note",
+                            id = m.id.toString(),
+                            title = m.name,
+                            subtitle = "Comment on ${m.name}",
+                            snippet = chunk.content,
+                            url = "/materials/${m.id}"
+                        )
+                    } else null
+                }
+            }
+        }
+
+        return if (cards.isEmpty()) {
+            ToolResult(0, emptyList(), "Nothing found in your notes.")
+        } else {
+            ToolResult(cards.size, cards)
+        }
     }
 
     @Tool(
