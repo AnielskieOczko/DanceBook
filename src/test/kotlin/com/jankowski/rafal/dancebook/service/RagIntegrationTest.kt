@@ -262,7 +262,7 @@ class RagIntegrationTest {
             "SELECT DISTINCT embedding_model FROM knowledge_chunk",
             String::class.java
         )
-        assertEquals("text-embedding-004", modelName)
+        assertEquals("gemini-embedding-001", modelName)
     }
 
     @Test

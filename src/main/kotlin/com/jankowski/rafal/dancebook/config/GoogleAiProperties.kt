@@ -21,7 +21,7 @@ data class GoogleAiProperties(
     /** Total time one assistant turn may spend waiting on the provider. */
     val assistantTimeoutSeconds: Long = 30,
     /** The embedding model behind knowledge retrieval (Spring AI). */
-    val embeddingModel: String = "text-embedding-004",
+    val embeddingModel: String = "gemini-embedding-001",
     /** Vector dimension for embeddings. */
     val embeddingDimensions: Int = 768
 )
