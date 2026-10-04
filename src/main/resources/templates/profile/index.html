@@ -8,24 +8,24 @@
     <section class="md:col-span-4 flex flex-col items-center md:items-start space-y-md">
         <div class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden bg-surface-container-highest border-4 border-surface relative group">
             <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-4xl">
-                <span th:text="${appUser.displayName != null ? appUser.displayName.substring(0,1) : 'U'}">U</span>
+                <span th:text="${appUser != null and appUser.displayName != null ? appUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
-            <button type="button" class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-primary-fixed transition-colors" aria-label="Edit avatar" title="Edit avatar">
+            <button type="button" class="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-primary-container text-on-primary-container rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-primary-fixed transition-colors" aria-label="Edit avatar" title="Edit avatar" th:attr="aria-label=#{profile.avatar.edit}, title=#{profile.avatar.edit}">
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
             </button>
         </div>
-        <div th:replace="~{fragments/page :: pageHeader(title=${appUser.displayName}, subtitle=${appUser.role == 'ADMIN' ? 'Administrator' : 'Dance Enthusiast'}, cls='mb-0')}"></div>
+        <div th:replace="~{fragments/page :: pageHeader(title=${appUser != null ? appUser.displayName : ''}, subtitle=${appUser != null and appUser.role != null and appUser.role.name() == 'ADMIN' ? #messages.msg('profile.role.admin') : #messages.msg('profile.role.user')}, cls='mb-0')}"></div>
         <div class="w-full grid grid-cols-2 gap-sm pt-sm border-t border-outline-variant">
             <div class="bg-surface-container-low p-sm rounded-lg flex flex-col items-center md:items-start">
-                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs">Library</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs" th:text="#{profile.library}">Library</span>
                 <span class="font-headline-md text-headline-md text-on-surface">124</span>
             </div>
             <div class="bg-surface-container-low p-sm rounded-lg flex flex-col items-center md:items-start">
-                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs">Styles</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs" th:text="#{profile.styles}">Styles</span>
                 <span class="font-headline-md text-headline-md text-on-surface">12</span>
             </div>
         </div>
-        <button class="btn-primary w-full mt-margin">
+        <button class="btn-primary w-full mt-margin" th:text="#{profile.edit_profile}">
             Edit Profile
         </button>
     </section>
@@ -35,14 +35,14 @@
         <!-- Personal Collections (Dynamic Lists) -->
         <div>
             <div class="flex justify-between items-center mb-md border-b border-outline-variant pb-xs">
-                <h2 class="font-headline-md text-headline-md text-on-surface">My Collections</h2>
-                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center" aria-label="New collection" title="New collection">
+                <h2 class="font-headline-md text-headline-md text-on-surface" th:text="#{profile.my_collections}">My Collections</h2>
+                <a href="/lists/new" class="text-primary hover:text-primary-container transition-colors min-h-[44px] min-w-[44px] inline-flex items-center justify-center" aria-label="New collection" title="New collection" th:attr="aria-label=#{profile.collections.new}, title=#{profile.collections.new}">
                     <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md')}"></span>
                 </a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
                 <!-- If no lists -->
-                <div th:if="${#lists.isEmpty(navLists)}" class="col-span-full py-8 text-center text-outline italic text-sm">
+                <div th:if="${#lists.isEmpty(navLists)}" class="col-span-full py-8 text-center text-outline italic text-sm" th:text="#{profile.no_collections}">
                     No custom collections created yet.
                 </div>
                 
@@ -54,7 +54,7 @@
                      </div>
                      <div class="w-2/3 p-md flex flex-col justify-center">
                          <h3 class="font-body-lg text-body-lg text-on-surface mb-xs truncate" th:text="${list.name}">Collection Name</h3>
-                         <p class="font-body-sm text-body-sm text-on-surface-variant">Filtered Collection</p>
+                         <p class="font-body-sm text-body-sm text-on-surface-variant" th:text="#{profile.collections.filtered}">Filtered Collection</p>
                      </div>
                 </a>
             </div>
@@ -63,11 +63,46 @@
         <!-- Account Settings / Password -->
         <div>
             <div class="mb-md border-b border-outline-variant pb-xs">
-                <h2 class="font-headline-md text-headline-md text-on-surface">Account Settings</h2>
+                <h2 class="font-headline-md text-headline-md text-on-surface" th:text="#{profile.account_settings}">Account Settings</h2>
+            </div>
+
+            <!-- Language Setting -->
+            <div id="language-section" class="space-y-4 mb-8">
+                <h3 class="font-body-lg font-medium text-on-surface" th:text="#{profile.language}">Language</h3>
+
+                <th:block th:if="${localeSuccessMsg}">
+                    <div th:replace="~{fragments/alert :: alert(variant='success', text=#{profile.language.saved})}"></div>
+                </th:block>
+                <th:block th:if="${localeErrorMsg}">
+                    <div th:replace="~{fragments/alert :: alert(variant='error', text=#{profile.language.invalid})}"></div>
+                </th:block>
+
+                <form th:action="@{/profile/locale}" method="post" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
+                        <div>
+                            <div th:replace="~{fragments/form :: selectField(
+                                path='locale',
+                                id='localeSelect',
+                                label=#{profile.language.preferred},
+                                bound=false,
+                                value=${appUser.locale ?: ''},
+                                placeholder=#{profile.language.browser_default},
+                                options=${languageOptions},
+                                optValue='value',
+                                optLabel='label'
+                            )}"></div>
+                        </div>
+                        <div class="flex justify-start sm:justify-end">
+                            <button type="submit" class="btn-outline" th:text="#{profile.language.save}">
+                                Save Language
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
             
             <div th:fragment="passwordSection" id="password-section" class="space-y-6">
-                <h3 class="font-body-lg font-medium text-on-surface">Update Password</h3>
+                <h3 class="font-body-lg font-medium text-on-surface" th:text="#{profile.update_password}">Update Password</h3>
                 
                 <!-- Messages -->
                 <div th:if="${passwordSuccessMsg}" class="p-3 rounded-lg bg-primary/10 text-primary text-sm" th:text="${passwordSuccessMsg}"></div>
@@ -77,16 +112,16 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div class="sm:col-span-2">
-                            <div th:replace="~{fragments/form :: field(path='currentPassword', label='Current Password', type='password', required=true, id='currentPassword')}"></div>
+                            <div th:replace="~{fragments/form :: field(path='currentPassword', label=#{profile.current_password}, type='password', required=true, id='currentPassword')}"></div>
                         </div>
                         <div>
-                            <div th:replace="~{fragments/form :: field(path='newPassword', label='New Password', type='password', required=true, id='newPassword')}"></div>
+                            <div th:replace="~{fragments/form :: field(path='newPassword', label=#{profile.new_password}, type='password', required=true, id='newPassword')}"></div>
                         </div>
                         <div>
-                            <div th:replace="~{fragments/form :: field(path='confirmNewPassword', label='Confirm New Password', type='password', required=true, id='confirmPassword')}"></div>
+                            <div th:replace="~{fragments/form :: field(path='confirmNewPassword', label=#{profile.confirm_new_password}, type='password', required=true, id='confirmPassword')}"></div>
                         </div>
                         <div class="sm:col-span-2 flex justify-end">
-                            <button type="submit" class="btn-outline">
+                            <button type="submit" class="btn-outline" th:text="#{profile.update_security}">
                                 Update Security
                             </button>
                         </div>
@@ -99,7 +134,7 @@
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="w-full flex items-center gap-sm py-4 text-error hover:opacity-70 transition-colors">
                             <span th:replace="~{fragments/icon :: icon(name='logout', size='md')}"></span>
-                            <span class="font-body-md text-body-md font-medium">Log Out</span>
+                            <span class="font-body-md text-body-md font-medium" th:text="#{profile.logout}">Log Out</span>
                         </button>
                     </form>
                 </li>

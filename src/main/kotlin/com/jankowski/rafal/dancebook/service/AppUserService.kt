@@ -16,4 +16,5 @@ interface AppUserService {
     fun createUser(request: UserCreateRequest): AppUser
     fun changePassword(userId: UUID, request: PasswordChangeRequest)
     fun updateUser(id: UUID, request: UserUpdateRequest): AppUser
+    fun updateLocale(userId: UUID, locale: String?): AppUser
 }
