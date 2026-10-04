@@ -52,6 +52,18 @@ class AssistantScriptGuardTest {
     }
 
     @Test
+    fun `the surface has viewport-fixed positioning and layering classes`() {
+        val dialogTag = widget.substringAfter("<dialog id=\"assistantSurface\"").substringBefore(">")
+        assertTrue(dialogTag.contains("fixed"), "must be fixed to the viewport, not in document flow")
+        assertTrue(dialogTag.contains("inset-0"), "must anchor to viewport edges on mobile")
+        assertTrue(dialogTag.contains("z-50"), "must layer above page headers and content")
+        assertTrue(dialogTag.contains("open:flex"), "must be flex only when open so closed dialog does not cover page")
+        assertTrue(dialogTag.contains("md:left-auto"), "must unpin left edge on desktop")
+        assertTrue(dialogTag.contains("md:right-0"), "must dock to right edge on desktop")
+        assertTrue(dialogTag.contains("md:w-[400px]"), "must have 400px width on desktop")
+    }
+
+    @Test
     fun `the layout loads the script and widget only for a signed-in page that has the assistant`() {
         assertTrue(layout.contains("th:if=\"\${assistantNav != null}\""))
         assertTrue(layout.contains("@{/js/assistant.js}"))

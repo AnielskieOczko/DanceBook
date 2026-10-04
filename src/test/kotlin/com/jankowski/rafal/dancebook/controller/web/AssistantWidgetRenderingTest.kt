@@ -82,6 +82,8 @@ class AssistantWidgetRenderingTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"assistantBar\"")))
             .andExpect(content().string(containsString("<dialog id=\"assistantSurface\"")))
+            .andExpect(content().string(containsString("fixed inset-0")))
+            .andExpect(content().string(containsString("md:w-[400px]")))
             .andExpect(content().string(containsString("data-assistant-open")))
             .andExpect(content().string(containsString("/js/assistant.js")))
             .andExpect(content().string(containsString("data-page-type=\"HOME\"")))
