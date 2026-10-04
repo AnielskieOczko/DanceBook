@@ -916,6 +916,57 @@ row shows no quote. Only a genuinely empty result produces `suggestionsEmpty`.
 this account's quota. With fallbacks off there is nowhere else for the request to go, so
 the user gets the rewrite's readable error and can retry. That is expected, not a bug.
 
+### The assistant, its drafts and the knowledge index
+
+The chat assistant (#148, #149, #156) is separate from `LlmProvider`: it uses Spring AI's
+`ChatModel` and `EmbeddingModel`, both Google GenAI on `GOOGLE_AI_API_KEY`
+(`google.ai.assistant-model`, `google.ai.embedding-model`, `google.ai.embedding-dimensions`).
+Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md`,
+`2026-09-25-rag-design.md` and `docs/superpowers/plans/2026-09-29-*`, `2026-09-30-*`.
+
+- **No key, no assistant.** Every assistant bean carries `@ConditionalOnAssistant`, so
+  without `GOOGLE_AI_API_KEY` there are no beans, its routes 404, and `AssistantFeature.enabled`
+  hides the markup. New assistant code needs the annotation too. `/assistant/*` is in
+  `AssistantWebController`; each user is limited to 20 messages a minute
+  (`AssistantRateLimiter`, in memory).
+- **Tools go through services, never repositories**, so the access rules apply to whatever
+  the model asks for. Read tools are in `AssistantReadTools` (`search_figures`,
+  `search_notes`, `search_knowledge`, `list_sessions`, `get_note`, `get_figure`).
+- **The assistant never writes on its own.** `AssistantDraftTools` has `draft_note`,
+  `draft_session` and `draft_figure`; they validate a request DTO and store an
+  `assistant_draft` row (`PENDING`), and never call a domain service. The card's **Save**
+  (`POST /assistant/drafts/{id}/save`) claims the row, runs the same service method the form
+  calls *outside* the transaction (Google Calendar I/O must not sit in one), then marks it
+  `SAVED`, or releases it to `PENDING` with the error. **Edit in form** opens the normal create
+  form prefilled. Another user's draft id is 404, not 403.
+- **Grounding:** a figure, note or session id in a draft is dropped unless an earlier tool
+  result in the same conversation, or the page the user is on, contained it
+  (`AssistantGrounding`). The model is told what was dropped. Ids stay in their own kind.
+- **Knowledge index (`knowledge_chunk`, pgvector).** Local `compose.yaml` uses
+  `pgvector/pgvector:pg16`; production Neon supports the extension. Our own table rather than
+  Spring AI's `PgVectorStore`, because retrieval must join visibility. Retrieval is hybrid:
+  vector top-k and `simple`-config full-text top-k merged by reciprocal rank fusion, so exact
+  figure names still rank first. Each chunk copies `owner_id` and `visibility` from its
+  source and stores `embedding_model`; a model change makes the index stale
+  (`KnowledgeIndexService.isStale`) and needs a rebuild. Sources are notes, note comments,
+  figures and choreographies.
+- **Keeping it current:** `KnowledgeIndexEventListener` queues a source on the domain events
+  (`AFTER_COMMIT`), so a save never waits on the embedding call. **Deletes and visibility
+  changes apply at once without re-embedding**, so a note made private leaves search
+  immediately. A failed embedding stays queued and retries with exponential backoff (capped at
+  60s), or the provider's own "retry in Ns" delay. Calls are throttled to
+  `google.ai.embedding-requests-per-minute` (90, under the free tier's 100). Search keeps
+  working on the full-text half until embeddings catch up.
+- **Admin rebuild:** `POST /admin/knowledge/rebuild` and `GET /admin/knowledge/status` on the
+  admin dashboard. `RebuildReport` reports chunks *embedded* as well as indexed, and
+  `KnowledgeIndexStatus.isComplete` is false while any chunk lacks an embedding, so a rebuild
+  cut short by rate limits is not reported as done.
+- **Related notes** on the note and figure pages come from `KnowledgeRetrievalService`
+  (top 3 visible chunks by similarity, excluding the item itself).
+- **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
+  similarity is meaningless then and only full-text matching is real. Don't test relevance
+  against it.
+
 ## Constraints and gotchas
 
 - **Schema changes require a Flyway migration.** `spring.jpa.hibernate.ddl-auto=validate`,
