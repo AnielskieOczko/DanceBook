@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}"/>
     <meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : ''}"/>
-    <title th:text="${pageTitle != null ? pageTitle + ' · CHOREO' : 'CHOREO'}">CHOREO</title>
+    <title th:text="${pageTitle != null ? pageTitle + ' · ' + (brandName ?: 'DanceBook') : (brandName ?: 'DanceBook')}">DanceBook</title>
 
     <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
     <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
         <!-- Brand -->
         <a href="/" class="flex items-center">
-            <h1 class="text-on-surface font-display-lg text-[20px] tracking-[0.2em] font-semibold uppercase">CHOREO</h1>
+            <h1 class="text-on-surface font-display-lg text-[20px] tracking-[0.2em] font-semibold uppercase" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
         </a>
 
         <!-- Desktop Navigation -->

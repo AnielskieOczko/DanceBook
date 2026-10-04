@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.config.Brand
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.CustomListService
@@ -19,6 +20,9 @@ class NavbarAdvice(
     private val activityEventService: ActivityEventService,
     private val systemSettingService: SystemSettingService
 ) {
+
+    @ModelAttribute("brandName")
+    fun brandName(): String = Brand.NAME
 
     /** Optional: absent in `@WebMvcTest` slices, and null-safe when the assistant is off. */
     @org.springframework.beans.factory.annotation.Autowired(required = false)
