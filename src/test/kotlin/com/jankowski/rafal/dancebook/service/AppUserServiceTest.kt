@@ -134,4 +134,98 @@ class AppUserServiceTest {
 
         assertTrue(exception.message!!.contains("'$rootAdminUsername' not found"))
     }
+
+    @Test
+    fun `updateLocale saves valid locale string`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            locale = "en"
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        val updated = appUserService.updateLocale(userId, "pl")
+
+        assertEquals("pl", updated.locale)
+    }
+
+    @Test
+    fun `updateLocale sets null when given blank string`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            locale = "en"
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        val updated = appUserService.updateLocale(userId, "   ")
+
+        org.junit.jupiter.api.Assertions.assertNull(updated.locale)
+    }
+
+    @Test
+    fun `updateLocale sets null when given null string`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            locale = "en"
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        val updated = appUserService.updateLocale(userId, null)
+
+        org.junit.jupiter.api.Assertions.assertNull(updated.locale)
+    }
+
+    @Test
+    fun `updateLocale rejects unsupported locale and does not save`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            locale = "en"
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+
+        val ex = assertThrows(IllegalArgumentException::class.java) {
+            appUserService.updateLocale(userId, "xx")
+        }
+        assertTrue(ex.message!!.contains("Unsupported locale"))
+        org.mockito.Mockito.verify(appUserRepository, org.mockito.Mockito.never()).save(org.mockito.ArgumentMatchers.any())
+        assertEquals("en", user.locale)
+    }
+
+    @Test
+    fun `updateLocale rejects over-long locale and does not save`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            locale = "en"
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+
+        val ex = assertThrows(IllegalArgumentException::class.java) {
+            appUserService.updateLocale(userId, "toolonglocalename12345")
+        }
+        assertTrue(ex.message!!.contains("Unsupported locale"))
+        org.mockito.Mockito.verify(appUserRepository, org.mockito.Mockito.never()).save(org.mockito.ArgumentMatchers.any())
+        assertEquals("en", user.locale)
+    }
+
+    @Test
+    fun `updateLocale throws when user does not exist`() {
+        val userId = UUID.randomUUID()
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.empty())
+
+        assertThrows(EntityNotFoundException::class.java) {
+            appUserService.updateLocale(userId, "pl")
+        }
+    }
 }

@@ -37,6 +37,8 @@ class AppUser {
     @JoinColumn(name = "default_calendar_id")
     var defaultCalendar: TrainingCalendar? = null
 
+    var locale: String? = null
+
     @Column(updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
 }

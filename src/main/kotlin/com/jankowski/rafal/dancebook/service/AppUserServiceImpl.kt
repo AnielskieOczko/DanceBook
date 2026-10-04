@@ -175,4 +175,21 @@ class AppUserServiceImpl(
 
         return appUserRepository.save(user)
     }
+
+    override fun updateLocale(userId: UUID, locale: String?): AppUser {
+        log.debug("Updating locale for user id {} to {}", userId, locale)
+        val user = findById(userId)
+        val trimmed = locale?.trim()
+        if (trimmed.isNullOrEmpty()) {
+            user.locale = null
+            return appUserRepository.save(user)
+        }
+
+        if (!com.jankowski.rafal.dancebook.config.AppLocales.isSupported(trimmed)) {
+            throw IllegalArgumentException("Unsupported locale: $locale")
+        }
+
+        user.locale = com.jankowski.rafal.dancebook.config.AppLocales.normalize(trimmed)
+        return appUserRepository.save(user)
+    }
 }
