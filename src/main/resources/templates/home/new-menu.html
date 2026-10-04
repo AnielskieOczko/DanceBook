@@ -7,7 +7,7 @@
 
 <!-- The single "+ New" entry point that replaced the two fixed quick actions. -->
 <div th:fragment="homeNewMenu" class="relative" id="home-new-menu">
-    <details class="group">
+    <details class="group js-dropdown">
         <summary class="btn-primary list-none cursor-pointer [&::-webkit-details-marker]:hidden min-h-[44px]">
             <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
             <span>New</span>

@@ -109,6 +109,38 @@ document.addEventListener('htmx:afterSwap', function(event) {
 });
 
 /**
+ * Closes all open dropdown/popup menus (details dropdowns, 3-dot menus, notification dropdown),
+ * optionally preserving the menu that contains `exceptElement`.
+ */
+function closeAllMenus(exceptElement) {
+    // 1. Details dropdowns (home "+ New" menu, mobile profile menu, LOD color guide)
+    document.querySelectorAll('details.js-dropdown[open], #home-new-menu details[open], #profile-menu[open], #lod-color-guide[open]').forEach(details => {
+        if (!exceptElement || (!details.contains(exceptElement) && details !== exceptElement)) {
+            details.removeAttribute('open');
+        }
+    });
+
+    // 2. 3-dot action menus (.js-menu-dropdown)
+    document.querySelectorAll('.js-menu-dropdown:not(.hidden)').forEach(dropdown => {
+        const btn = dropdown.previousElementSibling?.classList.contains('js-menu-btn')
+            ? dropdown.previousElementSibling
+            : dropdown.parentElement?.querySelector('.js-menu-btn');
+        if (!exceptElement || (dropdown !== exceptElement && !dropdown.contains(exceptElement) && btn !== exceptElement && !btn?.contains(exceptElement))) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    // 3. Notification dropdown
+    const notifWrapper = document.getElementById('notification-bell-wrapper');
+    const notifDropdown = document.getElementById('notification-dropdown');
+    if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
+        if (!exceptElement || (notifWrapper && !notifWrapper.contains(exceptElement))) {
+            notifDropdown.classList.add('hidden');
+        }
+    }
+}
+
+/**
  * Global click handler for delegated events.
  */
 document.addEventListener('click', function(event) {
@@ -252,17 +284,14 @@ document.addEventListener('click', function(event) {
     const menuBtn = event.target.closest('.js-menu-btn');
     if (menuBtn) {
         event.preventDefault();
-        event.stopPropagation();
         
         const dropdown = menuBtn.nextElementSibling;
         if (!dropdown) return;
         
         const isHidden = dropdown.classList.contains('hidden');
         
-        // Close all other menus first
-        document.querySelectorAll('.js-menu-dropdown').forEach(d => {
-            if (d !== dropdown) d.classList.add('hidden');
-        });
+        // Close all other dropdowns / menus
+        closeAllMenus(menuBtn);
         
         // Toggle current menu
         if (isHidden) {
@@ -295,10 +324,15 @@ document.addEventListener('click', function(event) {
     const bellBtn = event.target.closest('#notification-bell');
     if (bellBtn) {
         event.preventDefault();
-        event.stopPropagation();
         const dropdown = document.getElementById('notification-dropdown');
         if (dropdown) {
-            dropdown.classList.toggle('hidden');
+            const isHidden = dropdown.classList.contains('hidden');
+            closeAllMenus(bellBtn);
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
         }
         return;
     }
@@ -388,17 +422,57 @@ document.addEventListener('click', function(event) {
         return;
     }
 
-    // Close notification dropdown when clicking outside
-    if (!event.target.closest('#notification-bell-wrapper')) {
-        const notifDropdown = document.getElementById('notification-dropdown');
-        if (notifDropdown) notifDropdown.classList.add('hidden');
+    // Close dropdowns and menus when clicking outside
+    closeAllMenus(event.target);
+});
+
+/**
+ * Global keydown handler: closes open dropdown/popup menus on Escape and restores focus to trigger.
+ */
+document.addEventListener('keydown', function(event) {
+    if (event.key !== 'Escape' && event.key !== 'Esc') return;
+    if (event.target && event.target.closest('dialog')) return;
+
+    let closedAny = false;
+    let triggerToFocus = null;
+
+    // 1. Details dropdowns (home "+ New" menu, mobile profile menu, LOD color guide)
+    const openDetailsList = document.querySelectorAll('details.js-dropdown[open], #home-new-menu details[open], #profile-menu[open], #lod-color-guide[open]');
+    openDetailsList.forEach(details => {
+        details.removeAttribute('open');
+        closedAny = true;
+        if (!triggerToFocus || details.contains(document.activeElement)) {
+            triggerToFocus = details.querySelector('summary');
+        }
+    });
+
+    // 2. 3-dot action menus (.js-menu-dropdown)
+    const openMenuDropdowns = document.querySelectorAll('.js-menu-dropdown:not(.hidden)');
+    openMenuDropdowns.forEach(dropdown => {
+        dropdown.classList.add('hidden');
+        closedAny = true;
+        const btn = dropdown.previousElementSibling?.classList.contains('js-menu-btn')
+            ? dropdown.previousElementSibling
+            : dropdown.parentElement?.querySelector('.js-menu-btn');
+        if (!triggerToFocus || dropdown.contains(document.activeElement)) {
+            triggerToFocus = btn;
+        }
+    });
+
+    // 3. Notification dropdown
+    const notifDropdown = document.getElementById('notification-dropdown');
+    if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
+        notifDropdown.classList.add('hidden');
+        closedAny = true;
+        const bellBtn = document.getElementById('notification-bell');
+        if (!triggerToFocus || notifDropdown.contains(document.activeElement)) {
+            triggerToFocus = bellBtn;
+        }
     }
 
-    // 4. Close menus when clicking outside
-    if (!event.target.closest('.js-menu-dropdown')) {
-        document.querySelectorAll('.js-menu-dropdown').forEach(d => {
-            d.classList.add('hidden');
-        });
+    if (closedAny) {
+        event.preventDefault();
+        triggerToFocus?.focus();
     }
 });
 
