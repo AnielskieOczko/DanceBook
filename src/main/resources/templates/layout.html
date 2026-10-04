@@ -99,7 +99,7 @@
             </div>
 
             <!-- Phone: the bottom bar holds four tabs, so the rest lives behind the avatar -->
-            <details class="md:hidden relative" id="profile-menu">
+            <details class="md:hidden relative js-dropdown" id="profile-menu">
                 <summary class="w-11 h-11 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold list-none cursor-pointer [&::-webkit-details-marker]:hidden"
                          aria-label="Menu">
                     <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
