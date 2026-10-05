@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.repository.*
 import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -294,6 +295,8 @@ class FormValidationWebTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
             .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("Update Password")))
+            .andExpect(content().string(not(containsString("Update Security"))))
     }
 
     @Test

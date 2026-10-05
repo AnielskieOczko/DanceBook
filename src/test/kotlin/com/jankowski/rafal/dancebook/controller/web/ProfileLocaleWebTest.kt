@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
@@ -71,7 +72,7 @@ class ProfileLocaleWebTest {
         testUser.locale = "pl"
         appUserRepository.save(testUser)
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             get("/profile")
                 .with(user(testUser.username).roles("USER"))
                 .header("Accept-Language", "en")
@@ -82,6 +83,13 @@ class ProfileLocaleWebTest {
             .andExpect(content().string(containsString("Zmień hasło")))
             .andExpect(content().string(containsString("Wyloguj się")))
             .andExpect(content().string(containsString("DanceBook")))
+            .andExpect(content().string(not(containsString("Update Security"))))
+            .andExpect(content().string(not(containsString("Zaktualizuj zabezpieczenia"))))
+            .andReturn()
+
+        val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
+        val submitBtn = doc.selectFirst("#password-section button[type=submit]")
+        assertEquals("Zmień hasło", submitBtn?.text()?.trim())
     }
 
     @Test
@@ -89,7 +97,7 @@ class ProfileLocaleWebTest {
         testUser.locale = "en"
         appUserRepository.save(testUser)
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             get("/profile")
                 .with(user(testUser.username).roles("USER"))
                 .header("Accept-Language", "pl")
@@ -100,6 +108,13 @@ class ProfileLocaleWebTest {
             .andExpect(content().string(containsString("Update Password")))
             .andExpect(content().string(containsString("Log Out")))
             .andExpect(content().string(containsString("DanceBook")))
+            .andExpect(content().string(not(containsString("Update Security"))))
+            .andExpect(content().string(not(containsString("Zaktualizuj zabezpieczenia"))))
+            .andReturn()
+
+        val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
+        val submitBtn = doc.selectFirst("#password-section button[type=submit]")
+        assertEquals("Update Password", submitBtn?.text()?.trim())
     }
 
     @Test
