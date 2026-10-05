@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="calendarSelector" class="flex items-center gap-3">
+<div th:fragment="calendarSelector" class="flex flex-wrap items-center gap-2 sm:gap-3">
     <div th:if="${selectableCalendars != null && selectableCalendars.size() > 1}"
-         class="flex items-center gap-2">
-        <label for="activeCalendar" class="form-label mb-0">Calendar</label>
-        <select id="activeCalendar" name="calendarId" class="form-select"
+         class="flex items-center gap-2 min-w-0">
+        <label for="activeCalendar" class="form-label mb-0 shrink-0">Calendar</label>
+        <select id="activeCalendar" name="calendarId" class="form-select max-w-[200px]"
                 hx-post="/training-events/active-calendar" hx-trigger="change">
             <option value="ALL" th:selected="${activeCalendar == null}">All calendars</option>
             <option th:each="cal : ${selectableCalendars}"
@@ -17,18 +17,20 @@
             </option>
         </select>
     </div>
-    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface" title="Manage calendars">
+    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface shrink-0" title="Manage calendars">
         <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span>
     </a>
     <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}">
-        <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
-                hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
-            <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
-            <span>Sync now</span>
-        </button>
-        <span class="text-xs text-text-secondary whitespace-nowrap"
-              th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
-              th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
+        <div class="flex items-center gap-2 shrink-0">
+            <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
+                    hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
+                <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
+                <span>Sync now</span>
+            </button>
+            <span class="text-xs text-text-secondary whitespace-nowrap"
+                  th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
+                  th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
+        </div>
     </th:block>
 </div>
 

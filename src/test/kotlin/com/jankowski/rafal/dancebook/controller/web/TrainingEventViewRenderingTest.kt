@@ -49,6 +49,7 @@ import java.util.UUID
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.jsoup.Jsoup
 
@@ -661,6 +662,37 @@ class TrainingEventViewRenderingTest {
         val doc = Jsoup.parse(html)
         val syncText = doc.select(".text-text-secondary:contains(Never synced)")
         assertEquals(1, syncText.size, "Should display Never synced when null")
+    }
+
+    @Test
+    fun `calendar selector allows wrapping on mobile and groups sync controls`() {
+        val club = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Club"; enabled = true }
+        val home = TrainingCalendar().apply { id = UUID.randomUUID(); displayName = "Home"; enabled = true }
+        `when`(activeCalendarService.selectable()).thenReturn(listOf(club, home))
+        `when`(activeCalendarService.active()).thenReturn(club)
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(attendedSession()))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val select = doc.selectFirst("#activeCalendar")
+        assertNotNull(select, "Calendar select should be present")
+        assertTrue(select!!.hasClass("max-w-[200px]"), "Calendar select should constrain max-width")
+
+        val selectorContainer = select.closest(".flex.items-center.gap-2")?.parent()
+        assertNotNull(selectorContainer, "Selector container should be present")
+        assertTrue(selectorContainer!!.hasClass("flex-wrap"), "Calendar selector should allow wrapping on narrow viewports")
+
+        val syncButton = doc.selectFirst("button[hx-post='/training-events/sync']")
+        assertNotNull(syncButton, "Sync button should be present")
+        val syncGroup = syncButton!!.parent()
+        assertNotNull(syncGroup, "Sync button should have parent group")
+        assertTrue(syncGroup!!.hasClass("shrink-0"), "Sync controls group should have shrink-0")
+        assertTrue(syncGroup.children().any { it.hasClass("whitespace-nowrap") }, "Sync controls group should contain the sync status timestamp")
     }
 
     @Test
