@@ -23,7 +23,7 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script th:src="@{/js/main.js}"></script>
 </head>
-<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 md:pb-0"
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 xl:pb-0"
       th:data-poll-interval="${pollInterval != null ? pollInterval : 5}"
       th:data-logout-interval="${autoLogout != null ? autoLogout : 10}">
 
@@ -38,7 +38,7 @@
         </a>
 
         <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-2">
+        <nav class="hidden xl:flex items-center gap-2">
             <a href="/" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
                th:classappend="${activeNav == 'home' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Dashboard</a>
             <a href="/materials" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
@@ -55,7 +55,7 @@
 
         <!-- Trailing Icons -->
         <div class="flex items-center gap-4">
-            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden md:flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors" aria-label="Admin Dashboard" title="Admin Dashboard">
+            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden xl:flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors" aria-label="Admin Dashboard" title="Admin Dashboard">
                 <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
             </a>
 
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Desktop: the avatar goes straight to the profile, the nav already lists everything -->
-            <div class="hidden md:block w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:border-outline transition-colors">
+            <div class="hidden xl:block w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:border-outline transition-colors">
                 <a href="/profile" aria-label="Profile">
                     <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">
                         <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
@@ -99,7 +99,7 @@
             </div>
 
             <!-- Phone: the bottom bar holds four tabs, so the rest lives behind the avatar -->
-            <details class="md:hidden relative js-dropdown" id="profile-menu">
+            <details class="xl:hidden relative js-dropdown" id="profile-menu">
                 <summary class="w-11 h-11 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold list-none cursor-pointer [&::-webkit-details-marker]:hidden"
                          aria-label="Menu">
                     <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
@@ -136,7 +136,7 @@
 <!-- ═══════════════════════════════════════════════
      BOTTOM NAV BAR (Mobile Only)
      ═══════════════════════════════════════════════ -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-1 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
+<nav class="xl:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-1 py-3 pb-safe bg-surface shadow-ambient rounded-t-xl z-50" sec:authorize="isAuthenticated()">
     <!-- Home -->
     <a href="/" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"

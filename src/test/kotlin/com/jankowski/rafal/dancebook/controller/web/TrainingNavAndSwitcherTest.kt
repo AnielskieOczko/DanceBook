@@ -183,7 +183,7 @@ class TrainingNavAndSwitcherTest {
         val doc = Jsoup.parse(result.response.contentAsString)
 
         // Desktop nav
-        val desktopLinks = doc.select("header nav.hidden.md\\:flex a")
+        val desktopLinks = doc.select("header nav.hidden.xl\\:flex a")
         assertEquals(6, desktopLinks.size, "Desktop nav must contain exactly 6 links")
 
         val expectedDesktop = listOf(
@@ -215,7 +215,7 @@ class TrainingNavAndSwitcherTest {
         assertNotNull(avatarLink, "Header avatar must link to /profile")
 
         // Mobile bottom nav: four tabs since #147. Everything else is behind the avatar menu.
-        val mobileLinks = doc.select("nav.md\\:hidden a")
+        val mobileLinks = doc.select("nav.xl\\:hidden a")
         assertEquals(4, mobileLinks.size, "Mobile bottom nav must contain exactly 4 links")
 
         val expectedMobile = listOf(
