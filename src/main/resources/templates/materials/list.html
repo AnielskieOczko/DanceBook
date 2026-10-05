@@ -400,17 +400,10 @@
                             <td class="table-cell text-right whitespace-nowrap">
                                 <div class="inline-flex items-center gap-1.5 justify-end">
                                     <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or m.owner?.id == currentUser.id)}">
-                                        <a th:href="@{/materials/{id}/edit(id=${m.id})}"
-                                           class="btn-outline btn-sm">
-                                            <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                                            <span>Edit</span>
-                                        </a>
+                                        <th:block th:replace="~{fragments/button :: iconButton(icon='edit', label='Edit', href=@{/materials/{id}/edit(id=${m.id})})}"></th:block>
                                         <form th:action="@{/materials/{id}/delete(id=${m.id})}" method="post"
                                               data-confirm="Are you sure you want to delete this note?">
-                                            <button type="submit" class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
-                                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                                                <span>Delete</span>
-                                            </button>
+                                            <th:block th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', variant='danger')}"></th:block>
                                         </form>
                                     </th:block>
                                     <span th:if="${currentUser == null or (currentUser.role.name() != 'ADMIN' and m.owner?.id != currentUser.id)}" class="text-on-surface-variant">-</span>

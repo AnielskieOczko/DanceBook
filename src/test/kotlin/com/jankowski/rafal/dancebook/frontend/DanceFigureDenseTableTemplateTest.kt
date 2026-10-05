@@ -53,7 +53,7 @@ import java.util.UUID
  * Verifies:
  * 1. Scroll container with tabindex="0", role="region", aria-label="Figures".
  * 2. Pinned first column with table-header-pinned and table-cell-pinned on Name.
- * 3. 10 columns in order: Name, Style, Class, Timing, Position, Leader, Follower, Steps, Source, Actions.
+ * 3. 6 columns in order: Name, Style, Class, Steps, Source, Actions.
  * 4. Sortable headers (Name, Style, Class) with aria-sort and sort toggle buttons.
  * 5. Missing values rendered as explicit dashes.
  * 6. Steps column displaying syllabus presence without per-row queries.
@@ -117,7 +117,7 @@ class DanceFigureDenseTableTemplateTest {
     }
 
     @Test
-    fun `rendered table has exact 10 columns in order`() {
+    fun `rendered table has exact 6 columns in order`() {
         val figures = listOf(createSampleFigure(predefined = true))
         `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(figures)
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
@@ -141,10 +141,9 @@ class DanceFigureDenseTableTemplateTest {
         }
 
         val expected = listOf(
-            "Name", "Style", "Class", "Timing", "Position",
-            "Leader", "Follower", "Steps", "Source", "Actions"
+            "Name", "Style", "Class", "Steps", "Source", "Actions"
         )
-        assertEquals(expected, headerNames, "Dense table columns must match expected 10 columns in order")
+        assertEquals(expected, headerNames, "Dense table columns must match expected 6 columns in order")
     }
 
     @Test
@@ -288,38 +287,38 @@ class DanceFigureDenseTableTemplateTest {
         // ── Predefined Row ──────────────────────────────────────────────
         val row1 = rows[0]
         val cells1 = row1.select("td")
+        assertEquals(6, cells1.size)
         assertEquals("Predefined Figure", cells1[0].text().trim())
         assertEquals("Waltz", cells1[1].text().trim())
         assertEquals("D", cells1[2].text().trim())
-        assertEquals("123", cells1[3].text().trim())
-        assertTrue(cells1[4].text().contains("Closed Position"), "Position must contain start position")
-        assertTrue(cells1[4].text().contains("Promenade Position"), "Position must contain end position")
-        assertTrue(cells1[5].text().contains("LF") && cells1[5].text().contains("RF"), "Leader feet must show LF -> RF")
-        assertTrue(cells1[6].text().contains("RF") && cells1[6].text().contains("LF"), "Follower feet must show RF -> LF")
         // Steps column has steps -> "Yes"
-        assertTrue(cells1[7].text().contains("Yes"), "Steps column must render 'Yes' for figure with syllabus")
+        assertTrue(cells1[3].text().contains("Yes"), "Steps column must render 'Yes' for figure with syllabus")
         // Source column predefined -> "Predefined"
-        assertTrue(cells1[8].text().contains("Predefined"), "Source column must render 'Predefined'")
+        assertTrue(cells1[4].text().contains("Predefined"), "Source column must render 'Predefined'")
         // Actions: Edit is present, Delete form is ABSENT
-        assertNotNull(cells1[9].selectFirst("a[href*='/edit']"), "Edit link must be present")
-        assertNull(cells1[9].selectFirst("form[action*='/delete']"), "Delete form must NEVER be offered on predefined figure")
+        val editLink1 = cells1[5].selectFirst("a[href*='/edit']")
+        assertNotNull(editLink1, "Edit link must be present")
+        assertEquals("Edit", editLink1?.attr("aria-label"), "Edit link must have aria-label='Edit'")
+        assertEquals("Edit", editLink1?.attr("title"), "Edit link must have title='Edit'")
+        assertNull(cells1[5].selectFirst("form[action*='/delete']"), "Delete form must NEVER be offered on predefined figure")
 
         // ── Custom Row ──────────────────────────────────────────────────
         val row2 = rows[1]
         val cells2 = row2.select("td")
+        assertEquals(6, cells2.size)
         assertEquals("Custom Figure", cells2[0].text().trim())
-        // Missing values must render as explicit dash
-        assertEquals("-", cells2[3].text().trim(), "Missing timing must render as '-'")
-        assertEquals("-", cells2[4].text().trim(), "Missing position must render as '-'")
-        assertEquals("-", cells2[5].text().trim(), "Missing leader feet must render as '-'")
-        assertEquals("-", cells2[6].text().trim(), "Missing follower feet must render as '-'")
+        assertEquals("Waltz", cells2[1].text().trim())
+        assertEquals("D", cells2[2].text().trim())
         // Steps column has no steps -> "-"
-        assertEquals("-", cells2[7].text().trim(), "Steps column must render '-' for figure without syllabus")
+        assertEquals("-", cells2[3].text().trim(), "Steps column must render '-' for figure without syllabus")
         // Source column custom -> "Custom"
-        assertTrue(cells2[8].text().contains("Custom"), "Source column must render 'Custom'")
+        assertTrue(cells2[4].text().contains("Custom"), "Source column must render 'Custom'")
         // Actions: Edit is present, Delete form IS present with data-confirm
-        assertNotNull(cells2[9].selectFirst("a[href*='/edit']"), "Edit link must be present")
-        val deleteForm = cells2[9].selectFirst("form[action*='/delete']")
+        val editLink2 = cells2[5].selectFirst("a[href*='/edit']")
+        assertNotNull(editLink2, "Edit link must be present")
+        assertEquals("Edit", editLink2?.attr("aria-label"), "Edit link must have aria-label='Edit'")
+        assertEquals("Edit", editLink2?.attr("title"), "Edit link must have title='Edit'")
+        val deleteForm = cells2[5].selectFirst("form[action*='/delete']")
         assertNotNull(deleteForm, "Delete form must be present on custom figure")
         assertEquals(
             "Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.",
@@ -327,6 +326,8 @@ class DanceFigureDenseTableTemplateTest {
         )
         val deleteBtn = deleteForm?.selectFirst("button[type=submit]")
         assertNotNull(deleteBtn, "Delete submit button must exist")
+        assertEquals("Delete", deleteBtn?.attr("aria-label"), "Delete button must have aria-label='Delete'")
+        assertEquals("Delete", deleteBtn?.attr("title"), "Delete button must have title='Delete'")
         assertTrue(deleteBtn?.hasClass("text-danger") == true, "Delete button must use text-danger token")
         assertTrue(deleteBtn?.hasClass("hover:bg-danger-soft") == true, "Delete button must use hover:bg-danger-soft token")
         assertFalse(deleteBtn?.className()?.contains("error-soft") == true, "Delete button must not use non-existent error-soft token")

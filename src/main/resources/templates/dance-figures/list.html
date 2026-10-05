@@ -306,10 +306,6 @@
                                     </th:block>
                                 </button>
                             </th>
-                            <th scope="col" class="table-cell text-left whitespace-nowrap">Timing</th>
-                            <th scope="col" class="table-cell text-left whitespace-nowrap">Position</th>
-                            <th scope="col" class="table-cell text-left whitespace-nowrap">Leader</th>
-                            <th scope="col" class="table-cell text-left whitespace-nowrap">Follower</th>
                             <th scope="col" class="table-cell text-left whitespace-nowrap">Steps</th>
                             <th scope="col" class="table-cell text-left whitespace-nowrap">Source</th>
                             <th scope="col" class="table-cell text-right whitespace-nowrap">Actions</th>
@@ -327,61 +323,25 @@
                             <td class="table-cell whitespace-nowrap" th:text="${f.danceType != null ? f.danceType.name : '-'}">Waltz</td>
                             <!-- 3. Class -->
                             <td class="table-cell whitespace-nowrap" th:text="${f.danceClass != null ? f.danceClass : '-'}">H</td>
-                            <!-- 4. Timing -->
-                            <td class="table-cell whitespace-nowrap" th:text="${(f.alternativeTiming != null and !#strings.isEmpty(f.alternativeTiming)) ? f.alternativeTiming : '-'}">123</td>
-                            <!-- 5. Position (starting -> ending) -->
-                            <td class="table-cell whitespace-nowrap" th:title="${((f.startingPosition != null and !#strings.isEmpty(f.startingPosition)) or (f.endingPosition != null and !#strings.isEmpty(f.endingPosition))) ? (f.startingPosition ?: '-') + ' → ' + (f.endingPosition ?: '-') : null}">
-                                <th:block th:if="${(f.startingPosition != null and !#strings.isEmpty(f.startingPosition)) or (f.endingPosition != null and !#strings.isEmpty(f.endingPosition))}">
-                                    <span th:text="${f.startingPosition ?: '-'}">Closed</span>
-                                    <span class="text-on-surface-variant">&rarr;</span>
-                                    <span th:text="${f.endingPosition ?: '-'}">Promenade</span>
-                                </th:block>
-                                <span th:if="${(f.startingPosition == null or #strings.isEmpty(f.startingPosition)) and (f.endingPosition == null or #strings.isEmpty(f.endingPosition))}">-</span>
-                            </td>
-                            <!-- 6. Leader feet (starting -> ending) -->
-                            <td class="table-cell whitespace-nowrap">
-                                <th:block th:if="${(f.startingFootLeader != null and !#strings.isEmpty(f.startingFootLeader)) or (f.endingFootLeader != null and !#strings.isEmpty(f.endingFootLeader))}">
-                                    <span th:text="${f.startingFootLeader ?: '-'}">LF</span>
-                                    <span class="text-on-surface-variant">&rarr;</span>
-                                    <span th:text="${f.endingFootLeader ?: '-'}">RF</span>
-                                </th:block>
-                                <span th:if="${(f.startingFootLeader == null or #strings.isEmpty(f.startingFootLeader)) and (f.endingFootLeader == null or #strings.isEmpty(f.endingFootLeader))}">-</span>
-                            </td>
-                            <!-- 7. Follower feet (starting -> ending) -->
-                            <td class="table-cell whitespace-nowrap">
-                                <th:block th:if="${(f.startingFootFollower != null and !#strings.isEmpty(f.startingFootFollower)) or (f.endingFootFollower != null and !#strings.isEmpty(f.endingFootFollower))}">
-                                    <span th:text="${f.startingFootFollower ?: '-'}">RF</span>
-                                    <span class="text-on-surface-variant">&rarr;</span>
-                                    <span th:text="${f.endingFootFollower ?: '-'}">LF</span>
-                                </th:block>
-                                <span th:if="${(f.startingFootFollower == null or #strings.isEmpty(f.startingFootFollower)) and (f.endingFootFollower == null or #strings.isEmpty(f.endingFootFollower))}">-</span>
-                            </td>
-                            <!-- 8. Steps (has syllabus) -->
+                            <!-- 4. Steps (has syllabus) -->
                             <td class="table-cell whitespace-nowrap">
                                 <th:block th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}">
                                     <span th:replace="~{fragments/badge :: badge(label='Yes', variant='accent')}"></span>
                                 </th:block>
                                 <span th:if="${figuresWithSteps == null or !#sets.contains(figuresWithSteps, f.id)}" class="text-on-surface-variant font-bold text-sm">-</span>
                             </td>
-                            <!-- 9. Source (predefined or custom) -->
+                            <!-- 5. Source (predefined or custom) -->
                             <td class="table-cell whitespace-nowrap">
                                 <span th:replace="~{fragments/badge :: badge(label=(${f.predefined} ? 'Predefined' : 'Custom'), variant=(${f.predefined} ? 'neutral' : 'primary'))}"></span>
                             </td>
-                            <!-- 10. Actions -->
+                            <!-- 6. Actions -->
                             <td class="table-cell text-right whitespace-nowrap">
                                 <div class="inline-flex items-center gap-1.5 justify-end">
-                                    <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}"
-                                       class="btn-outline btn-sm">
-                                        <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                                        <span>Edit</span>
-                                    </a>
+                                    <th:block th:replace="~{fragments/button :: iconButton(icon='edit', label='Edit', href=@{/dance-figures/{id}/edit(id=${f.id})})}"></th:block>
                                     <th:block th:if="${f.isDeletableBy(currentUser)}">
                                         <form th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
                                               data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
-                                            <button type="submit" class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
-                                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                                                <span>Delete</span>
-                                            </button>
+                                            <th:block th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', variant='danger')}"></th:block>
                                         </form>
                                     </th:block>
                                 </div>

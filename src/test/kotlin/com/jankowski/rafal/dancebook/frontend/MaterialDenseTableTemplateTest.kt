@@ -310,10 +310,17 @@ class MaterialDenseTableTemplateTest {
         assertTrue(cells1[5].text().contains("Source"), "Media must show Source badge")
         assertFalse(cells1[6].text().trim() == "-", "Created date must be rendered")
         // Actions: Viewer is owner -> Edit and Delete are present
-        assertNotNull(cells1[7].selectFirst("a[href*='/edit']"), "Edit link must be present for owner")
+        val editLink = cells1[7].selectFirst("a[href*='/edit']")
+        assertNotNull(editLink, "Edit link must be present for owner")
+        assertEquals("Edit", editLink?.attr("aria-label"), "Edit link must have aria-label='Edit'")
+        assertEquals("Edit", editLink?.attr("title"), "Edit link must have title='Edit'")
         val deleteForm = cells1[7].selectFirst("form[action*='/delete']")
         assertNotNull(deleteForm, "Delete form must be present for owner")
         assertEquals("Are you sure you want to delete this note?", deleteForm?.attr("data-confirm"))
+        val deleteBtn = deleteForm?.selectFirst("button[type=submit]")
+        assertNotNull(deleteBtn, "Delete button must be present for owner")
+        assertEquals("Delete", deleteBtn?.attr("aria-label"), "Delete button must have aria-label='Delete'")
+        assertEquals("Delete", deleteBtn?.attr("title"), "Delete button must have title='Delete'")
 
         // ── Minimal Note Row ────────────────────────────────────────────
         val row2 = rows[1]
