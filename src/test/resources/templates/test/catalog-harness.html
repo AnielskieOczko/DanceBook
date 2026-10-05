@@ -53,6 +53,10 @@
     <th:block th:replace="~{fragments/button :: iconButton(icon='close', label='Close', href='/cancel', variant='primary', size='sm', cls='extra-cls')}"></th:block>
 </div>
 
+<div th:fragment="iconButtonDanger">
+    <th:block th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', variant='danger')}"></th:block>
+</div>
+
 <!-- 5. BUTTON: submitRow -->
 <div th:fragment="submitRowRequired">
     <div th:replace="~{fragments/button :: submitRow(cancelHref='/back', submitLabel='Save')}"></div>

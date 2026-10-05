@@ -242,6 +242,7 @@ class FragmentCatalogRenderingTest {
             "linkAll",
             "buttonAll",
             "iconButtonAll",
+            "iconButtonDanger",
             "submitRowAll",
             "fieldAll",
             "selectAll",
