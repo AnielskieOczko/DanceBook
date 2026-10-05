@@ -885,5 +885,109 @@ class TrainingEventViewRenderingTest {
         assertTrue(doc.select("input[name=scope]").size > 0, "Should include radio scope options")
         assertEquals("/training-events/${event.id}/delete", doc.select("form").attr("action"))
     }
+
+    @Test
+    fun `view page renders edit and delete actions as icon-only with accessible names`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val event = attendedSession().apply { this.series = series }
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+
+        val html = mockMvc.perform(get("/training-events/${event.id}").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("training-events/view"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val editLink = doc.selectFirst("a[href='/training-events/${event.id}/edit']")
+        assertNotNull(editLink, "Edit link should be present")
+        assertTrue(editLink!!.hasClass("btn-icon"), "Edit link should have btn-icon class")
+        assertEquals("Edit", editLink.attr("aria-label"), "Edit link should have aria-label='Edit'")
+        assertEquals("Edit", editLink.attr("title"), "Edit link should have title='Edit'")
+        assertTrue(editLink.ownText().trim().isEmpty(), "Edit link should have no text outside icon")
+        assertTrue(editLink.select("span:not(.material-symbols-outlined)").isEmpty(), "Edit link should have no text label elements")
+
+        val deleteBtn = doc.selectFirst("button[hx-get='/training-events/${event.id}/delete-dialog']")
+        assertNotNull(deleteBtn, "Delete button should be present")
+        assertTrue(deleteBtn!!.hasClass("btn-icon"), "Delete button should have btn-icon class")
+        assertTrue(deleteBtn.hasClass("text-danger"), "Delete button should have text-danger class")
+        assertTrue(deleteBtn.hasClass("hover:bg-danger-soft"), "Delete button should have hover:bg-danger-soft class")
+        assertEquals("Delete", deleteBtn.attr("aria-label"), "Delete button should have aria-label='Delete'")
+        assertEquals("Delete", deleteBtn.attr("title"), "Delete button should have title='Delete'")
+        assertTrue(deleteBtn.ownText().trim().isEmpty(), "Delete button should have no text outside icon")
+        assertTrue(deleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Delete button should have no text label elements")
+    }
+
+    @Test
+    fun `view page standalone delete button renders as icon-only with accessible names`() {
+        val event = attendedSession()
+        `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
+
+        val html = mockMvc.perform(get("/training-events/${event.id}").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(view().name("training-events/view"))
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val deleteBtn = doc.selectFirst("form[action='/training-events/${event.id}/delete'] button[type='submit']")
+        assertNotNull(deleteBtn, "Standalone delete submit button should be present")
+        assertTrue(deleteBtn!!.hasClass("btn-icon"), "Standalone delete button should have btn-icon class")
+        assertTrue(deleteBtn.hasClass("text-danger"), "Standalone delete button should have text-danger class")
+        assertTrue(deleteBtn.hasClass("hover:bg-danger-soft"), "Standalone delete button should have hover:bg-danger-soft class")
+        assertEquals("Delete", deleteBtn.attr("aria-label"), "Standalone delete button should have aria-label='Delete'")
+        assertEquals("Delete", deleteBtn.attr("title"), "Standalone delete button should have title='Delete'")
+        assertTrue(deleteBtn.ownText().trim().isEmpty(), "Standalone delete button should have no text outside icon")
+        assertTrue(deleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Standalone delete button should have no text label elements")
+    }
+
+    @Test
+    fun `agenda renders desktop inline edit and delete actions as icon-only with accessible names`() {
+        val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
+            id = UUID.randomUUID()
+            title = "Monday practice"
+        }
+        val seriesOcc = attendedSession().apply { this.series = series }
+        val standalone = attendedSession()
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null))
+            .thenReturn(listOf(seriesOcc, standalone))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+
+        val doc = Jsoup.parse(html)
+        val inlineEditLinks = doc.select(".hidden.md\\:flex a[href^='/training-events/'][href$='/edit']")
+        assertTrue(inlineEditLinks.size >= 2, "Should find desktop inline edit links")
+        for (link in inlineEditLinks) {
+            assertTrue(link.hasClass("btn-icon"), "Inline edit link should have btn-icon class")
+            assertEquals("Edit", link.attr("aria-label"), "Inline edit link should have aria-label='Edit'")
+            assertEquals("Edit", link.attr("title"), "Inline edit link should have title='Edit'")
+            assertTrue(link.ownText().trim().isEmpty(), "Inline edit link should have no text outside icon")
+            assertTrue(link.select("span:not(.material-symbols-outlined)").isEmpty(), "Inline edit link should have no text label span")
+        }
+
+        val inlineSeriesDeleteBtn = doc.selectFirst(".hidden.md\\:flex button[hx-get='/training-events/${seriesOcc.id}/delete-dialog']")
+        assertNotNull(inlineSeriesDeleteBtn, "Inline series delete button should be present")
+        assertTrue(inlineSeriesDeleteBtn!!.hasClass("btn-icon"), "Inline series delete button should have btn-icon class")
+        assertTrue(inlineSeriesDeleteBtn.hasClass("text-danger"), "Inline series delete button should have text-danger class")
+        assertTrue(inlineSeriesDeleteBtn.hasClass("hover:bg-danger-soft"), "Inline series delete button should have hover:bg-danger-soft class")
+        assertEquals("Delete", inlineSeriesDeleteBtn.attr("aria-label"), "Inline series delete button should have aria-label='Delete'")
+        assertEquals("Delete", inlineSeriesDeleteBtn.attr("title"), "Inline series delete button should have title='Delete'")
+        assertTrue(inlineSeriesDeleteBtn.ownText().trim().isEmpty(), "Inline series delete button should have no text outside icon")
+        assertTrue(inlineSeriesDeleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Inline series delete button should have no text label span")
+
+        val inlineStandaloneDeleteBtn = doc.selectFirst(".hidden.md\\:flex form[action='/training-events/${standalone.id}/delete'] button[type='submit']")
+        assertNotNull(inlineStandaloneDeleteBtn, "Inline standalone delete button should be present")
+        assertTrue(inlineStandaloneDeleteBtn!!.hasClass("btn-icon"), "Inline standalone delete button should have btn-icon class")
+        assertTrue(inlineStandaloneDeleteBtn.hasClass("text-danger"), "Inline standalone delete button should have text-danger class")
+        assertTrue(inlineStandaloneDeleteBtn.hasClass("hover:bg-danger-soft"), "Inline standalone delete button should have hover:bg-danger-soft class")
+        assertEquals("Delete", inlineStandaloneDeleteBtn.attr("aria-label"), "Inline standalone delete button should have aria-label='Delete'")
+        assertEquals("Delete", inlineStandaloneDeleteBtn.attr("title"), "Inline standalone delete button should have title='Delete'")
+        assertTrue(inlineStandaloneDeleteBtn.ownText().trim().isEmpty(), "Inline standalone delete button should have no text outside icon")
+        assertTrue(inlineStandaloneDeleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Inline standalone delete button should have no text label span")
+    }
 }
 
