@@ -14,17 +14,21 @@
         </th:block>
         <div th:fragment="eventToolbar" class="flex items-center gap-3 shrink-0">
             <th:block th:if="${event.calendar == null || event.calendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}">
-                <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-primary">Edit</a>
+                <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label='Edit')}"></a>
                 <button th:if="${event.series != null}"
                         type="button"
-                        class="btn-danger"
+                        class="btn-icon text-danger hover:bg-danger-soft"
+                        aria-label="Delete"
+                        title="Delete"
                         th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
                         hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML">Delete</button>
+                        hx-swap="innerHTML">
+                    <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+                </button>
                 <form th:if="${event.series == null}"
                       th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
                       data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
-                    <button type="submit" class="btn-danger">Delete</button>
+                    <button th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', cls='text-danger hover:bg-danger-soft')}"></button>
                 </form>
             </th:block>
             <a href="/training-events" class="btn-outline">Back</a>

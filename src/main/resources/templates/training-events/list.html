@@ -238,27 +238,21 @@
 
                 <!-- Edit and delete: inline on a pointer, behind an overflow menu on a phone. -->
                 <div th:if="${canManage}" class="hidden md:flex items-center gap-2 shrink-0">
-                    <a th:href="@{/training-events/{id}/edit(id=${event.id})}" class="btn-outline btn-sm flex items-center gap-1.5" title="Edit">
-                        <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                        <span>Edit</span>
-                    </a>
+                    <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label='Edit', size='sm')}"></a>
                     <button th:if="${event.series != null}"
                             type="button"
-                            class="btn-outline btn-sm text-danger hover:bg-danger-soft border-danger/30 hover:border-danger flex items-center gap-1.5"
+                            class="btn-icon text-danger hover:bg-danger-soft"
+                            aria-label="Delete"
                             title="Delete"
                             th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
                             hx-target="#confirmModalContainer"
                             hx-swap="innerHTML">
                         <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                        <span>Delete</span>
                     </button>
                     <form th:if="${event.series == null}"
                           th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
                           data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
-                        <button type="submit" class="btn-outline btn-sm text-danger hover:bg-danger-soft border-danger/30 hover:border-danger flex items-center gap-1.5" title="Delete">
-                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                            <span>Delete</span>
-                        </button>
+                        <button th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', size='sm', cls='text-danger hover:bg-danger-soft')}"></button>
                     </form>
                 </div>
 
