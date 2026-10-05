@@ -7,7 +7,7 @@
 
 <!-- Standard Page Header -->
 <div th:fragment="pageHeader"
-     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
+     class="flex flex-col lg:flex-row lg:items-center lg:justify-between flex-wrap gap-4 mb-6"
      th:classappend="${cls}">
     <div class="page-header mb-0">
         <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
@@ -52,7 +52,7 @@
 
 <!-- Training View Switcher -->
 <nav th:fragment="viewSwitcher"
-     class="view-switcher"
+     class="view-switcher max-w-full"
      th:classappend="${cls}"
      aria-label="Training views">
     <a href="/training-events"

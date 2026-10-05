@@ -5,7 +5,7 @@
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
     <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? 'No calendar connected' : (#lists.size(events) + ' sessions logged')}, toolbar=~{::listToolbar})}">
-        <div th:fragment="listToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
+        <div th:fragment="listToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
             <a href="/training-events/new" class="btn-primary"

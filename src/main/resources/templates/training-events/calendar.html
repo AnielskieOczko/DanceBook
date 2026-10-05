@@ -9,7 +9,7 @@
             <p class="page-subtitle hidden md:block">Click a slot to add a session, or drag one to move it.</p>
             <p class="page-subtitle md:hidden">Tap a day to read it. Tap + to add a session.</p>
         </th:block>
-        <div th:fragment="calendarToolbar" class="flex flex-col sm:flex-row sm:items-center gap-4 shrink-0">
+        <div th:fragment="calendarToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='calendar')}"></nav>
             <!-- On a phone the floating + creates on the selected day, so this would be a second
