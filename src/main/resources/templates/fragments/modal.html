@@ -13,7 +13,7 @@
     <div class="flex items-center justify-between pb-4 border-b border-outline-variant mb-4">
         <h3 th:if="${title != null}" class="text-title font-sans text-on-surface" th:text="${title}">Modal Title</h3>
         <form method="dialog" class="ml-auto">
-            <button type="submit" class="btn-icon p-1 min-h-0 min-w-0" aria-label="Close">
+            <button type="submit" class="btn-icon p-1 min-h-0 min-w-0" aria-label="Close" th:attr="aria-label=#{common.close}">
                 <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
             </button>
         </form>
