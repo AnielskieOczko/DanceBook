@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
+      th:lang="${#locale.language}"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="html(content)">
@@ -40,28 +41,37 @@
         <!-- Desktop Navigation -->
         <nav class="hidden xl:flex items-center gap-2">
             <a href="/" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'home' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Dashboard</a>
+               th:classappend="${activeNav == 'home' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.dashboard}">Dashboard</a>
             <a href="/materials" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'materials' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Notes</a>
+               th:classappend="${activeNav == 'materials' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.notes}">Notes</a>
             <a href="/dance-figures" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'dance-figures' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Figures</a>
+               th:classappend="${activeNav == 'dance-figures' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.figures}">Figures</a>
             <a href="/lists" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'lists' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Collections</a>
+               th:classappend="${activeNav == 'lists' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.collections}">Collections</a>
             <a href="/choreographies" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Choreographies</a>
+               th:classappend="${activeNav == 'choreographies' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.choreographies}">Choreographies</a>
             <a href="/training-events" class="font-body-md transition-all duration-200 px-4 py-2 rounded-full"
-               th:classappend="${activeNav == 'training-events' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}">Training</a>
+               th:classappend="${activeNav == 'training-events' ? 'text-primary bg-surface-container-high font-bold' : 'text-secondary hover:text-primary hover:bg-surface-container font-semibold'}"
+               th:text="#{nav.training}">Training</a>
         </nav>
 
         <!-- Trailing Icons -->
         <div class="flex items-center gap-4">
-            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden xl:flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors" aria-label="Admin Dashboard" title="Admin Dashboard">
+            <a sec:authorize="hasRole('ADMIN')" href="/admin" class="hidden xl:flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors"
+               aria-label="Admin Dashboard" title="Admin Dashboard"
+               th:attr="aria-label=#{nav.admin_dashboard}, title=#{nav.admin_dashboard}">
                 <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
             </a>
 
             <button type="button" th:if="${assistantNav != null}" data-assistant-open
                     class="flex items-center justify-center min-h-[44px] min-w-[44px] p-2.5 rounded-full text-outline hover:text-on-surface transition-colors"
-                    aria-label="Open assistant" title="Assistant (press /)">
+                    aria-label="Open assistant" title="Assistant (press /)"
+                    th:attr="aria-label=#{nav.assistant.open}, title=#{nav.assistant.title}">
                 <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md')}"></span>
             </button>
 
@@ -73,7 +83,8 @@
                         hx-target="#notification-dropdown"
                         hx-swap="innerHTML"
                         aria-label="Notifications"
-                        title="Notifications">
+                        title="Notifications"
+                        th:attr="aria-label=#{nav.notifications}, title=#{nav.notifications}">
                     <span th:replace="~{fragments/icon :: icon(name='notifications', size='md')}"></span>
                     <!-- Badge (HTMX polling) -->
                     <span id="notification-badge"
@@ -91,7 +102,7 @@
 
             <!-- Desktop: the avatar goes straight to the profile, the nav already lists everything -->
             <div class="hidden xl:block w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:border-outline transition-colors">
-                <a href="/profile" aria-label="Profile">
+                <a href="/profile" aria-label="Profile" th:attr="aria-label=#{nav.profile}">
                     <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">
                         <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
                     </div>
@@ -101,21 +112,25 @@
             <!-- Phone: the bottom bar holds four tabs, so the rest lives behind the avatar -->
             <details class="xl:hidden relative js-dropdown" id="profile-menu">
                 <summary class="w-11 h-11 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold list-none cursor-pointer [&::-webkit-details-marker]:hidden"
-                         aria-label="Menu">
+                         aria-label="Menu" th:attr="aria-label=#{nav.menu}">
                     <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
                 </summary>
                 <div class="absolute right-0 top-full mt-2 w-56 z-50 card shadow-ambient py-2">
                     <a href="/profile" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-outline')}"></span>Profile
+                        <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-outline')}"></span>
+                        <span th:text="#{nav.profile}">Profile</span>
                     </a>
                     <a href="/choreographies" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-outline')}"></span>Choreographies
+                        <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-outline')}"></span>
+                        <span th:text="#{nav.choreographies}">Choreographies</span>
                     </a>
                     <a href="/lists" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-outline')}"></span>Collections
+                        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-outline')}"></span>
+                        <span th:text="#{nav.collections}">Collections</span>
                     </a>
                     <a sec:authorize="hasRole('ADMIN')" href="/admin" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-outline')}"></span>Admin
+                        <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-outline')}"></span>
+                        <span th:text="#{nav.admin}">Admin</span>
                     </a>
                 </div>
             </details>
@@ -142,28 +157,28 @@
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'home' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='home', size='md', filled=${activeNav == 'home'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1">Home</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.home}">Home</span>
     </a>
     <!-- Training -->
     <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'training-events' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'training-events' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', filled=${activeNav == 'training-events'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1">Training</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.training}">Training</span>
     </a>
     <!-- Notes -->
     <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'materials' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'materials' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='description', size='md', filled=${activeNav == 'materials'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1">Notes</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.notes}">Notes</span>
     </a>
     <!-- Figures -->
     <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'dance-figures' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', filled=${activeNav == 'dance-figures'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1">Figures</span>
+        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.figures}">Figures</span>
     </a>
 </nav>
 

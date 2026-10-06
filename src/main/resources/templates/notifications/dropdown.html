@@ -7,12 +7,13 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 border-b border-surface-variant">
-        <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold">Notifications</h4>
+        <h4 class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold" th:text="#{notifications.title}">Notifications</h4>
         <button th:if="${unreadCount > 0}"
                 class="js-close-notification-dropdown font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors"
                 hx-post="/notifications/mark-read"
                 hx-target="#notification-badge"
-                hx-swap="innerHTML">
+                hx-swap="innerHTML"
+                th:text="#{notifications.mark_all_read}">
             Mark all read
         </button>
     </div>
@@ -126,14 +127,15 @@
         <!-- Empty State -->
         <div th:if="${unreadEvents == null || unreadEvents.isEmpty()}" class="px-4 py-8 text-center">
             <span th:replace="~{fragments/icon :: icon(name='notifications_off', size='lg', cls='text-outline mb-2')}"></span>
-            <p class="font-body-md text-body-md text-outline">You're all caught up!</p>
+            <p class="font-body-md text-body-md text-outline" th:text="#{notifications.all_caught_up}">You're all caught up!</p>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="px-4 py-3 border-t border-surface-variant bg-surface-container-low">
         <a href="/activity-history"
-           class="font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors uppercase tracking-wider block text-center">
+           class="font-label-sm text-label-sm text-primary hover:text-on-surface transition-colors uppercase tracking-wider block text-center"
+           th:text="#{notifications.view_all}">
             View all activity
         </a>
     </div>

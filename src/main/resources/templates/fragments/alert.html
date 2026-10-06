@@ -24,7 +24,8 @@
     <button th:if="${dismissible == true}"
             type="button"
             class="js-dismiss-alert shrink-0 p-1 hover:opacity-80 transition-opacity"
-            aria-label="Dismiss">
+            aria-label="Dismiss"
+            th:attr="aria-label=#{common.dismiss}">
         <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
     </button>
 </div>
