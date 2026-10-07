@@ -15,10 +15,10 @@
          class="flex flex-col gap-3">
 
     <h2 id="home-wrap-up-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0"
-        th:text="${wrapUp.hero != null ? 'To wrap up' : 'Next session'}">To wrap up</h2>
+        th:text="${wrapUp.hero != null ? #messages.msg('dashboard.wrap_up.to_wrap_up') : #messages.msg('dashboard.wrap_up.next_session')}">To wrap up</h2>
 
     <th:block th:if="${wrapUpError != null}">
-        <div th:replace="~{fragments/alert :: alert(variant='error', title='Could not save', text=${wrapUpError})}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='error', title=#{dashboard.wrap_up.could_not_save}, text=${wrapUpError})}"></div>
     </th:block>
 
     <!-- Hero: the newest session still waiting for an answer -->
@@ -46,7 +46,7 @@
                 <input type="hidden" name="status" value="ATTENDED">
                 <button type="submit"
                         class="min-h-[44px] px-5 rounded-xl bg-surface text-primary text-sm font-semibold flex items-center justify-center gap-1.5 cursor-pointer hover:bg-surface-container">
-                    <span th:replace="~{fragments/icon :: icon(name='check', size='md')}"></span>Attended
+                    <span th:replace="~{fragments/icon :: icon(name='check', size='md')}"></span><th:block th:text="#{dashboard.wrap_up.attended}">Attended</th:block>
                 </button>
             </form>
             <form th:action="@{/home/sessions/{id}/attendance(id=${wrapUp.hero.id})}"
@@ -55,26 +55,25 @@
                 <input type="hidden" name="status" value="SKIPPED">
                 <button type="submit"
                         class="min-h-[44px] px-5 rounded-xl border border-on-primary/40 text-on-primary text-sm font-medium cursor-pointer hover:bg-on-primary/10">
-                    Skipped
+                    <th:block th:text="#{dashboard.wrap_up.skipped}">Skipped</th:block>
                 </button>
             </form>
             <th:block th:if="${assistantNav != null}">
-                <!--/* Single-quoted attribute so the literal substitution can hold double quotes; Thymeleaf escapes them in the output. */-->
                 <button type="button"
-                        th:attr='data-assistant-prefill=|Wrap up "${wrapUp.hero.title}" (${wrapUp.hero.dateLabel}): |'
+                        th:attr="data-assistant-prefill=#{dashboard.wrap_up.assistant_prefill(${wrapUp.hero.title}, ${wrapUp.hero.dateLabel})}"
                         class="col-span-2 lg:col-span-1 min-h-[44px] px-5 rounded-xl border border-on-primary/40 text-on-primary text-sm font-medium flex items-center justify-center gap-2 cursor-pointer hover:bg-on-primary/10">
-                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', title=null)}"></span>Wrap up with the assistant
+                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', title=null)}"></span><th:block th:text="#{dashboard.wrap_up.with_assistant}">Wrap up with the assistant</th:block>
                 </button>
             </th:block>
             <a th:if="${wrapUp.hero.noteId == null}"
                th:href="@{/materials/new(fromSession=${wrapUp.hero.id})}"
                class="col-span-2 lg:ml-auto min-h-[44px] px-5 rounded-xl border border-on-primary/40 bg-on-primary/10 text-on-primary text-sm font-medium flex items-center justify-center gap-2 hover:bg-on-primary/20">
-                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md')}"></span>Write a note from this session
+                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md')}"></span><th:block th:text="#{dashboard.wrap_up.write_note}">Write a note from this session</th:block>
             </a>
             <a th:if="${wrapUp.hero.noteId != null}"
                th:href="@{/materials/{id}(id=${wrapUp.hero.noteId})}"
                class="col-span-2 lg:ml-auto min-h-[44px] px-5 rounded-xl border border-on-primary/40 bg-on-primary/10 text-on-primary text-sm font-medium flex items-center justify-center gap-2 hover:bg-on-primary/20">
-                <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>Open note
+                <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span><th:block th:text="#{dashboard.wrap_up.open_note}">Open note</th:block>
             </a>
         </div>
     </article>
@@ -89,11 +88,13 @@
             <p class="text-[13px] text-on-surface-variant m-0" th:text="${waiting.dateLabel + ' · ' + waiting.timeLabel}">Wed 24 Sep · 18:00–19:00</p>
         </div>
         <a th:if="${waiting.noteId != null}" th:href="@{/materials/{id}(id=${waiting.noteId})}"
-           class="btn-icon" aria-label="Open note" title="Open note">
+           class="btn-icon" aria-label="Open note" title="Open note"
+           th:attr="aria-label=#{dashboard.wrap_up.open_note}, title=#{dashboard.wrap_up.open_note}">
             <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>
         </a>
         <a th:if="${waiting.noteId == null}" th:href="@{/materials/new(fromSession=${waiting.id})}"
-           class="btn-icon" aria-label="Write a note from this session" title="Write a note from this session">
+           class="btn-icon" aria-label="Write a note from this session" title="Write a note from this session"
+           th:attr="aria-label=#{dashboard.wrap_up.write_note}, title=#{dashboard.wrap_up.write_note}">
             <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md')}"></span>
         </a>
         <form th:action="@{/home/sessions/{id}/attendance(id=${waiting.id})}"
@@ -101,6 +102,7 @@
               hx-target="#home-wrap-up" hx-swap="outerHTML" method="post">
             <input type="hidden" name="status" value="ATTENDED">
             <button type="submit" aria-label="Mark attended" title="Mark attended"
+                    th:attr="aria-label=#{dashboard.wrap_up.mark_attended}, title=#{dashboard.wrap_up.mark_attended}"
                     class="w-11 h-11 rounded-full border border-primary/30 bg-primary-soft text-primary flex items-center justify-center cursor-pointer">
                 <span th:replace="~{fragments/icon :: icon(name='check', size='md')}"></span>
             </button>
@@ -110,6 +112,7 @@
               hx-target="#home-wrap-up" hx-swap="outerHTML" method="post">
             <input type="hidden" name="status" value="SKIPPED">
             <button type="submit" aria-label="Mark skipped" title="Mark skipped"
+                    th:attr="aria-label=#{dashboard.wrap_up.mark_skipped}, title=#{dashboard.wrap_up.mark_skipped}"
                     class="w-11 h-11 rounded-full border border-outline-variant bg-surface text-on-surface-variant flex items-center justify-center cursor-pointer">
                 <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
             </button>
@@ -131,16 +134,16 @@
                 class="text-xs px-2.5 py-1 rounded-[10px] bg-surface-container text-on-surface-variant"
                 th:text="${segment.label + ' · ' + segment.durationLabel}">Quickstep · 30m</li>
         </ul>
-        <p class="text-sm text-on-surface-variant m-0">You are all caught up.</p>
+        <p class="text-sm text-on-surface-variant m-0" th:text="#{dashboard.wrap_up.all_caught_up}">You are all caught up.</p>
         <a th:if="${wrapUp.next.noteId != null}" th:href="@{/materials/{id}(id=${wrapUp.next.noteId})}"
            class="btn-outline min-h-[44px] self-start">
-            <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span>Open note
+            <span th:replace="~{fragments/icon :: icon(name='description', size='md')}"></span><th:block th:text="#{dashboard.wrap_up.open_note}">Open note</th:block>
         </a>
     </article>
 
     <!-- Nothing waiting and nothing planned -->
     <div th:if="${wrapUp.hero == null and wrapUp.next == null}" class="card rounded-2xl">
-        <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='Schedule your first session', text='Sessions you plan show up here, ready to wrap up once they are over.', actionHref='/training-events/new', actionLabel='Schedule a session')}"></div>
+        <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title=#{dashboard.wrap_up.empty_title}, text=#{dashboard.wrap_up.empty_text}, actionHref='/training-events/new', actionLabel=#{dashboard.wrap_up.empty_action})}"></div>
     </div>
 </section>
 

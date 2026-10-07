@@ -9,8 +9,8 @@
      phone and sits in a grid from 1024px. A figure with no timing is listed without a value. -->
 <section th:fragment="homeRecentNotes" id="home-recent-notes" aria-labelledby="home-recent-notes-title" class="flex flex-col gap-3">
     <div class="flex items-baseline justify-between">
-        <h2 id="home-recent-notes-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0">Recent notes</h2>
-        <a href="/materials" class="text-[13px] font-semibold text-primary hover:underline">All notes</a>
+        <h2 id="home-recent-notes-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0" th:text="#{dashboard.recent_notes.title}">Recent notes</h2>
+        <a href="/materials" class="text-[13px] font-semibold text-primary hover:underline" th:text="#{dashboard.recent_notes.all_notes}">All notes</a>
     </div>
 
     <div th:if="${!dashboard.recentNotes.isEmpty()}"
@@ -35,7 +35,7 @@
     </div>
 
     <div th:if="${dashboard.recentNotes.isEmpty()}" class="card rounded-2xl">
-        <div th:replace="~{fragments/empty :: emptyState(icon='edit_note', title='Write your first note', text='Notes are where what you learn in class stays useful.', actionHref='/materials/new', actionLabel='Write a note')}"></div>
+        <div th:replace="~{fragments/empty :: emptyState(icon='edit_note', title=#{dashboard.recent_notes.empty_title}, text=#{dashboard.recent_notes.empty_text}, actionHref='/materials/new', actionLabel=#{dashboard.recent_notes.empty_action})}"></div>
     </div>
 </section>
 

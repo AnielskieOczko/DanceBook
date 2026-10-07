@@ -12,27 +12,28 @@
          aria-labelledby="home-month-title"
          th:attr="hx-swap-oob=${oob != null ? 'true' : null}"
          class="flex flex-col gap-3">
-    <h2 id="home-month-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0">This month</h2>
+    <h2 id="home-month-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0" th:text="#{dashboard.month.title}">This month</h2>
     <a href="/training-events/stats?period=THIS_MONTH"
        class="card rounded-2xl p-4 flex flex-col gap-3.5 text-on-surface hover:border-outline">
         <dl class="grid grid-cols-3 gap-2 m-0">
             <div class="flex flex-col-reverse gap-0.5">
                 <dd class="text-[22px] font-semibold m-0" th:text="${dashboard.month.trainedLabel}">11h 30m</dd>
-                <dt class="text-xs text-on-surface-variant">trained</dt>
+                <dt class="text-xs text-on-surface-variant" th:text="#{dashboard.month.trained}">trained</dt>
             </div>
             <div class="flex flex-col-reverse gap-0.5">
                 <dd class="text-[22px] font-semibold m-0" th:text="${dashboard.month.attended}">9</dd>
-                <dt class="text-xs text-on-surface-variant">sessions attended</dt>
+                <dt class="text-xs text-on-surface-variant" th:text="#{dashboard.month.attended}">sessions attended</dt>
             </div>
             <div class="flex flex-col-reverse gap-0.5">
                 <dd class="text-[22px] font-semibold m-0"
                     th:text="${dashboard.month.attendanceRatePercent != null ? dashboard.month.attendanceRatePercent + '%' : '–'}">90%</dd>
-                <dt class="text-xs text-on-surface-variant">attendance</dt>
+                <dt class="text-xs text-on-surface-variant" th:text="#{dashboard.month.attendance}">attendance</dt>
             </div>
         </dl>
         <!-- Category breakdown: desktop only, and only once there is time to break down -->
         <div th:if="${!dashboard.month.byCategory.isEmpty()}" class="hidden lg:flex flex-col gap-2">
-            <div class="flex h-2 rounded overflow-hidden gap-0.5" role="img" aria-label="Time by dance style this month">
+            <div class="flex h-2 rounded overflow-hidden gap-0.5" role="img" aria-label="Time by dance style this month"
+                 th:attr="aria-label=#{dashboard.month.style_breakdown_aria_label}">
                 <span th:each="slice : ${dashboard.month.byCategory}"
                       th:style="${'flex-grow:' + slice.minutes + ';background:' + slice.color}"></span>
             </div>
