@@ -31,7 +31,10 @@ import com.jankowski.rafal.dancebook.service.AssistantNavSupport
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import java.util.Locale
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextImpl
@@ -333,9 +336,15 @@ class HomeDashboardRenderingTest {
     }
 
     /** `NavbarAdvice` only supplies `assistantNav` for an authenticated principal; with the filters off the test has to provide one. */
-    private fun signedIn() {
-        val dancer = com.jankowski.rafal.dancebook.model.AppUser().apply { id = UUID.randomUUID(); username = "dancer"; displayName = "Dancer" }
+    private fun signedIn(locale: String = "en") {
+        val dancer = com.jankowski.rafal.dancebook.model.AppUser().apply {
+            id = UUID.randomUUID()
+            username = "dancer"
+            displayName = "Dancer"
+            this.locale = locale
+        }
         `when`(appUserService.getCurrentUser()).thenReturn(dancer)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(dancer)
         TestSecurityContextHolder.setContext(
             SecurityContextImpl(UsernamePasswordAuthenticationToken("dancer", "x", listOf(SimpleGrantedAuthority("ROLE_USER"))))
         )
@@ -361,5 +370,124 @@ class HomeDashboardRenderingTest {
         val doc = Jsoup.parse(mockMvc.perform(get("/").with(csrf())).andExpect(status().isOk).andReturn().response.contentAsString)
 
         assertNull(doc.selectFirst("[data-assistant-prefill]"))
+    }
+
+    @Test
+    fun `renders empty state and chrome in Polish when locale is pl`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(emptyView())
+        signedIn("pl")
+
+        mockMvc.perform(get("/").locale(Locale.forLanguageTag("pl")).with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Zaplanuj swój pierwszy trening")))
+            .andExpect(content().string(containsString("Napisz swoją pierwszą notatkę")))
+            .andExpect(content().string(containsString("W tym miesiącu")))
+            .andExpect(content().string(containsString("Ostatnie notatki")))
+            .andExpect(content().string(containsString("Wszystkie notatki")))
+            // New menu items in Polish
+            .andExpect(content().string(containsString("Nowy")))
+            .andExpect(content().string(containsString("Notatka")))
+            .andExpect(content().string(containsString("Trening")))
+            .andExpect(content().string(containsString("Figura")))
+            .andExpect(content().string(containsString("Choreografia")))
+            .andExpect(content().string(containsString("Kolekcja")))
+            // Week aria-label in Polish
+            .andExpect(content().string(containsString("aria-label=\"Ten tydzień\"")))
+            // No English leftovers
+            .andExpect(content().string(not(containsString("Schedule your first session"))))
+            .andExpect(content().string(not(containsString("Write your first note"))))
+    }
+
+    @Test
+    fun `renders populated dashboard sections in Polish when locale is pl`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(populatedView())
+        signedIn("pl")
+
+        mockMvc.perform(get("/").locale(Locale.forLanguageTag("pl")).with(csrf()))
+            .andExpect(status().isOk)
+            // Hero section
+            .andExpect(content().string(containsString("Do podsumowania")))
+            .andExpect(content().string(containsString("Obecny")))
+            .andExpect(content().string(containsString("Pominięty")))
+            .andExpect(content().string(containsString("Napisz notatkę z tego treningu")))
+            // Older rows
+            .andExpect(content().string(containsString("aria-label=\"Oznacz jako obecny\"")))
+            .andExpect(content().string(containsString("aria-label=\"Oznacz jako pominięty\"")))
+            // Week strip: streak, count to confirm, day aria-labels
+            .andExpect(content().string(containsString("Seria 4 treningów")))
+            .andExpect(content().string(containsString("2 do potwierdzenia")))
+            .andExpect(content().string(containsString("Tue 22, do potwierdzenia")))
+            .andExpect(content().string(containsString("Fri 25, dzisiaj")))
+            // Month summary
+            .andExpect(content().string(containsString("treningu")))
+            .andExpect(content().string(containsString("odbytych treningów")))
+            .andExpect(content().string(containsString("frekwencja")))
+            .andExpect(content().string(containsString("aria-label=\"Czas według stylu tańca w tym miesiącu\"")))
+            // Continue section
+            .andExpect(content().string(containsString("Kontynuuj")))
+            // Ensure English equivalents are replaced
+            .andExpect(content().string(not(containsString("To wrap up"))))
+            .andExpect(content().string(not(containsString("4-session streak"))))
+            .andExpect(content().string(not(containsString("2 to confirm"))))
+            .andExpect(content().string(not(containsString("needs confirmation"))))
+    }
+
+    @Test
+    fun `the wrap-up hero offers Open note and assistant chip in Polish when locale is pl`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(populatedView(heroNote = noteId))
+        `when`(assistantNavSupport.forPath("/")).thenReturn(AssistantNav(PageContext(PageContextType.HOME), "Home"))
+        signedIn("pl")
+
+        val doc = Jsoup.parse(
+            mockMvc.perform(get("/").locale(Locale.forLanguageTag("pl")).with(csrf()))
+                .andExpect(status().isOk)
+                .andReturn().response.contentAsString
+        )
+
+        // Open note in Polish
+        val openNoteBtn = doc.selectFirst("#home-wrap-up a[href='/materials/$noteId']")
+        assertNotNull(openNoteBtn)
+        assertTrue(openNoteBtn!!.text().contains("Otwórz notatkę"))
+
+        // Assistant chip with Polish prefill and text
+        val chip = doc.selectFirst("#home-wrap-up [data-assistant-prefill]")
+        assertNotNull(chip)
+        assertEquals("Podsumuj \"Standard group class\" (Tuesday 23 Sep): ", chip!!.attr("data-assistant-prefill"))
+        assertTrue(chip.text().contains("Podsumuj z asystentem"))
+    }
+
+    @Test
+    fun `with nothing waiting the slot shows next session in Polish when locale is pl`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(
+            emptyView().copy(wrapUp = WrapUp(waiting = emptyList(), next = card(heroId, "Saturday practice", noteId)))
+        )
+        signedIn("pl")
+
+        mockMvc.perform(get("/").locale(Locale.forLanguageTag("pl")).with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Następny trening")))
+            .andExpect(content().string(containsString("Wszystko na bieżąco.")))
+            .andExpect(content().string(containsString("Otwórz notatkę")))
+            .andExpect(content().string(not(containsString("Next session"))))
+            .andExpect(content().string(not(containsString("You are all caught up."))))
+    }
+
+    @Test
+    fun `failed attendance update renders error alert in Polish when locale is pl`() {
+        `when`(dashboardService.dashboardForCurrentUser()).thenReturn(populatedView())
+        doThrow(IllegalStateException("Calendar sync failed")).`when`(trainingEventService)
+            .updateAttendance(heroId, AttendanceStatus.ATTENDED)
+        signedIn("pl")
+
+        mockMvc.perform(
+            post("/home/sessions/$heroId/attendance")
+                .param("status", "ATTENDED")
+                .header("HX-Request", "true")
+                .locale(Locale.forLanguageTag("pl"))
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Nie udało się zapisać")))
+            .andExpect(content().string(containsString("Calendar sync failed")))
     }
 }

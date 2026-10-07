@@ -10,7 +10,7 @@
 <section th:fragment="homeWeek"
          id="home-week"
          aria-label="This week"
-         th:attr="hx-swap-oob=${oob != null ? 'true' : null}"
+         th:attr="aria-label=#{dashboard.week.aria_label}, hx-swap-oob=${oob != null ? 'true' : null}"
          class="card rounded-2xl px-2 py-3 lg:px-4 flex flex-col gap-3">
     <ol class="grid grid-cols-7 gap-1 list-none m-0 p-0">
         <li th:each="day : ${dashboard.week.days}" class="flex flex-col lg:flex-row items-center lg:justify-center gap-1.5 lg:gap-2">
@@ -22,9 +22,9 @@
                                     (day.state.name() == 'UNCONFIRMED' ? 'border border-dashed border-warning bg-warning/10 text-warning' :
                                     (day.state.name() == 'PLANNED' ? 'border border-primary text-primary' : 'text-on-surface-variant'))) +
                                     (day.today ? ' ring-2 ring-on-surface ring-offset-2 font-bold' : '')}"
-                  th:attr="aria-label=${day.weekdayLabel + ' ' + day.dayOfMonth + (day.state.name() == 'ATTENDED' ? ', attended' :
-                                        (day.state.name() == 'UNCONFIRMED' ? ', needs confirmation' :
-                                        (day.state.name() == 'PLANNED' ? ', planned' : ''))) + (day.today ? ', today' : '')}"
+                  th:attr="aria-label=${day.weekdayLabel + ' ' + day.dayOfMonth + (day.state.name() == 'ATTENDED' ? #messages.msg('dashboard.week.state.attended') :
+                                        (day.state.name() == 'UNCONFIRMED' ? #messages.msg('dashboard.week.state.needs_confirmation') :
+                                        (day.state.name() == 'PLANNED' ? #messages.msg('dashboard.week.state.planned') : ''))) + (day.today ? #messages.msg('dashboard.week.today') : '')}"
                   th:text="${day.dayOfMonth}">22</span>
         </li>
     </ol>
@@ -32,12 +32,12 @@
         <th:block th:if="${dashboard.week.streak > 0}">
             <span class="flex items-center gap-1.5 font-semibold text-primary">
                 <span th:replace="~{fragments/icon :: icon(name='local_fire_department', size='sm')}"></span>
-                <span th:text="${dashboard.week.streak + '-session streak'}">4-session streak</span>
+                <span th:text="#{dashboard.week.streak(${dashboard.week.streak})}">4-session streak</span>
             </span>
         </th:block>
         <span th:if="${dashboard.week.toConfirmCount > 0}"
               class="ml-auto font-medium text-warning"
-              th:text="${dashboard.week.toConfirmCount + ' to confirm'}">2 to confirm</span>
+              th:text="#{dashboard.week.to_confirm(${dashboard.week.toConfirmCount})}">2 to confirm</span>
     </p>
 </section>
 

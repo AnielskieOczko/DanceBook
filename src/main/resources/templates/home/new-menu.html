@@ -10,23 +10,23 @@
     <details class="group js-dropdown">
         <summary class="btn-primary list-none cursor-pointer [&::-webkit-details-marker]:hidden min-h-[44px]">
             <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-            <span>New</span>
+            <span th:text="#{dashboard.new_menu.button}">New</span>
         </summary>
         <div class="absolute right-0 top-full mt-2 w-56 z-40 card shadow-ambient py-2">
             <a href="/materials/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md', cls='text-primary')}"></span>Note
+                <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.note}">Note</th:block>
             </a>
             <a href="/training-events/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', cls='text-primary')}"></span>Session
+                <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.session}">Session</th:block>
             </a>
             <a href="/dance-figures/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span>Figure
+                <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.figure}">Figure</th:block>
             </a>
             <a href="/choreographies/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-primary')}"></span>Choreography
+                <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.choreography}">Choreography</th:block>
             </a>
             <a href="/lists/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-primary')}"></span>Collection
+                <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.collection}">Collection</th:block>
             </a>
         </div>
     </details>
