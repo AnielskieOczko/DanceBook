@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${listId == null ? 'New Collection' : 'Edit Collection'}, subtitle='Create a filtered collection of your dance materials with a beautiful cover image.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=(${listId == null ? #messages.msg('collections.new') : #messages.msg('collections.edit')}), subtitle=#{collections.form.subtitle})}"></div>
 
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
           th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">
@@ -13,16 +13,16 @@
 
         <!-- Basic Info Section -->
         <div class="space-y-6">
-            <div th:replace="~{fragments/form :: field(path='name', label='Collection Name', required=true, placeholder='e.g. My Waltz Collection', id='listName')}"></div>
+            <div th:replace="~{fragments/form :: field(path='name', label=#{collections.form.name_label}, required=true, placeholder=#{collections.form.name_placeholder}, id='listName')}"></div>
 
             <!-- Image Upload Section -->
             <div>
-                <label class="form-label">Collection Cover Image</label>
+                <label class="form-label" th:text="#{collections.form.cover_label}">Collection Cover Image</label>
                 
                 <div th:if="${listId != null and currentImage != null}" class="mb-4">
-                    <p class="text-xs text-on-surface-variant mb-2">Current Image:</p>
+                    <p class="text-xs text-on-surface-variant mb-2" th:text="#{collections.form.current_image}">Current Image:</p>
                     <div class="relative w-48 h-32 rounded-lg overflow-hidden border border-outline-variant">
-                        <img th:src="@{/uploads/lists/{filename}(filename=${currentImage})}" alt="Current Cover Image" class="w-full h-full object-cover">
+                        <img th:src="@{/uploads/lists/{filename}(filename=${currentImage})}" alt="Current Cover Image" th:attr="alt=#{collections.form.current_cover_alt}" class="w-full h-full object-cover">
                     </div>
                 </div>
 
@@ -30,18 +30,18 @@
                     <div id="uploadContent" class="space-y-1 text-center">
                         <span th:replace="~{fragments/icon :: icon(name='image', size='lg', cls='text-on-surface-variant mx-auto block')}"></span>
                         <div class="text-sm text-on-surface-variant justify-center mt-2">
-                            <span class="font-medium text-primary hover:text-primary-hover">Upload a file</span>
-                            <span>or click here to select</span>
+                            <span class="font-medium text-primary hover:text-primary-hover" th:text="#{common.upload.upload_file}">Upload a file</span>
+                            <span th:text="#{common.upload.or_select}">or click here to select</span>
                             <input id="imageUpload" name="image" type="file" accept="image/*" class="sr-only">
                         </div>
-                        <p class="text-xs text-outline mt-1">PNG, JPG, GIF up to 10MB</p>
+                        <p class="text-xs text-outline mt-1" th:text="#{common.upload.hint_formats}">PNG, JPG, GIF up to 10MB</p>
                     </div>
 
                     <div id="previewContainer" class="hidden absolute inset-0 w-full h-full bg-surface-container-low z-10">
-                        <img id="imagePreview" class="w-full h-full object-contain" src="#" alt="Image preview">
+                        <img id="imagePreview" class="w-full h-full object-contain" src="#" alt="Image preview" th:attr="alt=#{common.upload.preview_alt}">
                         <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                             <span th:replace="~{fragments/icon :: icon(name='edit', size='lg', cls='text-white mb-1')}"></span>
-                            <span id="previewFilename" class="text-white text-sm font-medium px-4 text-center truncate w-full">Change image</span>
+                            <span id="previewFilename" class="text-white text-sm font-medium px-4 text-center truncate w-full" th:text="#{common.upload.change_image}">Change image</span>
                         </div>
                     </div>
                 </label>
@@ -52,19 +52,19 @@
 
         <!-- Filters Grid Section -->
         <div>
-            <h3 class="font-headline-md text-on-surface mb-4">Collection Filters</h3>
+            <h3 class="font-headline-md text-on-surface mb-4" th:text="#{collections.form.filters_heading}">Collection Filters</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name Filter -->
-                <div th:replace="~{fragments/form :: field(path='nameFilter', label='Name Contains', placeholder='Filter materials by name...', id='nameFilter')}"></div>
+                <div th:replace="~{fragments/form :: field(path='nameFilter', label=#{collections.form.name_filter_label}, placeholder=#{collections.form.name_filter_placeholder}, id='nameFilter')}"></div>
 
                 <!-- Min Rating -->
-                <div th:replace="~{fragments/form :: field(path='minRating', label='Minimum Rating', type='number', min='1', max='5', placeholder='1-5', id='minRating')}"></div>
+                <div th:replace="~{fragments/form :: field(path='minRating', label=#{collections.form.min_rating_label}, type='number', min='1', max='5', placeholder=#{collections.form.min_rating_placeholder}, id='minRating')}"></div>
 
                 <!-- Dance Types -->
-                <div th:replace="~{fragments/form :: selectField(path='danceTypeIds', label='Dance Styles', options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceTypeIds')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeIds', label=#{collections.form.dance_styles_label}, options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint=#{common.multi_select_hint}, id='danceTypeIds')}"></div>
 
                 <!-- Dance Categories -->
-                <div th:replace="~{fragments/form :: selectField(path='danceCategoryIds', label='Categories', options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint='Hold Ctrl/Cmd to select multiple', id='danceCategoryIds')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceCategoryIds', label=#{collections.form.categories_label}, options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint=#{common.multi_select_hint}, id='danceCategoryIds')}"></div>
             </div>
         </div>
 
@@ -72,14 +72,14 @@
 
         <!-- Settings Section -->
         <div>
-            <div th:replace="~{fragments/form :: toggle(path='isPublic', label='Public Collection', hint='Visible to all users on the platform')}"></div>
+            <div th:replace="~{fragments/form :: toggle(path='isPublic', label=#{collections.form.is_public_label}, hint=#{collections.form.is_public_hint})}"></div>
         </div>
 
         <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
-            <a href="/lists" class="btn-outline">Cancel</a>
+            <a href="/lists" class="btn-outline" th:text="#{common.cancel}">Cancel</a>
             <button type="submit" class="btn-primary">
                 <span th:replace="~{fragments/icon :: icon(name='save', size='md')}"></span>
-                Save Collection
+                <span th:text="#{collections.form.save}">Save Collection</span>
             </button>
         </div>
     </form>

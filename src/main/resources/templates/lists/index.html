@@ -5,7 +5,7 @@
 <section th:with="activeNav='lists'" class="space-y-lg relative">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: pageHeader(title='My Collections', subtitle=${#lists.size(lists)} + ' collections curated', actionUrl='/lists/new', actionText='New Collection', actionIcon='add', actionVariant='primary')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=#{collections.title}, subtitle=#{collections.subtitle(${#lists.size(lists)})}, actionUrl='/lists/new', actionText=#{collections.new}, actionIcon='add', actionVariant='primary')}"></div>
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
@@ -17,19 +17,21 @@
                     <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
                            class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
                            placeholder="Search collections..."
+                           th:attr="placeholder=#{collections.search_placeholder}"
                            hx-trigger="keyup changed delay:300ms" th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                 </div>
 
                 <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]" aria-label="Filters">
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]" aria-label="Filters" th:attr="aria-label=#{common.filters}">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
-                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none">Filters</span>
+                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none" th:text="#{common.filters}">Filters</span>
                 </button>
 
                 <!-- View Toggle -->
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
+                               aria-label="List view" th:attr="aria-label=#{common.view_list}"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
@@ -38,6 +40,7 @@
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
+                               aria-label="Grid view" th:attr="aria-label=#{common.view_grid}"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
@@ -52,7 +55,7 @@
                 <!-- Column 1: Categories -->
                 <div class="flex flex-col gap-4 mt-4">
                     <div class="flex flex-col gap-2">
-                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Categories</span>
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{collections.filter.categories}">Categories</span>
                         <div class="flex flex-wrap gap-2">
                             <label th:each="c : ${danceCategories}" class="cursor-pointer">
                                 <input type="checkbox" name="categoryIds" th:value="${c.id}" class="js-category-checkbox hidden peer"
@@ -70,7 +73,7 @@
                 <!-- Column 2: Styles (Dance Types) -->
                 <div class="flex flex-col gap-4 mt-4 md:col-span-1">
                     <div class="flex flex-col gap-2">
-                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Dance Styles</span>
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{collections.filter.styles}">Dance Styles</span>
                         <div class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin">
                             <label th:each="t : ${danceTypes}" 
                                    th:data-category-id="${t.category != null ? t.category.id : ''}"
@@ -89,14 +92,14 @@
 
                 <!-- Column 3: Sorting -->
                 <div class="flex flex-col gap-1 mt-4">
-                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sort By</label>
+                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{common.sort_by}">Sort By</label>
                     <select name="sortBy" id="filterSortBy" 
                             class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
                             th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="name_asc" th:selected="${selectedSortBy == 'name_asc' || selectedSortBy == null || selectedSortBy == ''}">Name (A-Z)</option>
-                        <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}">Name (Z-A)</option>
-                        <option value="newest" th:selected="${selectedSortBy == 'newest'}">Newest</option>
-                        <option value="oldest" th:selected="${selectedSortBy == 'oldest'}">Oldest</option>
+                        <option value="name_asc" th:selected="${selectedSortBy == 'name_asc' || selectedSortBy == null || selectedSortBy == ''}" th:text="#{common.sort.name_asc}">Name (A-Z)</option>
+                        <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}" th:text="#{common.sort.name_desc}">Name (Z-A)</option>
+                        <option value="newest" th:selected="${selectedSortBy == 'newest'}" th:text="#{common.sort.newest}">Newest</option>
+                        <option value="oldest" th:selected="${selectedSortBy == 'oldest'}" th:text="#{common.sort.oldest}">Oldest</option>
                     </select>
                 </div>
             </div>
@@ -110,9 +113,9 @@
             <div class="empty-state-icon">
                 <span th:replace="~{fragments/icon :: icon(name='search_off', size='lg', cls='text-outline')}"></span>
             </div>
-            <h3 class="empty-state-title">No collections found</h3>
-            <p class="empty-state-text">No collections match the selected filters or search queries.</p>
-            <a href="/lists/new" class="btn-primary mt-4">Create collection</a>
+            <h3 class="empty-state-title" th:text="#{collections.empty.title}">No collections found</h3>
+            <p class="empty-state-text" th:text="#{collections.empty.text}">No collections match the selected filters or search queries.</p>
+            <a href="/lists/new" class="btn-primary mt-4" th:text="#{collections.empty.action}">Create collection</a>
         </div>
 
         <!-- 1. Grid (Cards) View -->
@@ -123,24 +126,28 @@
                           imgSrc=${hasCustomImage ? '/uploads/lists/' + list.imageFilename : (firstCatImage != null ? '/uploads/categories/' + firstCatImage : '/uploads/defaults/list-placeholder.png')}"
                  class="card relative group flex flex-col min-h-[120px] hover:z-30 focus-within:z-30">
                 
-                <a th:href="@{/lists/{id}(id=${list.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${list.name}">View Collection</span></a>
+                <a th:href="@{/lists/{id}(id=${list.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{collections.view_named(${list.name})}">View Collection</span></a>
                 
                 <!-- Absolute Action Menu (Fixed Stacking) -->
                 <div class="absolute top-3 right-2 z-30 group/menu pointer-events-auto">
-                    <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options">
+                    <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options" th:attr="aria-label=#{common.more_options}, title=#{common.more_options}">
                         <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
                     </button>
                     <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                         <a th:href="@{/lists/{id}(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span> Open
+                            <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span>
+                            <span th:text="#{common.open}">Open</span>
                         </a>
                         <a th:href="@{/lists/{id}/edit(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                            <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
+                            <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
+                            <span th:text="#{common.edit}">Edit</span>
                         </a>
                         <form th:action="@{/lists/{id}/delete(id=${list.id})}" method="post"
-                              data-confirm="Are you sure you want to delete this collection?">
+                              data-confirm="Are you sure you want to delete this collection?"
+                              th:attr="data-confirm=#{collections.delete_confirm}">
                             <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
-                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
+                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
+                                <span th:text="#{common.delete}">Delete</span>
                             </button>
                         </form>
                     </div>
@@ -148,7 +155,7 @@
 
                 <div class="flex flex-row w-full relative z-0 pointer-events-none">
                     <div class="w-1/3 aspect-square relative overflow-hidden rounded-tl-lg rounded-bl-lg bg-surface-container-high block z-0">
-                        <img th:src="${imgSrc}" onerror="this.src='/images/categories/placeholder.png'" alt="Collection Cover" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
+                        <img th:src="${imgSrc}" onerror="this.src='/images/categories/placeholder.png'" alt="Collection Cover" th:attr="alt=#{collections.cover_alt}" class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 transition-all duration-500" />
                         <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <span th:replace="~{fragments/icon :: icon(name='folder_open', size='lg', cls='text-white')}"></span>
                         </div>
@@ -160,10 +167,10 @@
                             </div>
                             
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
-                                <span th:replace="~{fragments/badge :: badge(label=(${list.isPublic ? 'Public' : 'Private'}), variant=(${list.isPublic ? 'secondary' : 'neutral'}))}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=(${list.isPublic ? #messages.msg('collections.visibility.public') : #messages.msg('collections.visibility.private')}), variant=(${list.isPublic ? 'secondary' : 'neutral'}))}"></span>
                                 <span th:each="t : ${list.danceTypes}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30" th:text="${t.name}">Type</span>
                                 <span th:each="c : ${list.danceCategories}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30" th:text="${c.name}">Cat</span>
-                                <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="${list.minRating} + '+ stars'">3+ stars</span>
+                                <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="#{collections.min_rating_stars(${list.minRating})}">3+ stars</span>
                             </div>
                         </div>
                     </div>
@@ -175,12 +182,12 @@
         <div th:if="${!#lists.isEmpty(lists) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
             <article th:each="list : ${lists}"
                      class="card relative group flex items-center justify-between p-3 hover:z-30 focus-within:z-30">
-                <a th:href="@{/lists/{id}(id=${list.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="'View ' + ${list.name}">View Collection</span></a>
+                <a th:href="@{/lists/{id}(id=${list.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{collections.view_named(${list.name})}">View Collection</span></a>
                 
                 <div class="flex items-center gap-3 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
                     <!-- Mini Cover / Icon -->
                     <div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden shrink-0 flex items-center justify-center text-on-surface-variant">
-                        <img th:if="${list.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${list.imageFilename})}" alt="Collection Cover" class="w-full h-full object-cover">
+                        <img th:if="${list.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${list.imageFilename})}" alt="Collection Cover" th:attr="alt=#{collections.cover_alt}" class="w-full h-full object-cover">
                         <th:block th:unless="${list.imageFilename != null}">
                             <span th:replace="~{fragments/icon :: icon(name=${list.isPublic ? 'public' : 'lock'}, size='md')}"></span>
                         </th:block>
@@ -191,10 +198,10 @@
                             <h3 class="text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap overflow-hidden text-ellipsis" th:text="${list.name}">Collection Name</h3>
                         </div>
                         <div class="flex flex-wrap gap-1.5 items-center relative z-20 pointer-events-auto">
-                            <span th:replace="~{fragments/badge :: badge(label=(${list.isPublic ? 'Public' : 'Private'}), variant=(${list.isPublic ? 'secondary' : 'neutral'}))}"></span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${list.isPublic ? #messages.msg('collections.visibility.public') : #messages.msg('collections.visibility.private')}), variant=(${list.isPublic ? 'secondary' : 'neutral'}))}"></span>
                             <span th:each="t : ${list.danceTypes}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30" th:text="${t.name}">Type</span>
                             <span th:each="c : ${list.danceCategories}" class="bg-secondary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-secondary-container/30" th:text="${c.name}">Cat</span>
-                            <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="${list.minRating} + '+ stars'">3+ stars</span>
+                            <span th:if="${list.minRating != null}" class="bg-accent-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-accent-container/30" th:text="#{collections.min_rating_stars(${list.minRating})}">3+ stars</span>
                         </div>
                     </div>
                 </div>
@@ -205,20 +212,24 @@
                         <span th:text="${#temporals.format(list.createdAt, 'dd MMM yyyy')}">Date</span>
                     </span>
                     <div class="group/menu">
-                        <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options">
+                        <button type="button" class="js-menu-btn min-h-[44px] min-w-[44px] rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More options" title="More options" th:attr="aria-label=#{common.more_options}, title=#{common.more_options}">
                             <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
                         </button>
                         <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                             <a th:href="@{/lists/{id}(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span> Open
+                                <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span>
+                                <span th:text="#{common.open}">Open</span>
                             </a>
                             <a th:href="@{/lists/{id}/edit(id=${list.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
+                                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
+                                <span th:text="#{common.edit}">Edit</span>
                             </a>
                             <form th:action="@{/lists/{id}/delete(id=${list.id})}" method="post"
-                                  data-confirm="Are you sure you want to delete this collection?">
+                                  data-confirm="Are you sure you want to delete this collection?"
+                                  th:attr="data-confirm=#{collections.delete_confirm}">
                                 <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
-                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
+                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
+                                    <span th:text="#{common.delete}">Delete</span>
                                 </button>
                             </form>
                         </div>
