@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg">
 
-    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${stats.period.label}, toolbar=~{::statsToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${stats.period.label}, toolbar=~{::statsToolbar})}">
         <div th:fragment="statsToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='stats')}"></nav>
@@ -14,10 +14,10 @@
     <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
         <div th:replace="~{fragments/empty :: emptyState(
             icon='calendar_month',
-            title='No calendars connected',
-            text='Connect your Google Calendar to start tracking training sessions.',
+            title=#{training.empty.no_calendars_title},
+            text=#{training.empty.no_calendars_text},
             actionHref='/training-calendars/new',
-            actionLabel='Connect Calendar')}"></div>
+            actionLabel=#{training.empty.no_calendars_action})}"></div>
     </th:block>
 
     <th:block th:unless="${selectableCalendars == null || selectableCalendars.isEmpty()}">
@@ -36,22 +36,22 @@
     <th:block th:if="${stats.counts.total == 0}">
         <div th:replace="~{fragments/empty :: emptyState(
             icon='monitoring',
-            title=(${stats.period.name() == 'ALL_TIME'} ? 'No sessions logged yet' : 'No sessions in this period'),
+            title=(${stats.period.name() == 'ALL_TIME'} ? #{training.stats.empty_all_title} : #{training.stats.empty_period_title}),
             text=(${stats.period.name() == 'ALL_TIME'}
-                ? 'Log a training session and this page will start keeping score: hours trained, how often you show up, and where your time goes.'
-                : 'Nothing falls in this window. Try a wider period, or log a session to see it here.'),
+                ? #{training.stats.empty_all_text}
+                : #{training.stats.empty_period_text}),
             actionHref=(${canAddSession} ? '/training-events/new' : null),
-            actionLabel='Add Session')}"></div>
+            actionLabel=#{training.add_session})}"></div>
     </th:block>
 
     <div th:if="${stats.counts.total > 0}" class="space-y-lg">
 
         <!-- KPI cards. Two up on a phone, four across from md. -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-            <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label='Hours trained')}"></div>
-            <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label='Attendance')}"></div>
-            <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label='Streak', caption='consecutive, all time')}"></div>
-            <div th:replace="~{fragments/card :: statCard(value=${stats.counts.attended}, label='Attended', caption=(${stats.counts.skipped + ' skipped · ' + stats.counts.upcoming + ' upcoming'}))}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label=#{training.stats.hours_trained})}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label=#{training.stats.attendance})}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.stats.streak_caption})}"></div>
+            <div th:replace="~{fragments/card :: statCard(value=${stats.counts.attended}, label=#{training.stats.attended}, caption=#{training.stats.attended_caption(${stats.counts.skipped}, ${stats.counts.upcoming})})}"></div>
         </div>
 
         <!-- Nudge. Unconfirmed sessions are excluded from every figure above, so the way
@@ -62,9 +62,9 @@
             <span th:replace="~{fragments/icon :: icon(name='help', size='md', cls='text-secondary')}"></span>
             <div>
                 <p class="font-semibold text-text-primary"
-                   th:text="${stats.counts.unconfirmed} + ' past sessions need confirming'">
+                   th:text="#{training.stats.unconfirmed_title(${stats.counts.unconfirmed})}">
                     3 past sessions need confirming</p>
-                <p class="text-sm text-text-secondary">They count towards nothing above until
+                <p class="text-sm text-text-secondary" th:text="#{training.stats.unconfirmed_text}">They count towards nothing above until
                     you mark them attended or skipped.</p>
             </div>
         </a>
@@ -75,7 +75,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
 
             <div class="card p-6 space-y-4">
-                <h2 class="text-lg font-heading font-medium text-text-primary">Time by style</h2>
+                <h2 class="text-lg font-heading font-medium text-text-primary" th:text="#{training.stats.time_by_style}">Time by style</h2>
                 <div th:if="${!#lists.isEmpty(stats.byCategory)}" class="relative h-64">
                     <canvas id="category-chart" aria-hidden="true" th:attr="data-slices=${categoryChartJson}"></canvas>
                 </div>
@@ -86,12 +86,12 @@
                         <span class="text-text-secondary" th:text="${slice.durationLabel}">6h</span>
                     </li>
                 </ul>
-                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-text-secondary">
+                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-text-secondary" th:text="#{training.stats.no_attended}">
                     No attended sessions in this period yet</p>
             </div>
 
             <div class="card p-6 space-y-4">
-                <h2 class="text-lg font-heading font-medium text-text-primary">Time by session type</h2>
+                <h2 class="text-lg font-heading font-medium text-text-primary" th:text="#{training.stats.time_by_type}">Time by session type</h2>
                 <div th:if="${!#lists.isEmpty(stats.byEventType)}" class="relative h-64">
                     <canvas id="event-type-chart" aria-hidden="true" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
                 </div>
@@ -100,10 +100,10 @@
                         <span class="w-3 h-3 rounded-full shrink-0" th:style="'background-color:' + ${slice.color}"></span>
                         <span class="text-text-primary flex-1" th:text="${slice.label}">TRAINING</span>
                         <span class="text-text-secondary"
-                              th:text="${slice.durationLabel} + ' · ' + ${slice.sessionCount} + ' sessions'">6h · 4 sessions</span>
+                              th:text="#{training.stats.slice_sessions(${slice.durationLabel}, ${slice.sessionCount})}">6h · 4 sessions</span>
                     </li>
                 </ul>
-                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-text-secondary">
+                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-text-secondary" th:text="#{training.stats.no_attended}">
                     No attended sessions in this period yet</p>
             </div>
         </div>

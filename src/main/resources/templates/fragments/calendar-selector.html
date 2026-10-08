@@ -5,31 +5,32 @@
 <div th:fragment="calendarSelector" class="flex flex-wrap items-center gap-2 sm:gap-3">
     <div th:if="${selectableCalendars != null && selectableCalendars.size() > 1}"
          class="flex items-center gap-2 min-w-0">
-        <label for="activeCalendar" class="form-label mb-0 shrink-0">Calendar</label>
+        <label for="activeCalendar" class="form-label mb-0 shrink-0" th:text="#{training.selector.calendar}">Calendar</label>
         <select id="activeCalendar" name="calendarId" class="form-select max-w-[200px]"
                 hx-post="/training-events/active-calendar" hx-trigger="change">
-            <option value="ALL" th:selected="${activeCalendar == null}">All calendars</option>
+            <option value="ALL" th:selected="${activeCalendar == null}" th:text="#{training.selector.all_calendars}">All calendars</option>
             <option th:each="cal : ${selectableCalendars}"
                     th:value="${cal.id}"
                     th:selected="${activeCalendar != null && activeCalendar.id == cal.id}"
-                    th:text="${cal.enabled} ? ${cal.displayName} : ${cal.displayName} + ' (disabled)'">
+                    th:text="${cal.enabled} ? ${cal.displayName} : #{training.selector.disabled(${cal.displayName})}">
                 Calendar
             </option>
         </select>
     </div>
-    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface shrink-0" title="Manage calendars">
+    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface shrink-0" title="Manage calendars" th:title="#{training.selector.manage}">
         <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span>
     </a>
     <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}">
         <div class="flex items-center gap-2 shrink-0">
             <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
-                    hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar">
+                    hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar"
+                    th:title="#{training.selector.sync_title}">
                 <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
-                <span>Sync now</span>
+                <span th:text="#{training.selector.sync_now}">Sync now</span>
             </button>
             <span class="text-xs text-text-secondary whitespace-nowrap"
-                  th:text="${lastSyncedAt != null ? 'Synced ' + #temporals.format(lastSyncedAt, 'HH:mm') : 'Never synced'}"
-                  th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never synced'}">Never synced</span>
+                  th:text="${lastSyncedAt != null ? #messages.msg('training.selector.synced', #temporals.format(lastSyncedAt, 'HH:mm')) : #messages.msg('training.selector.never_synced')}"
+                  th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : #messages.msg('training.selector.never_synced')}">Never synced</span>
         </div>
     </th:block>
 </div>

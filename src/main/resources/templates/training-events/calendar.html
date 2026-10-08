@@ -4,10 +4,10 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitleSlot=~{::calendarSubtitle}, toolbar=~{::calendarToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitleSlot=~{::calendarSubtitle}, toolbar=~{::calendarToolbar})}">
         <th:block th:fragment="calendarSubtitle">
-            <p class="page-subtitle hidden md:block">Click a slot to add a session, or drag one to move it.</p>
-            <p class="page-subtitle md:hidden">Tap a day to read it. Tap + to add a session.</p>
+            <p class="page-subtitle hidden md:block" th:text="#{training.calendar.subtitle_pointer}">Click a slot to add a session, or drag one to move it.</p>
+            <p class="page-subtitle md:hidden" th:text="#{training.calendar.subtitle_touch}">Tap a day to read it. Tap + to add a session.</p>
         </th:block>
         <div th:fragment="calendarToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
@@ -17,7 +17,7 @@
             <a href="/training-events/new" class="btn-primary hidden md:inline-flex"
                th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession}">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                Add Session
+                <span th:text="#{training.add_session}">Add Session</span>
             </a>
         </div>
     </div>
@@ -25,10 +25,10 @@
     <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
         <div th:replace="~{fragments/empty :: emptyState(
             icon='calendar_month',
-            title='No calendars connected',
-            text='Connect your Google Calendar to start tracking training sessions.',
+            title=#{training.empty.no_calendars_title},
+            text=#{training.empty.no_calendars_text},
             actionHref='/training-calendars/new',
-            actionLabel='Connect Calendar')}"></div>
+            actionLabel=#{training.empty.no_calendars_action})}"></div>
     </th:block>
 
     <th:block th:unless="${selectableCalendars == null || selectableCalendars.isEmpty()}">
@@ -55,7 +55,7 @@
              carries load dots and the detail lands here instead. -->
         <div id="dayAgenda" class="md:hidden space-y-3">
             <div class="tc-agenda-heading">
-                <h2 id="dayAgendaTitle" class="font-headline-md text-lg font-semibold text-on-surface">Today</h2>
+                <h2 id="dayAgendaTitle" class="font-headline-md text-lg font-semibold text-on-surface" th:text="#{training.today}">Today</h2>
                 <span id="dayAgendaTotal" class="text-[13px] tabular-nums text-on-surface-variant"></span>
             </div>
             <div id="dayAgendaList" class="space-y-2"></div>
@@ -82,7 +82,8 @@
 
         <button id="quickCreateFab" type="button" class="tc-fab md:hidden"
                 th:if="${canAddSession}"
-                aria-label="Add a session on the selected day">
+                aria-label="Add a session on the selected day"
+                th:attr="aria-label=#{training.calendar.add_on_selected_day}">
             <span th:replace="~{fragments/icon :: icon(name='add', size='lg')}"></span>
         </button>
 
@@ -90,7 +91,8 @@
              shown, so a resize past the breakpoint can never leave a sheet stranded on desktop. -->
         <div id="quickCreateBackdrop" class="tc-sheet-backdrop hidden md:hidden"></div>
         <div id="quickCreateSheet" class="tc-sheet hidden md:hidden"
-             role="dialog" aria-modal="true" aria-label="New session">
+             role="dialog" aria-modal="true" aria-label="New session"
+             th:attr="aria-label=#{training.calendar.new_session}">
             <div class="tc-sheet-handle"></div>
             <div id="quickCreateSheetBody"></div>
         </div>
@@ -114,19 +116,20 @@
           class="space-y-3">
         <div class="flex items-start justify-between gap-2">
             <div>
-                <h3 class="font-headline-md text-lg font-semibold text-on-surface">New session</h3>
+                <h3 class="font-headline-md text-lg font-semibold text-on-surface" th:text="#{training.calendar.new_session}">New session</h3>
                 <p class="form-hint mt-0.5" th:if="${targetCalendar != null}">
-                    Calendar: <span class="font-medium text-on-surface" th:text="${targetCalendar.displayName}">Club</span>
+                    <span th:text="#{training.calendar.quick.calendar_label}">Calendar:</span> <span class="font-medium text-on-surface" th:text="${targetCalendar.displayName}">Club</span>
                 </p>
             </div>
-            <button type="button" aria-label="Close" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close">
+            <button type="button" aria-label="Close" class="btn-icon min-h-0 min-w-0 p-1" data-close-quick-create title="Close"
+                    th:attr="aria-label=#{common.close}, title=#{common.close}">
                 <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
             </button>
         </div>
 
         <input type="hidden" name="calendarId" th:value="${targetCalendar?.id}">
 
-        <input type="text" th:field="*{title}" required class="form-input" placeholder="Add title" autofocus>
+        <input type="text" th:field="*{title}" required class="form-input" placeholder="Add title" th:placeholder="#{training.calendar.quick.title_placeholder}" autofocus>
 
         <input type="date" th:field="*{date}" required class="form-input">
 
@@ -136,18 +139,18 @@
         </div>
 
         <select th:field="*{repeat}" class="form-select">
-            <option value="NONE">Does not repeat</option>
-            <option value="WEEKLY" th:text="'Weekly on ' + ${quickCreateWeekday}">Weekly</option>
+            <option value="NONE" th:text="#{training.calendar.quick.repeat_none}">Does not repeat</option>
+            <option value="WEEKLY" th:text="#{training.calendar.quick.repeat_weekly(${quickCreateWeekday})}">Weekly</option>
         </select>
 
         <div id="quickRepeatUntilRow" class="hidden">
-            <label class="form-label">Repeat until</label>
+            <label class="form-label" th:text="#{training.form.field.repeat_until}">Repeat until</label>
             <input type="date" th:field="*{repeatUntil}" class="form-input">
         </div>
 
         <div class="flex items-center justify-between gap-2 pt-1">
-            <a th:href="@{/training-events/new}" class="btn-ghost px-0 min-h-0 text-label-md">More options</a>
-            <button type="submit" class="btn-primary">Save</button>
+            <a th:href="@{/training-events/new}" class="btn-ghost px-0 min-h-0 text-label-md" th:text="#{training.calendar.quick.more_options}">More options</a>
+            <button type="submit" class="btn-primary" th:text="#{common.save}">Save</button>
         </div>
     </form>
 </div>

@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${trainingEventId == null ? 'Add Training Session' : 'Edit Training Session'}, subtitle='Saved here and written through to your Google Calendar.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=${trainingEventId == null ? #messages.msg('training.form.title.add') : #messages.msg('training.form.title.edit')}, subtitle=#{training.form.subtitle})}"></div>
 
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
           th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm"
@@ -22,7 +22,7 @@
         <th:block th:if="${draftNote != null}">
             <input type="hidden" name="materialId" th:value="${draftNote.id}"/>
             <div data-draft-note class="text-sm text-on-surface-variant">
-                Linked note: <span class="font-semibold text-on-surface" th:text="${draftNote.name}">Quickstep drills</span>
+                <span th:text="#{training.form.linked_note}">Linked note:</span> <span class="font-semibold text-on-surface" th:text="${draftNote.name}">Quickstep drills</span>
             </div>
         </th:block>
 
@@ -37,7 +37,7 @@
                 <span th:replace="~{fragments/icon :: icon(name='calendar_today', size='md', cls='text-primary')}"></span>
                 <div>
                     <span class="text-label-sm font-label-sm uppercase tracking-wide text-on-surface-variant block"
-                          th:text="${trainingEventId == null ? 'Target calendar' : 'Calendar'}">
+                          th:text="${trainingEventId == null ? #messages.msg('training.form.calendar.target') : #messages.msg('training.form.calendar.current')}">
                         Target calendar
                     </span>
                     <span class="font-body-md font-semibold text-on-surface"
@@ -46,78 +46,79 @@
                     </span>
                 </div>
             </div>
-            <span th:if="${trainingEventId != null}" class="text-label-sm text-on-surface-variant">
+            <span th:if="${trainingEventId != null}" class="text-label-sm text-on-surface-variant"
+                  th:text="#{training.form.calendar.locked}">
                 Cannot be moved between calendars
             </span>
         </div>
         <input th:if="${trainingEventId == null}" type="hidden" name="calendarId"
                th:value="${targetCalendar?.id}">
 
-        <div th:replace="~{fragments/form :: field(path='title', label='Title', required=true, id='title', placeholder='e.g. Monday practice, Standard camp...')}"></div>
+        <div th:replace="~{fragments/form :: field(path='title', label=#{training.form.field.title}, required=true, id='title', placeholder=#{training.form.field.title_placeholder})}"></div>
 
         <!-- Date and times, laid out the way Google's editor does -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div th:replace="~{fragments/form :: field(path='date', label='Date', type='date', required=true, id='date')}"></div>
-            <div th:replace="~{fragments/form :: field(path='startTime', label='From', type='time', required=true, id='startTime')}"></div>
-            <div th:replace="~{fragments/form :: field(path='endTime', label='To', type='time', required=true, id='endTime')}"></div>
+            <div th:replace="~{fragments/form :: field(path='date', label=#{training.form.field.date}, type='date', required=true, id='date')}"></div>
+            <div th:replace="~{fragments/form :: field(path='startTime', label=#{training.form.field.from}, type='time', required=true, id='startTime')}"></div>
+            <div th:replace="~{fragments/form :: field(path='endTime', label=#{training.form.field.to}, type='time', required=true, id='endTime')}"></div>
         </div>
 
         <div>
             <button type="button" id="toggleEndDate" class="btn-ghost px-0 min-h-0 text-label-md">
                 <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
-                Ends on a different day
+                <span th:text="#{training.form.ends_other_day}">Ends on a different day</span>
             </button>
             <div id="endDateRow" class="hidden mt-2">
-                <div th:replace="~{fragments/form :: field(path='endDate', label='End date', type='date', id='endDate', hint='For camps and competitions that run across days.')}"></div>
+                <div th:replace="~{fragments/form :: field(path='endDate', label=#{training.form.field.end_date}, type='date', id='endDate', hint=#{training.form.field.end_date_hint})}"></div>
             </div>
         </div>
 
         <!-- Repeats: recurrence is a property of the event, as in Google's editor -->
         <div th:if="${trainingEventId == null}">
-            <div th:replace="~{fragments/form :: selectField(path='repeat', label='Repeats', id='repeat', options=${repeatOptions}, optValue='value', optLabel='label')}"></div>
+            <div th:replace="~{fragments/form :: selectField(path='repeat', label=#{training.form.field.repeats}, id='repeat', options=${repeatOptions}, optValue='value', optLabel='label')}"></div>
             <div id="repeatUntilRow" class="hidden mt-3">
-                <div th:replace="~{fragments/form :: field(path='repeatUntil', label='Repeat until', type='date', required=true, id='repeatUntil', hint='Sessions are created up front, at most 52.', hintId='repeatSummary')}"></div>
+                <div th:replace="~{fragments/form :: field(path='repeatUntil', label=#{training.form.field.repeat_until}, type='date', required=true, id='repeatUntil', hint=#{training.form.field.repeat_until_hint}, hintId='repeatSummary')}"></div>
             </div>
         </div>
 
         <!-- Which occurrences an edit applies to -->
         <div th:if="${isSeriesOccurrence}" class="bg-surface-container rounded-md p-4 space-y-4">
             <div>
-                <label class="form-label">This session repeats. Apply changes to</label>
+                <label class="form-label" th:text="#{training.form.scope.legend}">This session repeats. Apply changes to</label>
                 <div class="space-y-3 mt-2">
                     <div>
                         <label class="flex items-center gap-3 font-body-md">
                             <input type="radio" th:field="*{editScope}" value="THIS_EVENT">
-                            <span>This event only</span>
+                            <span th:text="#{training.form.scope.this_event}">This event only</span>
                         </label>
-                        <p class="form-hint ml-7 mt-1 text-on-surface-variant">
+                        <p class="form-hint ml-7 mt-1 text-on-surface-variant" th:text="#{training.form.scope.this_event_hint}">
                             Detaches this session from the series. It will become a standalone session and cannot be reconnected.
                         </p>
                     </div>
                     <label class="flex items-center gap-3 font-body-md">
                         <input type="radio" th:field="*{editScope}" value="THIS_AND_FOLLOWING">
-                        <span>This and following events</span>
+                        <span th:text="#{training.form.scope.this_and_following}">This and following events</span>
                     </label>
                     <label class="flex items-center gap-3 font-body-md">
                         <input type="radio" th:field="*{editScope}" value="ALL_EVENTS">
-                        <span>All events</span>
+                        <span th:text="#{training.form.scope.all_events}">All events</span>
                     </label>
                 </div>
-                <p id="scopeHint" class="form-hint mt-3">Sessions keep their dates, times, attendance and outcomes.</p>
+                <p id="scopeHint" class="form-hint mt-3" th:text="#{training.form.scope.hint}">Sessions keep their dates, times, attendance and outcomes.</p>
             </div>
 
             <!-- Recurrence pattern controls (shown when All events is selected) -->
             <div id="seriesPatternControls" class="border-t border-border pt-4 space-y-4 hidden">
-                <div class="font-medium text-on-surface text-body-md">Recurrence Pattern</div>
+                <div class="font-medium text-on-surface text-body-md" th:text="#{training.form.pattern.title}">Recurrence Pattern</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <div th:replace="~{fragments/form :: selectField(path='dayOfWeek', label='Weekday', required=true, id='dayOfWeek', options=${dayOfWeekOptions}, optValue='value', optLabel='label')}"></div>
+                        <div th:replace="~{fragments/form :: selectField(path='dayOfWeek', label=#{training.form.pattern.weekday}, required=true, id='dayOfWeek', options=${dayOfWeekOptions}, optValue='value', optLabel='label')}"></div>
                     </div>
                     <div>
-                        <div th:replace="~{fragments/form :: field(path='repeatUntil', label='Repeat until', type='date', required=true, id='repeatUntil')}"></div>
+                        <div th:replace="~{fragments/form :: field(path='repeatUntil', label=#{training.form.field.repeat_until}, type='date', required=true, id='repeatUntil')}"></div>
                     </div>
                 </div>
-                <p class="form-hint" id="editPatternSummary">
+                <p class="form-hint" id="editPatternSummary" th:text="#{training.form.pattern.hint}">
                     Changing the weekday or times moves every occurrence. Shortening drops excess sessions; extending creates new ones.
                 </p>
             </div>
@@ -126,10 +127,10 @@
         <!-- Style breakdown -->
         <div class="border-t border-border pt-6">
             <div class="flex items-center justify-between mb-2">
-                <label class="form-label mb-0">Styles</label>
+                <label class="form-label mb-0" th:text="#{training.form.styles.label}">Styles</label>
                 <span id="segmentTotal" class="font-label-sm text-label-sm text-on-surface-variant"></span>
             </div>
-            <p class="form-hint mb-3">
+            <p class="form-hint mb-3" th:text="#{training.form.styles.hint}">
                 Split the session by style, e.g. 1h Standard then 2h Latin. Leave empty for
                 sessions that are not style-specific.
             </p>
@@ -137,15 +138,16 @@
             <div id="segmentRows" class="space-y-3">
                 <div th:each="segment, iter : *{segments}" class="flex items-center gap-3" data-segment-row>
                     <select th:field="*{segments[__${iter.index}__].categoryId}" class="form-select flex-1">
-                        <option value="">-- Select style --</option>
+                        <option value="" th:text="#{training.styles.select}">-- Select style --</option>
                         <option th:each="category : ${danceCategories}" th:value="${category.id}"
                                 th:text="${category.name}">Standard</option>
                     </select>
                     <input type="number" min="0" step="5"
                            th:field="*{segments[__${iter.index}__].durationMinutes}"
-                           class="form-input w-28" placeholder="min" data-segment-minutes>
-                    <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove">
+                           class="form-input w-28" placeholder="min" th:placeholder="#{training.unit.min}" data-segment-minutes>
+                    <span class="font-body-md text-on-surface-variant" th:text="#{training.unit.min}">min</span>
+                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove"
+                            th:attr="aria-label=#{training.form.styles.remove_aria}, title=#{training.action.remove}">
                         <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                     </button>
                 </div>
@@ -153,21 +155,22 @@
 
             <button type="button" id="addSegment" class="btn-outline mt-3">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                Add style
+                <span th:text="#{training.styles.add}">Add style</span>
             </button>
 
             <!-- Template for a new row; kept in the DOM so Tailwind emits its classes -->
             <template id="segmentRowTemplate">
                 <div class="flex items-center gap-3" data-segment-row>
                     <select name="segments[INDEX].categoryId" class="form-select flex-1">
-                        <option value="">-- Select style --</option>
+                        <option value="" th:text="#{training.styles.select}">-- Select style --</option>
                         <option th:each="category : ${danceCategories}" th:value="${category.id}"
                                 th:text="${category.name}">Standard</option>
                     </select>
                     <input type="number" min="0" step="5" name="segments[INDEX].durationMinutes"
-                           class="form-input w-28" placeholder="min" data-segment-minutes>
-                    <span class="font-body-md text-on-surface-variant">min</span>
-                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove">
+                           class="form-input w-28" placeholder="min" th:placeholder="#{training.unit.min}" data-segment-minutes>
+                    <span class="font-body-md text-on-surface-variant" th:text="#{training.unit.min}">min</span>
+                    <button type="button" aria-label="Remove style" class="btn-icon text-error" data-remove-segment title="Remove"
+                            th:attr="aria-label=#{training.form.styles.remove_aria}, title=#{training.action.remove}">
                         <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                     </button>
                 </div>
@@ -176,18 +179,18 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-6">
             <div>
-                <div th:replace="~{fragments/form :: selectField(path='eventType', label='Type', required=true, id='eventType', options=${eventTypeOptions})}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='eventType', label=#{training.form.field.type}, required=true, id='eventType', options=${eventTypeOptions})}"></div>
             </div>
             <div>
-                <div th:replace="~{fragments/form :: selectField(path='attendanceStatus', label='Attendance', id='attendanceStatus', options=${attendanceStatusOptions})}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='attendanceStatus', label=#{training.form.field.attendance}, id='attendanceStatus', options=${attendanceStatusOptions})}"></div>
             </div>
         </div>
 
-        <div th:replace="~{fragments/form :: richText(path='description', label='Notes', id='description', placeholder='What did you work on?', rows=4)}"></div>
+        <div th:replace="~{fragments/form :: richText(path='description', label=#{training.form.field.notes}, id='description', placeholder=#{training.form.field.notes_placeholder}, rows=4)}"></div>
 
-        <div th:replace="~{fragments/form :: field(path='materialsUrl', label='External materials link', type='url', id='materialsUrl', placeholder='https://...', hint='For links outside DanceBook.')}"></div>
+        <div th:replace="~{fragments/form :: field(path='materialsUrl', label=#{training.form.field.materials_url}, type='url', id='materialsUrl', placeholder='https://...', hint=#{training.form.field.materials_url_hint})}"></div>
 
-        <div th:replace="~{fragments/button :: submitRow(cancelHref='/training-events', submitLabel='Save Session')}"></div>
+        <div th:replace="~{fragments/button :: submitRow(cancelHref='/training-events', cancelLabel=#{common.cancel}, submitLabel=#{training.form.save})}"></div>
     </form>
 
     <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>
