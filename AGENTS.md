@@ -978,7 +978,12 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   (the rest, waits). Shares must be 5 to 95 and leave the worker 5 or startup fails. Anonymous
   callers get no semantic search at all. Neither `HybridSearchServiceImpl.search` nor the related-notes
   methods hold a transaction across the embedding call, and the related-notes and assistant paths
-  check `AssistantFeature.enabled` first. gives keyword-only results. Semantic
+  check `AssistantFeature.enabled` first. Because Open Session in View is off, what `search` and
+  the related-notes methods return is initialised inside their own short transactions by
+  `ReadModelInitializer` (note: owner, dance type and category, pinned figures with their catalog
+  entry, type and category; figure: dance type and category, creator). Anything beyond that, such
+  as a figure's steps or a note's comments, is not loaded; add it there if a consumer needs it.
+  Semantic
   matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance

@@ -67,6 +67,13 @@ class HybridSearchServiceTest {
         }
     }
 
+    private class NoOpTransactions : org.springframework.transaction.PlatformTransactionManager {
+        override fun getTransaction(definition: org.springframework.transaction.TransactionDefinition?): org.springframework.transaction.TransactionStatus =
+            org.springframework.transaction.support.SimpleTransactionStatus()
+        override fun commit(status: org.springframework.transaction.TransactionStatus) {}
+        override fun rollback(status: org.springframework.transaction.TransactionStatus) {}
+    }
+
     private val user = AppUser().apply { id = UUID.randomUUID() }
     private lateinit var materialService: MaterialService
     private lateinit var danceFigureService: DanceFigureService
@@ -93,7 +100,8 @@ class HybridSearchServiceTest {
     private fun build() {
         service = HybridSearchServiceImpl(
             materialService, danceFigureService, appUserService, commentRepository,
-            chunks, embeddings, EmbeddingBudget(props, Clock.systemUTC()), props, AssistantFeature(props)
+            chunks, embeddings, EmbeddingBudget(props, Clock.systemUTC()), props, AssistantFeature(props),
+            org.springframework.transaction.support.TransactionTemplate(NoOpTransactions())
         )
     }
 

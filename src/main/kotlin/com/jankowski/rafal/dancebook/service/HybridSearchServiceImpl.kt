@@ -35,7 +35,8 @@ class HybridSearchServiceImpl(
     private val embeddingModel: EmbeddingModel,
     private val embeddingBudget: EmbeddingBudget,
     private val googleAiProperties: GoogleAiProperties,
-    private val assistantFeature: AssistantFeature
+    private val assistantFeature: AssistantFeature,
+    private val transactionTemplate: org.springframework.transaction.support.TransactionTemplate
 ) : HybridSearchService {
 
     companion object {
@@ -53,10 +54,17 @@ class HybridSearchServiceImpl(
         val q = query?.trim().orEmpty()
         if (q.isEmpty()) return emptyList()
 
-        val keywordNotes = materialService.searchNotes(q, null, danceTypeId, limit)
-        val keywordFigures = danceFigureService.findAll(
-            typeIds = danceTypeId?.let { listOf(it) }, nameSearch = q
-        ).take(limit)
+        // One short transaction for the keyword legs, so the results can be initialised before the
+        // session closes (Open Session in View is off).
+        val (keywordNotes, keywordFigures) = transactionTemplate.execute {
+            val notes = materialService.searchNotes(q, null, danceTypeId, limit)
+            val figures = danceFigureService.findAll(
+                typeIds = danceTypeId?.let { listOf(it) }, nameSearch = q
+            ).take(limit)
+            notes.forEach { ReadModelInitializer.note(it) }
+            figures.forEach { ReadModelInitializer.figure(it) }
+            notes to figures
+        }!!
 
         val keywordIds = (keywordNotes.mapNotNull { it.id } + keywordFigures.mapNotNull { it.id }).toSet()
         val semantic = semanticHits(q, danceTypeId, keywordIds)
@@ -107,10 +115,12 @@ class HybridSearchServiceImpl(
 
             val near = chunks.filter { (it.distance ?: Double.MAX_VALUE) < maxDistance }
             // One query for every comment chunk, instead of one per chunk.
-            val noteIdByComment = commentRepository
-                .findAllById(near.filter { it.chunk.sourceType == KnowledgeSourceType.NOTE_COMMENT }.map { it.chunk.sourceId }.distinct())
-                .mapNotNull { c -> c.material?.id?.let { c.id to it } }
-                .toMap()
+            val commentIds = near.filter { it.chunk.sourceType == KnowledgeSourceType.NOTE_COMMENT }.map { it.chunk.sourceId }.distinct()
+            val noteIdByComment = if (commentIds.isEmpty()) emptyMap() else transactionTemplate.execute {
+                commentRepository.findAllById(commentIds)
+                    .mapNotNull { c -> c.material?.id?.let { c.id to it } }
+                    .toMap()
+            }!!
 
             // Ordered, de-duplicated candidates: (kind, id) nearest first.
             val candidates = LinkedHashSet<Pair<SearchHitType, UUID>>()
@@ -145,8 +155,15 @@ class HybridSearchServiceImpl(
         }
     }
 
-    private fun openNote(id: UUID): Material? = try { materialService.findById(id) } catch (e: Exception) { null }
-    private fun openFigure(id: UUID): DanceFigure? = try { danceFigureService.findById(id) } catch (e: Exception) { null }
+    // Each in its own transaction: a not-found or access failure rolls back only this lookup, and
+    // the entity is initialised before its session closes.
+    private fun openNote(id: UUID): Material? = try {
+        transactionTemplate.execute { ReadModelInitializer.note(materialService.findById(id)) }
+    } catch (e: Exception) { null }
+
+    private fun openFigure(id: UUID): DanceFigure? = try {
+        transactionTemplate.execute { ReadModelInitializer.figure(danceFigureService.findById(id)) }
+    } catch (e: Exception) { null }
 
     private fun noteHit(n: Material, m: SearchMatch) = SearchHit(SearchHitType.NOTE, n.id!!, m, note = n)
     private fun figureHit(f: DanceFigure, m: SearchMatch) = SearchHit(SearchHitType.FIGURE, f.id!!, m, figure = f)

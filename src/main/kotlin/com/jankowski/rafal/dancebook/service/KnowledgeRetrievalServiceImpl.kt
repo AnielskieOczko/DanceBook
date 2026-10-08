@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.KnowledgeChunk
 import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
@@ -54,14 +55,18 @@ class KnowledgeRetrievalServiceImpl(
         } ?: return emptyList()
 
         val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = materialId, currentUser = currentUser, limit = limit)
-        return relatedChunks.mapNotNull {
-            try {
-                materialService.findById(it.sourceId)
-            } catch (e: Exception) {
-                null
-            }
-        }.distinctBy { it.id }
+        return openRelated(relatedChunks)
     }
+
+    // Each note in its own transaction, initialised before its session closes (Open Session in
+    // View is off); a note the user cannot open rolls back only its own lookup.
+    private fun openRelated(chunks: List<KnowledgeChunk>): List<Material> = chunks.mapNotNull { chunk ->
+        try {
+            transactionTemplate.execute { ReadModelInitializer.note(materialService.findById(chunk.sourceId)) }
+        } catch (e: Exception) {
+            null
+        }
+    }.distinctBy { it.id }
 
     override fun findRelatedNotesForFigure(figureId: UUID, currentUser: AppUser?, limit: Int): List<Material> {
         val chunk = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, figureId)
@@ -74,12 +79,6 @@ class KnowledgeRetrievalServiceImpl(
         } ?: return emptyList()
 
         val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = figureId, currentUser = currentUser, limit = limit)
-        return relatedChunks.mapNotNull {
-            try {
-                materialService.findById(it.sourceId)
-            } catch (e: Exception) {
-                null
-            }
-        }.distinctBy { it.id }
+        return openRelated(relatedChunks)
     }
 }
