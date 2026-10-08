@@ -33,5 +33,7 @@ data class KnowledgeChunk(
 
 data class KnowledgeSearchResult(
     val chunk: KnowledgeChunk,
-    val rrfScore: Double
+    val rrfScore: Double,
+    /** Cosine distance of the vector match, or null when the chunk matched by text only. */
+    val distance: Double? = null
 )

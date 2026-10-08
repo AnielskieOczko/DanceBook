@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.config.AssistantFeature
 import com.jankowski.rafal.dancebook.config.GoogleAiProperties
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Comment
@@ -49,10 +50,12 @@ class HybridSearchServiceTest {
         var failure: RuntimeException? = null
         var lastQuery: String? = "unset"
         var lastUser: AppUser? = null
+        var lastMaxDistance: Double? = null
         override fun hybridSearch(
             query: String?, queryEmbedding: FloatArray?, sourceTypes: List<KnowledgeSourceType>?,
-            currentUser: AppUser?, limit: Int, topK: Int, k: Int
+            currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double
         ): List<KnowledgeSearchResult> {
+            lastMaxDistance = maxDistance
             lastQuery = query
             lastUser = currentUser
             failure?.let { throw it }
@@ -78,7 +81,7 @@ class HybridSearchServiceTest {
         commentRepository = mock(CommentRepository::class.java)
         chunks = FakeChunkRepository()
         embeddings = FakeEmbeddingModel()
-        props = GoogleAiProperties(embeddingRequestsPerMinute = 100)
+        props = GoogleAiProperties(apiKey = "key", embeddingRequestsPerMinute = 100, semanticSearchMaxDistance = 0.5)
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(user)
         build()
     }
@@ -86,16 +89,16 @@ class HybridSearchServiceTest {
     private fun build() {
         service = HybridSearchServiceImpl(
             materialService, danceFigureService, appUserService, commentRepository,
-            chunks, embeddings, EmbeddingQueryRateLimiter(props, Clock.systemUTC())
+            chunks, embeddings, EmbeddingQueryRateLimiter(props, Clock.systemUTC()), props, AssistantFeature(props)
         )
     }
 
     private fun note(name: String) = Material().apply { id = UUID.randomUUID(); this.name = name }
     private fun figure(name: String) = DanceFigure().apply { id = UUID.randomUUID(); this.name = name }
 
-    private fun chunk(type: KnowledgeSourceType, sourceId: UUID) = KnowledgeSearchResult(
+    private fun chunk(type: KnowledgeSourceType, sourceId: UUID, distance: Double = 0.1) = KnowledgeSearchResult(
         KnowledgeChunk(sourceType = type, sourceId = sourceId, content = "x", embeddingModel = "m", visibility = Visibility.PUBLIC),
-        0.1
+        0.1, distance
     )
 
     private fun keywordNotes(vararg notes: Material) {
@@ -213,7 +216,7 @@ class HybridSearchServiceTest {
 
     @Test
     fun `the embedding rate limit is respected by skipping the semantic leg`() {
-        props = GoogleAiProperties(embeddingRequestsPerMinute = 1)
+        props = GoogleAiProperties(apiKey = "key", embeddingRequestsPerMinute = 1)
         build()
         val kw = note("Sway notes"); val sem = note("Semantic")
         keywordNotes(kw); keywordFigures(); visibleNote(sem)
@@ -224,6 +227,47 @@ class HybridSearchServiceTest {
 
         assertEquals(1, embeddings.calls, "the second search is over the limit and must not call the provider")
         assertEquals(listOf(kw.id), second.map { it.id })
+    }
+
+    @Test
+    fun `without an API key the semantic leg is skipped and keyword results stand alone`() {
+        props = GoogleAiProperties(apiKey = "", embeddingRequestsPerMinute = 100)
+        build()
+        val kw = note("Sway notes"); val sem = note("Zero vector neighbour")
+        keywordNotes(kw); keywordFigures(); visibleNote(sem)
+        chunks.results = listOf(chunk(KnowledgeSourceType.NOTE, sem.id!!))
+
+        val hits = service.search("sway")
+
+        assertEquals(listOf(kw.id), hits.map { it.id })
+        assertEquals(0, embeddings.calls)
+        assertEquals("unset", chunks.lastQuery, "the index must not be queried either")
+    }
+
+    @Test
+    fun `semantic candidates beyond the configured distance are dropped, those within are kept`() {
+        keywordNotes(); keywordFigures()
+        val near = note("Near"); val far = note("Far"); val edge = note("Edge")
+        listOf(near, far, edge).forEach { visibleNote(it) }
+        chunks.results = listOf(
+            chunk(KnowledgeSourceType.NOTE, near.id!!, 0.49),
+            chunk(KnowledgeSourceType.NOTE, far.id!!, 0.51),
+            chunk(KnowledgeSourceType.NOTE, edge.id!!, 0.5)
+        )
+
+        val hits = service.search("sway")
+
+        assertEquals(listOf(near.id), hits.map { it.id })
+        assertEquals(0.5, chunks.lastMaxDistance) // the threshold is also pushed into the vector query
+    }
+
+    @Test
+    fun `a keyword hit with only a distant semantic match stays KEYWORD`() {
+        val a = note("A")
+        keywordNotes(a); keywordFigures(); visibleNote(a)
+        chunks.results = listOf(chunk(KnowledgeSourceType.NOTE, a.id!!, 0.9))
+
+        assertEquals(SearchMatch.KEYWORD, service.search("sway").single().match)
     }
 
     @Test

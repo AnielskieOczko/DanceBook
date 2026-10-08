@@ -1,5 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.config.AssistantFeature
+import com.jankowski.rafal.dancebook.config.GoogleAiProperties
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
 import com.jankowski.rafal.dancebook.model.Material
@@ -32,7 +34,9 @@ class HybridSearchServiceImpl(
     private val commentRepository: CommentRepository,
     private val knowledgeChunkRepository: KnowledgeChunkRepository,
     private val embeddingModel: EmbeddingModel,
-    private val embeddingRateLimiter: EmbeddingQueryRateLimiter
+    private val embeddingRateLimiter: EmbeddingQueryRateLimiter,
+    private val googleAiProperties: GoogleAiProperties,
+    private val assistantFeature: AssistantFeature
 ) : HybridSearchService {
 
     companion object {
@@ -78,22 +82,29 @@ class HybridSearchServiceImpl(
     private fun semanticHits(query: String, danceTypeId: UUID?, keywordIds: Set<UUID>): Semantic {
         val none = Semantic(emptySet(), emptyList())
         return try {
+            if (!assistantFeature.enabled) {
+                // No key means zero-vector embeddings, whose neighbours are meaningless.
+                return none
+            }
             if (!embeddingRateLimiter.tryAcquire()) {
                 log.debug("Embedding rate limit reached, searching by keyword only")
                 return none
             }
+            val maxDistance = googleAiProperties.semanticSearchMaxDistance
             val embedding = embeddingModel.embed(query)
             val chunks = knowledgeChunkRepository.hybridSearch(
                 query = null,
                 queryEmbedding = embedding,
                 sourceTypes = listOf(KnowledgeSourceType.NOTE, KnowledgeSourceType.NOTE_COMMENT, KnowledgeSourceType.FIGURE),
                 currentUser = appUserService.getCurrentUserOrNull(),
-                limit = SEMANTIC_CANDIDATES
+                limit = SEMANTIC_CANDIDATES,
+                maxDistance = maxDistance
             )
 
             // Ordered, de-duplicated candidates: (kind, id) nearest first.
             val candidates = LinkedHashSet<Pair<SearchHitType, UUID>>()
             for (r in chunks) {
+                if ((r.distance ?: Double.MAX_VALUE) >= maxDistance) continue
                 when (r.chunk.sourceType) {
                     KnowledgeSourceType.NOTE -> candidates += SearchHitType.NOTE to r.chunk.sourceId
                     KnowledgeSourceType.NOTE_COMMENT -> commentRepository.findById(r.chunk.sourceId).orElse(null)

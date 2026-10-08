@@ -122,4 +122,19 @@ class HybridSearchIntegrationTest {
         assertEquals(SearchMatch.SEMANTIC, byId[semanticNote.id]?.match)
         assertEquals(keywordNote.id, hits.first().id)
     }
+
+    @Test
+    fun `the vector query honours the distance threshold and reports the distance`() {
+        val n = note(userA, "Body motion", "all about sway", Visibility.PUBLIC)
+        val embedding = FloatArray(768).also { it[0] = 1f } // "sway" only; the note embeds on sway and waltz, 45 degrees away
+
+        fun run(max: Double) = knowledgeChunkRepository.hybridSearch(
+            query = null, queryEmbedding = embedding, currentUser = userA, maxDistance = max
+        ).filter { it.chunk.sourceId == n.id }
+
+        val within = run(0.65)
+        assertEquals(1, within.size)
+        assertTrue(within.single().distance!! in 0.2..0.4, "distance was ${within.single().distance}")
+        assertTrue(run(0.1).isEmpty())
+    }
 }

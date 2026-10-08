@@ -968,8 +968,10 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   come from the existing `MaterialService.searchNotes` / `DanceFigureService.findAll`, in their
   order; up to 5 extra semantic-only items (vector-only query, then opened through the services
   so access is re-checked) are appended, and items found both ways go first. Any embedding
-  failure, or `EmbeddingQueryRateLimiter` refusing (same requests-per-minute setting as the
-  index worker, but its own window, and it never sleeps), gives keyword-only results.
+  failure, no API key (`AssistantFeature.enabled` false: zero-vector embeddings), or
+  `EmbeddingQueryRateLimiter` refusing (same requests-per-minute setting as the
+  index worker, but its own window, and it never sleeps), gives keyword-only results. Semantic
+  matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.

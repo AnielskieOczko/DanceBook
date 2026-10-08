@@ -25,5 +25,10 @@ data class GoogleAiProperties(
     /** Vector dimension for embeddings. */
     val embeddingDimensions: Int = 768,
     /** Maximum embedding requests per minute. Defaults to 90 (below free tier limit of 100). */
-    val embeddingRequestsPerMinute: Int = 90
+    val embeddingRequestsPerMinute: Int = 90,
+    /**
+     * Cosine distance (0 identical, 1 unrelated) beyond which a semantic search match is dropped.
+     * 0.65 is the cutoff the knowledge index's hybrid query has always used.
+     */
+    val semanticSearchMaxDistance: Double = 0.65
 )
