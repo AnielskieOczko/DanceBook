@@ -26,7 +26,6 @@ import org.springframework.ai.embedding.EmbeddingRequest
 import org.springframework.ai.embedding.EmbeddingResponse
 import org.springframework.jdbc.core.JdbcTemplate
 import java.time.Clock
-import java.util.Optional
 import java.util.UUID
 
 class HybridSearchServiceTest {
@@ -51,11 +50,13 @@ class HybridSearchServiceTest {
         var lastQuery: String? = "unset"
         var lastUser: AppUser? = null
         var lastMaxDistance: Double? = null
+        var lastTopK: Int? = null
         override fun hybridSearch(
             query: String?, queryEmbedding: FloatArray?, sourceTypes: List<KnowledgeSourceType>?,
             currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double
         ): List<KnowledgeSearchResult> {
             lastMaxDistance = maxDistance
+            lastTopK = topK
             lastQuery = query
             lastUser = currentUser
             failure?.let { throw it }
@@ -89,7 +90,7 @@ class HybridSearchServiceTest {
     private fun build() {
         service = HybridSearchServiceImpl(
             materialService, danceFigureService, appUserService, commentRepository,
-            chunks, embeddings, EmbeddingQueryRateLimiter(props, Clock.systemUTC()), props, AssistantFeature(props)
+            chunks, embeddings, EmbeddingBudget(props, Clock.systemUTC()), props, AssistantFeature(props)
         )
     }
 
@@ -159,7 +160,7 @@ class HybridSearchServiceTest {
         val sem = note("Sem")
         val comment = Comment().apply { id = UUID.randomUUID(); material = sem }
         keywordNotes(); keywordFigures(); visibleNote(sem)
-        `when`(commentRepository.findById(comment.id!!)).thenReturn(Optional.of(comment))
+        `when`(commentRepository.findAllById(listOf(comment.id!!))).thenReturn(listOf(comment))
         chunks.results = listOf(
             chunk(KnowledgeSourceType.NOTE, sem.id!!),
             chunk(KnowledgeSourceType.NOTE, sem.id!!),
@@ -268,6 +269,41 @@ class HybridSearchServiceTest {
         chunks.results = listOf(chunk(KnowledgeSourceType.NOTE, a.id!!, 0.9))
 
         assertEquals(SearchMatch.KEYWORD, service.search("sway").single().match)
+    }
+
+    @Test
+    fun `the whole candidate window is requested from the vector query`() {
+        keywordNotes(); keywordFigures()
+        service.search("sway")
+        assertEquals(30, chunks.lastTopK)
+    }
+
+    @Test
+    fun `comment chunks are resolved to notes in one batched lookup`() {
+        keywordNotes(); keywordFigures()
+        val n1 = note("N1"); val n2 = note("N2")
+        visibleNote(n1); visibleNote(n2)
+        val c1 = Comment().apply { id = UUID.randomUUID(); material = n1 }
+        val c2 = Comment().apply { id = UUID.randomUUID(); material = n2 }
+        val c3 = Comment().apply { id = UUID.randomUUID(); material = n1 }
+        `when`(commentRepository.findAllById(listOf(c1.id!!, c2.id!!, c3.id!!))).thenReturn(listOf(c1, c2, c3))
+        chunks.results = listOf(c1, c2, c3).map { chunk(KnowledgeSourceType.NOTE_COMMENT, it.id!!) }
+
+        val hits = service.search("sway")
+
+        assertEquals(listOf(n1.id, n2.id), hits.map { it.id })
+        org.mockito.Mockito.verify(commentRepository, org.mockito.Mockito.times(1)).findAllById(org.mockito.ArgumentMatchers.anyIterable())
+        org.mockito.Mockito.verify(commentRepository, org.mockito.Mockito.never()).findById(org.mockito.ArgumentMatchers.any())
+    }
+
+    @Test
+    fun `a search is not run for a user over their share of the shared budget`() {
+        props = GoogleAiProperties(apiKey = "key", embeddingRequestsPerMinute = 100, embeddingSearchPerUserPerMinute = 1)
+        build()
+        keywordNotes(); keywordFigures()
+        service.search("sway")
+        service.search("sway")
+        assertEquals(1, embeddings.calls)
     }
 
     @Test

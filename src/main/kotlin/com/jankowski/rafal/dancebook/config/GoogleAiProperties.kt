@@ -30,5 +30,9 @@ data class GoogleAiProperties(
      * Cosine distance (0 identical, 1 unrelated) beyond which a semantic search match is dropped.
      * 0.65 is the cutoff the knowledge index's hybrid query has always used.
      */
-    val semanticSearchMaxDistance: Double = 0.65
+    val semanticSearchMaxDistance: Double = 0.65,
+    /** Share of the per-minute embedding budget live searches may use; the index worker keeps the rest. */
+    val embeddingSearchSharePercent: Int = 30,
+    /** Searches that may embed per user per minute, so one user cannot use up the search share. */
+    val embeddingSearchPerUserPerMinute: Int = 5
 )

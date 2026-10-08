@@ -34,7 +34,7 @@ class HybridSearchServiceImpl(
     private val commentRepository: CommentRepository,
     private val knowledgeChunkRepository: KnowledgeChunkRepository,
     private val embeddingModel: EmbeddingModel,
-    private val embeddingRateLimiter: EmbeddingQueryRateLimiter,
+    private val embeddingBudget: EmbeddingBudget,
     private val googleAiProperties: GoogleAiProperties,
     private val assistantFeature: AssistantFeature
 ) : HybridSearchService {
@@ -86,7 +86,8 @@ class HybridSearchServiceImpl(
                 // No key means zero-vector embeddings, whose neighbours are meaningless.
                 return none
             }
-            if (!embeddingRateLimiter.tryAcquire()) {
+            val user = appUserService.getCurrentUserOrNull()
+            if (!embeddingBudget.tryAcquireForSearch(user?.id)) {
                 log.debug("Embedding rate limit reached, searching by keyword only")
                 return none
             }
@@ -96,19 +97,26 @@ class HybridSearchServiceImpl(
                 query = null,
                 queryEmbedding = embedding,
                 sourceTypes = listOf(KnowledgeSourceType.NOTE, KnowledgeSourceType.NOTE_COMMENT, KnowledgeSourceType.FIGURE),
-                currentUser = appUserService.getCurrentUserOrNull(),
+                currentUser = user,
                 limit = SEMANTIC_CANDIDATES,
+                topK = SEMANTIC_CANDIDATES,
                 maxDistance = maxDistance
             )
 
+            val near = chunks.filter { (it.distance ?: Double.MAX_VALUE) < maxDistance }
+            // One query for every comment chunk, instead of one per chunk.
+            val noteIdByComment = commentRepository
+                .findAllById(near.filter { it.chunk.sourceType == KnowledgeSourceType.NOTE_COMMENT }.map { it.chunk.sourceId }.distinct())
+                .mapNotNull { c -> c.material?.id?.let { c.id to it } }
+                .toMap()
+
             // Ordered, de-duplicated candidates: (kind, id) nearest first.
             val candidates = LinkedHashSet<Pair<SearchHitType, UUID>>()
-            for (r in chunks) {
-                if ((r.distance ?: Double.MAX_VALUE) >= maxDistance) continue
+            for (r in near) {
                 when (r.chunk.sourceType) {
                     KnowledgeSourceType.NOTE -> candidates += SearchHitType.NOTE to r.chunk.sourceId
-                    KnowledgeSourceType.NOTE_COMMENT -> commentRepository.findById(r.chunk.sourceId).orElse(null)
-                        ?.material?.id?.let { candidates += SearchHitType.NOTE to it }
+                    KnowledgeSourceType.NOTE_COMMENT -> noteIdByComment[r.chunk.sourceId]
+                        ?.let { candidates += SearchHitType.NOTE to it }
                     KnowledgeSourceType.FIGURE -> candidates += SearchHitType.FIGURE to r.chunk.sourceId
                     else -> {}
                 }

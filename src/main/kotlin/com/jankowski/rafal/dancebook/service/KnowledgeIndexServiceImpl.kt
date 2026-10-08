@@ -38,7 +38,8 @@ class KnowledgeIndexServiceImpl(
     private val richTextService: RichTextService,
     private val embeddingModel: EmbeddingModel,
     private val googleAiProperties: GoogleAiProperties,
-    private val transactionTemplate: TransactionTemplate
+    private val transactionTemplate: TransactionTemplate,
+    private val embeddingBudget: EmbeddingBudget
 ) : KnowledgeIndexService {
 
     companion object {
@@ -237,6 +238,8 @@ class KnowledgeIndexServiceImpl(
             }
         }
         lastRequestTimestamp.set(System.currentTimeMillis())
+        // Searches draw on the same per-minute budget; wait here if they have used it up.
+        embeddingBudget.acquireForWorker()
     }
 
     internal fun isRateLimitException(e: Throwable): Boolean {
