@@ -6,7 +6,7 @@
 
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-text-secondary mb-6">
-        <a href="/lists" class="hover:text-primary transition-colors">Lists</a>
+        <a href="/lists" class="hover:text-primary transition-colors" th:text="#{nav.collections}">Lists</a>
         <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-outline')}"></span>
         <span class="text-text-primary font-medium truncate" th:text="${customList.name}">List Name</span>
     </nav>
@@ -14,7 +14,7 @@
     <!--/* Warning alert for owner when collection has private notes */-->
     <th:block th:if="${privateNotesWarning}">
         <div class="mb-6">
-            <div th:replace="~{fragments/alert :: alert(variant='warning', title='Private Notes Warning', text='Some of your notes matching this collection are private and won\'t be shown to other users.')}"></div>
+            <div th:replace="~{fragments/alert :: alert(variant='warning', title=#{collections.view.private_notes_warning_title}, text=#{collections.view.private_notes_warning_text})}"></div>
         </div>
     </th:block>
 
@@ -22,8 +22,8 @@
     <div class="mb-6 relative rounded-xl overflow-hidden border border-border bg-surface-warm">
         <!-- Cover Image Background -->
         <div class="absolute inset-0 z-0">
-            <img th:if="${customList.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${customList.imageFilename})}" alt="Cover" class="w-full h-full object-cover opacity-20">
-            <img th:unless="${customList.imageFilename != null}" th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Cover" class="w-full h-full object-cover opacity-10 mix-blend-multiply">
+            <img th:if="${customList.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${customList.imageFilename})}" alt="Cover" th:attr="alt=#{collections.cover_alt}" class="w-full h-full object-cover opacity-20">
+            <img th:unless="${customList.imageFilename != null}" th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Cover" th:attr="alt=#{collections.default_cover_alt}" class="w-full h-full object-cover opacity-10 mix-blend-multiply">
             <div class="absolute inset-0 bg-linear-to-t from-surface-warm via-surface-warm/80 to-transparent"></div>
         </div>
         
@@ -38,12 +38,12 @@
                         <span th:replace="~{fragments/badge :: badge(label=${c.name}, variant='secondary')}"></span>
                     </th:block>
                     <th:block th:if="${customList.minRating != null}">
-                        <span th:replace="~{fragments/badge :: badge(label=(${customList.minRating + '+ stars'}), variant='accent')}"></span>
+                        <span th:replace="~{fragments/badge :: badge(label=(${#messages.msg('collections.min_rating_stars', customList.minRating)}), variant='accent')}"></span>
                     </th:block>
                     <th:block th:if="${customList.nameFilter != null}">
-                        <span th:replace="~{fragments/badge :: badge(label=(${'Search: ' + customList.nameFilter}), variant='neutral')}"></span>
+                        <span th:replace="~{fragments/badge :: badge(label=(${#messages.msg('collections.view.search_filter', customList.nameFilter)}), variant='neutral')}"></span>
                     </th:block>
-                    <span th:replace="~{fragments/badge :: badge(label=(${customList.isPublic ? 'Public' : 'Private'}), variant=(${customList.isPublic ? 'secondary' : 'neutral'}))}"></span>
+                    <span th:replace="~{fragments/badge :: badge(label=(${customList.isPublic ? #messages.msg('collections.visibility.public') : #messages.msg('collections.visibility.private')}), variant=(${customList.isPublic ? 'secondary' : 'neutral'}))}"></span>
                 </div>
             </div>
             
@@ -54,6 +54,7 @@
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view"
+                               th:attr="aria-label=#{common.view_list}"
                                th:checked="${currentView == 'list'}"
                                th:hx-get="@{/lists/{id}(id=${customList.id})}" hx-target="#materials-grid" hx-swap="outerHTML">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
@@ -63,6 +64,7 @@
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
                                aria-label="Grid view"
+                               th:attr="aria-label=#{common.view_grid}"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists/{id}(id=${customList.id})}" hx-target="#materials-grid" hx-swap="outerHTML">
                         <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
@@ -74,12 +76,14 @@
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-2" th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or customList.owner?.id == currentUser.id)}">
                     <a th:href="@{/lists/{id}/edit(id=${customList.id})}" 
-                       class="flex items-center justify-center w-11 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection" aria-label="Edit Collection">
+                       class="flex items-center justify-center w-11 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection" aria-label="Edit Collection"
+                       th:attr="title=#{collections.edit}, aria-label=#{collections.edit}">
                         <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
                     </a>
-                    <button type="button" class="js-open-delete-modal flex items-center justify-center px-3 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-danger hover:bg-danger-soft hover:border-danger/30 transition-colors gap-1.5 font-label-md" title="Delete Collection">
+                    <button type="button" class="js-open-delete-modal flex items-center justify-center px-3 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-danger hover:bg-danger-soft hover:border-danger/30 transition-colors gap-1.5 font-label-md" title="Delete Collection"
+                            th:attr="title=#{collections.delete}">
                         <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
-                        <span>Delete</span>
+                        <span th:text="#{common.delete}">Delete</span>
                     </button>
                 </div>
             </div>
@@ -92,17 +96,17 @@
             <div class="w-10 h-10 rounded-full bg-danger-soft flex items-center justify-center shrink-0">
                 <span th:replace="~{fragments/icon :: icon(name='warning', size='lg')}"></span>
             </div>
-            <h3 class="font-headline-md text-on-surface text-xl">Delete Collection?</h3>
+            <h3 class="font-headline-md text-on-surface text-xl" th:text="#{collections.view.delete_modal_title}">Delete Collection?</h3>
         </div>
-        <p class="text-on-surface-variant font-body-md mb-6">
+        <p class="text-on-surface-variant font-body-md mb-6" th:text="#{collections.view.delete_modal_message(${customList.name})}">
             Are you sure you want to delete "<span class="font-semibold text-on-surface" th:text="${customList.name}"></span>"? This action cannot be undone, but the materials inside will not be deleted.
         </p>
         <div class="flex justify-end gap-3">
             <form method="dialog" class="inline">
-                <button type="submit" class="btn-outline">Cancel</button>
+                <button type="submit" class="btn-outline" th:text="#{common.cancel}">Cancel</button>
             </form>
             <form th:action="@{/lists/{id}/delete(id=${customList.id})}" method="post" class="contents">
-                <button type="submit" class="btn-danger">Delete Collection</button>
+                <button type="submit" class="btn-danger" th:text="#{collections.delete}">Delete Collection</button>
             </form>
         </div>
     </dialog>
