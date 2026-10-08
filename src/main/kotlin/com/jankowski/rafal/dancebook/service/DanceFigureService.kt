@@ -3,6 +3,7 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import java.util.UUID
 
 interface DanceFigureService {
@@ -18,7 +19,8 @@ interface DanceFigureService {
         danceClass: DanceClass? = null,
         nameSearch: String? = null,
         sortBy: String? = null,
-        hasSteps: Boolean? = null
+        hasSteps: Boolean? = null,
+        medalLevel: MedalLevel? = null
     ): List<DanceFigure>
     fun findById(id: UUID): DanceFigure
     fun findByDanceType(danceTypeId: UUID): List<DanceFigure>

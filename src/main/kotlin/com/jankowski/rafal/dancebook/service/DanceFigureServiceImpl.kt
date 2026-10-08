@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.DanceFigureStepSet
@@ -42,15 +43,17 @@ class DanceFigureServiceImpl(
         danceClass: DanceClass?,
         nameSearch: String?,
         sortBy: String?,
-        hasSteps: Boolean?
+        hasSteps: Boolean?,
+        medalLevel: MedalLevel?
     ): List<DanceFigure> {
-        log.debug("Retrieving dance figures with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}, hasSteps={}", typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps)
+        log.debug("Retrieving dance figures with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}, hasSteps={}, medalLevel={}", typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps, medalLevel)
         val spec = DanceFigureSpecification.withFilters(
             typeIds = typeIds,
             categoryIds = categoryIds,
             danceClass = danceClass,
             nameSearch = nameSearch,
-            hasSteps = hasSteps
+            hasSteps = hasSteps,
+            medalLevel = medalLevel
         )
 
         val sort = when (sortBy) {
@@ -138,6 +141,7 @@ class DanceFigureServiceImpl(
         danceFigure.name = request.name
         danceFigure.danceType = danceType
         danceFigure.danceClass = request.danceClass
+        danceFigure.medalLevel = request.medalLevel
         danceFigure.alternativeTiming = request.alternativeTiming
         danceFigure.startingFootLeader = request.startingFootLeader
         danceFigure.endingFootLeader = request.endingFootLeader

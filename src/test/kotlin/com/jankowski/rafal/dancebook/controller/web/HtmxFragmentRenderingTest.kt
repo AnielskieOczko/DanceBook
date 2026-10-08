@@ -130,7 +130,7 @@ class HtmxFragmentRenderingTest {
 
     @Test
     fun `dance-figures list htmx returns figuresTable fragment with id figures-grid`() {
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
 
         mockMvc.perform(get("/dance-figures").header("HX-Request", "true").with(csrf()))
             .andExpect(status().isOk)
@@ -302,7 +302,7 @@ class HtmxFragmentRenderingTest {
             danceType = null
         }
         `when`(materialService.findById(materialId)).thenReturn(material)
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
 
         mockMvc.perform(
             get("/materials/$materialId/figures/picker")
@@ -324,7 +324,7 @@ class HtmxFragmentRenderingTest {
             danceType = null
         }
         `when`(materialService.findById(materialId)).thenReturn(material)
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
 
         mockMvc.perform(
             get("/materials/$materialId/figures/search")

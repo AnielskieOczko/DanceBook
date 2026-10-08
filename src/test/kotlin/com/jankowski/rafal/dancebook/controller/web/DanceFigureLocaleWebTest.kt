@@ -106,7 +106,7 @@ class DanceFigureLocaleWebTest {
             danceType = waltz
         }
         `when`(danceTypeService.findAll()).thenReturn(listOf(waltz))
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any()))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(listOf(figure))
 
         mockMvc.perform(
@@ -188,7 +188,7 @@ class DanceFigureLocaleWebTest {
             danceType = waltz
         }
         `when`(danceTypeService.findAll()).thenReturn(listOf(waltz))
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any()))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(listOf(figure))
 
         mockMvc.perform(

@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureStepSetRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureLinkRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
@@ -52,6 +53,7 @@ class DanceFigureWebController(
         @RequestParam(required = false) nameSearch: String? = null,
         @RequestParam(required = false) sortBy: String? = null,
         @RequestParam(required = false) hasSteps: Boolean? = null,
+        @RequestParam(required = false) medalLevel: MedalLevel? = null,
         @RequestParam(required = false, defaultValue = "list") view: String = "list",
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
@@ -62,7 +64,8 @@ class DanceFigureWebController(
             danceClass = danceClass,
             nameSearch = nameSearch,
             sortBy = sortBy,
-            hasSteps = hasSteps
+            hasSteps = hasSteps,
+            medalLevel = medalLevel
         )
 
         val figureIds = figures.mapNotNull { it.id }
@@ -78,6 +81,7 @@ class DanceFigureWebController(
         model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
         model.addAttribute("selectedDanceClass", danceClass)
+        model.addAttribute("selectedMedalLevel", medalLevel)
         model.addAttribute("selectedNameSearch", nameSearch)
         model.addAttribute("selectedSortBy", sortBy)
         model.addAttribute("selectedHasSteps", hasSteps)
@@ -198,6 +202,7 @@ class DanceFigureWebController(
             name = danceFigure.name,
             danceTypeId = danceFigure.danceType?.id,
             danceClass = danceFigure.danceClass,
+            medalLevel = danceFigure.medalLevel,
             alternativeTiming = danceFigure.alternativeTiming,
             startingFootLeader = danceFigure.startingFootLeader,
             endingFootLeader = danceFigure.endingFootLeader,

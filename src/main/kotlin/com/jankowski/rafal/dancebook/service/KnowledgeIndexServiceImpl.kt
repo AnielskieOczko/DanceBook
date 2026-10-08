@@ -384,6 +384,7 @@ class KnowledgeIndexServiceImpl(
             "Figure: ${figure.name}",
             figure.danceType?.name?.let { "Dance: $it" },
             figure.danceClass?.displayName?.let { "Class: $it" },
+            figure.medalLevel?.displayName?.let { "Medal: $it" },
             figure.alternativeTiming?.takeIf { it.isNotBlank() }?.let { "Timing: $it" },
             pos.takeIf { it.isNotBlank() }?.let { "Positions: $it" },
             notes.takeIf { it.isNotBlank() }?.let { "Notes: $it" },

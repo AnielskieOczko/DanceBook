@@ -143,7 +143,7 @@ class MaterialFigureSuggestWebTest {
         `when`(materialService.findById(materialId)).thenReturn(material)
         `when`(materialService.findFiguresByMaterial(materialId)).thenReturn(emptyList())
         `when`(commentService.getCommentsForMaterial(materialId)).thenReturn(emptyList())
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
     }
 
     // ── GET /materials/{id}/figures/suggest ───────────────────────────────────

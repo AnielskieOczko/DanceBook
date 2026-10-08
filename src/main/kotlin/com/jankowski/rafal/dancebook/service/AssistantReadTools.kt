@@ -313,7 +313,10 @@ class AssistantReadTools(
         title = f.name,
         subtitle = listOfNotNull(f.danceType?.name, f.danceClass?.displayName).joinToString(" · ").ifEmpty { null },
         url = "/dance-figures/${f.id}",
-        chips = listOfNotNull(f.alternativeTiming?.takeIf { it.isNotBlank() })
+        chips = listOfNotNull(
+            f.alternativeTiming?.takeIf { it.isNotBlank() },
+            f.medalLevel?.let { "Medal: ${it.displayName}" }
+        )
     )
 
     private fun noteCard(m: Material, terms: List<String>): ResultCard {

@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
 import java.util.UUID
@@ -15,7 +16,8 @@ object DanceFigureSpecification {
         categoryIds: List<UUID>? = null,
         danceClass: DanceClass? = null,
         nameSearch: String? = null,
-        hasSteps: Boolean? = null
+        hasSteps: Boolean? = null,
+        medalLevel: MedalLevel? = null
     ): Specification<DanceFigure> {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>()
@@ -30,6 +32,10 @@ object DanceFigureSpecification {
 
             danceClass?.let {
                 predicates.add(cb.equal(root.get<DanceClass>("danceClass"), it))
+            }
+
+            medalLevel?.let {
+                predicates.add(cb.equal(root.get<MedalLevel>("medalLevel"), it))
             }
 
             if (!nameSearch.isNullOrBlank()) {
