@@ -51,12 +51,15 @@ class HybridSearchServiceTest {
         var lastUser: AppUser? = null
         var lastMaxDistance: Double? = null
         var lastTopK: Int? = null
+        var lastDanceTypeId: UUID? = null
         override fun hybridSearch(
             query: String?, queryEmbedding: FloatArray?, sourceTypes: List<KnowledgeSourceType>?,
-            currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double
+            currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double,
+            danceTypeId: UUID?
         ): List<KnowledgeSearchResult> {
             lastMaxDistance = maxDistance
             lastTopK = topK
+            lastDanceTypeId = danceTypeId
             lastQuery = query
             lastUser = currentUser
             failure?.let { throw it }
@@ -304,6 +307,17 @@ class HybridSearchServiceTest {
         service.search("sway")
         service.search("sway")
         assertEquals(1, embeddings.calls)
+    }
+
+    @Test
+    fun `the dance type filter is pushed into the vector query`() {
+        val type = UUID.randomUUID()
+        `when`(materialService.searchNotes("sway", null, type, HybridSearchService.DEFAULT_LIMIT)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(listOf(type), null, null, "sway", null, null, null)).thenReturn(emptyList())
+
+        service.search("sway", type)
+
+        assertEquals(type, chunks.lastDanceTypeId)
     }
 
     @Test

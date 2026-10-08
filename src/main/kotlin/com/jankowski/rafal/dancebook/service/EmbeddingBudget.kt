@@ -12,12 +12,14 @@ import java.util.UUID
  * One per-minute budget of `google.ai.embedding-requests-per-minute` calls, drawn on by both the
  * index worker and live searches, so together they stay under the provider's limit.
  *
- * - The worker ([acquireForWorker]) may use the whole budget and waits when it is spent.
- * - A search ([tryAcquireForSearch]) never waits: it is refused, and falls back to keyword-only
- *   results. It is refused when the budget is spent, when searches already hold their share of
- *   it (`embedding-search-share-percent`, default 30, so the worker always keeps the rest), or
- *   when that user has made `embedding-search-per-user-per-minute` searches (default 5), so one
- *   heavy user cannot use up everyone's share.
+ * The budget is split by `embedding-search-share-percent` (default 30):
+ * - The worker ([acquireForWorker]) may use the other 70 percent and waits when that is spent.
+ *   Its calls alone can therefore never fill the window and starve searches.
+ * - Searches ([tryAcquireForSearch]) and the assistant ([tryAcquireInteractive]) share the
+ *   search part. A search never waits: it is refused, and falls back to keyword-only results.
+ *   It is also refused when that user has made `embedding-search-per-user-per-minute` calls
+ *   (default 5), so one heavy user cannot use up everyone's share. The assistant is interactive,
+ *   so it waits a short, bounded time for a slot before giving up.
  *
  * Sliding one-minute window, in memory. A requests-per-minute of 0 or less is unlimited.
  */
@@ -35,7 +37,7 @@ class EmbeddingBudget(
         val total = googleAiProperties.embeddingRequestsPerMinute
         if (total <= 0) return true
         val key: Any = userId ?: anonymous
-        val searchCap = maxOf(1, total * googleAiProperties.embeddingSearchSharePercent.coerceIn(0, 100) / 100)
+        val searchCap = searchCap(total)
         synchronized(entries) {
             val now = clock.instant()
             evict(now)
@@ -48,6 +50,21 @@ class EmbeddingBudget(
         }
     }
 
+    /** Like [tryAcquireForSearch], but retries every 100 ms for up to [maxWaitMs] before giving up. */
+    fun tryAcquireInteractive(userId: UUID?, maxWaitMs: Long = googleAiProperties.embeddingInteractiveMaxWaitMs, sleep: (Long) -> Unit = { Thread.sleep(it) }): Boolean {
+        var waited = 0L
+        while (true) {
+            if (tryAcquireForSearch(userId)) return true
+            if (waited >= maxWaitMs) return false
+            val step = minOf(100L, maxWaitMs - waited)
+            sleep(step)
+            waited += step
+        }
+    }
+
+    private fun searchCap(total: Int) =
+        maxOf(1, total * googleAiProperties.embeddingSearchSharePercent.coerceIn(0, 100) / 100)
+
     /** Takes a slot, calling [sleep] with the time to wait for as long as the budget is spent. */
     fun acquireForWorker(sleep: (Long) -> Unit = { Thread.sleep(it) }) {
         val total = googleAiProperties.embeddingRequestsPerMinute
@@ -57,11 +74,15 @@ class EmbeddingBudget(
             synchronized(entries) {
                 val now = clock.instant()
                 evict(now)
-                if (entries.size < total) {
+                val workerCap = maxOf(1, total - searchCap(total))
+                val mine = entries.filter { !it.isSearch }
+                if (entries.size < total && mine.size < workerCap) {
                     entries.addLast(Entry(now, null, false))
                     return
                 }
-                waitMs = maxOf(1L, Duration.between(now, entries.first.at.plusSeconds(60)).toMillis())
+                // Wait for the oldest entry that is actually blocking us to leave the window.
+                val blocking = if (mine.size >= workerCap) mine.first() else entries.first
+                waitMs = maxOf(1L, Duration.between(now, blocking.at.plusSeconds(60)).toMillis())
             }
             sleep(waitMs)
         }

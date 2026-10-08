@@ -124,6 +124,25 @@ class HybridSearchIntegrationTest {
     }
 
     @Test
+    fun `the dance type filter applies before the candidate limit`() {
+        val cat = danceCategoryRepository.save(DanceCategory().apply { name = "Latin ${UUID.randomUUID()}" })
+        val tango = danceTypeRepository.save(DanceType().apply { name = "Tango ${UUID.randomUUID()}"; category = cat })
+        val nearer = note(userA, "Waltz sway", "sway", Visibility.PUBLIC) // waltz: nearest to "sway"
+        val farther = materialRepository.save(Material().apply {
+            owner = userA; name = "Tango motion"; description = "sway turn spin"
+            visibility = Visibility.PUBLIC; danceType = tango
+        }).also { knowledgeIndexService.indexMaterial(it.id!!) }
+        val embedding = FloatArray(768).also { it[0] = 1f }
+
+        fun ids(type: UUID?) = knowledgeChunkRepository.hybridSearch(
+            query = null, queryEmbedding = embedding, currentUser = userA, topK = 1, danceTypeId = type
+        ).map { it.chunk.sourceId }
+
+        assertEquals(listOf(nearer.id), ids(null), "unfiltered, the nearer note takes the only slot")
+        assertEquals(listOf(farther.id), ids(tango.id), "filtered, the tango note is not crowded out")
+    }
+
+    @Test
     fun `the vector query honours the distance threshold and reports the distance`() {
         val n = note(userA, "Body motion", "all about sway", Visibility.PUBLIC)
         val embedding = FloatArray(768).also { it[0] = 1f } // "sway" only; the note embeds on sway and waltz, 45 degrees away

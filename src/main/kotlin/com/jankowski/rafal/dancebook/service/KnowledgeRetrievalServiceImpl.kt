@@ -19,11 +19,18 @@ class KnowledgeRetrievalServiceImpl(
     private val danceFigureRepository: DanceFigureRepository,
     private val materialService: MaterialService,
     private val richTextService: RichTextService,
-    private val embeddingModel: EmbeddingModel
+    private val embeddingModel: EmbeddingModel,
+    private val embeddingBudget: EmbeddingBudget
 ) : KnowledgeRetrievalService {
 
     companion object {
         private val log = LoggerFactory.getLogger(KnowledgeRetrievalServiceImpl::class.java)
+    }
+
+    /** Embeds through the shared budget; null (no related notes) when it stays exhausted or the call fails. */
+    private fun embedQuery(text: String, user: AppUser?): FloatArray? {
+        if (!embeddingBudget.tryAcquireInteractive(user?.id)) return null
+        return try { embeddingModel.embed(text) } catch (e: Exception) { null }
     }
 
     @Transactional(readOnly = true)
@@ -32,7 +39,7 @@ class KnowledgeRetrievalServiceImpl(
         val embedding = chunk?.embedding ?: run {
             val material = materialRepository.findById(materialId).orElse(null) ?: return emptyList()
             val text = listOfNotNull(material.name, richTextService.toPlainText(material.description)).joinToString("\n")
-            try { embeddingModel.embed(text) } catch (e: Exception) { null }
+            embedQuery(text, currentUser)
         } ?: return emptyList()
 
         val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = materialId, currentUser = currentUser, limit = limit)
@@ -51,7 +58,7 @@ class KnowledgeRetrievalServiceImpl(
         val embedding = chunk?.embedding ?: run {
             val figure = danceFigureRepository.findById(figureId).orElse(null) ?: return emptyList()
             val text = listOfNotNull("Figure: ${figure.name}", figure.danceType?.name, figure.danceClass?.displayName).joinToString("\n")
-            try { embeddingModel.embed(text) } catch (e: Exception) { null }
+            embedQuery(text, currentUser)
         } ?: return emptyList()
 
         val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = figureId, currentUser = currentUser, limit = limit)

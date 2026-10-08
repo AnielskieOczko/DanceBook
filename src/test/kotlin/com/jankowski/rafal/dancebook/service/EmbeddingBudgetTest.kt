@@ -49,10 +49,43 @@ class EmbeddingBudgetTest {
     }
 
     @Test
-    fun `worker calls count against the same total, so search is refused when the worker used it up`() {
-        val b = budget(rpm = 4, sharePercent = 100)
-        repeat(4) { b.acquireForWorker { } }
-        assertFalse(b.tryAcquireForSearch(alice))
+    fun `a worker saturating the window still leaves searches their share`() {
+        val b = budget(rpm = 10, sharePercent = 30)
+        // The worker takes everything it is allowed without waiting: 70 percent of 10.
+        repeat(7) { b.acquireForWorker { throw AssertionError("worker must not wait yet") } }
+        // It cannot take more than that; the next call waits for the window to move.
+        var waited = false
+        b.acquireForWorker { ms -> waited = true; clock.now = clock.now.plusMillis(ms) }
+        assertTrue(waited, "the eighth worker call must wait, it is capped at 70 percent")
+
+        val fresh = budget(rpm = 10, sharePercent = 30)
+        repeat(7) { fresh.acquireForWorker { } }
+        repeat(3) { assertTrue(fresh.tryAcquireForSearch(alice), "search $it must succeed") }
+        assertFalse(fresh.tryAcquireForSearch(alice))
+    }
+
+    @Test
+    fun `an interactive caller waits a bounded time for a slot and then gives up`() {
+        val b = budget(rpm = 10, sharePercent = 10, perUser = 100)
+        assertTrue(b.tryAcquireForSearch(alice)) // takes the single search slot
+        var slept = 0L
+        val got = b.tryAcquireInteractive(bob, maxWaitMs = 1000) { ms -> slept += ms; clock.now = clock.now.plusMillis(ms) }
+        assertFalse(got)
+        assertTrue(slept in 1000..1250, "slept $slept")
+    }
+
+    @Test
+    fun `an interactive caller proceeds once a slot frees within the wait`() {
+        val b = budget(rpm = 10, sharePercent = 10)
+        assertTrue(b.tryAcquireForSearch(alice))
+        clock.now = clock.now.plusSeconds(59)
+        assertTrue(b.tryAcquireInteractive(bob, maxWaitMs = 2000) { ms -> clock.now = clock.now.plusMillis(ms) })
+    }
+
+    @Test
+    fun `an interactive caller with a free slot does not wait`() {
+        val b = budget(rpm = 10, sharePercent = 50)
+        assertTrue(b.tryAcquireInteractive(alice, maxWaitMs = 1000) { throw AssertionError("must not wait") })
     }
 
     @Test
@@ -67,7 +100,7 @@ class EmbeddingBudgetTest {
 
     @Test
     fun `an idle worker is not delayed`() {
-        val b = budget(rpm = 2)
+        val b = budget(rpm = 10)
         var slept = 0L
         repeat(2) { b.acquireForWorker { slept += it } }
         assertEquals(0L, slept)

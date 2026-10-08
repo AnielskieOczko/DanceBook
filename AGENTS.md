@@ -970,9 +970,10 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   so access is re-checked) are appended, and items found both ways go first. Any embedding
   failure, no API key (`AssistantFeature.enabled` false: zero-vector embeddings), or
   `EmbeddingBudget` refusing (one per-minute budget shared with the index worker: the
-  worker waits for a slot, a search never does; searches get at most
-  `embedding-search-share-percent` of it, default 30, and `embedding-search-per-user-per-minute`
-  each, default 5), gives keyword-only results. Semantic
+  the worker is capped at the other 70% and waits for a slot; searches get
+  `embedding-search-share-percent` of it, default 30, never wait, and are limited to
+  `embedding-search-per-user-per-minute` each, default 5; the assistant's query embeddings use
+  the search share too but wait up to `embedding-interactive-max-wait-ms`, default 2000), gives keyword-only results. Semantic
   matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance

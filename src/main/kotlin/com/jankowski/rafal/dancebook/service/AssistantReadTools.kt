@@ -47,7 +47,8 @@ class AssistantReadTools(
     private val knowledgeChunkRepository: KnowledgeChunkRepository? = null,
     private val embeddingModel: EmbeddingModel? = null,
     private val choreographyRepository: ChoreographyRepository? = null,
-    private val commentRepository: CommentRepository? = null
+    private val commentRepository: CommentRepository? = null,
+    private val embeddingBudget: EmbeddingBudget? = null
 ) {
 
     companion object {
@@ -55,6 +56,13 @@ class AssistantReadTools(
         private val DAY = DateTimeFormatter.ofPattern("EEE d MMM", Locale.ENGLISH)
         private val CREATED = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
         private val TIME = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
+    }
+
+    /** Query embeddings go through the shared budget; null (keyword-only) when it stays exhausted. */
+    private fun embedQuery(text: String): FloatArray? {
+        val model = embeddingModel ?: return null
+        if (embeddingBudget != null && !embeddingBudget.tryAcquireInteractive(appUserService.getCurrentUserOrNull()?.id)) return null
+        return model.embed(text)
     }
 
     val callbacks: List<ToolCallback> by lazy { ToolCallbacks.from(this).toList() }
@@ -75,7 +83,7 @@ class AssistantReadTools(
 
         val user = appUserService.getCurrentUserOrNull()
         if (knowledgeChunkRepository != null) {
-            val queryEmbedding = try { embeddingModel?.embed(query) } catch (e: Exception) { null }
+            val queryEmbedding = try { embedQuery(query) } catch (e: Exception) { null }
             val searchResults = knowledgeChunkRepository.hybridSearch(
                 query = query,
                 queryEmbedding = queryEmbedding,
@@ -116,7 +124,7 @@ class AssistantReadTools(
         val user = appUserService.getCurrentUserOrNull()
 
         if (knowledgeChunkRepository != null && !query.isNullOrBlank()) {
-            val queryEmbedding = try { embeddingModel?.embed(query) } catch (e: Exception) { null }
+            val queryEmbedding = try { embedQuery(query) } catch (e: Exception) { null }
             val searchResults = knowledgeChunkRepository.hybridSearch(
                 query = query,
                 queryEmbedding = queryEmbedding,
@@ -158,7 +166,7 @@ class AssistantReadTools(
         if (knowledgeChunkRepository == null) return ToolResult(0, emptyList(), "Nothing found in your notes.")
 
         val user = appUserService.getCurrentUserOrNull()
-        val queryEmbedding = try { embeddingModel?.embed(question) } catch (e: Exception) { null }
+        val queryEmbedding = try { embedQuery(question) } catch (e: Exception) { null }
         val searchResults = knowledgeChunkRepository.hybridSearch(
             query = question,
             queryEmbedding = queryEmbedding,

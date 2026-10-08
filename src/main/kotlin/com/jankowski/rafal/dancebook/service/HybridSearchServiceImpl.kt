@@ -100,7 +100,8 @@ class HybridSearchServiceImpl(
                 currentUser = user,
                 limit = SEMANTIC_CANDIDATES,
                 topK = SEMANTIC_CANDIDATES,
-                maxDistance = maxDistance
+                maxDistance = maxDistance,
+                danceTypeId = danceTypeId
             )
 
             val near = chunks.filter { (it.distance ?: Double.MAX_VALUE) < maxDistance }

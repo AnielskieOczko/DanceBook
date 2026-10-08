@@ -217,7 +217,8 @@ class KnowledgeChunkRepository(
         limit: Int = 10,
         topK: Int = 20,
         k: Int = 60,
-        maxDistance: Double = DEFAULT_MAX_DISTANCE
+        maxDistance: Double = DEFAULT_MAX_DISTANCE,
+        danceTypeId: UUID? = null
     ): List<KnowledgeSearchResult> {
         val hasVector = queryEmbedding != null
         val hasText = !query.isNullOrBlank()
@@ -248,6 +249,17 @@ class KnowledgeChunkRepository(
             "source_type IN ($placeholders)"
         } else "TRUE"
 
+        // Filtering here, inside the candidate queries, is what keeps a dance-type search from
+        // having its nearest chunks crowded out by other dance types.
+        val danceTypeCondition = if (danceTypeId != null) {
+            """(
+                (source_type = 'NOTE' AND EXISTS (SELECT 1 FROM material m WHERE m.id = source_id AND m.dance_type_id = ?))
+                OR (source_type = 'NOTE_COMMENT' AND EXISTS (SELECT 1 FROM comment c JOIN material m ON m.id = c.material_id WHERE c.id = source_id AND m.dance_type_id = ?))
+                OR (source_type = 'FIGURE' AND EXISTS (SELECT 1 FROM dance_figure f WHERE f.id = source_id AND f.dance_type_id = ?))
+                OR (source_type = 'CHOREOGRAPHY' AND EXISTS (SELECT 1 FROM choreography ch WHERE ch.id = source_id AND ch.dance_type_id = ?))
+            )"""
+        } else "TRUE"
+
         val vectorCteParams = mutableListOf<Any?>()
         val vectorCte = if (hasVector) {
             vectorCteParams.add(embStr)
@@ -261,6 +273,7 @@ class KnowledgeChunkRepository(
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { vectorCteParams.add(it.name) }
             }
+            if (danceTypeId != null) repeat(4) { vectorCteParams.add(danceTypeId) }
             vectorCteParams.add(embStr)
             vectorCteParams.add(topK)
             """
@@ -272,6 +285,7 @@ class KnowledgeChunkRepository(
                   AND (embedding <=> cast(? as vector)) < ?
                   AND $accessCondition
                   AND $sourceCondition
+                  AND $danceTypeCondition
                 ORDER BY embedding <=> cast(? as vector)
                 LIMIT ?
             )
@@ -295,6 +309,7 @@ class KnowledgeChunkRepository(
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { textCteParams.add(it.name) }
             }
+            if (danceTypeId != null) repeat(4) { textCteParams.add(danceTypeId) }
             textCteParams.add(cleanQuery)
             textCteParams.add(topK)
             """
@@ -304,6 +319,7 @@ class KnowledgeChunkRepository(
                 WHERE content_tsv @@ plainto_tsquery('simple', ?)
                   AND $accessCondition
                   AND $sourceCondition
+                  AND $danceTypeCondition
                 ORDER BY ts_rank(content_tsv, plainto_tsquery('simple', ?)) DESC
                 LIMIT ?
             )
