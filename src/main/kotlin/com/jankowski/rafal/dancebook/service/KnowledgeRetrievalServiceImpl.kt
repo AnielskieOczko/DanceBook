@@ -22,7 +22,7 @@ class KnowledgeRetrievalServiceImpl(
     private val embeddingModel: EmbeddingModel,
     private val embeddingBudget: EmbeddingBudget,
     private val assistantFeature: com.jankowski.rafal.dancebook.config.AssistantFeature,
-    private val transactionTemplate: org.springframework.transaction.support.TransactionTemplate
+    transactionTemplate: org.springframework.transaction.support.TransactionTemplate
 ) : KnowledgeRetrievalService {
 
     companion object {
@@ -40,6 +40,10 @@ class KnowledgeRetrievalServiceImpl(
         if (!embeddingBudget.tryAcquireInteractive(user?.id, maxWaitMs = 0)) return null
         return try { embeddingModel.embed(text) } catch (e: Exception) { null }
     }
+
+    /** Every transaction here only reads, so it is declared read-only, as the old @Transactional(readOnly) was. */
+    private val transactionTemplate = org.springframework.transaction.support.TransactionTemplate(transactionTemplate.transactionManager!!)
+        .apply { isReadOnly = true }
 
     private fun <T> readOnly(block: () -> T?): T? =
         transactionTemplate.execute { block() }

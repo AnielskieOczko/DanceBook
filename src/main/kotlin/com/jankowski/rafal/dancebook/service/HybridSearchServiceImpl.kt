@@ -36,7 +36,7 @@ class HybridSearchServiceImpl(
     private val embeddingBudget: EmbeddingBudget,
     private val googleAiProperties: GoogleAiProperties,
     private val assistantFeature: AssistantFeature,
-    private val transactionTemplate: org.springframework.transaction.support.TransactionTemplate
+    transactionTemplate: org.springframework.transaction.support.TransactionTemplate
 ) : HybridSearchService {
 
     companion object {
@@ -44,6 +44,10 @@ class HybridSearchServiceImpl(
         /** Chunks to fetch for the semantic leg: several chunks can belong to one note. */
         private const val SEMANTIC_CANDIDATES = 30
     }
+
+    /** Every transaction here only reads, so it is declared read-only. */
+    private val transactionTemplate = org.springframework.transaction.support.TransactionTemplate(transactionTemplate.transactionManager!!)
+        .apply { isReadOnly = true }
 
     private data class Ranked(val hit: SearchHit, val rank: Int)
 
@@ -137,8 +141,14 @@ class HybridSearchServiceImpl(
             val ids = mutableSetOf<UUID>()
             val extra = mutableListOf<SearchHit>()
             for ((type, id) in candidates) {
-                val inKeyword = id in keywordIds
-                if (!inKeyword && extra.size >= HybridSearchService.SEMANTIC_LIMIT) continue
+                if (id in keywordIds) {
+                    // Already a keyword hit, so already access-checked and loaded: it only needs the
+                    // BOTH flag. Opening it again would cost a transaction and let a transient
+                    // failure quietly drop it to a lower tier.
+                    ids += id
+                    continue
+                }
+                if (extra.size >= HybridSearchService.SEMANTIC_LIMIT) continue
                 // Opening the item re-applies the access rules, on top of the SQL filter.
                 val hit = when (type) {
                     SearchHitType.NOTE -> openNote(id)?.takeIf { danceTypeId == null || it.danceType?.id == danceTypeId }
@@ -146,7 +156,7 @@ class HybridSearchServiceImpl(
                     SearchHitType.FIGURE -> openFigure(id)?.takeIf { danceTypeId == null || it.danceType?.id == danceTypeId }
                         ?.let { figureHit(it, SearchMatch.SEMANTIC) }
                 } ?: continue
-                if (inKeyword) ids += id else extra += hit
+                extra += hit
             }
             Semantic(ids, extra)
         } catch (e: Exception) {

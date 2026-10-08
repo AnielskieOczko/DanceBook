@@ -167,6 +167,21 @@ class HybridSearchServiceTest {
     }
 
     @Test
+    fun `a keyword hit that is also a semantic neighbour is BOTH without being opened again, even if opening would fail`() {
+        val a = note("A"); val f = figure("F")
+        keywordNotes(a); keywordFigures(f)
+        `when`(materialService.findById(a.id!!)).thenThrow(RuntimeException("transient"))
+        `when`(danceFigureService.findById(f.id!!)).thenThrow(RuntimeException("transient"))
+        chunks.results = listOf(chunk(KnowledgeSourceType.NOTE, a.id!!), chunk(KnowledgeSourceType.FIGURE, f.id!!))
+
+        val hits = service.search("sway")
+
+        assertEquals(listOf(SearchMatch.BOTH, SearchMatch.BOTH), hits.map { it.match })
+        org.mockito.Mockito.verify(materialService, org.mockito.Mockito.never()).findById(a.id!!)
+        org.mockito.Mockito.verify(danceFigureService, org.mockito.Mockito.never()).findById(f.id!!)
+    }
+
+    @Test
     fun `several chunks of one note and a comment chunk collapse into one hit`() {
         val sem = note("Sem")
         val comment = Comment().apply { id = UUID.randomUUID(); material = sem }

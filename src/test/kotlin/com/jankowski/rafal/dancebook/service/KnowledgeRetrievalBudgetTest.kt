@@ -34,7 +34,8 @@ class KnowledgeRetrievalBudgetTest {
     /** Records whether a transaction is open while the provider is called. */
     private class TrackingTx : PlatformTransactionManager {
         @Volatile var open = false
-        override fun getTransaction(definition: TransactionDefinition?): TransactionStatus { open = true; return SimpleTransactionStatus() }
+        val readOnlyFlags = mutableListOf<Boolean>()
+        override fun getTransaction(definition: TransactionDefinition?): TransactionStatus { open = true; readOnlyFlags += definition!!.isReadOnly; return SimpleTransactionStatus() }
         override fun commit(status: TransactionStatus) { open = false }
         override fun rollback(status: TransactionStatus) { open = false }
     }
@@ -99,6 +100,13 @@ class KnowledgeRetrievalBudgetTest {
         service(keyed).findRelatedNotesForMaterial(id, user)
         assertEquals(1, model.calls)
         assertFalse(model.embeddedInsideTransaction, "a slow embedding call must not hold a database connection")
+    }
+
+    @Test
+    fun `related-notes page views only ever open read-only transactions`() {
+        service(keyed).findRelatedNotesForMaterial(id, user)
+        assertTrue(tx.readOnlyFlags.isNotEmpty())
+        assertTrue(tx.readOnlyFlags.all { it }, "flags were ${tx.readOnlyFlags}")
     }
 
     @Test
