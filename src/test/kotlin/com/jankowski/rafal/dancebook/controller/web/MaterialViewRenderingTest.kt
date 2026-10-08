@@ -345,4 +345,25 @@ class MaterialViewRenderingTest {
         assertFalse(html.contains("sequence", ignoreCase = true), "HTML must not contain 'sequence'")
         assertFalse(html.contains("Director", ignoreCase = true), "HTML must not contain 'Director'")
     }
+
+    @Test
+    fun `note detail view renders floating scroll-to-controls from layout`() {
+        val material = Material().apply {
+            id = materialId
+            name = "Note With Floating Scroll Control"
+            description = "<div>Scrollable note content</div>"
+            owner = ownerUser
+            this.danceType = this@MaterialViewRenderingTest.danceType
+            visibility = Visibility.PUBLIC
+            createdAt = LocalDateTime.now()
+        }
+
+        `when`(materialService.findById(materialId)).thenReturn(material)
+
+        mockMvc.perform(get("/materials/$materialId"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"scrollToControls\"")))
+            .andExpect(content().string(containsString("id=\"scrollToTopBtn\"")))
+            .andExpect(content().string(containsString("id=\"scrollToBottomBtn\"")))
+    }
 }

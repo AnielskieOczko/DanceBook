@@ -190,5 +190,19 @@
 <!-- Shared confirm modal container for server-rendered dialogs -->
 <div id="confirmModalContainer"></div>
 
+<!-- Go-to top / bottom floating control (#224) -->
+<nav id="scrollToControls" class="goto" hidden role="group" aria-label="Scroll the page" th:attr="aria-label=#{nav.scroll.group}">
+    <button type="button" id="scrollToTopBtn" disabled
+            aria-label="Go to top" title="Go to top"
+            th:attr="aria-label=#{nav.scroll.top}, title=#{nav.scroll.top}">
+        <span th:replace="~{fragments/icon :: icon(name='keyboard_arrow_up', size='md', title=null)}"></span>
+    </button>
+    <button type="button" id="scrollToBottomBtn" disabled
+            aria-label="Go to bottom" title="Go to bottom"
+            th:attr="aria-label=#{nav.scroll.bottom}, title=#{nav.scroll.bottom}">
+        <span th:replace="~{fragments/icon :: icon(name='keyboard_arrow_down', size='md', title=null)}"></span>
+    </button>
+</nav>
+
 </body>
 </html>

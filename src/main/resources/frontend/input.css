@@ -1226,3 +1226,79 @@ trix-editor a {
   font-style: italic;
 }
 
+/* ── Go-to-top / Go-to-bottom floating control (#224) ── */
+.goto {
+  position: fixed;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-ambient);
+  right: 16px;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+}
+
+.goto.is-visible {
+  display: flex;
+}
+
+.goto[hidden] {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .goto {
+    right: 28px;
+    bottom: 28px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  body:has(#assistantBar:not(.hidden):not([hidden])) .goto {
+    bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+body:has(dialog[open]) .goto {
+  display: none !important;
+}
+
+.goto button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  border: 0;
+  background-color: transparent;
+  color: var(--color-on-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.goto button:hover:not(:disabled) {
+  background-color: var(--color-surface-container);
+}
+
+.goto button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+.goto button:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goto button {
+    transition: none !important;
+  }
+}

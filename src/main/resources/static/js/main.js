@@ -847,3 +847,75 @@ document.addEventListener('click', function(event) {
     const panel = document.getElementById('ai-rewrite-target');
     if (panel) panel.innerHTML = '';
 });
+
+// ── Go-to-top / Go-to-bottom floating control (#224) ──────────────────────────
+function initScrollToControls() {
+    const controls = document.getElementById('scrollToControls');
+    const topBtn = document.getElementById('scrollToTopBtn');
+    const bottomBtn = document.getElementById('scrollToBottomBtn');
+    if (!controls || !topBtn || !bottomBtn) return;
+
+    function update() {
+        const docEl = document.documentElement;
+        const scrollHeight = Math.max(docEl.scrollHeight, document.body ? document.body.scrollHeight : 0);
+        const clientHeight = window.innerHeight || docEl.clientHeight;
+        const scrollTop = window.scrollY || docEl.scrollTop || (document.body ? document.body.scrollTop : 0);
+        const maxScroll = scrollHeight - clientHeight;
+
+        // Long page rule: page scrollable height exceeds ~2 screens
+        const isLongPage = scrollHeight > (clientHeight * 2);
+
+        if (!isLongPage || maxScroll <= 0) {
+            controls.classList.remove('is-visible');
+            controls.setAttribute('hidden', '');
+            return;
+        }
+
+        controls.classList.add('is-visible');
+        controls.removeAttribute('hidden');
+
+        // At either end, the button that cannot move is disabled
+        const atTop = scrollTop <= 8;
+        const atBottom = (maxScroll - scrollTop) <= 8;
+
+        topBtn.disabled = atTop;
+        bottomBtn.disabled = atBottom;
+    }
+
+    topBtn.addEventListener('click', function() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({
+            top: 0,
+            behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+    });
+
+    bottomBtn.addEventListener('click', function() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const docEl = document.documentElement;
+        const targetTop = Math.max(docEl.scrollHeight, document.body ? document.body.scrollHeight : 0);
+        window.scrollTo({
+            top: targetTop,
+            behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+    });
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    document.addEventListener('htmx:afterSwap', update);
+    document.addEventListener('htmx:afterSettle', update);
+    document.addEventListener('htmx:historyRestore', update);
+
+    if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(update);
+        resizeObserver.observe(document.documentElement);
+    }
+
+    update();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollToControls);
+} else {
+    initScrollToControls();
+}
