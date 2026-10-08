@@ -9,13 +9,13 @@
     <header class="flex items-center justify-between pb-4 border-b border-outline-variant">
         <a href="/materials" class="min-h-[44px] flex items-center gap-1.5 text-sm md:text-base font-medium text-on-surface-variant hover:text-on-surface transition-colors group">
             <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-0.5 transition-transform')}"></span>
-            <span>Notes</span>
+            <span th:text="#{notes.title}">Notes</span>
         </a>
         <div class="flex items-center gap-2">
             <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
                 <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary btn-sm flex items-center gap-1.5">
                     <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                    <span>Edit note</span>
+                    <span th:text="#{notes.action.edit_note}">Edit note</span>
                 </a>
             </th:block>
         </div>
@@ -31,7 +31,7 @@
             <span th:if="${material.danceType != null and material.danceType.category != null}"
                   class="px-2 py-0.5 bg-surface-container rounded"
                   th:text="${material.danceType.category.name}">Category</span>
-            <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? 'Public' : 'Private'}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
+            <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
         </div>
 
         <!-- Title in Source Serif 4 -->
@@ -45,9 +45,9 @@
                 <span><span class="font-semibold text-on-surface" th:text="${material.rating}">4</span>/5</span>
             </span>
             <span th:if="${material.createdAt != null}"
-                  th:text="'Created ' + ${#temporals.format(material.createdAt, 'd MMM yyyy')}">Created 16 Sep 2026</span>
+                  th:text="#{notes.meta.created(${#temporals.format(material.createdAt, 'd MMM yyyy')})}">Created 16 Sep 2026</span>
             <span th:if="${material.updatedAt != null}"
-                  th:text="'Updated ' + ${#temporals.format(material.updatedAt, 'd MMM yyyy')}">Updated 22 Sep 2026</span>
+                  th:text="#{notes.meta.updated(${#temporals.format(material.updatedAt, 'd MMM yyyy')})}">Updated 22 Sep 2026</span>
         </div>
 
         <!-- Note text in Source Serif 4 -->
@@ -62,7 +62,7 @@
     <div id="pinnedFiguresSection" th:fragment="pinnedFiguresSection" th:attr="hx-swap-oob=${oobSwap == true ? 'outerHTML' : null}" class="pt-7 border-t border-outline-variant space-y-4">
         <div class="flex items-center justify-between">
             <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-                <span>Figures</span>
+                <span th:text="#{notes.figures.title}">Figures</span>
                 <span th:if="${figures != null && !#lists.isEmpty(figures)}" class="text-sm font-normal text-on-surface-variant" th:text="${#lists.size(figures)}"></span>
             </h2>
             <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
@@ -71,15 +71,16 @@
                         hx-target="#confirmModalContainer"
                         hx-swap="innerHTML"
                         class="btn-secondary btn-sm flex items-center gap-1.5"
-                        aria-label="Pin figure">
+                        aria-label="Pin figure"
+                        th:attr="aria-label=#{notes.figures.pin}">
                     <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
-                    <span>Pin figure</span>
+                    <span th:text="#{notes.figures.pin}">Pin figure</span>
                 </button>
             </th:block>
         </div>
 
         <!-- Empty state -->
-        <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm">
+        <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm" th:text="#{notes.figures.empty}">
             No figures pinned to this note yet.
         </div>
 
@@ -105,7 +106,7 @@
                         <!-- Dance Class -->
                         <span th:if="${f.danceFigure?.danceClass != null}"
                               class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface font-label-sm text-[11px] font-medium"
-                              th:text="${'Class ' + f.danceFigure.danceClass}">Class H</span>
+                              th:text="#{notes.figures.class(${f.danceFigure.danceClass})}">Class H</span>
                         <!-- Alternative Timing (only if present and not empty/blank) -->
                         <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}"
                               class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
@@ -124,7 +125,8 @@
                         <button type="submit"
                                 class="text-outline-variant hover:text-error transition-colors p-2.5 rounded-lg hover:bg-surface-container flex items-center justify-center min-w-[44px] min-h-[44px]"
                                 title="Unpin figure"
-                                aria-label="Unpin figure">
+                                aria-label="Unpin figure"
+                                th:attr="title=#{notes.figures.unpin}, aria-label=#{notes.figures.unpin}">
                             <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
                         </button>
                     </form>
@@ -136,7 +138,7 @@
     <!--/* Video and source Section (only rendered when video or source is present) */-->
     <th:block th:if="${(material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))) or (material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))) or (material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink)))}">
         <section class="pt-7 border-t border-outline-variant space-y-4">
-            <h2 class="font-headline-md text-headline-md text-on-surface">Video and source</h2>
+            <h2 class="font-headline-md text-headline-md text-on-surface" th:text="#{notes.media.title}">Video and source</h2>
 
             <!--/* Drive Video Player (if Drive file exists) */-->
             <th:block th:if="${material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))}">
@@ -150,21 +152,21 @@
             <th:block th:if="${(material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))) or (material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink)))}">
                 <dl class="grid grid-cols-1 sm:grid-cols-[140px_minmax(0,1fr)] gap-y-3 sm:gap-x-5 text-sm">
                     <th:block th:if="${material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))}">
-                        <dt class="text-on-surface-variant font-medium">Video</dt>
+                        <dt class="text-on-surface-variant font-medium" th:text="#{notes.media.video}">Video</dt>
                         <dd class="flex flex-col gap-0.5 min-w-0">
                             <a th:href="${material.videoLink}" target="_blank" rel="noopener"
                                class="font-medium text-primary hover:text-primary-hover break-all transition-colors"
                                th:text="${material.videoLink}">Video link</a>
-                            <span class="text-xs text-on-surface-variant">A video to watch for this note</span>
+                            <span class="text-xs text-on-surface-variant" th:text="#{notes.media.video_hint}">A video to watch for this note</span>
                         </dd>
                     </th:block>
                     <th:block th:if="${material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink))}">
-                        <dt class="text-on-surface-variant font-medium">Source</dt>
+                        <dt class="text-on-surface-variant font-medium" th:text="#{notes.media.source}">Source</dt>
                         <dd class="flex flex-col gap-0.5 min-w-0">
                             <a th:href="${material.sourceLink}" target="_blank" rel="noopener"
                                class="font-medium text-primary hover:text-primary-hover break-all transition-colors"
                                th:text="${material.sourceLink}">Source link</a>
-                            <span class="text-xs text-on-surface-variant">Where this material came from</span>
+                            <span class="text-xs text-on-surface-variant" th:text="#{notes.media.source_hint}">Where this material came from</span>
                         </dd>
                     </th:block>
                 </dl>
@@ -177,7 +179,7 @@
         <section id="relatedNotesSection" class="pt-7 border-t border-outline-variant space-y-4">
             <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='hub', size='md', cls='text-primary')}"></span>
-                <span>Related notes</span>
+                <span th:text="#{notes.related.title}">Related notes</span>
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <th:block th:each="relNote : ${relatedNotes}">
@@ -191,7 +193,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-1 text-xs font-medium text-primary">
-                            <span>Open note</span>
+                            <span th:text="#{notes.action.open_note}">Open note</span>
                             <span th:replace="~{fragments/icon :: icon(name='arrow_forward', size='sm')}"></span>
                         </div>
                     </a>
