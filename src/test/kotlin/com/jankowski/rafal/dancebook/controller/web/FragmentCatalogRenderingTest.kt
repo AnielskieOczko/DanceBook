@@ -292,8 +292,39 @@ class FragmentCatalogRenderingTest {
     fun `field fragment renders validation errors and error styling when form has binding error`() {
         mockMvc.perform(get("/test/catalog-error").with(csrf()))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
             .andExpect(content().string(containsString("Name must not be blank")))
+    }
+
+    @Test
+    fun `field fragment without an error does not carry the invalid state`() {
+        val html = mockMvc.perform(get("/test/catalog/fieldAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        assertTrue(html.contains("form-input"), "The field should still render as a form-input:\n$html")
+        assertFalse(html.contains("form-input-invalid"), "A valid field must not render the invalid state:\n$html")
+    }
+
+    @Test
+    fun `modal fragment takes its corners from the card radius token`() {
+        val html = mockMvc.perform(get("/test/catalog/modalAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        assertTrue(html.contains("rounded-card"), "The dialog must name the card radius token:\n$html")
+        assertFalse(html.contains("rounded-lg"), "The dialog must not carry a per-template radius:\n$html")
+    }
+
+    @Test
+    fun `form and button fragments carry no hand-written radius`() {
+        listOf("fieldAll", "selectAll", "textareaAll", "buttonAll", "linkAll", "iconButtonAll", "submitRowAll").forEach { name ->
+            val html = mockMvc.perform(get("/test/catalog/$name").with(csrf()))
+                .andExpect(status().isOk)
+                .andReturn().response.contentAsString
+            assertFalse(
+                Regex("""\brounded(-[a-z0-9\[\]]+)?\b""").containsMatchIn(html),
+                "Fragment $name must take its radius from the shared utility, not a rounded-* class:\n$html"
+            )
+        }
     }
 
     @Test

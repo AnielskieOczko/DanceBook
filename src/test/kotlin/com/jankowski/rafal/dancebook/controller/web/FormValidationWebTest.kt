@@ -104,7 +104,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -118,7 +118,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -132,7 +132,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -146,7 +146,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -159,7 +159,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -173,7 +173,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -186,7 +186,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -231,7 +231,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
     }
 
     @Test
@@ -294,7 +294,7 @@ class FormValidationWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"errorSummary\"")))
-            .andExpect(content().string(containsString("border-error")))
+            .andExpect(content().string(containsString("form-input-invalid")))
             .andExpect(content().string(containsString("Update Password")))
             .andExpect(content().string(not(containsString("Update Security"))))
     }

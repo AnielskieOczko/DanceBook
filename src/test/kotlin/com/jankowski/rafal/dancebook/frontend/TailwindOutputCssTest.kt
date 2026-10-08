@@ -113,6 +113,112 @@ class TailwindOutputCssTest {
         )
     }
 
+    @ParameterizedTest(name = "radius token {0} is defined in output.css")
+    @ValueSource(
+        strings = [
+            "--radius-pill:9999px",
+            "--radius-field:24px",
+            "--radius-card:16px",
+            "--radius-inset:12px",
+            "--radius-button:var(--radius-pill)",
+            "--radius-lg:16px",
+            "--radius-xl:16px",
+        ]
+    )
+    fun `radius tokens from the rounded forms mock are emitted`(declaration: String) {
+        assertTrue(
+            Regex(Regex.escape(declaration) + "[;}]").containsMatchIn(css.replace(" ", "")),
+            "Expected output.css to define `$declaration`, the radius ladder from #214."
+        )
+    }
+
+    @ParameterizedTest(name = "{0} is a pill")
+    @ValueSource(
+        strings = ["btn-primary", "btn-secondary", "btn-outline", "btn-danger", "btn-ghost", "btn-icon", "btn-sm", "form-input", "form-select"]
+    )
+    fun `buttons and single-line controls resolve to the pill radius`(className: String) {
+        val rule = Regex("""\.${cssEscape(className)}\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            rule.containsMatchIn(css),
+            "`$className` must take its corners from var(--radius-pill)."
+        )
+    }
+
+    @Test
+    fun `textarea uses the field radius and not the pill`() {
+        val rules = Regex("""\.form-textarea\s*\{[^}]*\}""").findAll(css).map { it.value }.toList()
+        val lastRadius = rules.flatMap { Regex("""border-radius\s*:\s*([^;}]+)""").findAll(it).map { m -> m.groupValues[1].trim() }.toList() }.last()
+        assertTrue(
+            lastRadius == "var(--radius-field)",
+            ".form-textarea must end on var(--radius-field) so it wins over the pill it inherits, but ends on $lastRadius."
+        )
+    }
+
+    @Test
+    fun `multiple select uses the field radius and drops the dropdown chevron`() {
+        val multipleRule = Regex("""\.form-select:is\([^{]*multiple[^{]*\)\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for .form-select:is([multiple]...)")
+        assertTrue(
+            multipleRule.contains("border-radius:var(--radius-field)"),
+            "Multiple select must use var(--radius-field), but got: $multipleRule"
+        )
+        assertFalse(
+            multipleRule.contains("var(--radius-pill)"),
+            "Multiple select must not resolve to var(--radius-pill)"
+        )
+        assertTrue(
+            multipleRule.contains("background-image:none"),
+            "Multiple select must remove the dropdown chevron with background-image:none"
+        )
+    }
+
+    @Test
+    fun `card corners come from the card radius token`() {
+        assertTrue(
+            Regex("""\.card\s*\{[^}]*border-radius\s*:\s*var\(--radius-card\)[^}]*\}""").containsMatchIn(css),
+            ".card must use var(--radius-card), 16px."
+        )
+        assertTrue(
+            css.contains(".rounded-card") && css.contains("border-radius:var(--radius-card)"),
+            "The rounded-card utility must exist so dialogs can name the token."
+        )
+    }
+
+    @Test
+    fun `form controls draw a 3px primary ring on focus that follows the curve`() {
+        val focusRule = Regex("""\.form-input:focus\s*\{[^}]*\}""").findAll(css).joinToString("") { it.value }
+        assertTrue(focusRule.contains("calc(3px + var(--tw-ring-offset-width))"), "Focus ring on .form-input must be 3px wide.")
+        assertTrue(focusRule.contains("var(--color-primary) 22%"), "Focus ring on .form-input must be primary at 22%.")
+    }
+
+    @Test
+    fun `global keyboard focus ring leaves form controls to their own ring`() {
+        assertTrue(
+            css.contains(":focus-visible:not(.form-input,.form-select,.form-textarea)") ||
+                css.contains(":focus-visible:not(.form-input, .form-select, .form-textarea)"),
+            "The global *:focus-visible rule must exclude form controls, or its !important 2px ring replaces the 3px one."
+        )
+    }
+
+    @Test
+    fun `invalid state turns the border and the focus ring to error and survives hover`() {
+        val invalid = Regex("""\.form-input-invalid(:focus)?\s*\{[^}]*\}""").findAll(css).joinToString("") { it.value }
+        assertTrue(invalid.contains("border-color:var(--color-error)!important"), "Invalid border must be error and !important so hover cannot repaint it.")
+        assertTrue(invalid.contains("var(--color-error) 20%"), "Invalid focus ring must be error at 20%.")
+    }
+
+    @Test
+    fun `disabled form controls are half opacity and ignore hover`() {
+        assertTrue(
+            Regex("""\.form-input:disabled\s*\{[^}]*opacity\s*:\s*\.5[^}]*\}""").containsMatchIn(css),
+            ".form-input:disabled must be 50% opacity."
+        )
+        assertTrue(
+            Regex("""\.form-input:disabled:hover\s*\{[^}]*\}""").containsMatchIn(css),
+            ".form-input:disabled:hover must reset the hover lift."
+        )
+    }
+
     @Test
     fun `badge-warning component is emitted in output css`() {
         assertTrue(

@@ -8,7 +8,7 @@
 <!-- Native HTML5 Dialog Modal -->
 <dialog th:fragment="modal"
         th:id="${id}"
-        class="rounded-lg border border-outline-variant bg-surface p-6 shadow-ambient backdrop:bg-black/50 w-full"
+        class="rounded-card border border-outline-variant bg-surface p-6 shadow-ambient backdrop:bg-black/50 w-full"
         th:classappend="${(size == 'sm' ? 'max-w-[20rem]' : (size == 'lg' ? 'max-w-[40rem]' : 'max-w-[28rem]')) + (cls != null ? ' ' + cls : '')}">
     <div class="flex items-center justify-between pb-4 border-b border-outline-variant mb-4">
         <h3 th:if="${title != null}" class="text-title font-sans text-on-surface" th:text="${title}">Modal Title</h3>
