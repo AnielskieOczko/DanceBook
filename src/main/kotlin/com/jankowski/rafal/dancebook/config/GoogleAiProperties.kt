@@ -25,5 +25,20 @@ data class GoogleAiProperties(
     /** Vector dimension for embeddings. */
     val embeddingDimensions: Int = 768,
     /** Maximum embedding requests per minute. Defaults to 90 (below free tier limit of 100). */
-    val embeddingRequestsPerMinute: Int = 90
+    val embeddingRequestsPerMinute: Int = 90,
+    /**
+     * Cosine distance (0 identical, 1 unrelated) beyond which a semantic search match is dropped.
+     * 0.65 is the cutoff the knowledge index's hybrid query has always used.
+     */
+    val semanticSearchMaxDistance: Double = 0.65,
+    /** Share of the per-minute embedding budget live searches may use; the index worker keeps the rest. */
+    val embeddingSearchSharePercent: Int = 30,
+    /** Searches that may embed per user per minute, so one user cannot use up the search share. */
+    val embeddingSearchPerUserPerMinute: Int = 5,
+    /** Share of the per-minute embedding budget for the assistant's own query embeddings, separate from the search box. */
+    val embeddingInteractiveSharePercent: Int = 20,
+    /** Assistant embeddings per user per minute (one question can use several). */
+    val embeddingInteractivePerUserPerMinute: Int = 15,
+    /** How long the interactive assistant waits for an embedding slot before giving up, in ms. */
+    val embeddingInteractiveMaxWaitMs: Long = 2000
 )

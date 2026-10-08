@@ -963,6 +963,28 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   cut short by rate limits is not reported as done.
 - **Related notes** on the note and figure pages come from `KnowledgeRetrievalService`
   (top 3 visible chunks by similarity, excluding the item itself).
+- **Standard search backend (#233):** `HybridSearchService.search(query, danceTypeId)` returns one
+  list of `SearchHit`s (notes and figures) marked `KEYWORD`, `SEMANTIC` or `BOTH`. Keyword hits
+  come from the existing `MaterialService.searchNotes` / `DanceFigureService.findAll`, in their
+  order; up to 5 extra semantic-only items (vector-only query, then opened through the services
+  so access is re-checked) are appended, and items found both ways go first. Any embedding
+  failure, no API key (`AssistantFeature.enabled` false: zero-vector embeddings), or
+  `EmbeddingBudget` refusing, or an anonymous visitor, gives keyword-only results.
+  `EmbeddingBudget` is one per-minute budget (`embedding-requests-per-minute`) in three
+  independent pools: the search box (`embedding-search-share-percent` 30, `...-search-per-user-per-minute`
+  5, never waits), the assistant's query embeddings and related notes
+  (`embedding-interactive-share-percent` 20, `...-interactive-per-user-per-minute` 15; the assistant waits up
+  to `embedding-interactive-max-wait-ms`, 2000, related notes never wait) and the index worker
+  (the rest, waits). Shares must be 5 to 95 and leave the worker 5 or startup fails. Anonymous
+  callers get no semantic search at all. Neither `HybridSearchServiceImpl.search` nor the related-notes
+  methods hold a transaction across the embedding call, and the related-notes and assistant paths
+  check `AssistantFeature.enabled` first. Because Open Session in View is off, what `search` and
+  the related-notes methods return is initialised inside their own short transactions by
+  `ReadModelInitializer` (note: owner, dance type and category, pinned figures with their catalog
+  entry, type and category; figure: dance type and category, creator). Anything beyond that, such
+  as a figure's steps or a note's comments, is not loaded; add it there if a consumer needs it.
+  Semantic
+  matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.

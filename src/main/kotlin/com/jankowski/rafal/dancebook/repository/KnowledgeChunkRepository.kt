@@ -18,6 +18,11 @@ class KnowledgeChunkRepository(
     private val jdbcTemplate: JdbcTemplate
 ) {
 
+    companion object {
+        /** Cosine distance (0 identical, 1 unrelated) beyond which a vector match is ignored. */
+        const val DEFAULT_MAX_DISTANCE = 0.65
+    }
+
     private val rowMapper = RowMapper<KnowledgeChunk> { rs, _ ->
         val embStr = rs.getString("embedding")
         val embedding = embStr?.removeSurrounding("[", "]")
@@ -211,7 +216,9 @@ class KnowledgeChunkRepository(
         currentUser: AppUser?,
         limit: Int = 10,
         topK: Int = 20,
-        k: Int = 60
+        k: Int = 60,
+        maxDistance: Double = DEFAULT_MAX_DISTANCE,
+        danceTypeId: UUID? = null
     ): List<KnowledgeSearchResult> {
         val hasVector = queryEmbedding != null
         val hasText = !query.isNullOrBlank()
@@ -242,10 +249,23 @@ class KnowledgeChunkRepository(
             "source_type IN ($placeholders)"
         } else "TRUE"
 
+        // Filtering here, inside the candidate queries, is what keeps a dance-type search from
+        // having its nearest chunks crowded out by other dance types.
+        val danceTypeCondition = if (danceTypeId != null) {
+            """(
+                (source_type = 'NOTE' AND EXISTS (SELECT 1 FROM material m WHERE m.id = source_id AND m.dance_type_id = ?))
+                OR (source_type = 'NOTE_COMMENT' AND EXISTS (SELECT 1 FROM comment c JOIN material m ON m.id = c.material_id WHERE c.id = source_id AND m.dance_type_id = ?))
+                OR (source_type = 'FIGURE' AND EXISTS (SELECT 1 FROM dance_figure f WHERE f.id = source_id AND f.dance_type_id = ?))
+                OR (source_type = 'CHOREOGRAPHY' AND EXISTS (SELECT 1 FROM choreography ch WHERE ch.id = source_id AND ch.dance_type_id = ?))
+            )"""
+        } else "TRUE"
+
         val vectorCteParams = mutableListOf<Any?>()
         val vectorCte = if (hasVector) {
             vectorCteParams.add(embStr)
             vectorCteParams.add(embStr)
+            vectorCteParams.add(embStr)
+            vectorCteParams.add(maxDistance)
             if (currentUser != null && currentUser.role != Role.ADMIN) {
                 vectorCteParams.add(currentUser.id)
                 vectorCteParams.add(currentUser.id)
@@ -253,16 +273,19 @@ class KnowledgeChunkRepository(
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { vectorCteParams.add(it.name) }
             }
+            if (danceTypeId != null) repeat(4) { vectorCteParams.add(danceTypeId) }
             vectorCteParams.add(embStr)
             vectorCteParams.add(topK)
             """
             vector_matches AS (
-                SELECT id, ROW_NUMBER() OVER (ORDER BY embedding <=> cast(? as vector)) AS rank
+                SELECT id, ROW_NUMBER() OVER (ORDER BY embedding <=> cast(? as vector)) AS rank,
+                       (embedding <=> cast(? as vector)) AS distance
                 FROM knowledge_chunk
                 WHERE embedding IS NOT NULL
-                  AND (embedding <=> cast(? as vector)) < 0.65
+                  AND (embedding <=> cast(? as vector)) < ?
                   AND $accessCondition
                   AND $sourceCondition
+                  AND $danceTypeCondition
                 ORDER BY embedding <=> cast(? as vector)
                 LIMIT ?
             )
@@ -270,7 +293,7 @@ class KnowledgeChunkRepository(
         } else {
             """
             vector_matches AS (
-                SELECT NULL::uuid AS id, NULL::bigint AS rank WHERE false
+                SELECT NULL::uuid AS id, NULL::bigint AS rank, NULL::float8 AS distance WHERE false
             )
             """.trimIndent()
         }
@@ -286,6 +309,7 @@ class KnowledgeChunkRepository(
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { textCteParams.add(it.name) }
             }
+            if (danceTypeId != null) repeat(4) { textCteParams.add(danceTypeId) }
             textCteParams.add(cleanQuery)
             textCteParams.add(topK)
             """
@@ -295,6 +319,7 @@ class KnowledgeChunkRepository(
                 WHERE content_tsv @@ plainto_tsquery('simple', ?)
                   AND $accessCondition
                   AND $sourceCondition
+                  AND $danceTypeCondition
                 ORDER BY ts_rank(content_tsv, plainto_tsquery('simple', ?)) DESC
                 LIMIT ?
             )
@@ -318,7 +343,7 @@ class KnowledgeChunkRepository(
             WITH $vectorCte,
                  $textCte
             SELECT kc.*,
-                   (COALESCE(1.0 / (? + vm.rank), 0.0) + COALESCE(1.0 / (? + tm.rank), 0.0)) AS rrf_score
+                   (COALESCE(1.0 / (? + vm.rank), 0.0) + COALESCE(1.0 / (? + tm.rank), 0.0)) AS rrf_score, vm.distance AS vector_distance
             FROM knowledge_chunk kc
             LEFT JOIN vector_matches vm ON kc.id = vm.id
             LEFT JOIN text_matches tm ON kc.id = tm.id
@@ -330,7 +355,7 @@ class KnowledgeChunkRepository(
         return jdbcTemplate.query(sql, { rs, rowNum ->
             val chunk = rowMapper.mapRow(rs, rowNum)!!
             val rrf = rs.getDouble("rrf_score")
-            KnowledgeSearchResult(chunk, rrf)
+            KnowledgeSearchResult(chunk, rrf, rs.getObject("vector_distance")?.let { rs.getDouble("vector_distance") })
         }, *allParams.toTypedArray())
     }
 
