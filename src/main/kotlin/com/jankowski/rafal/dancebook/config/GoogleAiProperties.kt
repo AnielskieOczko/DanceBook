@@ -35,6 +35,10 @@ data class GoogleAiProperties(
     val embeddingSearchSharePercent: Int = 30,
     /** Searches that may embed per user per minute, so one user cannot use up the search share. */
     val embeddingSearchPerUserPerMinute: Int = 5,
+    /** Share of the per-minute embedding budget for the assistant's own query embeddings, separate from the search box. */
+    val embeddingInteractiveSharePercent: Int = 20,
+    /** Assistant embeddings per user per minute (one question can use several). */
+    val embeddingInteractivePerUserPerMinute: Int = 15,
     /** How long the interactive assistant waits for an embedding slot before giving up, in ms. */
     val embeddingInteractiveMaxWaitMs: Long = 2000
 )

@@ -9,17 +9,25 @@ import java.util.ArrayDeque
 import java.util.UUID
 
 /**
- * One per-minute budget of `google.ai.embedding-requests-per-minute` calls, drawn on by both the
- * index worker and live searches, so together they stay under the provider's limit.
+ * One per-minute budget of `google.ai.embedding-requests-per-minute` calls, split into three
+ * independent pools so that none can starve another and together they stay under the provider's
+ * limit:
  *
- * The budget is split by `embedding-search-share-percent` (default 30):
- * - The worker ([acquireForWorker]) may use the other 70 percent and waits when that is spent.
- *   Its calls alone can therefore never fill the window and starve searches.
- * - Searches ([tryAcquireForSearch]) and the assistant ([tryAcquireInteractive]) share the
- *   search part. A search never waits: it is refused, and falls back to keyword-only results.
- *   It is also refused when that user has made `embedding-search-per-user-per-minute` calls
- *   (default 5), so one heavy user cannot use up everyone's share. The assistant is interactive,
- *   so it waits a short, bounded time for a slot before giving up.
+ * - **Search box** ([tryAcquireForSearch]): `embedding-search-share-percent` (default 30), at
+ *   most `embedding-search-per-user-per-minute` (5) per user. Never waits; a refusal means
+ *   keyword-only results.
+ * - **Assistant** ([tryAcquireInteractive]): `embedding-interactive-share-percent` (default 20),
+ *   at most `embedding-interactive-per-user-per-minute` (15) per user, since one question can use
+ *   several. It may wait a short bounded time for a slot (the assistant is interactive); callers
+ *   that must not wait, such as a page view, pass 0.
+ * - **Index worker** ([acquireForWorker]): whatever is left (default 50). It waits when spent.
+ *
+ * Anonymous callers (no user id) get no semantic search and no assistant embeddings at all: a
+ * single shared anonymous allowance would be used up by one visitor for everyone, and a public
+ * visitor should not spend the paid budget. They still get keyword results.
+ *
+ * Each share must be 5 to 95 percent and together they must leave the worker at least 5, or
+ * construction (so application startup) fails with a message naming the property.
  *
  * Sliding one-minute window, in memory. A requests-per-minute of 0 or less is unlimited.
  */
@@ -28,59 +36,83 @@ class EmbeddingBudget(
     private val googleAiProperties: GoogleAiProperties,
     private val clock: Clock
 ) {
-    private class Entry(val at: Instant, val searchUser: Any?, val isSearch: Boolean)
+    private enum class Pool { SEARCH, INTERACTIVE, WORKER }
 
-    private val anonymous = Any()
+    private class Entry(val at: Instant, val pool: Pool, val user: UUID?)
+
     private val entries = ArrayDeque<Entry>()
 
-    fun tryAcquireForSearch(userId: UUID?): Boolean {
-        val total = googleAiProperties.embeddingRequestsPerMinute
-        if (total <= 0) return true
-        val key: Any = userId ?: anonymous
-        val searchCap = searchCap(total)
-        synchronized(entries) {
-            val now = clock.instant()
-            evict(now)
-            val searches = entries.filter { it.isSearch }
-            if (entries.size >= total) return false
-            if (searches.size >= searchCap) return false
-            if (searches.count { it.searchUser == key } >= googleAiProperties.embeddingSearchPerUserPerMinute) return false
-            entries.addLast(Entry(now, key, true))
-            return true
+    init {
+        val search = googleAiProperties.embeddingSearchSharePercent
+        val interactive = googleAiProperties.embeddingInteractiveSharePercent
+        require(search in 5..95) {
+            "google.ai.embedding-search-share-percent must be between 5 and 95, was $search"
+        }
+        require(interactive in 5..95) {
+            "google.ai.embedding-interactive-share-percent must be between 5 and 95, was $interactive"
+        }
+        require(search + interactive <= 95) {
+            "google.ai.embedding-search-share-percent ($search) plus embedding-interactive-share-percent " +
+                "($interactive) must leave at least 5 percent of the budget for the index worker"
         }
     }
 
-    /** Like [tryAcquireForSearch], but retries every 100 ms for up to [maxWaitMs] before giving up. */
-    fun tryAcquireInteractive(userId: UUID?, maxWaitMs: Long = googleAiProperties.embeddingInteractiveMaxWaitMs, sleep: (Long) -> Unit = { Thread.sleep(it) }): Boolean {
+    fun tryAcquireForSearch(userId: UUID?): Boolean =
+        tryAcquire(Pool.SEARCH, userId, googleAiProperties.embeddingSearchSharePercent, googleAiProperties.embeddingSearchPerUserPerMinute)
+
+    /** Like [tryAcquireForSearch] for the assistant, retrying every 100 ms for up to [maxWaitMs] before giving up. */
+    fun tryAcquireInteractive(
+        userId: UUID?,
+        maxWaitMs: Long = googleAiProperties.embeddingInteractiveMaxWaitMs,
+        sleep: (Long) -> Unit = { Thread.sleep(it) }
+    ): Boolean {
         var waited = 0L
         while (true) {
-            if (tryAcquireForSearch(userId)) return true
-            if (waited >= maxWaitMs) return false
+            if (tryAcquire(Pool.INTERACTIVE, userId, googleAiProperties.embeddingInteractiveSharePercent, googleAiProperties.embeddingInteractivePerUserPerMinute)) return true
+            if (userId == null || waited >= maxWaitMs) return false
             val step = minOf(100L, maxWaitMs - waited)
             sleep(step)
             waited += step
         }
     }
 
-    private fun searchCap(total: Int) =
-        maxOf(1, total * googleAiProperties.embeddingSearchSharePercent.coerceIn(0, 100) / 100)
+    private fun poolCap(total: Int, percent: Int) = maxOf(1, total * percent / 100)
 
-    /** Takes a slot, calling [sleep] with the time to wait for as long as the budget is spent. */
+    private fun tryAcquire(pool: Pool, userId: UUID?, percent: Int, perUser: Int): Boolean {
+        if (userId == null) return false
+        val total = googleAiProperties.embeddingRequestsPerMinute
+        if (total <= 0) return true
+        val cap = poolCap(total, percent)
+        synchronized(entries) {
+            val now = clock.instant()
+            evict(now)
+            val mine = entries.filter { it.pool == pool }
+            if (entries.size >= total || mine.size >= cap) return false
+            if (mine.count { it.user == userId } >= perUser) return false
+            entries.addLast(Entry(now, pool, userId))
+            return true
+        }
+    }
+
+    /** Takes a slot, calling [sleep] with the time to wait for as long as the worker's pool is spent. */
     fun acquireForWorker(sleep: (Long) -> Unit = { Thread.sleep(it) }) {
         val total = googleAiProperties.embeddingRequestsPerMinute
         if (total <= 0) return
+        val workerCap = maxOf(
+            1,
+            total - poolCap(total, googleAiProperties.embeddingSearchSharePercent) -
+                poolCap(total, googleAiProperties.embeddingInteractiveSharePercent)
+        )
         while (true) {
             val waitMs: Long
             synchronized(entries) {
                 val now = clock.instant()
                 evict(now)
-                val workerCap = maxOf(1, total - searchCap(total))
-                val mine = entries.filter { !it.isSearch }
+                val mine = entries.filter { it.pool == Pool.WORKER }
                 if (entries.size < total && mine.size < workerCap) {
-                    entries.addLast(Entry(now, null, false))
+                    entries.addLast(Entry(now, Pool.WORKER, null))
                     return
                 }
-                // Wait for the oldest entry that is actually blocking us to leave the window.
                 val blocking = if (mine.size >= workerCap) mine.first() else entries.first
                 waitMs = maxOf(1L, Duration.between(now, blocking.at.plusSeconds(60)).toMillis())
             }

@@ -48,7 +48,8 @@ class AssistantReadTools(
     private val embeddingModel: EmbeddingModel? = null,
     private val choreographyRepository: ChoreographyRepository? = null,
     private val commentRepository: CommentRepository? = null,
-    private val embeddingBudget: EmbeddingBudget? = null
+    private val embeddingBudget: EmbeddingBudget? = null,
+    private val assistantFeature: com.jankowski.rafal.dancebook.config.AssistantFeature? = null
 ) {
 
     companion object {
@@ -61,6 +62,7 @@ class AssistantReadTools(
     /** Query embeddings go through the shared budget; null (keyword-only) when it stays exhausted. */
     private fun embedQuery(text: String): FloatArray? {
         val model = embeddingModel ?: return null
+        if (assistantFeature != null && !assistantFeature.enabled) return null
         if (embeddingBudget != null && !embeddingBudget.tryAcquireInteractive(appUserService.getCurrentUserOrNull()?.id)) return null
         return model.embed(text)
     }

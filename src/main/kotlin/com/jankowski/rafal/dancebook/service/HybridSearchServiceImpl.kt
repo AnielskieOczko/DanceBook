@@ -10,7 +10,6 @@ import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
 import org.slf4j.LoggerFactory
 import org.springframework.ai.embedding.EmbeddingModel
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 /**
@@ -47,7 +46,9 @@ class HybridSearchServiceImpl(
 
     private data class Ranked(val hit: SearchHit, val rank: Int)
 
-    @Transactional(readOnly = true)
+    // Deliberately not @Transactional: the embedding call is a network round trip, and a
+    // transaction would hold a database connection across it. Each service and repository call
+    // below opens its own short transaction.
     override fun search(query: String?, danceTypeId: UUID?, limit: Int): List<SearchHit> {
         val q = query?.trim().orEmpty()
         if (q.isEmpty()) return emptyList()

@@ -57,6 +57,8 @@ class HybridSearchIntegrationTest {
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
 
+    @Autowired private lateinit var testEmbeddingModel: RagIntegrationTest.RagTestConfig.TestEmbeddingModel
+
     @MockBean private lateinit var calendarClient: GoogleCalendarClient
     @MockBean private lateinit var appUserService: AppUserService
 
@@ -121,6 +123,22 @@ class HybridSearchIntegrationTest {
         assertEquals(SearchMatch.BOTH, byId[keywordNote.id]?.match)
         assertEquals(SearchMatch.SEMANTIC, byId[semanticNote.id]?.match)
         assertEquals(keywordNote.id, hits.first().id)
+    }
+
+    @Test
+    fun `the query is embedded outside any transaction so a slow provider cannot hold a connection`() {
+        note(userA, "Sway basics", "sway", Visibility.PUBLIC)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(userA)
+        var inTransaction: Boolean? = null
+        testEmbeddingModel.beforeEmbedHook = {
+            inTransaction = org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive()
+        }
+        try {
+            hybridSearchService.search("sway")
+        } finally {
+            testEmbeddingModel.beforeEmbedHook = null
+        }
+        assertEquals(false, inTransaction, "the embed call must run with no transaction open")
     }
 
     @Test
