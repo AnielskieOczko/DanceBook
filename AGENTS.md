@@ -989,6 +989,51 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.
 
+### Internationalisation (en / pl)
+
+The UI is available in English and Polish (#220). English is the default; the supported
+locales are listed in `config/AppLocales.kt`.
+
+- **Which language a request uses.** `config/UserLocaleResolver.kt` reads the signed-in
+  user's saved `AppUser.locale`, and falls back to `Accept-Language`, then English. The
+  user changes it on the profile page (`POST /profile/locale`, `ProfileController`).
+- **Where the text lives.** Two bundles in `src/main/resources`: `messages.properties`
+  (English) and `messages_pl.properties` (Polish), UTF-8, basename `messages`. Keys are
+  `<area>.<screen>.<name>` (`training.calendar.quick.repeat_none`) and grouped under a
+  `# Area - Subarea` comment. Keep both files in the same order, and add every key to both.
+- **Templates.** Keep the English text as the element's body and bind it:
+  `th:text="#{key}"`. For attributes use `th:attr="placeholder=#{key}"`, and the same for
+  `title` and `aria-label`; the English attribute stays beside it as the prototype value, so
+  seeing both is correct. Do not change fragment names, element ids or form field names
+  while translating.
+- **Reuse before adding.** `common.*` (actions such as save, cancel, delete) and `nav.*`
+  are shared across areas. Anything else gets its own key in the area's group, even when
+  the English text matches another area's, as figures and notes already do.
+- **Message parameters.** Pass dynamic parts as `{0}`, never by concatenation. The bundles
+  use `MessageFormat`, which treats a single `'` as an escape and drops it, so avoid
+  apostrophes in a parameterised message or write `''`.
+- **Polish plurals.** Polish has three plural forms and a count message cannot choose
+  between them. Where a count appears, the Polish phrase puts the number after a label
+  (`Treningi: {0}`) while English keeps `{0} sessions`. Same key, different shape per
+  locale; do not try to inflect.
+- **Dance terms.** Use the terms Polish dancers actually say and keep established
+  loanwords where a translation sounds odd (LF, RF and timing counts stay as notation).
+  Record the reasoning in the plan.
+- **Still English by design.** Text built in Kotlin or JavaScript is not covered by a
+  template sweep: enum labels, dates, numbers and validation messages (#244), strings
+  built in JS such as the rich text toolbar (#245), and assistant replies (#246). A page
+  that is Polish apart from these is not a miss. Sweeps for the remaining areas are
+  tracked under #204.
+- **Tests.** Each area has a `*LocaleWebTest` (`controller/web/ChoreographyLocaleWebTest.kt`
+  is a good one to copy): a `@WebMvcTest` that renders its pages with a Polish locale and
+  checks for Polish text and the absence of the English labels, then with an English locale
+  and checks nothing moved. Existing English rendering tests must pass unchanged. Nothing
+  yet checks key parity between the two bundles (#247), so compare the added keys of both
+  files yourself, and look for duplicate keys after resolving a merge conflict.
+- **Merging.** Every sweep appends a block to both bundles, so two open sweeps conflict on
+  the same lines. Both sides only add keys: keep both blocks, remove the markers, check for
+  duplicate keys.
+
 ## Constraints and gotchas
 
 - **Schema changes require a Flyway migration.** `spring.jpa.hibernate.ddl-auto=validate`,
