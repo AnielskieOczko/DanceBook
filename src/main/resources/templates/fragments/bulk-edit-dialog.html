@@ -15,12 +15,12 @@
             <span th:replace="~{fragments/icon :: icon(name='category', size='md')}"></span>
         </div>
         <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
-            <span th:text="${dialogTitle ?: 'Change Event Type'}">Change Event Type</span>
+            <span th:text="${dialogTitle ?: #messages.msg('training.bulk.type.title')}">Change Event Type</span>
         </h3>
     </div>
     <p th:if="${selectedCount != null}" class="font-body-md text-on-surface-variant mb-2"
-       th:text="'Apply to ' + ${selectedCount} + (${selectedCount} == 1 ? ' selected session' : ' selected sessions')">Apply to 3 selected sessions</p>
-    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed">
+       th:text="${selectedCount} == 1 ? #{training.bulk.apply_to_one(${selectedCount})} : #{training.bulk.apply_to_many(${selectedCount})}">Apply to 3 selected sessions</p>
+    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed" th:text="#{training.bulk.type.text}">
         Select the new event type for the selected sessions. This writes through to each Google Calendar event.
     </p>
     <form th:action="@{/training-events/bulk-edit-type}"
@@ -34,14 +34,14 @@
             <input th:each="id : ${sessionIds}" type="hidden" name="sessionIds" th:value="${id}">
         </th:block>
         <div>
-            <label for="bulkEventType" class="form-label">Event Type</label>
+            <label for="bulkEventType" class="form-label" th:text="#{training.bulk.type.label}">Event Type</label>
             <select id="bulkEventType" name="eventType" class="form-select w-full" required>
                 <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}">TRAINING</option>
             </select>
         </div>
         <div class="flex justify-end gap-3 pt-2">
-            <button type="submit" formmethod="dialog" class="btn-outline">Cancel</button>
-            <button type="submit" class="btn-primary">Update Type</button>
+            <button type="submit" formmethod="dialog" class="btn-outline" th:text="#{common.cancel}">Cancel</button>
+            <button type="submit" class="btn-primary" th:text="#{training.bulk.type.submit}">Update Type</button>
         </div>
     </form>
 </dialog>
@@ -56,12 +56,12 @@
             <span th:replace="~{fragments/icon :: icon(name='style', size='md')}"></span>
         </div>
         <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
-            <span th:text="${dialogTitle ?: 'Replace Style Segments'}">Replace Style Segments</span>
+            <span th:text="${dialogTitle ?: #messages.msg('training.bulk.styles.title')}">Replace Style Segments</span>
         </h3>
     </div>
     <p th:if="${selectedCount != null}" class="font-body-md text-on-surface-variant mb-2"
-       th:text="'Apply to ' + ${selectedCount} + (${selectedCount} == 1 ? ' selected session' : ' selected sessions')">Apply to 3 selected sessions</p>
-    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed">
+       th:text="${selectedCount} == 1 ? #{training.bulk.apply_to_one(${selectedCount})} : #{training.bulk.apply_to_many(${selectedCount})}">Apply to 3 selected sessions</p>
+    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed" th:text="#{training.bulk.styles.text}">
         Set the style breakdown across the selected sessions. Any session shorter than the total breakdown duration will be left untouched.
     </p>
     <form th:action="@{/training-events/bulk-edit-styles}"
@@ -78,14 +78,15 @@
         <div class="js-segment-rows space-y-3">
             <div class="flex items-center gap-3 js-segment-row">
                 <select name="segments[0].categoryId" class="form-select flex-1">
-                    <option value="">-- Select style --</option>
+                    <option value="" th:text="#{training.styles.select}">-- Select style --</option>
                     <option th:each="category : ${danceCategories}" th:value="${category.id}"
                             th:text="${category.name}">Standard</option>
                 </select>
                 <input type="number" min="0" step="5" name="segments[0].durationMinutes"
-                       class="form-input w-28" placeholder="min">
-                <span class="font-body-md text-on-surface-variant">min</span>
-                <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove">
+                       class="form-input w-28" placeholder="min" th:placeholder="#{training.unit.min}">
+                <span class="font-body-md text-on-surface-variant" th:text="#{training.unit.min}">min</span>
+                <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove"
+                        th:attr="aria-label=#{training.action.remove}, title=#{training.action.remove}">
                     <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                 </button>
             </div>
@@ -93,29 +94,30 @@
 
         <button type="button" class="js-bulk-add-segment btn-outline text-sm">
             <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
-            Add style
+            <span th:text="#{training.styles.add}">Add style</span>
         </button>
 
         <!-- Template for cloning rows in JavaScript -->
         <template class="js-segment-template">
             <div class="flex items-center gap-3 js-segment-row">
                 <select name="segments[INDEX].categoryId" class="form-select flex-1">
-                    <option value="">-- Select style --</option>
+                    <option value="" th:text="#{training.styles.select}">-- Select style --</option>
                     <option th:each="category : ${danceCategories}" th:value="${category.id}"
                             th:text="${category.name}">Standard</option>
                 </select>
                 <input type="number" min="0" step="5" name="segments[INDEX].durationMinutes"
-                       class="form-input w-28" placeholder="min">
-                <span class="font-body-md text-on-surface-variant">min</span>
-                <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove">
+                       class="form-input w-28" placeholder="min" th:placeholder="#{training.unit.min}">
+                <span class="font-body-md text-on-surface-variant" th:text="#{training.unit.min}">min</span>
+                <button type="button" class="btn-icon text-error js-bulk-remove-segment" aria-label="Remove" title="Remove"
+                        th:attr="aria-label=#{training.action.remove}, title=#{training.action.remove}">
                     <span th:replace="~{fragments/icon :: icon(name='close')}"></span>
                 </button>
             </div>
         </template>
 
         <div class="flex justify-end gap-3 pt-2">
-            <button type="submit" formmethod="dialog" class="btn-outline">Cancel</button>
-            <button type="submit" class="btn-primary">Apply Breakdown</button>
+            <button type="submit" formmethod="dialog" class="btn-outline" th:text="#{common.cancel}">Cancel</button>
+            <button type="submit" class="btn-primary" th:text="#{training.bulk.styles.submit}">Apply Breakdown</button>
         </div>
     </form>
 </dialog>
@@ -130,12 +132,12 @@
             <span th:replace="~{fragments/icon :: icon(name='menu_book', size='md')}"></span>
         </div>
         <h3 id="modalTitle" class="font-headline-md text-on-surface text-xl font-semibold flex items-center gap-2">
-            <span th:text="${dialogTitle ?: 'Attach Note or Link'}">Attach Note or Link</span>
+            <span th:text="${dialogTitle ?: #messages.msg('training.bulk.material.title')}">Attach Note or Link</span>
         </h3>
     </div>
     <p th:if="${selectedCount != null}" class="font-body-md text-on-surface-variant mb-2"
-       th:text="'Apply to ' + ${selectedCount} + (${selectedCount} == 1 ? ' selected session' : ' selected sessions')">Apply to 3 selected sessions</p>
-    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed">
+       th:text="${selectedCount} == 1 ? #{training.bulk.apply_to_one(${selectedCount})} : #{training.bulk.apply_to_many(${selectedCount})}">Apply to 3 selected sessions</p>
+    <p class="text-on-surface-variant font-body-md mb-4 leading-relaxed" th:text="#{training.bulk.material.text}">
         Attach a Note or an external materials link to all selected sessions.
     </p>
     <form th:action="@{/training-events/bulk-edit-material}"
@@ -150,32 +152,32 @@
         </th:block>
 
         <div>
-            <label for="bulkMaterialId" class="form-label">Note</label>
+            <label for="bulkMaterialId" class="form-label" th:text="#{training.bulk.material.note_label}">Note</label>
             <select id="bulkMaterialId" name="materialId" class="form-select w-full">
-                <option value="">-- No Note --</option>
+                <option value="" th:text="#{training.bulk.material.no_note}">-- No Note --</option>
                 <option th:each="mat : ${materials}" th:value="${mat.id}" th:text="${mat.name}">Note</option>
             </select>
-            <p class="form-hint">Links an existing Note from your library.</p>
+            <p class="form-hint" th:text="#{training.bulk.material.note_hint}">Links an existing Note from your library.</p>
         </div>
 
         <div>
-            <label for="bulkMaterialsUrl" class="form-label">External materials link</label>
+            <label for="bulkMaterialsUrl" class="form-label" th:text="#{training.form.field.materials_url}">External materials link</label>
             <input id="bulkMaterialsUrl" type="url" name="materialsUrl" class="form-input w-full"
                    placeholder="https://...">
-            <p class="form-hint">For video or materials links outside DanceBook.</p>
+            <p class="form-hint" th:text="#{training.bulk.material.url_hint}">For video or materials links outside DanceBook.</p>
         </div>
 
         <div class="pt-1">
             <label class="inline-flex items-center gap-2 cursor-pointer text-body-md text-on-surface select-none">
                 <input type="checkbox" name="clearMaterial" value="true"
                        class="rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer">
-                <span>Clear existing Note and external link</span>
+                <span th:text="#{training.bulk.material.clear}">Clear existing Note and external link</span>
             </label>
         </div>
 
         <div class="flex justify-end gap-3 pt-2">
-            <button type="submit" formmethod="dialog" class="btn-outline">Cancel</button>
-            <button type="submit" class="btn-primary">Save Note / Link</button>
+            <button type="submit" formmethod="dialog" class="btn-outline" th:text="#{common.cancel}">Cancel</button>
+            <button type="submit" class="btn-primary" th:text="#{training.bulk.material.submit}">Save Note / Link</button>
         </div>
     </form>
 </dialog>

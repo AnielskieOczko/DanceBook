@@ -4,14 +4,14 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg relative">
 
-    <div th:replace="~{fragments/page :: pageHeader(title='Training', subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? 'No calendar connected' : (#lists.size(events) + ' sessions logged')}, toolbar=~{::listToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? #messages.msg('training.list.subtitle_no_calendar') : #messages.msg('training.list.subtitle_count', #lists.size(events))}, toolbar=~{::listToolbar})}">
         <div th:fragment="listToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
             <a href="/training-events/new" class="btn-primary"
                th:if="${(selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession}">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-                Add Session
+                <span th:text="#{training.add_session}">Add Session</span>
             </a>
         </div>
     </div>
@@ -29,13 +29,14 @@
             <input type="hidden" name="awaitingConfirmation" th:if="${selectedAwaitingConfirmation}" value="true">
 
             <div class="flex items-center gap-2 md:flex-1">
-                <input type="search" name="search" th:value="${search}" placeholder="Search sessions..."
+                <input type="search" name="search" th:value="${search}" placeholder="Search sessions..." th:placeholder="#{training.list.search_placeholder}"
                        class="form-input flex-1"
                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                        hx-include="#filterForm" hx-trigger="keyup changed delay:300ms">
 
                 <button type="button" class="js-toggle btn-outline md:hidden shrink-0 relative"
-                        data-toggle-target="#filterFields" aria-label="Show filters">
+                        data-toggle-target="#filterFields" aria-label="Show filters"
+                        th:attr="aria-label=#{training.list.show_filters}">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md')}"></span>
                     <span th:if="${activeFilterCount != null && activeFilterCount > 0}"
                           th:text="${activeFilterCount}"
@@ -49,7 +50,7 @@
                 <select name="eventTypes" class="form-select md:w-48"
                         th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                         hx-include="#filterForm">
-                    <option value="">All types</option>
+                    <option value="" th:text="#{training.list.all_types}">All types</option>
                     <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}"
                             th:selected="${selectedEventTypes != null && selectedEventTypes.contains(type)}">TRAINING</option>
                 </select>
@@ -57,7 +58,7 @@
                 <select name="attendanceStatuses" class="form-select md:w-48"
                         th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                         hx-include="#filterForm">
-                    <option value="">All statuses</option>
+                    <option value="" th:text="#{training.list.all_statuses}">All statuses</option>
                     <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}"
                             th:selected="${selectedStatuses != null && selectedStatuses.contains(status)}">PLANNED</option>
                 </select>
@@ -65,7 +66,7 @@
                 <select name="categoryIds" class="form-select md:w-48"
                         th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                         hx-include="#filterForm">
-                    <option value="">All styles</option>
+                    <option value="" th:text="#{training.list.all_styles}">All styles</option>
                     <option th:each="category : ${danceCategories}" th:value="${category.id}" th:text="${category.name}"
                             th:selected="${selectedCategoryIds != null && selectedCategoryIds.contains(category.id)}">Standard</option>
                 </select>
@@ -79,14 +80,14 @@
         <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
             <div th:replace="~{fragments/empty :: emptyState(
                 icon='calendar_month',
-                title='No calendars connected',
-                text='Connect your Google Calendar to start tracking training sessions.',
+                title=#{training.empty.no_calendars_title},
+                text=#{training.empty.no_calendars_text},
                 actionHref='/training-calendars/new',
-                actionLabel='Connect Calendar')}"></div>
+                actionLabel=#{training.empty.no_calendars_action})}"></div>
         </th:block>
 
         <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty() && (events == null || events.isEmpty())}">
-            <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title='No training sessions yet', text='Log your first session and it will appear here and in your Google Calendar.', actionHref=${canAddSession ? '/training-events/new' : null}, actionLabel='Add Session')}"></div>
+            <div th:replace="~{fragments/empty :: emptyState(icon='calendar_month', title=#{training.list.empty_title}, text=#{training.list.empty_text}, actionHref=${canAddSession ? '/training-events/new' : null}, actionLabel=#{training.add_session})}"></div>
         </th:block>
 
         <!-- Feedback message following a bulk action -->
@@ -96,7 +97,8 @@
                 <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-primary')}"></span>
                 <span th:text="${bulkMessage}">3 sessions marked as attended.</span>
             </div>
-            <button type="button" class="js-dismiss-banner text-outline hover:text-on-surface" aria-label="Dismiss">
+            <button type="button" class="js-dismiss-banner text-outline hover:text-on-surface" aria-label="Dismiss"
+                    th:attr="aria-label=#{common.dismiss}">
                 <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
             </button>
         </div>
@@ -105,10 +107,10 @@
         <div th:if="${events != null && !events.isEmpty()}"
              class="flex items-center justify-between py-2 px-1 border-b border-outline-variant/30">
             <label class="inline-flex items-center gap-2 cursor-pointer text-body-md font-medium text-on-surface select-none">
-                <input type="checkbox" id="selectAllSessions" class="js-select-all-sessions rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" aria-label="Select all sessions">
-                <span id="selectAllLabel">Select all</span>
+                <input type="checkbox" id="selectAllSessions" class="js-select-all-sessions rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" aria-label="Select all sessions" th:attr="aria-label=#{training.list.select_all_aria}">
+                <span id="selectAllLabel" th:text="#{training.list.select_all}">Select all</span>
             </label>
-            <span class="text-label-sm text-outline tabular-nums" th:text="${#lists.size(events)} + ' sessions'">6 sessions</span>
+            <span class="text-label-sm text-outline tabular-nums" th:text="#{training.list.count(${#lists.size(events)})}">6 sessions</span>
         </div>
 
         <!-- Floating bulk action bar -->
@@ -120,16 +122,16 @@
                      rounded-xl px-4 py-3 items-center justify-between gap-3
                      max-w-[calc(100vw-2rem)] sm:max-w-2xl w-full sm:w-auto">
             <div class="flex items-center gap-2">
-                <span id="bulkSelectedCount" class="font-medium text-on-surface text-body-md whitespace-nowrap">0 selected</span>
+                <span id="bulkSelectedCount" class="font-medium text-on-surface text-body-md whitespace-nowrap" th:text="#{training.list.selected_count(0)}">0 selected</span>
             </div>
             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                 <button type="submit" name="status" value="ATTENDED"
                         class="btn-primary text-sm px-3 py-1.5 whitespace-nowrap">
-                    Mark Attended
+                    <span th:text="#{training.list.mark_attended}">Mark Attended</span>
                 </button>
                 <button type="submit" name="status" value="SKIPPED"
                         class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                    Mark Skipped
+                    <span th:text="#{training.list.mark_skipped}">Mark Skipped</span>
                 </button>
                 <th:block th:if="${activeCalendar == null || activeCalendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}">
                     <button type="button"
@@ -138,7 +140,7 @@
                             hx-swap="innerHTML"
                             hx-include=".js-session-checkbox:checked, #filterForm"
                             class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                        Change Type
+                        <span th:text="#{training.list.change_type}">Change Type</span>
                     </button>
                     <button type="button"
                             th:hx-post="@{/training-events/bulk-edit-styles-dialog}"
@@ -146,7 +148,7 @@
                             hx-swap="innerHTML"
                             hx-include=".js-session-checkbox:checked, #filterForm"
                             class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                        Set Styles
+                        <span th:text="#{training.list.set_styles}">Set Styles</span>
                     </button>
                     <button type="button"
                             th:hx-post="@{/training-events/bulk-edit-material-dialog}"
@@ -154,7 +156,7 @@
                             hx-swap="innerHTML"
                             hx-include=".js-session-checkbox:checked, #filterForm"
                             class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap">
-                        Set Note
+                        <span th:text="#{training.list.set_note}">Set Note</span>
                     </button>
                     <button type="button"
                             th:hx-post="@{/training-events/bulk-delete-dialog}"
@@ -162,11 +164,12 @@
                             hx-swap="innerHTML"
                             hx-include=".js-session-checkbox:checked, #filterForm"
                             class="btn-outline text-sm px-3 py-1.5 whitespace-nowrap text-danger border-danger/30 hover:bg-danger-soft">
-                        Delete
+                        <span th:text="#{common.delete}">Delete</span>
                     </button>
                 </th:block>
                 <button type="button" class="js-bulk-clear btn-icon text-on-surface-variant hover:text-on-surface ml-1"
-                        title="Clear selection" aria-label="Clear selection">
+                        title="Clear selection" aria-label="Clear selection"
+                        th:attr="title=#{training.list.clear_selection}, aria-label=#{training.list.clear_selection}">
                     <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
                 </button>
             </div>
@@ -189,7 +192,7 @@
 
                 <input type="checkbox" name="sessionIds" th:value="${event.id}"
                        class="js-session-checkbox mt-3 sm:mt-3.5 rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer shrink-0"
-                       aria-label="Select session">
+                       aria-label="Select session" th:attr="aria-label=#{training.list.select_session}">
 
                 <!-- Date rail; the stripe and tint are the session's status. -->
                 <div class="tc-rail"
@@ -207,14 +210,14 @@
                     <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
                         <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
                         <span class="text-outline"> · </span>
-                        <span th:text="${event.durationMinutes} + ' min'">120 min</span>
+                        <span th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
                     </p>
 
                     <div class="tc-badges mt-2">
                         <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
 
                         <span th:each="segment : ${event.segments}" class="badge-secondary"
-                              th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+                              th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>
 
                         <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
                     </div>
@@ -226,24 +229,25 @@
                         <form th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
                               hx-target="#events-list" hx-swap="outerHTML">
                             <input type="hidden" name="status" value="ATTENDED">
-                            <button type="submit" class="btn-primary">Attended</button>
+                            <button type="submit" class="btn-primary" th:text="#{dashboard.wrap_up.attended}">Attended</button>
                         </form>
                         <form th:hx-post="@{/training-events/{id}/attendance(id=${event.id})}"
                               hx-target="#events-list" hx-swap="outerHTML">
                             <input type="hidden" name="status" value="SKIPPED">
-                            <button type="submit" class="btn-outline">Skipped</button>
+                            <button type="submit" class="btn-outline" th:text="#{dashboard.wrap_up.skipped}">Skipped</button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Edit and delete: inline on a pointer, behind an overflow menu on a phone. -->
                 <div th:if="${canManage}" class="hidden md:flex items-center gap-2 shrink-0">
-                    <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label='Edit', size='sm')}"></a>
+                    <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label=#{common.edit}, size='sm')}"></a>
                     <button th:if="${event.series != null}"
                             type="button"
                             class="btn-icon text-danger hover:bg-danger-soft"
                             aria-label="Delete"
                             title="Delete"
+                            th:attr="aria-label=#{common.delete}, title=#{common.delete}"
                             th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
                             hx-target="#confirmModalContainer"
                             hx-swap="innerHTML">
@@ -251,13 +255,15 @@
                     </button>
                     <form th:if="${event.series == null}"
                           th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
-                          data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
-                        <button th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', size='sm', cls='text-danger hover:bg-danger-soft')}"></button>
+                          data-confirm="Delete this training session? It will also be removed from your Google Calendar."
+                          th:attr="data-confirm=#{training.delete_confirm}">
+                        <button th:replace="~{fragments/button :: iconButton(icon='delete', label=#{common.delete}, type='submit', size='sm', cls='text-danger hover:bg-danger-soft')}"></button>
                     </form>
                 </div>
 
                 <div th:if="${canManage}" class="relative md:hidden shrink-0">
-                    <button type="button" class="js-menu-btn btn-icon" aria-label="More actions">
+                    <button type="button" class="js-menu-btn btn-icon" aria-label="More actions"
+                            th:attr="aria-label=#{training.list.more_actions}">
                         <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md')}"></span>
                     </button>
                     <div class="js-menu-dropdown hidden absolute right-0 top-full mt-1 w-44 z-30 py-1
@@ -265,7 +271,7 @@
                         <a th:href="@{/training-events/{id}/edit(id=${event.id})}"
                            class="flex items-center gap-2 px-3 py-2 font-body-md text-[15px] text-on-surface hover:bg-surface-container">
                             <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                            Edit
+                            <span th:text="#{common.edit}">Edit</span>
                         </a>
                         <button th:if="${event.series != null}"
                                 type="button"
@@ -274,15 +280,16 @@
                                 hx-target="#confirmModalContainer"
                                 hx-swap="innerHTML">
                             <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                            Delete
+                            <span th:text="#{common.delete}">Delete</span>
                         </button>
                         <form th:if="${event.series == null}"
                               th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
-                              data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
+                              data-confirm="Delete this training session? It will also be removed from your Google Calendar."
+                              th:attr="data-confirm=#{training.delete_confirm}">
                             <button type="submit"
                                     class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container">
                                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                                Delete
+                                <span th:text="#{common.delete}">Delete</span>
                             </button>
                         </form>
                     </div>

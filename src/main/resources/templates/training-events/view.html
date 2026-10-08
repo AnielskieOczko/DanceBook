@@ -14,12 +14,13 @@
         </th:block>
         <div th:fragment="eventToolbar" class="flex items-center gap-3 shrink-0">
             <th:block th:if="${event.calendar == null || event.calendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}">
-                <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label='Edit')}"></a>
+                <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label=#{common.edit})}"></a>
                 <button th:if="${event.series != null}"
                         type="button"
                         class="btn-icon text-danger hover:bg-danger-soft"
                         aria-label="Delete"
                         title="Delete"
+                        th:attr="aria-label=#{common.delete}, title=#{common.delete}"
                         th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
                         hx-target="#confirmModalContainer"
                         hx-swap="innerHTML">
@@ -27,64 +28,65 @@
                 </button>
                 <form th:if="${event.series == null}"
                       th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
-                      data-confirm="Delete this training session? It will also be removed from your Google Calendar.">
-                    <button th:replace="~{fragments/button :: iconButton(icon='delete', label='Delete', type='submit', cls='text-danger hover:bg-danger-soft')}"></button>
+                      data-confirm="Delete this training session? It will also be removed from your Google Calendar."
+                      th:attr="data-confirm=#{training.delete_confirm}">
+                    <button th:replace="~{fragments/button :: iconButton(icon='delete', label=#{common.delete}, type='submit', cls='text-danger hover:bg-danger-soft')}"></button>
                 </form>
             </th:block>
-            <a href="/training-events" class="btn-outline">Back</a>
+            <a href="/training-events" class="btn-outline" th:text="#{training.view.back}">Back</a>
         </div>
     </div>
 
     <div class="card p-8 space-y-6">
         <h2 class="text-xl font-bold text-on-surface border-b border-border pb-3 flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='event', size='md', cls='text-primary')}"></span>
-            Session details
+            <span th:text="#{training.view.session_details}">Session details</span>
         </h2>
 
         <div class="flex flex-wrap items-center gap-2">
             <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
             <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
                 <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
-                <span>Repeating series</span>
+                <span th:text="#{training.view.repeating_series}">Repeating series</span>
             </span>
             <span th:each="segment : ${event.segments}" class="badge-secondary"
-                  th:text="${segment.danceCategory.name} + ' ' + ${segment.durationMinutes} + 'min'">Standard 60min</span>
+                  th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>
             <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
-            <span class="badge-neutral" th:text="${event.durationMinutes} + ' min'">120 min</span>
+            <span class="badge-neutral" th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
         </div>
 
         <!-- Confirm a past session that was never marked either way -->
         <div th:if="${event.isAwaitingConfirmationFor(currentUser)}" class="flex items-center gap-3 pt-2">
             <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post">
                 <input type="hidden" name="status" value="ATTENDED">
-                <button type="submit" class="btn-primary">I attended</button>
+                <button type="submit" class="btn-primary" th:text="#{training.view.i_attended}">I attended</button>
             </form>
             <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post">
                 <input type="hidden" name="status" value="SKIPPED">
-                <button type="submit" class="btn-outline">I skipped</button>
+                <button type="submit" class="btn-outline" th:text="#{training.view.i_skipped}">I skipped</button>
             </form>
         </div>
 
         <div th:if="${event.description != null}">
-            <h3 class="form-label">Notes</h3>
+            <h3 class="form-label" th:text="#{training.form.field.notes}">Notes</h3>
             <div th:replace="~{fragments/rich-text :: content(value=${event.description}, cls='font-body-md text-body-md text-on-surface-variant leading-relaxed')}"></div>
         </div>
 
         <div th:if="${event.material != null}">
-            <h3 class="form-label">Linked material</h3>
+            <h3 class="form-label" th:text="#{training.view.linked_material}">Linked material</h3>
             <a th:href="@{/materials/{id}(id=${event.material.id})}"
                class="font-semibold text-primary hover:underline" th:text="${event.material.name}">Waltz basics</a>
         </div>
 
         <div th:if="${event.materialsUrl != null}">
-            <h3 class="form-label">External materials</h3>
+            <h3 class="form-label" th:text="#{training.view.external_materials}">External materials</h3>
             <a th:href="${event.materialsUrl}" target="_blank" rel="noopener noreferrer"
                class="font-semibold text-primary hover:underline break-all" th:text="${event.materialsUrl}">https://...</a>
         </div>
 
-        <p class="font-label-sm text-label-sm text-outline pt-4 border-t border-border">
-            Added by <span th:text="${event.createdBy?.displayName}">Test User</span>
-            on <span th:text="${#temporals.format(event.createdAt, 'MMMM d yyyy')}">September 6 2026</span>
+        <p class="font-label-sm text-label-sm text-outline pt-4 border-t border-border"
+           th:text="#{training.view.added_by(${event.createdBy?.displayName ?: ''}, ${#temporals.format(event.createdAt, 'MMMM d yyyy')})}">
+            Added by Test User on September 6 2026
         </p>
     </div>
 </section>

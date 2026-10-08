@@ -24,10 +24,10 @@
                              (statusName == 'ATTENDED' ? 'badge-success' :
                               (statusName == 'SKIPPED' ? 'badge-danger' : 'badge-neutral'))) +
                             (cls != null ? ' ' + cls : '')}"
-          th:text="${isUnconfirmed ? 'Needs confirmation' :
-                    (statusName == 'ATTENDED' ? 'Attended' :
-                     (statusName == 'SKIPPED' ? 'Skipped' :
-                      (statusName == 'CANCELLED' ? 'Cancelled' : 'Planned')))}">Planned</span>
+          th:text="${isUnconfirmed ? #messages.msg('training.status.needs_confirmation') :
+                    (statusName == 'ATTENDED' ? #messages.msg('dashboard.wrap_up.attended') :
+                     (statusName == 'SKIPPED' ? #messages.msg('dashboard.wrap_up.skipped') :
+                      (statusName == 'CANCELLED' ? #messages.msg('training.status.cancelled') : #messages.msg('training.status.planned'))))}">Planned</span>
 </th:block>
 
 </body>
