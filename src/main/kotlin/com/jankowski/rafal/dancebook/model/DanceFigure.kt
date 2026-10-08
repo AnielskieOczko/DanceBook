@@ -33,6 +33,11 @@ class DanceFigure {
     @Column(name = "dance_class")
     var danceClass: DanceClass? = null
 
+    /** Optional mastery level, independent of [danceClass]. Null for syllabus imports. */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "medal_level")
+    var medalLevel: MedalLevel? = null
+
     /** Syllabus figures are imported with this set; only an admin may delete them. */
     @Column(nullable = false)
     var predefined: Boolean = false

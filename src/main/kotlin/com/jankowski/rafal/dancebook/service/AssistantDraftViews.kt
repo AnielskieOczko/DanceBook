@@ -90,6 +90,7 @@ class AssistantDraftViews(
         val fields = mutableListOf<DraftField>()
         r.danceTypeId?.let { id -> lookup { danceTypeService.findById(id).name } }?.let { fields += DraftField("Dance style", it) }
         r.danceClass?.let { fields += DraftField("Class", it.displayName) }
+        r.medalLevel?.let { fields += DraftField("Medal", it.displayName) }
         r.alternativeTiming?.takeIf { it.isNotBlank() }?.let { fields += DraftField("Timing", it) }
         r.startingPosition?.takeIf { it.isNotBlank() }?.let { fields += DraftField("Starts", it) }
         r.endingPosition?.takeIf { it.isNotBlank() }?.let { fields += DraftField("Ends", it) }

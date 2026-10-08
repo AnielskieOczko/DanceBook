@@ -7,6 +7,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
 import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
@@ -222,6 +223,29 @@ class RagIntegrationTest {
         )
         val resultIdsAfterChange = resultsAfterChange.map { it.chunk.sourceId }
         assertFalse(resultIdsAfterChange.contains(publicNote.id), "Public note turned private must immediately be hidden from User B")
+    }
+
+    @Test
+    fun `indexed figure text carries the medal level only when set`() {
+        val medal = danceFigureRepository.save(DanceFigure().apply {
+            name = "Medal Figure"
+            danceType = waltz
+            danceClass = DanceClass.D
+            medalLevel = MedalLevel.GOLD
+        })
+        val plain = danceFigureRepository.save(DanceFigure().apply {
+            name = "Plain Figure"
+            danceType = waltz
+            danceClass = DanceClass.D
+        })
+
+        knowledgeIndexService.indexFigure(medal.id!!)
+        knowledgeIndexService.indexFigure(plain.id!!)
+
+        val medalText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, medal.id!!)!!.content
+        val plainText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, plain.id!!)!!.content
+        assertTrue(medalText.contains("Medal: Gold"), medalText)
+        assertFalse(plainText.contains("Medal"), plainText)
     }
 
     @Test

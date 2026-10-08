@@ -7,6 +7,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import jakarta.persistence.EntityNotFoundException
@@ -86,6 +87,17 @@ class AssistantReadToolsTest {
         assertEquals("/dance-figures/${many[0].id}", first.url)
         assertEquals("Waltz · Class D", first.subtitle)
         assertEquals(listOf("1 2 3"), first.chips)
+    }
+
+    @Test
+    fun `a figure card names the medal level when the figure has one`() {
+        val medal = figure("Medal Turn").apply { medalLevel = MedalLevel.SILVER }
+        `when`(danceFigureService.findAll(null, null, null, "medal", null, null)).thenReturn(listOf(medal))
+
+        val card = tools.searchFigures("medal", null, null).items.single()
+
+        assertEquals(listOf("1 2 3", "Medal: Silver"), card.chips)
+        assertEquals("Waltz · Class D", card.subtitle)
     }
 
     @Test

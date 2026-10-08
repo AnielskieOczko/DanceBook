@@ -4,6 +4,7 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
@@ -106,6 +107,19 @@ class DanceFigureWebControllerTest {
     }
 
     @Test
+    fun `should pass the medal level filter to the catalog query`() {
+        val model = ConcurrentModel()
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, MedalLevel.GOLD)).thenReturn(emptyList())
+        `when`(danceTypeService.findAll()).thenReturn(emptyList())
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        controller.listDanceFigures(medalLevel = MedalLevel.GOLD, model = model)
+
+        verify(danceFigureService).findAll(null, null, null, null, null, null, MedalLevel.GOLD)
+        assertEquals(MedalLevel.GOLD, model["selectedMedalLevel"])
+    }
+
+    @Test
     fun `should show edit form with all fields mapped`() {
         val model = ConcurrentModel()
         val figureId = UUID.randomUUID()
@@ -118,6 +132,7 @@ class DanceFigureWebControllerTest {
             name = "Back Whisk"
             this.danceType = danceType
             danceClass = DanceClass.H
+            medalLevel = MedalLevel.BRONZE
             alternativeTiming = "123&"
             startingPosition = "Closed"
             endingPosition = "Promenade"
@@ -139,6 +154,7 @@ class DanceFigureWebControllerTest {
         assertEquals("Back Whisk", request.name)
         assertEquals(danceType.id, request.danceTypeId)
         assertEquals(DanceClass.H, request.danceClass)
+        assertEquals(MedalLevel.BRONZE, request.medalLevel)
         assertEquals("123&", request.alternativeTiming)
         assertEquals("Closed", request.startingPosition)
         assertEquals("Promenade", request.endingPosition)

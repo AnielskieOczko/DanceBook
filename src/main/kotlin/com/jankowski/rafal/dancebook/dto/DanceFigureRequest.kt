@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.dto
 
 import com.jankowski.rafal.dancebook.model.DanceClass
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.util.UUID
@@ -13,6 +14,7 @@ data class DanceFigureRequest(
     val danceTypeId: UUID? = null,
 
     val danceClass: DanceClass? = null,
+    val medalLevel: MedalLevel? = null,
     val alternativeTiming: String? = null,
 
     val startingFootLeader: String? = null,

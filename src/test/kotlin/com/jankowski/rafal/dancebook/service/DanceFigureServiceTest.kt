@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigureCreatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureUpdatedEvent
 import com.jankowski.rafal.dancebook.model.DanceFigureDeletedEvent
 import com.jankowski.rafal.dancebook.model.DanceType
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import jakarta.persistence.EntityNotFoundException
@@ -457,6 +458,53 @@ class DanceFigureServiceTest {
         val result = danceFigureService.findFigureIdsWithSteps(emptyList())
 
         assertEquals(emptySet<UUID>(), result)
+    }
+
+    @Test
+    fun `should create a figure with a medal level and with none`() {
+        val danceTypeId = UUID.randomUUID()
+        val danceType = DanceType().apply { id = danceTypeId; name = "Waltz" }
+        `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
+        `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(emptyList())
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+
+        val withMedal = danceFigureService.create(
+            DanceFigureRequest(name = "Medal Figure", danceTypeId = danceTypeId, danceClass = DanceClass.H, medalLevel = MedalLevel.SILVER)
+        )
+        val without = danceFigureService.create(
+            DanceFigureRequest(name = "Plain Figure", danceTypeId = danceTypeId, danceClass = DanceClass.H)
+        )
+
+        assertEquals(MedalLevel.SILVER, withMedal.medalLevel)
+        assertEquals(DanceClass.H, withMedal.danceClass)
+        assertEquals(null, without.medalLevel)
+    }
+
+    @Test
+    fun `should set and clear the medal level on update`() {
+        val figureId = UUID.randomUUID()
+        val danceTypeId = UUID.randomUUID()
+        val danceType = DanceType().apply { id = danceTypeId; name = "Waltz" }
+        val existing = DanceFigure().apply {
+            id = figureId
+            name = "Figure"
+            this.danceType = danceType
+            danceClass = DanceClass.E
+        }
+        `when`(danceFigureRepository.findById(figureId)).thenReturn(Optional.of(existing))
+        `when`(danceTypeService.findById(danceTypeId)).thenReturn(danceType)
+        `when`(danceFigureRepository.findByDanceTypeIdOrderByNameAsc(danceTypeId)).thenReturn(listOf(existing))
+        `when`(danceFigureRepository.save(any(DanceFigure::class.java))).thenAnswer { it.arguments[0] as DanceFigure }
+
+        val set = danceFigureService.update(
+            figureId, DanceFigureRequest(name = "Figure", danceTypeId = danceTypeId, danceClass = DanceClass.E, medalLevel = MedalLevel.GOLD, version = 0)
+        )
+        assertEquals(MedalLevel.GOLD, set.medalLevel)
+
+        val cleared = danceFigureService.update(
+            figureId, DanceFigureRequest(name = "Figure", danceTypeId = danceTypeId, danceClass = DanceClass.E, version = 0)
+        )
+        assertEquals(null, cleared.medalLevel)
     }
 
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
