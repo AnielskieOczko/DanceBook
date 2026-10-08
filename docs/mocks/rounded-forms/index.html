@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Rounded Forms</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout concept: a reference sheet. Token ladder first, then each control family with every state in a
+   compact matrix, then two 375px phone frames and a live go-to-top/bottom demo.
+   Colour tokens are copied from src/main/resources/frontend/input.css (light only, as in the app).
+   Only the --r-* radius tokens are new; they are proposals for issue #221. */
+:root {
+  --surface: #ffffff;
+  --surface-container: #f5f5f3;
+  --surface-highest: #e3e3e0;
+  --outline: #8e9199;
+  --outline-variant: #e3e3e0;
+  --on-surface: #16181a;
+  --on-surface-variant: #5b6067;
+  --primary: #1f4b4a;
+  --primary-hover: #163736;
+  --primary-soft: #e9eded;
+  --on-primary: #ffffff;
+  --error: #b3261e;
+  --error-soft: #f7e9e8;
+  --shadow-ambient: 0 4px 20px rgba(22,24,26,.08);
+  --ring: color-mix(in srgb, var(--primary) 22%, transparent);
+  --ring-error: color-mix(in srgb, var(--error) 20%, transparent);
+
+  /* PROPOSED radius tokens */
+  --r-pill: 9999px;     /* existing token, now the default for every single-line control */
+  --r-field: 1.5rem;    /* 24px  multi-line fields: textarea, Trix editor, comment cards, popovers */
+  --r-card: 1rem;       /* 16px  cards and dialogs (was 8px) */
+  --r-inset: .75rem;    /* 12px  things nested inside a rounded surface: menu rows, speech-tail corner */
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-prose: 'Source Serif 4', Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--surface); color: var(--on-surface); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; margin: 0; padding-inline: 16px; padding-block: 32px 80px; }
+.wrap { max-width: 1120px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1 { font-size: 30px; line-height: 36px; letter-spacing: -.02em; margin: 0 0 8px; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 20px; line-height: 28px; margin: 0 0 4px; font-weight: 600; }
+h3 { font-size: 13px; font-weight: 600; margin: 0 0 8px; color: var(--on-surface-variant); }
+p { margin: 0; }
+.lede { max-width: 68ch; color: var(--on-surface-variant); font-size: 16px; line-height: 26px; }
+.note { font-size: 13px; color: var(--on-surface-variant); max-width: 70ch; }
+section { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--outline-variant); padding-top: 24px; }
+.grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.state-label { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px; }
+code, .tok { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--surface-container); padding: 1px 6px; border-radius: var(--r-pill); color: var(--on-surface); }
+.ico { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ico.sm { width: 16px; height: 16px; }
+
+/* ---------- radius ladder ---------- */
+.ladder { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.rung { display: flex; flex-direction: column; gap: 10px; }
+.swatch { height: 72px; background: var(--primary-soft); border: 1px solid var(--outline); }
+.rung dl { margin: 0; font-size: 13px; }
+.rung dt { font-weight: 600; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.rung dd { margin: 2px 0 0; color: var(--on-surface-variant); }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--outline-variant); vertical-align: top; }
+th { font-weight: 600; color: var(--on-surface-variant); }
+
+/* ---------- field (input / select / search) ---------- */
+.label { display: block; font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.label .req { color: var(--error); }
+.field { position: relative; display: flex; align-items: center; width: 100%; min-height: 48px; padding: 12px 20px; background: var(--surface-container); border: 1px solid var(--outline); border-radius: var(--r-pill); color: var(--on-surface); font: 400 16px/1.4 var(--font-sans); transition: border-color .2s, box-shadow .2s, background-color .2s; }
+.field::placeholder { color: var(--on-surface-variant); }
+.field:hover, .field.is-hover { background: var(--surface); border-color: var(--on-surface-variant); }
+.field:focus, .field.is-focus { outline: none; background: var(--surface); border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
+.field.is-error { border-color: var(--error); background: var(--surface); }
+.field.is-error:focus, .field.is-error.is-focus { box-shadow: 0 0 0 3px var(--ring-error); }
+.field:disabled, .field.is-disabled { opacity: .5; cursor: not-allowed; background: var(--surface-container); border-color: var(--outline); }
+select.field { appearance: none; padding-right: 48px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat; background-size: 1.25rem; background-position: right 16px center; }
+.err { margin-top: 8px; padding-left: 20px; color: var(--error); font-weight: 600; font-size: 14px; display: flex; gap: 6px; align-items: center; }
+.hint { margin-top: 8px; padding-left: 20px; color: var(--on-surface-variant); font-size: 13px; }
+.state { display: flex; flex-direction: column; }
+textarea.field { border-radius: var(--r-field); min-height: 96px; resize: vertical; align-items: flex-start; }
+
+.search { position: relative; display: block; width: 100%; }
+.search > .ico { position: absolute; left: 18px; top: 50%; translate: 0 -50%; color: var(--on-surface-variant); pointer-events: none; z-index: 1; }
+.search .field { padding-left: 48px; padding-right: 48px; }
+.search .clear { position: absolute; right: 6px; top: 50%; translate: 0 -50%; width: 36px; height: 36px; border-radius: var(--r-pill); display: grid; place-items: center; background: transparent; border: 0; color: var(--on-surface-variant); cursor: pointer; }
+.search .clear:hover { background: var(--surface-highest); color: var(--on-surface); }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 16px/1 var(--font-sans); min-height: 48px; padding: 12px 24px; border-radius: var(--r-pill); border: 1px solid transparent; cursor: pointer; transition: background-color .2s, box-shadow .2s, transform .1s; user-select: none; }
+.btn.sm { min-height: 44px; padding: 8px 16px; font-size: 14px; }
+.btn:active { transform: scale(.98); }
+.btn:focus-visible, .btn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary); }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover, .btn-primary.is-hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--surface-container); color: var(--on-surface); border-color: var(--outline); }
+.btn-secondary:hover, .btn-secondary.is-hover { background: var(--surface-highest); }
+.btn-outline { background: transparent; color: var(--on-surface); border-color: var(--outline); }
+.btn-outline:hover, .btn-outline.is-hover { background: var(--surface-container); }
+.btn-ghost { background: transparent; color: var(--on-surface-variant); }
+.btn-ghost:hover, .btn-ghost.is-hover { background: var(--surface-container); color: var(--on-surface); }
+.btn-danger { background: var(--error); color: #fff; }
+.btn-danger:hover, .btn-danger.is-hover { opacity: .9; }
+.btn-icon { min-width: 48px; min-height: 48px; padding: 0; background: transparent; color: var(--on-surface-variant); }
+.btn-icon:hover, .btn-icon.is-hover { background: var(--surface-container); color: var(--on-surface); }
+.btn:disabled, .btn.is-disabled { opacity: .5; cursor: not-allowed; }
+.btn-matrix { display: grid; grid-template-columns: 90px repeat(4, max-content); gap: 10px 16px; align-items: center; justify-items: start; min-width: 640px; }
+.btn-matrix .h { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+
+/* ---------- chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border-radius: var(--r-pill); font: 600 16px/1 var(--font-sans); background: var(--surface-container); color: var(--on-surface); border: 1px solid var(--outline-variant); cursor: pointer; transition: all .2s; }
+.chip:hover, .chip.is-hover { background: var(--surface); border-color: var(--outline); }
+.chip.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.chip:focus-visible, .chip.is-focus { outline: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary); }
+.chip.sm { min-height: 32px; padding: 4px 12px; font-size: 13px; }
+.chip[disabled] { opacity: .5; cursor: not-allowed; }
+.segmented { display: inline-flex; gap: 4px; padding: 4px; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: var(--r-pill); max-width: 100%; overflow-x: auto; }
+.segmented button { min-height: 40px; padding: 6px 16px; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; font: 600 13px/1 var(--font-sans); color: var(--on-surface-variant); cursor: pointer; white-space: nowrap; }
+.segmented button:hover { color: var(--on-surface); background: color-mix(in srgb, var(--surface) 60%, transparent); }
+.segmented button.on { background: var(--surface); color: var(--on-surface); border-color: var(--outline-variant); }
+.badge { display: inline-flex; align-items: center; padding: 2px 12px; border-radius: var(--r-pill); font-size: 13px; font-weight: 600; background: var(--surface-container); border: 1px solid var(--outline-variant); color: var(--on-surface-variant); white-space: nowrap; }
+.badge.p { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.filterbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.filterbar .search { flex: 1 1 240px; min-width: 0; width: auto; }
+.filterbar select.field { width: auto; flex: 0 1 180px; }
+
+/* ---------- calendar ---------- */
+.cal-wrap { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.date-field { position: relative; }
+.date-field .ico { position: absolute; right: 18px; top: 50%; translate: 0 -50%; color: var(--on-surface-variant); pointer-events: none; }
+.datepop { width: 320px; max-width: 100%; background: var(--surface); border: 1px solid var(--outline); border-radius: var(--r-field); box-shadow: var(--shadow-ambient); padding: 16px; }
+.datepop header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-weight: 600; font-size: 16px; }
+.datepop header .btn-icon { min-width: 40px; min-height: 40px; }
+.dow, .days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.dow span { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); padding: 4px 0; }
+.days button { aspect-ratio: 1; width: 100%; border: 1px solid transparent; background: transparent; border-radius: var(--r-pill); font: 500 14px var(--font-sans); color: var(--on-surface); cursor: pointer; position: relative; font-variant-numeric: tabular-nums; padding: 0; }
+.days button:hover { background: var(--surface-container); }
+.days button.out { color: var(--on-surface-variant); opacity: .45; }
+.days button.today { border-color: var(--primary); }
+.days button.sel { background: var(--primary); color: #fff; font-weight: 600; }
+.days button.dot::after { content: ''; position: absolute; bottom: 5px; left: 50%; translate: -50% 0; width: 4px; height: 4px; border-radius: var(--r-pill); background: currentColor; }
+.days button.focus { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary); }
+.datepop footer { display: flex; justify-content: space-between; margin-top: 8px; }
+.calsel { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.calsel label { font-weight: 600; font-size: 16px; }
+.calsel select.field { width: 230px; max-width: 100%; }
+.sync { font-size: 12px; color: var(--on-surface-variant); }
+
+/* ---------- Trix + comments ---------- */
+.trix-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tgroup { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--outline); border-radius: var(--r-pill); background: var(--surface); }
+.tbtn { min-width: 40px; height: 38px; padding: 0 10px; border-radius: var(--r-pill); border: 0; background: transparent; color: var(--on-surface); font: 700 13px var(--font-sans); cursor: pointer; display: grid; place-items: center; transition: background-color .15s; }
+.tbtn:hover { background: var(--surface-container); }
+.tbtn.active { background: var(--primary-soft); color: var(--primary); }
+.tbtn:focus-visible, .tbtn.is-focus { outline: none; box-shadow: 0 0 0 2px var(--primary); }
+.tbtn:disabled { opacity: .4; cursor: not-allowed; }
+.editor { border: 1px solid var(--outline); border-radius: var(--r-field); background: var(--surface-container); padding: 14px 20px; min-height: 96px; font-family: var(--font-prose); font-size: 17px; line-height: 28px; transition: border-color .2s, box-shadow .2s; }
+.editor.is-focus { background: var(--surface); border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
+.editor.is-error { border-color: var(--error); background: var(--surface); }
+.editor .ph { color: var(--on-surface-variant); font-family: var(--font-sans); font-size: 16px; }
+.caret { display: inline-block; width: 1.5px; height: 1.1em; background: var(--primary); vertical-align: text-bottom; margin-left: 1px; }
+.linkdlg { display: flex; gap: 8px; padding: 10px; background: var(--surface); border: 1px solid var(--outline); border-radius: var(--r-field); box-shadow: var(--shadow-ambient); max-width: 100%; align-items: center; flex-wrap: wrap; }
+.linkdlg .field { min-height: 44px; padding: 6px 16px; font-size: 14px; flex: 1 1 160px; width: auto; }
+.composer { display: flex; gap: 12px; align-items: flex-start; }
+.avatar { width: 40px; height: 40px; border-radius: var(--r-pill); background: var(--surface-highest); display: grid; place-items: center; font-weight: 700; flex: none; }
+.composer .body { flex: 1; min-width: 0; }
+.actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.comment { display: flex; gap: 12px; }
+.comment .card { flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--outline-variant); border-radius: var(--r-field); border-top-left-radius: var(--r-inset); padding: 14px 20px; }
+.comment .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.comment .who { font-weight: 600; font-size: 13px; }
+.comment .when { font-size: 13px; color: var(--on-surface-variant); }
+.comment .txt { font-family: var(--font-prose); font-size: 17px; line-height: 28px; margin-top: 4px; }
+.comment .acts { display: flex; gap: 4px; margin: 8px -8px -6px; }
+.link-pill { border: 0; background: transparent; padding: 6px 12px; min-height: 32px; border-radius: var(--r-pill); font: 500 12px var(--font-sans); color: var(--on-surface-variant); cursor: pointer; }
+.link-pill:hover { background: var(--surface-container); color: var(--on-surface); }
+.link-pill.del:hover, .link-pill.del.is-hover { background: var(--error-soft); color: var(--error); }
+.comment.editing .card { border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+/* ---------- assistant ---------- */
+.abar { display: flex; align-items: center; gap: 8px; border: 1px solid var(--outline-variant); background: var(--surface); border-radius: var(--r-pill); padding: 6px 6px 6px 20px; box-shadow: var(--shadow-ambient); }
+.abar:focus-within, .abar.is-focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring), var(--shadow-ambient); }
+.abar input { flex: 1; min-width: 0; border: 0; background: transparent; font: 400 15px var(--font-sans); padding: 8px 0; outline: none; color: var(--on-surface); }
+.abar input::placeholder { color: var(--on-surface-variant); }
+.abar .go { width: 40px; height: 40px; border-radius: var(--r-pill); border: 0; background: var(--primary); color: #fff; display: grid; place-items: center; flex: none; }
+.abar .mic { width: 40px; height: 40px; border-radius: var(--r-pill); border: 0; background: transparent; color: var(--primary); display: grid; place-items: center; flex: none; }
+.abar kbd { border: 1px solid var(--outline-variant); border-radius: var(--r-pill); padding: 0 8px; font-size: 12px; color: var(--on-surface-variant); }
+.menu { margin-top: 6px; background: var(--surface); border: 1px solid var(--outline); border-radius: var(--r-card); box-shadow: var(--shadow-ambient); padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.menu div { padding: 10px 14px; border-radius: var(--r-inset); font-size: 14px; display: flex; justify-content: space-between; gap: 8px; }
+.menu div.hl { background: var(--surface-container); }
+.menu div.on { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+
+/* ---------- go-to control ---------- */
+.goto { position: fixed; z-index: 30; display: flex; flex-direction: column; gap: 2px; padding: 4px; background: var(--surface); border: 1px solid var(--outline-variant); border-radius: var(--r-pill); box-shadow: var(--shadow-ambient); }
+.goto button { width: 44px; height: 44px; padding: 0; border-radius: var(--r-pill); border: 0; background: transparent; color: var(--on-surface); display: grid; place-items: center; cursor: pointer; transition: background-color .15s; }
+.goto button:hover { background: var(--surface-container); }
+.goto button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--primary); }
+.goto button:disabled { opacity: .35; cursor: default; background: transparent; }
+.goto.static { position: static; display: inline-flex; }
+.demo-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; }
+.stage { position: relative; height: 340px; border: 1px solid var(--outline-variant); border-radius: var(--r-card); background: var(--surface); overflow: hidden; }
+.stage .scroller { height: 100%; overflow-y: auto; padding: 8px 20px; }
+.stage .goto { position: absolute; right: 16px; bottom: 16px; }
+.stage .row { display: flex; gap: 10px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--outline-variant); font-size: 14px; }
+.stage .row b { font-variant-numeric: tabular-nums; min-width: 28px; color: var(--on-surface-variant); }
+.stage .row i { margin-left: auto; font-style: normal; font-size: 12px; color: var(--on-surface-variant); padding-right: 56px; }
+.states { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+.states .col { align-items: flex-start; }
+
+/* ---------- phones ---------- */
+.phones { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+.phone-wrap { display: flex; flex-direction: column; gap: 8px; max-width: 100%; }
+.phone { width: 375px; max-width: 100%; height: 760px; border: 1px solid var(--outline); border-radius: 36px; background: var(--surface); position: relative; overflow: hidden; }
+.phone .screen { height: 100%; overflow-y: auto; padding: 24px 16px 200px; display: flex; flex-direction: column; gap: 14px; }
+.phone .screen h4 { margin: 0; font-size: 24px; line-height: 32px; font-weight: 600; }
+.phone .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 68px; background: var(--surface); border-top: 1px solid var(--outline-variant); display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; text-align: center; font-size: 11px; font-weight: 600; color: var(--on-surface-variant); }
+.phone .tabbar span { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.phone .tabbar .on { color: var(--primary); }
+.phone .abar { position: absolute; left: 16px; right: 16px; bottom: 80px; }
+.phone .goto { position: absolute; right: 16px; bottom: 140px; }
+.phone.no-abar .goto { bottom: 84px; }
+.session { border: 1px solid var(--outline-variant); border-radius: var(--r-card); padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
+.session .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-weight: 600; }
+.session .t small { font-weight: 500; color: var(--on-surface-variant); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.session .d { color: var(--on-surface-variant); font-size: 13px; }
+.session .bd { display: flex; gap: 6px; flex-wrap: wrap; }
+.phone .hscroll { display: flex; gap: 8px; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; padding-bottom: 2px; flex: none; }
+.phone .hscroll .chip, .phone .hscroll .badge { flex: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4M4 5v4h4M4 13a8 8 0 0 0 14 4M20 19v-4h-4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6v.01M4 12v.01M4 18v.01"/></symbol>
+  <symbol id="i-olist" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5l1-1v4M3.5 14.5h2l-2 3h2"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+</svg>
+
+<div class="wrap">
+<header class="col">
+  <span class="tok" style="align-self:flex-start">Mock for #214 · epic #198 · not implemented</span>
+  <h1>Rounded form language</h1>
+  <p class="lede">Every single-line control becomes a pill, like the chips, avatars and assistant bar already are. Multi-line surfaces (editor, comment cards, popovers) use a softer 24px corner, because a true pill breaks once text wraps. Colours, type and spacing are the app's own tokens from <code>input.css</code>; only the radius tokens below are new. Hover and focus are forced on some samples so every state shows at once.</p>
+</header>
+
+<section id="tokens">
+  <div><h2>Radius tokens</h2><p class="note">Proposed replacement for the 2/4/8px scale in <code>@theme</code>. Names follow the existing <code>--radius-*</code> convention so Tailwind emits <code>rounded-pill</code>, <code>rounded-field</code> and so on.</p></div>
+  <div class="ladder">
+    <div class="rung"><div class="swatch" style="border-radius:var(--r-pill)"></div><dl><dt><code>--radius-pill</code> 9999px <span class="badge p">default</span></dt><dd>Input, select, search, button, chip, view switcher, Trix button groups, assistant bar, go-to control. Already exists, so the common case needs no new name.</dd></dl></div>
+    <div class="rung"><div class="swatch" style="border-radius:var(--r-field)"></div><dl><dt><code>--radius-field</code> 24px <span class="badge">new</span></dt><dd>Textarea, Trix editor, comment cards, date popover. Same visual weight as a pill at one line, still clean at five.</dd></dl></div>
+    <div class="rung"><div class="swatch" style="border-radius:var(--r-card)"></div><dl><dt><code>--radius-card</code> 16px <span class="badge">was 8px</span></dt><dd>Cards, dialogs, dropdown menus, session cards.</dd></dl></div>
+    <div class="rung"><div class="swatch" style="border-radius:var(--r-inset)"></div><dl><dt><code>--radius-inset</code> 12px <span class="badge">new</span></dt><dd>Rows inside a rounded surface (menu options) and the author-side corner of a comment card. A nested radius stays smaller than its parent.</dd></dl></div>
+  </div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Token</th><th>Today</th><th>Proposed</th><th>Used by</th></tr></thead>
+    <tbody>
+      <tr><td><code>--radius-button</code></td><td>4px</td><td>alias of <code>--radius-pill</code></td><td><code>btn-*</code> (<code>rounded-md</code> today)</td></tr>
+      <tr><td><code>--radius-sm</code> / <code>--radius-md</code></td><td>2px / 4px</td><td>retire from form code</td><td><code>form-input</code>, Trix, FullCalendar buttons, view switcher</td></tr>
+      <tr><td><code>--radius-lg</code> / <code>--radius-xl</code></td><td>8px / 8px</td><td>inset 12px / card 16px</td><td>cards, sheets</td></tr>
+      <tr><td><code>--radius-field</code></td><td>none</td><td>1.5rem</td><td>textarea, Trix editor, comment cards, popovers</td></tr>
+    </tbody>
+  </table></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>State</th><th>Border</th><th>Extra</th><th>Rule</th></tr></thead>
+    <tbody>
+      <tr><td>Default</td><td><code>outline</code> (3:1)</td><td>fill <code>surface-container</code></td><td>colours unchanged</td></tr>
+      <tr><td>Hover</td><td><code>on-surface-variant</code></td><td>fill <code>surface</code></td><td>border darkens, fill lifts</td></tr>
+      <tr><td>Focus</td><td><code>primary</code></td><td>3px ring, primary at 22%</td><td>the ring follows the pill. Today focus is border-only, so this adds the ring.</td></tr>
+      <tr><td>Error</td><td><code>error</code></td><td>message with icon below, 20px inset</td><td>focus ring turns error colour</td></tr>
+      <tr><td>Disabled</td><td>unchanged</td><td>50% opacity, no hover</td><td>matches <code>btn:disabled</code></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="inputs">
+  <div><h2>Text inputs and selects</h2><p class="note"><code>form-input</code> and <code>form-select</code>, 48px tall. Labels stay above the field, as in <code>fragments/form.html</code>.</p></div>
+  <div class="grid">
+    <div class="col">
+      <h3>Text input · figure name</h3>
+      <div class="state"><div class="state-label"><span>Default</span></div><input id="in-default" class="field" placeholder="e.g. Natural Spin Turn"></div>
+      <div class="state"><div class="state-label"><span>Hover</span></div><input id="in-hover" class="field is-hover" placeholder="e.g. Natural Spin Turn"></div>
+      <div class="state"><div class="state-label"><span>Focus</span></div><input id="in-focus" class="field is-focus" value="Natural Spin T"></div>
+      <div class="state"><div class="state-label"><span>Filled</span></div><input id="in-filled" class="field" value="Natural Spin Turn"></div>
+      <div class="state"><div class="state-label"><span>Disabled</span></div><input id="in-disabled" class="field is-disabled" value="Waltz" disabled></div>
+    </div>
+    <div class="col">
+      <h3>With label, hint and error</h3>
+      <div class="state"><label class="label" for="in-timing">Timing <span class="req" aria-hidden="true">*</span></label>
+        <input id="in-timing" class="field" value="1 2&amp; 3">
+        <p class="hint">Count as danced, e.g. 1 2&amp; 3 or SQQ.</p></div>
+      <div class="state"><label class="label" for="in-err">Figure name <span class="req" aria-hidden="true">*</span></label>
+        <input id="in-err" class="field is-error" aria-invalid="true" aria-describedby="in-err-msg" value="">
+        <p class="err" id="in-err-msg"><svg class="ico sm"><use href="#i-alert"/></svg>Enter a figure name.</p></div>
+      <div class="state"><label class="label" for="in-err2">Amount of turn</label>
+        <input id="in-err2" class="field is-error is-focus" aria-invalid="true" aria-describedby="in-err2-msg" value="three quarters">
+        <p class="err" id="in-err2-msg"><svg class="ico sm"><use href="#i-alert"/></svg>Use a fraction such as 3/8 or 1/4 turn.</p></div>
+      <div class="state"><label class="label" for="in-ta">Description</label>
+        <textarea id="in-ta" class="field">Turn on the ball of the right foot, left foot closes to right, rising to the end of step 3.</textarea>
+        <p class="hint">Multi-line uses <code>--radius-field</code>.</p></div>
+    </div>
+    <div class="col">
+      <h3>Select · dance class (H–S)</h3>
+      <div class="state"><div class="state-label"><span>Default</span></div><select id="sel-default" class="field"><option>All classes</option></select></div>
+      <div class="state"><div class="state-label"><span>Hover</span></div><select id="sel-hover" class="field is-hover"><option>Class D</option></select></div>
+      <div class="state"><div class="state-label"><span>Focus</span></div><select id="sel-focus" class="field is-focus"><option>Class C</option></select></div>
+      <div class="state"><div class="state-label"><span>Error</span></div><select id="sel-err" class="field is-error"><option>Select a dance class</option></select>
+        <p class="err"><svg class="ico sm"><use href="#i-alert"/></svg>Choose a class between H and S.</p></div>
+      <div class="state"><div class="state-label"><span>Disabled</span></div><select id="sel-dis" class="field is-disabled" disabled><option>Standard</option></select></div>
+      <div class="state"><div class="state-label"><span>Open list</span><code>--radius-card</code></div>
+        <select id="sel-open" class="field is-focus"><option>Latin</option></select>
+        <div class="menu"><div>Standard</div><div class="on">Latin <span>✓</span></div><div class="hl">Social</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="search">
+  <div><h2>Search box and filter chips</h2><p class="note">Training sessions list (<code>training-events/list.html</code>) and the figure library. Search keeps its icon inside the pill; the clear button is a circle that fits the curve.</p></div>
+  <div class="grid">
+    <div class="col">
+      <h3>Search · states</h3>
+      <div class="state"><div class="state-label"><span>Default</span></div><label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="s1" type="search" class="field" placeholder="Search sessions…"></label></div>
+      <div class="state"><div class="state-label"><span>Focus, typing</span></div><label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="s2" type="search" class="field is-focus" value="Rumba"><button class="clear" type="button" aria-label="Clear search"><svg class="ico sm"><use href="#i-x"/></svg></button></label></div>
+      <div class="state"><div class="state-label"><span>Hover</span></div><label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="s3" type="search" class="field is-hover" placeholder="Search figures…"></label></div>
+      <div class="state"><div class="state-label"><span>Disabled</span></div><label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="s4" type="search" class="field is-disabled" placeholder="Search figures…" disabled></label></div>
+    </div>
+    <div class="col">
+      <h3>Chip states</h3>
+      <div class="chips">
+        <button class="chip" type="button">Default</button>
+        <button class="chip is-hover" type="button">Hover</button>
+        <button class="chip is-focus" type="button">Focus</button>
+        <button class="chip active" type="button">Selected</button>
+        <button class="chip" type="button" disabled>Disabled</button>
+      </div>
+      <h3 style="margin-top:12px">Dance type</h3>
+      <div class="chips"><button class="chip active" type="button">All</button><button class="chip" type="button">Standard</button><button class="chip" type="button">Latin</button><button class="chip" type="button">Social</button></div>
+      <h3 style="margin-top:12px">Dance class (H–S) · compact</h3>
+      <div class="chips" style="gap:8px"><button class="chip sm" type="button">H</button><button class="chip sm" type="button">E</button><button class="chip sm active" type="button">D</button><button class="chip sm active" type="button">C</button><button class="chip sm" type="button">B</button><button class="chip sm" type="button">A</button><button class="chip sm" type="button">S</button></div>
+      <h3 style="margin-top:12px">View switcher (Training)</h3>
+      <div class="segmented" role="tablist"><button class="on" type="button">Calendar</button><button type="button">Agenda</button><button type="button">Timeline</button><button type="button">Stats</button></div>
+    </div>
+  </div>
+  <h3>Composed · Training sessions filter bar</h3>
+  <div class="filterbar">
+    <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="fb-search" type="search" class="field" placeholder="Search sessions…" value="Cha Cha"></label>
+    <select id="fb-type" class="field" aria-label="Dance type"><option>Latin</option></select>
+    <select id="fb-class" class="field" aria-label="Dance class"><option>Class C</option></select>
+    <button class="btn btn-primary" type="button">Filter</button>
+    <button class="btn btn-ghost" type="button">Clear</button>
+  </div>
+  <div class="chips" style="align-items:center"><span class="chip sm active">Latin<svg class="ico sm"><use href="#i-x"/></svg></span><span class="chip sm active">Class C<svg class="ico sm"><use href="#i-x"/></svg></span><span class="note">3 sessions: Cha Cha Cha basics, Fan and Hockey Stick, Alemana</span></div>
+</section>
+
+<section id="calendar">
+  <div><h2>Calendar picker and calendar selector</h2><p class="note">Date field is a pill; its popover is <code>--radius-field</code>; each day is a circle. FullCalendar toolbar buttons (<code>.fc-button</code>) become pills too. Dots mark days that already have a training session.</p></div>
+  <div class="cal-wrap">
+    <div class="col" style="width:320px;max-width:100%">
+      <div class="state"><label class="label" for="date-in">Session date</label>
+        <div class="date-field"><input id="date-in" class="field is-focus" value="Tue 14 Oct 2026"><svg class="ico"><use href="#i-cal"/></svg></div></div>
+      <div class="datepop" role="dialog" aria-label="Choose date">
+        <header><button class="btn btn-icon" type="button" aria-label="Previous month"><svg class="ico"><use href="#i-left"/></svg></button><span>October 2026</span><button class="btn btn-icon" type="button" aria-label="Next month"><svg class="ico"><use href="#i-right"/></svg></button></header>
+        <div class="dow"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+        <div class="days">
+          <button class="out">28</button><button class="out">29</button><button class="out">30</button><button>1</button><button class="dot">2</button><button>3</button><button>4</button>
+          <button>5</button><button class="dot">6</button><button class="today">7</button><button>8</button><button class="dot">9</button><button>10</button><button>11</button>
+          <button>12</button><button>13</button><button class="sel focus">14</button><button>15</button><button class="dot">16</button><button>17</button><button>18</button>
+          <button>19</button><button>20</button><button class="dot">21</button><button>22</button><button>23</button><button>24</button><button>25</button>
+          <button>26</button><button>27</button><button class="dot">28</button><button>29</button><button>30</button><button>31</button><button class="out">1</button>
+        </div>
+        <footer><button class="btn btn-ghost sm" type="button">Today</button><button class="btn btn-ghost sm" type="button">Clear</button></footer>
+      </div>
+      <p class="note">Today = ring, selected = filled, keyboard focus = offset ring, dot = has a session, outside month = faded.</p>
+    </div>
+    <div class="col" style="flex:1;min-width:280px">
+      <h3>Calendar selector (<code>fragments/calendar-selector.html</code>)</h3>
+      <div class="calsel">
+        <label for="calsel">Calendar</label>
+        <select id="calsel" class="field"><option>Ballroom Squad (Google)</option></select>
+        <button class="btn btn-ghost btn-icon" type="button" aria-label="Manage calendars"><svg class="ico"><use href="#i-sync"/></svg></button>
+        <button class="btn btn-outline sm" type="button"><svg class="ico sm"><use href="#i-sync"/></svg>Sync now</button>
+        <span class="sync">Synced 18:42</span>
+      </div>
+      <h3 style="margin-top:12px">FullCalendar toolbar</h3>
+      <div class="chips" style="align-items:center">
+        <button class="btn btn-outline sm" type="button">Today</button>
+        <span class="segmented"><button type="button" aria-label="Previous"><svg class="ico sm"><use href="#i-left"/></svg></button><button type="button" aria-label="Next"><svg class="ico sm"><use href="#i-right"/></svg></button></span>
+        <strong style="font-size:20px;letter-spacing:-.01em">October 2026</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comments">
+  <div><h2>Trix toolbar and comment box</h2><p class="note">Comments on a Note. Toolbar groups become pills with pill buttons inside; the editor and cards use <code>--radius-field</code>. The edit state and link dialog are shown too. Prose stays Source Serif 4.</p></div>
+  <div class="grid">
+    <div class="col">
+      <h3>Toolbar button states</h3>
+      <div class="trix-bar">
+        <div class="tgroup" role="group" aria-label="Text"><button class="tbtn" type="button" aria-label="Bold">B</button><button class="tbtn active" type="button" aria-label="Italic" style="font-style:italic">I</button><button class="tbtn is-focus" type="button" aria-label="Link"><svg class="ico sm"><use href="#i-link"/></svg></button></div>
+        <div class="tgroup" role="group" aria-label="Lists"><button class="tbtn" type="button" aria-label="Bullets"><svg class="ico sm"><use href="#i-list"/></svg></button><button class="tbtn" type="button" aria-label="Numbers"><svg class="ico sm"><use href="#i-olist"/></svg></button></div>
+        <div class="tgroup" role="group" aria-label="History"><button class="tbtn" type="button" aria-label="Undo"><svg class="ico sm"><use href="#i-undo"/></svg></button><button class="tbtn" type="button" disabled aria-label="Redo" style="scale:-1 1"><svg class="ico sm"><use href="#i-undo"/></svg></button></div>
+      </div>
+      <p class="note">Default, active (Italic), keyboard focus (Link), disabled (Redo).</p>
+      <h3 style="margin-top:12px">Link dialog</h3>
+      <div class="linkdlg"><input id="lk" class="field" value="https://example.org/waltz-syllabus" aria-label="Link address"><button class="btn btn-primary sm" type="button">Link</button><button class="btn btn-ghost sm" type="button">Unlink</button></div>
+    </div>
+    <div class="col">
+      <h3>Composer · empty, focused, error</h3>
+      <div class="composer"><div class="avatar">R</div><div class="body">
+        <div class="trix-bar"><div class="tgroup"><button class="tbtn" type="button">B</button><button class="tbtn" type="button" style="font-style:italic">I</button><button class="tbtn" type="button" aria-label="Link"><svg class="ico sm"><use href="#i-link"/></svg></button><button class="tbtn" type="button" aria-label="Bullets"><svg class="ico sm"><use href="#i-list"/></svg></button></div></div>
+        <div class="editor"><span class="ph">Add a comment…</span></div>
+      </div></div>
+      <div class="composer"><div class="avatar">R</div><div class="body">
+        <div class="trix-bar"><div class="tgroup"><button class="tbtn active" type="button">B</button><button class="tbtn" type="button" style="font-style:italic">I</button><button class="tbtn" type="button" aria-label="Link"><svg class="ico sm"><use href="#i-link"/></svg></button><button class="tbtn" type="button" aria-label="Bullets"><svg class="ico sm"><use href="#i-list"/></svg></button></div></div>
+        <div class="editor is-focus">At 0:48 keep the <b>sway</b> to the left through steps 4 to 6, then lower on the Chassé<span class="caret"></span></div>
+        <div class="actions"><button class="btn btn-ghost sm" type="button">Cancel</button><button class="btn btn-primary sm" type="button">Post comment</button></div>
+      </div></div>
+      <div class="composer"><div class="avatar">R</div><div class="body">
+        <div class="editor is-error"><span class="ph">Add a comment…</span></div>
+        <p class="err"><svg class="ico sm"><use href="#i-alert"/></svg>Write something before posting.</p>
+      </div></div>
+    </div>
+    <div class="col">
+      <h3>Comment cards · Note “Waltz: Natural Spin Turn”</h3>
+      <div class="comment"><div class="avatar">M</div><div class="card"><div class="meta"><span class="who">Marta K. <span class="badge" style="margin-left:6px">Coach</span></span><span class="when">12 Oct · Edited</span></div>
+        <div class="txt">Heel turn on step 2 is late. Wait for the hips to pass before pivoting, timing <i>1 2&amp; 3</i>.</div>
+        <div class="acts"><button class="link-pill" type="button">Edit</button><button class="link-pill del" type="button">Delete</button></div></div></div>
+      <div class="comment editing"><div class="avatar">R</div><div class="card"><div class="meta"><span class="who">Rafal</span><span class="when">Editing</span></div>
+        <div class="trix-bar" style="margin-top:8px"><div class="tgroup"><button class="tbtn" type="button">B</button><button class="tbtn" type="button" style="font-style:italic">I</button></div></div>
+        <div class="txt" style="margin-top:0">Rising through 1 2 3, lowering end of 3<span class="caret"></span></div>
+        <div class="actions"><button class="btn btn-ghost sm" type="button">Cancel</button><button class="btn btn-primary sm" type="button">Save</button></div></div></div>
+      <div class="comment"><div class="avatar">J</div><div class="card"><div class="meta"><span class="who">Jan W.</span><span class="when">9 Oct</span></div>
+        <div class="txt">Compare with the Fallaway Reverse and Slip Pivot on the Class D list.</div>
+        <div class="acts"><button class="link-pill" type="button">Edit</button><button class="link-pill del is-hover" type="button">Delete</button></div></div></div>
+      <p class="note">Card corners are 24px, with the avatar-side top corner at 12px (<code>--radius-inset</code>) so the card points at its author. Delete shows its hover state.</p>
+    </div>
+  </div>
+</section>
+
+<section id="assistant">
+  <div><h2>Dashboard assistant</h2><p class="note">The bar is already a pill; it gains the same focus ring as fields. The scope select and prompt chips use the shared select and chip.</p></div>
+  <div class="grid">
+    <div class="col">
+      <div class="state"><div class="state-label"><span>Default</span></div><form class="abar" role="search" onsubmit="return false"><svg class="ico" style="color:var(--primary)"><use href="#i-spark"/></svg><input id="ab1" type="text" placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"><kbd aria-hidden="true">/</kbd><button class="mic" type="button" aria-label="Dictate"><svg class="ico"><use href="#i-mic"/></svg></button><button class="go" type="submit" aria-label="Send"><svg class="ico"><use href="#i-arrow-up"/></svg></button></form></div>
+      <div class="state"><div class="state-label"><span>Focus, typing</span></div><form class="abar is-focus" role="search" onsubmit="return false"><svg class="ico" style="color:var(--primary)"><use href="#i-spark"/></svg><input id="ab2" type="text" value="Find figures with a heel turn" aria-label="Message the assistant"><button class="go" type="submit" aria-label="Send"><svg class="ico"><use href="#i-arrow-up"/></svg></button></form></div>
+      <div class="chips" style="gap:8px"><button class="chip sm" type="button">Find a figure</button><button class="chip sm" type="button">Search my notes</button><button class="chip sm" type="button">To confirm</button></div>
+    </div>
+    <div class="col">
+      <div class="state"><label class="label" for="as-scope">Ask about</label>
+        <select id="as-scope" class="field is-focus"><option>This page: Natural Spin Turn</option></select>
+        <div class="menu"><div class="on">This page: Natural Spin Turn <span>✓</span></div><div class="hl">All figures</div><div>My notes</div><div>My training sessions</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="buttons">
+  <div><h2>Buttons</h2><p class="note"><code>btn-*</code> change from <code>rounded-md</code> (4px) to <code>--radius-pill</code>. Heights stay 48px (44px small), so touch targets do not change. Padding stays 24px / 16px, which already clears the curve.</p></div>
+  <div class="table-scroll"><div class="btn-matrix">
+    <span></span><span class="h">Default</span><span class="h">Hover</span><span class="h">Focus</span><span class="h">Disabled</span>
+    <span class="h">Primary</span><button class="btn btn-primary" type="button">Save changes</button><button class="btn btn-primary is-hover" type="button">Save changes</button><button class="btn btn-primary is-focus" type="button">Save changes</button><button class="btn btn-primary" type="button" disabled>Save changes</button>
+    <span class="h">Secondary</span><button class="btn btn-secondary" type="button">Add to list</button><button class="btn btn-secondary is-hover" type="button">Add to list</button><button class="btn btn-secondary is-focus" type="button">Add to list</button><button class="btn btn-secondary" type="button" disabled>Add to list</button>
+    <span class="h">Outline</span><button class="btn btn-outline" type="button">Cancel</button><button class="btn btn-outline is-hover" type="button">Cancel</button><button class="btn btn-outline is-focus" type="button">Cancel</button><button class="btn btn-outline" type="button" disabled>Cancel</button>
+    <span class="h">Ghost</span><button class="btn btn-ghost" type="button">Clear</button><button class="btn btn-ghost is-hover" type="button">Clear</button><button class="btn btn-ghost is-focus" type="button">Clear</button><button class="btn btn-ghost" type="button" disabled>Clear</button>
+    <span class="h">Danger</span><button class="btn btn-danger" type="button">Delete note</button><button class="btn btn-danger is-hover" type="button">Delete note</button><button class="btn btn-danger is-focus" type="button">Delete note</button><button class="btn btn-danger" type="button" disabled>Delete note</button>
+    <span class="h">Icon</span><button class="btn btn-icon" type="button" aria-label="Add"><svg class="ico"><use href="#i-plus"/></svg></button><button class="btn btn-icon is-hover" type="button" aria-label="Add"><svg class="ico"><use href="#i-plus"/></svg></button><button class="btn btn-icon is-focus" type="button" aria-label="Add"><svg class="ico"><use href="#i-plus"/></svg></button><button class="btn btn-icon" type="button" disabled aria-label="Add"><svg class="ico"><use href="#i-plus"/></svg></button>
+    <span class="h">Small</span><button class="btn btn-primary sm" type="button">Post comment</button><button class="btn btn-outline sm" type="button"><svg class="ico sm"><use href="#i-sync"/></svg>Sync now</button><button class="btn btn-secondary sm" type="button">Edit</button><button class="btn btn-danger sm" type="button">Delete</button>
+  </div></div>
+  <div class="stack"><h3>Form submit row</h3>
+    <div style="display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;border-top:1px solid var(--outline-variant);padding-top:16px"><button class="btn btn-outline" type="button">Cancel</button><button class="btn btn-primary" type="button">Save changes</button></div></div>
+</section>
+
+<section id="goto">
+  <div><h2>Go to top / bottom</h2><p class="note">One shared control: a vertical pill holding two 44px circular buttons. It shows once the page is at least two screens tall, and the button that cannot move is disabled. Try the live panel; on a real page it also fades in after the first screen of scrolling.</p></div>
+  <div class="demo-grid">
+    <div class="col">
+      <h3>Live · scroll the figure list</h3>
+      <div class="stage" id="stage">
+        <div class="scroller" id="scroller"><div id="rows"></div></div>
+        <div class="goto" id="gotoLive" role="group" aria-label="Scroll the page">
+          <button type="button" id="goTop" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button>
+          <button type="button" id="goBottom" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3>States</h3>
+      <div class="states">
+        <div class="col"><div class="state-label">Mid-page</div><div class="goto static"><button type="button" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div></div>
+        <div class="col"><div class="state-label">Hover</div><div class="goto static"><button type="button" aria-label="Go to top" style="background:var(--surface-container)"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div></div>
+        <div class="col"><div class="state-label">Focus</div><div class="goto static"><button type="button" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom" style="box-shadow:0 0 0 2px var(--primary)"><svg class="ico"><use href="#i-down"/></svg></button></div></div>
+        <div class="col"><div class="state-label">At top</div><div class="goto static"><button type="button" disabled aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div></div>
+        <div class="col"><div class="state-label">At bottom</div><div class="goto static"><button type="button" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" disabled aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div></div>
+      </div>
+      <div class="table-scroll"><table style="margin-top:8px"><tbody>
+        <tr><th>Show when</th><td>page is over 2 screens tall and scrolled more than about 1 screen from the top</td></tr>
+        <tr><th>Desktop</th><td>right 28px, bottom 28px; clear of the centred 620px assistant bar</td></tr>
+        <tr><th>Phone</th><td>right 16px, above the assistant bar and tab bar (bottom about 140px plus <code>env(safe-area-inset-bottom)</code>); 84px on screens without the bar</td></tr>
+        <tr><th>Behaviour</th><td>smooth scroll, instant under reduced motion; hidden while a dialog or the assistant sheet is open</td></tr>
+        <tr><th>Elevation</th><td>floats, so it takes the ambient shadow like the FAB and menus</td></tr>
+        <tr><th>Where</th><td>layout shell: choreographies, figures, Notes, training lists and history</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="mobile">
+  <div><h2>375px phone</h2><p class="note">Two composed screens. Fields and buttons keep 16px text (no iOS zoom) and 44–48px targets. Filter chips scroll sideways in one row. The go-to control sits above the assistant bar.</p></div>
+  <div class="phones">
+    <div class="phone-wrap">
+      <h3>Training · sessions</h3>
+      <div class="phone">
+        <div class="screen">
+          <h4>Training</h4>
+          <label class="search"><svg class="ico"><use href="#i-search"/></svg><input id="m-search" type="search" class="field" placeholder="Search sessions…"></label>
+          <div class="hscroll"><button class="chip active" type="button">All</button><button class="chip" type="button">Standard</button><button class="chip" type="button">Latin</button><button class="chip" type="button">Social</button></div>
+          <select id="m-class" class="field" aria-label="Dance class"><option>All classes (H–S)</option></select>
+          <div class="session"><div class="t"><span>Waltz technique</span><small>Tue 14 Oct · 18:30</small></div><div class="d">Natural Spin Turn, Reverse Turn, Closed Change</div><div class="bd"><span class="badge">Standard</span><span class="badge">Class D</span></div></div>
+          <div class="session"><div class="t"><span>Cha Cha Cha drills</span><small>Thu 16 Oct · 19:00</small></div><div class="d">Fan, Hockey Stick, Alemana, New York</div><div class="bd"><span class="badge">Latin</span><span class="badge">Class C</span></div></div>
+          <div class="session"><div class="t"><span>Social: Quickstep, Rumba</span><small>Sat 18 Oct · 11:00</small></div><div class="d">Quarter Turns, Chassé from PP, Spot Turns</div><div class="bd"><span class="badge">Social</span><span class="badge">Class E</span></div></div>
+          <div class="session"><div class="t"><span>Viennese Waltz basics</span><small>Tue 21 Oct · 18:30</small></div><div class="d">Natural Turn, Reverse Turn, Change Step</div><div class="bd"><span class="badge">Standard</span><span class="badge">Class C</span></div></div>
+        </div>
+        <div class="goto" role="group" aria-label="Scroll the page"><button type="button" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div>
+        <form class="abar" role="search" onsubmit="return false"><svg class="ico" style="color:var(--primary)"><use href="#i-spark"/></svg><input id="m-ab" type="text" placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"><button class="go" type="submit" aria-label="Send"><svg class="ico"><use href="#i-arrow-up"/></svg></button></form>
+        <nav class="tabbar" aria-label="Main"><span><svg class="ico"><use href="#i-home"/></svg>Home</span><span><svg class="ico"><use href="#i-book"/></svg>Figures</span><span class="on"><svg class="ico"><use href="#i-cal"/></svg>Training</span><span><svg class="ico"><use href="#i-list"/></svg>Notes</span><span><svg class="ico"><use href="#i-user"/></svg>Profile</span></nav>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <h3>Note · comments</h3>
+      <div class="phone no-abar">
+        <div class="screen">
+          <h4>Waltz: Natural Spin Turn</h4>
+          <div class="hscroll"><span class="badge p">Standard</span><span class="badge">Class D</span><span class="badge">1 2&amp; 3</span></div>
+          <h2 style="font-size:18px">Comments <span style="font-weight:400;color:var(--on-surface-variant)">2</span></h2>
+          <div class="composer"><div class="avatar" style="width:32px;height:32px;font-size:13px">R</div><div class="body">
+            <div class="trix-bar" style="gap:6px"><div class="tgroup"><button class="tbtn" type="button">B</button><button class="tbtn active" type="button" style="font-style:italic">I</button><button class="tbtn" type="button" aria-label="Link"><svg class="ico sm"><use href="#i-link"/></svg></button><button class="tbtn" type="button" aria-label="Bullets"><svg class="ico sm"><use href="#i-list"/></svg></button><button class="tbtn" type="button" aria-label="Numbers"><svg class="ico sm"><use href="#i-olist"/></svg></button></div></div>
+            <div class="editor is-focus" style="font-size:16px;line-height:26px;padding:12px 16px">Keep the sway left through 4 to 6<span class="caret"></span></div>
+            <div class="actions"><button class="btn btn-primary sm" type="button">Post comment</button></div>
+          </div></div>
+          <div class="comment"><div class="avatar" style="width:32px;height:32px;font-size:13px">M</div><div class="card" style="padding:12px 16px"><div class="meta"><span class="who">Marta K.</span><span class="when">12 Oct</span></div><div class="txt" style="font-size:16px;line-height:26px">Heel turn on step 2 is late. Wait for the hips to pass, timing <i>1 2&amp; 3</i>.</div><div class="acts"><button class="link-pill" type="button">Edit</button><button class="link-pill del" type="button">Delete</button></div></div></div>
+          <div class="comment"><div class="avatar" style="width:32px;height:32px;font-size:13px">J</div><div class="card" style="padding:12px 16px"><div class="meta"><span class="who">Jan W.</span><span class="when">9 Oct</span></div><div class="txt" style="font-size:16px;line-height:26px">Compare with the Reverse Turn count in the Class D list.</div></div></div>
+          <div class="state"><label class="label" for="m-err" style="font-size:14px">Session date</label><div class="date-field"><input id="m-err" class="field is-error" aria-invalid="true" value="31 Feb 2026"><svg class="ico"><use href="#i-cal"/></svg></div><p class="err"><svg class="ico sm"><use href="#i-alert"/></svg>That date does not exist.</p></div>
+        </div>
+        <div class="goto" role="group" aria-label="Scroll the page"><button type="button" aria-label="Go to top"><svg class="ico"><use href="#i-up"/></svg></button><button type="button" aria-label="Go to bottom"><svg class="ico"><use href="#i-down"/></svg></button></div>
+        <nav class="tabbar" aria-label="Main"><span><svg class="ico"><use href="#i-home"/></svg>Home</span><span><svg class="ico"><use href="#i-book"/></svg>Figures</span><span><svg class="ico"><use href="#i-cal"/></svg>Training</span><span class="on"><svg class="ico"><use href="#i-list"/></svg>Notes</span><span><svg class="ico"><use href="#i-user"/></svg>Profile</span></nav>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+(function () {
+  var figs = ['Natural Spin Turn','Reverse Turn','Closed Change','Chassé from PP','Natural Turn','Fallaway Reverse and Slip Pivot','Hesitation Change','Quarter Turns','Fan','Hockey Stick','Alemana','New York','Spot Turn','Basic Movement','Open Hip Twist','Cuban Break','Shoulder to Shoulder','Hand to Hand','Natural Top','Opening Out'];
+  var cls = ['D','D','H','E','C','B','E','H','D','D','C','D','E','H','C','D','D','D','C','D'];
+  var rows = document.getElementById('rows'), sc = document.getElementById('scroller');
+  figs.forEach(function (f, i) {
+    var d = document.createElement('div'); d.className = 'row';
+    d.innerHTML = '<b>' + (i + 1) + '</b><span></span><i>Class ' + cls[i] + '</i>';
+    d.children[1].textContent = f; rows.appendChild(d);
+  });
+  var top = document.getElementById('goTop'), bot = document.getElementById('goBottom');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function update() {
+    var max = sc.scrollHeight - sc.clientHeight, y = sc.scrollTop;
+    top.disabled = y < 8; bot.disabled = max - y < 8;
+  }
+  sc.addEventListener('scroll', update, { passive: true });
+  top.addEventListener('click', function () { sc.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); });
+  bot.addEventListener('click', function () { sc.scrollTo({ top: sc.scrollHeight, behavior: reduce ? 'auto' : 'smooth' }); });
+  update();
+})();
+</script>
+</body>
+</html>
