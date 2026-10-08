@@ -24,7 +24,7 @@
                th:max="${max}"
                th:step="${step}"
                class="form-input"
-               th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''" />
+               th:classappend="${#fields.hasErrors(path)} ? 'form-input-invalid' : ''" />
         <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
     </th:block>
     <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">
@@ -60,7 +60,7 @@
                 th:disabled="${disabled == true}"
                 th:multiple="${multiple == true}"
                 class="form-select"
-                th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''">
+                th:classappend="${#fields.hasErrors(path)} ? 'form-input-invalid' : ''">
             <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
             <option th:each="opt : ${options}"
                     th:value="${optValue != null ? opt[optValue] : opt}"
@@ -102,7 +102,7 @@
                   th:disabled="${disabled == true}"
                   th:readonly="${readonly == true}"
                   class="form-textarea"
-                  th:classappend="${#fields.hasErrors(path)} ? 'border-error ring-1 ring-error' : ''"></textarea>
+                  th:classappend="${#fields.hasErrors(path)} ? 'form-input-invalid' : ''"></textarea>
         <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
     </th:block>
     <th:block th:if="${springBoundObjectExpression == null or bound == false or raw == true}">

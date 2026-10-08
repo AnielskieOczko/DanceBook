@@ -110,16 +110,22 @@ layer(base);
   --color-chart-7: #7a4328;
   --color-chart-8: #41555e;
 
+  /* Radius ladder from the rounded-forms mock (#214): pill for every single-line control and
+   * button, field (24px) for multi-line surfaces, card (16px) for cards, dialogs and menus,
+   * inset (12px) for rows nested inside a rounded surface. lg and xl both resolve to the card
+   * radius because menus and cards name them; sm and md stay small for Trix, FullCalendar and
+   * alerts, which later issues convert. */
   --radius: 4px;
   --radius-xs: 2px;
   --radius-sm: 2px;
   --radius-md: 4px;
-  --radius-lg: 8px;
-  --radius-xl: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
-  --radius-card: 8px;
-  --radius-button: 4px;
   --radius-pill: 9999px;
+  --radius-field: 24px;
+  --radius-card: 16px;
+  --radius-button: var(--radius-pill);
 
   /* Careful: a --spacing-<name> token shadows the stock --container-<name> one,
    * so defining sm/md/lg/xl here makes max-w-md resolve to 24px instead of
@@ -226,6 +232,13 @@ layer(base);
   --shadow-xl: 0 4px 20px rgba(22, 24, 26, 0.08);
 }
 
+/* Static so the token is always emitted: nothing references --radius-inset yet (it is for rows
+ * nested inside a rounded surface and for the comment-card corner in #222), and Tailwind drops
+ * an unreferenced theme variable otherwise. */
+@theme static {
+  --radius-inset: 12px;
+}
+
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -252,11 +265,11 @@ layer(base);
 }
 
 @utility btn-sm {
-  @apply px-4 py-2 text-sm rounded-md min-h-[44px];
+  @apply px-4 py-2 text-sm rounded-pill min-h-[44px];
 }
 
 @utility btn-md {
-  @apply px-6 py-3 text-base rounded-md min-h-[48px];
+  @apply px-6 py-3 text-base rounded-pill min-h-[48px];
 }
 
 @utility btn-primary {
@@ -285,13 +298,13 @@ layer(base);
 }
 
 @utility btn-icon {
-  @apply btn p-3 rounded-md text-on-surface-variant min-h-[48px] min-w-[48px]
+  @apply btn p-3 rounded-pill text-on-surface-variant min-h-[48px] min-w-[48px]
            hover:bg-surface-container hover:text-on-surface;
 }
 
 @utility card {
   /* ── Cards ───────────────────────────────────── */
-  @apply bg-surface rounded-xl border border-outline-variant
+  @apply bg-surface rounded-card border border-outline-variant
            transition-all duration-300;
 }
 
@@ -348,24 +361,42 @@ layer(base);
 
 @utility form-input {
   /* ── Form Elements ───────────────────────────── */
-  @apply w-full px-4 py-3 bg-surface-container border border-outline rounded-sm
+  @apply w-full px-5 py-3 bg-surface-container border border-outline
            text-on-surface placeholder:text-on-surface-variant text-base min-h-[48px]
-           focus:outline-hidden focus:border-primary
-           transition-colors duration-200;
+           hover:bg-surface hover:border-on-surface-variant
+           focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface-container disabled:hover:border-outline
+           transition-[color,background-color,border-color,box-shadow] duration-200;
+  /* Raw declaration, not rounded-pill: form-textarea overrides it below, and two @apply'd
+   * utilities for the same property would be ordered by Tailwind rather than by us. */
+  border-radius: var(--radius-pill);
 }
 
 @utility form-select {
-  @apply form-input appearance-none bg-no-repeat bg-right pr-10 cursor-pointer;
+  @apply form-input appearance-none bg-no-repeat pr-12 cursor-pointer;
   /* The select chevron is an SVG data URI and cannot resolve CSS custom properties
    * (var(--color-on-surface-variant)). #5b6067 matches on-surface-variant and is the sole
    * permitted hex literal in this stylesheet. */
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-size: 1.25rem;
-  background-position: right center;
+  background-position: right 1rem center;
+
+  &:is([multiple], [size]:not([size="1"])) {
+    border-radius: var(--radius-field);
+    background-image: none;
+    padding-right: calc(var(--spacing) * 5);
+  }
 }
 
 @utility form-textarea {
   @apply form-input resize-y min-h-[100px];
+  border-radius: var(--radius-field);
+}
+
+@utility form-input-invalid {
+  /* Error state shared by input, select and textarea. Important because hover and focus on
+   * form-input set the same border and ring colours and would otherwise win on source order. */
+  @apply border-error! bg-surface! focus:ring-error/20!;
 }
 
 @utility form-label {
@@ -652,7 +683,9 @@ layer(base);
  * ──────────────────────────────────────────────── */
 @layer components {
   /* ── Accessible Keyboard Focus ────────────────── */
-  *:focus-visible {
+  /* Form controls are excluded: they draw their own 3px ring that follows the pill (see
+   * form-input), and this rule's !important would replace it with a 2px offset ring. */
+  *:focus-visible:not(.form-input, .form-select, .form-textarea) {
     @apply outline-hidden! ring-2! ring-primary! ring-offset-2!;
   }
 }
