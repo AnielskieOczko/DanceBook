@@ -7,10 +7,10 @@
 
 <!-- Legacy inline figure fragment preserved for /dance-figures/inline -->
 <div id="figureSelectFragment" th:fragment="figureSelectFragment">
-    <label for="danceFigureId" class="form-label">Select Figure</label>
+    <label for="danceFigureId" class="form-label" th:text="#{figures.select.label}">Select Figure</label>
     <div class="relative flex items-center gap-2">
         <select name="danceFigureId" id="danceFigureId" class="form-select flex-1 min-w-0">
-            <option value="">Select a figure...</option>
+            <option value="" th:text="#{figures.select.placeholder}">Select a figure...</option>
             <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
                 Figure Name
             </option>

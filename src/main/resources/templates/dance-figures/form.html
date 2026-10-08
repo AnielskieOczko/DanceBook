@@ -4,14 +4,14 @@
 
 <section th:with="activeNav='dance-figures'" class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${danceFigureId == null ? 'Create New Figure' : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? 'Edit ' + danceFigure.name : 'Edit Figure')}, subtitle='Register or update a figure in the dictionary. It will then be available to select in all material sequences matching the selected dance style.', toolbar=~{::editModeToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=${danceFigureId == null ? #messages.msg('figures.form.title.create') : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))}, subtitle=#{figures.form.subtitle}, toolbar=~{::editModeToolbar})}">
         <!-- Manual vs Guided Edit Tab Switcher -->
         <div th:fragment="editModeToolbar" class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-sm h-fit self-start md:self-center">
             <button type="button" id="manual-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
-                ✏️ Manual Edit
+                ✏️ <span th:text="#{figures.form.tab.manual}">Manual Edit</span>
             </button>
             <button type="button" id="guided-edit-tab-btn" class="px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
-                🤖 Guided Edit
+                🤖 <span th:text="#{figures.form.tab.guided}">Guided Edit</span>
             </button>
         </div>
     </div>
@@ -21,18 +21,18 @@
         <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
-                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary')}"></span> Guided Figure Import
+                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary')}"></span> <span th:text="#{figures.guided.title}">Guided Figure Import</span>
                 </h2>
-                <p class="text-xs text-on-surface-variant mt-1">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
+                <p class="text-xs text-on-surface-variant mt-1" th:text="#{figures.guided.subtitle}">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
             </div>
             
             <!-- Source tabs (JSON vs URL) -->
             <div class="inline-flex bg-surface-container p-1 rounded-lg border border-outline-variant/20 text-xs">
                 <button type="button" id="import-json-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
-                    📋 Paste JSON
+                    📋 <span th:text="#{figures.guided.tab.json}">Paste JSON</span>
                 </button>
                 <button type="button" id="import-url-tab-btn" class="px-3 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
-                    🔗 Parse URL
+                    🔗 <span th:text="#{figures.guided.tab.url}">Parse URL</span>
                 </button>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <div id="guided-error-container" class="hidden bg-rose-50 border border-rose-200 text-rose-950 p-4 rounded-lg flex gap-3 text-xs">
             <span th:replace="~{fragments/icon :: icon(name='error', size='md', cls='text-rose-600 shrink-0')}"></span>
             <div class="space-y-1">
-                <h4 class="font-bold">AI Analysis Failed</h4>
+                <h4 class="font-bold" th:text="#{figures.guided.error.title}">AI Analysis Failed</h4>
                 <p id="guided-error-message"></p>
             </div>
         </div>
@@ -49,22 +49,22 @@
         <!-- JSON Paste Section -->
         <div id="json-input-section" class="space-y-4 hidden">
             <div>
-                <label for="guided-json-input" class="form-label">Figure JSON Data</label>
+                <label for="guided-json-input" class="form-label" th:text="#{figures.guided.json.label}">Figure JSON Data</label>
                 <textarea id="guided-json-input" rows="8" class="form-textarea w-full font-mono text-xs p-3 rounded-lg border-border" placeholder='{ "name": "Natural Turn", "dance_type": "WALTZ", ... }'></textarea>
             </div>
             
             <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
                 <button type="button" id="toggle-schema-btn" class="text-xs text-primary font-medium hover:underline flex items-center gap-1">
-                    <span th:replace="~{fragments/icon :: icon(name='schema', size='sm')}"></span> Show Expected JSON Format
+                    <span th:replace="~{fragments/icon :: icon(name='schema', size='sm')}"></span> <span th:text="#{figures.guided.json.show_schema}">Show Expected JSON Format</span>
                 </button>
                 <button type="button" id="validate-json-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> Validate &amp; Preview
+                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> <span th:text="#{figures.guided.json.validate}">Validate &amp; Preview</span>
                 </button>
             </div>
 
             <!-- Collapsible Expected JSON Schema -->
             <div id="expected-schema-box" class="hidden bg-surface-container p-4 rounded-lg border border-border mt-3">
-                <h4 class="text-xs font-semibold text-on-surface mb-2">Expected JSON Schema:</h4>
+                <h4 class="text-xs font-semibold text-on-surface mb-2" th:text="#{figures.guided.json.expected_schema}">Expected JSON Schema:</h4>
                 <pre id="schema-display-pre" class="text-[10px] font-mono overflow-x-auto text-on-surface-variant max-h-60 p-2 bg-white rounded border border-border"></pre>
             </div>
         </div>
@@ -73,11 +73,11 @@
         <div id="url-input-section" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label for="guided-url-input" class="form-label">Dance Syllabus URL</label>
-                    <input id="guided-url-input" type="url" class="form-input" placeholder="e.g. https://www.dancecentral.info/ballroom/international-style/..."/>
+                    <label for="guided-url-input" class="form-label" th:text="#{figures.guided.url.label}">Dance Syllabus URL</label>
+                    <input id="guided-url-input" type="url" class="form-input" th:placeholder="#{figures.guided.url.placeholder}" placeholder="e.g. https://www.dancecentral.info/ballroom/international-style/..."/>
                 </div>
                 <div>
-                    <label for="guided-provider-select" class="form-label">AI Provider</label>
+                    <label for="guided-provider-select" class="form-label" th:text="#{figures.guided.provider.label}">AI Provider</label>
                     <select id="guided-provider-select" class="form-select">
                         <option value="openrouter" selected>OpenRouter (Free Tier)</option>
                         <option value="google-ai">Google AI (Gemini Free)</option>
@@ -85,7 +85,7 @@
                     </select>
                 </div>
                 <div>
-                    <label for="guided-model-select" class="form-label">AI Parsing Model</label>
+                    <label for="guided-model-select" class="form-label" th:text="#{figures.guided.model.label}">AI Parsing Model</label>
                     <select id="guided-model-select" class="form-select">
                         <option value="nvidia/nemotron-3-nano-30b-a3b:free">nvidia/nemotron-3-nano-30b-a3b:free (Default)</option>
                     </select>
@@ -97,38 +97,38 @@
                 <details class="group">
                     <summary class="flex items-center gap-1.5 cursor-pointer list-none text-xs font-semibold text-primary select-none hover:underline">
                         <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='transform transition-transform group-open:rotate-90')}"></span>
-                        ⚙️ Advanced AI Parameters
+                        ⚙️ <span th:text="#{figures.guided.advanced.title}">Advanced AI Parameters</span>
                     </summary>
                     <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-surface-container/30 p-4 rounded-lg border border-border/50">
                         <!-- Max Tokens -->
                         <div>
-                            <label for="guided-max-tokens" class="form-label text-xs">Max Output Tokens</label>
+                            <label for="guided-max-tokens" class="form-label text-xs" th:text="#{figures.guided.advanced.max_tokens}">Max Output Tokens</label>
                             <input id="guided-max-tokens" type="number" min="1024" max="100000" step="1024" value="16384" class="form-input text-xs py-1.5" placeholder="e.g. 16384"/>
-                            <p class="text-[10px] text-outline mt-1">Caps output size (typically 4096 - 16384).</p>
+                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.max_tokens_hint}">Caps output size (typically 4096 - 16384).</p>
                         </div>
                         <!-- Temperature -->
                         <div>
-                            <label for="guided-temperature" class="form-label text-xs">Temperature (0.0 to 2.0)</label>
+                            <label for="guided-temperature" class="form-label text-xs" th:text="#{figures.guided.advanced.temperature}">Temperature (0.0 to 2.0)</label>
                             <input id="guided-temperature" type="number" min="0.0" max="2.0" step="0.1" value="1.0" class="form-input text-xs py-1.5" placeholder="e.g. 1.0"/>
-                            <p class="text-[10px] text-outline mt-1">Higher is more variety; lower is focused/deterministic.</p>
+                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.temperature_hint}">Higher is more variety; lower is focused/deterministic.</p>
                         </div>
                         <!-- Reasoning Effort (OpenRouter specific) -->
                         <div id="reasoning-effort-container">
-                            <label for="guided-reasoning-effort" class="form-label text-xs">Reasoning / Thinking Effort</label>
+                            <label for="guided-reasoning-effort" class="form-label text-xs" th:text="#{figures.guided.advanced.reasoning_effort}">Reasoning / Thinking Effort</label>
                             <select id="guided-reasoning-effort" class="form-select text-xs py-1.5 pr-8">
-                                <option value="default">Model Default</option>
-                                <option value="none">Disabled (none / exclude)</option>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
+                                <option value="default" th:text="#{figures.guided.advanced.reasoning.default}">Model Default</option>
+                                <option value="none" th:text="#{figures.guided.advanced.reasoning.none}">Disabled (none / exclude)</option>
+                                <option value="low" th:text="#{figures.guided.advanced.reasoning.low}">Low</option>
+                                <option value="medium" th:text="#{figures.guided.advanced.reasoning.medium}">Medium</option>
+                                <option value="high" th:text="#{figures.guided.advanced.reasoning.high}">High</option>
                             </select>
-                            <p class="text-[10px] text-outline mt-1">Controls internal thinking effort for reasoning-enabled models.</p>
+                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.reasoning_hint}">Controls internal thinking effort for reasoning-enabled models.</p>
                         </div>
                         <!-- Thinking Budget (Google AI specific) -->
                         <div id="thinking-budget-container" class="hidden">
-                            <label for="guided-thinking-budget" class="form-label text-xs">Thinking Budget (tokens)</label>
+                            <label for="guided-thinking-budget" class="form-label text-xs" th:text="#{figures.guided.advanced.thinking_budget}">Thinking Budget (tokens)</label>
                             <input id="guided-thinking-budget" type="number" min="0" max="32768" step="1024" value="2048" class="form-input text-xs py-1.5" placeholder="e.g. 2048"/>
-                            <p class="text-[10px] text-outline mt-1">Set to 0 to disable thinking. Max 32768. Default 2048.</p>
+                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.thinking_budget_hint}">Set to 0 to disable thinking. Max 32768. Default 2048.</p>
                         </div>
                     </div>
                 </details>
@@ -138,14 +138,14 @@
             <!-- URL History and Action -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-border/40 pt-4">
                 <div id="url-history-container" class="hidden flex items-center gap-2 w-full sm:max-w-[28rem]">
-                    <label for="guided-url-history" class="text-xs text-outline shrink-0">Recent URLs:</label>
+                    <label for="guided-url-history" class="text-xs text-outline shrink-0" th:text="#{figures.guided.recent_urls}">Recent URLs:</label>
                     <select id="guided-url-history" class="form-select text-xs py-1.5 pr-8">
-                        <option value="">-- Select a recently used URL --</option>
+                        <option value="" th:text="#{figures.guided.select_recent_url}">-- Select a recently used URL --</option>
                     </select>
                 </div>
                 <div class="ml-auto">
                     <button type="button" id="parse-url-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                        <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm')}"></span> Analyze Page with AI
+                        <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm')}"></span> <span th:text="#{figures.guided.analyze_button}">Analyze Page with AI</span>
                     </button>
                 </div>
             </div>
@@ -156,25 +156,25 @@
                     <summary class="flex items-center justify-between cursor-pointer list-none text-xs font-semibold text-on-surface">
                         <span class="flex items-center gap-1.5">
                             <span th:replace="~{fragments/icon :: icon(name='analytics', size='sm', cls='text-primary')}"></span>
-                            AI Token Usage Statistics
+                            <span th:text="#{figures.guided.token_stats.title}">AI Token Usage Statistics</span>
                         </span>
                         <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='transform transition-transform group-open:rotate-180')}"></span>
                     </summary>
                     <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-border/50 pt-3">
                         <div class="bg-white p-2.5 rounded border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold">Prompt (Input)</span>
+                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.prompt}">Prompt (Input)</span>
                             <span id="stat-prompt-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-white p-2.5 rounded border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold">Completion (Output)</span>
+                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.completion}">Completion (Output)</span>
                             <span id="stat-completion-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-white p-2.5 rounded border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold">Reasoning (Thinking)</span>
+                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.reasoning}">Reasoning (Thinking)</span>
                             <span id="stat-reasoning-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-white p-2.5 rounded border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold">Total Tokens</span>
+                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.total}">Total Tokens</span>
                             <span id="stat-total-tokens" class="text-sm font-semibold text-primary font-bold">0</span>
                         </div>
                     </div>
@@ -186,8 +186,8 @@
         <div id="import-loading-state" class="hidden flex flex-col items-center justify-center py-12 space-y-4 bg-surface-container/30 rounded-lg border border-border">
             <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
             <div class="text-center">
-                <h3 class="text-sm font-semibold text-on-surface">AI is analyzing the page...</h3>
-                <p class="text-xs text-on-surface-variant mt-1">This typically takes 20-40 seconds. Jsoup is reading the page text, then LLM is parsing it.</p>
+                <h3 class="text-sm font-semibold text-on-surface" th:text="#{figures.guided.loading.title}">AI is analyzing the page...</h3>
+                <p class="text-xs text-on-surface-variant mt-1" th:text="#{figures.guided.loading.subtitle}">This typically takes 20-40 seconds. Jsoup is reading the page text, then LLM is parsing it.</p>
             </div>
         </div>
 
@@ -195,24 +195,24 @@
         <div id="diff-comparison-section" class="hidden space-y-6 border-t border-border pt-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2">
                 <div>
-                    <h3 class="text-lg font-semibold text-on-surface">🔍 Compare &amp; Match Imported Fields</h3>
-                    <p class="text-xs text-on-surface-variant">Review parsed details against current form values. Edit imported text directly in the right column if needed.</p>
+                    <h3 class="text-lg font-semibold text-on-surface">🔍 <span th:text="#{figures.guided.diff.title}">Compare &amp; Match Imported Fields</span></h3>
+                    <p class="text-xs text-on-surface-variant" th:text="#{figures.guided.diff.subtitle}">Review parsed details against current form values. Edit imported text directly in the right column if needed.</p>
                 </div>
                 
                 <!-- Partial Import Options -->
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold bg-surface-container px-3 py-2 rounded-lg border border-border/50">
-                    <span class="text-outline">Sections:</span>
+                    <span class="text-outline" th:text="#{figures.guided.diff.sections}">Sections:</span>
                     <label for="import-section-metadata" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-metadata" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        <span>Metadata</span>
+                        <span th:text="#{figures.guided.diff.section.metadata}">Metadata</span>
                     </label>
                     <label for="import-section-steps" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-steps" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        <span id="import-section-steps-text">Steps breakdown</span>
+                        <span id="import-section-steps-text" th:text="#{figures.guided.diff.section.steps}">Steps breakdown</span>
                     </label>
                     <label for="import-section-links" class="flex items-center gap-1.5 cursor-pointer">
                         <input type="checkbox" id="import-section-links" checked class="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"/>
-                        <span id="import-section-links-text">Resource links</span>
+                        <span id="import-section-links-text" th:text="#{figures.guided.diff.section.links}">Resource links</span>
                     </label>
                 </div>
             </div>
@@ -220,10 +220,10 @@
             <!-- Mobile-only Tab Switcher for Diff View -->
             <div class="inline-flex md:hidden bg-surface-container p-1 rounded-lg border border-outline-variant/30 text-xs w-full mb-3">
                 <button type="button" id="diff-mobile-tab-current" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold">
-                    👈 Show Current
+                    👈 <span th:text="#{figures.guided.diff.tab.current}">Show Current</span>
                 </button>
                 <button type="button" id="diff-mobile-tab-imported" class="flex-1 text-center py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface">
-                    👉 Show Imported
+                    👉 <span th:text="#{figures.guided.diff.tab.imported}">Show Imported</span>
                 </button>
             </div>
 
@@ -232,10 +232,10 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-surface-container border-b border-border text-xs font-semibold text-on-surface">
-                            <th class="p-3 w-12 text-center">Import</th>
-                            <th class="p-3 w-36">Field</th>
-                            <th class="p-3 js-col-current md:table-cell">Current Form Value</th>
-                            <th class="p-3 js-col-imported max-md:hidden md:table-cell">Imported Value (Editable)</th>
+                            <th class="p-3 w-12 text-center" th:text="#{figures.guided.diff.th.import}">Import</th>
+                            <th class="p-3 w-36" th:text="#{figures.guided.diff.th.field}">Field</th>
+                            <th class="p-3 js-col-current md:table-cell" th:text="#{figures.guided.diff.th.current}">Current Form Value</th>
+                            <th class="p-3 js-col-imported max-md:hidden md:table-cell" th:text="#{figures.guided.diff.th.imported}">Imported Value (Editable)</th>
                         </tr>
                     </thead>
                     <tbody id="diff-table-body" class="text-xs divide-y divide-border">
@@ -249,7 +249,7 @@
                 <button type="button" id="toggle-diff-steps-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
                     <span class="flex items-center gap-1.5">
                         <span th:replace="~{fragments/icon :: icon(name='list_alt', size='sm', cls='text-primary')}"></span>
-                        Preview Steps to Import (<span id="diff-steps-preview-count">0</span> steps)
+                        <span th:text="#{figures.guided.diff.preview_steps_prefix}">Preview Steps to Import (</span><span id="diff-steps-preview-count">0</span><span th:text="#{figures.guided.diff.preview_steps_suffix}"> steps)</span>
                     </span>
                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-steps-arrow', cls='transform transition-transform')}"></span>
                 </button>
@@ -257,14 +257,14 @@
                     <table class="w-full text-left text-[11px] border-collapse">
                         <thead>
                             <tr class="border-b border-border text-[10px] font-semibold uppercase text-outline">
-                                <th class="py-1.5 pr-2 w-16">Role</th>
+                                <th class="py-1.5 pr-2 w-16" th:text="#{figures.view.steps.th.role}">Role</th>
                                 <th class="py-1.5 pr-2 w-8">#</th>
-                                <th class="py-1.5 pr-2 w-16">Timing</th>
-                                <th class="py-1.5 pr-2 w-16">Foot</th>
-                                <th class="py-1.5 pr-2 min-w-[150px]">Action</th>
-                                <th class="py-1.5 pr-2 w-20">Footwork</th>
-                                <th class="py-1.5 pr-2 w-20">Alignment</th>
-                                <th class="py-1.5 pr-2 w-20">Turn</th>
+                                <th class="py-1.5 pr-2 w-16" th:text="#{figures.view.steps.th.timing}">Timing</th>
+                                <th class="py-1.5 pr-2 w-16" th:text="#{figures.view.steps.th.foot}">Foot</th>
+                                <th class="py-1.5 pr-2 min-w-[150px]" th:text="#{figures.view.steps.th.action}">Action</th>
+                                <th class="py-1.5 pr-2 w-20" th:text="#{figures.view.steps.th.footwork}">Footwork</th>
+                                <th class="py-1.5 pr-2 w-20" th:text="#{figures.view.steps.th.alignment}">Alignment</th>
+                                <th class="py-1.5 pr-2 w-20" th:text="#{figures.view.steps.th.turn}">Turn</th>
                             </tr>
                         </thead>
                         <tbody id="diff-steps-preview-tbody" class="divide-y divide-border/50">
@@ -279,7 +279,7 @@
                 <button type="button" id="toggle-diff-links-btn" class="flex items-center justify-between w-full text-xs font-semibold text-on-surface">
                     <span class="flex items-center gap-1.5">
                         <span th:replace="~{fragments/icon :: icon(name='link', size='sm', cls='text-primary')}"></span>
-                        Preview Resource Links to Import (<span id="diff-links-preview-count">0</span> links)
+                        <span th:text="#{figures.guided.diff.preview_links_prefix}">Preview Resource Links to Import (</span><span id="diff-links-preview-count">0</span><span th:text="#{figures.guided.diff.preview_links_suffix}"> links)</span>
                     </span>
                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-links-arrow', cls='transform transition-transform')}"></span>
                 </button>
@@ -292,9 +292,9 @@
 
             <!-- Diff Action Buttons -->
             <div class="flex justify-end gap-3 pt-4 border-t border-border">
-                <button type="button" id="discard-import-btn" class="btn-outline btn-sm">Discard</button>
+                <button type="button" id="discard-import-btn" class="btn-outline btn-sm" th:text="#{figures.guided.diff.discard}">Discard</button>
                 <button type="button" id="apply-import-btn" class="btn-primary btn-sm flex items-center gap-1.5">
-                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> Apply to Form
+                    <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span> <span th:text="#{figures.guided.diff.apply}">Apply to Form</span>
                 </button>
             </div>
         </div>
@@ -309,7 +309,7 @@
         <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
 
         <th:block th:if="${danceFigureId == null}">
-            <div th:replace="~{fragments/alert :: alert(variant='info', text='Figures are shared with every DanceBook user.')}"></div>
+            <div th:replace="~{fragments/alert :: alert(variant='info', text=#{figures.form.alert.shared})}"></div>
         </th:block>
 
         <!-- TOP SECTION: Metadata Grid (3 Columns on Desktop) -->
@@ -321,52 +321,52 @@
                 <!-- Section 1: Core Information -->
                 <div class="card p-8 space-y-6 bg-white">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                        <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-primary')}"></span> Core Information
+                        <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.core}">Core Information</span>
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Figure Name -->
-                        <div th:replace="~{fragments/form :: field(path='name', label='Figure Name', required=true, placeholder='e.g. Back Whisk, Double Reverse Spin...', id='name')}"></div>
+                        <div th:replace="~{fragments/form :: field(path='name', label=#{figures.form.field.name}, required=true, placeholder=#{figures.form.field.name_placeholder}, id='name')}"></div>
 
                         <!-- Dance Style selection -->
-                        <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='-- Select Dance Style --', id='danceTypeId')}"></div>
+                        <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{figures.form.field.dance_type}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{figures.form.field.dance_type_placeholder}, id='danceTypeId')}"></div>
 
                         <!-- Dancer Class selection -->
-                        <div th:replace="~{fragments/form :: selectField(path='danceClass', label='Minimum Dancer Class (Optional)', options=${danceClasses}, optLabel='displayName', placeholder='None (Social/General)', id='danceClass')}"></div>
+                        <div th:replace="~{fragments/form :: selectField(path='danceClass', label=#{figures.form.field.dance_class}, options=${danceClasses}, optLabel='displayName', placeholder=#{figures.form.field.dance_class_placeholder}, id='danceClass')}"></div>
 
                         <!-- Alternative Timing -->
-                        <div th:replace="~{fragments/form :: field(path='alternativeTiming', label='Alternative Timing (Optional)', placeholder='e.g. 12&3, SQQ, Q&Q...', id='alternativeTiming')}"></div>
+                        <div th:replace="~{fragments/form :: field(path='alternativeTiming', label=#{figures.form.field.alternative_timing}, placeholder=#{figures.form.field.alternative_timing_placeholder}, id='alternativeTiming')}"></div>
                     </div>
                 </div>
 
                 <!-- Section 2: Positions & Footwork -->
                 <div class="card p-8 space-y-6 bg-white">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                        <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span> Positions &amp; Footwork
+                        <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.positions}">Positions &amp; Footwork</span>
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div th:replace="~{fragments/form :: field(path='startingPosition', label='Starting Position', placeholder='e.g. Closed Position', id='startingPosition')}"></div>
-                        <div th:replace="~{fragments/form :: field(path='endingPosition', label='Ending Position', placeholder='e.g. Promenade Position', id='endingPosition')}"></div>
+                        <div th:replace="~{fragments/form :: field(path='startingPosition', label=#{figures.form.field.starting_position}, placeholder=#{figures.form.field.starting_position_placeholder}, id='startingPosition')}"></div>
+                        <div th:replace="~{fragments/form :: field(path='endingPosition', label=#{figures.form.field.ending_position}, placeholder=#{figures.form.field.ending_position_placeholder}, id='endingPosition')}"></div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-border pt-4">
                         <div>
                             <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
-                                <span th:replace="~{fragments/icon :: icon(name='face', size='sm', cls='text-primary')}"></span> Leader Footwork
+                                <span th:replace="~{fragments/icon :: icon(name='face', size='sm', cls='text-primary')}"></span> <span th:text="#{figures.form.subheading.leader_footwork}">Leader Footwork</span>
                             </h3>
                             <div class="space-y-4">
-                                <div th:replace="~{fragments/form :: field(path='startingFootLeader', label='Starting Foot (Leader)', placeholder='e.g. LF, RF', id='startingFootLeader')}"></div>
-                                <div th:replace="~{fragments/form :: field(path='endingFootLeader', label='Ending Foot (Leader)', placeholder='e.g. LF, RF', id='endingFootLeader')}"></div>
+                                <div th:replace="~{fragments/form :: field(path='startingFootLeader', label=#{figures.form.field.starting_foot_leader}, placeholder=#{figures.form.field.foot_placeholder}, id='startingFootLeader')}"></div>
+                                <div th:replace="~{fragments/form :: field(path='endingFootLeader', label=#{figures.form.field.ending_foot_leader}, placeholder=#{figures.form.field.foot_placeholder}, id='endingFootLeader')}"></div>
                             </div>
                         </div>
                         <div>
                             <h3 class="text-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1.5">
-                                <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm', cls='text-primary')}"></span> Follower Footwork
+                                <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm', cls='text-primary')}"></span> <span th:text="#{figures.form.subheading.follower_footwork}">Follower Footwork</span>
                             </h3>
                             <div class="space-y-4">
-                                <div th:replace="~{fragments/form :: field(path='startingFootFollower', label='Starting Foot (Follower)', placeholder='e.g. LF, RF', id='startingFootFollower')}"></div>
-                                <div th:replace="~{fragments/form :: field(path='endingFootFollower', label='Ending Foot (Follower)', placeholder='e.g. LF, RF', id='endingFootFollower')}"></div>
+                                <div th:replace="~{fragments/form :: field(path='startingFootFollower', label=#{figures.form.field.starting_foot_follower}, placeholder=#{figures.form.field.foot_placeholder}, id='startingFootFollower')}"></div>
+                                <div th:replace="~{fragments/form :: field(path='endingFootFollower', label=#{figures.form.field.ending_foot_follower}, placeholder=#{figures.form.field.foot_placeholder}, id='endingFootFollower')}"></div>
                             </div>
                         </div>
                     </div>
@@ -378,16 +378,16 @@
                 <!-- Section 5: External Links & Videos -->
                 <div class="card p-8 space-y-6 bg-white flex flex-col h-full">
                     <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2 flex-shrink-0">
-                        <span th:replace="~{fragments/icon :: icon(name='smart_display', size='md', cls='text-primary')}"></span> Videos &amp; Resources
+                        <span th:replace="~{fragments/icon :: icon(name='smart_display', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.videos_resources}">Videos &amp; Resources</span>
                     </h2>
                     
                     <div class="overflow-x-auto min-h-[100px] flex-1">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
-                                    <th class="py-2 pr-2">Title</th>
-                                    <th class="py-2 pr-2">URL *</th>
-                                    <th class="py-2 pr-2 w-28">Type</th>
+                                    <th class="py-2 pr-2" th:text="#{figures.form.links.th.title}">Title</th>
+                                    <th class="py-2 pr-2" th:text="#{figures.form.links.th.url}">URL *</th>
+                                    <th class="py-2 pr-2 w-28" th:text="#{figures.form.links.th.type}">Type</th>
                                     <th class="py-2 w-8 text-right"></th>
                                 </tr>
                             </thead>
@@ -395,20 +395,20 @@
                                 <tr th:each="link, stat : *{links}" class="link-row border-b border-border">
                                     <td class="py-2 pr-2">
                                         <input type="hidden" th:name="'links[' + ${stat.index} + '].id'" th:value="${link.id}" />
-                                        <input type="text" th:name="'links[' + ${stat.index} + '].title'" th:value="${link.title}" class="form-input text-xs py-1.5" placeholder="e.g. Gold Syllabus Video" />
+                                        <input type="text" th:name="'links[' + ${stat.index} + '].title'" th:value="${link.title}" class="form-input text-xs py-1.5" th:placeholder="#{figures.form.links.title_placeholder}" placeholder="e.g. Gold Syllabus Video" />
                                     </td>
                                     <td class="py-2 pr-2">
                                         <input type="text" th:name="'links[' + ${stat.index} + '].url'" th:value="${link.url}" required class="form-input text-xs py-1.5" placeholder="https://..." />
                                     </td>
                                     <td class="py-2 pr-2">
                                         <select th:name="'links[' + ${stat.index} + '].type'" class="form-select text-xs py-1.5 pr-8">
-                                            <option value="video" th:selected="${link.type == 'video'}">Video</option>
-                                            <option value="syllabus" th:selected="${link.type == 'syllabus'}">Syllabus</option>
-                                            <option value="other" th:selected="${link.type == 'other'}">Other</option>
+                                            <option value="video" th:selected="${link.type == 'video'}" th:text="#{figures.form.links.type.video}">Video</option>
+                                            <option value="syllabus" th:selected="${link.type == 'syllabus'}" th:text="#{figures.form.links.type.syllabus}">Syllabus</option>
+                                            <option value="other" th:selected="${link.type == 'other'}" th:text="#{figures.form.links.type.other}">Other</option>
                                         </select>
                                     </td>
                                     <td class="py-2 text-right">
-                                        <button type="button" aria-label="Remove link" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
+                                        <button type="button" aria-label="Remove link" th:attr="aria-label=#{figures.form.links.remove}" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn">
                                             <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                         </button>
                                     </td>
@@ -418,7 +418,7 @@
                     </div>
                     
                     <button type="button" id="add-link-btn" class="btn-outline btn-sm w-full mt-4 flex-shrink-0">
-                        <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Resource Link
+                        <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> <span th:text="#{figures.form.links.add}">Add Resource Link</span>
                     </button>
                 </div>
             </div>
@@ -430,7 +430,7 @@
             <div class="card p-8 space-y-6 bg-white overflow-hidden" id="step-sets-card">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border pb-3 gap-3">
                     <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
-                        <span th:replace="~{fragments/icon :: icon(name='list_alt', size='md', cls='text-primary')}"></span> Steps Breakdown
+                        <span th:replace="~{fragments/icon :: icon(name='list_alt', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.steps_breakdown}">Steps Breakdown</span>
                     </h2>
                     
                     <!-- Step Sets Tab Bar -->
@@ -445,7 +445,7 @@
                             </th:block>
                         </div>
                         <button type="button" id="add-step-set-btn" class="btn-outline btn-sm py-1 px-2.5 flex items-center gap-1 shrink-0">
-                            <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Combination
+                            <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> <span th:text="#{figures.form.steps.add_combination}">Add Combination</span>
                         </button>
                     </div>
                 </div>
@@ -462,36 +462,36 @@
                             <input type="hidden" class="step-set-id" th:name="'stepSets[' + ${setStat.index} + '].id'" th:value="${set.id}" />
                             
                             <div>
-                                <label class="block text-xs font-bold text-outline uppercase mb-1">Combination Name *</label>
+                                <label class="block text-xs font-bold text-outline uppercase mb-1" th:text="#{figures.form.steps.combination_name}">Combination Name *</label>
                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].name'" th:value="${set.name}" required 
-                                       class="form-input text-sm py-2 js-set-name-input" placeholder="e.g., Default, Alternative Timing" />
+                                       class="form-input text-sm py-2 js-set-name-input" th:placeholder="#{figures.form.steps.combination_name_placeholder}" placeholder="e.g., Default, Alternative Timing" />
                             </div>
                             
                             <div class="flex items-center gap-2 pt-5">
                                 <input type="radio" th:id="'set-default-radio-' + ${setStat.index}" name="default-set-radio" 
                                        th:value="${setStat.index}" th:checked="${set.isDefault}" class="form-radio js-set-default-radio" />
                                 <input type="hidden" class="js-set-default-hidden" th:name="'stepSets[' + ${setStat.index} + '].isDefault'" th:value="${set.isDefault}" />
-                                <label th:for="'set-default-radio-' + ${setStat.index}" class="text-sm font-semibold text-on-surface cursor-pointer select-none">
+                                <label th:for="'set-default-radio-' + ${setStat.index}" class="text-sm font-semibold text-on-surface cursor-pointer select-none" th:text="#{figures.form.steps.mark_default}">
                                     Mark as Default
                                 </label>
                             </div>
                             
                             <div class="flex items-center justify-end pt-4">
                                 <button type="button" class="btn-outline btn-sm text-danger hover:bg-danger-soft/20 border-danger/30 hover:border-danger js-remove-step-set-btn">
-                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='mr-1')}"></span> Delete Combination
+                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='mr-1')}"></span> <span th:text="#{figures.form.steps.delete_combination}">Delete Combination</span>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Role Tab Selector inside set panel -->
                         <div class="flex items-center justify-between border-b border-border/40 pb-2">
-                            <span class="text-sm font-bold text-outline uppercase">Steps List</span>
+                            <span class="text-sm font-bold text-outline uppercase" th:text="#{figures.form.steps.steps_list}">Steps List</span>
                             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
                                 <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
-                                    <span th:replace="~{fragments/icon :: icon(name='face', size='sm')}"></span> Leader
+                                    <span th:replace="~{fragments/icon :: icon(name='face', size='sm')}"></span> <span th:text="#{figures.role.leader}">Leader</span>
                                 </button>
                                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
-                                    <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm')}"></span> Follower
+                                    <span th:replace="~{fragments/icon :: icon(name='face_2', size='sm')}"></span> <span th:text="#{figures.role.follower}">Follower</span>
                                 </button>
                             </div>
                         </div>
@@ -503,13 +503,13 @@
                                     <thead class="hidden md:table-header-group">
                                         <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                             <th class="py-2 pr-2 w-12">#</th>
-                                            <th class="py-2 pr-2 w-20">Timing *</th>
-                                            <th class="py-2 pr-2 w-20">Foot *</th>
-                                            <th class="py-2 pr-2 min-w-[150px]">Action *</th>
-                                            <th class="py-2 pr-2 w-24">Footwork</th>
-                                            <th class="py-2 pr-2 w-24">Alignment</th>
-                                            <th class="py-2 pr-2 w-24">Turn</th>
-                                            <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                                            <th class="py-2 pr-2 w-20" th:text="#{figures.form.steps.th.timing}">Timing *</th>
+                                            <th class="py-2 pr-2 w-20" th:text="#{figures.form.steps.th.foot}">Foot *</th>
+                                            <th class="py-2 pr-2 min-w-[150px]" th:text="#{figures.form.steps.th.action}">Action *</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.footwork}">Footwork</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.alignment}">Alignment</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.turn}">Turn</th>
+                                            <th class="py-2 pr-2 min-w-[150px]" th:text="#{figures.form.steps.th.comments}">Comments</th>
                                             <th class="py-2 w-10 text-right"></th>
                                         </tr>
                                     </thead>
@@ -520,45 +520,45 @@
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                                 <input type="hidden" class="step-role" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].role'" value="LEADER" />
-                                                <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
-                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${#messages.msg('figures.form.steps.step_number', step.stepNumber)}">Step 1</span>
+                                                <button type="button" aria-label="Remove step" th:attr="aria-label=#{figures.form.steps.remove_step}" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
                                                     <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.timing}">Timing *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.foot}">Foot *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.action}">Action *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.footwork}">Footwork</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.alignment}">Alignment</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.turn}">Turn</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.comments}">Technical Comments</label>
                                                 <textarea th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
                                                 <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
-                                                    <span>Show Technical Details</span>
+                                                    <span th:text="#{figures.form.steps.show_technical_details}">Show Technical Details</span>
                                                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='js-mobile-arrow')}"></span>
                                                 </button>
-                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
+                                                <button type="button" aria-label="Remove step" th:attr="aria-label=#{figures.form.steps.remove_step}" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                     <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
@@ -567,7 +567,7 @@
                                 </table>
                             </div>
                             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="LEADER">
-                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Leader Step
+                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> <span th:text="#{figures.form.steps.add_leader_step}">Add Leader Step</span>
                             </button>
                         </div>
 
@@ -578,13 +578,13 @@
                                     <thead class="hidden md:table-header-group">
                                         <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                                             <th class="py-2 pr-2 w-12">#</th>
-                                            <th class="py-2 pr-2 w-20">Timing *</th>
-                                            <th class="py-2 pr-2 w-20">Foot *</th>
-                                            <th class="py-2 pr-2 min-w-[150px]">Action *</th>
-                                            <th class="py-2 pr-2 w-24">Footwork</th>
-                                            <th class="py-2 pr-2 w-24">Alignment</th>
-                                            <th class="py-2 pr-2 w-24">Turn</th>
-                                            <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                                            <th class="py-2 pr-2 w-20" th:text="#{figures.form.steps.th.timing}">Timing *</th>
+                                            <th class="py-2 pr-2 w-20" th:text="#{figures.form.steps.th.foot}">Foot *</th>
+                                            <th class="py-2 pr-2 min-w-[150px]" th:text="#{figures.form.steps.th.action}">Action *</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.footwork}">Footwork</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.alignment}">Alignment</th>
+                                            <th class="py-2 pr-2 w-24" th:text="#{figures.form.steps.th.turn}">Turn</th>
+                                            <th class="py-2 pr-2 min-w-[150px]" th:text="#{figures.form.steps.th.comments}">Comments</th>
                                             <th class="py-2 w-10 text-right"></th>
                                         </tr>
                                     </thead>
@@ -595,45 +595,45 @@
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
                                                 <input type="hidden" class="step-id" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].id'" th:value="${step.id}" />
                                                 <input type="hidden" class="step-role" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].role'" value="FOLLOWER" />
-                                                <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${step.stepNumber}">Step 1</span>
-                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
+                                                <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline" th:text="${#messages.msg('figures.form.steps.step_number', step.stepNumber)}">Step 1</span>
+                                                <button type="button" aria-label="Remove step" th:attr="aria-label=#{figures.form.steps.remove_step}" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden">
                                                     <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.timing}">Timing *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].timing'" th:value="${step.timing}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-1 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.foot}">Foot *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].foot'" th:value="${step.foot}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action *</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.action}">Action *</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].action'" th:value="${step.action}" required class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.footwork}">Footwork</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].footwork'" th:value="${step.footwork}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.alignment}">Alignment</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].alignment'" th:value="${step.alignment}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.turn}">Turn</label>
                                                 <input type="text" th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].amountOfTurn'" th:value="${step.amountOfTurn}" class="form-input text-xs py-1.5" />
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
+                                                <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1" th:text="#{figures.form.steps.th.comments}">Technical Comments</label>
                                                 <textarea th:name="'stepSets[' + ${setStat.index} + '].steps[' + ${stat.index} + '].commentsText'" th:text="${step.commentsText}" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
                                             </td>
                                             <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
                                                 <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
-                                                    <span>Show Technical Details</span>
+                                                    <span th:text="#{figures.form.steps.show_technical_details}">Show Technical Details</span>
                                                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='js-mobile-arrow')}"></span>
                                                 </button>
-                                                <button type="button" aria-label="Remove step" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
+                                                <button type="button" aria-label="Remove step" th:attr="aria-label=#{figures.form.steps.remove_step}" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex">
                                                     <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                                 </button>
                                             </td>
@@ -642,7 +642,7 @@
                                 </table>
                             </div>
                             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
-                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> Add Follower Step
+                                <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span> <span th:text="#{figures.form.steps.add_follower_step}">Add Follower Step</span>
                             </button>
                         </div>
                     </div>
@@ -656,29 +656,29 @@
             <!-- Figure Connections (1/3 Width) -->
             <div class="card p-8 space-y-6 bg-white lg:col-span-1">
                 <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                    <span th:replace="~{fragments/icon :: icon(name='link', size='md', cls='text-primary')}"></span> Connections
+                    <span th:replace="~{fragments/icon :: icon(name='link', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.connections}">Connections</span>
                 </h2>
 
                 <!-- Preceding Figures -->
-                <div th:replace="~{fragments/form :: selectField(path='precedingFigureNames', label='Preceding Figures', options=${availableFigures}, optValue='name', optLabel='name', multiple=true, hint='(Cmd-click to select multiple)', id='precedingFigureNames', cls='text-xs')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='precedingFigureNames', label=#{figures.form.field.preceding_figures}, options=${availableFigures}, optValue='name', optLabel='name', multiple=true, hint=#{figures.form.field.multi_select_hint}, id='precedingFigureNames', cls='text-xs')}"></div>
 
                 <!-- Following Figures -->
-                <div th:replace="~{fragments/form :: selectField(path='followingFigureNames', label='Following Figures', options=${availableFigures}, optValue='name', optLabel='name', multiple=true, hint='(Cmd-click to select multiple)', id='followingFigureNames', cls='text-xs')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='followingFigureNames', label=#{figures.form.field.following_figures}, options=${availableFigures}, optValue='name', optLabel='name', multiple=true, hint=#{figures.form.field.multi_select_hint}, id='followingFigureNames', cls='text-xs')}"></div>
             </div>
 
             <!-- Notes (2/3 Width) -->
             <div class="card p-8 space-y-6 bg-white lg:col-span-2">
                 <h2 class="text-xl font-semibold text-on-surface border-b border-border pb-3 flex items-center gap-2">
-                    <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> Figure Notes
+                    <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> <span th:text="#{figures.form.section.notes}">Figure Notes</span>
                 </h2>
-                <div th:replace="~{fragments/form :: richText(path='notes', label='General Notes', rows=5, placeholder='Add technical details, tips or specific instruction notes here...', id='notes')}"></div>
+                <div th:replace="~{fragments/form :: richText(path='notes', label=#{figures.form.field.notes}, rows=5, placeholder=#{figures.form.field.notes_placeholder}, id='notes')}"></div>
             </div>
         </div>
 
         <!-- Action buttons -->
         <div class="flex justify-end gap-4 mt-10 pt-6 border-t border-border">
-            <a href="/dance-figures" class="btn-outline">Cancel</a>
-            <button type="submit" class="btn-primary">Save Figure</button>
+            <a href="/dance-figures" class="btn-outline" th:text="#{common.cancel}">Cancel</a>
+            <button type="submit" class="btn-primary" th:text="#{figures.form.save}">Save Figure</button>
         </div>
     </form>
 

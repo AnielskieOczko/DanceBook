@@ -1,6 +1,6 @@
 <div th:fragment="comment-list" id="comment-section" class="space-y-6">
     <h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-        <span>Comments</span>
+        <span th:text="#{notes.comments.title}">Comments</span>
         <span class="font-normal text-on-surface-variant" th:text="${comments != null ? #lists.size(comments) : 0}">0</span>
     </h2>
 
@@ -19,9 +19,9 @@
                 <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
             <div class="flex-1">
-                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder='Add a comment...', id='comment-content')}"></div>
+                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder=#{notes.comments.placeholder}, id='comment-content')}"></div>
                 <div class="flex justify-end mt-2">
-                    <button type="submit" class="btn-primary btn-sm">Post comment</button>
+                    <button type="submit" class="btn-primary btn-sm" th:text="#{notes.comments.post}">Post comment</button>
                 </div>
             </div>
         </form>
@@ -32,7 +32,7 @@
         <th:block th:each="c : ${comments}">
             <div th:replace="~{materials/fragments/comments :: comment-item}"></div>
         </th:block>
-        <div th:if="${#lists.isEmpty(comments)}" class="text-sm text-on-surface-variant italic">
+        <div th:if="${#lists.isEmpty(comments)}" class="text-sm text-on-surface-variant italic" th:text="#{notes.comments.empty}">
             No comments yet.
         </div>
     </div>
@@ -46,7 +46,7 @@
         <div class="flex justify-between items-baseline mb-1">
             <div class="flex items-center gap-2">
                 <span class="font-label-sm text-label-sm text-on-surface font-semibold" th:text="${c.author.displayName}">Marcus T.</span>
-                <span th:if="${c.updatedAt != null}" class="text-[10px] text-outline uppercase">Edited</span>
+                <span th:if="${c.updatedAt != null}" class="text-[10px] text-outline uppercase" th:text="#{notes.comments.edited}">Edited</span>
             </div>
             <span class="font-label-sm text-label-sm text-on-surface-variant opacity-50"
                   th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>
@@ -60,14 +60,16 @@
                     hx-target="closest .group"
                     hx-swap="outerHTML"
                     type="button"
-                    class="text-xs font-medium text-on-surface-variant hover:text-on-surface transition-colors">Edit</button>
+                    class="text-xs font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+                    th:text="#{common.edit}">Edit</button>
             <button th:if="${(currentUser != null and currentUser.id == c.author.id) or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
-                    hx-confirm="Delete this comment?"
+                    th:hx-confirm="#{notes.comments.delete_confirm}"
                     type="button"
-                    class="text-xs font-medium text-on-surface-variant hover:text-error transition-colors">Delete</button>
+                    class="text-xs font-medium text-on-surface-variant hover:text-error transition-colors"
+                    th:text="#{common.delete}">Delete</button>
         </div>
     </div>
 </div>
@@ -90,8 +92,9 @@
                         th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
                         hx-target="closest .group"
                         hx-swap="outerHTML"
-                        class="btn-secondary btn-sm">Cancel</button>
-                <button type="submit" class="btn-primary btn-sm">Save</button>
+                        class="btn-secondary btn-sm"
+                        th:text="#{common.cancel}">Cancel</button>
+                <button type="submit" class="btn-primary btn-sm" th:text="#{common.save}">Save</button>
             </div>
         </form>
     </div>

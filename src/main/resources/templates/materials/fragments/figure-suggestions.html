@@ -12,7 +12,7 @@
 
     <div class="flex items-center gap-2">
         <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm', cls='text-primary flex-shrink-0')}"></span>
-        <h3 id="sugg-title" class="m-0 text-sm font-semibold text-on-surface">Suggested from this note</h3>
+        <h3 id="sugg-title" class="m-0 text-sm font-semibold text-on-surface" th:text="#{notes.suggestions.title}">Suggested from this note</h3>
     </div>
 
     <div th:each="s : ${suggestions}" class="flex gap-3 items-start">
@@ -22,7 +22,7 @@
             <span th:if="${s.figure.danceClass != null or s.reason != null}"
                   class="text-[13px] text-on-surface-variant leading-snug">
                 <th:block th:if="${s.figure.danceClass != null}"
-                          th:text="${'Class ' + s.figure.danceClass + '. '}"></th:block><th:block th:if="${s.reason != null}">Note says <q class="text-on-surface" th:text="${s.reason}">quoted phrase</q></th:block>
+                          th:text="#{notes.figures.class_dot(${s.figure.danceClass})}"></th:block><th:block th:if="${s.reason != null}"><th:block th:text="#{notes.suggestions.note_says}">Note says </th:block><q class="text-on-surface" th:text="${s.reason}">quoted phrase</q></th:block>
             </span>
         </div>
         <div class="js-suggestion-action shrink-0">
@@ -35,9 +35,11 @@
                 <button type="submit"
                         class="btn-primary btn-sm flex items-center gap-1"
                         title="Pin figure"
-                        aria-label="Pin figure">
+                        aria-label="Pin figure"
+                        th:title="#{notes.figures.pin}"
+                        th:attr="aria-label=#{notes.figures.pin}">
                     <span th:replace="~{fragments/icon :: icon(name='push_pin', size='sm')}"></span>
-                    <span>Pin</span>
+                    <span th:text="#{notes.picker.pin}">Pin</span>
                 </button>
             </form>
         </div>
@@ -46,7 +48,7 @@
 
 <!-- Empty state: LLM found no clear matches -->
 <div th:fragment="suggestionsEmpty">
-    <div th:replace="~{fragments/alert :: alert(variant='info', text='No figures in the catalog clearly match this note.')}"></div>
+    <div th:replace="~{fragments/alert :: alert(variant='info', text=#{notes.suggestions.empty})}"></div>
 </div>
 
 <!-- Error state: provider failure or access error -->
@@ -63,7 +65,7 @@
             hx-indicator="#figure-suggest-retry-btn"
             hx-disabled-elt="this">
         <span th:replace="~{fragments/icon :: icon(name='refresh', size='sm', cls='text-primary')}"></span>
-        <span>Try again</span>
+        <span th:text="#{common.retry}">Try again</span>
         <span class="htmx-indicator" aria-hidden="true">
             <span th:replace="~{fragments/icon :: icon(name='autorenew', size='sm', cls='animate-spin text-primary')}"></span>
         </span>
