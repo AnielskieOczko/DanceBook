@@ -5,7 +5,7 @@ description: Use when handing implementation work to Google Antigravity (agy) - 
 
 # Delegate an issue to Antigravity (`agy`)
 
-Claude writes the **specification**; `agy` (Gemini 3.8 Flash by default, or Claude Sonnet 4.6 on its separate quota) works out the implementation
+Claude writes the **specification**; `agy` (Gemini 3.8 Flash by default, or Claude Sonnet 5.5 on its separate quota) works out the implementation
 and writes the code. This skill covers spec-writing and the handoff — verification is
 `verify-agy-work`.
 
@@ -206,8 +206,8 @@ the real price of the issue, and the only honest input to "can Pro sustain this"
 | Group | Model | When |
 |---|---|---|
 | Gemini | `gemini-3.8-flash-high` | Default, when the Gemini quota can carry the whole issue |
-| Claude and GPT | `claude-sonnet-4-6` | When the Gemini quota is low (roughly under 20% weekly for a feature-sized issue) |
-| Claude and GPT | `claude-opus-4-6-thinking` | Only for an unusually hard issue, since it uses up that quota fastest |
+| Claude and GPT | `claude-sonnet-5-5-high` | When the Gemini quota is low (roughly under 20% weekly for a feature-sized issue) |
+| Claude and GPT | `claude-opus-5-5-high` | Only for an unusually hard issue, since it uses up that quota fastest |
 
 Pick a group whose quota covers the first run **and** the fix rounds. Then keep the same
 `--model` for every run on the issue, resumes included. The user believes that resuming a
@@ -219,7 +219,7 @@ Write the choice into the clone once it exists (step 2), so a later session resu
 same model:
 
 ```bash
-printf 'claude-sonnet-4-6\n' > ../DanceBook-agy-<N>/.agy-model
+printf 'claude-sonnet-5-5-high\n' > ../DanceBook-agy-<N>/.agy-model
 ```
 
 ### 2. Isolate — a clone, not a worktree
