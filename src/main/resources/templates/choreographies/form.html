@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='choreographies'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${choreographyId == null ? 'New Choreography' : 'Edit Choreography Details'}, subtitle='Set up your choreography metadata. You can add figures to the routine in the next step.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=(${choreographyId == null ? #messages.msg('choreographies.form.title.new') : #messages.msg('choreographies.form.title.edit')}), subtitle=#{choreographies.form.subtitle})}"></div>
 
     <form th:action="@{${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/metadata'}}"
           th:object="${choreographyRequest}" method="post" class="card p-8 space-y-8">
@@ -17,27 +17,27 @@
 
         <div class="space-y-6">
             <!-- Name -->
-            <div th:replace="~{fragments/form :: field(path='name', label='Choreography Name', required=true, placeholder='e.g. Bronze Waltz Routine')}"></div>
+            <div th:replace="~{fragments/form :: field(path='name', label=#{choreographies.form.name_label}, required=true, placeholder=#{choreographies.form.name_placeholder})}"></div>
 
             <!-- Description -->
-            <div th:replace="~{fragments/form :: richText(path='description', label='Description / Notes', placeholder='Add details, target level, or practice focus...', rows=4)}"></div>
+            <div th:replace="~{fragments/form :: richText(path='description', label=#{choreographies.form.description_label}, placeholder=#{choreographies.form.description_placeholder}, rows=4)}"></div>
 
             <!-- Dance Style -->
             <div th:if="${choreographyId != null}">
                 <input type="hidden" name="danceTypeId" th:value="*{danceTypeId}">
-                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...', disabled=true, hint='Dance style cannot be changed after choreography has been created.')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{choreographies.form.dance_style_label}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{choreographies.form.select_dance_style}, disabled=true, hint=#{choreographies.form.dance_style_disabled_hint})}"></div>
             </div>
             <div th:if="${choreographyId == null}">
-                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label='Dance Style', required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder='Select a dance style...')}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{choreographies.form.dance_style_label}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{choreographies.form.select_dance_style})}"></div>
             </div>
         </div>
 
         <hr class="border-outline-variant/30">
 
         <!-- Visibility Toggle -->
-        <div th:replace="~{fragments/form :: toggle(path='isPublic', label='Public Choreography', hint='Visible and cloneable by other dancers')}"></div>
+        <div th:replace="~{fragments/form :: toggle(path='isPublic', label=#{choreographies.form.is_public_label}, hint=#{choreographies.form.is_public_hint})}"></div>
 
-        <div th:replace="~{fragments/button :: submitRow(cancelHref=${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}, submitLabel='Save Details', submitIcon='save')}"></div>
+        <div th:replace="~{fragments/button :: submitRow(cancelHref=${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/edit'}, cancelLabel=#{common.cancel}, submitLabel=#{choreographies.form.save_details}, submitIcon='save')}"></div>
     </form>
 
     <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>

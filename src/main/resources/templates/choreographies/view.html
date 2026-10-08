@@ -55,13 +55,13 @@
             <div class="flex items-center gap-2 mb-2">
                 <a href="/choreographies" class="text-xs text-text-secondary hover:text-primary flex items-center gap-1">
                     <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm')}"></span>
-                    Back to List
+                    <span th:text="#{choreographies.view.back_to_list}">Back to List</span>
                 </a>
             </div>
             <div class="flex items-center gap-3">
                 <h1 class="text-3xl font-heading font-bold text-on-surface" th:text="${choreography.name}">Competition Waltz</h1>
                 <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
-                      th:text="${choreography.danceType != null ? choreography.danceType.name : 'Unknown'}">Waltz</span>
+                      th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
             </div>
         </div>
         
@@ -69,31 +69,31 @@
             <!-- Print button -->
             <button id="printBtn" class="btn-outline btn-sm flex-1 sm:flex-initial justify-center">
                 <span th:replace="~{fragments/icon :: icon(name='print', size='sm')}"></span>
-                <span class="text-xs sm:text-sm">Print / PDF</span>
+                <span class="text-xs sm:text-sm" th:text="#{choreographies.view.print_pdf}">Print / PDF</span>
             </button>
             <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary btn-sm flex-1 sm:flex-initial justify-center">
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                <span class="text-xs sm:text-sm">Build Sequence</span>
+                <span class="text-xs sm:text-sm" th:text="#{choreographies.view.build_sequence}">Build Sequence</span>
             </a>
             <!-- Duplicate & Delete actions -->
             <div class="relative inline-block text-left">
-                <button type="button" class="js-menu-btn btn-outline btn-sm min-w-[44px] min-h-[44px] flex items-center justify-center p-0" aria-label="More actions">
+                <button type="button" class="js-menu-btn btn-outline btn-sm min-w-[44px] min-h-[44px] flex items-center justify-center p-0" aria-label="More actions" th:attr="aria-label=#{choreographies.more_actions}">
                     <span th:replace="~{fragments/icon :: icon(name='more_horiz', size='md')}"></span>
                 </button>
                 <div class="js-menu-dropdown absolute right-0 mt-2 w-44 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
                     <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                        <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span> Edit Details
+                        <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span> <span th:text="#{choreographies.action.edit_details}">Edit Details</span>
                     </a>
                     <form th:action="@{/choreographies/{id}/duplicate(id=${choreography.id})}" method="post">
                         <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> Clone Routine
+                            <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.clone_routine}">Clone Routine</span>
                         </button>
                     </form>
                     <hr class="border-border my-1">
                     <form th:action="@{/choreographies/{id}/delete(id=${choreography.id})}" method="post"
-                          th:data-confirm="'Are you sure you want to delete this choreography?'">
+                          th:data-confirm="#{choreographies.delete_confirm}">
                         <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete Routine
+                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{choreographies.action.delete_routine}">Delete Routine</span>
                         </button>
                     </form>
                 </div>
@@ -109,9 +109,9 @@
             <div class="flex items-center justify-between gap-4">
                 <h2 class="text-2xl font-bold text-on-surface print:text-black" th:text="${choreography.name}">Bronze Waltz Routine</h2>
                 <div class="text-right text-xs text-text-secondary print:text-black">
-                    <span class="block">Owner: <strong th:text="${choreography.owner != null ? choreography.owner.username : 'User'}">Rafal</strong></span>
-                    <span class="block">Dance Style: <strong th:text="${choreography.danceType != null ? choreography.danceType.name : 'Waltz'}">Waltz</strong></span>
-                    <span class="block">Updated: <strong th:text="${#temporals.format(choreography.updatedAt, 'dd MMM yyyy')}">Date</strong></span>
+                    <span class="block"><span th:text="#{choreographies.view.owner}">Owner:</span> <strong th:text="${choreography.owner != null ? choreography.owner.username : #messages.msg('choreographies.view.default_user')}">Rafal</strong></span>
+                    <span class="block"><span th:text="#{choreographies.view.dance_style}">Dance Style:</span> <strong th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</strong></span>
+                    <span class="block"><span th:text="#{choreographies.view.updated}">Updated:</span> <strong th:text="${#temporals.format(choreography.updatedAt, 'dd MMM yyyy')}">Date</strong></span>
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-3">
@@ -123,15 +123,15 @@
                 <details id="lod-color-guide" class="relative group inline-block no-print shrink-0 js-dropdown" th:unless="${#lists.isEmpty(choreography.entries)}">
                     <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-variant hover:bg-surface-warm text-on-surface-variant text-xs font-bold uppercase tracking-wider transition-colors select-none border border-outline-variant/30">
                         <span th:replace="~{fragments/icon :: icon(name='palette', size='sm')}"></span>
-                        Color Guide
+                        <span th:text="#{choreographies.view.color_guide}">Color Guide</span>
                     </summary>
                     <div class="absolute right-0 top-full mt-2 w-48 bg-surface-container rounded-lg shadow-ambient border border-border p-3 z-50">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2 border-b border-border pb-1">Line of Dance</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2 border-b border-border pb-1" th:text="#{choreographies.view.line_of_dance}">Line of Dance</h4>
                         <ul class="space-y-2 text-sm font-medium text-on-surface">
-                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-blue-500 shrink-0 border border-black/10"></span> Long Wall</li>
-                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-emerald-500 shrink-0 border border-black/10"></span> Short Wall</li>
-                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-purple-500 shrink-0 border border-black/10"></span> Diagonal</li>
-                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-rose-500 shrink-0 border border-black/10"></span> Corner</li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-blue-500 shrink-0 border border-black/10"></span> <span th:text="#{choreographies.lod.long_wall}">Long Wall</span></li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-emerald-500 shrink-0 border border-black/10"></span> <span th:text="#{choreographies.lod.short_wall}">Short Wall</span></li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-purple-500 shrink-0 border border-black/10"></span> <span th:text="#{choreographies.lod.diagonal}">Diagonal</span></li>
+                            <li class="flex items-center gap-2.5"><span class="w-3 h-3 rounded-sm bg-rose-500 shrink-0 border border-black/10"></span> <span th:text="#{choreographies.lod.corner}">Corner</span></li>
                         </ul>
                     </div>
                 </details>
@@ -141,8 +141,8 @@
         <!-- Empty state warning -->
         <div th:if="${#lists.isEmpty(choreography.entries)}" class="text-center py-12 text-text-secondary">
             <span th:replace="~{fragments/icon :: icon(name='playlist_add', size='lg', cls='block mb-2 text-outline')}"></span>
-            <p class="font-medium text-base">This choreography doesn't have any figures yet.</p>
-            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary mt-4 inline-flex no-print">Open Builder</a>
+            <p class="font-medium text-base" th:text="#{choreographies.view.empty_text}">This choreography doesn't have any figures yet.</p>
+            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary mt-4 inline-flex no-print" th:text="#{choreographies.view.open_builder}">Open Builder</a>
         </div>
 
         <!-- Routine Timeline Sequence -->
@@ -152,7 +152,7 @@
 
             <!-- Detailed Version (Print Only) -->
             <div class="hidden print:block" style="page-break-before: always;">
-                <h2 class="text-xl font-bold mb-6 text-black border-b border-black pb-2 text-center uppercase tracking-wider">Detailed Sequence Breakdown</h2>
+                <h2 class="text-xl font-bold mb-6 text-black border-b border-black pb-2 text-center uppercase tracking-wider" th:text="#{choreographies.view.detailed_breakdown}">Detailed Sequence Breakdown</h2>
                 <div th:replace="~{:: sequenceTimeline(entries=${choreography.entries}, detailedView=${true})}"></div>
             </div>
         </div>
@@ -201,7 +201,7 @@
                         <div class="col-start-1 row-start-2 md:col-start-2 md:row-start-1 print:col-start-2 print:row-start-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
                             <!-- Man Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
-                                <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Man:</span>
+                                <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.man}">Man:</span>
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getLeaderSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
@@ -211,7 +211,7 @@
                             </div>
                             <!-- Lady Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
-                                <span class="text-[10px] font-bold text-secondary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2">Lady:</span>
+                                <span class="text-[10px] font-bold text-secondary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.lady}">Lady:</span>
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getFollowerSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
@@ -235,7 +235,7 @@
                              class="group mt-3">
                         <summary class="cursor-pointer flex items-center gap-1.5 text-base font-bold text-primary hover:text-primary-focus select-none list-none [&::-webkit-details-marker]:hidden print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
                             <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='transition-transform duration-200 group-open:rotate-90 print:hidden')}"></span>
-                            Details
+                            <span th:text="#{choreographies.view.details}">Details</span>
                         </summary>
                         
                         <div class="mt-4 pl-2 sm:pl-7 space-y-4 ml-2.5" th:classappend="${detailedView == true ? 'print:block print:pl-4' : ''}">
@@ -243,7 +243,7 @@
                             <div class="mb-2 print:hidden" th:if="${entry.danceFigure != null}">
                                 <a th:href="@{/dance-figures/{id}(id=${entry.danceFigure.id})}" class="text-xs font-bold text-primary hover:text-primary-focus flex items-center gap-1 w-fit transition-colors bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
                                     <span th:replace="~{fragments/icon :: icon(name='menu_book', size='sm')}"></span>
-                                    View Figure in Syllabus
+                                    <span th:text="#{choreographies.view.view_figure_in_syllabus}">View Figure in Syllabus</span>
                                 </a>
                             </div>
 
@@ -279,17 +279,17 @@
                                                  class="group/tech mt-2 text-sm">
                                             <summary class="cursor-pointer text-text-secondary hover:text-primary flex items-center gap-1 list-none [&::-webkit-details-marker]:hidden font-semibold print:text-black" th:classappend="${detailedView == true ? 'print:hidden' : ''}">
                                                 <span th:replace="~{fragments/icon :: icon(name='arrow_right', size='sm', cls='transition-transform group-open/tech:rotate-90 print:hidden')}"></span>
-                                                Technical details
+                                                <span th:text="#{choreographies.view.technical_details}">Technical details</span>
                                             </summary>
                                             <div class="pl-4 mt-2 space-y-1.5 text-text-secondary ml-1.5 py-1 print:text-black">
                                                 <div th:if="${!#strings.isEmpty(step.footwork) && step.footwork != '-'}">
-                                                    <span class="font-bold">Footwork:</span> <span th:text="${step.footwork}">HT</span>
+                                                    <span class="font-bold" th:text="#{choreographies.view.footwork}">Footwork:</span> <span th:text="${step.footwork}">HT</span>
                                                 </div>
                                                 <div th:if="${!#strings.isEmpty(step.alignment) && step.alignment != '-'}">
-                                                    <span class="font-bold">Alignment:</span> <span th:text="${step.alignment}">LOD</span>
+                                                    <span class="font-bold" th:text="#{choreographies.view.alignment}">Alignment:</span> <span th:text="${step.alignment}">LOD</span>
                                                 </div>
                                                 <div th:if="${!#strings.isEmpty(step.amountOfTurn) && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0'}">
-                                                    <span class="font-bold">Turn:</span> <span th:text="${step.amountOfTurn}">1/4 L</span>
+                                                    <span class="font-bold" th:text="#{choreographies.view.turn}">Turn:</span> <span th:text="${step.amountOfTurn}">1/4 L</span>
                                                 </div>
                                                 <ul th:if="${!#lists.isEmpty(step.comments)}" class="list-disc pl-4 mt-2 space-y-1.5">
                                                     <li th:each="c : ${step.comments}" th:text="${c.commentText}"></li>

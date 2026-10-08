@@ -33,27 +33,27 @@
             <div class="flex items-center gap-2 mb-2">
                 <a href="/choreographies" class="text-xs text-text-secondary hover:text-primary flex items-center gap-1">
                     <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm')}"></span>
-                    Back to Choreographies
+                    <span th:text="#{choreographies.builder.back}">Back to Choreographies</span>
                 </a>
             </div>
             <div class="flex items-center gap-3">
                 <h1 class="text-3xl font-heading font-bold text-on-surface" th:text="${choreography.name}">Bronze Waltz</h1>
                 <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
-                      th:text="${choreography.danceType != null ? choreography.danceType.name : 'Unknown'}">Waltz</span>
+                      th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
             </div>
             <th:block th:if="${choreography.description != null}">
                 <div th:replace="~{fragments/rich-text :: content(value=${choreography.description}, cls='text-sm text-on-surface-variant mt-1')}"></div>
             </th:block>
-            <p th:if="${choreography.description == null}" class="text-sm text-on-surface-variant mt-1">No description. Click Edit Details to add one.</p>
+            <p th:if="${choreography.description == null}" class="text-sm text-on-surface-variant mt-1" th:text="#{choreographies.builder.no_description}">No description. Click Edit Details to add one.</p>
         </div>
         <div class="flex items-center gap-3">
             <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="btn-outline">
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
-                Edit Details
+                <span th:text="#{choreographies.action.edit_details}">Edit Details</span>
             </a>
             <a th:href="@{/choreographies/{id}(id=${choreography.id})}" class="btn-primary">
                 <span th:replace="~{fragments/icon :: icon(name='visibility', size='md')}"></span>
-                View Routine
+                <span th:text="#{choreographies.builder.view_routine}">View Routine</span>
             </a>
         </div>
     </div>
@@ -66,7 +66,7 @@
             <div class="bg-surface rounded-card border border-border p-6 shadow-xs">
                 <h2 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
                     <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-primary')}"></span>
-                    Routine Sequence
+                    <span th:text="#{choreographies.builder.sequence_title}">Routine Sequence</span>
                 </h2>
                 
                 <div id="sequence-timeline-container" class="relative">
@@ -84,8 +84,8 @@
                             <div class="empty-state-icon">
                                 <span th:replace="~{fragments/icon :: icon(name='playlist_add', size='lg', cls='text-outline')}"></span>
                             </div>
-                            <h3 class="empty-state-title">Sequence is empty</h3>
-                            <p class="empty-state-text">Start building by choosing figures from the list on the right or adding a section divider.</p>
+                            <h3 class="empty-state-title" th:text="#{choreographies.builder.empty_title}">Sequence is empty</h3>
+                            <p class="empty-state-text" th:text="#{choreographies.builder.empty_text}">Start building by choosing figures from the list on the right or adding a section divider.</p>
                         </div>
 
                         <!-- Draggable sequence entry cards -->
@@ -99,27 +99,29 @@
                                 <!-- Type 1: SECTION LABEL -->
                                 <div th:if="${entry.entryType.name() == 'SECTION_LABEL'}"
                                      class="flex items-center gap-3 py-3 my-5 group/section">
-                                    <div class="h-px bg-border flex-1"></div>
-                                    <div class="flex items-center gap-2 bg-surface px-3">
-                                        <span th:replace="~{fragments/icon :: icon(name='drag_indicator', size='sm', cls='text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors')}"></span>
-                                        <input type="text" th:value="${entry.sectionLabel}"
-                                               name="sectionLabel"
-                                               placeholder="e.g. Opening Sequence"
-                                               th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
-                                               hx-trigger="change"
-                                               hx-target="#sequence-timeline-container"
-                                               class="bg-surface-warm font-heading font-semibold text-xs uppercase tracking-wider text-center text-primary px-3 py-1.5 rounded border border-transparent focus:border-primary-container focus:bg-white outline-hidden w-48 sm:w-64" />
-                                        
-                                        <button type="button"
-                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
+                                     <div class="h-px bg-border flex-1"></div>
+                                     <div class="flex items-center gap-2 bg-surface px-3">
+                                         <span th:replace="~{fragments/icon :: icon(name='drag_indicator', size='sm', cls='text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors')}"></span>
+                                         <input type="text" th:value="${entry.sectionLabel}"
+                                                name="sectionLabel"
+                                                placeholder="e.g. Opening Sequence"
+                                                th:attr="placeholder=#{choreographies.builder.section_placeholder}"
+                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                                hx-trigger="change"
                                                 hx-target="#sequence-timeline-container"
-                                                class="opacity-0 group-hover/section:opacity-100 px-2 py-1 text-text-secondary hover:text-danger transition-all duration-200 rounded hover:bg-surface-warm flex items-center gap-1 text-xs"
-                                                title="Delete section">
-                                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
-                                            <span>Delete</span>
-                                        </button>
-                                    </div>
-                                    <div class="h-px bg-border flex-1"></div>
+                                                class="bg-surface-warm font-heading font-semibold text-xs uppercase tracking-wider text-center text-primary px-3 py-1.5 rounded border border-transparent focus:border-primary-container focus:bg-white outline-hidden w-48 sm:w-64" />
+                                         
+                                         <button type="button"
+                                                 th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
+                                                 hx-target="#sequence-timeline-container"
+                                                 class="opacity-0 group-hover/section:opacity-100 px-2 py-1 text-text-secondary hover:text-danger transition-all duration-200 rounded hover:bg-surface-warm flex items-center gap-1 text-xs"
+                                                 title="Delete section"
+                                                 th:attr="title=#{choreographies.builder.delete_section_title}">
+                                             <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                                             <span th:text="#{common.delete}">Delete</span>
+                                         </button>
+                                     </div>
+                                     <div class="h-px bg-border flex-1"></div>
                                 </div>
 
                                 <!-- Type 2: FIGURE -->
@@ -130,62 +132,64 @@
                                                               entry.lineIndicator?.name() == 'CORNER' ? 'border-l-4 border-rose-500' : 'border-l border-border'}"
                                      th:classappend="${indicatorClass}"
                                      class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white rounded-lg shadow-xs border hover:shadow-md transition-shadow group/card">
-                                    
-                                    <div class="flex items-start gap-3 flex-1 min-w-0">
-                                        <!-- Drag handle -->
-                                        <span th:replace="~{fragments/icon :: icon(name='drag_indicator', size='md', cls='text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors mt-0.5 shrink-0')}"></span>
-                                        
-                                        <!-- Content -->
-                                        <div class="space-y-1.5 flex-1 min-w-0">
-                                            <div class="flex flex-wrap items-center gap-2">
-                                                <span class="figure-number font-bold text-on-surface text-base"></span>
-                                                <span class="font-bold text-on-surface text-base" th:text="${entry.danceFigure?.name}">Natural Turn</span>
-                                                <span th:if="${entry.danceFigure?.danceClass != null}"
-                                                      class="badge bg-secondary-container text-on-surface text-[9px] font-semibold border border-outline-variant/30"
-                                                      th:text="${entry.danceFigure.danceClass.name()}">F</span>
-                                                <span th:if="${entry.danceFigure?.alternativeTiming != null}"
-                                                      class="badge bg-surface-warm text-text-secondary text-[9px]"
-                                                      th:text="${entry.danceFigure.alternativeTiming}">123</span>
-                                            </div>
-                                            <!-- Inline note input -->
-                                            <div class="flex items-center gap-1.5 max-w-[32rem]">
-                                                <span th:replace="~{fragments/icon :: icon(name='notes', size='sm', cls='text-text-secondary')}"></span>
-                                                <input type="text" name="notes" th:value="${entry.notes}"
-                                                       maxlength="500"
-                                                       placeholder="Add practice details..."
-                                                       th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
-                                                       hx-trigger="change"
-                                                       hx-target="#sequence-timeline-container"
-                                                       class="bg-transparent text-xs text-text-secondary placeholder:text-outline w-full border-b border-transparent focus:border-outline-variant/30 py-0.5 outline-hidden" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                     
+                                     <div class="flex items-start gap-3 flex-1 min-w-0">
+                                         <!-- Drag handle -->
+                                         <span th:replace="~{fragments/icon :: icon(name='drag_indicator', size='md', cls='text-text-secondary cursor-grab active:cursor-grabbing hover:text-primary transition-colors mt-0.5 shrink-0')}"></span>
+                                         
+                                         <!-- Content -->
+                                         <div class="space-y-1.5 flex-1 min-w-0">
+                                             <div class="flex flex-wrap items-center gap-2">
+                                                 <span class="figure-number font-bold text-on-surface text-base"></span>
+                                                 <span class="font-bold text-on-surface text-base" th:text="${entry.danceFigure?.name}">Natural Turn</span>
+                                                 <span th:if="${entry.danceFigure?.danceClass != null}"
+                                                       class="badge bg-secondary-container text-on-surface text-[9px] font-semibold border border-outline-variant/30"
+                                                       th:text="${entry.danceFigure.danceClass.name()}">F</span>
+                                                 <span th:if="${entry.danceFigure?.alternativeTiming != null}"
+                                                       class="badge bg-surface-warm text-text-secondary text-[9px]"
+                                                       th:text="${entry.danceFigure.alternativeTiming}">123</span>
+                                             </div>
+                                             <!-- Inline note input -->
+                                             <div class="flex items-center gap-1.5 max-w-[32rem]">
+                                                 <span th:replace="~{fragments/icon :: icon(name='notes', size='sm', cls='text-text-secondary')}"></span>
+                                                 <input type="text" name="notes" th:value="${entry.notes}"
+                                                        maxlength="500"
+                                                        placeholder="Add practice details..."
+                                                        th:attr="placeholder=#{choreographies.builder.notes_placeholder}"
+                                                        th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                                        hx-trigger="change"
+                                                        hx-target="#sequence-timeline-container"
+                                                        class="bg-transparent text-xs text-text-secondary placeholder:text-outline w-full border-b border-transparent focus:border-outline-variant/30 py-0.5 outline-hidden" />
+                                             </div>
+                                         </div>
+                                     </div>
 
-                                    <!-- Controls -->
-                                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
-                                        <!-- Line Indicator Selector -->
-                                        <select name="lineIndicator"
-                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
-                                                hx-trigger="change"
-                                                hx-target="#sequence-timeline-container"
-                                                class="form-select text-xs py-1.5 px-3 rounded bg-surface border border-outline-variant/30 text-text-secondary hover:text-text-primary transition-all w-[130px] shrink-0 font-medium">
-                                            <option value="">Line Indicator</option>
-                                            <option th:each="indicator : ${lineIndicators}"
-                                                    th:value="${indicator.name()}"
-                                                    th:selected="${entry.lineIndicator == indicator}"
-                                                    th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(indicator.name(), '_', ' ')))}">Short Wall</option>
-                                        </select>
-                                        
-                                        <!-- Delete button -->
-                                        <button type="button"
-                                                th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
-                                                hx-target="#sequence-timeline-container"
-                                                class="flex items-center gap-1 px-2 py-1.5 text-text-secondary hover:text-danger hover:bg-red-50 transition-colors rounded shrink-0 text-xs min-h-[44px]"
-                                                title="Delete entry">
-                                            <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
-                                            <span>Delete</span>
-                                        </button>
-                                    </div>
+                                     <!-- Controls -->
+                                     <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
+                                         <!-- Line Indicator Selector -->
+                                         <select name="lineIndicator"
+                                                 th:hx-post="@{/choreographies/{id}/entries/{entryId}(id=${choreography.id}, entryId=${entry.id})}"
+                                                 hx-trigger="change"
+                                                 hx-target="#sequence-timeline-container"
+                                                 class="form-select text-xs py-1.5 px-3 rounded bg-surface border border-outline-variant/30 text-text-secondary hover:text-text-primary transition-all w-[130px] shrink-0 font-medium">
+                                             <option value="" th:text="#{choreographies.builder.line_indicator_placeholder}">Line Indicator</option>
+                                             <option th:each="indicator : ${lineIndicators}"
+                                                     th:value="${indicator.name()}"
+                                                     th:selected="${entry.lineIndicator == indicator}"
+                                                     th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(indicator.name(), '_', ' ')))}">Short Wall</option>
+                                         </select>
+                                         
+                                         <!-- Delete button -->
+                                         <button type="button"
+                                                 th:hx-post="@{/choreographies/{id}/entries/{entryId}/delete(id=${choreography.id}, entryId=${entry.id})}"
+                                                 hx-target="#sequence-timeline-container"
+                                                 class="flex items-center gap-1 px-2 py-1.5 text-text-secondary hover:text-danger hover:bg-red-50 transition-colors rounded shrink-0 text-xs min-h-[44px]"
+                                                 title="Delete entry"
+                                                 th:attr="title=#{choreographies.builder.delete_entry_title}">
+                                             <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+                                             <span th:text="#{common.delete}">Delete</span>
+                                         </button>
+                                     </div>
 
                                 </div>
 
@@ -199,10 +203,10 @@
                 <div class="flex items-center gap-3 mt-6">
                     <form th:hx-post="@{/choreographies/{id}/entries(id=${choreography.id})}" hx-target="#sequence-timeline-container" class="inline flex-1">
                         <input type="hidden" name="entryType" value="SECTION_LABEL" />
-                        <input type="hidden" name="sectionLabel" value="New Section" />
+                        <input type="hidden" name="sectionLabel" value="New Section" th:value="#{choreographies.builder.default_section_name}" />
                         <button type="submit" class="w-full btn-outline flex items-center justify-center gap-2 py-3 rounded-lg border border-dashed border-primary-container hover:bg-surface-container-high transition-colors">
                             <span th:replace="~{fragments/icon :: icon(name='add_circle', size='md')}"></span>
-                            Add Section Divider
+                            <span th:text="#{choreographies.builder.add_section_divider}">Add Section Divider</span>
                         </button>
                     </form>
                 </div>
@@ -215,9 +219,9 @@
             <div class="bg-surface rounded-card border border-border p-6 shadow-xs sticky top-[96px]">
                 <h2 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2">
                     <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', cls='text-primary')}"></span>
-                    Figure Selector
+                    <span th:text="#{choreographies.builder.figure_selector}">Figure Selector</span>
                 </h2>
-                <p class="text-xs text-text-secondary mb-4">Click the "+" icon next to a figure to add it to your routine sequence.</p>
+                <p class="text-xs text-text-secondary mb-4" th:text="#{choreographies.builder.figure_selector_hint}">Click the "+" icon next to a figure to add it to your routine sequence.</p>
 
                 <!-- Search Input -->
                 <div class="relative group mb-6">
@@ -225,6 +229,7 @@
                     <input type="text" name="query"
                            class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2.5 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
                            placeholder="Search figures..."
+                           th:attr="placeholder=#{choreographies.builder.search_placeholder}"
                            th:hx-get="@{/choreographies/{id}/figures-search(id=${choreography.id})}"
                            hx-trigger="keyup changed delay:250ms"
                            hx-target="#figures-list"
@@ -235,7 +240,7 @@
                 <div id="figures-list" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 scrollbar-thin">
                     <div th:fragment="figuresList" class="space-y-2">
                         
-                        <div th:if="${#lists.isEmpty(figures)}" class="text-center py-6 text-sm text-text-secondary">
+                        <div th:if="${#lists.isEmpty(figures)}" class="text-center py-6 text-sm text-text-secondary" th:text="#{choreographies.builder.no_figures}">
                             No figures found for this style.
                         </div>
 
@@ -251,7 +256,7 @@
                                           th:text="${fig.danceClass.name()}">F</span>
                                     <span th:if="${fig.alternativeTiming != null}"
                                           class="text-[10px] text-text-secondary"
-                                          th:text="'Timing: ' + ${fig.alternativeTiming}">123</span>
+                                          th:text="${#messages.msg('choreographies.builder.timing', fig.alternativeTiming)}">123</span>
                                 </div>
                             </div>
 
@@ -259,7 +264,7 @@
                             <form th:hx-post="@{/choreographies/{id}/entries(id=${choreography.id})}" hx-target="#sequence-timeline-container" class="shrink-0">
                                 <input type="hidden" name="entryType" value="FIGURE" />
                                 <input type="hidden" name="danceFigureId" th:value="${fig.id}" />
-                                <button type="submit" class="btn-icon min-w-[44px] min-h-[44px] rounded-full bg-primary-container/10 hover:bg-primary-container text-primary transition-all flex items-center justify-center" aria-label="Add figure" title="Add figure">
+                                <button type="submit" class="btn-icon min-w-[44px] min-h-[44px] rounded-full bg-primary-container/10 hover:bg-primary-container text-primary transition-all flex items-center justify-center" aria-label="Add figure" title="Add figure" th:attr="aria-label=#{choreographies.builder.add_figure}, title=#{choreographies.builder.add_figure}">
                                     <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
                                 </button>
                             </form>
@@ -271,7 +276,7 @@
 
                 <div class="border-t border-border mt-6 pt-4 text-center">
                     <a href="/dance-figures" class="text-xs font-semibold text-primary hover:text-primary-hover flex items-center justify-center gap-1">
-                        View global figures list
+                        <span th:text="#{choreographies.builder.view_global_figures}">View global figures list</span>
                         <span th:replace="~{fragments/icon :: icon(name='arrow_forward', size='sm')}"></span>
                     </a>
                 </div>
