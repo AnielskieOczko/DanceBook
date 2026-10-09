@@ -44,13 +44,13 @@ const DriveUpload = {
 
             if (!sessionRes.ok) {
                 const errText = await sessionRes.text();
-                throw new Error('Failed to create upload session: ' + errText);
+                throw new Error(I18n.t('js.drive.error.create_session', errText));
             }
 
             const sessionData = await sessionRes.json();
             const uploadUrl = sessionData.uploadUrl;
             if (!uploadUrl) {
-                throw new Error('No upload URL returned by server');
+                throw new Error(I18n.t('js.drive.error.no_upload_url'));
             }
 
             // 2. Upload the file directly to Google Drive using the pre-auth URL
@@ -76,22 +76,22 @@ const DriveUpload = {
                             body: JSON.stringify({ fileId: fileId })
                         });
                         if (!finRes.ok) {
-                            onError('Finalize upload failed with status: ' + finRes.status);
+                            onError(I18n.t('js.drive.error.finalize_status', finRes.status));
                             return;
                         }
                     } catch (permErr) {
-                        onError('Could not finalize upload: ' + permErr.message);
+                        onError(I18n.t('js.drive.error.finalize_failed', permErr.message));
                         return;
                     }
 
                     onSuccess(fileId);
                 } else {
-                    onError('Upload failed with status: ' + xhr.status);
+                    onError(I18n.t('js.drive.error.upload_status', xhr.status));
                 }
             });
 
             xhr.addEventListener('error', () => {
-                onError('Upload failed due to a network error');
+                onError(I18n.t('js.drive.error.network'));
             });
 
             xhr.open('PUT', uploadUrl);

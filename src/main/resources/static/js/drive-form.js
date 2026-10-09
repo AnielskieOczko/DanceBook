@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Disable buttons during upload
       uploadBtn.disabled = true;
-      uploadBtn.textContent = 'Uploading...';
+      uploadBtn.textContent = I18n.t('notes.form.drive.uploading');
       saveBtn.disabled = true;
       progressContainer.classList.remove('hidden');
       uploadStatus.classList.add('hidden');
@@ -47,35 +47,35 @@ document.addEventListener('DOMContentLoaded', function() {
           progressBar.style.width = percent + '%';
           progressPercent.textContent = percent + '%';
           if (percent >= 100) {
-            progressLabel.textContent = 'Processing...';
+            progressLabel.textContent = I18n.t('js.drive.processing');
           }
         },
         // onSuccess
         function(fileId) {
           document.getElementById('driveFileId').value = fileId;
           progressBar.style.width = '100%';
-          progressLabel.textContent = 'Complete!';
+          progressLabel.textContent = I18n.t('js.drive.complete');
           progressBar.classList.remove('bg-primary');
           progressBar.classList.add('bg-success');
 
           uploadStatus.className = 'mt-3 text-sm rounded-button p-3 bg-success-soft text-success border border-success/30';
-          uploadStatus.innerHTML = '✅ Video uploaded successfully! File ID: <code class="font-mono text-xs">' + fileId + '</code>';
+          uploadStatus.innerHTML = I18n.t('js.drive.success', fileId);
           uploadStatus.classList.remove('hidden');
 
           document.getElementById('currentVideo').classList.remove('hidden');
           document.getElementById('currentVideoId').textContent = fileId;
 
-          uploadBtn.textContent = 'Upload';
+          uploadBtn.textContent = I18n.t('notes.form.drive.upload');
           saveBtn.disabled = false;
         },
         // onError
         function(error) {
           uploadStatus.className = 'mt-3 text-sm rounded-button p-3 bg-danger-soft text-danger border border-danger/30';
-          uploadStatus.textContent = '❌ Upload failed: ' + error;
+          uploadStatus.textContent = I18n.t('js.drive.error', error);
           uploadStatus.classList.remove('hidden');
 
           uploadBtn.disabled = false;
-          uploadBtn.textContent = 'Retry';
+          uploadBtn.textContent = I18n.t('common.retry');
           saveBtn.disabled = false;
           progressContainer.classList.add('hidden');
         }
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Remove video button handler
     document.getElementById('removeVideoBtn').addEventListener('click', function() {
-      if (confirm("Are you sure you want to unlink this video?\n\n⚠️ WARNING: Once you click 'Save Material', this video file will be PERMANENTLY deleted from your Google Drive storage!")) {
+      if (confirm(I18n.t('js.drive.confirm_unlink'))) {
         // Clear the form value immediately
         document.getElementById('driveFileId').value = '';
 
@@ -95,13 +95,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('uploadStatus').classList.add('hidden');
 
         // Reset the file picker
-        document.getElementById('fileLabel').innerHTML = 'Click to select a video file...';
+        document.getElementById('fileLabel').innerHTML = I18n.t('notes.form.drive.select_file');
         document.getElementById('fileLabel').classList.remove('border-primary', 'bg-surface', 'text-text-primary', 'font-medium');
         document.getElementById('videoFile').value = '';
 
         // Disable upload button until a new file is picked
         document.getElementById('uploadBtn').disabled = true;
-        document.getElementById('uploadBtn').textContent = 'Upload';
+        uploadBtn.textContent = I18n.t('notes.form.drive.upload');
 
         // Reset progress bar
         document.getElementById('progressContainer').classList.add('hidden');

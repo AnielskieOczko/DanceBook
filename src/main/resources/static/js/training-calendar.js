@@ -175,7 +175,14 @@
         // Emptied on purpose: the stylesheet draws real chevrons with Material Symbols, which
         // font-src allows, where FullCalendar's own icon font is a blocked data: URI.
         buttonIcons: false,
-        buttonText: { today: 'Today', month: 'Month', week: 'Week', list: 'List', prev: '', next: '' },
+        buttonText: {
+            today: I18n.t('js.calendar.today'),
+            month: I18n.t('js.calendar.month'),
+            week: I18n.t('js.calendar.week'),
+            list: I18n.t('js.calendar.list'),
+            prev: '',
+            next: ''
+        },
         views: {
             dayGridMonth: { dayMaxEvents: 2 }
         },
@@ -186,7 +193,7 @@
                 encodeURIComponent(fetchInfo.startStr) + '&end=' + encodeURIComponent(fetchInfo.endStr);
             fetch(url, { headers: { 'Accept': 'application/json' } })
                 .then(function (r) {
-                    if (!r.ok) throw new Error('Could not load sessions');
+                    if (!r.ok) throw new Error(I18n.t('js.calendar.error.load'));
                     return r.json();
                 })
                 .then(success)
@@ -247,7 +254,7 @@
         }).then(function (response) {
             if (response.ok) return null;
             return response.json().then(function (data) {
-                throw new Error(data.error || 'Could not move this session');
+                throw new Error(data.error || I18n.t('js.calendar.error.move'));
             });
         }).catch(function (e) {
             showError(e.message);
@@ -336,7 +343,7 @@
             if (agendaTotal) agendaTotal.textContent = '';
             const empty = document.createElement('p');
             empty.className = 'tc-agenda-empty';
-            empty.textContent = 'Nothing scheduled. Tap + to add a session.';
+            empty.textContent = I18n.t('js.calendar.agenda.empty');
             agendaList.appendChild(empty);
             return;
         }
@@ -345,8 +352,9 @@
             const total = events.reduce(function (sum, event) {
                 return sum + (event.end ? minutesBetween(event.start, event.end) : 0);
             }, 0);
-            agendaTotal.textContent = events.length + (events.length === 1 ? ' session · ' : ' sessions · ') +
-                durationLabel(total);
+            agendaTotal.textContent = events.length === 1
+                ? I18n.t('js.calendar.agenda.total_one', durationLabel(total))
+                : I18n.t('js.calendar.agenda.total_many', [events.length, durationLabel(total)]);
         }
 
         events.forEach(function (event) {
@@ -413,7 +421,7 @@
 
         fetch(url, { headers: { 'Accept': 'text/html' } })
             .then(function (r) {
-                if (!r.ok) throw new Error('Could not open the quick create form');
+                if (!r.ok) throw new Error(I18n.t('js.calendar.error.quick_create'));
                 return r.text();
             })
             .then(function (html) {

@@ -28,6 +28,16 @@ class NavbarAdvice(
     @org.springframework.beans.factory.annotation.Autowired(required = false)
     var assistantNavSupport: com.jankowski.rafal.dancebook.service.AssistantNavSupport? = null
 
+    /** Optional: absent in `@WebMvcTest` slices without the service bean. */
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    var i18nJsBundleService: com.jankowski.rafal.dancebook.service.I18nJsBundleService? = null
+
+    @ModelAttribute("i18nBundle")
+    fun i18nBundle(): String {
+        val locale = org.springframework.context.i18n.LocaleContextHolder.getLocale()
+        return i18nJsBundleService?.getBundleJson(locale) ?: "{}"
+    }
+
     @ModelAttribute("assistantNav")
     fun assistantNav(request: HttpServletRequest): Any? {
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication

@@ -1,3 +1,48 @@
+/**
+ * Client-side I18n dictionary and interpolation helper.
+ * Reads the localized bundle injected into #i18n-bundle data-messages.
+ */
+const I18n = (function() {
+    let messages = {};
+
+    function init() {
+        const el = document.getElementById('i18n-bundle');
+        if (el) {
+            try {
+                const raw = el.getAttribute('data-messages');
+                if (raw) messages = JSON.parse(raw);
+            } catch (e) {
+                console.error('Failed to parse i18n bundle', e);
+            }
+        }
+    }
+
+    init();
+    document.addEventListener('DOMContentLoaded', init);
+
+    function t(key, params) {
+        if (!key) return '';
+        let str = Object.prototype.hasOwnProperty.call(messages, key) ? messages[key] : key;
+        if (params !== undefined && params !== null) {
+            if (typeof params === 'object' && !Array.isArray(params)) {
+                Object.keys(params).forEach(function(k) {
+                    str = str.split('{' + k + '}').join(params[k]);
+                });
+            } else if (Array.isArray(params)) {
+                params.forEach(function(val, idx) {
+                    str = str.split('{' + idx + '}').join(val);
+                });
+            } else {
+                str = str.split('{0}').join(params);
+            }
+        }
+        return str;
+    }
+
+    return { init, t };
+})();
+window.I18n = I18n;
+
 document.addEventListener('htmx:configRequest', function(event) {
     const tokenMeta = document.querySelector('meta[name="_csrf"]');
     const headerMeta = document.querySelector('meta[name="_csrf_header"]');
@@ -92,7 +137,7 @@ function updateBulkActionBar() {
     const countEl = document.getElementById('bulkSelectedCount');
     if (bar && countEl) {
         if (count > 0) {
-            countEl.textContent = count === 1 ? '1 selected' : `${count} selected`;
+            countEl.textContent = count === 1 ? I18n.t('js.main.selected_one') : I18n.t('js.main.selected_many', count);
             bar.classList.remove('hidden');
             bar.classList.add('flex');
         } else {
@@ -386,9 +431,9 @@ document.addEventListener('click', function(event) {
         if (startInput) startInput.value = startTime;
         if (endInput) endInput.value = endTime;
 
-        if (headerText) headerText.textContent = "Edit Figure in Sequence";
+        if (headerText) headerText.textContent = I18n.t('js.sequence.edit_figure');
         if (headerIcon) headerIcon.textContent = "edit";
-        if (submitBtn) submitBtn.textContent = "Update Figure";
+        if (submitBtn) submitBtn.textContent = I18n.t('js.sequence.update_figure');
         if (cancelBtn) cancelBtn.classList.remove('hidden');
 
         if (formContainer) {
@@ -415,9 +460,9 @@ document.addEventListener('click', function(event) {
         if (startInput) startInput.value = '0';
         if (endInput) endInput.value = '0';
 
-        if (headerText) headerText.textContent = "Add Figure to Sequence";
+        if (headerText) headerText.textContent = I18n.t('js.sequence.add_figure');
         if (headerIcon) headerIcon.textContent = "add_circle";
-        if (submitBtn) submitBtn.textContent = "Save to Sequence";
+        if (submitBtn) submitBtn.textContent = I18n.t('js.sequence.save_figure');
         if (cancelBtn) cancelBtn.classList.add('hidden');
         return;
     }
@@ -658,7 +703,8 @@ function renderIcon(name, options = {}) {
  * Replaces any existing message so only one message is displayed at a time.
  * @param {string} message - Error message to display
  */
-function showErrorAlert(message) {
+function showErrorAlert(message, params) {
+    const text = I18n.t(message, params);
     let container = document.getElementById('alert-container');
     if (!container) {
         container = document.createElement('div');
@@ -671,13 +717,14 @@ function showErrorAlert(message) {
             document.body.insertBefore(container, document.body.firstChild);
         }
     }
+    const dismissLabel = I18n.t('common.dismiss');
     container.innerHTML = `
 <div role="alert" class="p-4 rounded-md border flex items-start gap-3 bg-error/10 border-error text-error">
     ${renderIcon('error', { size: 'md' })}
     <div class="flex-1">
-        <p class="text-sm font-normal">${message}</p>
+        <p class="text-sm font-normal">${text}</p>
     </div>
-    <button type="button" class="js-dismiss-alert shrink-0 p-1 hover:opacity-80 transition-opacity" aria-label="Dismiss">
+    <button type="button" class="js-dismiss-alert shrink-0 p-1 hover:opacity-80 transition-opacity" aria-label="${dismissLabel}">
         ${renderIcon('close', { size: 'sm' })}
     </button>
 </div>`;
@@ -687,12 +734,15 @@ window.showErrorAlert = showErrorAlert;
 // Surface background HTMX failures in the alert container
 document.addEventListener('htmx:responseError', function(event) {
     const status = event.detail.xhr ? event.detail.xhr.status : null;
-    const message = status ? `Request failed (${status}). Please try again.` : 'An unexpected error occurred. Please try again.';
-    showErrorAlert(message);
+    if (status) {
+        showErrorAlert('js.error.request_failed_status', status);
+    } else {
+        showErrorAlert('js.error.unexpected');
+    }
 });
 
 document.addEventListener('htmx:sendError', function() {
-    showErrorAlert('Network error. Please check your connection and try again.');
+    showErrorAlert('js.error.network');
 });
 
 // ════════════════════════════════════════════════

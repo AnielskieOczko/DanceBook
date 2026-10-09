@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (tab) {
                     const display = tab.querySelector('.js-tab-name-display');
                     if (display) {
-                        display.textContent = nameInput.value.trim() || `Set ${parseInt(idx) + 1}`;
+                        display.textContent = nameInput.value.trim() || I18n.t('js.figure.set_name', parseInt(idx) + 1);
                     }
                 }
             }
@@ -155,10 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (arrow && label) {
                     if (isHidden) {
                         arrow.classList.add('rotate-180');
-                        label.textContent = 'Hide Technical Details';
+                        label.textContent = I18n.t('js.figure.hide_technical_details');
                     } else {
                         arrow.classList.remove('rotate-180');
-                        label.textContent = 'Show Technical Details';
+                        label.textContent = I18n.t('figures.form.steps.show_technical_details');
                     }
                 }
             }
@@ -309,7 +309,7 @@ function addStepSet() {
     const setIdx = document.querySelectorAll('.js-step-set-panel').length;
 
     // Prompt user for new combination name (pre-populated with Default)
-    const rawName = prompt("Enter a name for the new step combination:", `Combination ${setIdx + 1}`);
+    const rawName = prompt(I18n.t('js.figure.combination_prompt'), I18n.t('js.figure.combination_default_name', setIdx + 1));
     const setName = rawName ? rawName.trim() : "";
     if (setName === "") return;
 
@@ -332,9 +332,9 @@ function addStepSet() {
             <input type="hidden" class="step-set-id" name="stepSets[${setIdx}].id" value="" />
             
             <div>
-                <label class="block text-xs font-bold text-outline uppercase mb-1">Combination Name *</label>
+                <label class="block text-xs font-bold text-outline uppercase mb-1">${I18n.t('figures.form.steps.combination_name')}</label>
                 <input type="text" name="stepSets[${setIdx}].name" value="${setName}" required 
-                       class="form-input text-sm py-2 js-set-name-input" placeholder="e.g., Default, Alternative Timing" />
+                       class="form-input text-sm py-2 js-set-name-input" placeholder="${I18n.t('figures.form.steps.combination_name_placeholder')}" />
             </div>
             
             <div class="flex items-center gap-2 pt-5">
@@ -342,26 +342,26 @@ function addStepSet() {
                        value="${setIdx}" class="form-radio js-set-default-radio" />
                 <input type="hidden" class="js-set-default-hidden" name="stepSets[${setIdx}].isDefault" value="false" />
                 <label for="set-default-radio-${setIdx}" class="text-sm font-semibold text-on-surface cursor-pointer select-none">
-                    Mark as Default
+                    ${I18n.t('figures.form.steps.mark_default')}
                 </label>
             </div>
             
             <div class="flex items-center justify-end pt-4">
                 <button type="button" class="btn-outline btn-sm text-danger hover:bg-danger-soft/20 border-danger/30 hover:border-danger js-remove-step-set-btn">
-                    ${renderIcon('delete', { size: 'sm', cls: 'mr-1' })} Delete Combination
+                    ${renderIcon('delete', { size: 'sm', cls: 'mr-1' })} ${I18n.t('figures.form.steps.delete_combination')}
                 </button>
             </div>
         </div>
 
         <!-- Role Tab Selector inside set panel -->
         <div class="flex items-center justify-between border-b border-border/40 pb-2">
-            <span class="text-sm font-bold text-outline uppercase">Steps List</span>
+            <span class="text-sm font-bold text-outline uppercase">${I18n.t('figures.form.steps.steps_list')}</span>
             <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
                 <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
-                    ${renderIcon('face', { size: 'md' })} Leader
+                    ${renderIcon('face', { size: 'md' })} ${I18n.t('figures.role.leader')}
                 </button>
                 <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
-                    ${renderIcon('face_2', { size: 'md' })} Follower
+                    ${renderIcon('face_2', { size: 'md' })} ${I18n.t('figures.role.follower')}
                 </button>
             </div>
         </div>
@@ -373,13 +373,13 @@ function addStepSet() {
                     <thead class="hidden md:table-header-group">
                         <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                             <th class="py-2 pr-2 w-12">#</th>
-                            <th class="py-2 pr-2 w-20">Timing *</th>
-                            <th class="py-2 pr-2 w-20">Foot *</th>
-                            <th class="py-2 pr-2 min-w-[150px]">Action *</th>
-                            <th class="py-2 pr-2 w-24">Footwork</th>
-                            <th class="py-2 pr-2 w-24">Alignment</th>
-                            <th class="py-2 pr-2 w-24">Turn</th>
-                            <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.timing')}</th>
+                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.foot')}</th>
+                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.action')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.footwork')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.alignment')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.turn')}</th>
+                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.comments')}</th>
                             <th class="py-2 w-10 text-right"></th>
                         </tr>
                     </thead>
@@ -388,7 +388,7 @@ function addStepSet() {
                 </table>
             </div>
             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="LEADER">
-                ${renderIcon('add', { size: 'sm' })} Add Leader Step
+                ${renderIcon('add', { size: 'sm' })} ${I18n.t('figures.form.steps.add_leader_step')}
             </button>
         </div>
 
@@ -399,13 +399,13 @@ function addStepSet() {
                     <thead class="hidden md:table-header-group">
                         <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
                             <th class="py-2 pr-2 w-12">#</th>
-                            <th class="py-2 pr-2 w-20">Timing *</th>
-                            <th class="py-2 pr-2 w-20">Foot *</th>
-                            <th class="py-2 pr-2 min-w-[150px]">Action *</th>
-                            <th class="py-2 pr-2 w-24">Footwork</th>
-                            <th class="py-2 pr-2 w-24">Alignment</th>
-                            <th class="py-2 pr-2 w-24">Turn</th>
-                            <th class="py-2 pr-2 min-w-[150px]">Comments</th>
+                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.timing')}</th>
+                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.foot')}</th>
+                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.action')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.footwork')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.alignment')}</th>
+                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.turn')}</th>
+                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.comments')}</th>
                             <th class="py-2 w-10 text-right"></th>
                         </tr>
                     </thead>
@@ -414,7 +414,7 @@ function addStepSet() {
                 </table>
             </div>
             <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
-                ${renderIcon('add', { size: 'sm' })} Add Follower Step
+                ${renderIcon('add', { size: 'sm' })} ${I18n.t('figures.form.steps.add_follower_step')}
             </button>
         </div>
     `;
@@ -432,11 +432,11 @@ function addStepSet() {
 function removeStepSet(button) {
     const panels = document.querySelectorAll('.js-step-set-panel');
     if (panels.length <= 1) {
-        alert("At least one step combination is required.");
+        alert(I18n.t('js.figure.alert_combination_required'));
         return;
     }
 
-    if (!confirm("Are you sure you want to delete this step combination and all of its steps?")) {
+    if (!confirm(I18n.t('js.figure.confirm_delete_combination'))) {
         return;
     }
 
@@ -474,44 +474,44 @@ function addStepRow(panel, role) {
             <input type="hidden" class="step-id" name="stepSets[0].steps[0].id" value="" />
             <input type="hidden" class="step-role" name="stepSets[0].steps[0].role" value="${role}" />
             <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline">1</span>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden" aria-label="Remove step" title="Remove step">
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden" aria-label="${I18n.t('figures.form.steps.remove_step')}" title="${I18n.t('figures.form.steps.remove_step')}">
                 ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>
         <td class="col-span-1 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Timing *</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.timing')}</label>
             <input type="text" name="stepSets[0].steps[0].timing" required class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-1 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Foot *</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.foot')}</label>
             <input type="text" name="stepSets[0].steps[0].foot" required class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Action Description *</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('js.figure.action_description')}</label>
             <input type="text" name="stepSets[0].steps[0].action" required class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Footwork</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.footwork')}</label>
             <input type="text" name="stepSets[0].steps[0].footwork" class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Alignment</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.alignment')}</label>
             <input type="text" name="stepSets[0].steps[0].alignment" class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Turn</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.turn')}</label>
             <input type="text" name="stepSets[0].steps[0].amountOfTurn" class="form-input text-xs py-1.5" />
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">Technical Comments</label>
+            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.comments')}</label>
             <textarea name="stepSets[0].steps[0].commentsText" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
         </td>
         <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
             <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
-                <span>Show Technical Details</span>
+                <span>${I18n.t('figures.form.steps.show_technical_details')}</span>
                 ${renderIcon('expand_more', { size: 'sm', cls: 'js-mobile-arrow' })}
             </button>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex" aria-label="Remove step" title="Remove step">
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex" aria-label="${I18n.t('figures.form.steps.remove_step')}" title="${I18n.t('figures.form.steps.remove_step')}">
                 ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>
@@ -552,20 +552,20 @@ function addLinkRow() {
     tr.innerHTML = `
         <td class="py-2 pr-2">
             <input type="hidden" name="links[${totalIndex}].id" value="" />
-            <input type="text" name="links[${totalIndex}].title" class="form-input text-xs py-1.5" placeholder="e.g. Routine Video Tutorial" />
+            <input type="text" name="links[${totalIndex}].title" class="form-input text-xs py-1.5" placeholder="${I18n.t('figures.form.links.title_placeholder')}" />
         </td>
         <td class="py-2 pr-2">
             <input type="text" name="links[${totalIndex}].url" required class="form-input text-xs py-1.5" placeholder="https://..." />
         </td>
         <td class="py-2 pr-2">
             <select name="links[${totalIndex}].type" class="form-select text-xs py-1.5 pr-8">
-                <option value="video">Video</option>
-                <option value="syllabus">Syllabus</option>
-                <option value="other">Other</option>
+                <option value="video">${I18n.t('figures.form.links.type.video')}</option>
+                <option value="syllabus">${I18n.t('figures.form.links.type.syllabus')}</option>
+                <option value="other">${I18n.t('figures.form.links.type.other')}</option>
             </select>
         </td>
         <td class="py-2 text-right">
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn" aria-label="Remove link" title="Remove link">
+            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn" aria-label="${I18n.t('figures.form.links.remove')}" title="${I18n.t('figures.form.links.remove')}">
                 ${renderIcon('delete', { size: 'md' })}
             </button>
         </td>

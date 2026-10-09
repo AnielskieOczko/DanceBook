@@ -91,7 +91,7 @@
         const box = document.createElement('div');
         box.setAttribute('role', 'alert');
         box.className = 'p-4 rounded-md border bg-error/10 border-error text-error text-sm';
-        box.textContent = "The assistant couldn't answer just now. Try again.";
+        box.textContent = I18n.t('js.assistant.error');
         thread.appendChild(box);
         thread.scrollTop = thread.scrollHeight;
     }
@@ -143,7 +143,7 @@
 
             function setIdle() {
                 button.innerHTML = renderIcon('mic', { size: 'md' });
-                button.setAttribute('aria-label', 'Dictate');
+                button.setAttribute('aria-label', I18n.t('assistant.dictate'));
                 recognition = null;
             }
 
@@ -163,7 +163,7 @@
                 recognition.onend = setIdle;
                 recognition.onerror = setIdle;
                 button.innerHTML = renderIcon('stop_circle', { size: 'md', cls: 'text-error' });
-                button.setAttribute('aria-label', 'Stop dictating');
+                button.setAttribute('aria-label', I18n.t('assistant.stop_dictating'));
                 recognition.start();
             });
         });
