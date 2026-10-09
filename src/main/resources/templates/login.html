@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Sign in · ' + ${brandName ?: 'DanceBook'}">Sign in · DanceBook</title>
+    <title th:text="#{auth.login.title} + ' · ' + ${brandName ?: 'DanceBook'}">Sign in · DanceBook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -20,57 +20,59 @@
             </div>
             <h1 class="font-heading font-bold text-3xl text-text-primary" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
         </div>
-        <p class="text-text-secondary text-sm">Your personal dance library</p>
+        <p class="text-text-secondary text-sm" th:text="#{auth.login.tagline}">Your personal dance library</p>
     </div>
 
     <!-- Sign In Card -->
     <div class="card p-8 w-full max-w-[28rem] shadow-warm-md">
-        <h2 class="font-heading font-bold text-xl text-text-primary mb-6">Sign in</h2>
+        <h2 class="font-heading font-bold text-xl text-text-primary mb-6" th:text="#{auth.login.heading}">Sign in</h2>
 
         <!-- Error message -->
         <div th:if="${param.error}" class="mb-4 p-3 rounded-button bg-danger-soft text-danger text-sm font-medium flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='error', size='sm')}"></span>
-            Invalid username or password
+            <span th:text="#{auth.login.error}">Invalid username or password</span>
         </div>
 
         <!-- Logout message -->
         <div th:if="${param.logout}" class="mb-4 p-3 rounded-button bg-success-soft text-success text-sm font-medium flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='check_circle', size='sm')}"></span>
-            You have been logged out
+            <span th:text="#{auth.login.logout}">You have been logged out</span>
         </div>
 
         <!-- Login Form -->
         <form th:action="@{/login}" method="post" class="space-y-5">
             <div>
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label" th:text="#{auth.login.username}">Username</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-text-secondary')}"></span>
                     </div>
                     <input id="username" name="username" type="text" required
-                           class="form-input pl-10" placeholder="Enter your username">
+                           class="form-input pl-10" placeholder="Enter your username"
+                           th:attr="placeholder=#{auth.login.username_placeholder}">
                 </div>
             </div>
 
             <div>
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label" th:text="#{auth.login.password}">Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span th:replace="~{fragments/icon :: icon(name='lock', size='md', cls='text-text-secondary')}"></span>
                     </div>
                     <input id="password" name="password" type="password" required
-                           class="form-input pl-10" placeholder="Enter your password">
+                           class="form-input pl-10" placeholder="Enter your password"
+                           th:attr="placeholder=#{auth.login.password_placeholder}">
                 </div>
             </div>
 
             <div class="flex items-center justify-between">
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" name="remember-me" class="rounded border-border text-primary focus:ring-primary">
-                    <span class="text-sm text-text-secondary">Remember me</span>
+                    <span class="text-sm text-text-secondary" th:text="#{auth.login.remember_me}">Remember me</span>
                 </label>
             </div>
 
-            <button type="submit" class="btn-primary w-full justify-center text-base py-3">
+            <button type="submit" class="btn-primary w-full justify-center text-base py-3" th:text="#{auth.login.submit}">
                 Sign in
             </button>
         </form>
@@ -81,19 +83,19 @@
                 <div class="w-full border-t border-border"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-                <span class="px-3 bg-surface text-text-secondary">Or continue with</span>
+                <span class="px-3 bg-surface text-text-secondary" th:text="#{auth.login.or_continue_with}">Or continue with</span>
             </div>
         </div>
 
         <!-- Google OAuth -->
         <a href="/oauth2/authorization/google" class="btn-outline w-full justify-center gap-2">
             <img src="/images/google.svg" alt="" class="w-5 h-5 shrink-0" aria-hidden="true">
-            Sign in with Google
+            <span th:text="#{auth.login.google}">Sign in with Google</span>
         </a>
     </div>
 
     <!-- Footer -->
-    <p class="mt-8 text-xs text-text-secondary"><span th:text="${brandName ?: 'DanceBook'}">DanceBook</span> · Made with <span class="text-danger">&#10084;</span></p>
+    <p class="mt-8 text-xs text-text-secondary"><span th:text="${brandName ?: 'DanceBook'}">DanceBook</span> · <span th:text="#{auth.login.made_with}">Made with</span> <span class="text-danger">&#10084;</span></p>
 
 </body>
 </html>

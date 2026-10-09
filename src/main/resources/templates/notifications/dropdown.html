@@ -54,29 +54,29 @@
                     <p class="font-body-md text-body-md text-on-surface leading-tight">
                         <span class="font-medium" th:text="${event.actor.displayName}">User</span>
                         <span th:switch="${event.eventType.name()}">
-                            <span th:case="'MATERIAL_CREATED'"> created </span>
-                            <span th:case="'MATERIAL_UPDATED'"> updated </span>
-                            <span th:case="'MATERIAL_DELETED'"> deleted </span>
-                            <span th:case="'COMMENT_ADDED'"> commented on </span>
-                            <span th:case="'LIST_CREATED'"> created </span>
-                            <span th:case="'LIST_MADE_PUBLIC'"> shared </span>
-                            <span th:case="'MATERIAL_FIGURE_ADDED'"> added figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' to </span>
-                            <span th:case="'MATERIAL_FIGURE_UPDATED'"> updated figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' in </span>
-                            <span th:case="'MATERIAL_FIGURE_DELETED'"> removed figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' from </span>
-                            <span th:case="'DANCE_FIGURE_CREATED'"> created figure </span>
-                            <span th:case="'DANCE_FIGURE_UPDATED'"> updated figure </span>
-                            <span th:case="'DANCE_FIGURE_DELETED'"> deleted figure </span>
-                            <span th:case="'TRAINING_EVENT_CREATED'"> scheduled training </span>
-                            <span th:case="'TRAINING_EVENT_UPDATED'"> updated training </span>
-                            <span th:case="'TRAINING_EVENT_DELETED'"> cancelled training </span>
-                            <span th:case="'TRAINING_SERIES_CREATED'"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
+                            <span th:case="'MATERIAL_CREATED'" th:text="' ' + #{notifications.event.dropdown.material_created} + ' '"> created </span>
+                            <span th:case="'MATERIAL_UPDATED'" th:text="' ' + #{notifications.event.dropdown.material_updated} + ' '"> updated </span>
+                            <span th:case="'MATERIAL_DELETED'" th:text="' ' + #{notifications.event.dropdown.material_deleted} + ' '"> deleted </span>
+                            <span th:case="'COMMENT_ADDED'" th:text="' ' + #{notifications.event.comment_added} + ' '"> commented on </span>
+                            <span th:case="'LIST_CREATED'" th:text="' ' + #{notifications.event.dropdown.list_created} + ' '"> created </span>
+                            <span th:case="'LIST_MADE_PUBLIC'" th:text="' ' + #{notifications.event.dropdown.list_shared} + ' '"> shared </span>
+                            <span th:case="'MATERIAL_FIGURE_ADDED'" th:text="' ' + #{notifications.event.figure_added(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.a_figure')})} + ' '"> added figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' to </span>
+                            <span th:case="'MATERIAL_FIGURE_UPDATED'" th:text="' ' + #{notifications.event.figure_updated(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.a_figure')})} + ' '"> updated figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' in </span>
+                            <span th:case="'MATERIAL_FIGURE_DELETED'" th:text="' ' + #{notifications.event.figure_deleted(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.a_figure')})} + ' '"> removed figure '<span th:text="${event.metadata ?: 'a figure'}"></span>' from </span>
+                            <span th:case="'DANCE_FIGURE_CREATED'" th:text="' ' + #{notifications.event.dance_figure_created} + ' '"> created figure </span>
+                            <span th:case="'DANCE_FIGURE_UPDATED'" th:text="' ' + #{notifications.event.dance_figure_updated} + ' '"> updated figure </span>
+                            <span th:case="'DANCE_FIGURE_DELETED'" th:text="' ' + #{notifications.event.dance_figure_deleted} + ' '"> deleted figure </span>
+                            <span th:case="'TRAINING_EVENT_CREATED'" th:text="' ' + #{notifications.event.training_created} + ' '"> scheduled training </span>
+                            <span th:case="'TRAINING_EVENT_UPDATED'" th:text="' ' + #{notifications.event.training_updated} + ' '"> updated training </span>
+                            <span th:case="'TRAINING_EVENT_DELETED'" th:text="' ' + #{notifications.event.training_deleted} + ' '"> cancelled training </span>
+                            <span th:case="'TRAINING_SERIES_CREATED'" th:text="' ' + #{notifications.event.training_series_created(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.several')})} + ' '"> scheduled <span th:text="${event.metadata ?: 'several'}"></span> repeating sessions of </span>
                             <span th:case="'TRAINING_SERIES_DELETED'">
-                                <span th:if="${event.metadata != null}"> cancelled <span th:text="${event.metadata}"></span> following sessions of </span>
-                                <span th:unless="${event.metadata != null}"> cancelled series </span>
+                                <span th:if="${event.metadata != null}" th:text="' ' + #{notifications.event.training_series_deleted_following(${event.metadata})} + ' '"> cancelled <span th:text="${event.metadata}"></span> following sessions of </span>
+                                <span th:unless="${event.metadata != null}" th:text="' ' + #{notifications.event.training_series_deleted} + ' '"> cancelled series </span>
                             </span>
-                            <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'"> marked </span>
-                            <span th:case="'TRAINING_BULK_DELETED'"> cancelled </span>
-                            <span th:case="'TRAINING_BULK_UPDATED'"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
+                            <span th:case="'TRAINING_BULK_ATTENDANCE_UPDATED'" th:text="' ' + #{notifications.event.bulk_attendance_marked} + ' '"> marked </span>
+                            <span th:case="'TRAINING_BULK_DELETED'" th:text="' ' + #{notifications.event.bulk_deleted} + ' '"> cancelled </span>
+                            <span th:case="'TRAINING_BULK_UPDATED'" th:text="' ' + #{notifications.event.bulk_updated(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.details')})} + ' '"> updated <span th:text="${event.metadata ?: 'details'}"></span> for </span>
                         </span>
                         <!-- Link for Material / CustomList -->
                         <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_SERIES_DELETED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
@@ -107,12 +107,15 @@
                         <!-- Link/Text for Bulk Attendance -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"
                            th:href="@{/training-events}"
-                           class="font-semibold text-primary hover:underline truncate"><span th:text="${event.metadata ?: 'multiple'}"></span> sessions</a>
-                        <span th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"> as <span th:text="${event.targetName}">attended</span></span>
+                           class="font-semibold text-primary hover:underline truncate"
+                           th:text="#{notifications.event.bulk_sessions(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.multiple')})}"><span th:text="${event.metadata ?: 'multiple'}"></span> sessions</a>
+                        <span th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"
+                              th:text="' ' + #{notifications.event.bulk_as(${event.targetName})}"> as <span th:text="${event.targetName}">attended</span></span>
                         <!-- Link/Text for Bulk Delete -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_DELETED'}"
                            th:href="@{/training-events}"
-                           class="font-semibold text-primary hover:underline truncate"><span th:text="${event.metadata ?: 'multiple'}"></span> training sessions</a>
+                           class="font-semibold text-primary hover:underline truncate"
+                           th:text="#{notifications.event.bulk_training_sessions(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.multiple')})}"><span th:text="${event.metadata ?: 'multiple'}"></span> training sessions</a>
                         <!-- Link/Text for Bulk Update -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_UPDATED'}"
                            th:href="@{/training-events}"
