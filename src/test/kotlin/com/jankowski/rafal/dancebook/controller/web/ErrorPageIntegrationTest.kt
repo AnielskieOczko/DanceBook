@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -51,13 +51,13 @@ class ErrorPageIntegrationTest {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    @MockBean
+    @MockitoBean
     private lateinit var googleDriveService: GoogleDriveService
 
-    @MockBean
+    @MockitoBean
     private lateinit var calendarClient: GoogleCalendarClient
 
-    @MockBean
+    @MockitoBean
     private lateinit var danceFigureService: DanceFigureService
 
     private val testUsername = "err-user"

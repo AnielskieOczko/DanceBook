@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -40,7 +40,7 @@ class TrainingEventSpecificationTest {
     @Autowired private lateinit var trainingCalendarRepository: TrainingCalendarRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     private fun calendar(name: String, owner: AppUser) = trainingCalendarRepository.save(
         TrainingCalendar().apply {

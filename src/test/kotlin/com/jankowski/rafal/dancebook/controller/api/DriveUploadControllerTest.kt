@@ -15,7 +15,7 @@ import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -47,8 +47,8 @@ class DriveUploadControllerTest {
     @Autowired private lateinit var uploadedFileRepository: UploadedFileRepository
     @Autowired private lateinit var passwordEncoder: PasswordEncoder
 
-    @MockBean private lateinit var googleDriveService: GoogleDriveService
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var googleDriveService: GoogleDriveService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     private lateinit var testUser: AppUser
 

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.support.TransactionTemplate
@@ -44,7 +44,7 @@ class AssistantDraftRepositoryIntegrationTest {
     @Autowired private lateinit var appUsers: AppUserRepository
     @Autowired private lateinit var transactions: TransactionTemplate
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     private lateinit var alice: AppUser
     private lateinit var bob: AppUser

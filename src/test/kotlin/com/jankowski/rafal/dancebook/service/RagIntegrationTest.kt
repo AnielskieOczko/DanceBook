@@ -33,7 +33,7 @@ import org.springframework.ai.embedding.EmbeddingResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
@@ -135,8 +135,8 @@ class RagIntegrationTest {
     @Autowired private lateinit var knowledgeIndexEventListener: KnowledgeIndexEventListener
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     private lateinit var userA: AppUser
     private lateinit var userB: AppUser

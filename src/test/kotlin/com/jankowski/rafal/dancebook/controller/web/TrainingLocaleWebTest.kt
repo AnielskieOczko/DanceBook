@@ -38,7 +38,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -89,22 +89,22 @@ class TrainingLocaleWebTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var trainingEventService: TrainingEventService
-    @MockBean private lateinit var trainingSeriesService: TrainingSeriesService
-    @MockBean private lateinit var trainingStatsService: TrainingStatsService
-    @MockBean private lateinit var trainingTimelineService: TrainingTimelineService
-    @MockBean private lateinit var danceCategoryService: DanceCategoryService
-    @MockBean private lateinit var materialService: MaterialService
-    @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
-    @MockBean private lateinit var assistantDrafts: AssistantDraftService
+    @MockitoBean private lateinit var trainingEventService: TrainingEventService
+    @MockitoBean private lateinit var trainingSeriesService: TrainingSeriesService
+    @MockitoBean private lateinit var trainingStatsService: TrainingStatsService
+    @MockitoBean private lateinit var trainingTimelineService: TrainingTimelineService
+    @MockitoBean private lateinit var danceCategoryService: DanceCategoryService
+    @MockitoBean private lateinit var materialService: MaterialService
+    @MockitoBean private lateinit var trainingCalendarService: TrainingCalendarService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var assistantDrafts: AssistantDraftService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
 
     private val polish = Locale.forLanguageTag("pl")
     private lateinit var testUser: AppUser

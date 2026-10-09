@@ -18,7 +18,7 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -66,8 +66,8 @@ class AccessControlSecondUserIntegrationTest {
     @Autowired private lateinit var passwordEncoder: PasswordEncoder
     @Autowired private lateinit var dataSource: javax.sql.DataSource
 
-    @MockBean private lateinit var googleDriveService: GoogleDriveService
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var googleDriveService: GoogleDriveService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     private fun <T> asUser(user: AppUser, block: () -> T): T {
         val auth = UsernamePasswordAuthenticationToken(
