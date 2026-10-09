@@ -218,7 +218,10 @@ class AssistantReadTools(
                             title = c.name,
                             subtitle = listOfNotNull(c.danceType?.name, "Choreography").joinToString(" · "),
                             snippet = chunk.content,
-                            url = "/choreographies/${c.id}"
+                            url = "/choreographies/${c.id}",
+                            chips = listOfNotNull(
+                                c.medalLevel?.let { "Medal: ${it.displayName}" }
+                            )
                         )
                     } else null
                 }

@@ -21,6 +21,10 @@ class Choreography {
     @JoinColumn(name = "dance_type_id", nullable = false)
     var danceType: DanceType? = null
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "medal_level")
+    var medalLevel: MedalLevel? = null
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     var owner: AppUser? = null

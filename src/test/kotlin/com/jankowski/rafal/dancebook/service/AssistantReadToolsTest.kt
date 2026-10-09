@@ -1,15 +1,22 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Choreography
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.Figure
+import com.jankowski.rafal.dancebook.model.KnowledgeChunk
+import com.jankowski.rafal.dancebook.model.KnowledgeSearchResult
+import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
+import com.jankowski.rafal.dancebook.model.Visibility
+import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
+import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
 import jakarta.persistence.EntityNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -197,5 +204,45 @@ class AssistantReadToolsTest {
         assertTrue(tools.getNote("not-a-uuid").message!!.contains("id"))
         assertNotNull(tools.getNote(hidden.toString()).message)
         assertEquals(0, tools.getNote(hidden.toString()).items.size)
+    }
+
+    @Test
+    fun `search_knowledge returns choreography card with medal level chip when set`() {
+        val choreoId = UUID.randomUUID()
+        val choreo = Choreography().apply {
+            id = choreoId
+            name = "Viennese Routine"
+            danceType = waltz
+            medalLevel = MedalLevel.GOLD
+        }
+        val chunk = KnowledgeChunk(
+            sourceType = KnowledgeSourceType.CHOREOGRAPHY,
+            sourceId = choreoId,
+            chunkIndex = 0,
+            content = "Choreography: Viennese Routine\nDance: Waltz\nMedal: Gold",
+            embeddingModel = "test-model",
+            visibility = Visibility.PUBLIC
+        )
+        val chunkRepo = mock(KnowledgeChunkRepository::class.java)
+        val choreoRepo = mock(ChoreographyRepository::class.java)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(user)
+        `when`(chunkRepo.hybridSearch("viennese", null, null, user, 5))
+            .thenReturn(listOf(KnowledgeSearchResult(chunk, 0.9)))
+        `when`(choreoRepo.findById(choreoId)).thenReturn(java.util.Optional.of(choreo))
+
+        val toolWithKnowledge = AssistantReadTools(
+            materialService, danceFigureService, danceTypeService, trainingEventService,
+            appUserService, RichTextServiceImpl(), clock,
+            knowledgeChunkRepository = chunkRepo,
+            choreographyRepository = choreoRepo
+        )
+
+        val result = toolWithKnowledge.searchKnowledge("viennese")
+        assertEquals(1, result.items.size)
+        val card = result.items.single()
+        assertEquals("choreography", card.kind)
+        assertEquals("Viennese Routine", card.title)
+        assertEquals(listOf("Medal: Gold"), card.chips)
+        assertEquals("/choreographies/$choreoId", card.url)
     }
 }
