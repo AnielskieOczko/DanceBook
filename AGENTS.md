@@ -369,7 +369,7 @@ field radius with the 12px `--radius-inset` on the author's side, and `comment-c
 for the inline edit card, which hosts the editor without a second border through
 `cls='comment-edit-editor'`. Card actions are `link-pill` (`link-pill del` for delete).
 `richText` takes a `hasError` parameter that adds `border-error` to the unbound editor, so a
-failed comment save shows the error ring; the bound case still gets it from the field. Trix's
+failed comment save shows the error ring. Trix's
 own stylesheet is never edited, only overridden in the unlayered block of `input.css`.
 
 **To send the editor's text with an htmx request that isn't a form submit, write it into
