@@ -5,6 +5,7 @@ import com.jankowski.rafal.dancebook.dto.ChoreographyRequest
 import com.jankowski.rafal.dancebook.service.ChoreographyService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.DanceTypeService
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
 import jakarta.persistence.EntityNotFoundException
@@ -32,13 +33,15 @@ class ChoreographyWebController(
     @GetMapping
     fun listAll(
         @RequestParam(required = false, defaultValue = "list") view: String,
+        @RequestParam(required = false) medalLevel: MedalLevel? = null,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model
     ): String {
-        log.debug("Listing choreographies in view mode: {}", view)
-        val choreographies = choreographyService.findByCurrentUser()
+        log.debug("Listing choreographies in view mode: {}, medalLevel: {}", view, medalLevel)
+        val choreographies = choreographyService.findByCurrentUser(medalLevel = medalLevel)
         model.addAttribute("choreographies", choreographies)
         model.addAttribute("currentView", view)
+        model.addAttribute("selectedMedalLevel", medalLevel)
         model.addAttribute("activeNav", "choreographies")
 
         return if (isHtmxRequest == true) {
@@ -124,7 +127,8 @@ class ChoreographyWebController(
             name = choreography.name,
             description = choreography.description,
             danceTypeId = choreography.danceType?.id,
-            isPublic = choreography.isPublic
+            isPublic = choreography.isPublic,
+            medalLevel = choreography.medalLevel
         )
         model.addAttribute("choreographyRequest", request)
         model.addAttribute("choreographyId", id)

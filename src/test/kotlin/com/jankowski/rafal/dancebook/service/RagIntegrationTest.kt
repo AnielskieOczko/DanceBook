@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Choreography
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -11,6 +12,7 @@ import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
+import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
 import com.jankowski.rafal.dancebook.repository.DanceCategoryRepository
 import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceTypeRepository
@@ -126,6 +128,7 @@ class RagIntegrationTest {
     @Autowired private lateinit var danceFigureRepository: DanceFigureRepository
     @Autowired private lateinit var danceTypeRepository: DanceTypeRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
+    @Autowired private lateinit var choreographyRepository: ChoreographyRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
     @Autowired private lateinit var testEmbeddingModel: EmbeddingModel
@@ -245,6 +248,29 @@ class RagIntegrationTest {
         val medalText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, medal.id!!)!!.content
         val plainText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, plain.id!!)!!.content
         assertTrue(medalText.contains("Medal: Gold"), medalText)
+        assertFalse(plainText.contains("Medal"), plainText)
+    }
+
+    @Test
+    fun `indexed choreography text carries the medal level only when set`() {
+        val medal = choreographyRepository.save(Choreography().apply {
+            name = "Medal Choreo"
+            danceType = waltz
+            owner = userA
+            medalLevel = MedalLevel.SILVER
+        })
+        val plain = choreographyRepository.save(Choreography().apply {
+            name = "Plain Choreo"
+            danceType = waltz
+            owner = userA
+        })
+
+        knowledgeIndexService.indexChoreography(medal.id!!)
+        knowledgeIndexService.indexChoreography(plain.id!!)
+
+        val medalText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.CHOREOGRAPHY, medal.id!!)!!.content
+        val plainText = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.CHOREOGRAPHY, plain.id!!)!!.content
+        assertTrue(medalText.contains("Medal: Silver"), medalText)
         assertFalse(plainText.contains("Medal"), plainText)
     }
 

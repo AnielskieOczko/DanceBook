@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.repository
 
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Choreography
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Share
 import com.jankowski.rafal.dancebook.model.Visibility
@@ -17,6 +18,20 @@ object ChoreographySpecification {
     fun visibleTo(user: AppUser?): Specification<Choreography> {
         return Specification { root, query, cb ->
             visibilityPredicate(root, query, cb, user)
+        }
+    }
+
+    fun withFilters(
+        user: AppUser? = null,
+        medalLevel: MedalLevel? = null
+    ): Specification<Choreography> {
+        return Specification { root, query, cb ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(visibilityPredicate(root, query, cb, user))
+            medalLevel?.let {
+                predicates.add(cb.equal(root.get<MedalLevel>("medalLevel"), it))
+            }
+            cb.and(*predicates.toTypedArray())
         }
     }
 

@@ -29,10 +29,13 @@ class ChoreographyServiceImpl(
         private val log = LoggerFactory.getLogger(ChoreographyServiceImpl::class.java)
     }
 
-    override fun findByCurrentUser(): List<Choreography> {
+    override fun findByCurrentUser(medalLevel: MedalLevel?): List<Choreography> {
         val currentUser = appUserService.getCurrentUserOrNull()
-        log.debug("Retrieving choreographies for user '{}'", currentUser?.username)
-        return choreographyRepository.findAll(ChoreographySpecification.visibleTo(currentUser), Sort.by(Sort.Direction.DESC, "updatedAt"))
+        log.debug("Retrieving choreographies for user '{}', medalLevel: {}", currentUser?.username, medalLevel)
+        return choreographyRepository.findAll(
+            ChoreographySpecification.withFilters(user = currentUser, medalLevel = medalLevel),
+            Sort.by(Sort.Direction.DESC, "updatedAt")
+        )
     }
 
     override fun findById(id: UUID): Choreography {
@@ -57,6 +60,7 @@ class ChoreographyServiceImpl(
             description = richTextService.clean(request.description)
             this.danceType = danceType
             owner = currentUser
+            medalLevel = request.medalLevel
             isPublic = request.isPublic
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
@@ -80,6 +84,7 @@ class ChoreographyServiceImpl(
         choreography.name = request.name
         choreography.description = richTextService.clean(request.description)
         choreography.danceType = danceType
+        choreography.medalLevel = request.medalLevel
         choreography.isPublic = request.isPublic
         choreography.updatedAt = LocalDateTime.now()
 
@@ -120,6 +125,7 @@ class ChoreographyServiceImpl(
             description = original.description
             danceType = original.danceType
             owner = currentUser
+            medalLevel = original.medalLevel
             isPublic = false // Keep duplicates private by default
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()

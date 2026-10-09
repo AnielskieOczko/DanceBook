@@ -3,10 +3,11 @@ package com.jankowski.rafal.dancebook.service
 import com.jankowski.rafal.dancebook.dto.ChoreographyEntryRequest
 import com.jankowski.rafal.dancebook.dto.ChoreographyRequest
 import com.jankowski.rafal.dancebook.model.Choreography
+import com.jankowski.rafal.dancebook.model.MedalLevel
 import java.util.UUID
 
 interface ChoreographyService {
-    fun findByCurrentUser(): List<Choreography>
+    fun findByCurrentUser(medalLevel: MedalLevel? = null): List<Choreography>
     fun findById(id: UUID): Choreography
     fun create(request: ChoreographyRequest): Choreography
     fun update(id: UUID, request: ChoreographyRequest): Choreography

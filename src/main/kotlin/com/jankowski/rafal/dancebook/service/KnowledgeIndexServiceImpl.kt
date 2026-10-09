@@ -424,6 +424,7 @@ class KnowledgeIndexServiceImpl(
         val content = listOfNotNull(
             "Choreography: ${choreography.name}",
             dance.takeIf { it.isNotBlank() }?.let { "Dance: $it" },
+            choreography.medalLevel?.displayName?.let { "Medal: $it" },
             desc.takeIf { it.isNotBlank() }?.let { "Description: $it" },
             sequence.takeIf { it.isNotBlank() }?.let { "Figure Sequence: $it" }
         ).joinToString("\n")
