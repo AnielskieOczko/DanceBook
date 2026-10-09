@@ -362,6 +362,16 @@ a stored bullet list rendered as flat lines until `.rich-text` got its own.
 `TailwindOutputCssTest` asserts both blocks survive into `output.css`, because a rendering test
 asserts on HTML and cannot see a missing rule.
 
+**The comments section follows the rounded form language (#222).** The editor and the link
+dialog take `--radius-field`, the toolbar groups and buttons are pills, and focus and error
+draw a 3px ring (`border-error` on the editor). Comment cards are the `comment-card` utility:
+field radius with the 12px `--radius-inset` on the author's side, and `comment-card-editing`
+for the inline edit card, which hosts the editor without a second border through
+`cls='comment-edit-editor'`. Card actions are `link-pill` (`link-pill del` for delete).
+`richText` takes a `hasError` parameter that adds `border-error` to the unbound editor, so a
+failed comment save shows the error ring. Trix's
+own stylesheet is never edited, only overridden in the unlayered block of `input.css`.
+
 **To send the editor's text with an htmx request that isn't a form submit, write it into
 `event.detail.parameters` in `htmx:configRequest`, not into a form field.** htmx has
 already collected the request's parameters (the enclosing form and any `hx-include`) by
@@ -1006,6 +1016,11 @@ locales are listed in `config/AppLocales.kt`.
   `title` and `aria-label`; the English attribute stays beside it as the prototype value, so
   seeing both is correct. Do not change fragment names, element ids or form field names
   while translating.
+- **Keep the English beside the binding when a guard test parses the raw template.**
+  `admin/dashboard.html` (the only admin template, translated in #242) is read as plain HTML by
+  `AdminDenseTableTemplateTest` and similar guards, so the static English text and the
+  `aria-label` stay in the markup next to `th:text` / `th:attr`. Removing them to "tidy up"
+  breaks those guards, not the rendering.
 - **Reuse before adding.** `common.*` (actions such as save, cancel, delete) and `nav.*`
   are shared across areas. Anything else gets its own key in the area's group, even when
   the English text matches another area's, as figures and notes already do.
