@@ -283,5 +283,32 @@ class CommentWebControllerTest {
             .andExpect(content().string(not(containsString("sequence"))))
             .andExpect(content().string(not(containsString("Director"))))
     }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `comment item renders rounded comment-card with author corner and link-pill actions`() {
+        mockMvc.perform(
+            get("/materials/$materialId/comments/$commentId")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("comment-card")))
+            .andExpect(content().string(containsString("link-pill")))
+            .andExpect(content().string(containsString("link-pill del")))
+    }
+
+    @Test
+    @WithMockUser(username = "dancer")
+    fun `comment edit form renders comment-card-editing with editing header and ghost cancel button`() {
+        mockMvc.perform(
+            get("/materials/$materialId/comments/$commentId/edit")
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("comment-card-editing")))
+            .andExpect(content().string(containsString("Editing")))
+            .andExpect(content().string(containsString("btn-ghost btn-sm")))
+            .andExpect(content().string(containsString("comment-edit-editor")))
+    }
 }
 

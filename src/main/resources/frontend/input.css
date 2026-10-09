@@ -308,6 +308,28 @@ layer(base);
            transition-all duration-300;
 }
 
+@utility comment-card {
+  /* ── Comment Card ────────────────────────────── */
+  @apply flex-1 min-w-0 bg-surface border border-outline-variant p-3 sm:px-5 sm:py-3.5;
+  border-radius: var(--radius-field);
+  border-top-left-radius: var(--radius-inset);
+}
+
+@utility comment-card-editing {
+  @apply border-primary ring-3 ring-primary/22;
+}
+
+@utility link-pill {
+  /* ── Link Pill Buttons ───────────────────────── */
+  @apply inline-flex items-center justify-center border-0 bg-transparent px-3 py-1.5 min-h-[32px]
+         rounded-pill font-sans font-medium text-xs text-on-surface-variant cursor-pointer
+         hover:bg-surface-container hover:text-on-surface transition-colors select-none;
+
+  &.del {
+    @apply hover:bg-error-container hover:text-error;
+  }
+}
+
 @utility badge {
   /* ── Badges ──────────────────────────────────── */
   @apply inline-flex items-center px-3 py-1 rounded-sm
@@ -992,35 +1014,38 @@ trix-toolbar .trix-button-row {
   gap: 0.375rem;
 }
 
+@media (min-width: 640px) {
+  trix-toolbar .trix-button-row {
+    gap: 0.5rem;
+  }
+}
+
 trix-toolbar .trix-button-group {
   display: inline-flex;
   align-items: center;
+  padding: 3px;
+  gap: 2px;
   border: 1px solid var(--color-outline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background-color: var(--color-surface);
-  overflow: hidden;
 }
 
 trix-toolbar .trix-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 0.5rem;
-  background-color: var(--color-surface);
+  min-width: 40px;
+  height: 38px;
+  padding: 0 10px;
+  background-color: transparent;
   border: none;
-  border-right: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-pill);
   color: var(--color-on-surface);
   font-family: var(--font-sans);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-trix-toolbar .trix-button:last-child {
-  border-right: none;
+  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
 trix-toolbar .trix-button:hover:not(:disabled) {
@@ -1033,8 +1058,13 @@ trix-toolbar .trix-button.trix-active {
   color: var(--color-primary);
 }
 
+trix-toolbar .trix-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
 trix-toolbar .trix-button:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -1042,7 +1072,7 @@ trix-toolbar .trix-button--icon {
   position: relative;
   text-indent: -9999px;
   overflow: hidden;
-  width: 44px;
+  width: 40px;
 }
 
 trix-toolbar .trix-button--icon::before {
@@ -1059,6 +1089,7 @@ trix-toolbar .trix-button--icon::before {
   opacity: 0.75;
 }
 
+trix-toolbar .trix-button--icon:hover:not(:disabled)::before,
 trix-toolbar .trix-button--icon.trix-active::before {
   opacity: 1;
 }
@@ -1101,10 +1132,10 @@ trix-toolbar .trix-dialog {
   left: 0;
   right: 0;
   max-width: 500px;
-  padding: 0.75rem;
+  padding: 10px;
   background-color: var(--color-surface);
   border: 1px solid var(--color-outline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-field);
   box-shadow: var(--shadow-ambient);
   z-index: 20;
 }
@@ -1116,43 +1147,76 @@ trix-toolbar .trix-dialog.trix-active {
 trix-toolbar .trix-dialog__link-fields {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+trix-toolbar .trix-dialog .trix-button-group {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  gap: 8px;
 }
 
 trix-toolbar .trix-input--dialog {
-  flex: 1;
+  flex: 1 1 160px;
   min-height: 44px;
-  padding: 0.375rem 0.75rem;
+  padding: 6px 16px;
   background-color: var(--color-surface-container);
   border: 1px solid var(--color-outline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   color: var(--color-on-surface);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 14px;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+trix-toolbar .trix-input--dialog:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-on-surface-variant);
 }
 
 trix-toolbar .trix-input--dialog:focus {
+  background-color: var(--color-surface);
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 trix-toolbar .trix-button--dialog {
   min-height: 44px;
-  min-width: 44px;
-  padding: 0.375rem 0.75rem;
-  font-size: 12px;
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-outline);
-  color: var(--color-on-surface);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
   cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-trix-toolbar .trix-button--dialog:hover {
+trix-toolbar .trix-button--dialog[data-trix-method="setAttribute"] {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+trix-toolbar .trix-button--dialog[data-trix-method="setAttribute"]:hover {
+  background-color: var(--color-primary-hover);
+}
+
+trix-toolbar .trix-button--dialog[data-trix-method="removeAttribute"] {
+  background-color: transparent;
+  color: var(--color-on-surface-variant);
+}
+
+trix-toolbar .trix-button--dialog[data-trix-method="removeAttribute"]:hover {
   background-color: var(--color-surface-container);
+  color: var(--color-on-surface);
+}
+
+trix-toolbar .trix-button--dialog:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-primary);
 }
 
 /* Editor Component */
@@ -1160,34 +1224,79 @@ trix-editor {
   display: block;
   box-sizing: border-box;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 12px 16px;
   background-color: var(--color-surface-container);
   border: 1px solid var(--color-outline);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-field);
   color: var(--color-on-surface);
-  min-height: 120px;
+  min-height: 96px;
   outline: none;
-  font-family: var(--font-sans);
+  font-family: var(--font-prose);
   font-size: 16px;
-  line-height: 1.6;
-  transition: border-color 0.2s;
+  line-height: 26px;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+@media (min-width: 640px) {
+  trix-editor {
+    padding: 14px 20px;
+    font-size: 17px;
+    line-height: 28px;
+  }
+}
+
+trix-editor:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-on-surface-variant);
 }
 
 trix-editor:focus,
 trix-editor:focus-visible {
+  background-color: var(--color-surface);
   border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 trix-editor.border-error {
   border-color: var(--color-error) !important;
-  box-shadow: 0 0 0 1px var(--color-error) !important;
+  background-color: var(--color-surface) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 20%, transparent) !important;
+}
+
+trix-editor:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-surface-container);
+  border-color: var(--color-outline);
 }
 
 trix-editor:empty:not(:focus)::before {
   color: var(--color-on-surface-variant);
-  opacity: 0.6;
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+/* Editor embedded inside an inline comment editing card */
+.comment-edit-editor trix-editor {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  min-height: 48px;
+  box-shadow: none !important;
+}
+
+.comment-edit-editor trix-editor:focus,
+.comment-edit-editor trix-editor:focus-visible,
+.comment-edit-editor trix-editor:hover {
+  background-color: transparent;
+  border: none;
+  box-shadow: none !important;
+}
+
+.comment-edit-editor trix-toolbar {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 /* List styling inside editor matching .rich-text */

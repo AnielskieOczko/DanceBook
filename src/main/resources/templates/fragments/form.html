@@ -199,7 +199,8 @@
                      th:placeholder="${placeholder}"
                      th:disabled="${disabled == true}"
                      th:attr="data-required=${required == true ? 'true' : null},aria-labelledby=${label != null ? (id ?: path) + '_label' : null},aria-label=${label == null && placeholder != null ? placeholder : null}"
-                     class="trix-content"></trix-editor>
+                     class="trix-content"
+                     th:classappend="${hasError == true} ? 'border-error' : ''"></trix-editor>
     </th:block>
     <p th:if="${hint != null and ((springBoundObjectExpression == null or bound == false or raw == true) or !#fields.hasErrors(path))}" class="form-hint" th:text="${hint}">Hint</p>
 </div>

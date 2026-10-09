@@ -333,6 +333,76 @@ class TailwindOutputCssTest {
         )
     }
 
+    @Test
+    fun `trix-editor uses field radius and prose font`() {
+        val editorRules = Regex("""trix-editor\s*\{[^}]*\}""").findAll(css).map { it.value }.toList()
+        val radiusMatch = editorRules.any { it.contains("border-radius:var(--radius-field)") }
+        assertTrue(
+            radiusMatch,
+            "trix-editor must define border-radius: var(--radius-field)."
+        )
+        val fontMatch = editorRules.any { it.contains("var(--font-prose)") }
+        assertTrue(
+            fontMatch,
+            "trix-editor must use var(--font-prose)."
+        )
+    }
+
+    @Test
+    fun `trix-toolbar button groups and buttons use pill radius`() {
+        val groupRule = Regex("""trix-toolbar \.trix-button-group\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for trix-toolbar .trix-button-group")
+        assertTrue(
+            groupRule.contains("border-radius:var(--radius-pill)"),
+            "trix-toolbar .trix-button-group must use var(--radius-pill)."
+        )
+        val buttonRule = Regex("""trix-toolbar \.trix-button\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for trix-toolbar .trix-button")
+        assertTrue(
+            buttonRule.contains("border-radius:var(--radius-pill)"),
+            "trix-toolbar .trix-button must use var(--radius-pill)."
+        )
+    }
+
+    @Test
+    fun `trix link dialog uses field radius and pill input`() {
+        val dialogRule = Regex("""trix-toolbar \.trix-dialog\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for trix-toolbar .trix-dialog")
+        assertTrue(
+            dialogRule.contains("border-radius:var(--radius-field)"),
+            "trix-toolbar .trix-dialog must use var(--radius-field)."
+        )
+        val inputRule = Regex("""trix-toolbar \.trix-input--dialog\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for trix-toolbar .trix-input--dialog")
+        assertTrue(
+            inputRule.contains("border-radius:var(--radius-pill)"),
+            "trix-toolbar .trix-input--dialog must use var(--radius-pill)."
+        )
+    }
+
+    @Test
+    fun `comment card and link pill utilities survive into output css`() {
+        val commentCardRules = Regex("""\.comment-card\s*\{[^}]*\}""").findAll(css).joinToString("") { it.value }
+        assertTrue(
+            commentCardRules.isNotEmpty(),
+            "Expected output.css to contain a rule for .comment-card"
+        )
+        assertTrue(
+            commentCardRules.contains("border-radius:var(--radius-field)"),
+            ".comment-card must define border-radius: var(--radius-field)."
+        )
+        assertTrue(
+            commentCardRules.contains("border-top-left-radius:var(--radius-inset)"),
+            ".comment-card must define border-top-left-radius: var(--radius-inset)."
+        )
+        val linkPillRule = Regex("""\.link-pill\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for .link-pill")
+        assertTrue(
+            linkPillRule.contains("border-radius:var(--radius-pill)"),
+            ".link-pill must use var(--radius-pill)."
+        )
+    }
+
     /** Tailwind escapes the characters that are not legal bare in a CSS selector. */
     private fun cssEscape(className: String): String =
         className.replace(Regex("""([\[\]./:#%!])"""), """\\$1""")
