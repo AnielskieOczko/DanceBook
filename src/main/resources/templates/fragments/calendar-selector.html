@@ -17,12 +17,12 @@
             </option>
         </select>
     </div>
-    <a href="/training-calendars" class="btn-ghost flex items-center justify-center p-1.5 text-on-surface-variant hover:text-on-surface shrink-0" title="Manage calendars" th:title="#{training.selector.manage}">
-        <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span>
+    <a href="/training-calendars" class="btn-icon shrink-0" title="Manage calendars" th:title="#{training.selector.manage}">
+        <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
     </a>
     <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}">
         <div class="flex items-center gap-2 shrink-0">
-            <button type="button" class="btn-outline flex items-center gap-1 text-sm py-1.5 px-3"
+            <button type="button" class="btn-outline btn-sm flex items-center gap-1.5"
                     hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar"
                     th:title="#{training.selector.sync_title}">
                 <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
