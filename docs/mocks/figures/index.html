@@ -262,8 +262,10 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 .rec h3 { color: var(--primary); font-size: 15px; }
 .list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 76ch; }
 @media (max-width: 720px) {
-  .mat { grid-template-columns: 48px repeat(5, minmax(0, 1fr)); }
-  .mat > div { padding: 10px 6px; gap: 6px; }
+  .mat { grid-template-columns: 44px repeat(5, minmax(0, 1fr)); }
+  .mat > div { padding: 10px 3px; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+  .mat > .rl, .mat > .h { font-size: 12px; }
+  .mat .cls { padding: 0 8px; }
   .mat .tag, .mat .note { display: none; }
   .mat .grade { flex-direction: column; align-items: flex-start; gap: 6px; }
   .prob thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
