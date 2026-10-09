@@ -234,11 +234,11 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 }
 
 /* ---------- badge sheets ---------- */
-.mat { display: grid; grid-template-columns: 96px repeat(4, minmax(0, 1fr)); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; }
+.mat { display: grid; grid-template-columns: 96px repeat(5, minmax(0, 1fr)); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; }
 .mat > div { padding: 14px 16px; border-bottom: 1px solid var(--hair); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 56px; }
 .mat > .h { font-weight: 600; color: var(--on-surface-variant); font-size: 13px; }
 .mat > .rl { font-weight: 600; }
-.mat > div:nth-last-child(-n+5) { border-bottom: 0; }
+.mat > div:nth-last-child(-n+6) { border-bottom: 0; }
 .ctx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
 .ctx > div { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 .ctx h3 { color: var(--on-surface-variant); font-size: 13px; }
@@ -262,7 +262,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 .rec h3 { color: var(--primary); font-size: 15px; }
 .list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 76ch; }
 @media (max-width: 720px) {
-  .mat { grid-template-columns: 56px repeat(4, minmax(0, 1fr)); }
+  .mat { grid-template-columns: 48px repeat(5, minmax(0, 1fr)); }
   .mat > div { padding: 10px 6px; gap: 6px; }
   .mat .tag, .mat .note { display: none; }
   .mat .grade { flex-direction: column; align-items: flex-start; gap: 6px; }
@@ -302,6 +302,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
       <button type="button" data-dir="B" aria-pressed="false">B Medal shapes</button>
       <button type="button" data-dir="C" aria-pressed="false">C Ring and word</button>
       <button type="button" data-dir="D" aria-pressed="false">D Medal icon</button>
+      <button type="button" data-dir="D2" aria-pressed="false">D2 Medal, no numerals</button>
     </div>
   </div>
 </header>
@@ -337,9 +338,9 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 
 <section class="sheet" id="badges">
   <div><h2>Bronze, Silver and Gold</h2>
-  <p class="note" style="margin-top:6px">Each direction sits next to the letter class (H to S) and never replaces it. A figure or choreography with no medal shows nothing. All four use muted metals, so the teal accent stays the only strong colour on the page.</p></div>
+  <p class="note" style="margin-top:6px">Each direction sits next to the letter class (H to S) and never replaces it. A figure or choreography with no medal shows nothing. All five use muted metals, so the teal accent stays the only strong colour on the page.</p></div>
 
-  <h3>All four directions, all four states</h3>
+  <h3>All five directions, all four states</h3>
   <div class="scroll-x"><div class="mat" id="matrix"></div></div>
 
   <h3>Without colour, and at 12, 16 and 24px</h3>
@@ -354,7 +355,8 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 
   <div class="rec"><h3>Recommendation: direction A, Rank bars</h3>
     <p>Three ascending bars with one, two or three filled. The count carries the level and it still reads in greyscale at 12px. Spell the word out (Bronze, Silver, Gold) wherever there is room: headers and choreography titles. In dense rows the bars stand alone, with the word in the tooltip.</p>
-    <p>D, Medal icon, is the friendliest and the only one that looks like a medal. It loses to A in one place: at 16px the numeral is about 6px tall and blurs, so the level is read from the digit and not seen at a glance. At 12px, with the ribbon dropped, the coin and numeral are readable but still slower than counting bars. D also has a trap. Podium medals use 1 for gold, and here 1 is Bronze and 3 is Gold, the opposite. That is a real risk if the numeral is read as a place. Pairing D in headers (24px and up, with the word) and A in dense rows is a sound option.</p>
+    <p>D, Medal icon, is the friendliest and the only one that looks like a medal. Its numeral is podium order: Gold 1, Silver 2, Bronze 3. It loses to A in one place. At 16px the numeral is about 7px tall and blurs, so you read the level from a digit and do not see it at a glance. At 12px, with the ribbon dropped, coin and numeral are readable but still slower than counting bars. Pairing D in headers (24px and up, with the word) and A in dense rows is a sound option.</p>
+    <p>D2, the same medal with no numeral, is the cleanest to look at, but on the coin colour is the only cue. In greyscale the three metals collapse into near-identical greys and the three coins become one coin. It is not safe on its own. It needs a redundant cue: always show the word (Bronze, Silver, Gold) beside it, or add a ribbon notch count. In dense rows, where there is no room for the word, I would not use D2.</p>
     <p>B has a strong medal feel, but circle and diamond are close at 12px. C is clear where there is room, but the word makes every row wider.</p></div>
 </section>
 
@@ -362,7 +364,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   <h2>Decisions needed</h2>
   <ol class="list">
     <li>Pick a medal direction, or a pairing such as A in rows and D in headers.</li>
-    <li>If D is used, decide what the numeral means: level (1 Bronze to 3 Gold, as drawn) or podium place (1 Gold). They are opposites.</li>
+    <li>Resolved: the numeral on D is podium order (Gold 1, Silver 2, Bronze 3). One thing to confirm: the medal picker lists Bronze, Silver, Gold as rising levels, so with D the digits on its options run 3, 2, 1 left to right. The word is always beside the glyph in the picker, so I left the order as levels, but it is a visible mismatch. Say if you would rather the picker list Gold first.</li><li>If D2 is used, accept that it needs the word beside it, or choose a ribbon notch count as the second cue.</li>
     <li>Confirm Side by side as the third step view next to Leader and Follower.</li>
     <li>Confirm that dense step inputs are 36px tall on desktop (44px on a phone), below the 48px of the rounded-forms standard, because eight fields per row do not fit at 48px.</li>
     <li>Is the medal set by hand by the figure's editor, or derived from a syllabus level? The mock assumes a hand-set value with None as the default.</li>
@@ -401,14 +403,14 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
       if (lvl === 'bronze') s = '<circle cx="8" cy="8" r="6.2" fill="' + c + '"/>';
       else if (lvl === 'silver') s = '<rect x="2.6" y="2.6" width="10.8" height="10.8" transform="rotate(45 8 8)" fill="' + c + '"/>';
       else s = '<polygon points="' + sealPath(8, 8, 7.6, 5.2, 8) + '" fill="' + c + '"/>';
-    } else if (dir === 'D') {
+    } else if (dir === 'D' || dir === 'D2') {
       /* round medal on a short ribbon; at 12px and below the ribbon goes and the coin fills the box */
-      var small = px <= 12, num = String(n);
+      var small = px <= 12, num = dir === 'D' ? String({ gold: 1, silver: 2, bronze: 3 }[lvl]) : '';
       var vb = small ? '3 5.2 10 10' : '0 0 16 16';
       if (!small) s += '<path d="M4.8 0.6 L7.5 5.6 M11.2 0.6 L8.5 5.6" fill="none" stroke="' + c + '" stroke-width="2" stroke-linecap="butt"/>';
       s += '<circle cx="8" cy="10.3" r="5.3" fill="' + SOFT[lvl] + '" stroke="' + c + '" stroke-width="1"/>' +
            '<circle cx="8" cy="10.3" r="4" fill="none" stroke="' + c + '" stroke-width="0.5" opacity=".55"/>' +
-           '<text x="8" y="' + (small ? 12.7 : 12.7) + '" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="' + (small ? 7 : 7) + '" fill="' + c + '">' + num + '</text>';
+           (num ? '<text x="8" y="' + (small ? 12.7 : 12.7) + '" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="' + (small ? 7 : 7) + '" fill="' + c + '">' + num + '</text>' : '');
       return '<svg width="' + px + '" height="' + px + '" viewBox="' + vb + '" aria-hidden="true">' + s + '</svg>';
     } else {
       for (var k = 0; k < 3; k++) {
@@ -685,18 +687,18 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   /* ---------- badge sheets ---------- */
   var LV = ['bronze', 'silver', 'gold'];
   function renderBadges() {
-    var m = '<div class="h">State</div><div class="h">A Rank bars</div><div class="h">B Medal shapes</div><div class="h">C Ring and word</div><div class="h">D Medal icon</div>';
-    m += '<div class="rl">None</div>' + ['A','B','C','D'].map(function () { return '<div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div>'; }).join('');
+    var m = '<div class="h">State</div><div class="h">A Rank bars</div><div class="h">B Medal shapes</div><div class="h">C Ring and word</div><div class="h">D Medal icon</div><div class="h">D2 No numerals</div>';
+    m += '<div class="rl">None</div>' + ['A','B','C','D','D2'].map(function () { return '<div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div>'; }).join('');
     LV.forEach(function (l) {
       m += '<div class="rl">' + NAMES[l] + '</div>';
-      ['A', 'B', 'C', 'D'].forEach(function (d) {
+      ['A', 'B', 'C', 'D', 'D2'].forEach(function (d) {
         m += '<div>' + grade('D', l, { dir: d, size: 18 }) + (d !== 'C' ? '<span class="tag ' + l + '">' + glyph(d, l, 14) + NAMES[l] + '</span>' : '') + '</div>';
       });
     });
     document.getElementById('matrix').innerHTML = m;
 
     var t = '';
-    [['A', 'Rank bars'], ['B', 'Medal shapes'], ['C', 'Ring, glyph only'], ['D', 'Medal icon']].forEach(function (d) {
+    [['A', 'Rank bars'], ['B', 'Medal shapes'], ['C', 'Ring, glyph only'], ['D', 'Medal icon, Gold 1'], ['D2', 'Medal icon, no numerals']].forEach(function (d) {
       function line(cls) {
         return '<div class="strip ' + cls + '">' + [12, 16, 24].map(function (px) { return '<span style="display:inline-flex;gap:10px;align-items:center"><span class="note" style="width:28px">' + px + '</span>' + LV.map(function (l) { return medal(l, { dir: d[0], size: px, noword: true }); }).join('') + '</span>'; }).join('') + '</div>';
       }
