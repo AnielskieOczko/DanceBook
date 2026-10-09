@@ -5,12 +5,12 @@
 <section th:with="activeNav='admin'">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: pageHeader(title='Admin Dashboard', subtitle='System overview and storage maintenance', icon='admin_panel_settings')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=#{admin.dashboard.title}, subtitle=#{admin.dashboard.subtitle}, icon='admin_panel_settings')}"></div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 gap-4 mb-8">
-        <div th:replace="~{fragments/card :: statCard(value=${totalUsers}, label='Users', icon='group')}"></div>
-        <div th:replace="~{fragments/card :: statCard(value=${totalMaterials}, label='Materials', icon='video_library')}"></div>
+        <div th:replace="~{fragments/card :: statCard(value=${totalUsers}, label=#{admin.dashboard.stats.users}, icon='group')}"></div>
+        <div th:replace="~{fragments/card :: statCard(value=${totalMaterials}, label=#{admin.dashboard.stats.materials}, icon='video_library')}"></div>
     </div>
 
     <!-- Flash Messages for Settings -->
@@ -26,17 +26,17 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-primary')}"></span>
-                Application Configuration
+                <th:block th:text="#{admin.settings.system.heading}">Application Configuration</th:block>
             </h2>
             <div class="flex items-center gap-2 mt-1">
-                <p class="text-sm text-text-secondary">Configure global application behaviors and timeouts.</p>
+                <p class="text-sm text-text-secondary" th:text="#{admin.settings.system.description}">Configure global application behaviors and timeouts.</p>
                 <div class="relative inline-block">
-                    <button type="button" class="js-menu-btn text-text-secondary hover:text-primary transition-colors focus:outline-hidden flex items-center" title="How this works">
+                    <button type="button" class="js-menu-btn text-text-secondary hover:text-primary transition-colors focus:outline-hidden flex items-center" th:attr="title=#{admin.settings.system.how_it_works_title}" title="How this works">
                         <span th:replace="~{fragments/icon :: icon(name='lightbulb', size='sm')}"></span>
                     </button>
                     <div class="js-menu-dropdown hidden absolute left-0 top-full mt-2 w-64 p-3 bg-surface-warm border border-border rounded-button shadow-lg z-50 text-xs text-text-secondary leading-relaxed">
-                        <strong class="text-text-primary block mb-1 font-medium">How changes apply:</strong>
-                        To test changes immediately in your current browser tab, you must refresh the page after saving. Otherwise, the new values apply on your next page load.
+                        <strong class="text-text-primary block mb-1 font-medium" th:text="#{admin.settings.system.how_it_works_heading}">How changes apply:</strong>
+                        <span th:text="#{admin.settings.system.how_it_works_body}">To test changes immediately in your current browser tab, you must refresh the page after saving. Otherwise, the new values apply on your next page load.</span>
                     </div>
                 </div>
             </div>
@@ -52,17 +52,17 @@
         <div class="p-6">
             <form hx-post="/admin/settings/system" hx-target="#systemSettingsSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="form-label text-sm font-semibold">Notification Polling Interval (minutes)</label>
+                    <label class="form-label text-sm font-semibold" th:text="#{admin.settings.system.poll_interval}">Notification Polling Interval (minutes)</label>
                     <input type="number" name="pollInterval" min="1" max="60" required class="form-input mt-1" th:value="${pollInterval}">
-                    <p class="text-xs text-text-secondary mt-2">How often the browser checks for new notifications while the tab is active.</p>
+                    <p class="text-xs text-text-secondary mt-2" th:text="#{admin.settings.system.poll_interval_hint}">How often the browser checks for new notifications while the tab is active.</p>
                 </div>
                 <div>
-                    <label class="form-label text-sm font-semibold">Auto-Logout Inactivity (minutes)</label>
+                    <label class="form-label text-sm font-semibold" th:text="#{admin.settings.system.auto_logout}">Auto-Logout Inactivity (minutes)</label>
                     <input type="number" name="autoLogout" min="1" max="120" required class="form-input mt-1" th:value="${autoLogout}">
-                    <p class="text-xs text-text-secondary mt-2">How long a user can be inactive before being automatically logged out.</p>
+                    <p class="text-xs text-text-secondary mt-2" th:text="#{admin.settings.system.auto_logout_hint}">How long a user can be inactive before being automatically logged out.</p>
                 </div>
                 <div class="md:col-span-2 flex justify-end pt-2 border-t border-border">
-                    <button type="submit" class="btn-primary">Save Configuration</button>
+                    <button type="submit" class="btn-primary" th:text="#{admin.settings.system.save}">Save Configuration</button>
                 </div>
             </form>
     </div>
@@ -72,18 +72,18 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span>
-                Syllabus Figures Import
+                <th:block th:text="#{admin.syllabus.heading}">Syllabus Figures Import</th:block>
             </h2>
-            <p class="text-sm text-text-secondary mt-1">Import dynamic technical breakdowns from the scraped Apify dataset.</p>
+            <p class="text-sm text-text-secondary mt-1" th:text="#{admin.syllabus.description}">Import dynamic technical breakdowns from the scraped Apify dataset.</p>
         </div>
         <div class="p-6">
             <div class="flex items-center gap-4">
-                <button hx-post="/admin/syllabus/import" hx-target="#syllabusImportResults" hx-swap="innerHTML" class="btn-primary" hx-indicator="#import-indicator">
+                <button hx-post="/admin/syllabus/import" hx-target="#syllabusImportResults" hx-swap="innerHTML" class="btn-primary" hx-indicator="#import-indicator" th:text="#{admin.syllabus.import_button}">
                     Import Figures &amp; Steps
                 </button>
                 <div id="import-indicator" class="htmx-indicator flex items-center gap-2 text-text-secondary text-sm">
                     <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary')}"></span>
-                    <span>Parsing and importing dataset records...</span>
+                    <span th:text="#{admin.syllabus.importing_indicator}">Parsing and importing dataset records...</span>
                 </div>
             </div>
             <div id="syllabusImportResults" class="mt-4"></div>
@@ -95,29 +95,29 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='hub', size='md', cls='text-primary')}"></span>
-                Knowledge Index (RAG)
+                <th:block th:text="#{admin.knowledge.heading}">Knowledge Index (RAG)</th:block>
             </h2>
-            <p class="text-sm text-text-secondary mt-1">Full-text and vector embeddings index over notes, comments, figures, and choreographies.</p>
+            <p class="text-sm text-text-secondary mt-1" th:text="#{admin.knowledge.description}">Full-text and vector embeddings index over notes, comments, figures, and choreographies.</p>
         </div>
         <div class="p-6">
             <th:block th:if="${isKnowledgeIndexStale}">
                 <div class="mb-4">
-                    <div th:replace="~{fragments/alert :: alert(variant='warning', title='Index Stale', text='The embedding model or schema has changed since chunks were last indexed. A rebuild is recommended.')}"></div>
+                    <div th:replace="~{fragments/alert :: alert(variant='warning', title=#{admin.knowledge.stale_title}, text=#{admin.knowledge.stale_text})}"></div>
                 </div>
             </th:block>
             <th:block th:if="${knowledgeStatus != null && !knowledgeStatus.isComplete}">
                 <div class="mb-4">
-                    <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding Incomplete', text=${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ' chunks embedded. Some chunks are awaiting vector embedding.')}"></div>
+                    <div th:replace="~{fragments/alert :: alert(variant='warning', title=#{admin.knowledge.incomplete_title}, text=#{admin.knowledge.incomplete_text(${knowledgeStatus.embeddedChunks}, ${knowledgeStatus.totalChunks})})}"></div>
                 </div>
             </th:block>
             <div class="flex items-center gap-4">
                 <button hx-post="/admin/knowledge/rebuild" hx-target="#knowledgeRebuildResults" hx-swap="innerHTML" class="btn-primary" hx-indicator="#knowledge-rebuild-indicator">
                     <span th:replace="~{fragments/icon :: icon(name='refresh', size='sm')}"></span>
-                    Rebuild Knowledge Index
+                    <th:block th:text="#{admin.knowledge.rebuild_button}">Rebuild Knowledge Index</th:block>
                 </button>
                 <div id="knowledge-rebuild-indicator" class="htmx-indicator flex items-center gap-2 text-text-secondary text-sm">
                     <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary')}"></span>
-                    <span>Re-indexing and generating embeddings...</span>
+                    <span th:text="#{admin.knowledge.rebuilding_indicator}">Re-indexing and generating embeddings...</span>
                 </div>
             </div>
             <div id="knowledgeRebuildResults" class="mt-4"></div>
@@ -129,37 +129,37 @@
 
         <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-primary')}"></span>
-            System Settings & Defaults
+            <th:block th:text="#{admin.settings.defaults.heading}">System Settings & Defaults</th:block>
         </h2>
-        <p class="text-sm text-text-secondary mb-6">
+        <p class="text-sm text-text-secondary mb-6" th:text="#{admin.settings.defaults.description}">
             Configure global default images used throughout the application when specific images are not provided.
         </p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Default Collection Image -->
             <div class="border border-border rounded-button p-4 bg-surface-warm">
-                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Collection Image</h3>
+                <h3 class="font-medium text-text-primary mb-2 text-sm" th:text="#{admin.settings.defaults.collection_image}">Default Collection Image</h3>
                 <div class="flex items-start gap-4">
                     <div class="w-24 h-24 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
-                        <img th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default List" class="w-full h-full object-cover">
+                        <img th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" th:attr="alt=#{admin.settings.defaults.list_alt}" alt="Default List" class="w-full h-full object-cover">
                     </div>
                     <form th:action="@{/admin/settings/default-list-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
                         <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
-                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                        <button type="submit" class="btn-primary btn-sm" th:text="#{admin.settings.defaults.upload_button}">Upload New Default</button>
                     </form>
                 </div>
             </div>
 
             <!-- Default Category Image -->
             <div class="border border-border rounded-button p-4 bg-surface-warm">
-                <h3 class="font-medium text-text-primary mb-2 text-sm">Default Category Image</h3>
+                <h3 class="font-medium text-text-primary mb-2 text-sm" th:text="#{admin.settings.defaults.category_image}">Default Category Image</h3>
                 <div class="flex items-start gap-4">
                     <div class="w-24 h-16 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
-                        <img th:src="@{/uploads/defaults/category-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" alt="Default Category" class="w-full h-full object-cover">
+                        <img th:src="@{/uploads/defaults/category-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" th:attr="alt=#{admin.settings.defaults.category_alt}" alt="Default Category" class="w-full h-full object-cover">
                     </div>
                     <form th:action="@{/admin/settings/default-category-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
                         <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
-                        <button type="submit" class="btn-primary btn-sm">Upload New Default</button>
+                        <button type="submit" class="btn-primary btn-sm" th:text="#{admin.settings.defaults.upload_button}">Upload New Default</button>
                     </form>
                 </div>
             </div>
@@ -170,27 +170,29 @@
     <div class="card p-6 mb-8">
         <h2 class="font-heading font-semibold text-lg text-text-primary mb-2 flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='cloud', size='md', cls='text-primary')}"></span>
-            Google Drive Maintenance
+            <th:block th:text="#{admin.storage.heading}">Google Drive Maintenance</th:block>
         </h2>
-        <p class="text-sm text-text-secondary mb-6">
+        <p class="text-sm text-text-secondary mb-6" th:text="#{admin.storage.description}">
             Finds Google Drive videos uploaded over 24 hours ago that were never saved to a material (orphaned files).
         </p>
         <div class="flex flex-wrap gap-3 mb-4">
             <button hx-post="/admin/storage/simulate" hx-target="#results" hx-swap="innerHTML" class="btn-secondary">
                 <span th:replace="~{fragments/icon :: icon(name='search', size='sm')}"></span>
-                Simulate Cleanup
+                <th:block th:text="#{admin.storage.simulate_button}">Simulate Cleanup</th:block>
             </button>
             <button hx-post="/admin/storage/execute" hx-target="#results" hx-swap="innerHTML"
+                    th:attr="hx-confirm=#{admin.storage.execute_confirm}"
                     hx-confirm="Are you sure you want to permanently delete orphaned files from Google Drive?"
                     class="btn-danger">
                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
-                Run Deletion
+                <th:block th:text="#{admin.storage.execute_button}">Run Deletion</th:block>
             </button>
             <button hx-post="/admin/storage/clean-permissions" hx-target="#results" hx-swap="innerHTML"
+                    th:attr="hx-confirm=#{admin.storage.permissions_confirm}"
                     hx-confirm="Are you sure you want to remove public (anyone) permissions from all existing Google Drive files?"
                     class="btn-secondary">
                 <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
-                Clean Public Permissions
+                <th:block th:text="#{admin.storage.permissions_button}">Clean Public Permissions</th:block>
             </button>
         </div>
         <div id="results"></div>
@@ -200,13 +202,13 @@
     <div class="card mb-8 overflow-hidden">
         <div class="px-6 py-4 border-b border-border bg-surface-warm flex items-center gap-2">
             <span th:replace="~{fragments/icon :: icon(name='cloud_download', size='md', cls='text-primary')}"></span>
-            <h2 class="font-heading font-semibold text-lg text-text-primary">Google Drive Files</h2>
+            <h2 class="font-heading font-semibold text-lg text-text-primary" th:text="#{admin.storage.files_heading}">Google Drive Files</h2>
         </div>
         <div class="p-6">
             <div hx-get="/admin/storage/files" hx-trigger="load">
                 <div class="flex items-center space-x-2 text-text-secondary">
                     <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary')}"></span>
-                    <span>Fetching storage data from Google...</span>
+                    <span th:text="#{admin.storage.loading}">Fetching storage data from Google...</span>
                 </div>
             </div>
         </div>
@@ -217,17 +219,17 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm flex justify-between items-center">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', cls='text-primary')}"></span>
-                Training Calendars
+                <th:block th:text="#{admin.calendars.heading}">Training Calendars</th:block>
             </h2>
             <button hx-get="/admin/calendars/form" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-primary btn-sm">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
-                Add Calendar
+                <th:block th:text="#{admin.calendars.add_button}">Add Calendar</th:block>
             </button>
         </div>
         <div hx-get="/admin/calendars" hx-trigger="load" hx-swap="outerHTML" id="calendarsSection">
             <div class="p-6 flex items-center space-x-2 text-text-secondary">
                 <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary')}"></span>
-                <span>Fetching training calendars...</span>
+                <span th:text="#{admin.calendars.loading}">Fetching training calendars...</span>
             </div>
         </div>
     </div>
@@ -237,11 +239,11 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm flex justify-between items-center">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='group', size='md', cls='text-primary')}"></span>
-                Registered Users
+                <th:block th:text="#{admin.users.heading}">Registered Users</th:block>
             </h2>
             <button hx-get="/admin/users/form" hx-target="#createUserFormContainer" hx-swap="innerHTML" class="btn-primary btn-sm">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='sm')}"></span>
-                Create Account
+                <th:block th:text="#{admin.users.create_button}">Create Account</th:block>
             </button>
         </div>
 
@@ -255,14 +257,14 @@
             </th:block>
         </div>
 
-        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Registered Users">
+        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Registered Users" th:attr="aria-label=#{admin.users.table_aria_label}">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell table-header-pinned text-left">User</th>
-                        <th class="table-cell text-left">Role</th>
-                        <th class="table-cell text-left">Joined</th>
-                        <th class="table-cell text-right">Actions</th>
+                        <th class="table-cell table-header-pinned text-left" th:text="#{admin.users.th_user}">User</th>
+                        <th class="table-cell text-left" th:text="#{admin.users.th_role}">Role</th>
+                        <th class="table-cell text-left" th:text="#{admin.users.th_joined}">Joined</th>
+                        <th class="table-cell text-right" th:text="#{admin.users.th_actions}">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -279,43 +281,43 @@
         <div class="px-6 py-4 border-b border-border bg-surface-warm">
             <h2 class="font-heading font-semibold text-lg text-text-primary flex items-center gap-2">
                 <span th:replace="~{fragments/icon :: icon(name='history', size='md', cls='text-primary')}"></span>
-                Cleanup Job History
+                <th:block th:text="#{admin.storage.history_heading}">Cleanup Job History</th:block>
             </h2>
         </div>
-        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Cleanup Job History">
+        <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Cleanup Job History" th:attr="aria-label=#{admin.storage.history_table_aria_label}">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell table-header-pinned text-left">Executed At</th>
-                        <th class="table-cell text-left">Type</th>
-                        <th class="table-cell text-left">Files Deleted</th>
-                        <th class="table-cell text-left">Details</th>
+                        <th class="table-cell table-header-pinned text-left" th:text="#{admin.storage.th_executed_at}">Executed At</th>
+                        <th class="table-cell text-left" th:text="#{admin.storage.th_type}">Type</th>
+                        <th class="table-cell text-left" th:text="#{admin.storage.th_files_deleted}">Files Deleted</th>
+                        <th class="table-cell text-left" th:text="#{admin.storage.th_details}">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="log : ${cleanupLogs}" class="table-row">
                         <td class="table-cell table-cell-pinned font-medium" th:text="${#temporals.format(log.executedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
                         <td class="table-cell">
-                            <span th:replace="~{fragments/badge :: badge(label=(${log.isDryRun ? 'Simulate' : 'Delete'}), variant=(${log.isDryRun ? 'accent' : 'danger'}))}"></span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${log.isDryRun ? #messages.msg('admin.storage.badge_simulate') : #messages.msg('admin.storage.badge_delete')}), variant=(${log.isDryRun ? 'accent' : 'danger'}))}"></span>
                         </td>
                         <td class="table-cell" th:text="${log.filesDeletedCount}">0</td>
                         <td class="table-cell">
                             <details th:if="${!log.deletedFiles.isEmpty()}" class="cursor-pointer">
-                                <summary class="font-semibold text-primary hover:text-primary-hover text-sm">View Files</summary>
+                                <summary class="font-semibold text-primary hover:text-primary-hover text-sm" th:text="#{admin.storage.view_files}">View Files</summary>
                                 <div class="mt-2 text-xs border border-border rounded-button p-2 bg-surface-warm max-h-48 overflow-y-auto">
                                     <table class="w-full text-left">
                                         <tr th:each="file : ${log.deletedFiles}" class="border-b last:border-0 border-border">
                                             <td class="py-1 pr-4 truncate max-w-[200px]" th:text="${file.name}">Name</td>
-                                            <td class="py-1 whitespace-nowrap text-right font-mono" th:text="${file.size != null ? T(java.lang.String).format('%.2f MB', file.size / 1048576.0) : 'Unknown'}">Size</td>
+                                            <td class="py-1 whitespace-nowrap text-right font-mono" th:text="${file.size != null ? T(java.lang.String).format('%.2f MB', file.size / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
                                         </tr>
                                     </table>
                                 </div>
                             </details>
-                            <span th:if="${log.deletedFiles.isEmpty()}" class="text-text-secondary">None</span>
+                            <span th:if="${log.deletedFiles.isEmpty()}" class="text-text-secondary" th:text="#{admin.storage.no_files}">None</span>
                         </td>
                     </tr>
                     <tr th:if="${cleanupLogs.isEmpty()}">
-                        <td colspan="4" class="table-cell text-center text-text-secondary">No cleanup history found.</td>
+                        <td colspan="4" class="table-cell text-center text-text-secondary" th:text="#{admin.storage.no_history}">No cleanup history found.</td>
                     </tr>
                 </tbody>
             </table>
@@ -324,65 +326,65 @@
 
     <!-- HTMX Fragments (hidden, returned by HTMX endpoints) -->
     <div th:fragment="cleanupResults" th:if="${orphanedFiles != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='info', title='Simulation Complete', text='Found ' + ${orphanedFiles.size()} + ' orphaned file(s).' + (${orphanedFiles.isEmpty()} ? ' Storage is clean!' : ''))}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='info', title=#{admin.storage.simulation_complete_title}, text=(${orphanedFiles.isEmpty()} ? #messages.msg('admin.storage.simulation_clean') : #messages.msg('admin.storage.simulation_found', orphanedFiles.size())))}"></div>
         <ul th:if="${!orphanedFiles.isEmpty()}" class="list-disc pl-5 mt-2 text-sm text-text-secondary">
             <li th:each="fileId : ${orphanedFiles}" th:text="${fileId}">file-id</li>
         </ul>
     </div>
 
     <div th:fragment="cleanupSuccess" th:if="${deletedCount != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='success', title='Cleanup Successful', text='Permanently deleted ' + ${deletedCount} + ' orphaned file(s) from Google Drive.')}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='success', title=#{admin.storage.cleanup_success_title}, text=#{admin.storage.cleanup_success_text(${deletedCount})})}"></div>
     </div>
 
     <div th:fragment="permissionCleanupSuccess" th:if="${permissionResult != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='success', title='Permissions Cleanup Complete', text='Scanned ' + ${permissionResult.filesScanned} + ' file(s), removed ' + ${permissionResult.permissionsRemoved} + ' public permission(s) across ' + ${permissionResult.modifiedFileIds.size()} + ' file(s).')}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='success', title=#{admin.storage.permission_cleanup_title}, text=#{admin.storage.permission_cleanup_text(${permissionResult.filesScanned}, ${permissionResult.permissionsRemoved}, ${permissionResult.modifiedFileIds.size()})})}"></div>
     </div>
 
     <div th:fragment="driveSection" th:if="${driveFiles != null}" class="space-y-4">
         <!-- Storage Size Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div class="stat-card bg-surface-container border border-border">
-                <div class="stat-card-label text-text-secondary">Total Cloud Space</div>
+                <div class="stat-card-label text-text-secondary" th:text="#{admin.storage.total_space}">Total Cloud Space</div>
                 <div class="flex items-baseline gap-2">
                     <span class="stat-card-value text-text-primary" th:text="${T(java.lang.String).format('%.2f MB', totalSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-text-secondary" th:text="'(' + ${totalCount} + ' files)'"></span>
+                    <span class="text-sm font-medium text-text-secondary" th:text="#{admin.storage.file_count(${totalCount})}">(0 files)</span>
                 </div>
             </div>
             <div class="stat-card bg-success-soft border border-success/30">
-                <div class="stat-card-label text-success">Linked Materials</div>
+                <div class="stat-card-label text-success" th:text="#{admin.storage.linked_materials}">Linked Materials</div>
                 <div class="flex items-baseline gap-2">
                     <span class="stat-card-value text-success" th:text="${T(java.lang.String).format('%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-success/80" th:text="'(' + ${linkedCount} + ' files)'"></span>
+                    <span class="text-sm font-medium text-success/80" th:text="#{admin.storage.file_count(${linkedCount})}">(0 files)</span>
                 </div>
             </div>
             <div class="stat-card bg-danger-soft border border-danger/30">
-                <div class="stat-card-label text-danger">Orphaned Waste</div>
+                <div class="stat-card-label text-danger" th:text="#{admin.storage.orphaned_waste}">Orphaned Waste</div>
                 <div class="flex items-baseline gap-2">
                     <span class="stat-card-value text-danger" th:text="${T(java.lang.String).format('%.2f MB', orphanedSize / 1048576.0)}">0 MB</span>
-                    <span class="text-sm font-medium text-danger/80" th:text="'(' + ${orphanedCount} + ' files)'"></span>
+                    <span class="text-sm font-medium text-danger/80" th:text="#{admin.storage.file_count(${orphanedCount})}">(0 files)</span>
                 </div>
             </div>
         </div>
 
-        <div class="overflow-x-auto border border-border rounded-button" tabindex="0" role="region" aria-label="Google Drive Files">
+        <div class="overflow-x-auto border border-border rounded-button" tabindex="0" role="region" aria-label="Google Drive Files" th:attr="aria-label=#{admin.storage.files_table_aria_label}">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell table-header-pinned text-left">File Name</th>
-                        <th class="table-cell text-left">Size</th>
-                        <th class="table-cell text-left">Status</th>
+                        <th class="table-cell table-header-pinned text-left" th:text="#{admin.storage.th_file_name}">File Name</th>
+                        <th class="table-cell text-left" th:text="#{admin.storage.th_file_size}">Size</th>
+                        <th class="table-cell text-left" th:text="#{admin.storage.th_file_status}">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="f : ${driveFiles}" class="table-row" th:classappend="${f.isOrphaned} ? 'bg-danger-soft/50' : ''">
                         <td class="table-cell table-cell-pinned font-medium" th:text="${f.name}">Name</td>
-                        <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : 'Unknown'}">Size</td>
+                        <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
                         <td class="table-cell">
-                            <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? 'Orphaned' : 'Linked'}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
+                            <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? #messages.msg('admin.storage.badge_orphaned') : #messages.msg('admin.storage.badge_linked')}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
                         </td>
                     </tr>
                     <tr th:if="${driveFiles.isEmpty()}">
-                        <td colspan="3" class="table-cell text-center text-text-secondary">No files found on Google Drive.</td>
+                        <td colspan="3" class="table-cell text-center text-text-secondary" th:text="#{admin.storage.no_files_found}">No files found on Google Drive.</td>
                     </tr>
                 </tbody>
             </table>
@@ -399,31 +401,31 @@
         </div>
         <form hx-post="/admin/users" hx-target="#usersSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="form-label">Username</label>
+                <label class="form-label" th:text="#{admin.users.form.username}">Username</label>
                 <input type="text" name="username" required class="form-input">
             </div>
             <div>
-                <label class="form-label">Email</label>
+                <label class="form-label" th:text="#{admin.users.form.email}">Email</label>
                 <input type="email" name="email" required class="form-input">
             </div>
             <div>
-                <label class="form-label">Display Name</label>
+                <label class="form-label" th:text="#{admin.users.form.display_name}">Display Name</label>
                 <input type="text" name="displayName" required class="form-input">
             </div>
             <div>
-                <label class="form-label">Role</label>
+                <label class="form-label" th:text="#{admin.users.form.role}">Role</label>
                 <select name="role" required class="form-select">
-                    <option value="USER">User</option>
-                    <option value="ADMIN">Admin</option>
+                    <option value="USER" th:text="#{admin.users.role.user}">User</option>
+                    <option value="ADMIN" th:text="#{admin.users.role.admin}">Admin</option>
                 </select>
             </div>
             <div class="md:col-span-2">
-                <label class="form-label">Initial Password (min 8 characters)</label>
+                <label class="form-label" th:text="#{admin.users.form.initial_password}">Initial Password (min 8 characters)</label>
                 <input type="password" name="password" required minlength="8" class="form-input">
             </div>
             <div class="md:col-span-2 flex justify-end gap-2">
-                <button type="button" hx-get="/admin/users/form/cancel" hx-target="#createUserFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm">Cancel</button>
-                <button type="submit" class="btn-primary btn-sm">Save Account</button>
+                <button type="button" hx-get="/admin/users/form/cancel" hx-target="#createUserFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm" th:text="#{common.cancel}">Cancel</button>
+                <button type="submit" class="btn-primary btn-sm" th:text="#{admin.users.form.save_account}">Save Account</button>
             </div>
         </form>
     </div>
@@ -435,12 +437,12 @@
             <div class="text-xs text-text-secondary/70 mt-0.5" th:text="'@' + ${user.username}"></div>
         </td>
         <td class="table-cell">
-            <span th:replace="~{fragments/badge :: badge(label=(${user.role.name() == 'ADMIN' ? 'Admin' : 'User'}), variant=(${user.role.name() == 'ADMIN' ? 'primary' : 'neutral'}))}"></span>
+            <span th:replace="~{fragments/badge :: badge(label=(${user.role.name() == 'ADMIN' ? #messages.msg('admin.users.role.admin') : #messages.msg('admin.users.role.user')}), variant=(${user.role.name() == 'ADMIN' ? 'primary' : 'neutral'}))}"></span>
         </td>
         <td class="table-cell text-text-secondary" th:text="${#temporals.format(user.createdAt, 'MMM dd, yyyy')}">Date</td>
         <td class="table-cell text-right">
             <button th:hx-get="@{/admin/users/{id}/edit(id=${user.id})}" hx-target="closest tr" hx-swap="outerHTML"
-                    class="text-sm text-primary hover:text-primary-hover font-semibold transition">Edit</button>
+                    class="text-sm text-primary hover:text-primary-hover font-semibold transition" th:text="#{common.edit}">Edit</button>
         </td>
     </tr>
 
@@ -451,40 +453,40 @@
             </th:block>
             <form th:hx-post="@{/admin/users/{id}/edit(id=${editUser.id})}" hx-target="closest tr" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
-                    <label class="form-label text-xs">Username</label>
+                    <label class="form-label text-xs" th:text="#{admin.users.form.username}">Username</label>
                     <input type="text" name="username" th:value="${editUser.username}" required class="form-input text-sm">
                 </div>
                 <div>
-                    <label class="form-label text-xs">Email</label>
+                    <label class="form-label text-xs" th:text="#{admin.users.form.email}">Email</label>
                     <input type="email" name="email" th:value="${editUser.email}" required class="form-input text-sm">
                 </div>
                 <div>
-                    <label class="form-label text-xs">Display Name</label>
+                    <label class="form-label text-xs" th:text="#{admin.users.form.display_name}">Display Name</label>
                     <input type="text" name="displayName" th:value="${editUser.displayName}" required class="form-input text-sm">
                 </div>
                 <div>
-                    <label class="form-label text-xs">Role</label>
+                    <label class="form-label text-xs" th:text="#{admin.users.form.role}">Role</label>
                     <select name="role" required class="form-select text-sm">
-                        <option value="USER" th:selected="${editUser.role.name() == 'USER'}">User</option>
-                        <option value="ADMIN" th:selected="${editUser.role.name() == 'ADMIN'}">Admin</option>
+                        <option value="USER" th:selected="${editUser.role.name() == 'USER'}" th:text="#{admin.users.role.user}">User</option>
+                        <option value="ADMIN" th:selected="${editUser.role.name() == 'ADMIN'}" th:text="#{admin.users.role.admin}">Admin</option>
                     </select>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="form-label text-xs">Reset Password (leave blank to keep)</label>
-                    <input type="password" name="newPassword" placeholder="Min 8 characters" class="form-input text-sm">
+                    <label class="form-label text-xs" th:text="#{admin.users.form.reset_password}">Reset Password (leave blank to keep)</label>
+                    <input type="password" name="newPassword" placeholder="Min 8 characters" th:attr="placeholder=#{admin.users.form.password_placeholder}" class="form-input text-sm">
                 </div>
                 <div class="md:col-span-2 flex justify-end gap-2">
-                    <button type="button" th:hx-get="@{/admin/users/{id}(id=${editUser.id})}" hx-target="closest tr" hx-swap="outerHTML" class="btn-outline btn-sm">Cancel</button>
-                    <button type="submit" class="btn-primary btn-sm">Save Changes</button>
+                    <button type="button" th:hx-get="@{/admin/users/{id}(id=${editUser.id})}" hx-target="closest tr" hx-swap="outerHTML" class="btn-outline btn-sm" th:text="#{common.cancel}">Cancel</button>
+                    <button type="submit" class="btn-primary btn-sm" th:text="#{admin.users.form.save_changes}">Save Changes</button>
                 </div>
             </form>
         </td>
     </tr>
 
     <div th:fragment="importSuccess" th:if="${importResult != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='success', title='Import Successful', text='Updated ' + ${importResult.figuresUpdated} + ' figures and created/updated ' + ${importResult.stepsCreated} + ' steps. Skipped ' + ${importResult.skippedUnmatched} + ' unmatched figures.')}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='success', title=#{admin.syllabus.import_success_title}, text=#{admin.syllabus.import_success_text(${importResult.figuresUpdated}, ${importResult.stepsCreated}, ${importResult.skippedUnmatched})})}"></div>
         <details th:if="${!importResult.warnings.isEmpty()}" class="mt-2 text-xs cursor-pointer">
-            <summary class="font-semibold text-text-primary hover:text-primary">View Warnings (<span th:text="${importResult.warnings.size()}">0</span>)</summary>
+            <summary class="font-semibold text-text-primary hover:text-primary"><th:block th:text="#{admin.syllabus.view_warnings}">View Warnings</th:block> (<span th:text="${importResult.warnings.size()}">0</span>)</summary>
             <ul class="list-disc pl-5 mt-1 text-text-secondary max-h-40 overflow-y-auto space-y-0.5">
                 <li th:each="w : ${importResult.warnings}" th:text="${w}">Warning</li>
             </ul>
@@ -492,39 +494,39 @@
     </div>
 
     <div th:fragment="importFailure" th:if="${importError != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='error', title='Import Failed', text=${importError})}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='error', title=#{admin.syllabus.import_failure_title}, text=${importError})}"></div>
     </div>
 
     <div th:fragment="rebuildStatus" id="knowledgeRebuildStatus" class="mt-2">
         <th:block th:if="${rebuildReport != null && (knowledgeStatus == null || !knowledgeStatus.isComplete)}">
             <div hx-get="/admin/knowledge/status" hx-trigger="load delay:2s" hx-target="#knowledgeRebuildStatus" hx-swap="outerHTML">
-                <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding in Progress', text=${rebuildReport.embeddedChunks} + ' of ' + ${rebuildReport.totalChunks} + ' chunks embedded (' + ${rebuildReport.indexedNotes} + ' notes, ' + ${rebuildReport.indexedComments} + ' comments, ' + ${rebuildReport.indexedFigures} + ' figures, ' + ${rebuildReport.indexedChoreographies} + ' choreographies indexed in ' + ${rebuildReport.durationMs} + ' ms). Background worker is generating vectors.')}"></div>
+                <div th:replace="~{fragments/alert :: alert(variant='warning', title=#{admin.knowledge.rebuild_in_progress_title}, text=#{admin.knowledge.rebuild_in_progress_with_report(${rebuildReport.embeddedChunks}, ${rebuildReport.totalChunks}, ${rebuildReport.indexedNotes}, ${rebuildReport.indexedComments}, ${rebuildReport.indexedFigures}, ${rebuildReport.indexedChoreographies}, ${rebuildReport.durationMs})})}"></div>
                 <div class="flex items-center gap-2 mt-2 text-sm text-text-secondary">
                     <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='sm', cls='animate-spin text-primary')}"></span>
-                    <span>Embedding chunks in background...</span>
+                    <span th:text="#{admin.knowledge.embedding_in_background}">Embedding chunks in background...</span>
                 </div>
             </div>
         </th:block>
         <th:block th:if="${rebuildReport == null && knowledgeStatus != null && !knowledgeStatus.isComplete}">
             <div hx-get="/admin/knowledge/status" hx-trigger="load delay:2s" hx-target="#knowledgeRebuildStatus" hx-swap="outerHTML">
-                <div th:replace="~{fragments/alert :: alert(variant='warning', title='Embedding in Progress', text=${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ' chunks embedded. Background worker is generating vectors.')}"></div>
+                <div th:replace="~{fragments/alert :: alert(variant='warning', title=#{admin.knowledge.rebuild_in_progress_title}, text=#{admin.knowledge.rebuild_in_progress_status(${knowledgeStatus.embeddedChunks}, ${knowledgeStatus.totalChunks})})}"></div>
                 <div class="flex items-center gap-2 mt-2 text-sm text-text-secondary">
                     <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='sm', cls='animate-spin text-primary')}"></span>
-                    <span>Embedding chunks in background...</span>
+                    <span th:text="#{admin.knowledge.embedding_in_background}">Embedding chunks in background...</span>
                 </div>
             </div>
         </th:block>
         <th:block th:if="${knowledgeStatus != null && knowledgeStatus.isComplete}">
-            <div th:replace="~{fragments/alert :: alert(variant='success', title='Knowledge Index Rebuilt', text='All ' + ${knowledgeStatus.totalChunks} + ' chunks embedded (' + ${knowledgeStatus.embeddedChunks} + ' of ' + ${knowledgeStatus.totalChunks} + ').')}"></div>
+            <div th:replace="~{fragments/alert :: alert(variant='success', title=#{admin.knowledge.rebuilt_title}, text=#{admin.knowledge.rebuilt_status(${knowledgeStatus.totalChunks}, ${knowledgeStatus.embeddedChunks})})}"></div>
         </th:block>
     </div>
 
     <div th:fragment="rebuildSuccess" th:if="${rebuildReport != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='success', title='Knowledge Index Rebuilt', text='Successfully indexed ' + ${rebuildReport.indexedNotes} + ' notes, ' + ${rebuildReport.indexedComments} + ' comments, ' + ${rebuildReport.indexedFigures} + ' figures, ' + ${rebuildReport.indexedChoreographies} + ' choreographies (' + ${rebuildReport.embeddedChunks} + ' of ' + ${rebuildReport.totalChunks} + ' chunks embedded) in ' + ${rebuildReport.durationMs} + ' ms.')}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='success', title=#{admin.knowledge.rebuilt_title}, text=#{admin.knowledge.rebuilt_report(${rebuildReport.indexedNotes}, ${rebuildReport.indexedComments}, ${rebuildReport.indexedFigures}, ${rebuildReport.indexedChoreographies}, ${rebuildReport.embeddedChunks}, ${rebuildReport.totalChunks}, ${rebuildReport.durationMs})})}"></div>
     </div>
 
     <div th:fragment="rebuildFailure" th:if="${rebuildError != null}" class="mt-2">
-        <div th:replace="~{fragments/alert :: alert(variant='error', title='Rebuild Failed', text=${rebuildError})}"></div>
+        <div th:replace="~{fragments/alert :: alert(variant='error', title=#{admin.knowledge.rebuild_failed_title}, text=${rebuildError})}"></div>
     </div>
 
     <div th:fragment="calendarsSection" id="calendarsSection">
@@ -541,16 +543,16 @@
             </th:block>
         </div>
 
-        <div th:if="${calendars != null && !calendars.isEmpty()}" class="overflow-x-auto" tabindex="0" role="region" aria-label="Training Calendars">
+        <div th:if="${calendars != null && !calendars.isEmpty()}" class="overflow-x-auto" tabindex="0" role="region" aria-label="Training Calendars" th:attr="aria-label=#{admin.calendars.table_aria_label}">
             <table class="min-w-full">
                 <thead class="table-header">
                     <tr>
-                        <th class="table-cell table-header-pinned text-left">Display Name</th>
-                        <th class="table-cell text-left">Google ID</th>
-                        <th class="table-cell text-left">Last Synced</th>
-                        <th class="table-cell text-left">Default</th>
-                        <th class="table-cell text-left">Enabled</th>
-                        <th class="table-cell text-right">Actions</th>
+                        <th class="table-cell table-header-pinned text-left" th:text="#{admin.calendars.th_display_name}">Display Name</th>
+                        <th class="table-cell text-left" th:text="#{admin.calendars.th_google_id}">Google ID</th>
+                        <th class="table-cell text-left" th:text="#{admin.calendars.th_last_synced}">Last Synced</th>
+                        <th class="table-cell text-left" th:text="#{admin.calendars.th_default}">Default</th>
+                        <th class="table-cell text-left" th:text="#{admin.calendars.th_enabled}">Enabled</th>
+                        <th class="table-cell text-right" th:text="#{admin.calendars.th_actions}">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -560,7 +562,7 @@
                 </tbody>
             </table>
         </div>
-        <div th:if="${calendars == null || calendars.isEmpty()}" class="p-6 text-center text-text-secondary">
+        <div th:if="${calendars == null || calendars.isEmpty()}" class="p-6 text-center text-text-secondary" th:text="#{admin.calendars.empty}">
             No calendars configured. Add one to start creating sessions.
         </div>
     </div>
@@ -568,16 +570,16 @@
     <tr th:fragment="calendarRow" th:id="'calendar-row-' + ${cal.id}" class="table-row">
         <td class="table-cell table-cell-pinned font-medium text-text-primary" th:text="${cal.displayName}">Display Name</td>
         <td class="table-cell font-mono text-sm text-text-secondary truncate max-w-[20rem]" th:text="${cal.writeTarget?.googleCalendarId}">cal-id</td>
-        <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : 'Never'}">Never</td>
+        <td class="table-cell text-text-secondary" th:text="${cal.lastSyncedAt != null ? #temporals.format(cal.lastSyncedAt, 'MMM dd, yyyy HH:mm') : #messages.msg('admin.calendars.never_synced')}">Never</td>
         <td class="table-cell">
             <span th:if="${cal.isDefaultFor(currentUser)}" class="badge-primary inline-flex items-center gap-1">
                 <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true)}"></span>
-                Default
+                <th:block th:text="#{admin.calendars.badge_default}">Default</th:block>
             </span>
             <button th:if="${!cal.isDefaultFor(currentUser)}" type="button"
                     th:hx-post="@{/admin/calendars/{id}/default(id=${cal.id})}"
                     hx-target="#calendarsSection" hx-swap="outerHTML"
-                    class="btn-outline btn-sm">
+                    class="btn-outline btn-sm" th:text="#{admin.calendars.make_default}">
                 Make Default
             </button>
         </td>
@@ -586,7 +588,7 @@
                     th:hx-post="@{/admin/calendars/{id}/enabled(id=${cal.id}, enabled=${!cal.enabled})}"
                     hx-target="#calendarsSection" hx-swap="outerHTML"
                     th:class="${cal.enabled} ? 'badge-success cursor-pointer hover:opacity-80 transition' : 'badge-neutral cursor-pointer hover:opacity-80 transition'"
-                    th:text="${cal.enabled ? 'Enabled' : 'Disabled'}">
+                    th:text="${cal.enabled ? #messages.msg('admin.calendars.status_enabled') : #messages.msg('admin.calendars.status_disabled')}">
                 Enabled
             </button>
         </td>
@@ -595,19 +597,19 @@
                 <button type="button"
                         th:hx-post="@{/admin/calendars/{id}/verify(id=${cal.id})}"
                         hx-target="#calendarsSection" hx-swap="outerHTML"
-                        class="btn-outline btn-sm">
+                        class="btn-outline btn-sm" th:text="#{admin.calendars.verify}">
                     Verify
                 </button>
                 <button type="button"
                         th:hx-get="@{/admin/calendars/{id}/edit(id=${cal.id})}"
                         hx-target="closest tr" hx-swap="outerHTML"
-                        class="btn-outline btn-sm">
+                        class="btn-outline btn-sm" th:text="#{common.edit}">
                     Edit
                 </button>
                 <button type="button"
                         th:hx-get="@{/admin/calendars/{id}/delete-dialog(id=${cal.id})}"
                         hx-target="#confirmModalContainer" hx-swap="innerHTML"
-                        class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft">
+                        class="btn-outline btn-sm text-danger border-danger/30 hover:bg-danger-soft" th:text="#{common.delete}">
                     Delete
                 </button>
             </div>
@@ -619,30 +621,30 @@
             <form th:hx-post="@{/admin/calendars/{id}(id=${calendar.id})}" hx-target="#calendarsSection" hx-swap="outerHTML" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="form-label text-xs">Display Name</label>
+                        <label class="form-label text-xs" th:text="#{admin.calendars.form.display_name}">Display Name</label>
                         <input type="text" name="displayName" th:value="${calendar.displayName}" required class="form-input text-sm">
                     </div>
                     <div>
-                        <label class="form-label text-xs">Google Calendar ID</label>
+                        <label class="form-label text-xs" th:text="#{admin.calendars.form.google_id}">Google Calendar ID</label>
                         <th:block th:if="${sessionCount > 0}">
                             <input type="text" th:value="${calendar.writeTarget?.googleCalendarId}" disabled class="form-input text-sm font-mono opacity-60 bg-surface-container cursor-not-allowed">
                             <input type="hidden" name="googleCalendarId" th:value="${calendar.writeTarget?.googleCalendarId}">
                             <p class="text-xs text-text-secondary mt-1.5 flex items-center gap-1">
                                 <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
-                                Google Calendar ID cannot be changed while calendar owns <span th:text="${sessionCount}">0</span> session(s).
+                                <span th:text="#{admin.calendars.form.google_id_locked(${sessionCount})}">Google Calendar ID cannot be changed while calendar owns 0 session(s).</span>
                             </p>
                         </th:block>
                         <th:block th:if="${sessionCount == 0}">
                             <input type="text" name="googleCalendarId" th:value="${calendar.writeTarget?.googleCalendarId}" required class="form-input text-sm font-mono">
-                            <p class="text-xs text-text-secondary mt-1.5">
+                            <p class="text-xs text-text-secondary mt-1.5" th:text="#{admin.calendars.form.google_id_unlocked}">
                                 Google Calendar ID can be updated because this calendar owns no sessions.
                             </p>
                         </th:block>
                     </div>
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button type="button" th:hx-get="@{/admin/calendars/{id}/cancel(id=${calendar.id})}" hx-target="closest tr" hx-swap="outerHTML" class="btn-outline btn-sm">Cancel</button>
-                    <button type="submit" class="btn-primary btn-sm">Save Changes</button>
+                    <button type="button" th:hx-get="@{/admin/calendars/{id}/cancel(id=${calendar.id})}" hx-target="closest tr" hx-swap="outerHTML" class="btn-outline btn-sm" th:text="#{common.cancel}">Cancel</button>
+                    <button type="submit" class="btn-primary btn-sm" th:text="#{admin.calendars.form.save_changes}">Save Changes</button>
                 </div>
             </form>
         </td>
@@ -654,19 +656,19 @@
         </div>
         <form hx-post="/admin/calendars" hx-target="#calendarsSection" hx-swap="outerHTML" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="form-label">Display Name</label>
-                <input type="text" name="displayName" required class="form-input" placeholder="e.g. Training Calendar">
+                <label class="form-label" th:text="#{admin.calendars.form.display_name}">Display Name</label>
+                <input type="text" name="displayName" required class="form-input" placeholder="e.g. Training Calendar" th:attr="placeholder=#{admin.calendars.form.display_name_placeholder}">
             </div>
             <div>
-                <label class="form-label">Google Calendar ID</label>
-                <input type="text" name="googleCalendarId" required class="form-input font-mono" placeholder="e.g. c_...&#64;group.calendar.google.com">
+                <label class="form-label" th:text="#{admin.calendars.form.google_id}">Google Calendar ID</label>
+                <input type="text" name="googleCalendarId" required class="form-input font-mono" placeholder="e.g. c_...&#64;group.calendar.google.com" th:attr="placeholder=#{admin.calendars.form.google_id_placeholder}">
                 <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                    Google Calendar &rarr; the calendar's &#8942; &rarr; Settings and sharing &rarr; Integrate calendar &rarr; Calendar ID (e.g. <code class="font-mono text-xs">c_...&#64;group.calendar.google.com</code>). Must be shared with the account owning <code class="font-mono text-xs">GOOGLE_REFRESH_TOKEN</code> with permission &ldquo;Make changes to events&rdquo;.
+                    <span th:text="#{admin.calendars.form.google_id_hint_path}">Google Calendar &rarr; the calendar's &#8942; &rarr; Settings and sharing &rarr; Integrate calendar &rarr; Calendar ID (e.g.</span> <code class="font-mono text-xs">c_...&#64;group.calendar.google.com</code><span th:text="#{admin.calendars.form.google_id_hint_share}">). Must be shared with the account owning</span> <code class="font-mono text-xs">GOOGLE_REFRESH_TOKEN</code> <span th:text="#{admin.calendars.form.google_id_hint_perm}">with permission &ldquo;Make changes to events&rdquo;.</span>
                 </p>
             </div>
             <div class="md:col-span-2 flex justify-end gap-2">
-                <button type="button" hx-get="/admin/calendars/form/cancel" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm">Cancel</button>
-                <button type="submit" class="btn-primary btn-sm">Add Calendar</button>
+                <button type="button" hx-get="/admin/calendars/form/cancel" hx-target="#addCalendarFormContainer" hx-swap="innerHTML" class="btn-outline btn-sm" th:text="#{common.cancel}">Cancel</button>
+                <button type="submit" class="btn-primary btn-sm" th:text="#{admin.calendars.form.add_button}">Add Calendar</button>
             </div>
         </form>
     </div>
