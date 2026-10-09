@@ -12,33 +12,33 @@
     <div th:if="${activeNav == 'home'}"
          class="md:hidden fixed left-0 right-0 bottom-[132px] z-40 flex gap-2 overflow-x-auto px-4 pb-1">
         <button type="button" data-assistant-prompt="Find figures with a heel turn"
-                class="shrink-0 min-h-[32px] rounded-full border border-outline-variant bg-surface px-3 text-xs text-on-surface"
+                class="shrink-0 min-h-[32px] rounded-pill border border-outline-variant bg-surface px-3 text-xs text-on-surface"
                 th:text="#{assistant.chip.find_figure}">Find a figure</button>
         <button type="button" data-assistant-prompt="Which of my notes talk about sway?"
-                class="shrink-0 min-h-[32px] rounded-full border border-outline-variant bg-surface px-3 text-xs text-on-surface"
+                class="shrink-0 min-h-[32px] rounded-pill border border-outline-variant bg-surface px-3 text-xs text-on-surface"
                 th:text="#{assistant.chip.search_notes}">Search my notes</button>
         <button type="button" data-assistant-prompt="Which sessions still need confirming?"
-                class="shrink-0 min-h-[32px] rounded-full border border-outline-variant bg-surface px-3 text-xs text-on-surface"
+                class="shrink-0 min-h-[32px] rounded-pill border border-outline-variant bg-surface px-3 text-xs text-on-surface"
                 th:text="#{assistant.chip.to_confirm}">To confirm</button>
     </div>
 
     <!-- The bar: docked above the tab bar on a phone's home page, floating bottom centre on desktop. -->
     <form id="assistantBar" role="search" autocomplete="off"
-          class="fixed left-4 right-4 bottom-[84px] z-40 items-center gap-2 rounded-full border border-outline-variant bg-surface py-1.5 pl-4 pr-1.5 md:bottom-7 md:left-1/2 md:right-auto md:w-[620px] md:-translate-x-1/2 md:pl-5"
+          class="fixed left-4 right-4 bottom-[84px] z-40 items-center gap-2 rounded-pill border border-outline-variant bg-surface shadow-ambient py-1.5 pl-4 pr-1.5 md:bottom-7 md:left-1/2 md:right-auto md:w-[620px] md:-translate-x-1/2 md:pl-5 transition-[border-color,box-shadow] duration-200 focus-within:border-primary focus-within:ring-3 focus-within:ring-primary/22"
           th:classappend="${activeNav == 'home' ? 'flex' : 'hidden md:flex'}">
         <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary')}"></span>
         <input id="assistantBarInput" type="text" name="text" required maxlength="2000"
                class="min-w-0 flex-1 bg-transparent py-2 text-[15px] text-on-surface outline-none placeholder:text-on-surface-variant"
                placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
                th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}">
-        <kbd class="hidden md:inline-block rounded border border-outline-variant px-1.5 text-xs text-on-surface-variant" aria-hidden="true">/</kbd>
+        <kbd class="hidden md:inline-block rounded-pill border border-outline-variant px-2 text-xs text-on-surface-variant" aria-hidden="true">/</kbd>
         <button type="button" data-assistant-mic hidden aria-label="Dictate"
-                class="flex h-10 w-10 items-center justify-center rounded-full text-primary"
+                class="flex h-10 w-10 items-center justify-center rounded-pill text-primary"
                 th:attr="aria-label=#{assistant.dictate}">
             <span th:replace="~{fragments/icon :: icon(name='mic', size='md')}"></span>
         </button>
         <button type="submit" aria-label="Send"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-on-primary"
+                class="flex h-10 w-10 items-center justify-center rounded-pill bg-primary text-on-primary"
                 th:attr="aria-label=#{assistant.send}">
             <span th:replace="~{fragments/icon :: icon(name='arrow_upward', size='md')}"></span>
         </button>
@@ -55,20 +55,20 @@
                 </p>
             </div>
             <button type="button" aria-label="Conversations" title="Conversations"
-                    class="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant"
+                    class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
                     th:attr="aria-label=#{assistant.conversations}, title=#{assistant.conversations}, hx-get=@{/assistant/conversations(pageType=${assistantNav.page.type.name()})}"
                     hx-target="#assistantThread" hx-swap="innerHTML">
                 <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
             </button>
             <button type="button" aria-label="New conversation" title="New conversation"
-                    class="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant"
+                    class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
                     th:attr="aria-label=#{assistant.new_conversation}, title=#{assistant.new_conversation}, hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
                     hx-target="#assistantThread" hx-swap="innerHTML">
                 <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
             </button>
             <form method="dialog">
                 <button type="submit" aria-label="Close assistant" title="Close"
-                        class="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant"
+                        class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
                         th:attr="aria-label=#{assistant.close}, title=#{assistant.close_title}">
                     <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
                 </button>
@@ -89,16 +89,16 @@
             <input type="hidden" name="pageType" th:value="${assistantNav.page.type.name()}">
             <input type="hidden" name="pageId" th:value="${assistantNav.page.id}">
             <input id="assistantComposerInput" type="text" name="text" required maxlength="2000"
-                   class="form-input min-w-0 flex-1 rounded-full text-[15px]"
+                   class="form-input min-w-0 flex-1 rounded-pill text-[15px]"
                    placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
                    th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}">
             <button type="button" data-assistant-mic hidden aria-label="Dictate"
-                    class="flex h-11 w-11 items-center justify-center rounded-full text-primary"
+                    class="flex h-11 w-11 items-center justify-center rounded-pill text-primary"
                     th:attr="aria-label=#{assistant.dictate}">
                 <span th:replace="~{fragments/icon :: icon(name='mic', size='md')}"></span>
             </button>
             <button type="submit" aria-label="Send"
-                    class="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-on-primary"
+                    class="flex h-11 w-11 items-center justify-center rounded-pill bg-primary text-on-primary"
                     th:attr="aria-label=#{assistant.send}">
                 <span th:replace="~{fragments/icon :: icon(name='arrow_upward', size='md')}"></span>
             </button>

@@ -91,6 +91,24 @@ class AssistantWidgetRenderingTest {
     }
 
     @Test
+    fun `assistant bar uses rounded-pill, ambient shadow and focus-within ring tokens`() {
+        val result = mockMvc.perform(get("/").with(asAlice()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
+        val bar = doc.selectFirst("#assistantBar")
+        org.junit.jupiter.api.Assertions.assertNotNull(bar, "#assistantBar must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(bar!!.hasClass("rounded-pill"), "#assistantBar must use rounded-pill token")
+        org.junit.jupiter.api.Assertions.assertTrue(bar.hasClass("shadow-ambient"), "#assistantBar must use shadow-ambient token")
+        org.junit.jupiter.api.Assertions.assertTrue(bar.className().contains("focus-within:ring-3"), "#assistantBar must draw 3px focus ring on focus-within")
+
+        val kbd = bar.selectFirst("kbd")
+        org.junit.jupiter.api.Assertions.assertNotNull(kbd, "kbd shortcut hint must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(kbd!!.hasClass("rounded-pill"), "kbd shortcut hint must use rounded-pill token")
+    }
+
+    @Test
     fun `a figure page names the figure, resolved by the server`() {
         val category = danceCategoryRepository.save(DanceCategory().apply { name = "Standard ${UUID.randomUUID()}" })
         val waltz = danceTypeRepository.save(DanceType().apply { name = "Waltz ${UUID.randomUUID()}"; this.category = category })

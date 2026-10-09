@@ -246,6 +246,45 @@ class TailwindOutputCssTest {
             itemTouchTargetRegex.containsMatchIn(css),
             ".view-switcher-item must define 44px min-height touch target."
         )
+        val switcherRegex = Regex("""\.view-switcher\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            switcherRegex.containsMatchIn(css),
+            ".view-switcher must use var(--radius-pill)."
+        )
+        val switcherItemRegex = Regex("""\.view-switcher-item\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            switcherItemRegex.containsMatchIn(css),
+            ".view-switcher-item must use var(--radius-pill)."
+        )
+        val switcherOverflowRegex = Regex("""\.view-switcher\s*\{[^}]*overflow-x\s*:\s*auto[^}]*\}""")
+        assertTrue(
+            switcherOverflowRegex.containsMatchIn(css),
+            ".view-switcher must use overflow-x: auto to remain a single scrollable row on mobile."
+        )
+        val switcherItemNoWrapRegex = Regex("""\.view-switcher-item\s*\{[^}]*white-space\s*:\s*nowrap[^}]*\}""")
+        assertTrue(
+            switcherItemNoWrapRegex.containsMatchIn(css),
+            ".view-switcher-item must prevent line breaks with white-space: nowrap."
+        )
+    }
+
+    @Test
+    fun `FullCalendar buttons and button groups resolve to the pill radius`() {
+        val fcButtonRegex = Regex("""\.fc\s+\.fc-button,\s*\.fc\s+\.fc-button-primary\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            fcButtonRegex.containsMatchIn(css),
+            "FullCalendar toolbar buttons must use var(--radius-pill)."
+        )
+        val fcGroupFirstRegex = Regex("""\.fc\s+\.fc-button-group\s*>\s*\.fc-button:first-child\s*\{[^}]*border-top-left-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            fcGroupFirstRegex.containsMatchIn(css),
+            "FullCalendar button group first-child must have rounded-pill left corners."
+        )
+        val fcGroupLastRegex = Regex("""\.fc\s+\.fc-button-group\s*>\s*\.fc-button:last-child\s*\{[^}]*border-top-right-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        assertTrue(
+            fcGroupLastRegex.containsMatchIn(css),
+            "FullCalendar button group last-child must have rounded-pill right corners."
+        )
     }
 
     @Test

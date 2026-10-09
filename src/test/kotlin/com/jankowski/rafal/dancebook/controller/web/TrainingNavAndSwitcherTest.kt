@@ -267,6 +267,30 @@ class TrainingNavAndSwitcherTest {
     }
 
     @Test
+    fun `training list view renders rounded search box with icon and pill calendar selector`() {
+        `when`(trainingEventService.findByCurrentUser(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val result = mockMvc.perform(get("/training-events").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+        val searchInput = doc.selectFirst("input[type='search'][name='search']")
+        assertNotNull(searchInput, "Search input must be present")
+        assertTrue(searchInput!!.hasClass("form-input"), "Search input must have form-input class (pill radius)")
+        assertTrue(searchInput.hasClass("pl-12"), "Search input must have pl-12 for the search icon")
+
+        val searchWrapper = searchInput.parent()
+        assertNotNull(searchWrapper, "Search input wrapper must be present")
+        val searchIcon = searchWrapper!!.selectFirst("span.material-symbols-outlined")
+        assertNotNull(searchIcon, "Search icon must be present inside search input wrapper")
+
+        val calSelector = doc.selectFirst(".btn-icon[href='/training-calendars']")
+        assertNotNull(calSelector, "Calendar selector manage button must use btn-icon (pill)")
+    }
+
+    @Test
     fun `training calendar view renders shared switcher with calendar marked as active`() {
         `when`(trainingEventService.findByCurrentUser(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
 
