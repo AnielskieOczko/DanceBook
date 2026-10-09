@@ -583,6 +583,17 @@ Calendar link, and Calendar had no History link), and Timeline held a nav slot o
 The switcher is neutral by design. Its `view-switcher*` utilities use surface tokens, not
 the accent, so it never competes with the page's one primary action.
 
+**The Training controls use the pill radius (#223), and the switcher must not wrap.** The
+switcher and its items are `rounded-pill`, so a row that wraps to a second line turns into one
+large rounded blob on a phone. It is therefore a single row that scrolls horizontally
+(`max-w-full overflow-x-auto`, items `shrink-0 whitespace-nowrap`), never `flex-wrap`. FullCalendar's
+buttons and button groups are restyled in the unlayered FullCalendar block of `input.css` with
+`--radius-pill`, including the outer ends of a group, because the library's own rule rounds
+every corner by 2px. The dashboard assistant bar (`assistant/widget.html`) is a pill with an
+ambient shadow and a primary `focus-within` ring, and it renders only when `assistantNav` is
+set, which needs the assistant feature enabled, so it is absent on a database where it is
+off. The assistant has no scope dropdown; its scope travels in hidden inputs.
+
 **Mobile labels must fit a sixth of 375px, about 61px each.** Each item is `flex-1`,
 which is what keeps the six evenly spaced. The labels are sentence case at 11px. The
 tracked-out uppercase they used to carry was retired in #93, and it does not fit:
