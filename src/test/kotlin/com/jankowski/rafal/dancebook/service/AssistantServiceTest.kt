@@ -108,6 +108,46 @@ class AssistantServiceTest {
         assertEquals("What is this?", model.prompts.first().instructions.filterIsInstance<UserMessage>().last().text)
     }
 
+    private fun systemOf(model: ScriptedChatModel) =
+        model.prompts.first().instructions.filterIsInstance<SystemMessage>().single().text
+
+    @Test
+    fun `a Polish user gets a Polish language rule covering replies and drafts`() {
+        user.locale = "pl"
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+        service(model).send(null, "Hi", home)
+        val system = systemOf(model)
+        assertTrue(system.contains("The user's language is Polish"), system)
+        assertTrue(system.contains("text of every draft"), system)
+        assertTrue(system.contains("Do not translate anything that already exists"), system)
+        user.locale = null
+    }
+
+    @Test
+    fun `an English user keeps English`() {
+        user.locale = "en"
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+        service(model).send(null, "Hi", home)
+        assertTrue(systemOf(model).contains("The user's language is English"))
+        user.locale = null
+    }
+
+    @Test
+    fun `without a stored locale the request locale is used, and English when it is unsupported`() {
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+        org.springframework.context.i18n.LocaleContextHolder.setLocale(java.util.Locale.forLanguageTag("pl"))
+        try {
+            service(model).send(null, "Hi", home)
+            assertTrue(systemOf(model).contains("The user's language is Polish"))
+            org.springframework.context.i18n.LocaleContextHolder.setLocale(java.util.Locale.GERMAN)
+            val second = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+            service(second).send(null, "Hi", home)
+            assertTrue(systemOf(second).contains("The user's language is English"))
+        } finally {
+            org.springframework.context.i18n.LocaleContextHolder.resetLocaleContext()
+        }
+    }
+
     @Test
     fun `only the last twenty messages go to the model, and tool messages stay out of history`() {
         val conversation = conversations.start("history")
