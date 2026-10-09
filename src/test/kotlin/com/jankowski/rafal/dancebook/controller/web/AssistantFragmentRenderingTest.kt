@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAu
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
@@ -58,15 +58,15 @@ class AssistantFragmentRenderingTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var assistantService: AssistantService
-    @MockBean private lateinit var conversationService: AssistantConversationService
-    @MockBean private lateinit var draftService: com.jankowski.rafal.dancebook.service.AssistantDraftService
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var assistantService: AssistantService
+    @MockitoBean private lateinit var conversationService: AssistantConversationService
+    @MockitoBean private lateinit var draftService: com.jankowski.rafal.dancebook.service.AssistantDraftService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
 
     @Test
     fun `start fragment root id and conversation id reset`() {

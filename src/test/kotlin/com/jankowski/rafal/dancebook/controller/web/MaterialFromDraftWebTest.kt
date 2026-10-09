@@ -45,7 +45,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -89,22 +89,22 @@ class MaterialFromDraftWebTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var materialService: MaterialService
-    @MockBean private lateinit var danceTypeService: DanceTypeService
-    @MockBean private lateinit var danceCategoryService: DanceCategoryService
-    @MockBean private lateinit var commentService: CommentService
-    @MockBean private lateinit var danceFigureService: DanceFigureService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var noteRewriteService: NoteRewriteService
-    @MockBean private lateinit var figureSuggestionService: FigureSuggestionService
-    @MockBean private lateinit var trainingEventService: TrainingEventService
-    @MockBean private lateinit var assistantDrafts: AssistantDraftService
+    @MockitoBean private lateinit var materialService: MaterialService
+    @MockitoBean private lateinit var danceTypeService: DanceTypeService
+    @MockitoBean private lateinit var danceCategoryService: DanceCategoryService
+    @MockitoBean private lateinit var commentService: CommentService
+    @MockitoBean private lateinit var danceFigureService: DanceFigureService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var noteRewriteService: NoteRewriteService
+    @MockitoBean private lateinit var figureSuggestionService: FigureSuggestionService
+    @MockitoBean private lateinit var trainingEventService: TrainingEventService
+    @MockitoBean private lateinit var assistantDrafts: AssistantDraftService
     // Global NavbarAdvice and interceptor dependencies
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
 
     private val draftId = UUID.randomUUID()
     private val category = DanceCategory().apply { id = UUID.randomUUID(); name = "Standard" }

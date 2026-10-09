@@ -20,7 +20,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAu
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.security.test.context.support.WithMockUser
@@ -127,16 +127,16 @@ class ConfirmDialogRenderingTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var trainingCalendarService: TrainingCalendarService
-    @MockBean private lateinit var googleCalendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var trainingCalendarService: TrainingCalendarService
+    @MockitoBean private lateinit var googleCalendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     // Pulled in by NavbarAdvice and TrainingCalendarContextAdvice
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
 
     @org.junit.jupiter.api.BeforeEach
     fun setUp() {

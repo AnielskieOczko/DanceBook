@@ -33,7 +33,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -84,17 +84,17 @@ class DanceFigureDenseTableTemplateTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var danceFigureService: DanceFigureService
-    @MockBean private lateinit var danceTypeService: DanceTypeService
-    @MockBean private lateinit var danceCategoryService: DanceCategoryService
+    @MockitoBean private lateinit var danceFigureService: DanceFigureService
+    @MockitoBean private lateinit var danceTypeService: DanceTypeService
+    @MockitoBean private lateinit var danceCategoryService: DanceCategoryService
 
     // Global NavbarAdvice dependencies
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
 
     private val templateFile = File("src/main/resources/templates/dance-figures/list.html")
     private val staticDoc by lazy {

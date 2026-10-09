@@ -28,7 +28,7 @@ import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
@@ -67,8 +67,8 @@ class AssistantDraftWebIntegrationTest {
     @Autowired private lateinit var conversationService: AssistantConversationService
     @Autowired private lateinit var codec: AssistantDraftCodec
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     private lateinit var alice: AppUser
     private lateinit var bob: AppUser

@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import com.jankowski.rafal.dancebook.model.CalendarSource
 import com.jankowski.rafal.dancebook.repository.CalendarSourceRepository
@@ -59,8 +59,8 @@ class CalendarSyncIntegrationTest {
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var jdbcTemplate: JdbcTemplate
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     private lateinit var testAdmin: AppUser
     private lateinit var defaultCal: TrainingCalendar

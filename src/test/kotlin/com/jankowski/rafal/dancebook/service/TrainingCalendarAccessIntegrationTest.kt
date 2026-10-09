@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.test.context.TestPropertySource
@@ -47,8 +47,8 @@ class TrainingCalendarAccessIntegrationTest {
     @Autowired private lateinit var activeCalendarService: ActiveCalendarService
     @Autowired private lateinit var appUserRepository: AppUserRepository
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     private lateinit var userA: AppUser
     private lateinit var userB: AppUser

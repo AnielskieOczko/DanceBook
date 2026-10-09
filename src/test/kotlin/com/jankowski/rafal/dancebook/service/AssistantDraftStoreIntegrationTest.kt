@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -48,8 +48,8 @@ class AssistantDraftStoreIntegrationTest {
     @Autowired private lateinit var messages: AssistantMessageRepository
     @Autowired private lateinit var appUsers: AppUserRepository
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
-    @MockBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var appUserService: AppUserService
 
     private lateinit var alice: AppUser
     private lateinit var bob: AppUser

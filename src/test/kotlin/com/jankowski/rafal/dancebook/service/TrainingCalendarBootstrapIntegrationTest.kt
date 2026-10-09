@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -37,7 +37,7 @@ class TrainingCalendarBootstrapIntegrationTest {
     @Autowired private lateinit var trainingEventRepository: TrainingEventRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     @Test
     fun `startup runner seeds default calendar and subsequent bootstrap backfills events without duplicating calendar`() {

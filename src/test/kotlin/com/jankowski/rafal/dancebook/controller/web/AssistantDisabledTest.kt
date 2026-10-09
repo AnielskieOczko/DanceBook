@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.ApplicationContext
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -45,7 +45,7 @@ class AssistantDisabledTest {
     @Autowired private lateinit var context: ApplicationContext
     @Autowired private lateinit var appUserRepository: AppUserRepository
 
-    @MockBean private lateinit var calendarClient: GoogleCalendarClient
+    @MockitoBean private lateinit var calendarClient: GoogleCalendarClient
 
     private fun signedIn(): org.springframework.test.web.servlet.request.RequestPostProcessor {
         val u = appUserRepository.save(AppUser().apply {

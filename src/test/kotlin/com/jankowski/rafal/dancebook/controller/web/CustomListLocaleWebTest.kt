@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -73,16 +73,16 @@ class CustomListLocaleWebTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var materialService: MaterialService
-    @MockBean private lateinit var danceTypeService: DanceTypeService
-    @MockBean private lateinit var danceCategoryService: DanceCategoryService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: com.jankowski.rafal.dancebook.service.CalendarSyncService
-    @MockBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
-    @MockBean private lateinit var trainingCalendarService: com.jankowski.rafal.dancebook.service.TrainingCalendarService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var materialService: MaterialService
+    @MockitoBean private lateinit var danceTypeService: DanceTypeService
+    @MockitoBean private lateinit var danceCategoryService: DanceCategoryService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: com.jankowski.rafal.dancebook.service.CalendarSyncService
+    @MockitoBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
+    @MockitoBean private lateinit var trainingCalendarService: com.jankowski.rafal.dancebook.service.TrainingCalendarService
 
     private lateinit var currentUser: AppUser
 

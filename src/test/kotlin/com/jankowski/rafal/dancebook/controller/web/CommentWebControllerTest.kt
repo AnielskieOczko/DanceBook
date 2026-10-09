@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
@@ -62,16 +62,16 @@ class CommentWebControllerTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var commentService: CommentService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var materialService: MaterialService
+    @MockitoBean private lateinit var commentService: CommentService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var materialService: MaterialService
 
     // NavbarAdvice dependencies
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
 
     private val materialId: UUID = UUID.fromString("11111111-1111-1111-1111-111111111111")
     private val commentId: UUID = UUID.fromString("22222222-2222-2222-2222-222222222222")

@@ -31,7 +31,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAu
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -70,15 +70,15 @@ class TrainingTimelineViewRenderingTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @MockBean private lateinit var trainingTimelineService: TrainingTimelineService
-    @MockBean private lateinit var activeCalendarService: ActiveCalendarService
+    @MockitoBean private lateinit var trainingTimelineService: TrainingTimelineService
+    @MockitoBean private lateinit var activeCalendarService: ActiveCalendarService
 
     // Pulled in by NavbarAdvice, which supplies the layout's model on every page.
-    @MockBean private lateinit var customListService: CustomListService
-    @MockBean private lateinit var appUserService: AppUserService
-    @MockBean private lateinit var activityEventService: ActivityEventService
-    @MockBean private lateinit var systemSettingService: SystemSettingService
-    @MockBean private lateinit var calendarSyncService: CalendarSyncService
+    @MockitoBean private lateinit var customListService: CustomListService
+    @MockitoBean private lateinit var appUserService: AppUserService
+    @MockitoBean private lateinit var activityEventService: ActivityEventService
+    @MockitoBean private lateinit var systemSettingService: SystemSettingService
+    @MockitoBean private lateinit var calendarSyncService: CalendarSyncService
 
     private lateinit var testUser: AppUser
 
