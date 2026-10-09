@@ -215,6 +215,23 @@ conversation on a different model makes agy reprocess the whole conversation, wh
 cost more than it saves. That is **unverified**. Probe it before relying on a switch
 mid-issue. If the quota runs out mid-run, wait for the reset rather than changing model.
 
+**Do not assume the Claude group is the cheap fallback for a big issue.** On #241 (a Polish
+translation sweep: ten templates and 144 message keys) `claude-sonnet-5-5-high` took the
+Claude/GPT group from 49.8% weekly remaining to 0.0% in a single 9-minute run (467k input,
+4.1M cache-read tokens, one very long turn), and the run died with `RESOURCE_EXHAUSTED`
+and a reset 161 hours away. Check `usage.py` before the run and again as soon as it ends.
+Put a sweep-sized issue on the group with the larger remaining fraction, and do not start a
+second large issue on a group that one run could empty.
+
+**When the wait is a week, a switch is the realistic option.** On #241 the run was resumed
+in the same conversation (`--conversation <id>`) on `gemini-3.8-flash-high`, with
+`.agy-model` updated to match. It picked up from the partial edits, finished, and its build
+was green when verified independently. The cost of the switch was not isolated, so the
+"reprocesses the whole conversation" worry above remains unmeasured; the resume used 764k
+tokens, against 601k for the comparable #240 sweep run on Gemini from the start. Expect
+`status:"ERROR"` in the JSON of a resumed run that finished its work (the old quota message
+was repeated): judge it by the diff and a real build, not by `status`.
+
 Write the choice into the clone once it exists (step 2), so a later session resumes on the
 same model:
 
