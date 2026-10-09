@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Edit Figure and Medals</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout concept: a reference sheet. What is wrong today, then the reworked editor at desktop width and in a
+   390px phone frame (same markup, container queries), then three medal directions in every context.
+   Colour tokens come from src/main/resources/frontend/input.css; radii from docs/mocks/rounded-forms (#221).
+   The three medal metals are the only new colours. They are muted, used for glyph strokes and fills only,
+   and never replace the teal accent, which stays on primary actions, active state, focus and "done". */
+:root {
+  --surface: #ffffff;
+  --surface-container: #f5f5f3;
+  --surface-highest: #e3e3e0;
+  --outline: #8e9199;
+  --hair: #e3e3e0;
+  --on-surface: #16181a;
+  --on-surface-variant: #5b6067;
+  --primary: #1f4b4a;
+  --primary-hover: #163736;
+  --primary-soft: #e9eded;
+  --on-primary: #ffffff;
+  --error: #b3261e;
+  --error-soft: #f7e9e8;
+  --ring: color-mix(in srgb, var(--primary) 22%, transparent);
+  --r-pill: 9999px; --r-field: 24px; --r-card: 16px; --r-inset: 12px;
+  --bronze: #8a5a2e; --bronze-soft: #f5ece3;
+  --silver: #66717e; --silver-soft: #eceef1;
+  --gold: #8a6a0c; --gold-soft: #f6efd8;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-prose: 'Source Serif 4', Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--surface); color: var(--on-surface); font: 14px/1.5 var(--font-sans); margin: 0; padding-inline: 16px; padding-block: 32px 96px; font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1240px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1 { font-size: 30px; line-height: 36px; letter-spacing: -.02em; margin: 0 0 8px; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 20px; line-height: 28px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 14px; margin: 0; font-weight: 600; }
+p { margin: 0; }
+.lede { max-width: 68ch; color: var(--on-surface-variant); font: 400 17px/28px var(--font-prose); }
+.note { font-size: 13px; color: var(--on-surface-variant); max-width: 72ch; }
+.sheet { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--hair); padding-top: 24px; min-width: 0; }
+a { color: var(--primary); }
+code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--surface-container); padding: 1px 6px; border-radius: var(--r-pill); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ico { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ico.sm { width: 16px; height: 16px; }
+.scroll-x { overflow-x: auto; }
+.prob { width: 100%; border-collapse: collapse; font-size: 13px; }
+.prob th, .prob td { text-align: left; padding: 10px 16px 10px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.prob th { color: var(--on-surface-variant); font-weight: 600; }
+.prob td:first-child { font-weight: 600; width: 22%; }
+
+/* ---------- controls (rounded-forms language) ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 14px/1 var(--font-sans); min-height: 44px; padding: 8px 20px; border-radius: var(--r-pill); border: 1px solid transparent; cursor: pointer; background: transparent; color: var(--on-surface); white-space: nowrap; }
+.btn:focus-visible, .seg button:focus-visible, .opt:focus-within, .chipx button:focus-visible, .jump a:focus-visible, .linkbtn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px var(--primary); }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-outline { border-color: var(--outline); }
+.btn-outline:hover { background: var(--surface-container); }
+.btn-ghost { color: var(--on-surface-variant); }
+.btn-ghost:hover { background: var(--surface-container); color: var(--on-surface); }
+.btn-danger { border-color: var(--error); color: var(--error); }
+.btn-danger:hover { background: var(--error-soft); }
+.btn.sm { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+.btn-icon { min-width: 36px; min-height: 36px; padding: 0; color: var(--on-surface-variant); }
+.btn-icon:hover { background: var(--surface-container); color: var(--on-surface); }
+.fld { width: 100%; min-height: 44px; padding: 10px 18px; background: var(--surface-container); border: 1px solid transparent; border-radius: var(--r-pill); color: var(--on-surface); font: 400 15px/1.3 var(--font-sans); transition: border-color .15s, box-shadow .15s, background-color .15s; }
+.fld:hover { background: var(--surface); border-color: var(--outline); }
+.fld:focus { outline: none; background: var(--surface); border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
+.fld.err { border-color: var(--error); background: var(--surface); }
+.fld::placeholder { color: var(--on-surface-variant); opacity: .8; }
+select.fld { appearance: none; padding-right: 44px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat; background-size: 1.25rem; background-position: right 14px center; }
+textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
+.lab { display: block; font-size: 14px; font-weight: 600; margin: 0 0 6px 4px; }
+.lab .req, .mlab .req { color: var(--error); }
+.help { margin: 6px 0 0 18px; font-size: 13px; color: var(--on-surface-variant); }
+.errmsg { margin: 6px 0 0 18px; font-size: 13px; font-weight: 600; color: var(--error); }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--surface-container); border: 1px solid var(--hair); border-radius: var(--r-field); max-width: 100%; }
+.seg button { min-height: 36px; padding: 6px 16px; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; font: 600 13px/1 var(--font-sans); color: var(--on-surface-variant); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+.seg button:hover { color: var(--on-surface); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--primary); border-color: var(--primary); }
+.count { font-weight: 500; color: var(--on-surface-variant); font-size: 12px; }
+.ok { color: var(--primary); display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; }
+
+/* ---------- class + medal tokens ---------- */
+.cls { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border: 1px solid var(--outline); border-radius: var(--r-pill); font: 600 13px/1 var(--font-sans); color: var(--on-surface); background: var(--surface); white-space: nowrap; }
+.medal { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; font: 600 13px/1 var(--font-sans); white-space: nowrap; }
+.medal svg { display: block; flex: none; }
+.medal.bronze { color: var(--bronze); } .medal.silver { color: var(--silver); } .medal.gold { color: var(--gold); }
+.grade { display: inline-flex; align-items: center; gap: 8px; }
+.tag { display: inline-flex; align-items: center; gap: 8px; min-height: 28px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid var(--hair); font: 600 13px/1 var(--font-sans); white-space: nowrap; }
+.tag.bronze { background: var(--bronze-soft); color: var(--bronze); border-color: color-mix(in srgb, var(--bronze) 35%, transparent); }
+.tag.silver { background: var(--silver-soft); color: var(--silver); border-color: color-mix(in srgb, var(--silver) 35%, transparent); }
+.tag.gold { background: var(--gold-soft); color: var(--gold); border-color: color-mix(in srgb, var(--gold) 35%, transparent); }
+
+/* ---------- the editor ---------- */
+.frame { border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; background: var(--surface); }
+.phone { width: 390px; max-width: 100%; height: 820px; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--outline); border-radius: 28px; background: var(--surface); }
+.app { container: app / inline-size; }
+.ed-crumb { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 14px 24px 8px; font-size: 13px; color: var(--on-surface-variant); }
+.ed-crumb a { text-decoration: none; }
+.ed-crumb a:hover { text-decoration: underline; }
+.ed-top { position: sticky; top: 0; z-index: 5; background: var(--surface); border-bottom: 1px solid var(--hair); border-top: 1px solid var(--hair); }
+.ed-bar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 16px; align-items: start; padding: 10px 24px; }
+.ed-name { font: 600 22px/1.2 var(--font-sans); letter-spacing: -.01em; min-height: 52px; padding-inline: 22px; }
+.ed-bar .grade { min-height: 52px; }
+.ed-actions { display: flex; gap: 8px; align-items: center; min-height: 52px; }
+.ed-state { font-size: 13px; color: var(--on-surface-variant); display: inline-flex; align-items: center; gap: 6px; min-width: 124px; }
+.ed-state .dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--on-surface-variant); }
+.jump { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 24px; border-bottom: 1px solid var(--hair); }
+.jump a { padding: 6px 14px; border-radius: var(--r-pill); font-size: 13px; font-weight: 600; text-decoration: none; color: var(--on-surface-variant); white-space: nowrap; }
+.jump a:hover { background: var(--surface-container); color: var(--on-surface); }
+.jump a.on { color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+.ed-body { padding: 8px 24px 40px; display: flex; flex-direction: column; }
+.sec { padding-block: 28px; border-bottom: 1px solid var(--hair); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.sec:last-child { border-bottom: 0; }
+.sec-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; justify-content: space-between; }
+.sec-h p { font-size: 13px; color: var(--on-surface-variant); }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.cell { min-width: 0; position: relative; }
+.medal-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px; border-radius: var(--r-pill); border: 1px solid var(--outline); background: var(--surface); font: 600 14px/1 var(--font-sans); cursor: pointer; }
+.opt:hover { background: var(--surface-container); }
+.opt input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; }
+.opt:has(input:checked) { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+.opt .medal { font-size: 14px; }
+
+/* positions and feet matrix */
+.feet { display: grid; grid-template-columns: 72px minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px 16px; align-items: start; }
+.feet .rowlab { font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.feet .colhead { font-size: 13px; font-weight: 600; color: var(--on-surface-variant); margin: 0 0 -4px 4px; }
+.mobonly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* flow chips */
+.flowgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.chipx { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; min-height: 36px; }
+.chipx span { display: inline-flex; align-items: center; gap: 2px; min-height: 36px; padding: 0 4px 0 14px; border-radius: var(--r-pill); background: var(--surface-container); border: 1px solid var(--hair); font-weight: 600; font-size: 13px; }
+.chipx span.none { background: none; border-style: dashed; font-weight: 400; color: var(--on-surface-variant); padding-inline: 14px; }
+.chipx button { width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--on-surface-variant); cursor: pointer; display: grid; place-items: center; }
+.chipx button:hover { background: var(--surface-highest); color: var(--on-surface); }
+
+/* steps */
+.set-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.set-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--hair); background: var(--surface-container); border-radius: var(--r-field); max-width: 100%; }
+.set-sel { display: none; flex: 1 1 200px; min-width: 0; }
+.set-tabs button { min-height: 40px; padding: 6px 16px; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; font: 600 13px/1 var(--font-sans); color: var(--on-surface-variant); cursor: pointer; white-space: nowrap; display: inline-flex; gap: 8px; align-items: center; }
+.set-tabs button:hover { color: var(--on-surface); }
+.set-tabs button[aria-selected="true"] { background: var(--surface); border-color: var(--primary); color: var(--primary); }
+.set-tabs button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px var(--primary); }
+.set-meta { display: grid; grid-template-columns: minmax(0, 340px) 1fr; gap: 12px 24px; align-items: end; }
+.set-meta .stat { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: flex-end; min-height: 44px; }
+.menu-note { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--error); border-radius: var(--r-inset); background: var(--error-soft); font-size: 13px; }
+.stephead, .steprow { display: grid; grid-template-columns: var(--cols); gap: 8px; align-items: start; }
+.steps { --cols: 36px 104px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px; }
+.steps.norole { --cols: 36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px; }
+.stephead { padding-bottom: 8px; border-bottom: 1px solid var(--outline); font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+.stephead div { padding-left: 14px; } .stephead .h-n, .stephead .h-role, .stephead .h-x { padding-left: 0; }
+.stephead .h-n { text-align: center; }
+.steprow { padding-block: 6px; border-bottom: 1px solid var(--hair); }
+.steprow.f { background: color-mix(in srgb, var(--surface-container) 55%, var(--surface)); }
+.steps .fld { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+.steps textarea.fld { padding: 8px 14px; min-height: 52px; }
+.c-head { display: contents; }
+.c-n { padding-top: 8px; font-weight: 600; font-size: 13px; text-align: center; }
+.c-role { padding-top: 5px; }
+.c-x { order: 99; }
+.rolechip { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px 0 4px; border-radius: var(--r-pill); border: 1px solid var(--outline); font-size: 12px; font-weight: 600; background: var(--surface); }
+.rolechip i { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 11px; background: var(--on-surface); color: var(--surface); }
+.rolechip.f i { background: var(--surface); color: var(--on-surface); box-shadow: inset 0 0 0 1.5px var(--on-surface); }
+.cell .mlab { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.steps-foot { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding-top: 6px; }
+.empty { padding: 28px 16px; text-align: center; border: 1px dashed var(--outline); border-radius: var(--r-card); display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.empty p { max-width: 46ch; color: var(--on-surface-variant); }
+.links-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) 140px 36px; gap: 8px; align-items: center; padding-block: 6px; border-bottom: 1px solid var(--hair); }
+.links-row.head { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); border-bottom-color: var(--outline); padding-block: 0 8px; }
+.links-row.head div { padding-left: 14px; }
+.links-row .fld { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+.guided { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--hair); border-radius: var(--r-card); margin-top: 20px; background: var(--surface); }
+.guided .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; justify-content: space-between; }
+.linkbtn { border: 0; background: none; color: var(--primary); font: 600 13px/1.2 var(--font-sans); cursor: pointer; padding: 6px 4px; border-radius: var(--r-pill); display: inline-flex; gap: 6px; align-items: center; }
+.linkbtn:hover { text-decoration: underline; }
+.fixednote { font-size: 13px; color: var(--on-surface-variant); }
+.dl-ico { display: none; }
+
+/* narrow editor: container query, so the phone frame and a real phone behave alike */
+@container app (max-width: 900px) {
+  .ed-crumb { padding-inline: 16px; }
+  .ed-bar { grid-template-columns: minmax(0, 1fr) auto; padding-inline: 16px; }
+  .ed-bar .cell { grid-column: 1 / -1; }
+  .ed-bar .grade { min-height: 44px; }
+  .ed-actions { min-height: 44px; }
+  .ed-actions .ed-state, .dl-txt, .sl-long { display: none; }
+  .dl-ico { display: inline; }
+  .jump { padding-inline: 16px; }
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1 1 auto; justify-content: center; padding-inline: 10px; }
+  .set-tabs { display: none; }
+  .set-sel { display: block; }
+  .ed-body { padding-inline: 16px; }
+  .grid2, .flowgrid { grid-template-columns: minmax(0, 1fr); }
+  .feet { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .feet .rowlab { grid-column: 1 / -1; min-height: 0; margin-top: 8px; border-top: 1px solid var(--hair); padding-top: 14px; }
+  .feet .rowlab.first { border-top: 0; padding-top: 0; margin-top: 0; }
+  .feet .posf { grid-column: 1 / -1; }
+  .feet .colhead { display: none; }
+  .mobonly { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
+  .set-meta { grid-template-columns: minmax(0, 1fr); }
+  .set-meta .stat { justify-content: flex-start; }
+  .stephead { display: none; }
+  .steps .steprow { display: flex; flex-wrap: wrap; gap: 12px; padding: 18px 0; align-items: flex-start; }
+  .steps .steprow.f { background: transparent; border-left: 3px solid var(--outline); padding-left: 12px; }
+  .c-head { display: flex; align-items: center; gap: 10px; width: 100%; }
+  .c-head .c-x { order: 0; margin-left: auto; }
+  .c-n { padding: 0; font-size: 15px; text-align: left; }
+  .c-n::before { content: "Step "; }
+  .c-role { padding: 0; }
+  .steprow > .cell { flex: 1 1 calc(50% - 6px); }
+  .steprow > .cell.wide { flex-basis: 100%; }
+  .cell .mlab { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; display: block; font-size: 13px; font-weight: 600; margin: 0 0 4px 4px; }
+  .steps .fld { min-height: 44px; font-size: 15px; }
+  .links-row { grid-template-columns: minmax(0, 1fr) 36px; gap: 8px; padding-block: 12px; }
+  .links-row.head { display: none; }
+  .links-row .l-url { grid-column: 1 / -1; grid-row: 2; }
+  .links-row .l-type { grid-column: 1 / -1; grid-row: 3; }
+  .links-row .l-x { grid-column: 2; grid-row: 1; }
+}
+
+/* ---------- badge sheets ---------- */
+.mat { display: grid; grid-template-columns: 96px repeat(5, minmax(0, 1fr)); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; }
+.mat > div { padding: 14px 16px; border-bottom: 1px solid var(--hair); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 56px; }
+.mat > .h { font-weight: 600; color: var(--on-surface-variant); font-size: 13px; }
+.mat > .rl { font-weight: 600; }
+.mat > div:nth-last-child(-n+6) { border-bottom: 0; }
+.ctx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.ctx > div { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.ctx h3 { color: var(--on-surface-variant); font-size: 13px; }
+.lrow { display: grid; grid-template-columns: minmax(0, 2fr) auto auto auto; gap: 10px 16px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--hair); font-size: 14px; }
+.lrow.head { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); padding-block: 0 8px; border-bottom-color: var(--outline); }
+.lrow b { font-weight: 600; }
+.lrow .sub, .entry .sub { display: block; font-size: 13px; color: var(--on-surface-variant); font-weight: 400; }
+.figtitle { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.figtitle h3 { font-size: 24px; letter-spacing: -.01em; color: var(--on-surface); font-weight: 600; }
+.chor { border: 1px solid var(--hair); border-radius: var(--r-card); padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.chor header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; justify-content: space-between; }
+.chor header h3 { font-size: 18px; color: var(--on-surface); }
+.entry { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--hair); }
+.entry .n { font-weight: 600; color: var(--on-surface-variant); }
+.tests { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px; }
+.tests > div { display: flex; flex-direction: column; gap: 10px; }
+.strip { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; padding: 14px 16px; border: 1px solid var(--hair); border-radius: var(--r-inset); }
+.gray { filter: grayscale(1); }
+.pick { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.rec { padding: 16px 20px; border: 1px solid var(--primary); border-radius: var(--r-card); max-width: 76ch; display: flex; flex-direction: column; gap: 8px; }
+.rec h3 { color: var(--primary); font-size: 15px; }
+.list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 76ch; }
+@media (max-width: 720px) {
+  .mat { grid-template-columns: 44px repeat(5, minmax(0, 1fr)); }
+  .mat > div { padding: 10px 3px; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+  .mat > .rl, .mat > .h { font-size: 12px; }
+  .mat .cls { padding: 0 8px; }
+  .mat .tag, .mat .note { display: none; }
+  .mat .grade { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .prob thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .prob, .prob tbody, .prob tr, .prob td { display: block; width: 100%; min-width: 0; }
+  .prob tr { padding: 14px 0; border-bottom: 1px solid var(--hair); }
+  .prob td { border: 0; padding: 4px 0; width: 100% !important; }
+  .prob td[data-l]::before { content: attr(data-l); display: block; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+}
+@media (max-width: 960px) {
+  .ctx { grid-template-columns: minmax(0, 1fr); }
+  .lrow { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .lrow .hide-s { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4zM14 7l3 3"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18 16l.7 2.3L21 19l-2.3.7L18 22l-.7-2.3L15 19l2.3-.7z"/></symbol>
+</svg>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:14px">
+  <h1>Edit figure rework and medal badges</h1>
+  <p class="lede">Mock for issue #218, part of #202. Nothing here is implemented. The two editors below are working prototypes: switch variants and roles, mark a default, change the medal, edit any cell. The figure data is illustrative and has not been checked against a syllabus.</p>
+  <div class="pick">
+    <span style="font-weight:600">Medal direction shown in the editors</span>
+    <div class="seg" id="dirPick" role="group" aria-label="Medal direction">
+      <button type="button" data-dir="A" aria-pressed="true">A Rank bars</button>
+      <button type="button" data-dir="B" aria-pressed="false">B Medal shapes</button>
+      <button type="button" data-dir="C" aria-pressed="false">C Ring and word</button>
+      <button type="button" data-dir="D" aria-pressed="false">D Medal icon</button>
+      <button type="button" data-dir="D2" aria-pressed="false">D2 Medal, no numerals</button>
+    </div>
+  </div>
+</header>
+
+<section class="sheet" id="problems">
+  <div><h2>What overlaps and crowds today</h2>
+  <p class="note" style="margin-top:6px">Found by reading <code>templates/dance-figures/form.html</code>, <code>dance-figure-form.js</code> and <code>guided-figure-edit.js</code>. The app was not run for this mock, so these are read from the markup and not from screenshots.</p></div>
+  <div class="scroll-x"><table class="prob">
+    <thead><tr><th>Problem</th><th>Where it comes from</th><th>What the rework does</th></tr></thead>
+    <tbody>
+      <tr><td>The figure name leaves the screen</td><td data-l="Where it comes from">The name is the first field of the first card. The title "Edit {name}" is plain text in the page header. Both scroll away, so once you are in the steps you cannot see which figure you are editing.</td><td data-l="What the rework does">The name is an editable field in a sticky bar with the class, medal and Save. It is visible at every scroll position, on desktop and phone.</td></tr>
+      <tr><td>Steps are four cards away</td><td data-l="Where it comes from">Core, Positions, Resources (a full-height card beside them), then Steps, then Flow: six near-identical bordered cards with icon headings.</td><td data-l="What the rework does">One column of hairline-separated sections and a jump row. Steps follow directly after the feet matrix.</td></tr>
+      <tr><td>The resource table is squeezed</td><td data-l="Where it comes from">Title, URL, Type and delete share a one-third column on large screens inside an <code>overflow-x-auto</code> wrapper, so the URL input and delete button are clipped or scroll sideways.</td><td data-l="What the rework does">Resources get the full content width, last. On a phone each link stacks into its own block.</td></tr>
+      <tr><td>The step table scrolls sideways and loses columns</td><td data-l="Where it comes from">Nine columns with two 150px minimums sit inside a card with <code>overflow-hidden</code>. Comments and the delete button fall off the right edge.</td><td data-l="What the rework does">Column widths are budgeted for a 1240px page: all eight step fields and remove fit without scrolling.</td></tr>
+      <tr><td>The phone hides step content</td><td data-l="Where it comes from">On a phone, Footwork, Alignment, Turn and Comments sit behind "Show Technical Details" in every step, with 10px labels.</td><td data-l="What the rework does">Every field is visible on a phone, in a two-up layout with 13px labels. Nothing is behind a disclosure.</td></tr>
+      <tr><td>One role at a time</td><td data-l="Where it comes from">A Leader / Follower toggle swaps whole tables, so comparing a leader step with its follower step takes a toggle per step.</td><td data-l="What the rework does">A third choice, Side by side, lists each step number as a leader row and a follower row, marked L or F in shape and text, not colour.</td></tr>
+      <tr><td>Variant controls are scattered and risky</td><td data-l="Where it comes from">Variant tabs sit in the Steps card header next to the title. Delete Combination shares a row with Mark as Default.</td><td data-l="What the rework does">One variant switcher with the default marked by a check. Rename and Make default sit beside it. Delete is a separate button and asks for confirmation inline.</td></tr>
+      <tr><td>Three toggle styles, emoji, tracked caps</td><td data-l="Where it comes from">Mode, source and role toggles each use different markup. Tabs use emoji. Column labels use 11px tracked uppercase.</td><td data-l="What the rework does">One pill segmented control everywhere, inline line icons, sentence-case labels.</td></tr>
+    </tbody></table></div>
+</section>
+
+<section class="sheet" id="desktop">
+  <div><h2>Editor at desktop width</h2>
+  <p class="note" style="margin-top:6px">Scroll this page and the name bar stays put. Everything in the old page is still here: name, style, class, alternative timing, starting and ending position, starting and ending foot for both roles, preceding and following figures, variants with a default, all eight step columns including per-step comments, and resource links. The guided import is behind the Guided import switch.</p></div>
+  <div class="frame"><div class="app" id="edDesk"></div></div>
+</section>
+
+<section class="sheet" id="mobile">
+  <div><h2>Editor at phone width</h2>
+  <p class="note" style="margin-top:6px">Same markup at 390px. Scroll inside the frame. The name and Save stay on screen. Each step is a block with all fields visible. Side by side works here too: follower steps carry a left rule and the F marker.</p></div>
+  <div class="phone"><div class="app" id="edPhone"></div></div>
+</section>
+
+<section class="sheet" id="badges">
+  <div><h2>Bronze, Silver and Gold</h2>
+  <p class="note" style="margin-top:6px">Each direction sits next to the letter class (H to S) and never replaces it. A figure or choreography with no medal shows nothing. All five use muted metals, so the teal accent stays the only strong colour on the page.</p></div>
+
+  <h3>All five directions, all four states</h3>
+  <div class="scroll-x"><div class="mat" id="matrix"></div></div>
+
+  <h3>Without colour, and at 12, 16 and 24px</h3>
+  <div class="tests" id="tests"></div>
+
+  <h3>In context, direction <span id="ctxDir">A</span></h3>
+  <div class="ctx">
+    <div><h3>Figure rows (figure list)</h3><div id="ctxRows"></div></div>
+    <div><h3>Figure header (view and edit)</h3><div id="ctxHead" style="display:flex;flex-direction:column;gap:22px"></div></div>
+    <div><h3>Choreography header and entries</h3><div id="ctxChor"></div></div>
+  </div>
+
+  <div class="rec"><h3>Recommendation: direction A, Rank bars</h3>
+    <p>Three ascending bars with one, two or three filled. The count carries the level and it still reads in greyscale at 12px. Spell the word out (Bronze, Silver, Gold) wherever there is room: headers and choreography titles. In dense rows the bars stand alone, with the word in the tooltip.</p>
+    <p>D, Medal icon, is the friendliest and the only one that looks like a medal. Its numeral is podium order: Gold 1, Silver 2, Bronze 3. It loses to A in one place. At 16px the numeral is about 7px tall and blurs, so you read the level from a digit and do not see it at a glance. At 12px, with the ribbon dropped, coin and numeral are readable but still slower than counting bars. Pairing D in headers (24px and up, with the word) and A in dense rows is a sound option.</p>
+    <p>D2, the same medal with no numeral, is the cleanest to look at, but on the coin colour is the only cue. In greyscale the three metals collapse into near-identical greys and the three coins become one coin. It is not safe on its own. It needs a redundant cue: always show the word (Bronze, Silver, Gold) beside it, or add a ribbon notch count. In dense rows, where there is no room for the word, I would not use D2.</p>
+    <p>B has a strong medal feel, but circle and diamond are close at 12px. C is clear where there is room, but the word makes every row wider.</p></div>
+</section>
+
+<section class="sheet" id="decisions">
+  <h2>Decisions needed</h2>
+  <ol class="list">
+    <li>Pick a medal direction, or a pairing such as A in rows and D in headers.</li>
+    <li>Resolved: the numeral on D is podium order (Gold 1, Silver 2, Bronze 3). One thing to confirm: the medal picker lists Bronze, Silver, Gold as rising levels, so with D the digits on its options run 3, 2, 1 left to right. The word is always beside the glyph in the picker, so I left the order as levels, but it is a visible mismatch. Say if you would rather the picker list Gold first.</li><li>If D2 is used, accept that it needs the word beside it, or choose a ribbon notch count as the second cue.</li>
+    <li>Confirm Side by side as the third step view next to Leader and Follower.</li>
+    <li>Confirm that dense step inputs are 36px tall on desktop (44px on a phone), below the 48px of the rounded-forms standard, because eight fields per row do not fit at 48px.</li>
+    <li>Is the medal set by hand by the figure's editor, or derived from a syllabus level? The mock assumes a hand-set value with None as the default.</li>
+    <li>Should a choreography carry its own medal, or show the highest medal among its entries? The mock shows its own value.</li>
+  </ol>
+</section>
+</div>
+
+<script>
+(function () {
+  var DIR = 'A';
+  var NAMES = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' };
+  var RANK = { bronze: 1, silver: 2, gold: 3 };
+  var METAL = { bronze: 'var(--bronze)', silver: 'var(--silver)', gold: 'var(--gold)' };
+  var EMPTY = '#b9bcc2';
+  var SOFT = { bronze: 'var(--bronze-soft)', silver: 'var(--silver-soft)', gold: 'var(--gold-soft)' };
+
+  /* ---------- medal glyphs ---------- */
+  function sealPath(cx, cy, ro, ri, n) {
+    var pts = [];
+    for (var i = 0; i < n * 2; i++) {
+      var a = Math.PI * i / n - Math.PI / 2, r = i % 2 ? ri : ro;
+      pts.push((cx + r * Math.cos(a)).toFixed(2) + ',' + (cy + r * Math.sin(a)).toFixed(2));
+    }
+    return pts.join(' ');
+  }
+  function glyph(dir, lvl, px) {
+    var n = RANK[lvl] || 0, c = METAL[lvl], s = '';
+    if (dir === 'A') {
+      var h = [5, 9, 13], x = [1, 6, 11];
+      for (var i = 0; i < 3; i++) {
+        var on = i < n;
+        s += '<rect x="' + x[i] + '" y="' + (15 - h[i]) + '" width="4" height="' + h[i] + '" rx="1.2" fill="' + (on ? c : 'none') + '" stroke="' + (on ? c : EMPTY) + '" stroke-width="1.2"/>';
+      }
+    } else if (dir === 'B') {
+      if (lvl === 'bronze') s = '<circle cx="8" cy="8" r="6.2" fill="' + c + '"/>';
+      else if (lvl === 'silver') s = '<rect x="2.6" y="2.6" width="10.8" height="10.8" transform="rotate(45 8 8)" fill="' + c + '"/>';
+      else s = '<polygon points="' + sealPath(8, 8, 7.6, 5.2, 8) + '" fill="' + c + '"/>';
+    } else if (dir === 'D' || dir === 'D2') {
+      /* round medal on a short ribbon; at 12px and below the ribbon goes and the coin fills the box */
+      var small = px <= 12, num = dir === 'D' ? String({ gold: 1, silver: 2, bronze: 3 }[lvl]) : '';
+      var vb = small ? '3 5.2 10 10' : '0 0 16 16';
+      if (!small) s += '<path d="M4.8 0.6 L7.5 5.6 M11.2 0.6 L8.5 5.6" fill="none" stroke="' + c + '" stroke-width="2" stroke-linecap="butt"/>';
+      s += '<circle cx="8" cy="10.3" r="5.3" fill="' + SOFT[lvl] + '" stroke="' + c + '" stroke-width="1"/>' +
+           '<circle cx="8" cy="10.3" r="4" fill="none" stroke="' + c + '" stroke-width="0.5" opacity=".55"/>' +
+           (num ? '<text x="8" y="' + (small ? 12.7 : 12.7) + '" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="' + (small ? 7 : 7) + '" fill="' + c + '">' + num + '</text>' : '');
+      return '<svg width="' + px + '" height="' + px + '" viewBox="' + vb + '" aria-hidden="true">' + s + '</svg>';
+    } else {
+      for (var k = 0; k < 3; k++) {
+        var a0 = (-90 + k * 120 + 14) * Math.PI / 180, a1 = (-90 + (k + 1) * 120 - 14) * Math.PI / 180, r = 6;
+        s += '<path d="M' + (8 + r * Math.cos(a0)).toFixed(2) + ' ' + (8 + r * Math.sin(a0)).toFixed(2) + ' A6 6 0 0 1 ' + (8 + r * Math.cos(a1)).toFixed(2) + ' ' + (8 + r * Math.sin(a1)).toFixed(2) + '" fill="none" stroke="' + (k < n ? c : EMPTY) + '" stroke-width="2.6" stroke-linecap="round"/>';
+      }
+    }
+    return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 16 16" aria-hidden="true">' + s + '</svg>';
+  }
+  /* o: dir, size, word (force the word), noword (suppress it in direction C) */
+  function medal(lvl, o) {
+    o = o || {}; var dir = o.dir || DIR;
+    if (!lvl) return '';
+    var showWord = o.word || (dir === 'C' && !o.noword);
+    return '<span class="medal ' + lvl + '" title="' + NAMES[lvl] + ' medal" role="img" aria-label="' + NAMES[lvl] + ' medal">' + glyph(dir, lvl, o.size || 16) + (showWord ? '<span>' + NAMES[lvl] + '</span>' : '') + '</span>';
+  }
+  function grade(cls, lvl, o) {
+    o = o || {};
+    return '<span class="grade"><span class="cls" title="Class ' + cls + '">' + (o.long ? 'Class ' : '') + cls + '</span>' + medal(lvl, o) + '</span>';
+  }
+
+  /* ---------- editor data ---------- */
+  function S(n, role, timing, foot, action, footwork, alignment, turn, comments) {
+    return { n: n, role: role, timing: timing, foot: foot, action: action, footwork: footwork, alignment: alignment, turn: turn, comments: comments };
+  }
+  function makeFigure() {
+    return {
+      name: 'Natural Turn', style: 'Waltz', cls: 'D', medal: 'bronze', alt: '1 2 3, 2 3 (over 1 bar and a half)',
+      startPos: 'Closed hold, facing diagonal to centre', endPos: 'Closed hold, backing diagonal to wall',
+      footL0: 'RF', footL1: 'LF', footF0: 'LF', footF1: 'RF',
+      pre: ['Closed Change', 'Whisk'], fol: ['Reverse Turn', 'Spin Turn', 'Natural Spin Turn'],
+      links: [
+        { title: 'Natural Turn, leader view', url: 'https://example.org/waltz/natural-turn', type: 'Video' },
+        { title: 'Waltz bronze syllabus, page 4', url: 'https://example.org/syllabus/waltz-bronze.pdf', type: 'Syllabus' }
+      ],
+      noteCount: 4,
+      sets: [
+        { name: 'Standard', def: true, steps: [
+          S(1, 'L', '1', 'RF', 'Forward', 'HT', 'Facing DC', 'None', 'Heel lead. Rise at the end of 1. Start in closed hold.'),
+          S(2, 'L', '2', 'LF', 'Side, slightly forward', 'T', 'Facing DW', '1/4 right between 1 and 3', 'Continue rising. Body turn leads, feet follow.'),
+          S(3, 'L', '3', 'RF', 'Close to LF', 'TH', 'Backing DC', 'None', 'Lower at the end of 3.'),
+          S(4, 'L', '1', 'LF', 'Back', 'T', 'Backing DC', 'None', 'Toe lead. Small step, keep the closed shape.'),
+          S(5, 'L', '2', 'RF', 'Side, small step', 'T', 'Backing DC', '3/8 right between 4 and 6', 'Pivot on the right foot as the follower comes through.'),
+          S(6, 'L', '3', 'LF', 'Close to RF', 'TH', 'Backing DW', 'None', 'Lower. Feet together.'),
+          S(1, 'F', '1', 'LF', 'Back', 'T', 'Backing DC', 'None', 'Toe lead, stay in front of the leader.'),
+          S(2, 'F', '2', 'RF', 'Side, turning right', 'T', 'Backing DC', '1/2 right between 1 and 3', 'Weight on the ball of the right foot, turn the body first.'),
+          S(3, 'F', '3', 'LF', 'Close to RF', 'TH', 'Facing DW', 'None', 'Lower at the end of 3.'),
+          S(4, 'F', '1', 'RF', 'Forward', 'HT', 'Facing DW', 'None', 'Heel lead into the second bar.'),
+          S(5, 'F', '2', 'LF', 'Side, turning right', 'T', 'Facing DW', '3/8 right between 4 and 6', 'Rise. Turn the body before the foot.'),
+          S(6, 'F', '3', 'RF', 'Close to LF', 'TH', 'Backing DW', 'None', 'Lower. Ready to continue the turn.')
+        ] },
+        { name: 'Spin turn ending', def: false, steps: [
+          S(1, 'L', '1', 'RF', 'Forward', 'HT', 'Facing DC', 'None', 'As in Standard.'),
+          S(2, 'L', '2', 'LF', 'Side, slightly forward', 'T', 'Facing DW', '1/4 right between 1 and 3', ''),
+          S(3, 'L', '3', 'RF', 'Close to LF', 'TH', 'Backing DC', 'None', ''),
+          S(4, 'L', '1', 'LF', 'Back', 'T', 'Backing DC', 'None', 'Pivot into the spin turn on step 4.'),
+          S(1, 'F', '1', 'LF', 'Back', 'T', 'Backing DC', 'None', ''),
+          S(2, 'F', '2', 'RF', 'Side, turning right', 'T', 'Backing DC', '1/2 right between 1 and 3', ''),
+          S(3, 'F', '3', 'LF', 'Close to RF', 'TH', 'Facing DW', 'None', ''),
+          S(4, 'F', '1', 'RF', 'Forward', 'HT', 'Facing DW', 'None', 'Follower walks forward through the spin.')
+        ] },
+        { name: 'Competition line', def: false, steps: [] }
+      ]
+    };
+  }
+
+  var STYLES = ['Waltz', 'Tango', 'Viennese Waltz', 'Foxtrot', 'Quickstep', 'Cha-cha-cha', 'Samba', 'Rumba', 'Paso Doble', 'Jive'];
+  var CLASSES = ['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A', 'S'];
+  var ALLFIG = ['Closed Change', 'Whisk', 'Reverse Turn', 'Spin Turn', 'Natural Spin Turn', 'Chasse from PP', 'Hesitation Change', 'Outside Change', 'Weave from PP', 'Running Spin Turn'];
+  function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function ico(n, c) { return '<svg class="ico ' + (c || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
+
+  var editors = [];
+  function makeEditor(root, pfx) {
+    var ed = { root: root, pfx: pfx, st: freshState() };
+    editors.push(ed);
+    render(ed);
+    return ed;
+  }
+  function freshState() { return { f: makeFigure(), setIdx: 0, role: 'both', mode: 'manual', sub: 'url', dirty: false, saved: false, confirmDel: false, active: 'details' }; }
+
+  function field(id, label, value, o) {
+    o = o || {};
+    return '<div class="cell ' + (o.cls || '') + '"><label class="' + (o.lcls || 'lab') + '" for="' + id + '">' + label + (o.req ? ' <span class="req">*</span>' : '') + '</label>' +
+      '<input class="fld" id="' + id + '" data-k="' + o.k + '" type="text" value="' + esc(value) + '"' + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : '') + '>' + (o.help ? '<p class="help">' + o.help + '</p>' : '') + '</div>';
+  }
+  function sel(id, label, opts, value, k, req) {
+    return '<div class="cell"><label class="lab" for="' + id + '">' + label + (req ? ' <span class="req">*</span>' : '') + '</label><select class="fld" id="' + id + '" data-k="' + k + '">' +
+      opts.map(function (o) { return '<option value="' + o + '"' + (o === value ? ' selected' : '') + '>' + (k === 'cls' ? 'Class ' + o : o) + '</option>'; }).join('') + '</select></div>';
+  }
+  function chips(ed, key, label) {
+    var p = ed.pfx, arr = ed.st.f[key];
+    var free = ALLFIG.filter(function (x) { return arr.indexOf(x) < 0; });
+    return '<div class="cell"><span class="lab" id="' + p + '-' + key + '-l">' + label + '</span><div class="chipx" role="list" aria-labelledby="' + p + '-' + key + '-l">' +
+      (arr.length ? arr.map(function (x, i) { return '<span role="listitem">' + esc(x) + '<button type="button" data-rm="' + key + ':' + i + '" aria-label="Remove ' + esc(x) + '">' + ico('x', 'sm') + '</button></span>'; }).join('') : '<span class="none" role="listitem">None yet</span>') +
+      '</div><label class="sr" for="' + p + '-' + key + '-add">Add to ' + label + '</label><select class="fld" id="' + p + '-' + key + '-add" data-addfig="' + key + '"><option value="">Add a figure</option>' + free.map(function (x) { return '<option>' + esc(x) + '</option>'; }).join('') + '</select></div>';
+  }
+
+  function stepRow(ed, s, both) {
+    var p = ed.pfx + '-s' + ed.st.setIdx + '-' + s.role + s.n, f = s.role === 'F';
+    function c(k, label, val, cls, ta, req) {
+      var id = p + '-' + k;
+      return '<div class="cell ' + (cls || '') + '"><label class="mlab" for="' + id + '">' + label + (req ? ' <span class="req">*</span>' : '') + '</label>' +
+        (ta ? '<textarea class="fld" id="' + id + '" data-sk="' + k + '" rows="2">' + esc(val) + '</textarea>' : '<input class="fld" id="' + id + '" data-sk="' + k + '" type="text" value="' + esc(val) + '">') + '</div>';
+    }
+    return '<div class="steprow' + (f ? ' f' : '') + '" role="row" data-srole="' + s.role + '" data-n="' + s.n + '">' +
+      '<div class="c-head"><div class="c-n" role="cell">' + s.n + '</div>' +
+      (both ? '<div class="c-role" role="cell"><span class="rolechip' + (f ? ' f' : '') + '"><i>' + s.role + '</i>' + (f ? 'Follower' : 'Leader') + '</span></div>' : '') +
+      '<div class="c-x" role="cell"><button type="button" class="btn btn-icon" data-rmstep="' + s.role + s.n + '" aria-label="Remove ' + (f ? 'follower' : 'leader') + ' step ' + s.n + '">' + ico('trash', 'sm') + '</button></div></div>' +
+      c('timing', 'Timing', s.timing, '', 0, 1) + c('foot', 'Foot', s.foot, '', 0, 1) + c('action', 'Action', s.action, 'wide', 0, 1) +
+      c('footwork', 'Footwork', s.footwork, '') + c('alignment', 'Alignment', s.alignment, '') + c('turn', 'Amount of turn', s.turn, 'wide') +
+      c('comments', 'Comments', s.comments, 'wide', 1) + '</div>';
+  }
+
+  function render(ed) {
+    var st = ed.st, f = st.f, p = ed.pfx, set = f.sets[st.setIdx], both = st.role === 'both';
+    var rows = set.steps.slice();
+    if (!both) rows = rows.filter(function (s) { return s.role === (st.role === 'LEADER' ? 'L' : 'F'); });
+    rows.sort(function (a, b) { return a.n - b.n || (a.role === 'L' ? -1 : 1); });
+    var nL = set.steps.filter(function (s) { return s.role === 'L'; }).length, nF = set.steps.length - nL;
+    var nameEmpty = !f.name.trim();
+    var h = '';
+    h += '<div class="ed-crumb"><span><a href="#" data-noop>Figures</a> / <a href="#" data-noop id="' + p + '-crumbstyle">' + esc(f.style) + '</a> / Edit</span>' +
+      '<div class="seg" role="group" aria-label="Edit mode"><button type="button" data-mode="manual" aria-pressed="' + (st.mode === 'manual') + '">' + ico('pen', 'sm') + 'Manual edit</button><button type="button" data-mode="guided" aria-pressed="' + (st.mode === 'guided') + '">' + ico('spark', 'sm') + 'Guided import</button></div></div>' +
+      '<div class="ed-top"><div class="ed-bar"><div class="cell"><label class="sr" for="' + p + '-name">Figure name</label><input class="fld ed-name' + (nameEmpty ? ' err' : '') + '" id="' + p + '-name" data-k="name" type="text" value="' + esc(f.name) + '" placeholder="Figure name" aria-invalid="' + nameEmpty + '"' + (nameEmpty ? ' aria-describedby="' + p + '-nameerr"' : '') + '>' +
+      (nameEmpty ? '<p class="errmsg" id="' + p + '-nameerr">Give the figure a name before saving.</p>' : '') + '</div>' +
+      '<div class="grade-wrap" id="' + p + '-gradeprev" style="display:flex;align-items:center;min-height:44px">' + grade(f.cls, f.medal, { long: true, word: true }) + '</div>' +
+      '<div class="ed-actions"><span class="ed-state" aria-live="polite">' + (st.saved ? '<span class="ok">' + ico('check', 'sm') + 'Saved</span>' : st.dirty ? '<span class="dot"></span>Unsaved changes' : '') + '</span>' +
+      '<button type="button" class="btn btn-ghost" data-discard aria-label="Discard changes"><span class="dl-txt">Discard</span><span class="dl-ico">' + ico('x', 'sm') + '</span></button><button type="button" class="btn btn-primary" data-save' + (nameEmpty ? ' disabled' : '') + '>Save<span class="sl-long">&nbsp;figure</span></button></div></div></div>' +
+      '<nav class="jump" aria-label="Sections">' + [['details', 'Details'], ['feet', 'Positions and feet'], ['steps', 'Steps'], ['flow', 'Flow'], ['links', 'Resources']].map(function (x) { return '<a href="#' + p + '-' + x[0] + '" data-jump="' + x[0] + '"' + (st.active === x[0] ? ' class="on" aria-current="true"' : '') + '>' + x[1] + '</a>'; }).join('') + '</nav>';
+
+    h += '<div class="ed-body">';
+    if (st.mode === 'guided') {
+      h += '<div class="guided" role="region" aria-label="Guided figure import"><div class="row"><div><h3>Import figure details</h3><p class="note">Paste figure JSON or give a page address. The result fills this form for you to review before saving.</p></div>' +
+        '<div class="seg" role="group" aria-label="Import source"><button type="button" data-sub="json" aria-pressed="' + (st.sub === 'json') + '">Paste JSON</button><button type="button" data-sub="url" aria-pressed="' + (st.sub === 'url') + '">Parse URL</button></div></div>' +
+        (st.sub === 'url'
+          ? '<div class="cell"><label class="lab" for="' + p + '-url">Page address</label><input class="fld" id="' + p + '-url" type="text" placeholder="https://"></div><div class="row"><div class="cell" style="flex:1 1 240px"><label class="lab" for="' + p + '-recent">Recent addresses</label><select class="fld" id="' + p + '-recent"><option>Choose a recent address</option></select></div><button type="button" class="btn btn-primary">' + ico('spark', 'sm') + 'Analyze page with AI</button></div>'
+          : '<div class="cell"><label class="lab" for="' + p + '-json">Figure JSON</label><textarea class="fld" id="' + p + '-json" rows="5" style="font-family:ui-monospace,Menlo,monospace;font-size:13px" placeholder=\'{ "name": "Natural Turn", "dance_type": "WALTZ" }\'></textarea></div><div class="row"><button type="button" class="linkbtn">Show expected format</button><button type="button" class="btn btn-primary">' + ico('check', 'sm') + 'Validate and preview</button></div>') +
+        '</div>';
+    }
+
+    /* details */
+    h += '<section class="sec" id="' + p + '-details" data-sec="details"><div class="sec-h"><h2>Details</h2></div><div class="grid2">' +
+      sel(p + '-style', 'Dance style', STYLES, f.style, 'style', 1) +
+      field(p + '-alt', 'Alternative timing', f.alt, { k: 'alt', ph: 'e.g. 1 &amp; 2 3', help: 'Shown on the figure card next to the main timing.' }) +
+      sel(p + '-cls', 'Class (H to S)', CLASSES, f.cls, 'cls') +
+      '<div class="cell"><span class="lab" id="' + p + '-ml">Medal</span><div class="medal-pick" role="radiogroup" aria-labelledby="' + p + '-ml">' +
+      [['', 'None'], ['bronze', 'Bronze'], ['silver', 'Silver'], ['gold', 'Gold']].map(function (m) {
+        return '<label class="opt"><input type="radio" name="' + p + '-medal" value="' + m[0] + '"' + ((f.medal || '') === m[0] ? ' checked' : '') + '>' + (m[0] ? medal(m[0], { word: true }) : '<span>None</span>') + '</label>';
+      }).join('') + '</div></div></div></section>';
+
+    /* feet */
+    h += '<section class="sec" id="' + p + '-feet" data-sec="feet"><div class="sec-h"><h2>Positions and feet</h2><p>Feet are the free foot at the start and end of the figure.</p></div><div class="feet">' +
+      '<span></span><span class="colhead">Position</span><span class="colhead">Leader foot</span><span class="colhead">Follower foot</span>' +
+      '<div class="rowlab first">Start</div>' + field(p + '-sp', 'Starting position', f.startPos, { k: 'startPos', cls: 'posf', lcls: 'mobonly' }) + field(p + '-sl', 'Starting foot, leader', f.footL0, { k: 'footL0', lcls: 'mobonly' }) + field(p + '-sf', 'Starting foot, follower', f.footF0, { k: 'footF0', lcls: 'mobonly' }) +
+      '<div class="rowlab">End</div>' + field(p + '-ep', 'Ending position', f.endPos, { k: 'endPos', cls: 'posf', lcls: 'mobonly' }) + field(p + '-el', 'Ending foot, leader', f.footL1, { k: 'footL1', lcls: 'mobonly' }) + field(p + '-ef', 'Ending foot, follower', f.footF1, { k: 'footF1', lcls: 'mobonly' }) +
+      '</div></section>';
+
+    /* steps */
+    h += '<section class="sec" id="' + p + '-steps" data-sec="steps"><div class="sec-h"><h2>Steps</h2><p>' + f.sets.length + ' variants. Each has its own leader and follower steps.</p></div>';
+    h += '<div class="set-row"><div class="set-tabs" role="tablist" aria-label="Step variants">' +
+      f.sets.map(function (s, i) { return '<button type="button" role="tab" id="' + p + '-tab' + i + '" data-set="' + i + '" aria-selected="' + (i === st.setIdx) + '"><span class="tabname">' + esc(s.name || 'Untitled variant') + '</span>' + (s.def ? '<span class="ok" title="Default variant">' + ico('check', 'sm') + '<span class="sr">Default</span></span>' : '') + '</button>'; }).join('') +
+      '</div><div class="cell set-sel"><label class="sr" for="' + p + '-setsel">Step variant</label><select class="fld" id="' + p + '-setsel" data-setsel>' + f.sets.map(function (s, i) { return '<option value="' + i + '"' + (i === st.setIdx ? ' selected' : '') + '>' + esc(s.name || 'Untitled variant') + (s.def ? ' (default)' : '') + ' (' + s.steps.length + ' steps)</option>'; }).join('') + '</select></div><button type="button" class="btn btn-outline sm" data-addset>' + ico('plus', 'sm') + 'New variant</button></div>';
+    h += '<div class="set-meta"><div class="cell"><label class="lab" for="' + p + '-setname">Variant name <span class="req">*</span></label><input class="fld" id="' + p + '-setname" data-setname type="text" value="' + esc(set.name) + '" placeholder="e.g. Standard"></div>' +
+      '<div class="stat">' + (set.def ? '<span class="ok">' + ico('check', 'sm') + 'Default variant</span>' : '<button type="button" class="btn btn-outline sm" data-makedef>Make default</button>') +
+      (f.sets.length > 1 && !st.confirmDel ? '<button type="button" class="btn btn-ghost sm" data-delset>' + ico('trash', 'sm') + 'Delete variant</button>' : '') + '</div></div>';
+    if (st.confirmDel) {
+      h += '<div class="menu-note" role="alertdialog" aria-label="Confirm delete"><span>Delete the variant <b>' + esc(set.name) + '</b> and its ' + set.steps.length + ' steps? This cannot be undone.</span><button type="button" class="btn btn-danger sm" data-delok>Delete variant</button><button type="button" class="btn btn-ghost sm" data-delno>Keep it</button></div>';
+    }
+    h += '<div class="set-row" style="justify-content:space-between"><div class="seg" role="group" aria-label="Which role to show">' +
+      '<button type="button" data-viewrole="LEADER" aria-pressed="' + (st.role === 'LEADER') + '">Leader <span class="count">' + nL + '</span></button>' +
+      '<button type="button" data-viewrole="FOLLOWER" aria-pressed="' + (st.role === 'FOLLOWER') + '">Follower <span class="count">' + nF + '</span></button>' +
+      '<button type="button" data-viewrole="both" aria-pressed="' + both + '">Side by side</button></div>' +
+      '<span class="fixednote">Timing, foot and action are required on every step.</span></div>';
+    if (!set.steps.length) {
+      h += '<div class="empty"><h3>This variant has no steps yet</h3><p>Add the leader steps first, then the follower steps. Side by side lists them by step number.</p><div class="set-row" style="justify-content:center"><button type="button" class="btn btn-primary" data-addstep="L">' + ico('plus', 'sm') + 'Add leader step</button><button type="button" class="btn btn-outline" data-addstep="F">' + ico('plus', 'sm') + 'Add follower step</button></div></div>';
+    } else {
+      h += '<div class="steps' + (both ? '' : ' norole') + '" role="table" aria-label="' + esc(set.name) + ' steps">' +
+        '<div class="stephead" role="row"><div class="h-n" role="columnheader">No.</div>' + (both ? '<div class="h-role" role="columnheader">Role</div>' : '') +
+        '<div role="columnheader">Timing</div><div role="columnheader">Foot</div><div role="columnheader">Action</div><div role="columnheader">Footwork</div><div role="columnheader">Alignment</div><div role="columnheader">Amount of turn</div><div role="columnheader">Comments</div><div class="h-x" role="columnheader"><span class="sr">Remove</span></div></div>' +
+        (rows.length ? rows.map(function (s) { return stepRow(ed, s, both); }).join('') : '<p class="note" style="padding:16px 0">No ' + (st.role === 'LEADER' ? 'leader' : 'follower') + ' steps in this variant yet.</p>') + '</div>';
+      h += '<div class="steps-foot">' + (both || st.role === 'LEADER' ? '<button type="button" class="btn btn-outline sm" data-addstep="L">' + ico('plus', 'sm') + 'Add leader step</button>' : '') + (both || st.role === 'FOLLOWER' ? '<button type="button" class="btn btn-outline sm" data-addstep="F">' + ico('plus', 'sm') + 'Add follower step</button>' : '') + '</div>';
+    }
+    h += '</section>';
+
+    /* flow */
+    h += '<section class="sec" id="' + p + '-flow" data-sec="flow"><div class="sec-h"><h2>Flow</h2><p>Figures that usually come before and after this one.</p></div><div class="flowgrid">' + chips(ed, 'pre', 'Preceding figures') + chips(ed, 'fol', 'Following figures') + '</div></section>';
+
+    /* links */
+    h += '<section class="sec" id="' + p + '-links" data-sec="links"><div class="sec-h"><h2>Resources</h2><p>Pinned in ' + f.noteCount + ' Notes.</p></div><div role="table" aria-label="Resource links">' +
+      '<div class="links-row head" role="row"><div>Title</div><div>Address</div><div>Type</div><div></div></div>' +
+      f.links.map(function (l, i) { return '<div class="links-row" role="row"><div class="cell"><label class="sr" for="' + p + '-lt' + i + '">Title</label><input class="fld" id="' + p + '-lt' + i + '" value="' + esc(l.title) + '" placeholder="Title"></div><div class="cell l-url"><label class="sr" for="' + p + '-lu' + i + '">Address</label><input class="fld" id="' + p + '-lu' + i + '" value="' + esc(l.url) + '" placeholder="https://"></div><div class="cell l-type"><label class="sr" for="' + p + '-ly' + i + '">Type</label><select class="fld" id="' + p + '-ly' + i + '">' + ['Video', 'Syllabus', 'Other'].map(function (t) { return '<option' + (t === l.type ? ' selected' : '') + '>' + t + '</option>'; }).join('') + '</select></div><div class="l-x"><button type="button" class="btn btn-icon" data-rmlink="' + i + '" aria-label="Remove link ' + esc(l.title) + '">' + ico('trash', 'sm') + '</button></div></div>'; }).join('') +
+      '</div><div><button type="button" class="btn btn-outline sm" data-addlink>' + ico('plus', 'sm') + 'Add resource link</button></div></section>';
+    h += '</div>';
+
+    var sc = scroller(ed.root), top = sc ? sc.scrollTop : window.scrollY;
+    var fid = document.activeElement && ed.root.contains(document.activeElement) ? document.activeElement.id : null;
+    ed.root.innerHTML = h;
+    bind(ed);
+    if (sc) sc.scrollTop = top; else window.scrollTo(0, top);
+    if (fid) { var el = document.getElementById(fid); if (el) el.focus({ preventScroll: true }); }
+  }
+  function scroller(root) { var n = root.parentElement; while (n && n !== document.body) { if (getComputedStyle(n).overflowY === 'auto') return n; n = n.parentElement; } return null; }
+
+  function dirty(ed) {
+    ed.st.dirty = true; ed.st.saved = false;
+    var s = ed.root.querySelector('.ed-state'); if (s) s.innerHTML = '<span class="dot"></span>Unsaved changes';
+  }
+  function refreshPreview(ed) { document.getElementById(ed.pfx + '-gradeprev').innerHTML = grade(ed.st.f.cls, ed.st.f.medal, { long: true, word: true }); }
+  function stepAt(ed, role, n) { return ed.st.f.sets[ed.st.setIdx].steps.filter(function (s) { return s.role === role && s.n === n; })[0]; }
+
+  function bind(ed) {
+    var r = ed.root, st = ed.st, f = st.f, set = f.sets[st.setIdx];
+    var on = function (sel, ev, fn) { r.querySelectorAll(sel).forEach(function (el) { el.addEventListener(ev, function (e) { fn(el, e); }); }); };
+    on('[data-noop]', 'click', function (a, e) { e.preventDefault(); });
+    on('input[data-k],select[data-k]', 'input', function (el) {
+      var k = el.dataset.k; f[k] = el.value; dirty(ed);
+      if (k === 'cls' || k === 'style') { if (k === 'cls') refreshPreview(ed); else document.getElementById(ed.pfx + '-crumbstyle').textContent = el.value; }
+      if (k === 'name' && (!el.value.trim()) !== el.classList.contains('err')) render(ed);
+    });
+    on('input[type=radio]', 'change', function (el) { f.medal = el.value; dirty(ed); refreshPreview(ed); });
+    on('[data-sk]', 'input', function (el) { var row = el.closest('.steprow'); var s = stepAt(ed, row.dataset.srole, +row.dataset.n); if (s) s[el.dataset.sk] = el.value; dirty(ed); });
+    on('[data-mode]', 'click', function (b) { st.mode = b.dataset.mode; render(ed); });
+    on('[data-sub]', 'click', function (b) { st.sub = b.dataset.sub; render(ed); });
+    on('[data-setsel]', 'change', function (el) { st.setIdx = +el.value; st.confirmDel = false; render(ed); });
+    on('[data-set]', 'click', function (b) { st.setIdx = +b.dataset.set; st.confirmDel = false; render(ed); });
+    on('.set-tabs [role=tab]', 'keydown', function (b, e) {
+      var all = r.querySelectorAll('.set-tabs [role=tab]'), d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+      e.preventDefault(); st.setIdx = (st.setIdx + d + all.length) % all.length; render(ed); document.getElementById(ed.pfx + '-tab' + st.setIdx).focus();
+    });
+    on('[data-viewrole]', 'click', function (b) { st.role = b.dataset.viewrole; render(ed); });
+    on('[data-setname]', 'input', function (el) { set.name = el.value; dirty(ed); var t = document.querySelector('#' + ed.pfx + '-tab' + st.setIdx + ' .tabname'); if (t) t.textContent = el.value || 'Untitled variant'; });
+    on('[data-addset]', 'click', function () { f.sets.push({ name: 'New variant ' + (f.sets.length + 1), def: false, steps: [] }); st.setIdx = f.sets.length - 1; dirty(ed); render(ed); });
+    on('[data-makedef]', 'click', function () { f.sets.forEach(function (s) { s.def = false; }); set.def = true; dirty(ed); render(ed); });
+    on('[data-delset]', 'click', function () { st.confirmDel = true; render(ed); });
+    on('[data-delno]', 'click', function () { st.confirmDel = false; render(ed); });
+    on('[data-delok]', 'click', function () { var wasDef = set.def; f.sets.splice(st.setIdx, 1); if (wasDef) f.sets[0].def = true; st.setIdx = 0; st.confirmDel = false; dirty(ed); render(ed); });
+    on('[data-addstep]', 'click', function (b) {
+      var role = b.dataset.addstep, n = set.steps.filter(function (s) { return s.role === role; }).length + 1;
+      set.steps.push(S(n, role, '', '', '', '', '', '', '')); dirty(ed); render(ed);
+      var el = document.getElementById(ed.pfx + '-s' + st.setIdx + '-' + role + n + '-timing'); if (el) el.focus();
+    });
+    on('[data-rmstep]', 'click', function (b) {
+      var key = b.dataset.rmstep, role = key.charAt(0), n = +key.slice(1);
+      set.steps = set.steps.filter(function (s) { return !(s.role === role && s.n === n); });
+      set.steps.forEach(function (s) { if (s.role === role && s.n > n) s.n -= 1; }); dirty(ed); render(ed);
+    });
+    on('[data-rm]', 'click', function (b) { var a = b.dataset.rm.split(':'); f[a[0]].splice(+a[1], 1); dirty(ed); render(ed); });
+    on('[data-addfig]', 'change', function (s) { if (s.value) { f[s.dataset.addfig].push(s.value); dirty(ed); render(ed); } });
+    on('[data-rmlink]', 'click', function (b) { f.links.splice(+b.dataset.rmlink, 1); dirty(ed); render(ed); });
+    on('[data-addlink]', 'click', function () { f.links.push({ title: '', url: '', type: 'Video' }); dirty(ed); render(ed); });
+    on('[data-save]', 'click', function () {
+      st.dirty = false; st.saved = true; render(ed);
+      setTimeout(function () { st.saved = false; var s = ed.root.querySelector('.ed-state'); if (s && !st.dirty) s.innerHTML = ''; }, 2500);
+    });
+    on('[data-discard]', 'click', function () { var m = st.mode; ed.st = freshState(); ed.st.mode = m; render(ed); });
+    on('[data-jump]', 'click', function (a, e) {
+      e.preventDefault(); var t = document.getElementById(ed.pfx + '-' + a.dataset.jump), sc = scroller(ed.root);
+      var bar = r.querySelector('.ed-top').offsetHeight + 8;
+      if (sc) sc.scrollTo({ top: t.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - bar, behavior: 'smooth' });
+      else window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - bar, behavior: 'smooth' });
+    });
+  }
+  function markActive(ed) {
+    var bar = ed.root.querySelector('.ed-top'); if (!bar) return;
+    var line = bar.getBoundingClientRect().bottom + 24, cur = 'details';
+    ed.root.querySelectorAll('[data-sec]').forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.dataset.sec; });
+    if (cur !== ed.st.active) {
+      ed.st.active = cur;
+      ed.root.querySelectorAll('.jump a').forEach(function (a) { var o = a.dataset.jump === cur; a.classList.toggle('on', o); if (o) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    }
+  }
+
+  /* ---------- badge sheets ---------- */
+  var LV = ['bronze', 'silver', 'gold'];
+  function renderBadges() {
+    var m = '<div class="h">State</div><div class="h">A Rank bars</div><div class="h">B Medal shapes</div><div class="h">C Ring and word</div><div class="h">D Medal icon</div><div class="h">D2 No numerals</div>';
+    m += '<div class="rl">None</div>' + ['A','B','C','D','D2'].map(function () { return '<div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div>'; }).join('');
+    LV.forEach(function (l) {
+      m += '<div class="rl">' + NAMES[l] + '</div>';
+      ['A', 'B', 'C', 'D', 'D2'].forEach(function (d) {
+        m += '<div>' + grade('D', l, { dir: d, size: 18 }) + (d !== 'C' ? '<span class="tag ' + l + '">' + glyph(d, l, 14) + NAMES[l] + '</span>' : '') + '</div>';
+      });
+    });
+    document.getElementById('matrix').innerHTML = m;
+
+    var t = '';
+    [['A', 'Rank bars'], ['B', 'Medal shapes'], ['C', 'Ring, glyph only'], ['D', 'Medal icon, Gold 1'], ['D2', 'Medal icon, no numerals']].forEach(function (d) {
+      function line(cls) {
+        return '<div class="strip ' + cls + '">' + [12, 16, 24].map(function (px) { return '<span style="display:inline-flex;gap:10px;align-items:center"><span class="note" style="width:28px">' + px + '</span>' + LV.map(function (l) { return medal(l, { dir: d[0], size: px, noword: true }); }).join('') + '</span>'; }).join('') + '</div>';
+      }
+      t += '<div><h3>' + d[0] + ' ' + d[1] + '</h3><span class="note">Colour</span>' + line('') + '<span class="note">Greyscale</span>' + line('gray') + '</div>';
+    });
+    document.getElementById('tests').innerHTML = t;
+    renderCtx();
+  }
+  function renderCtx() {
+    document.getElementById('ctxDir').textContent = DIR;
+    var rows = [['Closed Change', 'Waltz', 'H', null, '1 2 3'], ['Natural Turn', 'Waltz', 'D', 'bronze', '1 2 3, 2 3'], ['Reverse Turn', 'Waltz', 'C', 'silver', '1 2 3'], ['Hesitation Change', 'Waltz', 'B', 'gold', '1 2&3']];
+    document.getElementById('ctxRows').innerHTML = '<div class="lrow head"><div>Figure</div><div class="hide-s">Timing</div><div>Class</div><div>Medal</div></div>' +
+      rows.map(function (r) { return '<div class="lrow"><div><b>' + r[0] + '</b><span class="sub">' + r[1] + '</span></div><div class="hide-s">' + r[4] + '</div><div><span class="cls">' + r[2] + '</span></div><div style="min-width:' + (DIR === 'C' ? 70 : 20) + 'px">' + medal(r[3], { size: 16 }) + '</div></div>'; }).join('');
+    document.getElementById('ctxHead').innerHTML = [['Natural Turn', 'D', 'bronze'], ['Reverse Turn', 'C', 'silver'], ['Hesitation Change', 'B', 'gold'], ['Closed Change', 'H', null]].map(function (r) {
+      return '<div class="figtitle"><h3>' + r[0] + '</h3>' + grade(r[1], r[2], { long: true, word: true, size: 18 }) + '<span class="note">Waltz</span></div>';
+    }).join('');
+    var ent = [['Natural Turn', 'Waltz, 1 2 3', 'D', 'bronze'], ['Closed Change', 'Waltz, 1 2 3', 'H', null], ['Reverse Turn', 'Waltz, 1 2 3', 'C', 'silver'], ['Hesitation Change', 'Waltz, 1 2&3', 'B', 'gold']];
+    function chor(name, cls, lvl, list) {
+      return '<div class="chor"><header><h3>' + name + '</h3>' + grade(cls, lvl, { long: true, word: true, size: 18 }) + '</header><div class="note">' + list.length + (list.length === 1 ? ' figure' : ' figures') + ' in order</div><div>' +
+        list.map(function (e, i) { return '<div class="entry"><span class="n">' + (i + 1) + '</span><div><b>' + e[0] + '</b><span class="sub">' + e[1] + '</span></div>' + grade(e[2], e[3], { size: 16 }) + '</div>'; }).join('') + '</div></div>';
+    }
+    document.getElementById('ctxChor').innerHTML = '<div style="display:flex;flex-direction:column;gap:14px">' + chor('Slow waltz, bronze routine', 'D', 'bronze', [ent[0], ent[1], ent[2]]) + chor('Open competition waltz', 'B', 'gold', [ent[3], ent[2]]) + chor('Practice sketch', 'H', null, [ent[1]]) + '</div>';
+  }
+
+  document.getElementById('dirPick').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; DIR = b.dataset.dir;
+    this.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    editors.forEach(render); renderCtx();
+  });
+
+  var desk = makeEditor(document.getElementById('edDesk'), 'd');
+  var ph = makeEditor(document.getElementById('edPhone'), 'm');
+  renderBadges();
+  window.addEventListener('scroll', function () { markActive(desk); }, { passive: true });
+  document.querySelector('.phone').addEventListener('scroll', function () { markActive(ph); }, { passive: true });
+})();
+</script>
+</body>
+</html>
