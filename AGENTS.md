@@ -1155,6 +1155,12 @@ repository query, a Specification predicate, a migration — uses the `@SpringBo
 `@Testcontainers` + `@ServiceConnection` shape above. Do not introduce a `@DataJpaTest`
 slice; there is no existing one to model it on.
 
+**Mock Spring beans with `@MockitoBean` (and `@MockitoSpyBean`), never `@MockBean` / `@SpyBean`.**
+Import `org.springframework.test.context.bean.override.mockito.MockitoBean`. The Spring Boot
+annotations are deprecated and slated for removal, and `frontend/MockBeanDeprecationGuardTest`
+fails the build if a test source reintroduces them — a new test copied from an old one is the
+usual way that happens.
+
 Migrations get their own tests under `test/.../migration/`, driving Flyway directly against a
 Testcontainers Postgres with no Spring context at all, so they need none of the app's env
 vars (`migration/TrainingRecordBackfillTest.kt` is the pattern). Migrate to the version
