@@ -4,7 +4,7 @@
 
 <section th:with="activeNav='training-events'" class="space-y-lg">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${stats.period.label}, toolbar=~{::statsToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${#messages.msg('enum.stats_period.' + stats.period.name())}, toolbar=~{::statsToolbar})}">
         <div th:fragment="statsToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
             <nav th:replace="~{fragments/page :: viewSwitcher(currentView='stats')}"></nav>
@@ -29,7 +29,7 @@
            class="chip"
            th:classappend="${option == stats.period} ? 'chip-active' : ''"
            th:attr="aria-current=${option == stats.period} ? 'page' : null"
-           th:text="${option.label}">All time</a>
+           th:text="${#messages.msg('enum.stats_period.' + option.name())}">All time</a>
     </div>
 
     <!-- Empty state: no sessions to summarise. -->

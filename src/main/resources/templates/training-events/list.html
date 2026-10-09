@@ -54,7 +54,7 @@
                         th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                         hx-include="#filterForm">
                     <option value="" th:text="#{training.list.all_types}">All types</option>
-                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${type}"
+                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${#messages.msg('enum.training_event_type.' + type.name())}"
                             th:selected="${selectedEventTypes != null && selectedEventTypes.contains(type)}">TRAINING</option>
                 </select>
 
@@ -62,7 +62,7 @@
                         th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
                         hx-include="#filterForm">
                     <option value="" th:text="#{training.list.all_statuses}">All statuses</option>
-                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${status}"
+                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${#messages.msg('enum.attendance_status.' + status.name())}"
                             th:selected="${selectedStatuses != null && selectedStatuses.contains(status)}">PLANNED</option>
                 </select>
 
@@ -184,7 +184,7 @@
             <div class="tc-month-heading">
                 <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${group.label}">September 2026</h2>
                 <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
-                    <span th:text="${group.sessionLabel}">6 sessions</span>
+                    <span th:text="#{training.list.count(${group.sessionCount})}">6 sessions</span>
                     <span class="text-outline"> · </span>
                     <span th:text="${group.totalLabel}">9h 30m</span>
                 </p>
@@ -217,7 +217,7 @@
                     </p>
 
                     <div class="tc-badges mt-2">
-                        <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+                        <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + event.eventType.name())}">TRAINING</span>
 
                         <span th:each="segment : ${event.segments}" class="badge-secondary"
                               th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>

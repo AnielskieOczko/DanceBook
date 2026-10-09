@@ -18,7 +18,7 @@
             <a th:href="${item.href}" class="flex items-center gap-3 min-h-[44px] py-3 text-on-surface hover:text-primary">
                 <span class="flex-1 min-w-0">
                     <span class="block text-[15px] font-medium truncate" th:text="${item.name}">Waltz competition routine</span>
-                    <span class="block text-[13px] text-on-surface-variant" th:text="${item.kind.label + ' · ' + item.detail}">Choreography · 14 figures · edited 2 days ago</span>
+                    <span class="block text-[13px] text-on-surface-variant" th:text="${#messages.msg('enum.continue_kind.' + item.kind.name()) + ' · ' + item.detail}">Choreography · 14 figures · edited 2 days ago</span>
                 </span>
                 <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='text-outline')}"></span>
             </a>

@@ -85,7 +85,7 @@
 </form>
 
 <form th:fragment="selectAll" th:object="${testForm}">
-    <div th:replace="~{fragments/form :: selectField(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat', multiple=false, hintId='custom-select-hint')}"></div>
+    <div th:replace="~{fragments/form :: selectField(path='category', label='Category', options=${categoryOptions}, hint='Select category', required=true, placeholder='Select...', cls='extra-cls', id='custom-cat', multiple=false, hintId='custom-select-hint', msgPrefix=null)}"></div>
 </form>
 
 <!-- 8. FORM: textarea -->

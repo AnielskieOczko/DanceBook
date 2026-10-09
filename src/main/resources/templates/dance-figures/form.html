@@ -332,7 +332,7 @@
                         <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{figures.form.field.dance_type}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{figures.form.field.dance_type_placeholder}, id='danceTypeId')}"></div>
 
                         <!-- Dancer Class selection -->
-                        <div th:replace="~{fragments/form :: selectField(path='danceClass', label=#{figures.form.field.dance_class}, options=${danceClasses}, optLabel='displayName', placeholder=#{figures.form.field.dance_class_placeholder}, id='danceClass')}"></div>
+                        <div th:replace="~{fragments/form :: selectField(path='danceClass', label=#{figures.form.field.dance_class}, options=${danceClasses}, msgPrefix='enum.dance_class.', placeholder=#{figures.form.field.dance_class_placeholder}, id='danceClass')}"></div>
 
                         <!-- Alternative Timing -->
                         <div th:replace="~{fragments/form :: field(path='alternativeTiming', label=#{figures.form.field.alternative_timing}, placeholder=#{figures.form.field.alternative_timing_placeholder}, id='alternativeTiming')}"></div>

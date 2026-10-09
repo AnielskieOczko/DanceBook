@@ -74,7 +74,7 @@
                        th:checked="${opt.scope == T(com.jankowski.rafal.dancebook.model.SeriesScope).THIS_EVENT}"
                        class="mt-1 text-primary focus:ring-primary border-border">
                 <div class="flex-1 min-w-0">
-                    <div class="font-medium text-on-surface" th:text="${opt.label}">This event</div>
+                    <div class="font-medium text-on-surface" th:text="${opt.scope != null ? #messages.msg('enum.series_scope.' + opt.scope.name()) : opt.label}">This event</div>
                     <div class="text-sm text-on-surface-variant" th:text="${opt.description}">1 session</div>
                 </div>
             </label>
