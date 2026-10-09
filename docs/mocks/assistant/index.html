@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistant History and Full Window</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Layout concept: a review sheet. Brief and decisions first, then two directions. Each direction shows the history
+   panel in every state (many, empty, menu, rename, delete) at 400px, the phone widths, and a live window that
+   expands to full size and collapses back. Every frame is interactive; the labels name the state it starts in.
+   Tokens are the DanceBook ones from docs/mocks/rounded-forms (light only). */
+:root {
+  --surface: #ffffff;
+  --surface-container: #f5f5f3;
+  --surface-highest: #e3e3e0;
+  --outline: #8e9199;
+  --outline-variant: #e3e3e0;
+  --on-surface: #16181a;
+  --on-surface-variant: #5b6067;
+  --primary: #1f4b4a;
+  --primary-hover: #163736;
+  --primary-soft: #e9eded;
+  --on-primary: #ffffff;
+  --error: #b3261e;
+  --error-soft: #f7e9e8;
+  --shadow-ambient: 0 4px 20px rgba(22,24,26,.08);
+  --shadow-float: 0 8px 32px rgba(22,24,26,.14);
+  --ring: color-mix(in srgb, var(--primary) 22%, transparent);
+  --r-pill: 9999px; --r-field: 1.5rem; --r-card: 1rem; --r-inset: .75rem;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-prose: 'Source Serif 4', Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--surface); color: var(--on-surface); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; margin: 0; padding-inline: 16px; padding-block: 32px 96px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1 { font-size: 30px; line-height: 36px; letter-spacing: -.02em; margin: 0 0 8px; font-weight: 600; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 28px; margin: 0 0 4px; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+p { margin: 0; }
+.lede { max-width: 68ch; color: var(--on-surface-variant); font-size: 16px; line-height: 26px; }
+.note { font-size: 13px; color: var(--on-surface-variant); max-width: 70ch; }
+section.dir { display: flex; flex-direction: column; gap: 28px; border-top: 1px solid var(--outline-variant); padding-top: 28px; }
+.sub { display: flex; flex-direction: column; gap: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 28px 24px; align-items: flex-start; }
+.item { display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; max-width: 400px; }
+.item.phone { max-width: 375px; }
+.item.wide { max-width: none; }
+.cap { font-size: 13px; color: var(--on-surface-variant); }
+.cap b { color: var(--on-surface); font-weight: 600; }
+.cols { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.cols dt { font-weight: 600; }
+.cols dd { margin: 2px 0 12px; color: var(--on-surface-variant); }
+.cols dl { margin: 0; }
+.ico { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ico.sm { width: 16px; height: 16px; }
+.link { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary); }
+
+/* ---------- controls ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 14px/1 var(--font-sans); min-height: 44px; padding: 8px 18px; border-radius: var(--r-pill); border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+.btn.sm { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-outline { background: transparent; color: var(--on-surface); border-color: var(--outline); }
+.btn-outline:hover { background: var(--surface-container); }
+.btn-ghost { background: transparent; color: var(--on-surface-variant); }
+.btn-ghost:hover { background: var(--surface-container); color: var(--on-surface); }
+.btn-danger { background: var(--error); color: #fff; }
+.btn-danger:hover { opacity: .9; }
+.ibtn { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--on-surface-variant); cursor: pointer; }
+.ibtn:hover, .ibtn[aria-expanded="true"] { background: var(--surface-container); color: var(--on-surface); }
+.field { width: 100%; min-height: 44px; padding: 8px 18px; background: var(--surface-container); border: 1px solid var(--outline); border-radius: var(--r-pill); font: 400 15px/1.4 var(--font-sans); color: var(--on-surface); }
+.field::placeholder { color: var(--on-surface-variant); }
+.field:hover { background: var(--surface); }
+.field:focus { outline: none; background: var(--surface); border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
+.field.bad { border-color: var(--error); background: var(--surface); }
+.search { position: relative; display: block; }
+.search .ico { position: absolute; left: 16px; top: 50%; translate: 0 -50%; color: var(--on-surface-variant); pointer-events: none; }
+.search .field { padding-left: 44px; min-height: 40px; font-size: 14px; }
+.badge { display: inline-flex; padding: 1px 10px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; background: var(--primary-soft); color: var(--primary); white-space: nowrap; }
+.badge.saved { background: var(--primary); color: #fff; }
+
+/* ---------- frames ---------- */
+.frame { position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--outline); border-radius: var(--r-card); height: 600px; }
+.phone .frame { border-radius: 28px; height: 640px; }
+.phone .frame .phead { padding-top: 14px; }
+.phead { display: flex; align-items: center; gap: 4px; padding: 10px 12px; border-bottom: 1px solid var(--outline-variant); min-height: 64px; flex: none; }
+.phead .ttl { flex: 1; min-width: 0; padding-left: 6px; }
+.phead h4 { margin: 0; font-size: 16px; font-weight: 700; line-height: 22px; }
+.phead .ctx { font-size: 12px; color: var(--on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.titlechip { display: flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; min-height: 44px; padding: 6px 10px 6px 14px; border: 1px solid transparent; border-radius: var(--r-pill); background: transparent; font: 600 15px/1.2 var(--font-sans); color: var(--on-surface); cursor: pointer; text-align: left; }
+.titlechip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.titlechip:hover, .titlechip[aria-expanded="true"] { background: var(--surface-container); border-color: var(--outline-variant); }
+.pbody { flex: 1; min-height: 0; overflow-y: auto; }
+.hdr, .cmp { flex: none; }
+
+/* thread */
+.thread { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+.u { align-self: flex-end; max-width: 88%; background: var(--surface-container); border-radius: var(--r-field) var(--r-field) 6px var(--r-field); padding: 10px 16px; font-size: 15px; line-height: 1.55; }
+.a { font-family: var(--font-prose); font-size: 16px; line-height: 1.65; display: flex; flex-direction: column; gap: 10px; max-width: 68ch; }
+.drafts { border: 1px solid var(--outline-variant); border-radius: var(--r-card); font-family: var(--font-sans); overflow: hidden; }
+.draft { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.draft + .draft { border-top: 1px solid var(--outline-variant); }
+.draft .dh { display: flex; align-items: center; gap: 8px; }
+.draft .dh .ico { color: var(--primary); }
+.draft .dh strong { flex: 1; min-width: 0; font-size: 15px; line-height: 1.3; }
+.draft dl { margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; }
+.draft dl div { display: flex; gap: 10px; }
+.draft dt { width: 84px; flex: none; color: var(--on-surface-variant); }
+.draft dd { margin: 0; min-width: 0; flex: 1; }
+.timing { font-weight: 600; color: var(--primary); white-space: nowrap; }
+.figs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 13px; }
+.figs li { display: flex; gap: 8px; justify-content: space-between; }
+.acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--outline-variant); }
+.composer .field { flex: 1; min-width: 0; }
+.send { width: 44px; height: 44px; border-radius: var(--r-pill); background: var(--primary); color: #fff; border: 0; display: grid; place-items: center; flex: none; cursor: pointer; }
+
+/* history list */
+.hsearch { padding: 12px 14px 4px; }
+.hcount { padding: 0 20px 4px; font-size: 12px; color: var(--on-surface-variant); }
+.hgroup { padding: 14px 20px 4px; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+.hrow { position: relative; display: flex; align-items: flex-start; gap: 2px; padding: 2px 6px 2px 8px; margin: 0 6px; border-radius: var(--r-inset); }
+.hrow + .hrow::before { content: ""; position: absolute; left: 12px; right: 12px; top: 0; height: 1px; background: var(--outline-variant); }
+.hrow.active { background: var(--primary-soft); }
+.hrow.active + .hrow::before, .hrow.active::before { display: none; }
+.hopen { flex: 1; min-width: 0; text-align: left; background: transparent; border: 0; padding: 10px 8px; cursor: pointer; font: inherit; color: inherit; border-radius: var(--r-inset); display: flex; flex-direction: column; gap: 2px; }
+.hopen:hover .ht { text-decoration: underline; text-decoration-color: var(--outline); text-underline-offset: 3px; }
+.ht { font-size: 15px; font-weight: 500; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+.hrow.active .ht { color: var(--primary); font-weight: 600; }
+.hm { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--on-surface-variant); }
+.hm .c { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hm .t { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hrow > .ibtn { margin-top: 4px; }
+.menu { position: absolute; right: 8px; top: 46px; z-index: 5; width: 188px; padding: 6px; background: var(--surface); border: 1px solid var(--outline-variant); border-radius: var(--r-card); box-shadow: var(--shadow-float); display: flex; flex-direction: column; }
+.hrow.flip .menu { top: auto; bottom: 46px; }
+.menu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; border: 0; background: transparent; border-radius: var(--r-inset); font: 500 14px/1 var(--font-sans); color: var(--on-surface); cursor: pointer; text-align: left; }
+.menu button:hover { background: var(--surface-container); }
+.menu button.danger { color: var(--error); }
+.menu button.danger:hover { background: var(--error-soft); }
+.rename { flex: 1; min-width: 0; padding: 10px 6px 10px 8px; display: flex; flex-direction: column; gap: 8px; }
+.rename .hint { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--on-surface-variant); padding-inline: 14px; }
+.rename .hint.err { color: var(--error); font-weight: 600; }
+.confirm { flex: 1; margin: 6px 2px; padding: 14px; background: var(--error-soft); border-radius: var(--r-inset); display: flex; flex-direction: column; gap: 10px; }
+.confirm p { font-size: 14px; line-height: 1.45; }
+.confirm p b { font-weight: 600; }
+.empty { padding: 40px 28px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.empty .ico { width: 28px; height: 28px; color: var(--on-surface-variant); }
+.empty p { color: var(--on-surface-variant); max-width: 34ch; }
+.empty h3 { font-size: 17px; }
+.hfoot { padding: 10px 14px; border-top: 1px solid var(--outline-variant); flex: none; }
+
+/* Direction B floating switcher */
+.over { position: absolute; inset: 0; pointer-events: none; }
+.over > * { pointer-events: auto; }
+.pop { position: absolute; z-index: 10; left: 10px; top: 66px; width: min(380px, calc(100% - 20px)); max-height: calc(100% - 82px); display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--outline-variant); border-radius: var(--r-card); box-shadow: var(--shadow-float); overflow: hidden; }
+.pop .pbody { padding-bottom: 6px; }
+.dim { position: absolute; inset: 0; background: rgba(22,24,26,.22); z-index: 9; }
+.dim.clear { background: transparent; }
+.sheet { position: absolute; z-index: 10; left: 0; right: 0; bottom: 0; top: 96px; display: flex; flex-direction: column; background: var(--surface); border-radius: 24px 24px 0 0; box-shadow: var(--shadow-float); overflow: hidden; }
+.sheet .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--outline-variant); margin: 8px auto 2px; flex: none; }
+.drawer { position: absolute; z-index: 10; left: 0; top: 0; bottom: 0; width: 340px; max-width: 100%; display: flex; flex-direction: column; background: var(--surface); border-right: 1px solid var(--outline-variant); box-shadow: var(--shadow-float); }
+.modal { position: absolute; z-index: 20; left: 50%; top: 50%; translate: -50% -50%; width: min(340px, calc(100% - 32px)); background: var(--surface); border-radius: var(--r-card); box-shadow: var(--shadow-float); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.modal h3 { font-size: 17px; margin: 0; }
+.modal p { font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; }
+.modal .acts { justify-content: flex-end; margin-top: 4px; }
+.scrim { position: absolute; inset: 0; z-index: 19; background: rgba(22,24,26,.32); }
+
+/* ---------- live window ---------- */
+.win { position: relative; overflow: hidden; height: 600px; border: 1px solid var(--outline); border-radius: var(--r-card); background: var(--surface); }
+.win .app { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.win .nav { display: flex; align-items: center; gap: 22px; padding: 0 20px; height: 52px; border-bottom: 1px solid var(--outline-variant); font-size: 14px; font-weight: 500; color: var(--on-surface-variant); }
+.win .nav b { color: var(--on-surface); font-weight: 700; font-size: 16px; margin-right: 8px; }
+.win .nav .on { color: var(--primary); font-weight: 600; }
+.win .page { padding: 24px 28px; display: flex; flex-direction: column; max-width: 560px; }
+.win .page h5 { font: 600 24px/1.2 var(--font-sans); margin: 0 0 10px; letter-spacing: -.01em; }
+.win .page .li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--outline-variant); font-size: 14px; }
+.win .page .li span:last-child { color: var(--on-surface-variant); }
+.win .bar { position: absolute; left: 28px; bottom: 20px; width: 300px; max-width: calc(100% - 56px); display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 16px; border: 1px solid var(--outline-variant); border-radius: var(--r-pill); box-shadow: var(--shadow-ambient); background: var(--surface); color: var(--on-surface-variant); font-size: 14px; }
+.wpanel { position: absolute; top: 0; right: 0; bottom: 0; width: min(400px, 100%); display: flex; background: var(--surface); border-left: 1px solid var(--outline-variant); transition: width .24s ease; overflow: hidden; }
+.win.full .wpanel { width: 100%; border-left: 0; }
+.wcol { display: flex; flex-direction: column; min-width: 0; min-height: 0; flex: 1; position: relative; }
+.rail { width: 292px; flex: none; border-right: 1px solid var(--outline-variant); display: flex; flex-direction: column; min-height: 0; background: var(--surface); }
+.rail .rh { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 10px 20px; min-height: 64px; }
+.rail .rh h4 { margin: 0; font-size: 16px; }
+.measure { width: 100%; max-width: 700px; margin-inline: auto; }
+.pane { width: 340px; flex: none; border-left: 1px solid var(--outline-variant); overflow-y: auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 20px; background: var(--surface); }
+.pane h4 { margin: 0 0 6px; font-size: 14px; }
+.pane ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pane li { padding: 10px 0; border-top: 1px solid var(--outline-variant); display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+.pane li small { font-size: 12px; color: var(--on-surface-variant); line-height: 1.45; }
+.pane li .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.flow { display: grid; gap: 12px 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); margin: 0; padding: 0; }
+.flow li { list-style: none; border-top: 1px solid var(--outline); padding-top: 10px; font-size: 13px; color: var(--on-surface-variant); }
+.flow li b { display: block; color: var(--on-surface); font-size: 14px; margin-bottom: 2px; }
+@media (max-width: 800px) { .expandbtn { display: none; } .rail, .pane { display: none; } .win .bar { display: none; } }
+@media (prefers-reduced-motion: reduce) { .wpanel { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14"/></symbol>
+<symbol id="i-expand" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
+<symbol id="i-collapse" viewBox="0 0 24 24"><path d="M14 10h6V4M10 14H4v6M20 4l-6 6M4 20l6-6"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/></symbol>
+<symbol id="i-note" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="i-fig" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 8v6m-5-4 5 1 5-1M9 21l3-7 3 7"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+</svg>
+
+<div class="wrap">
+<header>
+  <h1>Assistant history and full-window view</h1>
+  <p class="lede">Two directions for issue #215: a history panel that lists every conversation with a three-dot menu (Rename, Delete), and an expanded full-window view that collapses back to the side panel. Both extend the widget that exists today (bar, 400px panel, phone sheet) and use the approved rounded form language. Everything below is clickable: open a menu, rename, delete, expand, collapse.</p>
+</header>
+
+<section class="dir" style="border-top:0;padding-top:0">
+  <div class="cols">
+    <dl>
+      <dt>Rules both directions follow</dt>
+      <dd>A title is plain text until you choose Rename in the three-dot menu. Then it becomes a field with Save and Cancel; Enter saves, Escape cancels, 80 characters at most. Rows are open buttons, so a tap never edits by accident.</dd>
+      <dt>Wording</dt>
+      <dd>A saved Material is a Note everywhere. Deleting a conversation never deletes what was saved from it, and the confirmation says so.</dd>
+    </dl>
+    <dl>
+      <dt>Direction A, Ledger</dt>
+      <dd>History is a view inside the panel, reached from the clock icon that already exists. Delete is confirmed inside the row. Expanded, the history stays on screen as a left column beside a centred reading column.</dd>
+      <dt>Direction B, Switcher</dt>
+      <dd>History hangs off the conversation title as a floating list, like a document switcher. Delete asks in a modal. Expanded, a right column keeps the Notes cited and the drafts of this conversation in view.</dd>
+    </dl>
+    <dl>
+      <dt>What the mock changes in the product</dt>
+      <dd>Adds an expand control to the panel header, a conversation search field, date groups in the list, and a three-dot menu in place of the always-visible rename form and Delete link. Rename happens in place.</dd>
+      <dt>Not covered</dt>
+      <dd>Pagination of the list (the product loads all of them; 16 are shown) and renaming from inside an open thread. Both are listed under decisions at the end.</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="dir" id="a">
+  <div>
+    <h2>Direction A: Ledger</h2>
+    <p class="lede">The panel keeps one job at a time. The clock icon swaps the thread for the list; the arrow swaps it back. Expanding adds no new place to learn: the same list simply stays visible next to the thread.</p>
+  </div>
+  <div class="sub">
+    <h3>History panel at 400px</h3>
+    <div class="row" id="a-states"></div>
+  </div>
+  <div class="sub">
+    <h3>Phone widths</h3>
+    <p class="note">The phone sheet is already full screen, so there is nothing to expand. Rows keep a 44px menu target. Delete confirms inside the row so the thumb stays where it was.</p>
+    <div class="row" id="a-phones"></div>
+  </div>
+  <div class="sub">
+    <h3>Expanded full-window view, live</h3>
+    <div class="item wide"><div class="win" id="a-win"></div>
+    <p class="cap">Press the expand icon in the panel header. In the full window, use the collapse icon, press Escape, or close the assistant. The same conversation stays open and the page behind it is untouched. Below 800px wide the expand control is hidden, as it would be in the app.</p></div>
+    <ol class="flow">
+      <li><b>Expand</b>The panel grows from its right edge to cover the window in 240ms. The list appears as a 292px column on the left.</li>
+      <li><b>Work</b>Rename and delete behave exactly as in the panel. Opening another conversation replaces only the centre column.</li>
+      <li><b>Collapse</b>The collapse icon or Escape returns to the 400px panel on the same conversation, and focus goes back to the expand icon.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="dir" id="b">
+  <div>
+    <h2>Direction B: Switcher</h2>
+    <p class="lede">The conversation title in the header is the way to other conversations, as in a document editor. The thread stays on screen behind a floating list, so you never lose your place. Expanded, the extra width goes to a column of what this conversation produced.</p>
+  </div>
+  <div class="sub">
+    <h3>History list at 400px</h3>
+    <div class="row" id="b-states"></div>
+  </div>
+  <div class="sub">
+    <h3>Phone widths</h3>
+    <p class="note">On a phone the floating list becomes a bottom sheet that rises over the thread. Delete is a modal at every width.</p>
+    <div class="row" id="b-phones"></div>
+  </div>
+  <div class="sub">
+    <h3>Expanded full-window view, live</h3>
+    <div class="item wide"><div class="win" id="b-win"></div>
+    <p class="cap">Expand from the panel header. In the full window the title opens the list as a 340px drawer from the left edge over the thread. Collapse with the icon or Escape.</p></div>
+    <ol class="flow">
+      <li><b>Expand</b>The panel grows to the full window. The thread takes the centre; a 340px column on the right lists the Notes the assistant linked and the drafts it prepared.</li>
+      <li><b>Switch</b>The title opens a drawer with the same list, menu, rename and delete modal. It closes when you pick a conversation or press Escape.</li>
+      <li><b>Collapse</b>Back to the 400px panel on the same conversation. The right column folds away; its items stay reachable in the thread as cards.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="dir">
+  <h2>Recommendation and open decisions</h2>
+  <div class="cols">
+    <dl>
+      <dt>Recommendation: Direction A</dt>
+      <dd>It reuses the control that exists (the clock icon), keeps one thing on screen at a time in the panel, and makes the full window a plain widening of the same layout. Direction B's right column is attractive, but it adds a second place where drafts live, next to the cards that already hold Save and Edit in form.</dd>
+    </dl>
+    <dl>
+      <dt>Decisions for you</dt>
+      <dd>1. Should a title also be renameable from inside an open thread, or only from the list? Both mocks say list only.<br>2. Should the list search match message text or titles only? The mock shows titles.<br>3. Inline delete confirmation (A) or a modal (B), whichever direction wins?<br>4. Is the icon plus Escape enough to collapse, or should a click on the page behind a docked panel also close it?</dd>
+    </dl>
+  </div>
+</section>
+</div>
+
+<script>
+(function () {
+  var ico = function (n, c) { return '<svg class="ico ' + (c || '') + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+
+  var DATA = [
+    [1, 'Heel turns in Waltz', 'Waltz notes', '18:42', 'Today', 8],
+    [2, 'Quickstep chassé notes from Thursday', 'Training session', '12:05', 'Today', 6],
+    [3, 'Which sessions still need confirming?', 'Home', '21:10', 'Yesterday', 4],
+    [4, 'Sway in my Slow Foxtrot notes', 'Note: Feather Finish', '09:30', 'Yesterday', 10],
+    [5, 'Cha-cha New Yorker timing and the Hockey Stick', 'Figure: New Yorker', 'Mon', 'Earlier this week', 12],
+    [6, 'Rumba: Alemana versus Hip Twist', 'Rumba figures', 'Mon', 'Earlier this week', 6],
+    [7, 'What comes before and after a Natural Spin Turn in Silver Waltz, and which of my notes mention it?', 'Figure: Natural Spin Turn', 'Sun', 'Earlier this week', 14],
+    [8, 'Tango Closed Promenade, leader and follower steps', 'Figure: Closed Promenade', 'Sat', 'Earlier this week', 8],
+    [9, 'Jive: Change of Places, Link and Fallaway Throwaway', 'Jive notes', '3 Oct', 'Earlier in October', 10],
+    [10, 'Samba Volta and Bounce Fallaway for the spring competition', 'Home', '2 Oct', 'Earlier in October', 16],
+    [11, 'Bronze Viennese Waltz syllabus gaps', 'Home', '1 Oct', 'Earlier in October', 6],
+    [12, 'Paso Doble Appel and Sur Place', 'Note: Paso basics', '28 Sep', 'September', 4],
+    [13, 'Foxtrot Three Step versus Feather Step', 'Figure: Three Step', '26 Sep', 'September', 8],
+    [14, 'How many Rumba sessions did I attend this month?', 'Training', '22 Sep', 'September', 4],
+    [15, 'Plan for Thursday: Silver Waltz class', 'Training session', '18 Sep', 'September', 12],
+    [16, 'Contra Check and Weave from Promenade Position', 'Figure: Weave', '12 Sep', 'September', 6]
+  ];
+  /* One store per frame, so a rename survives closing and reopening the list. */
+  function newStore(empty) {
+    return { active: empty ? null : 1, convos: empty ? [] : DATA.map(function (r) { return { id: r[0], title: r[1], ctx: r[2], time: r[3], group: r[4], msgs: r[5] }; }) };
+  }
+  var uid = 0;
+  function el(html, cls) { var d = document.createElement('div'); d.className = cls || ''; d.innerHTML = html; return d; }
+  function item(parent, cap, node, phone) {
+    var w = el('', 'item' + (phone ? ' phone' : '')); w.appendChild(node); w.appendChild(el(cap, 'cap')); parent.appendChild(w);
+  }
+
+  function thread() {
+    return '<div class="thread">' +
+      '<div class="u">Which of my notes talk about heel turns? Then draft a note from Thursday: we did Natural Spin Turn and Reverse Pivot and I kept losing the closing on count 3.</div>' +
+      '<div class="a"><p>Two of your notes mention heel turns: <a class="link" href="#">Waltz: Natural Spin Turn</a> covers the heel turn on the end of the figure, and <a class="link" href="#">Closing the feet on 3</a> has your teacher’s correction from September.</p>' +
+      '<p>I prepared a note, a training event and a figure for you to check. Nothing is saved until you press Save.</p>' +
+      '<div class="drafts">' +
+        '<div class="draft"><div class="dh">' + ico('note') + '<strong>Waltz: closing on 3</strong><span class="badge">Draft</span></div>' +
+        '<dl><div><dt>Dance</dt><dd>Waltz</dd></div><div><dt>Description</dt><dd>Reverse Pivot after Natural Spin Turn: feet close on 3, weight stays over the right foot before the pivot.</dd></div></dl>' +
+        '<ul class="figs"><li><span>Natural Spin Turn</span><span class="timing">1 2 3</span></li><li><span>Reverse Pivot</span><span class="timing">1 2</span></li></ul>' +
+        '<div class="acts"><button class="btn btn-primary sm">Save</button><button class="btn btn-outline sm">Edit in form</button></div></div>' +
+        '<div class="draft"><div class="dh">' + ico('cal') + '<strong>Silver Waltz class</strong><span class="badge">Draft</span></div>' +
+        '<dl><div><dt>When</dt><dd>Thursday 8 Oct, 19:00 to 20:00</dd></div><div><dt>Status</dt><dd>Unconfirmed</dd></div></dl>' +
+        '<div class="acts"><button class="btn btn-primary sm">Save</button><button class="btn btn-outline sm">Edit in form</button></div></div>' +
+        '<div class="draft"><div class="dh">' + ico('fig') + '<strong>Reverse Pivot</strong><span class="badge">Draft</span></div>' +
+        '<dl><div><dt>Dance</dt><dd>Waltz, Silver</dd></div><div><dt>Starts</dt><dd>Right foot back, closed position</dd></div><div><dt>Ends</dt><dd>Left foot forward, closed position</dd></div></dl>' +
+        '<div class="acts"><button class="btn btn-primary sm">Save</button><button class="btn btn-outline sm">Edit in form</button></div></div>' +
+      '</div></div></div>';
+  }
+  function composer() {
+    return '<form class="composer" onsubmit="return false"><input class="field" aria-label="Message the assistant" placeholder="Ask or tell DanceBook…"><button type="button" class="ibtn" aria-label="Dictate" style="color:var(--primary)">' + ico('mic') + '</button><button class="send" aria-label="Send">' + ico('send') + '</button></form>';
+  }
+
+  /* ---- history list component ---- */
+  function Hist(host, o) {
+    var st = o.store;
+    var s = { menu: o.menu || null, rename: o.rename || null, del: o.del || null, q: '', err: o.err || false, draft: o.draft };
+    var modal = null, stage = o.stage;
+    function visible() { var q = s.q.trim().toLowerCase(); return st.convos.filter(function (c) { return !q || c.title.toLowerCase().indexOf(q) > -1; }); }
+    function byId(id) { return st.convos.filter(function (c) { return c.id === id; })[0]; }
+    function short(t, n) { return t.length > n ? t.slice(0, n - 2) + '…' : t; }
+    function row(c, i, n) {
+      var active = c.id === st.active ? ' active' : '';
+      if (s.rename === c.id) {
+        var v = s.draft != null ? s.draft : c.title;
+        return '<div class="hrow' + active + '"><form class="rename" data-id="' + c.id + '">' +
+          '<input class="field' + (s.err ? ' bad' : '') + '" name="t" maxlength="80" value="' + esc(v) + '" aria-label="Conversation title">' +
+          '<div class="hint' + (s.err ? ' err' : '') + '"><span>' + (s.err ? 'Give the conversation a title.' : 'Enter saves, Escape cancels') + '</span><span>' + v.length + '/80</span></div>' +
+          '<div class="acts"><button class="btn btn-primary sm" type="submit">Save</button><button class="btn btn-ghost sm" type="button" data-act="cancel">Cancel</button></div></form></div>';
+      }
+      if (s.del === c.id && o.confirm === 'inline') {
+        return '<div class="hrow"><div class="confirm" role="alertdialog" aria-label="Delete conversation"><p><b>Delete “' + esc(short(c.title, 48)) + '”?</b> Its ' + c.msgs + ' messages are removed. Notes, training events and figures you saved from it stay.</p>' +
+          '<div class="acts"><button class="btn btn-danger sm" data-act="delok" data-id="' + c.id + '">Delete conversation</button><button class="btn btn-ghost sm" data-act="cancel">Keep it</button></div></div></div>';
+      }
+      var m = s.menu === c.id ? '<div class="menu" role="menu"><button role="menuitem" data-act="rename" data-id="' + c.id + '">' + ico('edit') + 'Rename</button><button role="menuitem" class="danger" data-act="delete" data-id="' + c.id + '">' + ico('trash') + 'Delete</button></div>' : '';
+      var flip = (i >= n - 2 && n > 4) ? ' flip' : '';
+      return '<div class="hrow' + active + flip + '"><button class="hopen" data-act="open" data-id="' + c.id + '"' + (active ? ' aria-current="true"' : '') + '><span class="ht">' + esc(c.title) + '</span><span class="hm"><span class="c">' + esc(c.ctx) + '</span><span class="t">' + esc(c.time) + '</span></span></button>' +
+        '<button class="ibtn" data-act="menu" data-id="' + c.id + '" aria-haspopup="menu" aria-expanded="' + (s.menu === c.id) + '" aria-label="Actions for ' + esc(c.title) + '">' + ico('more') + '</button>' + m + '</div>';
+    }
+    function render() {
+      var list = visible(), html = '';
+      if (!st.convos.length) {
+        html = '<div class="empty">' + ico('history') + '<h3>No conversations yet</h3><p>Ask about your Notes, the figure catalog or your training sessions. Each conversation you start is kept here.</p><button class="btn btn-primary" data-act="new">Start a conversation</button></div>';
+      } else {
+        html = '<div class="hsearch"><label class="search">' + ico('search') + '<input class="field" id="' + o.id + '-q" type="search" placeholder="Search conversations" aria-label="Search conversations" value="' + esc(s.q) + '"></label></div>' +
+          '<div class="hcount">' + (s.q ? list.length + ' of ' + st.convos.length : st.convos.length + ' conversations') + '</div>';
+        var g = null;
+        list.forEach(function (c, i) {
+          if (c.group !== g) { g = c.group; html += '<div class="hgroup">' + g + '</div>'; }
+          html += row(c, i, list.length);
+        });
+        if (!list.length) html += '<div class="empty"><h3>Nothing matches “' + esc(s.q) + '”</h3><p>Search looks at conversation titles.</p></div>';
+      }
+      var sq = host.querySelector('input[type=search]');
+      var refocus = sq && document.activeElement === sq, pos = sq ? sq.selectionStart : 0;
+      host.innerHTML = html;
+      if (refocus) { var k = host.querySelector('input[type=search]'); k.focus(); k.setSelectionRange(pos, pos); }
+      var r = host.querySelector('.rename input');
+      if (r && (s.fresh || o.autofocus)) { r.focus(); r.setSelectionRange(r.value.length, r.value.length); }
+      s.fresh = false;
+      if (modal) { modal.remove(); modal = null; }
+      if (s.del && o.confirm === 'modal' && stage) {
+        var c = byId(s.del);
+        modal = el('<div class="scrim" data-m="x"></div><div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="dm-' + o.id + '"><h3 id="dm-' + o.id + '">Delete this conversation?</h3><p><b style="color:var(--on-surface);font-weight:600">“' + esc(short(c.title, 60)) + '”</b> and its ' + c.msgs + ' messages will be removed. Notes, training events and figures you saved from it stay.</p><div class="acts"><button class="btn btn-outline" data-m="x">Keep it</button><button class="btn btn-danger" data-m="ok">Delete conversation</button></div></div>');
+        stage.appendChild(modal);
+        modal.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-m]'); if (!t) return;
+          if (t.dataset.m === 'ok') remove(s.del);
+          s.del = null; render();
+        });
+      }
+    }
+    function remove(id) {
+      st.convos = st.convos.filter(function (c) { return c.id !== id; });
+      if (st.active === id) st.active = null;
+      if (o.onChange) o.onChange();
+    }
+    host.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-act]');
+      if (!t) { if (s.menu) { s.menu = null; render(); } return; }
+      var a = t.dataset.act, id = +t.dataset.id;
+      if (a === 'menu') s.menu = s.menu === id ? null : id;
+      else if (a === 'rename') { s.rename = id; s.menu = null; s.draft = null; s.err = false; s.fresh = true; }
+      else if (a === 'delete') { s.del = id; s.menu = null; }
+      else if (a === 'cancel') { s.rename = null; s.del = null; s.err = false; s.draft = null; }
+      else if (a === 'delok') { remove(id); s.del = null; }
+      else if (a === 'open') { st.active = id; s.menu = null; if (o.onOpen) o.onOpen(id); }
+      else if (a === 'new') { if (o.onNew) o.onNew(); return; }
+      else return;
+      render();
+    });
+    host.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = e.target.closest('form.rename'); if (!f) return;
+      var v = f.t.value.trim();
+      if (!v) { s.err = true; s.draft = ''; s.fresh = true; render(); return; }
+      byId(+f.dataset.id).title = v;
+      s.rename = null; s.err = false; s.draft = null; if (o.onChange) o.onChange(); render();
+    });
+    host.addEventListener('input', function (e) {
+      if (e.target.type === 'search') { s.q = e.target.value; render(); }
+      else if (e.target.name === 't') {
+        s.draft = e.target.value; s.err = false;
+        var h = e.target.closest('form').querySelector('.hint'); h.className = 'hint';
+        h.innerHTML = '<span>Enter saves, Escape cancels</span><span>' + s.draft.length + '/80</span>';
+        e.target.classList.remove('bad');
+      }
+    });
+    host.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && (s.rename || s.del || s.menu)) { e.preventDefault(); s.rename = s.del = s.menu = null; s.err = false; s.draft = null; render(); }
+    });
+    this.activeTitle = function () { var c = byId(st.active); return c ? c.title : 'New conversation'; };
+    render();
+  }
+
+  /* ---- header pieces ---- */
+  function headerA(mode) {
+    if (mode === 'history') return '<div class="phead"><button class="ibtn" data-h="back" aria-label="Back to the conversation">' + ico('back') + '</button><div class="ttl"><h4>Conversations</h4></div><button class="ibtn" data-h="new" aria-label="New conversation" title="New conversation">' + ico('plus') + '</button><button class="ibtn expandbtn" data-h="expand" aria-label="Expand to full window" title="Expand">' + ico('expand') + '</button><button class="ibtn" data-h="close" aria-label="Close assistant" title="Close">' + ico('x') + '</button></div>';
+    return '<div class="phead"><div class="ttl"><h4>Assistant</h4><div class="ctx">Looking at: Waltz notes</div></div><button class="ibtn" data-h="hist" aria-label="Conversations" title="Conversations">' + ico('history') + '</button><button class="ibtn" data-h="new" aria-label="New conversation" title="New conversation">' + ico('plus') + '</button><button class="ibtn expandbtn" data-h="expand" aria-label="Expand to full window" title="Expand">' + ico('expand') + '</button><button class="ibtn" data-h="close" aria-label="Close assistant" title="Close">' + ico('x') + '</button></div>';
+  }
+  function headerB(title, open, hideExpand) {
+    return '<div class="phead"><button class="titlechip" data-h="hist" aria-haspopup="true" aria-expanded="' + !!open + '" style="flex:1;min-width:0;max-width:max-content"><span>' + esc(title) + '</span>' + ico('chev', 'sm') + '</button><span style="flex:1"></span><button class="ibtn" data-h="new" aria-label="New conversation" title="New conversation">' + ico('plus') + '</button>' + (hideExpand ? '' : '<button class="ibtn expandbtn" data-h="expand" aria-label="Expand to full window" title="Expand">' + ico('expand') + '</button>') + '<button class="ibtn" data-h="close" aria-label="Close assistant" title="Close">' + ico('x') + '</button></div>';
+  }
+
+  /* ---- Direction A frames ---- */
+  function frameA(opts) {
+    opts = opts || {};
+    var f = el('<div class="hdr"></div><div class="pbody"></div><div class="cmp"></div>', 'frame');
+    var hdr = f.querySelector('.hdr'), body = f.querySelector('.pbody'), cmp = f.querySelector('.cmp');
+    var store = newStore(opts.h && opts.h.empty);
+    function show(m) {
+      hdr.innerHTML = headerA(m);
+      if (m === 'history') {
+        cmp.innerHTML = ''; body.innerHTML = '';
+        new Hist(body, Object.assign({ id: 'a' + (++uid), confirm: 'inline', store: store, autofocus: false }, opts.h || {}, { onOpen: function () { show('thread'); }, onNew: function () { show('thread'); } }));
+        opts.h = null;
+      } else { body.innerHTML = thread(); cmp.innerHTML = composer(); }
+    }
+    f.addEventListener('click', function (e) {
+      var h = e.target.closest('[data-h]'); if (!h) return; var a = h.dataset.h;
+      if (a === 'hist') show('history'); else if (a === 'back' || a === 'new') show('thread');
+    });
+    show(opts.thread ? 'thread' : 'history');
+    return f;
+  }
+  var ar = document.getElementById('a-states');
+  item(ar, '<b>Many conversations.</b> Grouped by date, the open one tinted. Long titles clamp at two lines, and the page each one started from sits under the title.', frameA());
+  item(ar, '<b>Three-dot menu open.</b> Rename and Delete in a floating menu. It is the only element on this screen with a shadow.', frameA({ h: { menu: 3 } }));
+  item(ar, '<b>Rename in progress.</b> The row becomes a pill field with a count, Save and Cancel. Nothing else changes.', frameA({ h: { rename: 2 } }));
+  item(ar, '<b>Rename with an empty title.</b> Save is refused with a plain message under the field.', frameA({ h: { rename: 4, err: true, draft: '' } }));
+  item(ar, '<b>Delete confirmation.</b> Inline in the row, in the error tint, saying what goes and what stays.', frameA({ h: { del: 5 } }));
+  item(ar, '<b>Empty.</b> No conversations yet, with one primary action.', frameA({ h: { empty: true } }));
+  item(ar, '<b>Thread view.</b> What the panel shows today, plus the expand icon. The clock icon opens the list.', frameA({ thread: true }));
+
+  var ap = document.getElementById('a-phones');
+  item(ap, '<b>375px, history.</b> A full-screen sheet with the same header.', frameA(), true);
+  item(ap, '<b>375px, menu.</b> The menu opens leftward from the target and never leaves the screen.', frameA({ h: { menu: 2 } }), true);
+  item(ap, '<b>375px, rename.</b> The field takes the full row width.', frameA({ h: { rename: 2, draft: 'Quickstep chassé and Progressive Chassé to Right' } }), true);
+  item(ap, '<b>375px, delete.</b> The longest title is shortened inside the sentence only.', frameA({ h: { del: 7 } }), true);
+  Array.prototype.forEach.call(ap.children, function (w) { w.classList.add('phone'); w.firstChild.parentNode.classList.add('phone'); });
+
+  /* ---- window shell ---- */
+  function appShell(inner) {
+    return '<div class="app"><div class="nav"><b>DanceBook</b><span>Home</span><span class="on">Notes</span><span>Training</span><span>Figures</span></div>' +
+      '<div class="page"><h5>Waltz notes</h5><div class="li"><span>Waltz: Natural Spin Turn</span><span>Silver</span></div><div class="li"><span>Closing the feet on 3</span><span>Bronze</span></div><div class="li"><span>Hesitation Change from Fallaway</span><span>Gold</span></div><div class="li"><span>Weave from Promenade Position</span><span>Silver</span></div></div>' +
+      '<div class="bar">' + ico('spark') + '<span style="flex:1">Ask or tell DanceBook…</span><span class="send" style="width:36px;height:36px">' + ico('send') + '</span></div></div>' + inner;
+  }
+  function focusExpand(win) { var b = win.querySelector('[data-h=expand]'); if (b) b.focus(); }
+
+  /* ---- live window A ---- */
+  function liveA(win) {
+    var full = false, mode = 'thread', store = newStore(false), hist;
+    function build() {
+      win.className = 'win' + (full ? ' full' : ''); win.setAttribute('data-stage', '');
+      var rail = full ? '<div class="rail"><div class="rh"><h4>Conversations</h4><button class="ibtn" data-h="new" aria-label="New conversation">' + ico('plus') + '</button></div><div class="pbody" id="a-rail"></div></div>' : '';
+      var head = full
+        ? '<div class="phead"><div class="ttl"><h4 id="a-title"></h4><div class="ctx">Looking at: Waltz notes</div></div><button class="ibtn" data-h="collapse" id="a-collapse" aria-label="Collapse to side panel" title="Collapse (Esc)">' + ico('collapse') + '</button><button class="ibtn" data-h="close" aria-label="Close assistant">' + ico('x') + '</button></div>'
+        : headerA(mode);
+      win.innerHTML = appShell('<div class="wpanel" role="dialog" aria-label="Assistant">' + rail + '<div class="wcol">' + head + '<div class="pbody" id="a-main"></div>' + ((mode === 'thread' || full) ? composer() : '') + '</div></div>');
+      var m = win.querySelector('#a-main');
+      if (full) {
+        var title = win.querySelector('#a-title');
+        var upd = function () { title.textContent = hist.activeTitle(); };
+        hist = new Hist(win.querySelector('#a-rail'), { id: 'aw', confirm: 'inline', store: store, onOpen: upd, onChange: upd });
+        upd();
+        m.innerHTML = '<div class="measure">' + thread() + '</div>';
+        win.querySelector('.composer').classList.add('measure');
+      } else if (mode === 'history') {
+        hist = new Hist(m, { id: 'aw2', confirm: 'inline', store: store, onOpen: function () { mode = 'thread'; build(); }, onNew: function () { mode = 'thread'; build(); } });
+      } else { m.innerHTML = thread(); }
+    }
+    win.addEventListener('click', function (e) {
+      var h = e.target.closest('[data-h]'); if (!h) return; var a = h.dataset.h;
+      if (a === 'expand') { full = true; mode = 'thread'; build(); var b = win.querySelector('#a-collapse'); if (b) b.focus(); }
+      else if (a === 'collapse') { full = false; build(); focusExpand(win); }
+      else if (a === 'hist') { mode = 'history'; build(); }
+      else if (a === 'back' || a === 'new') { mode = 'thread'; build(); }
+    });
+    win.addEventListener('keydown', function (e) { if (e.key === 'Escape' && full && !e.defaultPrevented) { full = false; build(); focusExpand(win); } });
+    build();
+  }
+  liveA(document.getElementById('a-win'));
+
+  /* ---- Direction B frames ---- */
+  function frameB(opts) {
+    opts = opts || {};
+    var f = el('<div class="hdr"></div><div class="pbody"></div><div class="cmp"></div><div class="over"></div>', 'frame');
+    var sheet = !!opts.sheet, open = opts.open !== false, preset = opts.h || {};
+    var store = newStore(preset.empty), hist;
+    var hdr = f.querySelector('.hdr'), body = f.querySelector('.pbody'), cmp = f.querySelector('.cmp'), over = f.querySelector('.over');
+    body.innerHTML = thread(); cmp.innerHTML = composer();
+    function title() { return store.active ? hist ? hist.activeTitle() : store.convos[0].title : 'New conversation'; }
+    function head() { var c = store.convos.filter(function (x) { return x.id === store.active; })[0]; hdr.innerHTML = headerB(c ? c.title : 'New conversation', open, sheet); }
+    function paint() {
+      head(); over.innerHTML = '';
+      if (!open) return;
+      var box = el((sheet ? '<div class="grab"></div><div class="phead" style="border:0;min-height:48px"><div class="ttl"><h4>Conversations</h4></div><button class="ibtn" data-h="new" aria-label="New conversation">' + ico('plus') + '</button><button class="ibtn" data-h="hist" aria-label="Close the list">' + ico('x') + '</button></div>' : '') + '<div class="pbody"></div>' + (sheet ? '' : '<div class="hfoot"><button class="btn btn-outline sm" data-h="new" style="width:100%">' + ico('plus', 'sm') + 'New conversation</button></div>'), sheet ? 'sheet' : 'pop');
+      var d = el('', 'dim' + (sheet ? '' : ' clear')); d.dataset.h = 'hist';
+      over.appendChild(d); over.appendChild(box);
+      hist = new Hist(box.querySelector('.pbody'), Object.assign({ id: 'b' + (++uid), confirm: 'modal', store: store, stage: f }, preset, { onOpen: function () { open = false; paint(); }, onChange: head }));
+      preset = {};
+    }
+    f.addEventListener('click', function (e) {
+      var h = e.target.closest('[data-h]'); if (!h) return;
+      if (h.dataset.h === 'hist') { open = !open; paint(); }
+      else if (h.dataset.h === 'new') { open = false; store.active = null; paint(); }
+    });
+    paint(); return f;
+  }
+  var br = document.getElementById('b-states');
+  item(br, '<b>Many conversations.</b> The same rows as A, in a floating list over the thread, with search at the top and New conversation at the foot.', frameB());
+  item(br, '<b>Three-dot menu open.</b> The menu floats over the list. The two floating layers have shadows; the panel behind does not.', frameB({ h: { menu: 3 } }));
+  item(br, '<b>Rename in progress.</b> Edited in place in the list. The title in the header stays read-only.', frameB({ h: { rename: 2 } }));
+  item(br, '<b>Delete confirmation.</b> A modal over the whole panel. The longest title is shortened in the sentence.', frameB({ h: { del: 7 } }));
+  item(br, '<b>Empty.</b> The list opens to one sentence and one action.', frameB({ h: { empty: true } }));
+  item(br, '<b>Closed.</b> The title is a quiet pill with a chevron, and plain text until you press it.', frameB({ open: false }));
+
+  var bp = document.getElementById('b-phones');
+  item(bp, '<b>375px, history.</b> A bottom sheet rises over the thread. Tap the dimmed area to dismiss.', frameB({ sheet: true }), true);
+  item(bp, '<b>375px, rename.</b> The same row at full width.', frameB({ sheet: true, h: { rename: 2, draft: 'Quickstep chassé and Progressive Chassé to Right' } }), true);
+  item(bp, '<b>375px, delete.</b> A modal centred over the dimmed sheet.', frameB({ sheet: true, h: { del: 4 } }), true);
+
+  /* ---- live window B ---- */
+  function liveB(win) {
+    var full = false, drawer = false, store = newStore(false), hist;
+    function curTitle() { var c = store.convos.filter(function (x) { return x.id === store.active; })[0]; return c ? c.title : 'New conversation'; }
+    function build() {
+      win.className = 'win' + (full ? ' full' : ''); win.setAttribute('data-stage', '');
+      var title = curTitle();
+      var pane = full ? '<aside class="pane" aria-label="In this conversation"><div><h4>Notes it linked</h4><ul><li><a class="link" href="#">Waltz: Natural Spin Turn</a><small>Heel turn on the end of the figure, closes on 3.</small></li><li><a class="link" href="#">Closing the feet on 3</a><small>Teacher’s correction, September.</small></li></ul></div>' +
+        '<div><h4>Drafts</h4><ul><li><div class="top"><span>Waltz: closing on 3</span><span class="badge">Draft</span></div><small>Note, Waltz, 2 figures</small></li><li><div class="top"><span>Silver Waltz class</span><span class="badge">Draft</span></div><small>Training event, Thursday 8 Oct</small></li><li><div class="top"><span>Reverse Pivot</span><span class="badge saved">Saved</span></div><small>Figure, Waltz, Silver</small></li></ul></div></aside>' : '';
+      var head = full
+        ? '<div class="phead"><button class="titlechip" data-h="hist" aria-haspopup="true" aria-expanded="' + drawer + '" style="min-width:0"><span>' + esc(title) + '</span>' + ico('chev', 'sm') + '</button><span style="flex:1"></span><button class="ibtn" data-h="new" aria-label="New conversation">' + ico('plus') + '</button><button class="ibtn" data-h="collapse" id="b-collapse" aria-label="Collapse to side panel" title="Collapse (Esc)">' + ico('collapse') + '</button><button class="ibtn" data-h="close" aria-label="Close assistant">' + ico('x') + '</button></div>'
+        : headerB(title, drawer, false);
+      win.innerHTML = appShell('<div class="wpanel" role="dialog" aria-label="Assistant"><div class="wcol">' + head + '<div class="pbody"><div class="measure">' + thread() + '</div></div>' + composer() + '</div>' + pane + '</div>');
+      if (!drawer) return;
+      var wp = win.querySelector('.wpanel');
+      var box = el(full ? '<div class="phead"><div class="ttl"><h4>Conversations</h4></div><button class="ibtn" data-h="hist" aria-label="Close the list">' + ico('x') + '</button></div><div class="pbody"></div>' : '<div class="pbody"></div><div class="hfoot"><button class="btn btn-outline sm" data-h="new" style="width:100%">' + ico('plus', 'sm') + 'New conversation</button></div>', full ? 'drawer' : 'pop');
+      var d = el('', 'dim' + (full ? '' : ' clear')); d.dataset.h = 'hist'; if (full) d.style.background = 'rgba(22,24,26,.12)';
+      wp.appendChild(d); wp.appendChild(box);
+      hist = new Hist(box.querySelector('.pbody'), { id: 'bw', confirm: 'modal', store: store, stage: win, onOpen: function () { drawer = false; build(); }, onChange: function () { var c = win.querySelector('.titlechip span'); if (c) c.textContent = curTitle(); } });
+    }
+    win.addEventListener('click', function (e) {
+      var h = e.target.closest('[data-h]'); if (!h) return; var a = h.dataset.h;
+      if (a === 'expand') { full = true; drawer = false; build(); var b = win.querySelector('#b-collapse'); if (b) b.focus(); }
+      else if (a === 'collapse') { full = false; drawer = false; build(); focusExpand(win); }
+      else if (a === 'hist') { drawer = !drawer; build(); }
+      else if (a === 'new') { drawer = false; store.active = null; build(); }
+    });
+    win.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (drawer) { drawer = false; build(); } else if (full) { full = false; build(); focusExpand(win); }
+    });
+    build();
+  }
+  liveB(document.getElementById('b-win'));
+})();
+</script>
+</body>
+</html>
