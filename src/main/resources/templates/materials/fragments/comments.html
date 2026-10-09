@@ -14,12 +14,12 @@
         <form th:hx-post="@{/materials/{id}/comments(id=${material.id})}"
               hx-target="#comment-section"
               hx-swap="outerHTML"
-              class="flex gap-4 items-start">
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+              class="flex gap-3 sm:gap-4 items-start">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface text-[13px] sm:text-base font-bold">
                 <span th:text="${currentUser != null && currentUser.displayName != null ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
             </div>
-            <div class="flex-1">
-                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder=#{notes.comments.placeholder}, id='comment-content')}"></div>
+            <div class="flex-1 min-w-0">
+                <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, placeholder=#{notes.comments.placeholder}, id='comment-content', hasError=${commentError != null})}"></div>
                 <div class="flex justify-end mt-2">
                     <button type="submit" class="btn-primary btn-sm" th:text="#{notes.comments.post}">Post comment</button>
                 </div>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Comments List -->
-    <div class="space-y-6">
+    <div class="space-y-4 sm:space-y-6">
         <th:block th:each="c : ${comments}">
             <div th:replace="~{materials/fragments/comments :: comment-item}"></div>
         </th:block>
@@ -38,29 +38,29 @@
     </div>
 </div>
 
-<div th:fragment="comment-item" class="flex gap-4 group">
-    <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+<div th:fragment="comment-item" class="flex gap-3 sm:gap-4 group">
+    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface text-[13px] sm:text-base font-bold">
         <span th:text="${c.author.displayName != null && c.author.displayName.length() > 0 ? c.author.displayName.substring(0,1) : '?'}">U</span>
     </div>
-    <div class="flex-1 min-w-0">
-        <div class="flex justify-between items-baseline mb-1">
+    <div class="comment-card">
+        <div class="flex justify-between items-baseline gap-2 flex-wrap mb-1">
             <div class="flex items-center gap-2">
-                <span class="font-label-sm text-label-sm text-on-surface font-semibold" th:text="${c.author.displayName}">Marcus T.</span>
+                <span class="font-semibold text-[13px] text-on-surface" th:text="${c.author.displayName}">Marcus T.</span>
                 <span th:if="${c.updatedAt != null}" class="text-[10px] text-outline uppercase" th:text="#{notes.comments.edited}">Edited</span>
             </div>
-            <span class="font-label-sm text-label-sm text-on-surface-variant opacity-50"
+            <span class="text-[13px] text-on-surface-variant opacity-75"
                   th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>
         </div>
-        <div th:replace="~{fragments/rich-text :: content(value=${c.content}, cls='font-body-md leading-relaxed mt-1')}"></div>
+        <div th:replace="~{fragments/rich-text :: content(value=${c.content}, cls='font-prose text-body sm:text-prose leading-[26px] sm:leading-[28px] mt-1 text-on-surface')}"></div>
         
         <!-- Actions -->
-        <div class="flex gap-3 mt-2">
+        <div class="flex gap-1 mt-2 -mx-2 -mb-1.5" th:if="${(currentUser != null and currentUser.id == c.author.id) or #authorization.expression('hasRole(''ADMIN'')')}">
             <button th:if="${currentUser != null and currentUser.id == c.author.id}"
                     th:hx-get="@{/materials/{mId}/comments/{cId}/edit(mId=${material.id}, cId=${c.id})}"
                     hx-target="closest .group"
                     hx-swap="outerHTML"
                     type="button"
-                    class="text-xs font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+                    class="link-pill"
                     th:text="#{common.edit}">Edit</button>
             <button th:if="${(currentUser != null and currentUser.id == c.author.id) or #authorization.expression('hasRole(''ADMIN'')')}"
                     th:hx-delete="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${c.id})}"
@@ -68,31 +68,35 @@
                     hx-swap="outerHTML"
                     th:hx-confirm="#{notes.comments.delete_confirm}"
                     type="button"
-                    class="text-xs font-medium text-on-surface-variant hover:text-error transition-colors"
+                    class="link-pill del"
                     th:text="#{common.delete}">Delete</button>
         </div>
     </div>
 </div>
 
-<div th:fragment="comment-edit-form" class="group flex gap-4">
-    <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface font-bold">
+<div th:fragment="comment-edit-form" class="group flex gap-3 sm:gap-4">
+    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-surface-container-highest flex-shrink-0 flex items-center justify-center text-on-surface text-[13px] sm:text-base font-bold">
         <span th:text="${comment != null && comment.author?.displayName != null ? comment.author.displayName.substring(0,1) : 'U'}">U</span>
     </div>
-    <div class="flex-1">
+    <div class="comment-card comment-card-editing" th:classappend="${commentError != null} ? 'border-error! ring-error/20!' : ''">
         <!-- Error Alert -->
         <div th:if="${commentError != null}" class="mb-4">
             <div th:replace="~{fragments/alert :: alert(variant='error', text=${commentError})}"></div>
         </div>
+        <div class="flex justify-between items-baseline gap-2 flex-wrap mb-2">
+            <span class="font-semibold text-[13px] text-on-surface" th:text="${comment != null && comment.author?.displayName != null ? comment.author.displayName : ''}">Marcus T.</span>
+            <span class="text-[13px] text-on-surface-variant" th:text="#{notes.comments.editing}">Editing</span>
+        </div>
         <form th:hx-put="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
               hx-target="closest .group"
               hx-swap="outerHTML">
-            <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, value=${comment.content}, id='comment-edit-' + ${comment.id})}"></div>
-            <div class="flex gap-4 mt-2 justify-end">
+            <div th:replace="~{fragments/form :: richText(path='content', raw=true, required=true, value=${comment.content}, id='comment-edit-' + ${comment.id}, cls='comment-edit-editor', hasError=${commentError != null})}"></div>
+            <div class="flex gap-2 mt-2 justify-end">
                 <button type="button"
                         th:hx-get="@{/materials/{mId}/comments/{cId}(mId=${material.id}, cId=${comment.id})}"
                         hx-target="closest .group"
                         hx-swap="outerHTML"
-                        class="btn-secondary btn-sm"
+                        class="btn-ghost btn-sm"
                         th:text="#{common.cancel}">Cancel</button>
                 <button type="submit" class="btn-primary btn-sm" th:text="#{common.save}">Save</button>
             </div>
