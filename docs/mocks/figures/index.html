@@ -50,7 +50,7 @@ code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background:
 .ico { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ico.sm { width: 16px; height: 16px; }
 .scroll-x { overflow-x: auto; }
-.prob { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.prob { width: 100%; border-collapse: collapse; font-size: 13px; }
 .prob th, .prob td { text-align: left; padding: 10px 16px 10px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
 .prob th { color: var(--on-surface-variant); font-weight: 600; }
 .prob td:first-child { font-weight: 600; width: 22%; }
@@ -83,7 +83,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 .lab .req, .mlab .req { color: var(--error); }
 .help { margin: 6px 0 0 18px; font-size: 13px; color: var(--on-surface-variant); }
 .errmsg { margin: 6px 0 0 18px; font-size: 13px; font-weight: 600; color: var(--error); }
-.seg { display: inline-flex; gap: 4px; padding: 4px; background: var(--surface-container); border: 1px solid var(--hair); border-radius: var(--r-pill); max-width: 100%; overflow-x: auto; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--surface-container); border: 1px solid var(--hair); border-radius: var(--r-field); max-width: 100%; }
 .seg button { min-height: 36px; padding: 6px 16px; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; font: 600 13px/1 var(--font-sans); color: var(--on-surface-variant); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
 .seg button:hover { color: var(--on-surface); }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--primary); border-color: var(--primary); }
@@ -115,7 +115,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 .ed-actions { display: flex; gap: 8px; align-items: center; min-height: 52px; }
 .ed-state { font-size: 13px; color: var(--on-surface-variant); display: inline-flex; align-items: center; gap: 6px; min-width: 124px; }
 .ed-state .dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--on-surface-variant); }
-.jump { display: flex; gap: 4px; padding: 10px 24px; overflow-x: auto; border-bottom: 1px solid var(--hair); }
+.jump { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 24px; border-bottom: 1px solid var(--hair); }
 .jump a { padding: 6px 14px; border-radius: var(--r-pill); font-size: 13px; font-weight: 600; text-decoration: none; color: var(--on-surface-variant); white-space: nowrap; }
 .jump a:hover { background: var(--surface-container); color: var(--on-surface); }
 .jump a.on { color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
@@ -149,7 +149,8 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 
 /* steps */
 .set-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.set-tabs { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--hair); background: var(--surface-container); border-radius: var(--r-pill); overflow-x: auto; max-width: 100%; }
+.set-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--hair); background: var(--surface-container); border-radius: var(--r-field); max-width: 100%; }
+.set-sel { display: none; flex: 1 1 200px; min-width: 0; }
 .set-tabs button { min-height: 40px; padding: 6px 16px; border-radius: var(--r-pill); border: 1px solid transparent; background: transparent; font: 600 13px/1 var(--font-sans); color: var(--on-surface-variant); cursor: pointer; white-space: nowrap; display: inline-flex; gap: 8px; align-items: center; }
 .set-tabs button:hover { color: var(--on-surface); }
 .set-tabs button[aria-selected="true"] { background: var(--surface); border-color: var(--primary); color: var(--primary); }
@@ -199,6 +200,10 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   .ed-actions .ed-state, .dl-txt, .sl-long { display: none; }
   .dl-ico { display: inline; }
   .jump { padding-inline: 16px; }
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1 1 auto; justify-content: center; padding-inline: 10px; }
+  .set-tabs { display: none; }
+  .set-sel { display: block; }
   .ed-body { padding-inline: 16px; }
   .grid2, .flowgrid { grid-template-columns: minmax(0, 1fr); }
   .feet { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -229,11 +234,11 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 }
 
 /* ---------- badge sheets ---------- */
-.mat { display: grid; grid-template-columns: 112px repeat(3, minmax(0, 1fr)); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; min-width: 720px; }
+.mat { display: grid; grid-template-columns: 96px repeat(4, minmax(0, 1fr)); border: 1px solid var(--hair); border-radius: var(--r-card); overflow: clip; }
 .mat > div { padding: 14px 16px; border-bottom: 1px solid var(--hair); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 56px; }
 .mat > .h { font-weight: 600; color: var(--on-surface-variant); font-size: 13px; }
 .mat > .rl { font-weight: 600; }
-.mat > div:nth-last-child(-n+4) { border-bottom: 0; }
+.mat > div:nth-last-child(-n+5) { border-bottom: 0; }
 .ctx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
 .ctx > div { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 .ctx h3 { color: var(--on-surface-variant); font-size: 13px; }
@@ -256,6 +261,17 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 .rec { padding: 16px 20px; border: 1px solid var(--primary); border-radius: var(--r-card); max-width: 76ch; display: flex; flex-direction: column; gap: 8px; }
 .rec h3 { color: var(--primary); font-size: 15px; }
 .list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; max-width: 76ch; }
+@media (max-width: 720px) {
+  .mat { grid-template-columns: 56px repeat(4, minmax(0, 1fr)); }
+  .mat > div { padding: 10px 6px; gap: 6px; }
+  .mat .tag, .mat .note { display: none; }
+  .mat .grade { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .prob thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .prob, .prob tbody, .prob tr, .prob td { display: block; width: 100%; min-width: 0; }
+  .prob tr { padding: 14px 0; border-bottom: 1px solid var(--hair); }
+  .prob td { border: 0; padding: 4px 0; width: 100% !important; }
+  .prob td[data-l]::before { content: attr(data-l); display: block; font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+}
 @media (max-width: 960px) {
   .ctx { grid-template-columns: minmax(0, 1fr); }
   .lrow { grid-template-columns: minmax(0, 1fr) auto auto; }
@@ -285,6 +301,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
       <button type="button" data-dir="A" aria-pressed="true">A Rank bars</button>
       <button type="button" data-dir="B" aria-pressed="false">B Medal shapes</button>
       <button type="button" data-dir="C" aria-pressed="false">C Ring and word</button>
+      <button type="button" data-dir="D" aria-pressed="false">D Medal icon</button>
     </div>
   </div>
 </header>
@@ -295,14 +312,14 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   <div class="scroll-x"><table class="prob">
     <thead><tr><th>Problem</th><th>Where it comes from</th><th>What the rework does</th></tr></thead>
     <tbody>
-      <tr><td>The figure name leaves the screen</td><td>The name is the first field of the first card. The title "Edit {name}" is plain text in the page header. Both scroll away, so once you are in the steps you cannot see which figure you are editing.</td><td>The name is an editable field in a sticky bar with the class, medal and Save. It is visible at every scroll position, on desktop and phone.</td></tr>
-      <tr><td>Steps are four cards away</td><td>Core, Positions, Resources (a full-height card beside them), then Steps, then Flow: six near-identical bordered cards with icon headings.</td><td>One column of hairline-separated sections and a jump row. Steps follow directly after the feet matrix.</td></tr>
-      <tr><td>The resource table is squeezed</td><td>Title, URL, Type and delete share a one-third column on large screens inside an <code>overflow-x-auto</code> wrapper, so the URL input and delete button are clipped or scroll sideways.</td><td>Resources get the full content width, last. On a phone each link stacks into its own block.</td></tr>
-      <tr><td>The step table scrolls sideways and loses columns</td><td>Nine columns with two 150px minimums sit inside a card with <code>overflow-hidden</code>. Comments and the delete button fall off the right edge.</td><td>Column widths are budgeted for a 1240px page: all eight step fields and remove fit without scrolling.</td></tr>
-      <tr><td>The phone hides step content</td><td>On a phone, Footwork, Alignment, Turn and Comments sit behind "Show Technical Details" in every step, with 10px labels.</td><td>Every field is visible on a phone, in a two-up layout with 13px labels. Nothing is behind a disclosure.</td></tr>
-      <tr><td>One role at a time</td><td>A Leader / Follower toggle swaps whole tables, so comparing a leader step with its follower step takes a toggle per step.</td><td>A third choice, Side by side, lists each step number as a leader row and a follower row, marked L or F in shape and text, not colour.</td></tr>
-      <tr><td>Variant controls are scattered and risky</td><td>Variant tabs sit in the Steps card header next to the title. Delete Combination shares a row with Mark as Default.</td><td>One variant switcher with the default marked by a check. Rename and Make default sit beside it. Delete is a separate button and asks for confirmation inline.</td></tr>
-      <tr><td>Three toggle styles, emoji, tracked caps</td><td>Mode, source and role toggles each use different markup. Tabs use emoji. Column labels use 11px tracked uppercase.</td><td>One pill segmented control everywhere, inline line icons, sentence-case labels.</td></tr>
+      <tr><td>The figure name leaves the screen</td><td data-l="Where it comes from">The name is the first field of the first card. The title "Edit {name}" is plain text in the page header. Both scroll away, so once you are in the steps you cannot see which figure you are editing.</td><td data-l="What the rework does">The name is an editable field in a sticky bar with the class, medal and Save. It is visible at every scroll position, on desktop and phone.</td></tr>
+      <tr><td>Steps are four cards away</td><td data-l="Where it comes from">Core, Positions, Resources (a full-height card beside them), then Steps, then Flow: six near-identical bordered cards with icon headings.</td><td data-l="What the rework does">One column of hairline-separated sections and a jump row. Steps follow directly after the feet matrix.</td></tr>
+      <tr><td>The resource table is squeezed</td><td data-l="Where it comes from">Title, URL, Type and delete share a one-third column on large screens inside an <code>overflow-x-auto</code> wrapper, so the URL input and delete button are clipped or scroll sideways.</td><td data-l="What the rework does">Resources get the full content width, last. On a phone each link stacks into its own block.</td></tr>
+      <tr><td>The step table scrolls sideways and loses columns</td><td data-l="Where it comes from">Nine columns with two 150px minimums sit inside a card with <code>overflow-hidden</code>. Comments and the delete button fall off the right edge.</td><td data-l="What the rework does">Column widths are budgeted for a 1240px page: all eight step fields and remove fit without scrolling.</td></tr>
+      <tr><td>The phone hides step content</td><td data-l="Where it comes from">On a phone, Footwork, Alignment, Turn and Comments sit behind "Show Technical Details" in every step, with 10px labels.</td><td data-l="What the rework does">Every field is visible on a phone, in a two-up layout with 13px labels. Nothing is behind a disclosure.</td></tr>
+      <tr><td>One role at a time</td><td data-l="Where it comes from">A Leader / Follower toggle swaps whole tables, so comparing a leader step with its follower step takes a toggle per step.</td><td data-l="What the rework does">A third choice, Side by side, lists each step number as a leader row and a follower row, marked L or F in shape and text, not colour.</td></tr>
+      <tr><td>Variant controls are scattered and risky</td><td data-l="Where it comes from">Variant tabs sit in the Steps card header next to the title. Delete Combination shares a row with Mark as Default.</td><td data-l="What the rework does">One variant switcher with the default marked by a check. Rename and Make default sit beside it. Delete is a separate button and asks for confirmation inline.</td></tr>
+      <tr><td>Three toggle styles, emoji, tracked caps</td><td data-l="Where it comes from">Mode, source and role toggles each use different markup. Tabs use emoji. Column labels use 11px tracked uppercase.</td><td data-l="What the rework does">One pill segmented control everywhere, inline line icons, sentence-case labels.</td></tr>
     </tbody></table></div>
 </section>
 
@@ -320,9 +337,9 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
 
 <section class="sheet" id="badges">
   <div><h2>Bronze, Silver and Gold</h2>
-  <p class="note" style="margin-top:6px">Each direction sits next to the letter class (H to S) and never replaces it. A figure or choreography with no medal shows nothing. All three use muted metals, so the teal accent stays the only strong colour on the page.</p></div>
+  <p class="note" style="margin-top:6px">Each direction sits next to the letter class (H to S) and never replaces it. A figure or choreography with no medal shows nothing. All four use muted metals, so the teal accent stays the only strong colour on the page.</p></div>
 
-  <h3>All three directions, all four states</h3>
+  <h3>All four directions, all four states</h3>
   <div class="scroll-x"><div class="mat" id="matrix"></div></div>
 
   <h3>Without colour, and at 12, 16 and 24px</h3>
@@ -336,14 +353,16 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   </div>
 
   <div class="rec"><h3>Recommendation: direction A, Rank bars</h3>
-    <p>Three ascending bars with one, two or three filled. The count carries the level, so it still reads in greyscale and at 12px, and it needs no explanation. Spell the word out (Bronze, Silver, Gold) wherever there is room: headers and choreography titles. In dense rows the bars stand alone, with the word in the tooltip.</p>
-    <p>B has the strongest medal feel, but circle and diamond are close at 12px. C is the clearest where there is room, but the word makes every row wider.</p></div>
+    <p>Three ascending bars with one, two or three filled. The count carries the level and it still reads in greyscale at 12px. Spell the word out (Bronze, Silver, Gold) wherever there is room: headers and choreography titles. In dense rows the bars stand alone, with the word in the tooltip.</p>
+    <p>D, Medal icon, is the friendliest and the only one that looks like a medal. It loses to A in one place: at 16px the numeral is about 6px tall and blurs, so the level is read from the digit and not seen at a glance. At 12px, with the ribbon dropped, the coin and numeral are readable but still slower than counting bars. D also has a trap. Podium medals use 1 for gold, and here 1 is Bronze and 3 is Gold, the opposite. That is a real risk if the numeral is read as a place. Pairing D in headers (24px and up, with the word) and A in dense rows is a sound option.</p>
+    <p>B has a strong medal feel, but circle and diamond are close at 12px. C is clear where there is room, but the word makes every row wider.</p></div>
 </section>
 
 <section class="sheet" id="decisions">
   <h2>Decisions needed</h2>
   <ol class="list">
-    <li>Pick a medal direction, or a pairing such as A in rows and C in headers.</li>
+    <li>Pick a medal direction, or a pairing such as A in rows and D in headers.</li>
+    <li>If D is used, decide what the numeral means: level (1 Bronze to 3 Gold, as drawn) or podium place (1 Gold). They are opposites.</li>
     <li>Confirm Side by side as the third step view next to Leader and Follower.</li>
     <li>Confirm that dense step inputs are 36px tall on desktop (44px on a phone), below the 48px of the rounded-forms standard, because eight fields per row do not fit at 48px.</li>
     <li>Is the medal set by hand by the figure's editor, or derived from a syllabus level? The mock assumes a hand-set value with None as the default.</li>
@@ -359,6 +378,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   var RANK = { bronze: 1, silver: 2, gold: 3 };
   var METAL = { bronze: 'var(--bronze)', silver: 'var(--silver)', gold: 'var(--gold)' };
   var EMPTY = '#b9bcc2';
+  var SOFT = { bronze: 'var(--bronze-soft)', silver: 'var(--silver-soft)', gold: 'var(--gold-soft)' };
 
   /* ---------- medal glyphs ---------- */
   function sealPath(cx, cy, ro, ri, n) {
@@ -381,6 +401,15 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
       if (lvl === 'bronze') s = '<circle cx="8" cy="8" r="6.2" fill="' + c + '"/>';
       else if (lvl === 'silver') s = '<rect x="2.6" y="2.6" width="10.8" height="10.8" transform="rotate(45 8 8)" fill="' + c + '"/>';
       else s = '<polygon points="' + sealPath(8, 8, 7.6, 5.2, 8) + '" fill="' + c + '"/>';
+    } else if (dir === 'D') {
+      /* round medal on a short ribbon; at 12px and below the ribbon goes and the coin fills the box */
+      var small = px <= 12, num = String(n);
+      var vb = small ? '3 5.2 10 10' : '0 0 16 16';
+      if (!small) s += '<path d="M4.8 0.6 L7.5 5.6 M11.2 0.6 L8.5 5.6" fill="none" stroke="' + c + '" stroke-width="2" stroke-linecap="butt"/>';
+      s += '<circle cx="8" cy="10.3" r="5.3" fill="' + SOFT[lvl] + '" stroke="' + c + '" stroke-width="1"/>' +
+           '<circle cx="8" cy="10.3" r="4" fill="none" stroke="' + c + '" stroke-width="0.5" opacity=".55"/>' +
+           '<text x="8" y="' + (small ? 12.7 : 12.7) + '" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="' + (small ? 7 : 7) + '" fill="' + c + '">' + num + '</text>';
+      return '<svg width="' + px + '" height="' + px + '" viewBox="' + vb + '" aria-hidden="true">' + s + '</svg>';
     } else {
       for (var k = 0; k < 3; k++) {
         var a0 = (-90 + k * 120 + 14) * Math.PI / 180, a1 = (-90 + (k + 1) * 120 - 14) * Math.PI / 180, r = 6;
@@ -542,7 +571,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
     h += '<section class="sec" id="' + p + '-steps" data-sec="steps"><div class="sec-h"><h2>Steps</h2><p>' + f.sets.length + ' variants. Each has its own leader and follower steps.</p></div>';
     h += '<div class="set-row"><div class="set-tabs" role="tablist" aria-label="Step variants">' +
       f.sets.map(function (s, i) { return '<button type="button" role="tab" id="' + p + '-tab' + i + '" data-set="' + i + '" aria-selected="' + (i === st.setIdx) + '"><span class="tabname">' + esc(s.name || 'Untitled variant') + '</span>' + (s.def ? '<span class="ok" title="Default variant">' + ico('check', 'sm') + '<span class="sr">Default</span></span>' : '') + '</button>'; }).join('') +
-      '</div><button type="button" class="btn btn-outline sm" data-addset>' + ico('plus', 'sm') + 'New variant</button></div>';
+      '</div><div class="cell set-sel"><label class="sr" for="' + p + '-setsel">Step variant</label><select class="fld" id="' + p + '-setsel" data-setsel>' + f.sets.map(function (s, i) { return '<option value="' + i + '"' + (i === st.setIdx ? ' selected' : '') + '>' + esc(s.name || 'Untitled variant') + (s.def ? ' (default)' : '') + ' (' + s.steps.length + ' steps)</option>'; }).join('') + '</select></div><button type="button" class="btn btn-outline sm" data-addset>' + ico('plus', 'sm') + 'New variant</button></div>';
     h += '<div class="set-meta"><div class="cell"><label class="lab" for="' + p + '-setname">Variant name <span class="req">*</span></label><input class="fld" id="' + p + '-setname" data-setname type="text" value="' + esc(set.name) + '" placeholder="e.g. Standard"></div>' +
       '<div class="stat">' + (set.def ? '<span class="ok">' + ico('check', 'sm') + 'Default variant</span>' : '<button type="button" class="btn btn-outline sm" data-makedef>Make default</button>') +
       (f.sets.length > 1 && !st.confirmDel ? '<button type="button" class="btn btn-ghost sm" data-delset>' + ico('trash', 'sm') + 'Delete variant</button>' : '') + '</div></div>';
@@ -604,6 +633,7 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
     on('[data-sk]', 'input', function (el) { var row = el.closest('.steprow'); var s = stepAt(ed, row.dataset.srole, +row.dataset.n); if (s) s[el.dataset.sk] = el.value; dirty(ed); });
     on('[data-mode]', 'click', function (b) { st.mode = b.dataset.mode; render(ed); });
     on('[data-sub]', 'click', function (b) { st.sub = b.dataset.sub; render(ed); });
+    on('[data-setsel]', 'change', function (el) { st.setIdx = +el.value; st.confirmDel = false; render(ed); });
     on('[data-set]', 'click', function (b) { st.setIdx = +b.dataset.set; st.confirmDel = false; render(ed); });
     on('.set-tabs [role=tab]', 'keydown', function (b, e) {
       var all = r.querySelectorAll('.set-tabs [role=tab]'), d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
@@ -655,18 +685,18 @@ textarea.fld { border-radius: 20px; resize: vertical; line-height: 1.4; }
   /* ---------- badge sheets ---------- */
   var LV = ['bronze', 'silver', 'gold'];
   function renderBadges() {
-    var m = '<div class="h">State</div><div class="h">A Rank bars</div><div class="h">B Medal shapes</div><div class="h">C Ring and word</div>';
-    m += '<div class="rl">None</div><div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div><div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div><div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div>';
+    var m = '<div class="h">State</div><div class="h">A Rank bars</div><div class="h">B Medal shapes</div><div class="h">C Ring and word</div><div class="h">D Medal icon</div>';
+    m += '<div class="rl">None</div>' + ['A','B','C','D'].map(function () { return '<div><span class="cls">D</span><span class="note">Nothing is drawn.</span></div>'; }).join('');
     LV.forEach(function (l) {
       m += '<div class="rl">' + NAMES[l] + '</div>';
-      ['A', 'B', 'C'].forEach(function (d) {
+      ['A', 'B', 'C', 'D'].forEach(function (d) {
         m += '<div>' + grade('D', l, { dir: d, size: 18 }) + (d !== 'C' ? '<span class="tag ' + l + '">' + glyph(d, l, 14) + NAMES[l] + '</span>' : '') + '</div>';
       });
     });
     document.getElementById('matrix').innerHTML = m;
 
     var t = '';
-    [['A', 'Rank bars'], ['B', 'Medal shapes'], ['C', 'Ring and word, glyph only']].forEach(function (d) {
+    [['A', 'Rank bars'], ['B', 'Medal shapes'], ['C', 'Ring, glyph only'], ['D', 'Medal icon']].forEach(function (d) {
       function line(cls) {
         return '<div class="strip ' + cls + '">' + [12, 16, 24].map(function (px) { return '<span style="display:inline-flex;gap:10px;align-items:center"><span class="note" style="width:28px">' + px + '</span>' + LV.map(function (l) { return medal(l, { dir: d[0], size: px, noword: true }); }).join('') + '</span>'; }).join('') + '</div>';
       }
