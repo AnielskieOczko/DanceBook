@@ -233,6 +233,19 @@
     <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceStatus}, unconfirmed=true, cls='extra-cls')}"></span>
 </div>
 
+<!-- 20b. BADGE: medalBadge -->
+<div th:fragment="medalBadgeRequired">
+    <span th:replace="~{fragments/badge :: medalBadge(level='BRONZE')}"></span>
+</div>
+
+<div th:fragment="medalBadgeAll">
+    <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='rank_bars', word=true, size='lg', cls='extra-cls')}"></span>
+</div>
+
+<div th:fragment="medalBadgeNone">
+    <span th:replace="~{fragments/badge :: medalBadge(level=null)}"></span>
+</div>
+
 <!-- 21. EMPTY: emptyState -->
 <div th:fragment="emptyStateRequired">
     <div th:replace="~{fragments/empty :: emptyState(title='No items found')}"></div>

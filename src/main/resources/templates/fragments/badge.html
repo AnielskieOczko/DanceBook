@@ -30,5 +30,38 @@
                       (statusName == 'CANCELLED' ? #messages.msg('training.status.cancelled') : #messages.msg('training.status.planned'))))}">Planned</span>
 </th:block>
 
+<!-- Figure/Choreography Medal Badge (Rank Bars - Direction A) -->
+<th:block th:fragment="medalBadge"
+          th:with="lvlStr=${level != null ? level.toString() : null},
+                   lvlLower=${lvlStr != null ? #strings.toLowerCase(lvlStr) : ''},
+                   rank=${lvlLower == 'bronze' ? 1 : (lvlLower == 'silver' ? 2 : (lvlLower == 'gold' ? 3 : 0))},
+                   effectiveStyle=${style != null ? style : (badgeStyle != null ? badgeStyle : 'rank_bars')},
+                   showWord=${word != null and word},
+                   isLg=${size == 'lg' or size == 18 or size == '18'}">
+    <th:block th:if="${rank &gt; 0}">
+        <span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap"
+              th:classappend="${(lvlLower == 'bronze' ? 'text-bronze medal-badge-bronze' : (lvlLower == 'silver' ? 'text-silver medal-badge-silver' : (lvlLower == 'gold' ? 'text-gold medal-badge-gold' : ''))) + (cls != null ? ' ' + cls : '')}"
+              role="img"
+              th:title="${#messages.msg('figures.medal.aria.' + lvlLower)}"
+              th:attr="aria-label=${#messages.msg('figures.medal.aria.' + lvlLower)}">
+            <th:block th:if="${effectiveStyle == 'rank_bars' or effectiveStyle == 'RANK_BARS' or effectiveStyle == 'A'}">
+                <svg class="block shrink-0"
+                     th:classappend="${isLg ? 'w-[18px] h-[18px]' : 'w-4 h-4'}"
+                     viewBox="0 0 16 16"
+                     fill="none"
+                     aria-hidden="true">
+                    <rect x="1" y="10" width="4" height="5" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
+                    <rect th:if="${rank &gt;= 2}" x="6" y="6" width="4" height="9" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
+                    <rect th:if="${rank &lt; 2}" x="6" y="6" width="4" height="9" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>
+                    <rect th:if="${rank &gt;= 3}" x="11" y="2" width="4" height="13" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
+                    <rect th:if="${rank &lt; 3}" x="11" y="2" width="4" height="13" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>
+                </svg>
+            </th:block>
+            <!-- Seam: future badge styles plug in here -->
+            <span th:if="${showWord}" th:text="${#messages.msg('figures.medal.' + lvlLower)}">Bronze</span>
+        </span>
+    </th:block>
+</th:block>
+
 </body>
 </html>

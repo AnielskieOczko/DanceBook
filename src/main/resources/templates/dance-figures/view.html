@@ -13,6 +13,12 @@
         <div>
             <div class="flex flex-wrap items-center gap-3 mb-2">
                 <h1 class="text-3xl font-headline-lg text-on-surface" th:text="${danceFigure.name}">Figure Name</h1>
+                <th:block th:if="${danceFigure.danceClass != null or danceFigure.medalLevel != null}">
+                    <span class="inline-flex items-center gap-2">
+                        <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
+                        <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
+                    </span>
+                </th:block>
                 <span th:if="${danceFigure.predefined}" class="badge bg-outline-variant/30 text-outline border border-outline-variant/50" th:text="#{figures.view.predefined}">Syllabus Predefined</span>
             </div>
             <p class="text-on-surface-variant font-body-md" th:text="${danceFigure.danceType != null ? danceFigure.danceType.name : #messages.msg('figures.view.unknown_style')}">Dance Style</p>
@@ -55,8 +61,11 @@
                     </div>
                     <div>
                         <span class="block text-xs font-bold text-outline uppercase tracking-wider mb-1" th:text="#{figures.view.field.minimum_level}">Minimum Level</span>
-                        <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
-                        <span th:if="${danceFigure.danceClass == null}" class="text-on-surface-variant italic font-semibold" th:text="#{figures.view.class_none}">None (Social)</span>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
+                            <span th:if="${danceFigure.danceClass == null}" class="text-on-surface-variant italic font-semibold" th:text="#{figures.view.class_none}">None (Social)</span>
+                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true)}"></th:block>
+                        </div>
                     </div>
                     <div>
                         <span class="block text-xs font-bold text-outline uppercase tracking-wider mb-1" th:text="#{figures.view.field.alternative_timing}">Alternative Timing</span>

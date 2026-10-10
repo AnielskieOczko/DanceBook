@@ -228,6 +228,8 @@ class FragmentCatalogRenderingTest {
             "stepTableRequired",
             "badgeRequired",
             "attendanceBadgeRequired",
+            "medalBadgeRequired",
+            "medalBadgeNone",
             "emptyStateRequired",
             "alertRequired",
             "modalRequired",
@@ -261,6 +263,7 @@ class FragmentCatalogRenderingTest {
             "stepTableAll",
             "badgeAll",
             "attendanceBadgeAll",
+            "medalBadgeAll",
             "emptyStateAll",
             "alertAll",
             "modalAll",
@@ -546,6 +549,32 @@ class FragmentCatalogRenderingTest {
         assertTrue(allHtml.contains("Needs confirmation"), "Expected 'Needs confirmation' in attendanceBadgeAll:\n$allHtml")
         assertTrue(allHtml.contains("badge-warning"), "Expected 'badge-warning' in attendanceBadgeAll:\n$allHtml")
         assertTrue(allHtml.contains("extra-cls"), "Expected 'extra-cls' in attendanceBadgeAll:\n$allHtml")
+    }
+
+    @Test
+    fun `medal badge renders rank bars and metal colors`() {
+        val resultRequired = mockMvc.perform(get("/test/catalog/medalBadgeRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val reqHtml = resultRequired.response.contentAsString
+        assertTrue(reqHtml.contains("text-bronze"), "Expected 'text-bronze' in medalBadgeRequired:\n$reqHtml")
+        assertTrue(reqHtml.contains("stroke-medal-empty"), "Expected 'stroke-medal-empty' for unfilled bars:\n$reqHtml")
+        assertFalse(org.jsoup.Jsoup.parse(reqHtml).text().contains("Bronze"), "Medal word should not render as text when word=false:\n$reqHtml")
+
+        val resultAll = mockMvc.perform(get("/test/catalog/medalBadgeAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val allHtml = resultAll.response.contentAsString
+        assertTrue(allHtml.contains("text-gold"), "Expected 'text-gold' in medalBadgeAll:\n$allHtml")
+        assertTrue(allHtml.contains("extra-cls"), "Expected 'extra-cls' in medalBadgeAll:\n$allHtml")
+        assertTrue(org.jsoup.Jsoup.parse(allHtml).text().contains("Gold"), "Expected 'Gold' word in medalBadgeAll:\n$allHtml")
+        assertTrue(allHtml.contains("w-[18px]"), "Expected lg size 'w-[18px]' in medalBadgeAll:\n$allHtml")
+
+        val resultNone = mockMvc.perform(get("/test/catalog/medalBadgeNone").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val noneHtml = resultNone.response.contentAsString
+        assertFalse(noneHtml.contains("<svg"), "Level null / none should render nothing:\n$noneHtml")
     }
 
 
