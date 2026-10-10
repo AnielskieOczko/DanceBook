@@ -11,7 +11,7 @@
     <div class="relative flex items-center gap-2">
         <select name="danceFigureId" id="danceFigureId" class="form-select flex-1 min-w-0">
             <option value="" th:text="#{figures.select.placeholder}">Select a figure...</option>
-            <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + df.danceClass + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
+            <option th:each="df : ${availableFigures}" th:value="${df.id}" th:text="${df.name + (df.danceClass != null ? ' (' + #messages.msg('enum.dance_class.' + df.danceClass.name()) + ')' : '') + (df.alternativeTiming != null ? ' [' + df.alternativeTiming + ']' : '')}">
                 Figure Name
             </option>
         </select>

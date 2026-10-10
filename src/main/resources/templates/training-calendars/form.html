@@ -144,18 +144,18 @@
                         </td>
                         <td class="py-3 px-4">
                             <th:block th:if="${m.role.name() == 'OWNER'}">
-                                <span th:replace="~{fragments/badge :: badge(label='Owner', variant='primary')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.owner}, variant='primary')}"></span>
                             </th:block>
                             <th:block th:unless="${m.role.name() == 'OWNER'}">
-                                <span th:replace="~{fragments/badge :: badge(label='Viewer', variant='neutral')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.viewer}, variant='neutral')}"></span>
                             </th:block>
                         </td>
                         <td class="py-3 px-4">
                             <th:block th:if="${m.state.name() == 'ACTIVE'}">
-                                <span th:replace="~{fragments/badge :: badge(label='Active', variant='success')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.active}, variant='success')}"></span>
                             </th:block>
                             <th:block th:if="${m.state.name() == 'INVITED'}">
-                                <span th:replace="~{fragments/badge :: badge(label='Invited', variant='warning')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.invited}, variant='warning')}"></span>
                             </th:block>
                         </td>
                         <td class="py-3 px-4 text-right">

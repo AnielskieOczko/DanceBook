@@ -83,6 +83,18 @@ class TrainingHistoryServiceTest {
     }
 
     @Test
+    fun `history month labels follow the user locale when set to Polish`() {
+        currentUser.locale = "pl"
+        given(
+            record(LocalDateTime.of(2026, 9, 10, 18, 0)),
+            record(LocalDateTime.of(2026, 8, 27, 18, 0))
+        )
+
+        val months = trainingHistoryService.historyForCurrentUser().months
+        assertEquals(listOf("września 2026", "sierpnia 2026"), months.map { it.label })
+    }
+
+    @Test
     fun `a month totals the hours actually trained, not the skipped ones`() {
         given(
             record(LocalDateTime.of(2026, 9, 10, 18, 0), TrainingOutcome.ATTENDED, minutes = 90),

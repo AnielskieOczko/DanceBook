@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.jankowski.rafal.dancebook.config.AppLocales
 import com.jankowski.rafal.dancebook.config.ConditionalOnAssistant
 import com.jankowski.rafal.dancebook.config.GoogleAiProperties
 import com.jankowski.rafal.dancebook.dto.AssistantMessageView
@@ -21,10 +22,12 @@ import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.prompt.Prompt
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions
 import org.springframework.ai.model.tool.ToolCallingManager
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.time.Clock
 import java.time.Duration
 import java.time.LocalDate
+import java.util.Locale
 import java.util.UUID
 
 @Service
@@ -85,7 +88,7 @@ class AssistantServiceImpl(
         val userView = AssistantMessageView(AssistantRole.USER, clean)
 
         val assistantView = try {
-            answer(id, user.displayName, pageContexts.resolve(page))
+            answer(id, user.displayName, pageContexts.resolve(page), replyLocale(user.locale))
         } catch (e: AssistantUnavailableException) {
             log.warn("Assistant could not answer: {}", e.message)
             AssistantMessageView(AssistantRole.ASSISTANT, AssistantService.ERROR_TEXT, error = true)
@@ -104,10 +107,10 @@ class AssistantServiceImpl(
 
     // ── the loop ───────────────────────────────────────────────────────────
 
-    private fun answer(conversationId: UUID, userName: String, page: ResolvedPage): AssistantMessageView =
-        turnScope.run(ToolTurn(conversationId, page)) { answerInTurn(conversationId, userName, page) }
+    private fun answer(conversationId: UUID, userName: String, page: ResolvedPage, locale: Locale): AssistantMessageView =
+        turnScope.run(ToolTurn(conversationId, page)) { answerInTurn(conversationId, userName, page, locale) }
 
-    private fun answerInTurn(conversationId: UUID, userName: String, page: ResolvedPage): AssistantMessageView {
+    private fun answerInTurn(conversationId: UUID, userName: String, page: ResolvedPage, locale: Locale): AssistantMessageView {
         val deadline = System.nanoTime() + timeout.toNanos()
         fun remaining(): Duration = Duration.ofNanos(deadline - System.nanoTime())
 
@@ -118,7 +121,7 @@ class AssistantServiceImpl(
             .toolCallbacks(readTools.callbacks + draftTools.callbacks)
             .internalToolExecutionEnabled(false)
             .build()
-        var prompt = Prompt(listOf<Message>(SystemMessage(systemPrompt(userName, page))) + history, withTools)
+        var prompt = Prompt(listOf<Message>(SystemMessage(systemPrompt(userName, page, locale))) + history, withTools)
 
         var text: String? = null
         for (round in 1..AssistantService.MAX_TOOL_ROUNDS) {
@@ -208,7 +211,19 @@ class AssistantServiceImpl(
         return views
     }
 
-    private fun systemPrompt(userName: String, page: ResolvedPage): String {
+    /** The user's stored language, else the one resolved for this request, else English. */
+    private fun replyLocale(stored: String?): Locale =
+        AppLocales.parseLocale(stored)
+            ?: AppLocales.parseLocale(LocaleContextHolder.getLocale().language)
+            ?: AppLocales.DEFAULT
+
+    private fun languageRule(locale: Locale): String {
+        val language = if (locale.language == AppLocales.POLISH.language) "Polish" else "English"
+        return "The user's language is $language. Write every reply, and the text of every draft you prepare (titles, descriptions, notes), in $language. " +
+            "Do not translate anything that already exists: note text, figure names, dance names, ids and other user data stay exactly as stored, and quote them as they are."
+    }
+
+    private fun systemPrompt(userName: String, page: ResolvedPage, locale: Locale): String {
         val where = when {
             page.name != null -> "The user is looking at the ${page.type.name.lowercase()} \"${page.name}\" (id ${page.id})."
             page.label != null -> "The user is on the ${page.label} page."
@@ -218,6 +233,7 @@ class AssistantServiceImpl(
             You are the DanceBook assistant. DanceBook is a notebook for ballroom and Latin dancers: the user keeps notes (text, video links, pinned figures), a catalog of syllabus figures, training sessions and choreographies.
             Today is ${LocalDate.now(clock)}. The user's name is $userName.
             $where
+            ${languageRule(locale)}
             Use the tools to search and read the user's notes, the figure catalog and their training sessions. Do not guess: if you need a fact, call a tool. Never invent ids, titles or dates.
             When asked a question about dance knowledge, technical figure details, notes, or coach feedback, use search_knowledge to find relevant passages. Answers built from search_knowledge must cite the retrieved sources as links formatted like [Note Title](/materials/{id}) or [Figure Name](/dance-figures/{id}). If no relevant passage is found or search_knowledge returns no items, say: "Nothing found in your notes." rather than guessing or answering from general knowledge.
             To create something, call draft_note, draft_training_event or draft_figure. They only prepare a draft: the user sees a card and nothing is saved until they press Save. After drafting, say so in one sentence and do not repeat the fields. You cannot edit or delete existing notes, sessions or figures; if asked, say so and suggest doing it in the app.

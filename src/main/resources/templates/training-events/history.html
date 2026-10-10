@@ -41,7 +41,7 @@
         <div class="tc-month-heading">
             <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
             <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
-                <span th:text="${month.sessionLabel}">6 sessions</span>
+                <span th:text="#{training.list.count(${month.sessionCount})}">6 sessions</span>
                 <span class="text-outline"> · </span>
                 <span th:text="${month.totalLabel}">9h 30m</span> <span th:text="#{dashboard.month.trained}">trained</span>
             </p>
@@ -77,7 +77,7 @@
                     </p>
 
                     <div class="tc-badges mt-2">
-                        <span class="badge-primary" th:text="${record.eventType}">TRAINING</span>
+                        <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + record.eventType.name())}">TRAINING</span>
 
                         <span th:each="segment : ${record.segments}" class="badge-secondary"
                               th:text="#{training.segment_label(${segment.label}, ${segment.durationMinutes})}">Standard 60min</span>
