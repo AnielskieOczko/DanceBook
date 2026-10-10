@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 annotation class RichTextLength(
     val max: Int = 2000,
     val maxRaw: Int = 20000,
-    val message: String = "Length cannot exceed {max} characters",
+    val message: String = "{validation.richtext.length}",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []
 )

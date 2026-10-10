@@ -13,7 +13,7 @@ data class UserUpdateRequest(
     @field:NotBlank
     var displayName: String = "",
 
-    @field:NotNull(message = "Role is required")
+    @field:NotNull(message = "{validation.user.role_required}")
     var role: Role? = null,
     var newPassword: String? = null
 )

@@ -83,10 +83,10 @@
                         </td>
                         <td class="py-3 px-4">
                             <th:block th:if="${cal.visibility == T(com.jankowski.rafal.dancebook.model.Visibility).PUBLIC}">
-                                <span th:replace="~{fragments/badge :: badge(label='Public', variant='accent')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.visibility.public}, variant='accent')}"></span>
                             </th:block>
                             <th:block th:if="${cal.visibility == T(com.jankowski.rafal.dancebook.model.Visibility).PRIVATE}">
-                                <span th:replace="~{fragments/badge :: badge(label='Private', variant='neutral')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.visibility.private}, variant='neutral')}"></span>
                             </th:block>
                         </td>
                         <td class="py-3 px-4 text-xs text-on-surface-variant space-y-1">

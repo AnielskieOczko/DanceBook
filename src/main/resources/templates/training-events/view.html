@@ -44,7 +44,7 @@
         </h2>
 
         <div class="flex flex-wrap items-center gap-2">
-            <span class="badge-primary" th:text="${event.eventType}">TRAINING</span>
+            <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + event.eventType.name())}">TRAINING</span>
             <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
                 <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
                 <span th:text="#{training.view.repeating_series}">Repeating series</span>

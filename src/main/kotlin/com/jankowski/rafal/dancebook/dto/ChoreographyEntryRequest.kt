@@ -8,6 +8,6 @@ data class ChoreographyEntryRequest(
     val danceFigureId: UUID? = null,
     val sectionLabel: String? = null,
     val lineIndicator: String? = null,
-    @field:Size(max = 500, message = "Notes cannot exceed 500 characters")
+    @field:Size(max = 500, message = "{validation.choreography_entry.notes_max}")
     val notes: String? = null
 )

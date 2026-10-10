@@ -179,10 +179,10 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-border pt-6">
             <div>
-                <div th:replace="~{fragments/form :: selectField(path='eventType', label=#{training.form.field.type}, required=true, id='eventType', options=${eventTypeOptions})}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='eventType', label=#{training.form.field.type}, required=true, id='eventType', options=${eventTypeOptions}, msgPrefix='enum.training_event_type.')}"></div>
             </div>
             <div>
-                <div th:replace="~{fragments/form :: selectField(path='attendanceStatus', label=#{training.form.field.attendance}, id='attendanceStatus', options=${attendanceStatusOptions})}"></div>
+                <div th:replace="~{fragments/form :: selectField(path='attendanceStatus', label=#{training.form.field.attendance}, id='attendanceStatus', options=${attendanceStatusOptions}, msgPrefix='enum.attendance_status.')}"></div>
             </div>
         </div>
 

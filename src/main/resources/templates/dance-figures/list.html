@@ -97,7 +97,7 @@
                                 class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
                                 th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
                             <option value="" th:text="#{figures.list.all_classes}">All Classes</option>
-                            <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${dc}" th:selected="${dc == selectedDanceClass}">
+                            <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${#messages.msg('enum.dance_class.' + dc.name())}" th:selected="${dc == selectedDanceClass}">
                                 H
                             </option>
                         </select>
@@ -196,7 +196,7 @@
                             
                             <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
                                 <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                                <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
+                                <span th:if="${f.danceClass != null}" th:text="${#messages.msg('enum.dance_class.' + f.danceClass.name())}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
                                 <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span> <span th:text="${f.alternativeTiming}">Timing</span></span>
                             </div>
                         </div>
@@ -220,7 +220,7 @@
                         </div>
                         <div class="flex items-center gap-3 text-on-surface-variant">
                             <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                            <span th:if="${f.danceClass != null}" th:text="${f.danceClass}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
+                            <span th:if="${f.danceClass != null}" th:text="${#messages.msg('enum.dance_class.' + f.danceClass.name())}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
                             <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm"><span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span> <span th:text="${f.alternativeTiming}">Timing</span></span>
                         </div>
                     </div>
