@@ -86,8 +86,18 @@ class HybridSearchLazyLoadingIntegrationTest {
             name = "Sway figure"; danceType = waltz; danceClass = DanceClass.D; createdBy = user
         })
         knowledgeIndexService.indexFigure(catalogFigure.id!!)
+        awaitEmbedded()
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(user)
         `when`(appUserService.getCurrentUser()).thenReturn(user)
+    }
+
+    /** indexMaterial only stores the chunks; a background worker embeds them, and a search ignores unembedded chunks. */
+    private fun awaitEmbedded() {
+        val deadline = System.currentTimeMillis() + 10_000
+        while (knowledgeChunkRepository.countAwaitingEmbedding() > 0) {
+            check(System.currentTimeMillis() < deadline) { "chunks were not embedded within 10s" }
+            Thread.sleep(20)
+        }
     }
 
     private fun noteWithPin(name: String): Material {
@@ -95,7 +105,7 @@ class HybridSearchLazyLoadingIntegrationTest {
             owner = user; this.name = name; description = "sway"; visibility = Visibility.PUBLIC; danceType = waltz
         }
         n.figures.add(Figure().apply { material = n; danceFigure = catalogFigure })
-        return materialRepository.save(n).also { knowledgeIndexService.indexMaterial(it.id!!) }
+        return materialRepository.save(n).also { knowledgeIndexService.indexMaterial(it.id!!); awaitEmbedded() }
     }
 
     private fun readEverythingAPageCouldRead(n: Material) {
@@ -131,7 +141,7 @@ class HybridSearchLazyLoadingIntegrationTest {
             visibility = Visibility.PUBLIC; danceType = waltz
         }
         sem.figures.add(Figure().apply { material = sem; danceFigure = catalogFigure })
-        val saved = materialRepository.save(sem).also { knowledgeIndexService.indexMaterial(it.id!!) }
+        val saved = materialRepository.save(sem).also { knowledgeIndexService.indexMaterial(it.id!!); awaitEmbedded() }
 
         val hit = hybridSearchService.search("sway waltz").first { it.id == saved.id }
 
