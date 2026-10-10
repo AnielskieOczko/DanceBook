@@ -9,13 +9,23 @@
 
     <!-- View Toggles and Filter Summary -->
     <section class="bg-background z-40 py-2 border-b border-outline-variant/30 transition-all duration-300">
-        <div class="flex items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{choreographies.my_routines}">
                 My Routines
             </div>
 
-            <!-- View Toggle -->
-            <form id="viewToggleForm" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="change from:input[type='radio']" hx-push-url="false">
+            <!-- Medal filter + View Toggle -->
+            <form id="viewToggleForm" class="flex items-center gap-3" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="change" hx-push-url="false">
+                <div class="flex items-center gap-2">
+                    <label for="filterMedalLevel" class="sr-only" th:text="#{figures.list.medal_level}">Medal Level</label>
+                    <select name="medalLevel" id="filterMedalLevel"
+                            class="px-3 py-2 min-h-[42px] rounded-lg bg-surface border border-outline-variant/30 text-on-surface text-label-sm font-label-sm focus:border-primary focus:outline-hidden">
+                        <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
+                        <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
+                                th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}"
+                                th:selected="${ml == selectedMedalLevel}">Bronze</option>
+                    </select>
+                </div>
                 <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
@@ -66,6 +76,7 @@
                         <div class="flex flex-wrap items-center gap-2 mb-2 pr-8">
                             <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider border border-primary-container/30"
                                   th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_dance')}">Waltz</span>
+                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
                             <span th:replace="~{fragments/badge :: badge(label=(${choreo.isPublic ? #messages.msg('choreographies.visibility.public') : #messages.msg('choreographies.visibility.private')}), variant=(${choreo.isPublic ? 'secondary' : 'neutral'}))}"></span>
                         </div>
 
@@ -132,10 +143,11 @@
                         <span th:replace="~{fragments/icon :: icon(name=${choreo.isPublic ? 'public' : 'lock'}, size='md')}"></span>
                     </div>
                     <div class="flex flex-col overflow-hidden">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="text-body-md font-bold text-on-surface whitespace-nowrap overflow-hidden text-ellipsis" th:text="${choreo.name}">Competition Waltz</h3>
+                        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
+                            <h3 class="text-body-md font-bold text-on-surface whitespace-nowrap overflow-hidden text-ellipsis max-w-full" th:text="${choreo.name}">Competition Waltz</h3>
                             <span class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[9px] font-label-sm uppercase tracking-wider border border-primary-container/30 shrink-0"
                                   th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
+                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
                         </div>
                         <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=80, fallback=#{choreographies.no_description}, cls='text-xs text-on-surface-variant line-clamp-1')}"></p>
                     </div>
