@@ -62,6 +62,7 @@
                 <h1 class="text-3xl font-heading font-bold text-on-surface" th:text="${choreography.name}">Competition Waltz</h1>
                 <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
                       th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
+                <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreography.medalLevel}, word=true, size='lg')}"></th:block>
             </div>
         </div>
         

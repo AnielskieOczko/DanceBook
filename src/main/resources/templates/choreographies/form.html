@@ -30,6 +30,28 @@
             <div th:if="${choreographyId == null}">
                 <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{choreographies.form.dance_style_label}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{choreographies.form.select_dance_style})}"></div>
             </div>
+
+            <!-- Medal Level (optional, set by hand) -->
+            <div class="form-group">
+                <label class="form-label" id="medalLevelLabel">
+                    <span th:text="#{choreographies.form.medal_label}">Medal Level (Optional)</span>
+                </label>
+                <div class="flex flex-wrap items-center gap-2 pt-1" role="radiogroup" aria-labelledby="medalLevelLabel">
+                    <label class="relative inline-flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full border border-outline bg-surface font-semibold text-sm cursor-pointer hover:bg-surface-container has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                        <input type="radio" name="medalLevel" value=""
+                               th:checked="${choreographyRequest.medalLevel == null}"
+                               class="sr-only">
+                        <span th:text="#{figures.medal.none}">None</span>
+                    </label>
+                    <label th:each="lvl : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
+                           class="relative inline-flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full border border-outline bg-surface font-semibold text-sm cursor-pointer hover:bg-surface-container has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                        <input type="radio" name="medalLevel" th:value="${lvl.name()}"
+                               th:checked="${choreographyRequest.medalLevel == lvl}"
+                               class="sr-only">
+                        <th:block th:replace="~{fragments/badge :: medalBadge(level=${lvl}, word=true)}"></th:block>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <hr class="border-outline-variant/30">
