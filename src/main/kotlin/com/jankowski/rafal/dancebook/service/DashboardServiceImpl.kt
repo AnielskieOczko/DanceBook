@@ -23,6 +23,8 @@ import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
 import com.jankowski.rafal.dancebook.repository.CustomListRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
 import org.jsoup.Jsoup
+import org.springframework.context.MessageSource
+import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -55,7 +57,8 @@ class DashboardServiceImpl(
     private val materialRepository: MaterialRepository,
     private val choreographyRepository: ChoreographyRepository,
     private val customListRepository: CustomListRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    private val messageSource: MessageSource = defaultMessageSource
 ) : DashboardService {
 
     companion object {
@@ -66,51 +69,72 @@ class DashboardServiceImpl(
         /** How far ahead "next session" looks; a session beyond this is not a next one. */
         private const val NEXT_SESSION_HORIZON_DAYS = 365L
 
-        private val DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE d MMM", Locale.ENGLISH)
-        private val LONG_DATE_FORMAT = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.ENGLISH)
         private val TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
-        private val SHORT_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM", Locale.ENGLISH)
-        private val FULL_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
+
+        val defaultMessageSource: MessageSource by lazy {
+            ResourceBundleMessageSource().apply {
+                setBasenames("messages")
+                setDefaultEncoding("UTF-8")
+            }
+        }
 
         /** Morning is 05:00-11:59 and afternoon 12:00-17:59; everything else is evening. */
-        fun greetingFor(hour: Int): String = when (hour) {
-            in 5..11 -> "Good morning"
-            in 12..17 -> "Good afternoon"
-            else -> "Good evening"
+        fun greetingFor(hour: Int): String = greetingFor(hour, Locale.ENGLISH, defaultMessageSource)
+
+        fun greetingFor(hour: Int, locale: Locale, messageSource: MessageSource = defaultMessageSource): String {
+            val key = when (hour) {
+                in 5..11 -> "dashboard.greeting.morning"
+                in 12..17 -> "dashboard.greeting.afternoon"
+                else -> "dashboard.greeting.evening"
+            }
+            return messageSource.getMessage(key, null, locale)
+        }
+
+        fun pluralCategory(count: Long, locale: Locale): String = when (locale.language) {
+            "pl" -> when {
+                count == 1L -> "one"
+                count % 10 in 2..4 && count % 100 !in 12..14 -> "few"
+                else -> "many"
+            }
+            else -> if (count == 1L) "one" else "other"
         }
     }
 
     override fun dashboardForCurrentUser(): DashboardView {
         val user = appUserService.getCurrentUser()
+        val locale = com.jankowski.rafal.dancebook.config.AppLocales.parseLocale(user.locale)
+            ?: org.springframework.context.i18n.LocaleContextHolder.getLocale()
         val calendarId = activeCalendarService.active()?.id
         val now = LocalDateTime.now(clock)
         val today = now.toLocalDate()
 
         val waiting = awaitingConfirmation(user, calendarId, now)
         val wrapUp = WrapUp(
-            waiting = waiting.map { toCard(it) },
-            next = if (waiting.isEmpty()) nextSession(user, calendarId, now)?.let { toCard(it) } else null
+            waiting = waiting.map { toCard(it, locale) },
+            next = if (waiting.isEmpty()) nextSession(user, calendarId, now)?.let { toCard(it, locale) } else null
         )
         val stats = trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_MONTH, calendarId)
         val name = user.displayName.ifBlank { user.username }
+        val greetingWord = greetingFor(now.hour, locale, messageSource)
+        val greeting = messageSource.getMessage("dashboard.greeting.format", arrayOf(greetingWord, name), locale)
 
         return DashboardView(
-            greeting = "${greetingFor(now.hour)}, $name.",
-            dateLabel = today.format(LONG_DATE_FORMAT),
+            greeting = greeting,
+            dateLabel = today.format(DateTimeFormatter.ofPattern("EEEE d MMMM", locale)),
             week = WeekStrip(
-                days = weekDays(user, calendarId, today, now),
+                days = weekDays(user, calendarId, today, now, locale),
                 streak = stats.currentStreak,
                 toConfirmCount = waiting.size
             ),
             wrapUp = wrapUp,
-            recentNotes = recentNotes(user, today),
+            recentNotes = recentNotes(user, today, locale),
             month = MonthSummary(
                 trainedLabel = stats.totalTrainedLabel,
                 attended = stats.counts.attended,
                 attendanceRatePercent = stats.attendanceRatePercent,
                 byCategory = stats.byCategory
             ),
-            continueItems = continueItems(user, today)
+            continueItems = continueItems(user, today, locale)
         )
     }
 
@@ -126,7 +150,7 @@ class DashboardServiceImpl(
             .filter { it.attendanceFor(user) == AttendanceStatus.PLANNED && it.endTime.isAfter(now) }
             .minByOrNull { it.startTime }
 
-    private fun weekDays(user: AppUser, calendarId: UUID?, today: LocalDate, now: LocalDateTime): List<WeekDay> {
+    private fun weekDays(user: AppUser, calendarId: UUID?, today: LocalDate, now: LocalDateTime, locale: Locale): List<WeekDay> {
         val monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
         val sessions = trainingEventService
             .findInRange(monday.atStartOfDay(), monday.plusDays(7).atStartOfDay(), calendarId)
@@ -138,7 +162,7 @@ class DashboardServiceImpl(
                 .map { stateOf(it, user, now) }
             WeekDay(
                 date = date,
-                weekdayLabel = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH),
+                weekdayLabel = date.dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
                 dayOfMonth = date.dayOfMonth,
                 today = date == today,
                 // The enum is declared highest precedence first, so the minimum ordinal wins.
@@ -154,10 +178,10 @@ class DashboardServiceImpl(
         else -> WeekDayState.NONE
     }
 
-    private fun toCard(event: TrainingEvent) = SessionCard(
+    private fun toCard(event: TrainingEvent, locale: Locale) = SessionCard(
         id = event.id!!,
         title = event.title,
-        dateLabel = event.startTime.format(DATE_FORMAT),
+        dateLabel = event.startTime.format(DateTimeFormatter.ofPattern("EEEE d MMM", locale)),
         timeLabel = "${event.startTime.format(TIME_FORMAT)}–${event.endTime.format(TIME_FORMAT)}",
         segments = event.segments.map {
             SessionSegment(
@@ -168,13 +192,13 @@ class DashboardServiceImpl(
         noteId = event.material?.id
     )
 
-    private fun recentNotes(user: AppUser, today: LocalDate): List<RecentNote> =
+    private fun recentNotes(user: AppUser, today: LocalDate, locale: Locale): List<RecentNote> =
         materialRepository.findRecentByOwner(user, PageRequest.of(0, RECENT_NOTES)).map { note ->
             RecentNote(
                 id = note.id!!,
                 title = note.name,
                 danceLabel = note.danceType?.name,
-                whenLabel = relativeDate((note.updatedAt ?: note.createdAt).toLocalDate(), today),
+                whenLabel = relativeDate((note.updatedAt ?: note.createdAt).toLocalDate(), today, locale),
                 excerpt = excerptOf(note.description),
                 figures = pinnedFigures(note)
             )
@@ -198,19 +222,24 @@ class DashboardServiceImpl(
     }
 
     /** The user's most recently touched choreographies and collections, mixed and newest first. */
-    private fun continueItems(user: AppUser, today: LocalDate): List<ContinueItem> {
+    private fun continueItems(user: AppUser, today: LocalDate, locale: Locale): List<ContinueItem> {
         val choreographies = choreographyRepository.findAllByOwner(user)
             .sortedByDescending { it.updatedAt }
             .take(CONTINUE_ITEMS)
             .map {
                 val figures = it.entries.count { entry -> entry.entryType == EntryType.FIGURE }
+                val category = pluralCategory(figures.toLong(), locale)
+                val relDate = relativeDate(it.updatedAt.toLocalDate(), today, locale)
                 it.updatedAt to ContinueItem(
                     kind = ContinueKind.CHOREOGRAPHY,
                     id = it.id!!,
                     name = it.name,
                     href = "/choreographies/${it.id}",
-                    detail = "${figures} ${if (figures == 1) "figure" else "figures"} · edited " +
-                        relativeDate(it.updatedAt.toLocalDate(), today)
+                    detail = messageSource.getMessage(
+                        "dashboard.continue.figures.$category",
+                        arrayOf(figures, relDate),
+                        locale
+                    )
                 )
             }
         // A collection is a saved filter with no edit time of its own, so creation date stands in.
@@ -218,12 +247,17 @@ class DashboardServiceImpl(
             .sortedByDescending { it.createdAt }
             .take(CONTINUE_ITEMS)
             .map {
+                val relDate = relativeDate(it.createdAt.toLocalDate(), today, locale)
                 it.createdAt to ContinueItem(
                     kind = ContinueKind.COLLECTION,
                     id = it.id!!,
                     name = it.name,
                     href = "/lists/${it.id}",
-                    detail = "created " + relativeDate(it.createdAt.toLocalDate(), today)
+                    detail = messageSource.getMessage(
+                        "dashboard.continue.created",
+                        arrayOf(relDate),
+                        locale
+                    )
                 )
             }
         return (choreographies + collections)
@@ -232,15 +266,18 @@ class DashboardServiceImpl(
             .map { it.second }
     }
 
-    private fun relativeDate(date: LocalDate, today: LocalDate): String {
+    internal fun relativeDate(date: LocalDate, today: LocalDate, locale: Locale): String {
         val days = ChronoUnit.DAYS.between(date, today)
         return when {
-            days <= 0 -> "today"
-            days == 1L -> "yesterday"
-            days < 7 -> "$days days ago"
-            days < 14 -> "last week"
-            date.year == today.year -> date.format(SHORT_DATE_FORMAT)
-            else -> date.format(FULL_DATE_FORMAT)
+            days <= 0 -> messageSource.getMessage("dashboard.relative.today", null, locale)
+            days == 1L -> messageSource.getMessage("dashboard.relative.yesterday", null, locale)
+            days < 7 -> {
+                val category = pluralCategory(days, locale)
+                messageSource.getMessage("dashboard.relative.days_ago.$category", arrayOf(days), locale)
+            }
+            days < 14 -> messageSource.getMessage("dashboard.relative.last_week", null, locale)
+            date.year == today.year -> date.format(DateTimeFormatter.ofPattern("d MMM", locale))
+            else -> date.format(DateTimeFormatter.ofPattern("d MMM yyyy", locale))
         }
     }
 }

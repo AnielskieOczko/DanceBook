@@ -308,7 +308,7 @@
                                     <table class="w-full text-left">
                                         <tr th:each="file : ${log.deletedFiles}" class="border-b last:border-0 border-border">
                                             <td class="py-1 pr-4 truncate max-w-[200px]" th:text="${file.name}">Name</td>
-                                            <td class="py-1 whitespace-nowrap text-right font-mono" th:text="${file.size != null ? T(java.lang.String).format('%.2f MB', file.size / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
+                                            <td class="py-1 whitespace-nowrap text-right font-mono" th:text="${file.size != null ? T(java.lang.String).format(#locale, '%.2f MB', file.size / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -346,21 +346,21 @@
             <div class="stat-card bg-surface-container border border-border">
                 <div class="stat-card-label text-text-secondary" th:text="#{admin.storage.total_space}">Total Cloud Space</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-text-primary" th:text="${T(java.lang.String).format('%.2f MB', totalSize / 1048576.0)}">0 MB</span>
+                    <span class="stat-card-value text-text-primary" th:text="${T(java.lang.String).format(#locale, '%.2f MB', totalSize / 1048576.0)}">0 MB</span>
                     <span class="text-sm font-medium text-text-secondary" th:text="#{admin.storage.file_count(${totalCount})}">(0 files)</span>
                 </div>
             </div>
             <div class="stat-card bg-success-soft border border-success/30">
                 <div class="stat-card-label text-success" th:text="#{admin.storage.linked_materials}">Linked Materials</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-success" th:text="${T(java.lang.String).format('%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
+                    <span class="stat-card-value text-success" th:text="${T(java.lang.String).format(#locale, '%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
                     <span class="text-sm font-medium text-success/80" th:text="#{admin.storage.file_count(${linkedCount})}">(0 files)</span>
                 </div>
             </div>
             <div class="stat-card bg-danger-soft border border-danger/30">
                 <div class="stat-card-label text-danger" th:text="#{admin.storage.orphaned_waste}">Orphaned Waste</div>
                 <div class="flex items-baseline gap-2">
-                    <span class="stat-card-value text-danger" th:text="${T(java.lang.String).format('%.2f MB', orphanedSize / 1048576.0)}">0 MB</span>
+                    <span class="stat-card-value text-danger" th:text="${T(java.lang.String).format(#locale, '%.2f MB', orphanedSize / 1048576.0)}">0 MB</span>
                     <span class="text-sm font-medium text-danger/80" th:text="#{admin.storage.file_count(${orphanedCount})}">(0 files)</span>
                 </div>
             </div>
@@ -378,7 +378,7 @@
                 <tbody>
                     <tr th:each="f : ${driveFiles}" class="table-row" th:classappend="${f.isOrphaned} ? 'bg-danger-soft/50' : ''">
                         <td class="table-cell table-cell-pinned font-medium" th:text="${f.name}">Name</td>
-                        <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format('%.2f MB', f.sizeBytes / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
+                        <td class="table-cell font-mono text-text-secondary" th:text="${f.sizeBytes != null ? T(java.lang.String).format(#locale, '%.2f MB', f.sizeBytes / 1048576.0) : #messages.msg('admin.storage.unknown_size')}">Size</td>
                         <td class="table-cell">
                             <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? #messages.msg('admin.storage.badge_orphaned') : #messages.msg('admin.storage.badge_linked')}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
                         </td>

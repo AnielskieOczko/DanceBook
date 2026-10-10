@@ -43,6 +43,9 @@ class TrainingHistoryServiceImpl(
 
     override fun historyForCurrentUser(calendarId: UUID?): TrainingHistory {
         val currentUser = appUserService.getCurrentUser()
+        val locale = com.jankowski.rafal.dancebook.config.AppLocales.parseLocale(currentUser.locale)
+            ?: org.springframework.context.i18n.LocaleContextHolder.getLocale()
+        val monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
         val records = if (calendarId == null) {
             trainingRecordRepository.findAllByCreatedByOrderByOccurredAtDesc(currentUser)
         } else {
@@ -56,7 +59,7 @@ class TrainingHistoryServiceImpl(
         val months = records.groupBy { YearMonth.from(it.occurredAt) }
             .map { (month, monthRecords) ->
                 TrainingHistoryMonth(
-                    label = month.format(MONTH_LABEL),
+                    label = month.format(monthFormatter),
                     rows = monthRecords.map {
                         TrainingHistoryRow(it, TrainingEventPalette.swatchFor(it.outcome))
                     },

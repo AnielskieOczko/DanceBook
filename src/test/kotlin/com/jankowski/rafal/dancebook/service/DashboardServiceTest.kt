@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.Choreography
 import com.jankowski.rafal.dancebook.model.CustomList
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.EntryType
 import com.jankowski.rafal.dancebook.model.Figure
 import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.TrainingEvent
@@ -30,6 +31,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -366,5 +368,146 @@ class DashboardServiceTest {
         assertEquals("/choreographies/${newest.id}", items[0].href)
         assertEquals("/lists/${list.id}", items[1].href)
         assertEquals("0 figures · edited 2 days ago", items[0].detail)
+    }
+
+    @Test
+    fun `date and weekday labels follow the user locale when set to Polish`() {
+        user.locale = "pl"
+        val view = service().dashboardForCurrentUser()
+
+        assertEquals("Dzień dobry, Rafał.", view.greeting)
+        assertEquals("piątek 25 września", view.dateLabel)
+        assertEquals(listOf("pon.", "wt.", "śr.", "czw.", "pt.", "sob.", "niedz."), view.week.days.map { it.weekdayLabel })
+    }
+
+    @Test
+    fun `greeting follows the hour in Polish`() {
+        val pl = Locale.forLanguageTag("pl")
+        assertEquals("Dobry wieczór", DashboardServiceImpl.greetingFor(4, pl))
+        assertEquals("Dzień dobry", DashboardServiceImpl.greetingFor(5, pl))
+        assertEquals("Dzień dobry", DashboardServiceImpl.greetingFor(11, pl))
+        assertEquals("Dzień dobry", DashboardServiceImpl.greetingFor(12, pl))
+        assertEquals("Dzień dobry", DashboardServiceImpl.greetingFor(17, pl))
+        assertEquals("Dobry wieczór", DashboardServiceImpl.greetingFor(18, pl))
+        assertEquals("Dobry wieczór", DashboardServiceImpl.greetingFor(23, pl))
+    }
+
+    @Test
+    fun `greeting in Polish for evening session`() {
+        user.locale = "pl"
+        val eveningClock = Clock.fixed(now.withHour(20).toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
+        val view = service(eveningClock).dashboardForCurrentUser()
+
+        assertEquals("Dobry wieczór, Rafał.", view.greeting)
+    }
+
+    @Test
+    fun `relative date formats correctly in English and Polish`() {
+        val today = LocalDate.of(2026, 9, 25)
+        val en = Locale.ENGLISH
+        val pl = Locale.forLanguageTag("pl")
+
+        val s = service()
+        assertEquals("today", s.relativeDate(today, today, en))
+        assertEquals("dzisiaj", s.relativeDate(today, today, pl))
+
+        assertEquals("yesterday", s.relativeDate(today.minusDays(1), today, en))
+        assertEquals("wczoraj", s.relativeDate(today.minusDays(1), today, pl))
+
+        assertEquals("2 days ago", s.relativeDate(today.minusDays(2), today, en))
+        assertEquals("2 dni temu", s.relativeDate(today.minusDays(2), today, pl))
+
+        assertEquals("5 days ago", s.relativeDate(today.minusDays(5), today, en))
+        assertEquals("5 dni temu", s.relativeDate(today.minusDays(5), today, pl))
+
+        assertEquals("last week", s.relativeDate(today.minusDays(10), today, en))
+        assertEquals("w zeszłym tygodniu", s.relativeDate(today.minusDays(10), today, pl))
+
+        assertEquals("1 May", s.relativeDate(LocalDate.of(2026, 5, 1), today, en))
+        assertEquals("1 maj", s.relativeDate(LocalDate.of(2026, 5, 1), today, pl))
+
+        assertEquals("1 May 2025", s.relativeDate(LocalDate.of(2025, 5, 1), today, en))
+        assertEquals("1 maj 2025", s.relativeDate(LocalDate.of(2025, 5, 1), today, pl))
+    }
+
+    @Test
+    fun `recent note whenLabel is localized in Polish`() {
+        user.locale = "pl"
+        `when`(materialRepository.findRecentByOwner(user, PageRequest.of(0, 3)))
+            .thenReturn(listOf(note(figure("Feather Step", " S Q Q "))))
+
+        val card = service().dashboardForCurrentUser().recentNotes.single()
+
+        assertEquals("2 dni temu", card.whenLabel)
+    }
+
+    @Test
+    fun `continue items detail labels follow Polish plural forms`() {
+        user.locale = "pl"
+        fun choreo(name: String, figureCount: Int) = Choreography().apply {
+            id = UUID.randomUUID()
+            this.name = name
+            updatedAt = now.minusDays(2)
+            entries = (1..figureCount).map {
+                com.jankowski.rafal.dancebook.model.ChoreographyEntry().apply {
+                    entryType = EntryType.FIGURE
+                }
+            }.toMutableList()
+        }
+
+        // 0 figures -> many ("0 figur")
+        // 1 figure -> one ("1 figura")
+        // 2 figures -> few ("2 figury")
+        `when`(choreographyRepository.findAllByOwner(user)).thenReturn(
+            listOf(choreo("A", 0), choreo("B", 1), choreo("C", 2))
+        )
+        val items1 = service().dashboardForCurrentUser().continueItems
+        assertEquals("0 figur · edytowano 2 dni temu", items1[0].detail)
+        assertEquals("1 figura · edytowano 2 dni temu", items1[1].detail)
+        assertEquals("2 figury · edytowano 2 dni temu", items1[2].detail)
+
+        // 4 figures -> few ("4 figury")
+        // 5 figures -> many ("5 figur")
+        // 12 figures -> many ("12 figur")
+        `when`(choreographyRepository.findAllByOwner(user)).thenReturn(
+            listOf(choreo("D", 4), choreo("E", 5), choreo("F", 12))
+        )
+        val items2 = service().dashboardForCurrentUser().continueItems
+        assertEquals("4 figury · edytowano 2 dni temu", items2[0].detail)
+        assertEquals("5 figur · edytowano 2 dni temu", items2[1].detail)
+        assertEquals("12 figur · edytowano 2 dni temu", items2[2].detail)
+
+        // Collection in Polish
+        val list = CustomList().apply {
+            id = UUID.randomUUID()
+            name = "Kolekcja"
+            createdAt = now.minusDays(2)
+        }
+        `when`(choreographyRepository.findAllByOwner(user)).thenReturn(emptyList())
+        `when`(customListRepository.findAllByOwner(user)).thenReturn(listOf(list))
+        val listItems = service().dashboardForCurrentUser().continueItems
+        assertEquals("utworzono 2 dni temu", listItems[0].detail)
+    }
+
+    @Test
+    fun `pluralCategory correctly identifies CLDR categories for Polish and English`() {
+        val pl = Locale.forLanguageTag("pl")
+        val en = Locale.ENGLISH
+
+        assertEquals("one", DashboardServiceImpl.pluralCategory(1, en))
+        assertEquals("other", DashboardServiceImpl.pluralCategory(0, en))
+        assertEquals("other", DashboardServiceImpl.pluralCategory(2, en))
+        assertEquals("other", DashboardServiceImpl.pluralCategory(5, en))
+
+        assertEquals("one", DashboardServiceImpl.pluralCategory(1, pl))
+        assertEquals("few", DashboardServiceImpl.pluralCategory(2, pl))
+        assertEquals("few", DashboardServiceImpl.pluralCategory(3, pl))
+        assertEquals("few", DashboardServiceImpl.pluralCategory(4, pl))
+        assertEquals("many", DashboardServiceImpl.pluralCategory(0, pl))
+        assertEquals("many", DashboardServiceImpl.pluralCategory(5, pl))
+        assertEquals("many", DashboardServiceImpl.pluralCategory(12, pl))
+        assertEquals("many", DashboardServiceImpl.pluralCategory(14, pl))
+        assertEquals("many", DashboardServiceImpl.pluralCategory(21, pl))
+        assertEquals("few", DashboardServiceImpl.pluralCategory(22, pl))
     }
 }

@@ -64,7 +64,7 @@
             <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
             <option th:each="opt : ${options}"
                     th:value="${optValue != null ? opt[optValue] : opt}"
-                    th:text="${optLabel != null ? opt[optLabel] : opt}">Option</option>
+                    th:text="${msgPrefix != null ? #messages.msg(msgPrefix + opt.toString()) : (optLabel != null ? opt[optLabel] : opt)}">Option</option>
         </select>
         <p th:if="${#fields.hasErrors(path)}" th:errors="*{__${path}__}" class="form-error">Error</p>
     </th:block>
@@ -78,7 +78,7 @@
             <option th:if="${placeholder != null}" value="" th:text="${placeholder}">Select...</option>
             <option th:each="opt : ${options}"
                     th:value="${optValue != null ? opt[optValue] : opt}"
-                    th:text="${optLabel != null ? opt[optLabel] : opt}"
+                    th:text="${msgPrefix != null ? #messages.msg(msgPrefix + opt.toString()) : (optLabel != null ? opt[optLabel] : opt)}"
                     th:selected="${(optValue != null ? opt[optValue] : opt) == value}">Option</option>
         </select>
     </th:block>
@@ -214,7 +214,7 @@
      th:classappend="${cls}">
     <div class="flex items-center gap-2 text-error font-semibold text-base mb-2">
         <span th:replace="~{fragments/icon :: icon(name='error', size='md')}"></span>
-        <span th:text="${title ?: 'Please correct the following errors:'}">Please correct the following errors:</span>
+        <span th:text="${title ?: #messages.msg('form.error_summary.title')}">Please correct the following errors:</span>
     </div>
     <ul class="list-disc list-inside text-sm text-error space-y-1">
         <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li>

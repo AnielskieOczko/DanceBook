@@ -176,7 +176,7 @@
                                              <option th:each="indicator : ${lineIndicators}"
                                                      th:value="${indicator.name()}"
                                                      th:selected="${entry.lineIndicator == indicator}"
-                                                     th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(indicator.name(), '_', ' ')))}">Short Wall</option>
+                                                     th:text="${#messages.msg('enum.line_indicator.' + indicator.name())}">Short Wall</option>
                                          </select>
                                          
                                          <!-- Delete button -->

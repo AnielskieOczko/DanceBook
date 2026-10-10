@@ -53,7 +53,8 @@ class AdminController(
     private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService,
     private val systemSettingService: SystemSettingService,
     private val syllabusImporterService: SyllabusImporterService,
-    private val knowledgeIndexService: com.jankowski.rafal.dancebook.service.KnowledgeIndexService? = null
+    private val knowledgeIndexService: com.jankowski.rafal.dancebook.service.KnowledgeIndexService? = null,
+    private val messageSource: org.springframework.context.MessageSource? = null
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
@@ -227,7 +228,9 @@ class AdminController(
         model: Model
     ): String {
         if (bindingResult.hasErrors()) {
-            val errorMsg = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Validation failed"
+            val errorMsg = bindingResult.allErrors.firstOrNull()?.let {
+                messageSource?.getMessage(it, org.springframework.context.i18n.LocaleContextHolder.getLocale()) ?: it.defaultMessage
+            } ?: "Validation failed"
             model.addAttribute("createUserError", errorMsg)
             model.addAttribute("showCreateForm", true)
             model.addAttribute("users", appUserRepository.findAll())
@@ -267,7 +270,9 @@ class AdminController(
     ): String {
         val userId = UUID.fromString(id)
         if (bindingResult.hasErrors()) {
-            val errorMsg = bindingResult.allErrors.firstOrNull()?.defaultMessage ?: "Validation failed"
+            val errorMsg = bindingResult.allErrors.firstOrNull()?.let {
+                messageSource?.getMessage(it, org.springframework.context.i18n.LocaleContextHolder.getLocale()) ?: it.defaultMessage
+            } ?: "Validation failed"
             model.addAttribute("updateUserError", errorMsg)
             val user = appUserService.findById(userId)
             user.username = request.username

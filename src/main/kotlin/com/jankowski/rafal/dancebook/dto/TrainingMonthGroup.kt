@@ -1,12 +1,12 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.config.AppLocales
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import org.springframework.context.i18n.LocaleContextHolder
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-private val MONTH_LABEL: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
 
 /**
  * A session as a training page draws it. The swatch travels with the event so the template never
@@ -40,12 +40,15 @@ data class TrainingMonthGroup(
  * Lives here rather than in a controller because two pages now draw the same grouping, and a
  * second copy is what would let their month headings or colours drift apart.
  */
-fun groupByMonth(events: List<TrainingEvent>, user: AppUser): List<TrainingMonthGroup> =
-    events.groupBy { YearMonth.from(it.startTime) }
+fun groupByMonth(events: List<TrainingEvent>, user: AppUser): List<TrainingMonthGroup> {
+    val locale = AppLocales.parseLocale(user.locale) ?: LocaleContextHolder.getLocale()
+    val monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
+    return events.groupBy { YearMonth.from(it.startTime) }
         .map { (month, monthEvents) ->
             TrainingMonthGroup(
-                label = month.format(MONTH_LABEL),
+                label = month.format(monthFormatter),
                 rows = monthEvents.map { TrainingEventRow(it, TrainingEventPalette.swatchFor(it, user)) },
                 totalMinutes = monthEvents.sumOf { it.durationMinutes }
             )
         }
+}
