@@ -84,11 +84,20 @@ class HybridSearchIntegrationTest {
         waltz = danceTypeRepository.save(DanceType().apply { name = "Waltz ${UUID.randomUUID()}"; category = cat })
     }
 
+    /** indexMaterial only stores the chunks; a background worker embeds them, and a search ignores unembedded chunks. */
+    private fun awaitEmbedded() {
+        val deadline = System.currentTimeMillis() + 10_000
+        while (knowledgeChunkRepository.countAwaitingEmbedding() > 0) {
+            check(System.currentTimeMillis() < deadline) { "chunks were not embedded within 10s" }
+            Thread.sleep(20)
+        }
+    }
+
     private fun note(owner: AppUser, name: String, text: String, visibility: Visibility) =
         materialRepository.save(Material().apply {
             this.owner = owner; this.name = name; description = text
             this.visibility = visibility; danceType = waltz
-        }).also { knowledgeIndexService.indexMaterial(it.id!!) }
+        }).also { knowledgeIndexService.indexMaterial(it.id!!); awaitEmbedded() }
 
     @Test
     fun `second user never sees another user's private note, keyword or semantic`() {
@@ -149,7 +158,7 @@ class HybridSearchIntegrationTest {
         val farther = materialRepository.save(Material().apply {
             owner = userA; name = "Tango motion"; description = "sway turn spin"
             visibility = Visibility.PUBLIC; danceType = tango
-        }).also { knowledgeIndexService.indexMaterial(it.id!!) }
+        }).also { knowledgeIndexService.indexMaterial(it.id!!); awaitEmbedded() }
         val embedding = FloatArray(768).also { it[0] = 1f }
 
         fun ids(type: UUID?) = knowledgeChunkRepository.hybridSearch(
