@@ -49,6 +49,8 @@ data class DanceFigureRequest(
                 )
             )
         }
-        return stepSets
+        // The edit form pre-fills one empty "Default" set for a figure with no steps. Left
+        // untouched it is not a step set, and saving it would flag the figure as having steps.
+        return emptyList()
     }
 }
