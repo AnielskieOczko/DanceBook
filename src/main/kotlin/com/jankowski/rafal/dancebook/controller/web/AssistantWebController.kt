@@ -87,6 +87,29 @@ class AssistantWebController(
         return historyFragment(pageType, model, error)
     }
 
+    @GetMapping("/conversations/{id}/delete-dialog")
+    fun deleteDialog(
+        @PathVariable id: UUID,
+        @RequestParam(defaultValue = "OTHER") pageType: PageContextType,
+        model: Model
+    ): String {
+        val conversation = conversationService.findOwned(id)
+        val count = conversationService.messages(id).size
+        val messagePhrase = if (count == 1) "Its 1 message is removed." else "Its $count messages are removed."
+        model.addAttribute("dialogTitle", "Delete conversation")
+        model.addAttribute(
+            "dialogMessage",
+            "Delete “${conversation.title}”? $messagePhrase Notes, training events and figures you saved from it stay."
+        )
+        model.addAttribute("confirmLabel", "Delete conversation")
+        model.addAttribute("cancelLabel", "Keep it")
+        model.addAttribute("confirmUrl", "/assistant/conversations/$id/delete?pageType=$pageType")
+        model.addAttribute("hxTarget", "#assistantThread")
+        model.addAttribute("hxSwap", "innerHTML")
+        model.addAttribute("hxInclude", "#assistantConversationId")
+        return "fragments/confirm-dialog :: confirmModal"
+    }
+
     @PostMapping("/conversations/{id}/delete")
     fun delete(
         @PathVariable id: UUID,

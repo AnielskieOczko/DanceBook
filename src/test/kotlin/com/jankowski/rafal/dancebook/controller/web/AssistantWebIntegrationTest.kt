@@ -144,6 +144,7 @@ class AssistantWebIntegrationTest {
         val asBob = user(bob.username).roles("USER")
 
         mockMvc.perform(get("/assistant/conversations/$id").with(asBob)).andExpect(status().isNotFound)
+        mockMvc.perform(get("/assistant/conversations/$id/delete-dialog").with(asBob)).andExpect(status().isNotFound)
         mockMvc.perform(post("/assistant/conversations/$id/rename").with(csrf()).with(asBob).param("title", "Mine"))
             .andExpect(status().isNotFound)
         mockMvc.perform(post("/assistant/conversations/$id/delete").with(csrf()).with(asBob)).andExpect(status().isNotFound)
@@ -155,6 +156,20 @@ class AssistantWebIntegrationTest {
         val still = conversations.findById(id).get()
         assertEquals("Which notes mention sway?", still.title)
         assertEquals(2, messages.countByConversationId(id), "only Alice's own user and assistant messages")
+    }
+
+    @Test
+    fun `delete-dialog returns confirm modal for owner with message count`() {
+        val id = aliceConversation()
+        val asAlice = user(alice.username).roles("USER")
+
+        mockMvc.perform(get("/assistant/conversations/$id/delete-dialog").with(asAlice).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"confirmModal\"")))
+            .andExpect(content().string(containsString("Delete conversation")))
+            .andExpect(content().string(containsString("Delete “Which notes mention sway?”? Its 2 messages are removed.")))
+            .andExpect(content().string(containsString("Keep it")))
+            .andExpect(content().string(containsString("/assistant/conversations/$id/delete")))
     }
 
     @Test

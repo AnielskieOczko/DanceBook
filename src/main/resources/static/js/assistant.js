@@ -62,6 +62,81 @@
         const prompt = event.target.closest('[data-assistant-prompt]');
         if (prompt) {
             ask(prompt.getAttribute('data-assistant-prompt'));
+            return;
+        }
+
+        const renameBtn = event.target.closest('.js-rename-btn');
+        if (renameBtn) {
+            event.preventDefault();
+            const dropdown = renameBtn.closest('.js-menu-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+            const item = renameBtn.closest('li');
+            if (item) {
+                const view = item.querySelector('.js-convo-view');
+                const form = item.querySelector('.js-convo-rename');
+                if (view && form) {
+                    view.classList.add('hidden');
+                    form.classList.remove('hidden');
+                    const input = form.querySelector('input[name="title"]');
+                    if (input) {
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                    }
+                }
+            }
+            return;
+        }
+
+        const cancelBtn = event.target.closest('.js-cancel-rename');
+        if (cancelBtn) {
+            event.preventDefault();
+            const item = cancelBtn.closest('li');
+            if (item) {
+                const view = item.querySelector('.js-convo-view');
+                const form = item.querySelector('.js-convo-rename');
+                if (view && form) {
+                    const input = form.querySelector('input[name="title"]');
+                    if (input && input.hasAttribute('data-original')) {
+                        input.value = input.getAttribute('data-original');
+                        const counter = form.querySelector('.js-char-count');
+                        if (counter) counter.textContent = input.value.length + '/80';
+                    }
+                    form.classList.add('hidden');
+                    view.classList.remove('hidden');
+                }
+            }
+            return;
+        }
+    });
+
+    document.addEventListener('input', function (event) {
+        if (event.target && event.target.matches && event.target.matches('.js-convo-rename input[name="title"]')) {
+            const form = event.target.closest('form');
+            if (form) {
+                const counter = form.querySelector('.js-char-count');
+                if (counter) counter.textContent = event.target.value.length + '/80';
+            }
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && event.target && event.target.matches && event.target.matches('.js-convo-rename input[name="title"]')) {
+            event.preventDefault();
+            event.stopPropagation();
+            const item = event.target.closest('li');
+            if (item) {
+                const view = item.querySelector('.js-convo-view');
+                const form = item.querySelector('.js-convo-rename');
+                if (view && form) {
+                    if (event.target.hasAttribute('data-original')) {
+                        event.target.value = event.target.getAttribute('data-original');
+                        const counter = form.querySelector('.js-char-count');
+                        if (counter) counter.textContent = event.target.value.length + '/80';
+                    }
+                    form.classList.add('hidden');
+                    view.classList.remove('hidden');
+                }
+            }
         }
     });
 

@@ -6,6 +6,7 @@ import com.jankowski.rafal.dancebook.dto.AssistantTurn
 import com.jankowski.rafal.dancebook.dto.ConversationView
 import com.jankowski.rafal.dancebook.dto.ResultCard
 import com.jankowski.rafal.dancebook.model.AssistantConversation
+import com.jankowski.rafal.dancebook.model.AssistantMessage
 import com.jankowski.rafal.dancebook.model.AssistantRole
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
@@ -125,13 +126,37 @@ class AssistantFragmentRenderingTest {
     }
 
     @Test
-    fun `delete asks through hx-confirm, because data-confirm cannot stop an htmx form`() {
-        val c = AssistantConversation().apply { id = UUID.randomUUID(); title = "Sway notes"; updatedAt = LocalDateTime.of(2026, 9, 29, 10, 0) }
+    fun `history fragment renders three-dot menu, inline rename form, and delete confirmation dialog trigger`() {
+        val id = UUID.randomUUID()
+        val c = AssistantConversation().apply { this.id = id; title = "Sway notes"; updatedAt = LocalDateTime.of(2026, 9, 29, 10, 0) }
         `when`(conversationService.list()).thenReturn(listOf(c))
         mockMvc.perform(get("/assistant/conversations").param("pageType", "HOME").header("HX-Request", "true"))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("hx-confirm=\"Delete this conversation?")))
-            .andExpect(content().string(org.hamcrest.Matchers.not(containsString("data-confirm"))))
+            .andExpect(content().string(containsString("js-menu-btn")))
+            .andExpect(content().string(containsString("js-menu-dropdown")))
+            .andExpect(content().string(containsString("js-rename-btn")))
+            .andExpect(content().string(containsString("js-convo-rename")))
+            .andExpect(content().string(containsString("hx-target=\"#confirmModalContainer\"")))
+            .andExpect(content().string(containsString("/assistant/conversations/$id/delete-dialog")))
+    }
+
+    @Test
+    fun `delete-dialog returns confirmModal with conversation details`() {
+        val id = UUID.randomUUID()
+        val c = AssistantConversation().apply { this.id = id; title = "Sway notes" }
+        `when`(conversationService.findOwned(id)).thenReturn(c)
+        `when`(conversationService.messages(id)).thenReturn(listOf(
+            AssistantMessageView(AssistantRole.USER, "hello"),
+            AssistantMessageView(AssistantRole.ASSISTANT, "hi")
+        ).map { AssistantMessage().apply { role = it.role; content = it.text } })
+
+        mockMvc.perform(get("/assistant/conversations/$id/delete-dialog").param("pageType", "HOME").header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("id=\"confirmModal\"")))
+            .andExpect(content().string(containsString("Delete conversation")))
+            .andExpect(content().string(containsString("Delete “Sway notes”? Its 2 messages are removed.")))
+            .andExpect(content().string(containsString("Keep it")))
+            .andExpect(content().string(containsString("/assistant/conversations/$id/delete?pageType=HOME")))
     }
 
     @Test
