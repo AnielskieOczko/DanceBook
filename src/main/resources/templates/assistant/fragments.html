@@ -38,48 +38,73 @@
 
 <!-- The user's conversations, newest first. Continue, rename, delete. -->
 <div th:fragment="history" id="assistantHistory" class="flex flex-col gap-2" th:attr="data-reset-conversation=${resetConversationId == true ? 'true' : null}">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between pb-1">
         <h3 class="text-sm font-semibold">Conversations</h3>
         <button type="button"
-                class="text-sm font-semibold text-primary"
+                class="text-sm font-semibold text-primary hover:underline"
                 th:attr="hx-get=@{/assistant/start(pageType=${pageType})}"
                 hx-target="#assistantThread" hx-swap="innerHTML">New conversation</button>
     </div>
+    <div th:if="${!#lists.isEmpty(conversations)}" class="text-xs text-on-surface-variant pb-1"
+         th:text="${#lists.size(conversations) == 1 ? '1 conversation' : #lists.size(conversations) + ' conversations'}">1 conversation</div>
     <th:block th:if="${historyError != null}">
         <div th:replace="~{fragments/alert :: alert(variant='error', text=${historyError})}"></div>
     </th:block>
     <th:block th:if="${#lists.isEmpty(conversations)}">
-        <div th:replace="~{fragments/empty :: emptyState(title='No conversations yet')}"></div>
+        <div th:replace="~{fragments/empty :: emptyState(title='No conversations yet', text='Ask about your notes, the figure catalog or your training sessions. Each conversation you start is kept here.', icon='history')}"></div>
     </th:block>
-    <ul class="flex flex-col divide-y divide-outline-variant">
-        <li th:each="c : ${conversations}" class="flex flex-col gap-2 py-3">
-            <button type="button"
-                    class="text-left"
-                    th:attr="hx-get=@{/assistant/conversations/{id}(id=${c.id})}"
-                    hx-target="#assistantThread" hx-swap="innerHTML">
-                <span class="block truncate text-[15px] font-medium" th:text="${c.title}">Title</span>
-                <span class="block text-xs text-on-surface-variant" th:text="${#temporals.format(c.updatedAt, 'd MMM yyyy, HH:mm')}">Date</span>
-            </button>
-            <div class="flex items-center gap-2">
-                <form class="flex flex-1 items-center gap-2"
-                      method="post"
-                      th:attr="hx-post=@{/assistant/conversations/{id}/rename(id=${c.id})}"
-                      hx-target="#assistantThread" hx-swap="innerHTML">
-                    <input type="hidden" name="pageType" th:value="${pageType}">
-                    <input type="text" name="title" maxlength="80" required
-                           class="form-input min-w-0 flex-1 text-sm" aria-label="Rename conversation"
-                           th:value="${c.title}">
-                    <button type="submit" class="text-sm font-semibold text-primary">Rename</button>
-                </form>
-                <form method="post"
-                      th:attr="hx-post=@{/assistant/conversations/{id}/delete(id=${c.id})}"
-                      hx-target="#assistantThread" hx-swap="innerHTML"
-                      hx-include="#assistantConversationId"
-                      hx-confirm="Delete this conversation? This cannot be undone.">
-                    <input type="hidden" name="pageType" th:value="${pageType}">
-                    <button type="submit" class="text-sm font-semibold text-error" aria-label="Delete conversation">Delete</button>
-                </form>
+    <ul th:if="${!#lists.isEmpty(conversations)}" class="flex flex-col divide-y divide-outline-variant">
+        <li th:each="c : ${conversations}" class="relative flex flex-col gap-1 py-2" th:id="'assistant-convo-' + ${c.id}">
+            <div class="js-convo-view flex items-start gap-1">
+                <button type="button"
+                        class="flex flex-1 min-w-0 flex-col gap-1 text-left p-1 rounded-[12px] hover:bg-surface-container/60 transition-colors"
+                        th:attr="hx-get=@{/assistant/conversations/{id}(id=${c.id})}"
+                        hx-target="#assistantThread" hx-swap="innerHTML">
+                    <span class="line-clamp-2 text-[15px] font-medium leading-[1.35] text-on-surface break-words" th:text="${c.title}">Title</span>
+                    <span class="text-xs text-on-surface-variant tabular-nums" th:text="${#temporals.format(c.updatedAt, 'd MMM yyyy, HH:mm')}">Date</span>
+                </button>
+                <div class="relative shrink-0 pt-0.5">
+                    <button type="button"
+                            class="js-menu-btn flex h-10 w-10 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            aria-label="Actions"
+                            th:attr="aria-label='Actions for ' + ${c.title}">
+                        <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
+                    </button>
+                    <div class="js-menu-dropdown absolute right-0 top-full z-20 hidden w-44 flex-col rounded-card border border-outline-variant bg-surface p-1.5 shadow-float">
+                        <button type="button"
+                                class="js-rename-btn flex min-h-[44px] w-full items-center gap-2.5 rounded-[12px] px-3 py-2 text-left text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+                            <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
+                            <span>Rename</span>
+                        </button>
+                        <button type="button"
+                                class="flex min-h-[44px] w-full items-center gap-2.5 rounded-[12px] px-3 py-2 text-left text-sm font-medium text-error hover:bg-error-container transition-colors"
+                                th:attr="hx-get=@{/assistant/conversations/{id}/delete-dialog(id=${c.id}, pageType=${pageType})}"
+                                hx-target="#confirmModalContainer">
+                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-error')}"></span>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+            <form class="js-convo-rename hidden flex-1 min-w-0 flex-col gap-2 p-1"
+                  method="post"
+                  th:attr="hx-post=@{/assistant/conversations/{id}/rename(id=${c.id})}"
+                  hx-target="#assistantThread" hx-swap="innerHTML">
+                <input type="hidden" name="pageType" th:value="${pageType}">
+                <input type="text" name="title" maxlength="80" required
+                       class="form-input w-full min-h-[44px] rounded-pill border border-outline bg-surface-container px-4 text-[15px] text-on-surface placeholder:text-on-surface-variant hover:bg-surface focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22 outline-none"
+                       aria-label="Conversation title"
+                       th:value="${c.title}"
+                       th:attr="data-original=${c.title}">
+                <div class="hint flex items-center justify-between px-3 text-xs text-on-surface-variant">
+                    <span>Enter saves, Escape cancels</span>
+                    <span class="js-char-count tabular-nums" th:text="${#strings.length(c.title)} + '/80'">12/80</span>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <button type="submit" class="btn-primary btn-sm">Save</button>
+                    <button type="button" class="js-cancel-rename btn-ghost btn-sm">Cancel</button>
+                </div>
+            </form>
         </li>
     </ul>
 </div>
