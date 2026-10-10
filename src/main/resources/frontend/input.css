@@ -110,6 +110,14 @@ layer(base);
   --color-chart-7: #7a4328;
   --color-chart-8: #41555e;
 
+  --color-bronze: #8a5a2e;
+  --color-bronze-soft: #f5ece3;
+  --color-silver: #66717e;
+  --color-silver-soft: #eceef1;
+  --color-gold: #8a6a0c;
+  --color-gold-soft: #f6efd8;
+  --color-medal-empty: #b9bcc2;
+
   /* Radius ladder from the rounded-forms mock (#214): pill for every single-line control and
    * button, field (24px) for multi-line surfaces, card (16px) for cards, dialogs and menus,
    * inset (12px) for rows nested inside a rounded surface. lg and xl both resolve to the card

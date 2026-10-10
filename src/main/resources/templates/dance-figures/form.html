@@ -16,6 +16,11 @@
         </div>
     </div>
 
+    <div th:if="${danceFigureId != null and (danceFigure.danceClass != null or danceFigure.medalLevel != null)}" class="flex items-center gap-2 -mt-4 mb-6">
+        <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
+        <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true)}"></th:block>
+    </div>
+
     <!-- Guided Edit Panel (Hidden by Default) -->
     <div id="guided-edit-panel" class="hidden space-y-6 mb-8 card p-8 bg-white border border-border shadow-xs rounded-xl">
         <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -336,6 +341,28 @@
 
                         <!-- Alternative Timing -->
                         <div th:replace="~{fragments/form :: field(path='alternativeTiming', label=#{figures.form.field.alternative_timing}, placeholder=#{figures.form.field.alternative_timing_placeholder}, id='alternativeTiming')}"></div>
+
+                        <!-- Medal Level selection -->
+                        <div class="form-group md:col-span-2">
+                            <label class="form-label" id="medalLevelLabel">
+                                <span th:text="#{figures.form.field.medal}">Medal Level (Optional)</span>
+                            </label>
+                            <div class="flex flex-wrap items-center gap-2 pt-1" role="radiogroup" aria-labelledby="medalLevelLabel">
+                                <label class="relative inline-flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full border border-outline bg-surface font-semibold text-sm cursor-pointer hover:bg-surface-container has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                                    <input type="radio" name="medalLevel" value=""
+                                           th:checked="${danceFigure.medalLevel == null}"
+                                           class="sr-only">
+                                    <span th:text="#{figures.medal.none}">None</span>
+                                </label>
+                                <label th:each="lvl : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
+                                       class="relative inline-flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full border border-outline bg-surface font-semibold text-sm cursor-pointer hover:bg-surface-container has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                                    <input type="radio" name="medalLevel" th:value="${lvl.name()}"
+                                           th:checked="${danceFigure.medalLevel == lvl}"
+                                           class="sr-only">
+                                    <th:block th:replace="~{fragments/badge :: medalBadge(level=${lvl}, word=true)}"></th:block>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

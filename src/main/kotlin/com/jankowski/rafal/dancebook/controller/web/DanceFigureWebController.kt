@@ -77,6 +77,7 @@ class DanceFigureWebController(
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceCategories", danceCategoryService.findAll())
             model.addAttribute("danceClasses", DanceClass.values())
+            model.addAttribute("medalLevels", MedalLevel.values())
         }
         model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
@@ -110,6 +111,7 @@ class DanceFigureWebController(
         model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("danceTypes", danceTypeService.findAll())
         model.addAttribute("danceClasses", DanceClass.values())
+        model.addAttribute("medalLevels", MedalLevel.values())
         return "dance-figures/form"
     }
 
@@ -126,6 +128,7 @@ class DanceFigureWebController(
             model.addAttribute("availableFigures", availableFigures)
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceClasses", DanceClass.values())
+            model.addAttribute("medalLevels", MedalLevel.values())
             return "dance-figures/form"
         }
         try {
@@ -138,6 +141,7 @@ class DanceFigureWebController(
             model.addAttribute("availableFigures", availableFigures)
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceClasses", DanceClass.values())
+            model.addAttribute("medalLevels", MedalLevel.values())
             return "dance-figures/form"
         }
         return "redirect:/dance-figures"
@@ -228,6 +232,7 @@ class DanceFigureWebController(
         model.addAttribute("availableFigures", availableFigures)
         model.addAttribute("danceTypes", danceTypeService.findAll())
         model.addAttribute("danceClasses", DanceClass.values())
+        model.addAttribute("medalLevels", MedalLevel.values())
         return "dance-figures/form"
     }
 
@@ -246,6 +251,7 @@ class DanceFigureWebController(
             model.addAttribute("availableFigures", availableFigures)
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceClasses", DanceClass.values())
+            model.addAttribute("medalLevels", MedalLevel.values())
             return "dance-figures/form"
         }
         try {
@@ -264,6 +270,7 @@ class DanceFigureWebController(
             model.addAttribute("availableFigures", availableFigures)
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceClasses", DanceClass.values())
+            model.addAttribute("medalLevels", MedalLevel.values())
             return "dance-figures/form"
         }
         return "redirect:/dance-figures"
