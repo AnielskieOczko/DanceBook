@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('previewFilename').textContent = file.name + ' (Click to change)';
+                    document.getElementById('previewFilename').textContent = I18n.t('js.upload.click_to_change', file.name);
                     document.getElementById('uploadContent').classList.add('hidden');
                     document.getElementById('previewContainer').classList.remove('hidden');
                     document.getElementById('uploadBox').classList.remove('border-dashed', 'border-outline-variant');

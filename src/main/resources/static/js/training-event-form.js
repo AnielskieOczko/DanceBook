@@ -128,10 +128,9 @@
             return;
         }
 
-        let label = total + ' min';
-        if (slot !== null && slot > 0) {
-            label += ' of ' + slot + ' min';
-        }
+        const label = (slot !== null && slot > 0)
+            ? I18n.t('js.training.minutes_of_slot', [total, slot])
+            : I18n.t('js.training.minutes_only', total);
         segmentTotal.textContent = label;
         segmentTotal.classList.toggle('text-error', slot !== null && total > slot);
     }
@@ -169,13 +168,13 @@
     const repeatUntil = document.getElementById('repeatUntil');
     const repeatSummary = document.getElementById('repeatSummary');
 
-    const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const MAX_OCCURRENCES = 52;
 
     function chosenWeekday() {
         if (!dateInput || !dateInput.value) return null;
         const d = new Date(dateInput.value + 'T00:00');
-        return isNaN(d) ? null : WEEKDAYS[d.getDay()];
+        return isNaN(d) ? null : I18n.t('js.weekday.' + WEEKDAY_KEYS[d.getDay()]);
     }
 
     function refreshRepeat() {
@@ -188,7 +187,7 @@
         const weekday = chosenWeekday();
         const weeklyOption = repeatSelect.querySelector('option[value="WEEKLY"]');
         if (weeklyOption) {
-            weeklyOption.textContent = weekday ? 'Weekly on ' + weekday : 'Weekly on this weekday';
+            weeklyOption.textContent = weekday ? I18n.t('js.training.repeat_weekly_on', weekday) : I18n.t('js.training.repeat_weekly_this');
         }
         if (!repeating) return;
 
@@ -207,13 +206,13 @@
         const weeks = Math.floor((end - start) / (7 * 86400000)) + 1;
 
         if (!isFinite(weeks) || weeks < 1) {
-            repeatSummary.textContent = 'The end date must not be before the first session.';
+            repeatSummary.textContent = I18n.t('js.training.repeat.end_before_start');
             repeatSummary.classList.add('text-error');
             return;
         }
         repeatSummary.textContent = weeks > MAX_OCCURRENCES
-            ? 'That is ' + weeks + ' sessions; the limit is ' + MAX_OCCURRENCES + '.'
-            : 'Creates ' + weeks + ' session' + (weeks === 1 ? '' : 's') + ' up front.';
+            ? I18n.t('js.training.repeat.limit_exceeded', [weeks, MAX_OCCURRENCES])
+            : (weeks === 1 ? I18n.t('js.training.repeat.creates_one') : I18n.t('js.training.repeat.creates_many', weeks));
         repeatSummary.classList.toggle('text-error', weeks > MAX_OCCURRENCES);
     }
 
@@ -239,7 +238,7 @@
             if (startInput) startInput.readOnly = false;
             if (endInput) endInput.readOnly = false;
             if (scopeHint) {
-                scopeHint.textContent = 'Recurrence pattern is editable. Changing weekday, times or repeat-until recomputes the series.';
+                scopeHint.textContent = I18n.t('js.training.scope.all_events_hint');
             }
         } else if (scope === 'THIS_AND_FOLLOWING') {
             seriesPatternControls.classList.add('hidden');
@@ -247,7 +246,7 @@
             if (startInput) startInput.readOnly = true;
             if (endInput) endInput.readOnly = true;
             if (scopeHint) {
-                scopeHint.textContent = 'Sessions keep their dates, times, attendance and outcomes. Content changes apply to this and all future sessions.';
+                scopeHint.textContent = I18n.t('js.training.scope.this_and_following_hint');
             }
         } else {
             seriesPatternControls.classList.add('hidden');
@@ -255,7 +254,7 @@
             if (startInput) startInput.readOnly = false;
             if (endInput) endInput.readOnly = false;
             if (scopeHint) {
-                scopeHint.textContent = 'Detaches this session from the series. It will become a standalone session and cannot be reconnected.';
+                scopeHint.textContent = I18n.t('training.form.scope.this_event_hint');
             }
         }
     }
@@ -335,7 +334,7 @@
             })
             .catch(function (err) {
                 console.error('Failed to load pattern confirmation dialog', err);
-                showErrorAlert('Could not verify recurring pattern changes with the server. Please check your connection and try again.');
+                showErrorAlert(I18n.t('js.training.form.error.recurrence_pattern'));
             });
         }
     });

@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 console.error("Failed to load AI models", err);
-                showToast("Failed to load models list from server.", "error");
+                showToast(I18n.t('js.guided.error.models_load'), "error");
             });
     }
 
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isHidden) {
             expectedSchemaBox.classList.remove('hidden');
             if (!schemaLoaded) {
-                schemaDisplayPre.textContent = "Loading schema format...";
+                schemaDisplayPre.textContent = I18n.t('js.guided.schema.loading');
                 fetch('/api/dance-figures/guided-parse/schema')
                     .then(res => res.text())
                     .then(schema => {
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         schemaLoaded = true;
                     })
                     .catch(err => {
-                        schemaDisplayPre.textContent = "Error loading schema format.";
+                        schemaDisplayPre.textContent = I18n.t('js.guided.schema.error');
                         console.error(err);
                     });
             }
@@ -284,14 +284,14 @@ document.addEventListener('DOMContentLoaded', () => {
     validateJsonBtn.addEventListener('click', () => {
         const rawJson = guidedJsonInput.value.trim();
         if (!rawJson) {
-            showToast("Please paste JSON data first.", "warning");
+            showToast(I18n.t('js.guided.error.paste_json'), "warning");
             return;
         }
 
         try {
             JSON.parse(rawJson);
         } catch (e) {
-            showToast("Malformed JSON: " + e.message, "error");
+            showToast(I18n.t('js.guided.error.malformed_json', e.message), "error");
             return;
         }
 
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             console.error(err);
             setLoading(false);
-            const errorMsg = "Server error validating JSON: " + err.message;
+            const errorMsg = I18n.t('js.guided.error.validate_server', err.message);
             showToast(errorMsg, "error");
             if (guidedErrorContainer && guidedErrorMessage) {
                 guidedErrorMessage.textContent = errorMsg;
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     parseUrlBtn.addEventListener('click', () => {
         const url = guidedUrlInput.value.trim();
         if (!url) {
-            showToast("Please enter a webpage URL.", "warning");
+            showToast(I18n.t('js.guided.error.enter_url'), "warning");
             return;
         }
 
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             console.error(err);
             setLoading(false);
-            const errorMsg = "Server error calling AI agent to parse page: " + err.message;
+            const errorMsg = I18n.t('js.guided.error.parse_server', err.message);
             showToast(errorMsg, "error");
             if (guidedErrorContainer && guidedErrorMessage) {
                 guidedErrorMessage.textContent = errorMsg;
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!res.success) {
-            const errorMsg = res.errors.join(", ") || "Failed to parse data.";
+            const errorMsg = res.errors.join(", ") || I18n.t('js.guided.error.parse_failed');
             showToast(errorMsg, "error");
             if (guidedErrorContainer && guidedErrorMessage) {
                 guidedErrorMessage.textContent = errorMsg;
@@ -413,24 +413,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         parsedResultData = res.request;
         renderDiffView(res.request);
-        showToast("Data parsed successfully! Please review the changes below.", "success");
+        showToast(I18n.t('js.guided.success.parsed'), "success");
     }
 
     // 8. Diff Comparison Renderer
     const fieldsDefinition = [
-        { key: 'name', label: 'Figure Name', type: 'text', protect: true },
-        { key: 'danceTypeId', label: 'Dance Style', type: 'select_dance_type', protect: true },
-        { key: 'danceClass', label: 'Minimum Class', type: 'select_dance_class' },
-        { key: 'alternativeTiming', label: 'Alt Timing', type: 'text' },
-        { key: 'startingPosition', label: 'Starting Position', type: 'text' },
-        { key: 'endingPosition', label: 'Ending Position', type: 'text' },
-        { key: 'startingFootLeader', label: 'Start Foot (Leader)', type: 'text' },
-        { key: 'endingFootLeader', label: 'End Foot (Leader)', type: 'text' },
-        { key: 'startingFootFollower', label: 'Start Foot (Follower)', type: 'text' },
-        { key: 'endingFootFollower', label: 'End Foot (Follower)', type: 'text' },
-        { key: 'precedingFigureNames', label: 'Preceding Figures', type: 'list' },
-        { key: 'followingFigureNames', label: 'Following Figures', type: 'list' },
-        { key: 'notes', label: 'Notes & Details', type: 'textarea' }
+        { key: 'name', labelKey: 'figures.form.field.name', defaultLabel: 'Figure Name', type: 'text', protect: true },
+        { key: 'danceTypeId', labelKey: 'figures.form.field.dance_type', defaultLabel: 'Dance Style', type: 'select_dance_type', protect: true },
+        { key: 'danceClass', labelKey: 'figures.view.field.minimum_level', defaultLabel: 'Minimum Class', type: 'select_dance_class' },
+        { key: 'alternativeTiming', labelKey: 'figures.form.field.alternative_timing', defaultLabel: 'Alt Timing', type: 'text' },
+        { key: 'startingPosition', labelKey: 'figures.form.field.starting_position', defaultLabel: 'Starting Position', type: 'text' },
+        { key: 'endingPosition', labelKey: 'figures.form.field.ending_position', defaultLabel: 'Ending Position', type: 'text' },
+        { key: 'startingFootLeader', labelKey: 'figures.form.field.starting_foot_leader', defaultLabel: 'Start Foot (Leader)', type: 'text' },
+        { key: 'endingFootLeader', labelKey: 'figures.form.field.ending_foot_leader', defaultLabel: 'End Foot (Leader)', type: 'text' },
+        { key: 'startingFootFollower', labelKey: 'figures.form.field.starting_foot_follower', defaultLabel: 'Start Foot (Follower)', type: 'text' },
+        { key: 'endingFootFollower', labelKey: 'figures.form.field.ending_foot_follower', defaultLabel: 'End Foot (Follower)', type: 'text' },
+        { key: 'precedingFigureNames', labelKey: 'figures.form.field.preceding_figures', defaultLabel: 'Preceding Figures', type: 'list' },
+        { key: 'followingFigureNames', labelKey: 'figures.form.field.following_figures', defaultLabel: 'Following Figures', type: 'list' },
+        { key: 'notes', labelKey: 'figures.guided.field.notes_details', defaultLabel: 'Notes & Details', type: 'textarea' }
     ];
 
     function renderDiffView(imported) {
@@ -472,9 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Find dance style name by UUID
                 const selectEl = document.getElementById('danceTypeId');
                 const opt = selectEl ? Array.from(selectEl.options).find(o => o.value === importedVal) : null;
-                importedDisplay = opt ? opt.textContent : 'Style Not Found';
+                importedDisplay = opt ? opt.textContent : I18n.t('js.guided.diff.style_not_found');
             } else if (field.key === 'danceClass' && importedVal) {
-                importedDisplay = 'Class ' + importedVal;
+                importedDisplay = I18n.t('figures.view.class_label', importedVal);
             } else if (Array.isArray(importedVal)) {
                 importedDisplay = importedVal.join(', ');
             } else {
@@ -501,15 +501,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Col 2: Field Name
             const tdLabel = document.createElement('td');
             tdLabel.className = 'p-3 font-medium text-on-surface flex items-center justify-between gap-2 md:table-cell';
+            const labelText = I18n.t(field.labelKey, field.defaultLabel);
             tdLabel.innerHTML = `
-                <span>${field.label}</span>
-                ${isDifferent && !isProtected ? '<span class="badge badge-accent text-[9px] py-0.5 px-1.5 md:hidden">Changed</span>' : ''}
+                <span>${labelText}</span>
+                ${isDifferent && !isProtected ? '<span class="badge badge-accent text-[9px] py-0.5 px-1.5 md:hidden">' + I18n.t('js.guided.diff.changed') + '</span>' : ''}
             `;
 
             // Col 3: Current Form Value
             const tdCurrent = document.createElement('td');
             tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line js-col-current md:table-cell';
-            tdCurrent.textContent = currentDisplay || '(empty)';
+            tdCurrent.textContent = currentDisplay || I18n.t('js.guided.diff.empty');
 
             // Col 4: Imported Value (Editable Input)
             const tdImported = document.createElement('td');
@@ -574,14 +575,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (stepsCheckbox) stepsCheckbox.checked = true;
         const stepsText = document.getElementById('import-section-steps-text');
         if (stepsText) {
-            stepsText.textContent = `Steps breakdown (${leaderCount} L / ${followerCount} F)`;
+            stepsText.textContent = I18n.t('js.guided.diff.steps_breakdown', [leaderCount, followerCount]);
         }
 
         const linksCheckbox = document.getElementById('import-section-links');
         if (linksCheckbox) linksCheckbox.checked = true;
         const linksText = document.getElementById('import-section-links-text');
         if (linksText) {
-            linksText.textContent = `Resource links (${linksCount})`;
+            linksText.textContent = I18n.t('js.guided.diff.resource_links', linksCount);
         }
 
         // Populate Steps Preview Collapsible
@@ -630,7 +631,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 imported.links.forEach(link => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<span class="font-medium">${link.title || 'Reference Link'}:</span> <a href="${link.url}" target="_blank" class="text-primary hover:underline font-mono break-all">${link.url}</a> (${link.type || 'syllabus'})`;
+                    const refTitle = link.title || I18n.t('js.guided.diff.reference_link');
+                    li.innerHTML = `<span class="font-medium">${refTitle}:</span> <a href="${link.url}" target="_blank" class="text-primary hover:underline font-mono break-all">${link.url}</a> (${link.type || 'syllabus'})`;
                     linksPreviewList.appendChild(li);
                 });
             } else {
@@ -767,7 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const urlInput = lastRow.querySelector('input[name$=".url"]');
                     const typeSelect = lastRow.querySelector('select[name$=".type"]');
 
-                    if (titleInput) titleInput.value = link.title || 'Reference Link';
+                    if (titleInput) titleInput.value = link.title || I18n.t('js.guided.diff.reference_link');
                     if (urlInput) urlInput.value = link.url || '';
                     if (typeSelect) typeSelect.value = link.type || 'syllabus';
                 }
@@ -775,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reindexLinks();
         }
 
-        showToast("Imported data successfully applied to the form!", "success");
+        showToast(I18n.t('js.guided.success.applied'), "success");
         
         // Discard parsed state and switch back to Manual edit view
         discardImport();
@@ -821,7 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtered = history.filter(item => item.danceTypeId === danceTypeId || item.danceTypeId === 'default');
 
         if (filtered.length > 0) {
-            guidedUrlHistory.innerHTML = '<option value="">-- Select a recently used URL --</option>';
+            guidedUrlHistory.innerHTML = '<option value="">' + I18n.t('figures.guided.select_recent_url') + '</option>';
             filtered.forEach(item => {
                 const opt = document.createElement('option');
                 opt.value = item.url;
@@ -903,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.innerHTML = `
             ${renderIcon(icon, { size: 'md' })}
             <p class="text-xs font-medium">${message}</p>
-            <button type="button" class="ml-auto text-outline hover:text-on-surface shrink-0 js-toast-close" aria-label="Close">
+            <button type="button" class="ml-auto text-outline hover:text-on-surface shrink-0 js-toast-close" aria-label="${I18n.t('common.close')}">
                 ${renderIcon('close', { size: 'sm' })}
             </button>
         `;
