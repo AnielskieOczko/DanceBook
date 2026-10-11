@@ -276,7 +276,34 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         updateDefaultSetSelection("0");
     }
+
+    // Auto-resize dense textareas to fit content with no inner scrollbar or clipping
+    autoResizeAllTextareas();
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.classList.contains('dense-textarea')) {
+            autoResizeTextarea(e.target);
+        }
+    });
+    window.addEventListener('resize', () => {
+        autoResizeAllTextareas();
+    });
 });
+
+// Auto-resize dense textareas to fit content with no inner scrollbar or clipping
+function autoResizeTextarea(textarea) {
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    if (textarea.scrollHeight === 0) return;
+    const style = window.getComputedStyle(textarea);
+    const borderBoxDelta = (parseFloat(style.borderTopWidth) || 0) + (parseFloat(style.borderBottomWidth) || 0);
+    const targetHeight = textarea.scrollHeight + borderBoxDelta + 4;
+    textarea.style.height = Math.max(52, targetHeight) + 'px';
+}
+
+function autoResizeAllTextareas(container) {
+    const root = container || document;
+    root.querySelectorAll('.dense-textarea').forEach(autoResizeTextarea);
+}
 
 // -------------------------------------------------------------
 // Medal Badge Render Helper (5 directions: A, B, C, D, D2)
@@ -376,7 +403,11 @@ function setActiveStepSet(index) {
 
     document.querySelectorAll('.js-step-set-panel').forEach(panel => {
         const idx = panel.getAttribute('data-set-idx');
-        panel.classList.toggle('hidden', idx !== index.toString());
+        const isMatch = idx === index.toString();
+        panel.classList.toggle('hidden', !isMatch);
+        if (isMatch) {
+            autoResizeAllTextareas(panel);
+        }
     });
 }
 
@@ -424,16 +455,21 @@ function switchRoleView(panel, role) {
         btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
 
+    const isBoth = role === 'both';
+    const isLeader = role === 'LEADER';
+    const isFollower = role === 'FOLLOWER';
+
+    const tableWrapper = panel.querySelector('.js-steps-table-wrapper');
+    if (tableWrapper) {
+        tableWrapper.classList.toggle('norole', !isBoth);
+    }
+
     const header = panel.querySelector('.js-steps-header');
     const headerRoleCol = panel.querySelector('.js-col-header-role');
     const roleCols = panel.querySelectorAll('.js-col-role');
     const mobileRoleChips = panel.querySelectorAll('.js-mobile-role-chip');
     const addLeaderBtn = panel.querySelector('.js-add-leader-btn');
     const addFollowerBtn = panel.querySelector('.js-add-follower-btn');
-
-    const isBoth = role === 'both';
-    const isLeader = role === 'LEADER';
-    const isFollower = role === 'FOLLOWER';
 
     const colsBoth = '36px 104px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
     const colsSingle = '36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
@@ -457,6 +493,7 @@ function switchRoleView(panel, role) {
 
     if (addLeaderBtn) addLeaderBtn.classList.toggle('hidden', isFollower);
     if (addFollowerBtn) addFollowerBtn.classList.toggle('hidden', isLeader);
+    autoResizeAllTextareas(panel);
 }
 
 function reindexStepSets() {
@@ -489,6 +526,8 @@ function reindexStepSets() {
             const num = i + 1;
             const display = row.querySelector('.step-number-display');
             if (display) display.textContent = num;
+            const displayFull = row.querySelector('.step-number-display-full');
+            if (displayFull) displayFull.textContent = I18n.t('figures.form.steps.step_number', num);
             const numInput = row.querySelector('.step-number');
             if (numInput) numInput.value = num;
             row.setAttribute('data-step-number', num);
@@ -500,6 +539,8 @@ function reindexStepSets() {
             const num = i + 1;
             const display = row.querySelector('.step-number-display');
             if (display) display.textContent = num;
+            const displayFull = row.querySelector('.step-number-display-full');
+            if (displayFull) displayFull.textContent = I18n.t('figures.form.steps.step_number', num);
             const numInput = row.querySelector('.step-number');
             if (numInput) numInput.value = num;
             row.setAttribute('data-step-number', num);
@@ -566,13 +607,13 @@ function addStepSet() {
     if (tabsContainer) {
         const tab = document.createElement('button');
         tab.type = 'button';
-        tab.className = 'seg-pill-btn js-step-set-tab';
+        tab.className = 'set-tabs-btn js-step-set-tab';
         tab.setAttribute('data-set-idx', setIdx);
         tab.setAttribute('role', 'tab');
         tab.setAttribute('aria-selected', 'false');
         tab.innerHTML = `
             <span class="js-tab-name-display">${setName}</span>
-            <span class="js-tab-default-indicator text-primary font-bold hidden">✓</span>
+            <span class="js-tab-default-indicator text-primary inline-flex items-center hidden">${renderIcon('check', { size: 'sm' })}</span>
         `;
         tabsContainer.appendChild(tab);
     }
@@ -602,7 +643,7 @@ function addStepSet() {
                        value="${setIdx}" class="sr-only js-set-default-radio" />
                 <input type="hidden" class="js-set-default-hidden" name="stepSets[${setIdx}].isDefault" value="false" />
                 <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[13px] hidden">
-                    ${renderIcon('check_circle', { size: 'sm' })}
+                    ${renderIcon('check', { size: 'sm' })}
                     <span>${I18n.t('figures.form.steps.mark_default')}</span>
                 </span>
                 <button type="button" class="btn-outline btn-sm js-make-default-btn">
@@ -622,16 +663,16 @@ function addStepSet() {
             </div>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div class="seg-pill" role="group" aria-label="${I18n.t('figures.form.aria.which_role')}">
-                <button type="button" class="seg-pill-btn js-view-role-btn active" data-role="LEADER" aria-pressed="true">
+            <div class="seg-pill max-lg:w-full max-lg:flex" role="group" aria-label="${I18n.t('figures.form.aria.which_role')}">
+                <button type="button" class="seg-pill-btn max-lg:flex-1 max-lg:justify-center js-view-role-btn active" data-role="LEADER" aria-pressed="true">
                     <span>${I18n.t('figures.role.leader')}</span>
                     <span class="count text-xs font-semibold opacity-75 js-leader-count">0</span>
                 </button>
-                <button type="button" class="seg-pill-btn js-view-role-btn" data-role="FOLLOWER" aria-pressed="false">
+                <button type="button" class="seg-pill-btn max-lg:flex-1 max-lg:justify-center js-view-role-btn" data-role="FOLLOWER" aria-pressed="false">
                     <span>${I18n.t('figures.role.follower')}</span>
                     <span class="count text-xs font-semibold opacity-75 js-follower-count">0</span>
                 </button>
-                <button type="button" class="seg-pill-btn js-view-role-btn" data-role="both" aria-pressed="false">
+                <button type="button" class="seg-pill-btn max-lg:flex-1 max-lg:justify-center js-view-role-btn" data-role="both" aria-pressed="false">
                     <span>${I18n.t('figures.form.steps.side_by_side')}</span>
                 </button>
             </div>
@@ -651,18 +692,18 @@ function addStepSet() {
                 </button>
             </div>
         </div>
-        <div class="js-steps-table-wrapper w-full overflow-x-auto hidden">
-            <div class="hidden md:grid gap-2 items-center pb-2 border-b border-outline text-xs font-semibold text-on-surface-variant js-steps-header"
-                 style="grid-template-columns: 36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px;">
+        <div class="js-steps-table-wrapper w-full steps-table norole hidden">
+            <div class="hidden lg:grid gap-2 items-center pb-2 border-b border-outline text-xs font-semibold text-on-surface-variant js-steps-header"
+                 style="grid-template-columns: var(--cols);">
                 <div class="text-center">${I18n.t('figures.form.steps.th.number')}</div>
-                <div class="js-col-header-role hidden pl-2">${I18n.t('figures.view.steps.th.role')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.timing')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.foot')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.action')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.footwork')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.alignment')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.turn')}</div>
-                <div class="pl-2">${I18n.t('figures.form.steps.th.comments')}</div>
+                <div class="js-col-header-role hidden pl-3.5">${I18n.t('figures.view.steps.th.role')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.timing')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.foot')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.action')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.footwork')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.alignment')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.turn')}</div>
+                <div class="pl-3.5">${I18n.t('figures.form.steps.th.comments')}</div>
                 <div class="text-center"><span class="sr-only">${I18n.t('figures.form.steps.remove_step')}</span></div>
             </div>
             <div class="js-steps-rows-container divide-y divide-border">
@@ -724,8 +765,8 @@ function addStepRow(panel, role) {
     if (!tbody) return;
 
     const tr = document.createElement('div');
-    tr.className = `step-row py-2 md:py-1.5 grid gap-2 items-start ${!isLeader ? 'step-row-follower' : ''}`;
-    tr.style.gridTemplateColumns = '36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
+    tr.className = `step-row py-4.5 lg:py-1.5 flex flex-wrap lg:grid gap-3 lg:gap-2 items-start border-b border-border ${!isLeader ? 'step-row-follower' : ''}`;
+    tr.style.gridTemplateColumns = 'var(--cols)';
     tr.setAttribute('data-role', role);
 
     const roleName = isLeader ? I18n.t('figures.role.leader') : I18n.t('figures.role.follower');
@@ -738,52 +779,50 @@ function addStepRow(panel, role) {
         <input type="hidden" class="step-role" name="stepSets[0].steps[0].role" value="${role}" />
         <input type="hidden" class="step-number" name="stepSets[0].steps[0].stepNumber" value="1" />
 
-        <div class="c-n pt-2 text-center font-semibold text-[13px] text-on-surface max-md:col-span-full max-md:flex max-md:items-center max-md:justify-between">
-            <span class="step-number-display">1</span>
-            <div class="md:hidden flex items-center gap-2">
-                <span class="role-chip js-mobile-role-chip hidden">${roleChipHtml}</span>
+        <div class="c-head flex lg:contents items-center gap-2.5 w-full">
+            <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[15px] lg:text-[13px] text-on-surface">
+                <span class="max-lg:hidden step-number-display">1</span>
+                <span class="lg:hidden step-number-display-full">${I18n.t('figures.form.steps.step_number', 1)}</span>
+            </div>
+
+            <div class="c-role js-col-role hidden pt-0 lg:pt-1">
+                ${roleChipHtml}
+            </div>
+
+            <div class="c-x ml-auto lg:ml-0 lg:order-99 pt-0 lg:pt-1 text-center">
                 <button type="button" class="btn-icon text-on-surface-variant hover:text-danger js-remove-step-btn" aria-label="${I18n.t('figures.form.steps.remove_step')}">
                     ${renderIcon('delete', { size: 'sm' })}
                 </button>
             </div>
         </div>
 
-        <div class="c-role js-col-role hidden pt-1">
-            ${roleChipHtml}
-        </div>
-
-        <div class="max-md:col-span-1">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.timing')}</label>
+        <div class="min-w-0 basis-[calc(50%-6px)] lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.timing')}</label>
             <input type="text" name="stepSets[0].steps[0].timing" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.timing')}" />
         </div>
-        <div class="max-md:col-span-1">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.foot')}</label>
+        <div class="min-w-0 basis-[calc(50%-6px)] lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.foot')}</label>
             <input type="text" name="stepSets[0].steps[0].foot" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.foot')}" />
         </div>
-        <div class="max-md:col-span-full">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.action')}</label>
+        <div class="min-w-0 basis-full lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.action')}</label>
             <input type="text" name="stepSets[0].steps[0].action" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.action')}" />
         </div>
-        <div class="max-md:col-span-1">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.footwork')}</label>
+        <div class="min-w-0 basis-[calc(50%-6px)] lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.footwork')}</label>
             <input type="text" name="stepSets[0].steps[0].footwork" class="dense-input" placeholder="${I18n.t('figures.form.steps.th.footwork')}" />
         </div>
-        <div class="max-md:col-span-1">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.alignment')}</label>
+        <div class="min-w-0 basis-[calc(50%-6px)] lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.alignment')}</label>
             <input type="text" name="stepSets[0].steps[0].alignment" class="dense-input" placeholder="${I18n.t('figures.form.steps.th.alignment')}" />
         </div>
-        <div class="max-md:col-span-full">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.turn')}</label>
+        <div class="min-w-0 basis-full lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.turn')}</label>
             <input type="text" name="stepSets[0].steps[0].amountOfTurn" class="dense-input" placeholder="${I18n.t('figures.view.steps.th.turn')}" />
         </div>
-        <div class="max-md:col-span-full">
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.comments')}</label>
+        <div class="min-w-0 basis-full lg:basis-auto">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.comments')}</label>
             <textarea name="stepSets[0].steps[0].commentsText" class="dense-textarea" rows="2" placeholder="${I18n.t('figures.form.steps.th.comments')}"></textarea>
-        </div>
-        <div class="c-x hidden md:block pt-1 text-center">
-            <button type="button" class="btn-icon text-on-surface-variant hover:text-danger js-remove-step-btn" aria-label="${I18n.t('figures.form.steps.remove_step')}">
-                ${renderIcon('delete', { size: 'sm' })}
-            </button>
         </div>
     `;
 
@@ -905,27 +944,27 @@ function addLinkRow() {
 
     const totalIndex = document.querySelectorAll('.link-row').length;
     const tr = document.createElement('div');
-    tr.className = 'link-row py-2 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_140px_36px] gap-2 items-center';
+    tr.className = 'link-row py-3 lg:py-1.5 grid grid-cols-[minmax(0,1fr)_36px] lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_150px_36px] gap-2 items-center border-b border-border';
 
     tr.innerHTML = `
-        <div>
+        <div class="col-span-1 min-w-0">
             <input type="hidden" name="links[${totalIndex}].id" value="" />
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.title')}</label>
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.title')}</label>
             <input type="text" name="links[${totalIndex}].title" class="dense-input" placeholder="${I18n.t('figures.form.links.title_placeholder')}" />
         </div>
-        <div>
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.url')}</label>
+        <div class="col-span-full lg:col-span-1 min-w-0">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.url')}</label>
             <input type="text" name="links[${totalIndex}].url" required class="dense-input" placeholder="https://" />
         </div>
-        <div>
-            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.type')}</label>
+        <div class="col-span-full lg:col-span-1 min-w-0">
+            <label class="lg:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.type')}</label>
             <select name="links[${totalIndex}].type" class="dense-select">
                 <option value="video">${I18n.t('figures.form.links.type.video')}</option>
                 <option value="syllabus">${I18n.t('figures.form.links.type.syllabus')}</option>
                 <option value="other">${I18n.t('figures.form.links.type.other')}</option>
             </select>
         </div>
-        <div class="flex justify-end md:justify-center">
+        <div class="col-start-2 row-start-1 lg:col-auto lg:row-auto flex justify-end lg:justify-center">
             <button type="button" aria-label="${I18n.t('figures.form.links.remove')}" class="btn-icon text-on-surface-variant hover:text-danger js-remove-link-btn">
                 ${renderIcon('delete', { size: 'sm' })}
             </button>

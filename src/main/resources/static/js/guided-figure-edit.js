@@ -67,19 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
         switchMainTab('GUIDED');
     });
 
+    // The two mode buttons are seg-pill buttons: the shared .active / aria-pressed state is the
+    // whole look, so swap those and leave their classes alone.
+    function setActiveModeTab(active, inactive) {
+        active.classList.add('active');
+        active.setAttribute('aria-pressed', 'true');
+        inactive.classList.remove('active');
+        inactive.setAttribute('aria-pressed', 'false');
+    }
+
     function switchMainTab(tab) {
         if (tab === 'MANUAL') {
             figureForm.classList.remove('hidden');
             guidedEditPanel.classList.add('hidden');
-            
-            manualEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
-            guidedEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
+            setActiveModeTab(manualEditTabBtn, guidedEditTabBtn);
         } else {
             figureForm.classList.add('hidden');
             guidedEditPanel.classList.remove('hidden');
-            
-            manualEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all text-on-surface-variant hover:text-on-surface';
-            guidedEditTabBtn.className = 'px-4 py-1.5 rounded-md font-medium transition-all bg-white shadow-xs text-primary font-semibold';
+            setActiveModeTab(guidedEditTabBtn, manualEditTabBtn);
             
             // Auto-load models and history if not loaded
             loadModels();
