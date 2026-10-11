@@ -36,6 +36,7 @@ p{margin:0}
 .jump a:hover{background:var(--surface-container)}
 .cap{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface-variant);margin-bottom:8px}
 .pair{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.phonerow>div:first-child{max-width:100%;min-width:0}
 .phonerow{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
 .phone{width:375px;max-width:100%;height:780px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--outline);border-radius:28px;background:var(--surface);position:relative}
 .frame{border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface);overflow:clip;padding:24px}
@@ -102,7 +103,7 @@ button:focus-visible,a:focus-visible,.cell:focus-visible{outline:none;box-shadow
 .link:hover{text-decoration:underline}
 .meta{font-size:12px;color:var(--outline);border-top:1px solid var(--hair);padding-top:10px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-.sessgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+.sessgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:12px}
 .compact .sessgrid{grid-template-columns:1fr}
 .detailhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:20px 0 10px}
 .detailhead h3{font-size:16px}
@@ -210,6 +211,77 @@ button:focus-visible,a:focus-visible,.cell:focus-visible{outline:none;box-shadow
 .weekstrip{display:flex;gap:6px;margin:8px 0 12px}
 .weekstrip button{flex:1;border:1px solid var(--hair);background:var(--surface);border-radius:var(--r-inset);padding:6px 0;font:600 12px/1.2 var(--font-sans);cursor:pointer;color:var(--on-surface-variant)}
 .weekstrip button[aria-pressed="true"]{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+
+/* ===== direction 4: fitted bubbles, no horizontal scroll ===== */
+.f-desk{position:relative;border:1px solid var(--hair);border-radius:var(--r-card);padding:0 16px 12px;overflow:hidden}
+.f-lane{position:relative;height:70px;border-bottom:1px dashed var(--hair)}
+.f-plot{position:relative;height:120px}
+.f-axis{position:relative;height:26px;border-top:1px solid var(--outline)}
+.f-axis span{position:absolute;top:4px;transform:translateX(-50%);font-size:10px;color:var(--on-surface-variant);white-space:nowrap}
+.f-axis span.maj{font-weight:700;color:var(--on-surface);font-size:11px;transform:none}
+.f-axis i{position:absolute;top:0;height:6px;border-left:1px solid var(--outline)}
+.f-roll{position:relative;height:46px;margin-top:6px}
+.f-seg{position:absolute;top:0;bottom:0;padding:0 3px}
+.f-seg>div{height:100%;border:1px solid var(--hair);border-radius:var(--r-inset);background:var(--surface-container);display:flex;align-items:center;gap:8px;padding:0 8px;overflow:hidden;font-size:12px;font-weight:600;white-space:nowrap}
+.f-sp{position:absolute;bottom:0;width:calc(100%/26 - 4px);transform:translateX(-50%);border-radius:4px 4px 0 0;background:var(--primary);min-height:2px}
+.f-sp.part{background:color-mix(in srgb,var(--primary) 35%,white)}
+.f-spline{position:relative;height:46px;border-bottom:1px solid var(--hair)}
+.fw{display:flex;flex-direction:column;align-items:center;gap:3px}
+.fw.abs{position:absolute;bottom:4px;transform:translateX(-50%)}
+.sds{display:flex;gap:2px;height:6px}.sds i{width:6px;height:6px;border-radius:50%}
+.fb{position:relative;border-radius:50%;display:grid;place-items:center;border:2px solid var(--primary);background:var(--primary);color:#fff;font:700 13px/1 var(--font-sans);cursor:pointer;padding:0;flex:none;transition:box-shadow .15s}
+.fb:hover{box-shadow:0 0 0 4px var(--ring)}
+.fb.sel{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--primary)}
+.fb.skipped{background:var(--surface);border-color:var(--error);color:var(--error)}
+.fb.cancelled{background:var(--error-soft);border-color:var(--error);color:var(--error)}
+.fb.unconfirmed{background:var(--warning-soft);border-color:var(--warning);color:var(--warning)}
+.fb.upcoming{background:var(--surface);border:2px dashed var(--primary);color:var(--primary)}
+.fb .ov{position:absolute;right:-5px;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--surface);color:var(--st);border:1.5px solid var(--st);display:grid;place-items:center}
+.fb .ov .ms{font-size:11px;font-variation-settings:'wght' 700}
+.fb.mini{border-width:1.5px}
+.ring{--p:0;width:34px;height:34px;border-radius:50%;background:conic-gradient(var(--primary) calc(var(--p)*1%),var(--surface-highest) 0);display:grid;place-items:center;flex:none}
+.ring i{width:26px;height:26px;border-radius:50%;background:var(--surface-container);display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:700;color:var(--primary)}
+.ring.sm{width:28px;height:28px}.ring.sm i{width:21px;height:21px}
+.hb{height:8px;border-radius:var(--r-pill);background:var(--surface-highest);overflow:hidden;flex:1;min-width:20px}.hb b{display:block;height:100%;background:var(--primary);border-radius:var(--r-pill)}
+.ic{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.ic .ms{color:var(--primary)}
+.chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chipbar .ic{border:1px solid var(--hair);border-radius:var(--r-pill);padding:6px 14px 6px 10px;font-size:15px;min-height:40px}
+.f-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.f-wk>div{border:1px solid var(--hair);border-radius:var(--r-card);min-height:150px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--surface)}
+.f-wk .dh{font-size:11px;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.05em;text-align:center}.f-wk .dh b{display:block;font-size:20px;color:var(--on-surface);letter-spacing:0}
+.f-wk .tm{font-size:11px;color:var(--on-surface-variant)}
+.f-wk .tdy{border-color:var(--primary);background:var(--primary-soft)}
+.f-strk{position:absolute;top:8px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--bronze);white-space:nowrap}
+.f-strk i{width:30px;height:30px;border-radius:50%;border:1.5px dashed currentColor;display:grid;place-items:center;font-style:normal;background:var(--surface)}
+.f-strk.s{color:var(--silver)}.f-strk.g{color:var(--gold)}
+.f-today{position:absolute;top:0;bottom:0;border-left:2px solid var(--primary);z-index:2;pointer-events:none}
+.f-today span{position:absolute;top:4px;left:5px;background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:1px 4px;display:grid;place-items:center}
+/* vertical spine (phone) */
+.v-spine{position:relative;display:flex;flex-direction:column;gap:6px}
+.vmh{display:flex;align-items:center;gap:10px;margin:10px 0 2px;font-weight:700;font-size:15px}
+.vmh .hb{max-width:120px}
+.vrow{display:grid;grid-template-columns:40px 36px minmax(0,1fr);align-items:center;min-height:44px;cursor:pointer;border-radius:var(--r-inset)}
+.vrow.sel{background:var(--primary-soft)}
+.vrow .lb{font-size:11px;color:var(--on-surface-variant);text-align:right;padding-right:8px;line-height:1.1}.vrow .lb b{display:block;font-size:14px;color:var(--on-surface)}
+.vrow .sp{position:relative;display:grid;place-items:center;align-self:stretch}
+.vrow .sp::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px solid var(--hair)}
+.vrow .sp .fw{position:relative;z-index:1;background:transparent}
+.vrow .ct{display:flex;align-items:center;gap:6px;padding-left:8px;min-width:0}
+.vstrk{margin-left:40px;display:flex;align-items:center;gap:8px;border:1.5px dashed var(--primary);border-radius:var(--r-pill);padding:4px 12px 4px 8px;color:var(--primary);font-weight:700;background:var(--primary-soft);width:max-content;max-width:100%}
+.vwk{border:1px solid var(--hair);border-radius:var(--r-card);padding:8px 8px 10px;display:flex;flex-direction:column;gap:6px}
+.vwk .hd{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--on-surface-variant)}
+.vwk .hd .ic{color:var(--on-surface)}
+.vdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.vdays>div{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--on-surface-variant);min-height:54px;border-radius:var(--r-inset);padding:2px 0}
+.vdays>div.tdy{background:var(--primary-soft)}
+.vdays>div.off{opacity:.35}
+.vdayrow{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:8px;border-bottom:1px solid var(--hair);padding:6px 0;min-height:56px}
+.vdayrow .dh{font-size:11px;color:var(--on-surface-variant);text-transform:uppercase;text-align:center}.vdayrow .dh b{display:block;font-size:18px;color:var(--on-surface)}
+.vdayrow .cs{display:flex;gap:10px;flex-wrap:wrap}
+.f-nav{display:flex;gap:6px;align-items:center}
+.pick{display:inline-block;margin-left:6px;background:var(--primary);color:#fff;border-radius:var(--r-pill);font-size:11px;padding:2px 8px;vertical-align:middle}
+@media (max-width:480px){.frame{padding:12px}.f-desk{padding:0 8px 8px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -219,9 +291,9 @@ button:focus-visible,a:focus-visible,.cell:focus-visible{outline:none;box-shadow
 <header>
   <h1>Training timeline: three directions</h1>
   <p class="lede">Today the Training page's timeline reads like the calendar turned on its side: one card per session, month after month. These three directions each answer a different question. Where am I in the season? What did the week add up to? How consistent have I been, and what happened on that one day? Each is interactive and shown at desktop width and in a 375px phone frame. Every session carries the full detail the app records. The three directions share one dataset, so you can compare them directly.</p>
-  <p class="note" style="margin-top:12px">Mock data runs 4 May to 1 Nov 2026, with today set to Sun 11 Oct. It includes weekly series, a workshop, a competition, a three-day camp, skipped and cancelled sessions, and past sessions still unconfirmed. Dashed medal slots mark where badges from #35 and #39 will go. The badge designs themselves belong to those issues. Try the "I attended" and "I skipped" buttons on an unconfirmed session and watch all views update.</p>
+  <p class="note" style="margin-top:12px"><b>Status:</b> direction 2 (journey feed) is the provisional pick while direction 4 is explored. Direction 4 combines the cluster bubbles, icons and zoom of 1 with the weekly rollup and streak markers of 2, drawn as graphics, with no horizontal scrolling. Mock data runs 4 May to 1 Nov 2026, with today set to Sun 11 Oct. It includes weekly series, a workshop, a competition, a three-day camp, skipped and cancelled sessions, and past sessions still unconfirmed. Dashed medal slots mark where badges from #35 and #39 will go. The badge designs themselves belong to those issues. Try the "I attended" and "I skipped" buttons on an unconfirmed session and watch all views update.</p>
   <nav class="jump" aria-label="Directions">
-    <a href="#d1">1 Zoomable timeline</a><a href="#d2">2 Journey feed</a><a href="#d3">3 Season heat-strip</a>
+    <a href="#d1">1 Zoomable timeline</a><a href="#d2">2 Journey feed <span class="pick">current pick</span></a><a href="#d3">3 Season heat-strip</a><a href="#d4">4 Fitted bubbles (1 + 2)</a>
   </nav>
 </header>
 
@@ -259,6 +331,18 @@ button:focus-visible,a:focus-visible,.cell:focus-visible{outline:none;box-shadow
       <li>Outcomes keep distinct marks, so colour never carries the meaning alone: skipped is an outlined cell, cancelled is struck through, unconfirmed has a warning pip, upcoming is hatched.</li>
       <li>Drill-down reuses the same session detail as the session page, with Note link, segments and attendance actions.</li>
       <li>Trade-off: titles are hidden until you open a day.</li></ul></div></div>
+</section>
+
+<section class="sheet" id="d4">
+  <div><h2>4 &middot; Fitted bubbles: direction 1 meets direction 2 <span class="pick" style="background:var(--surface-container);color:var(--on-surface-variant)">exploring</span></h2>
+  <p class="note" style="margin-top:6px">Same bubbles, icons, streak lane and Season / Month / Week zoom as direction 1, but the range always fits the width: weeks across on desktop, a vertical spine on a phone. Weekly rollups and streaks are small graphics (rings, bars, icon plus number). Use the arrows to move through months and weeks; tap anything for the full session.</p></div>
+  <div class="pair"><div><div class="cap">Desktop</div><div class="frame" id="d4-desk"></div></div></div>
+  <div class="phonerow"><div><div class="cap">375px</div><div class="phone"><div class="frame compact" id="d4-mob"></div></div></div>
+    <div class="why"><h3>What it is good at</h3><ul>
+      <li>No sideways scrolling at any width: zoom changes the range, arrows move the window.</li>
+      <li>Icon = session kind (style, competition, camp, workshop); size = time trained; corner mark = outcome; coloured dots = styles.</li>
+      <li>Ring = attendance for the week, bar = hours; the dashed medals in the streak lane are the #35 / #39 slots.</li>
+      <li>Trade-off: the exact times and titles live in the tap panel, not on the chart.</li></ul></div></div>
 </section>
 
 </div>
@@ -513,9 +597,108 @@ function dir3(el, compact){
   el.addEventListener('click',ev=>{ const c=ev.target.closest('[data-d]'); if(c){ sel=+c.dataset.d; render(); const b=el.querySelector('.cell.sel'); } });
   views.push(render); render();
 }
+
+/* ================= DIRECTION 4 ================= */
+function dir4(el, compact){
+  let level=0, month=9, week=weekIdx(TODAY), sel=null;
+  const SI={Standard:'accessibility_new',Latin:'music_note',Social:'celebration'};
+  const OI={attended:'check',skipped:'remove',cancelled:'close',unconfirmed:'question_mark',upcoming:'schedule'};
+  const evIcon=e=> e.eventType==='COMPETITION'?'emoji_events':e.eventType==='CAMP'?'camping':e.eventType==='WORKSHOP'?'school':(e.segments[0]?SI[e.segments[0][0]]:'sports_gymnastics');
+  const wkEv = w => events.filter(e=>weekIdx(e.start)===w);
+  const monthEv = m => events.filter(e=>e.start.getMonth()===m);
+  const nx = events.find(e=>e.end>TODAY && e.status!=='CANCELLED'); sel=[nx.id];
+  const gk = g => { const ks=g.map(key); return ks.every(x=>x==='upcoming')?'upcoming':ks.includes('unconfirmed')?'unconfirmed':ks.every(x=>x==='skipped')?'skipped':ks.every(x=>x==='cancelled')?'cancelled':'attended'; };
+  const dia = (m,cap,base)=>Math.round(Math.min(cap, base+Math.sqrt(m)*(cap/16)));
+  function dots(g){ const cats=[...new Set(g.flatMap(e=>e.segments.map(x=>x[0])))]; return `<span class="sds">${cats.map(c=>`<i style="background:${catColor(c)}"></i>`).join('')}</span>`; }
+  function bub(g,d,style='',abs=false,showDots=true){
+    const k=gk(g), ids=g.map(e=>e.id), on=sel&&ids.some(i=>sel.includes(i)), mins=g.reduce((a,e)=>a+e.dur,0);
+    const tt = g.length===1? `${g[0].title}, ${hhmm(g[0].start)}`:`${g.length} sessions`;
+    return `<div class="fw ${abs?'abs':''}" style="${style}"><button class="fb ${k} ${on?'sel':''}" style="--st:${ST[k]};width:${d}px;height:${d}px" data-ids="${ids.join(',')}" title="${tt}" aria-label="${tt}, ${fmtDur(mins)}, ${LABEL[k]}">${g.length>1?`<b>${g.length}</b>`:ico(evIcon(g[0]),d>=30?'':'sm')}<span class="ov">${ico(OI[k])}</span></button>${showDots?dots(g):''}</div>`;
+  }
+  function rollGfx(list,sm){ const s=stat(list); const conf=s.att+s.sk; const pct=conf?Math.round(s.att/conf*100):0;
+    return `<span class="ring ${sm?'sm':''}" style="--p:${pct}" title="${s.att} attended, ${s.sk} skipped"><i>${conf?pct:'–'}</i></span><span class="ic">${ico('schedule','sm')}${(s.mins/60).toFixed(1)}</span><span class="ic">${ico('event','sm')}${s.n}</span>${s.unc?`<span class="ic" style="color:var(--warning)">${ico('question_mark','sm')}${s.unc}</span>`:''}`; }
+  function strkChip(e,pos){ const metal=e.milestone>=30?'g':e.milestone>=20?'s':''; return `<div class="f-strk ${metal}" style="left:${pos}%" title="Badge slot: ${e.milestone} in a row (#39)"><i>${ico('local_fire_department','sm fill')}</i>${e.milestone}</div>`; }
+  function range(){ if(level===0) return [START, new Date(START.getTime()+DAYS*MS)]; if(level===1) return [new Date(2026,month,1), new Date(2026,month+1,1)]; const a=new Date(START.getTime()+week*7*MS); return [a,new Date(a.getTime()+7*MS)]; }
+  const pos = (d,[a,b]) => Math.max(0,Math.min(100,(d-a)/(b-a)*100));
+  function title(){ if(level===0) return 'May – Oct 2026'; if(level===1) return MOF[month]+' 2026'; const a=new Date(START.getTime()+week*7*MS), b=new Date(a.getTime()+6*MS); return `${MO[a.getMonth()]} ${a.getDate()} – ${MO[b.getMonth()]} ${b.getDate()}`; }
+  function visible(){ return level===0?events:level===1?monthEv(month):wkEv(week); }
+
+  function desktop(){
+    const R=range(); const [a,b]=R; let lane='',plot='',axis='',roll='',today='';
+    visible().filter(e=>e.milestone).forEach(e=>lane+=strkChip(e,pos(e.start,R)));
+    if(TODAY>=a && TODAY<b) today=`<div class="f-today" style="left:calc(16px + (100% - 32px)*${pos(TODAY,R)/100})"><span>${ico('my_location','sm')}</span></div>`;
+    if(level===0){
+      for(let w=0;w<26;w++){ const l=wkEv(w); const x=(w+.5)/26*100; if(l.length){ plot+=bub(l,dia(l.reduce((q,e)=>q+e.dur,0),38,12),`left:${x}%`,true,false);} }
+      for(let m=4;m<=10;m++){ const d=new Date(2026,m,1); const x=Math.max(0,pos(d,R)); axis+=`<i style="left:${x}%"></i><span class="maj" style="left:${x}%;padding-left:4px">${MO[m]}</span>`; }
+      const maxH=Math.max(...[...Array(26).keys()].map(w=>stat(wkEv(w)).mins||0),1);
+      let sp=''; for(let w=0;w<26;w++){ const s=stat(wkEv(w)); const h=Math.max(2,(s.mins/maxH)*42); sp+=`<div class="f-sp ${s.mins?'':'part'}" style="left:${(w+.5)/26*100}%;height:${s.mins?h:(wkEv(w).length?6:0)}px" title="Week ${w+1}: ${(s.mins/60).toFixed(1)} h"></div>`; }
+      roll=`<div class="f-spline" aria-label="Hours per week">${sp}</div>`;
+    } else if(level===1){
+      const n=Math.round((b-a)/MS);
+      const byd=new Map(); visible().forEach(e=>{const d=e.start.getDate(); if(!byd.has(d))byd.set(d,[]); byd.get(d).push(e);});
+      byd.forEach((g,d)=>plot+=bub(g,dia(g.reduce((q,e)=>q+e.dur,0),30,16),`left:${(d-.5)/n*100}%`,true));
+      for(let d=1;d<=n;d++){ const dt=new Date(2026,month,d); axis+=`<span style="left:${(d-.5)/n*100}%;${dt.getDay()===1?'font-weight:700;color:var(--on-surface)':''}">${d}</span>`; }
+      for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS), sun=new Date(mon.getTime()+7*MS); if(sun<=a||mon>=b) continue; const s=new Date(Math.max(mon,a)), e2=new Date(Math.min(sun,b)); const l=wkEv(w).filter(e=>e.start.getMonth()===month);
+        roll+=`<div class="f-seg" style="left:${pos(s,R)}%;width:${(e2-s)/(b-a)*100}%"><div>${l.length?rollGfx(l,true):''}</div></div>`; }
+      roll=`<div class="f-roll">${roll}</div>`;
+    } else {
+      const cols=[0,1,2,3,4,5,6].map(i=>{ const d=new Date(a.getTime()+i*MS); const l=events.filter(e=>dayIdx(e.start)===dayIdx(d)); const t=dayIdx(d)===dayIdx(TODAY);
+        return `<div class="${t?'tdy':''}"><div class="dh">${WD[d.getDay()]}<b>${d.getDate()}</b></div>${l.map(e=>bub([e],44,44)+`<span class="tm">${hhmm(e.start)}</span>`).join('')}${l.some(e=>e.milestone)?`<span class="ic" style="color:var(--bronze)">${ico('local_fire_department','sm fill')}${l.find(e=>e.milestone).milestone}</span>`:''}</div>`; }).join('');
+      return `<div class="f-desk" style="padding-top:12px"><div class="chipbar" style="margin-bottom:10px">${rollGfx(wkEv(week),false)}</div><div class="f-wk">${cols}</div></div>`;
+    }
+    return `<div class="f-desk">${today}<div class="f-lane"><span class="tl-lanelabel" style="position:absolute;left:0;padding:6px 0">Streaks &amp; badges</span>${lane}${slotMarks()}</div><div class="f-plot">${plot}</div><div class="f-axis">${axis}</div>${roll}</div>`;
+  }
+  function slotMarks(){ return `<span class="slot" style="position:absolute;left:0;top:30px;min-height:30px"><i>${ico('workspace_premium','sm')}</i>Badge slot</span>`; }
+
+  function phone(){
+    let out='';
+    const strk=e=>`<div class="vstrk">${ico('local_fire_department','fill')}${e.milestone}<span class="slot" style="min-height:26px;padding:0 10px 0 4px;border-width:1px"><i style="width:18px;height:18px">${ico('workspace_premium','sm')}</i></span></div>`;
+    const todayRow = `<div class="vstrk" style="border-style:solid;background:var(--primary);color:#fff">${ico('my_location','sm')}</div>`;
+    if(level===0){
+      const maxM=Math.max(...[...Array(26).keys()].map(w=>stat(wkEv(w)).mins),1); let lastM=-1, todayDone=false;
+      for(let w=0;w<26;w++){ const l=wkEv(w), mon=new Date(START.getTime()+w*7*MS); const mIdx=new Date(mon.getTime()+3*MS).getMonth();
+        if(mIdx!==lastM){ lastM=mIdx; const ml=monthEv(mIdx); out+=`<div class="vmh">${MO[mIdx]}<span class="ic" style="font-weight:600;font-size:12px">${rollGfx(ml,true)}</span></div>`; }
+        const mins=l.reduce((q,e)=>q+e.dur,0), s=stat(l); const ids=l.map(e=>e.id); const on=sel&&ids.some(i=>sel.includes(i)); const isNow=weekIdx(TODAY)===w;
+        out+=`<div class="vrow ${on?'sel':''}" data-ids="${ids.join(',')}" role="button" tabindex="0" aria-label="Week ${w+1}"><div class="lb"><b>${mon.getDate()}</b>${MO[mon.getMonth()]}</div><div class="sp">${l.length?bub(l,dia(mins,34,12),'',false,false):''}</div><div class="ct">${isNow?`<span style="color:var(--primary)">${ico('my_location','sm')}</span>`:''}${l.slice(0,5).map(e=>`<button class="fb mini ${key(e)}" style="--st:${ST[key(e)]};width:24px;height:24px" tabindex="-1" data-ids="${e.id}" title="${e.title}">${ico(evIcon(e),'sm')}</button>`).join('')}<span class="hb" title="${(mins/60).toFixed(1)} h"><b style="width:${mins/maxM*100}%"></b></span></div></div>`;
+        l.filter(e=>e.milestone).forEach(e=>out+=strk(e));
+      }
+    } else if(level===1){
+      const [a,b]=range(); out+=`<div class="chipbar" style="margin-bottom:8px">${rollGfx(monthEv(month),false)}</div>`;
+      for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS), sun=new Date(mon.getTime()+7*MS); if(sun<=a||mon>=b) continue; const l=wkEv(w).filter(e=>e.start.getMonth()===month);
+        const days=[0,1,2,3,4,5,6].map(i=>{ const d=new Date(mon.getTime()+i*MS); const g=l.filter(e=>dayIdx(e.start)===dayIdx(d)); const off=d.getMonth()!==month; const t=dayIdx(d)===dayIdx(TODAY);
+          return `<div class="${off?'off':''} ${t?'tdy':''}">${WD[d.getDay()].slice(0,2)} ${d.getDate()}${g.length?bub(g,dia(g.reduce((q,e)=>q+e.dur,0),34,22)):''}</div>`; }).join('');
+        out+=`<div class="vwk"><div class="hd">${rollGfx(l,true)}</div><div class="vdays">${days}</div>${l.filter(e=>e.milestone).map(strk).join('')}</div>`; }
+      out=`<div class="v-spine">${out}</div>`;
+    } else {
+      const a=range()[0]; out+=`<div class="chipbar" style="margin-bottom:4px">${rollGfx(wkEv(week),false)}</div>`;
+      for(let i=0;i<7;i++){ const d=new Date(a.getTime()+i*MS); const l=events.filter(e=>dayIdx(e.start)===dayIdx(d));
+        out+=`<div class="vdayrow"><div class="dh">${WD[d.getDay()]}<b>${d.getDate()}</b></div><div class="cs">${l.map(e=>`<div style="display:flex;align-items:center;gap:6px">${bub([e],44,44)}<span class="tm" style="font-size:12px;color:var(--on-surface-variant)">${hhmm(e.start)}</span>${e.milestone?`<span class="ic" style="color:var(--bronze)">${ico('local_fire_department','sm fill')}${e.milestone}</span>`:''}</div>`).join('')}</div></div>`; }
+    }
+    return level===1?out:`<div class="v-spine">${out}</div>`;
+  }
+  function render(){
+    const sessions = sel?sel.map(i=>events.find(e=>e.id===i)):[];
+    el.innerHTML = `${pageHead('Zoom, step through time, tap a bubble.')}
+      <div class="chipbar">${rollGfx(events,false).replace('ring ','ring ')}<span class="ic">${ico('local_fire_department','fill')}${STREAK}</span><span class="slot bronze"><i>${ico('workspace_premium','sm')}</i>#35</span><span class="slot silver"><i>${ico('workspace_premium','sm')}</i>#39</span><span class="slot gold"><i>${ico('workspace_premium','sm')}</i></span></div>
+      <div class="toolbar" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Zoom">${['Season','Month','Week'].map((n,i)=>`<button type="button" data-lv="${i}" aria-pressed="${i===level}">${ico(['zoom_out_map','calendar_view_month','calendar_view_week'][i],'sm')}${n}</button>`).join('')}</div>
+        <div class="f-nav">${level?`<button class="btn btn-outline sm" data-nav="-1" aria-label="Previous">${ico('chevron_left','sm')}</button><b style="min-width:${compact?96:130}px;text-align:center">${title()}</b><button class="btn btn-outline sm" data-nav="1" aria-label="Next">${ico('chevron_right','sm')}</button>`:`<b>${title()}</b>`}<button class="btn btn-outline sm" data-today aria-label="Today">${ico('my_location','sm')}</button></div></div>
+      ${compact?phone():desktop()}${states()}
+      ${sessions.length?`<div class="detailhead"><h3>${sessions.length} session${sessions.length>1?'s':''} · ${fmtDur(sessions.reduce((q,e)=>q+e.dur,0))}</h3></div><div class="sessgrid">${sessions.map(sessionFull).join('')}</div>`:''}`;
+  }
+  el.addEventListener('click',ev=>{
+    const lv=ev.target.closest('[data-lv]'), nv=ev.target.closest('[data-nav]'), t=ev.target.closest('[data-ids]');
+    if(lv){ const n=+lv.dataset.lv; if(n===1&&sel&&level!==1) month=events.find(e=>e.id===sel[0]).start.getMonth(); if(n===2&&sel) week=weekIdx(events.find(e=>e.id===sel[0]).start); level=n; render(); }
+    else if(nv){ const d=+nv.dataset.nav; if(level===1) month=Math.max(4,Math.min(10,month+d)); else week=Math.max(0,Math.min(25,week+d)); render(); }
+    else if(ev.target.closest('[data-today]')){ month=TODAY.getMonth(); week=weekIdx(TODAY); render(); }
+    else if(t){ sel=t.dataset.ids.split(','); render(); }
+  });
+  el.addEventListener('keydown',ev=>{ if((ev.key==='Enter'||ev.key===' ')&&ev.target.classList&&ev.target.classList.contains('vrow')){ ev.preventDefault(); ev.target.click(); } });
+  views.push(render); render();
+}
 dir1(document.getElementById('d1-desk'),false); dir1(document.getElementById('d1-mob'),true);
 dir2(document.getElementById('d2-desk'),false); dir2(document.getElementById('d2-mob'),true);
-dir3(document.getElementById('d3-desk'),false); dir3(document.getElementById('d3-mob'),true);
+dir3(document.getElementById('d3-desk'),false);
+dir4(document.getElementById('d4-desk'),false); dir4(document.getElementById('d4-mob'),true); dir3(document.getElementById('d3-mob'),true);
 </script>
 </body>
 </html>
