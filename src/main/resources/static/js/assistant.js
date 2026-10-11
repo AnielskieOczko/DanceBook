@@ -1,4 +1,4 @@
-// The assistant widget (#148). Loaded only when the assistant exists (layout.html).
+// The assistant widget (#148, #226). Loaded only when the assistant exists (layout.html).
 // main.js has already run: renderIcon is defined. Listeners go on `document`, never on
 // document.body (main.js loads in <head>, where body is still null).
 (function () {
@@ -12,6 +12,15 @@
     const barInput = document.getElementById('assistantBarInput');
     if (!surface || !thread || !composer || !composerInput || !bar || !barInput) return;
 
+    const expandBtn = document.getElementById('assistantExpandBtn');
+    const collapseBtn = document.getElementById('assistantCollapseBtn');
+    const rail = document.getElementById('assistantRail');
+    const railBody = document.getElementById('assistantRailBody');
+    const titleEl = document.getElementById('assistantTitle');
+    const defaultTitle = titleEl ? titleEl.textContent : 'Assistant';
+    const widget = document.getElementById('assistantWidget');
+    const pageType = widget ? (widget.getAttribute('data-page-type') || 'OTHER') : 'OTHER';
+
     const wide = window.matchMedia('(min-width: 768px)');
     let firstOpen = true;
 
@@ -19,7 +28,20 @@
     function syncBar() {
         bar.hidden = surface.open && wide.matches;
     }
-    surface.addEventListener('close', syncBar);
+    surface.addEventListener('close', function () {
+        if (surface.classList.contains('is-expanded')) {
+            surface.classList.remove('is-expanded');
+            surface.removeAttribute('data-expanded');
+        }
+        syncBar();
+    });
+
+    surface.addEventListener('cancel', function (event) {
+        if (surface.classList.contains('is-expanded')) {
+            event.preventDefault();
+            collapse();
+        }
+    });
 
     function openSurface() {
         if (!surface.open) {
@@ -32,6 +54,63 @@
         }
         syncBar();
         composerInput.focus();
+    }
+
+    function updateTitle() {
+        if (!titleEl) return;
+        if (surface.classList.contains('is-expanded')) {
+            const convo = thread.querySelector('[data-conversation-title]');
+            if (convo) {
+                titleEl.textContent = convo.getAttribute('data-conversation-title');
+                return;
+            }
+        }
+        titleEl.textContent = defaultTitle;
+    }
+
+    function syncRailActive() {
+        if (!railBody) return;
+        const holder = document.getElementById('assistantConversationId');
+        const activeId = holder ? holder.value : '';
+        railBody.querySelectorAll('li').forEach(function (li) {
+            li.classList.remove('active');
+        });
+        if (activeId) {
+            const activeLi = document.getElementById('assistant-convo-' + activeId);
+            if (activeLi) activeLi.classList.add('active');
+        }
+    }
+
+    function expand() {
+        if (!wide.matches) return;
+        surface.classList.add('is-expanded');
+        surface.setAttribute('data-expanded', 'true');
+
+        // Direction A: if thread was showing history, switch it back to active conversation or start
+        if (thread.querySelector('#assistantHistory')) {
+            const holder = document.getElementById('assistantConversationId');
+            if (holder && holder.value) {
+                htmx.ajax('GET', '/assistant/conversations/' + encodeURIComponent(holder.value), { target: '#assistantThread', swap: 'innerHTML' });
+            } else {
+                htmx.ajax('GET', '/assistant/start?pageType=' + encodeURIComponent(pageType), { target: '#assistantThread', swap: 'innerHTML' });
+            }
+        }
+
+        // Populate history rail
+        if (railBody) {
+            htmx.ajax('GET', '/assistant/conversations?pageType=' + encodeURIComponent(pageType), { target: '#assistantRailBody', swap: 'innerHTML' });
+        }
+
+        updateTitle();
+        if (collapseBtn) collapseBtn.focus();
+    }
+
+    function collapse() {
+        if (!surface.classList.contains('is-expanded')) return;
+        surface.classList.remove('is-expanded');
+        surface.removeAttribute('data-expanded');
+        updateTitle();
+        if (expandBtn) expandBtn.focus();
     }
 
     // Move text into the composer and send it through the composer's own htmx request.
@@ -62,6 +141,20 @@
         const prompt = event.target.closest('[data-assistant-prompt]');
         if (prompt) {
             ask(prompt.getAttribute('data-assistant-prompt'));
+            return;
+        }
+
+        const exp = event.target.closest('#assistantExpandBtn');
+        if (exp) {
+            event.preventDefault();
+            expand();
+            return;
+        }
+
+        const col = event.target.closest('#assistantCollapseBtn');
+        if (col) {
+            event.preventDefault();
+            collapse();
             return;
         }
 
@@ -120,22 +213,39 @@
     });
 
     document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && event.target && event.target.matches && event.target.matches('.js-convo-rename input[name="title"]')) {
-            event.preventDefault();
-            event.stopPropagation();
-            const item = event.target.closest('li');
-            if (item) {
-                const view = item.querySelector('.js-convo-view');
-                const form = item.querySelector('.js-convo-rename');
-                if (view && form) {
-                    if (event.target.hasAttribute('data-original')) {
-                        event.target.value = event.target.getAttribute('data-original');
-                        const counter = form.querySelector('.js-char-count');
-                        if (counter) counter.textContent = event.target.value.length + '/80';
+        if (event.key === 'Escape') {
+            if (event.target && event.target.matches && event.target.matches('.js-convo-rename input[name="title"]')) {
+                event.preventDefault();
+                event.stopPropagation();
+                const item = event.target.closest('li');
+                if (item) {
+                    const view = item.querySelector('.js-convo-view');
+                    const form = item.querySelector('.js-convo-rename');
+                    if (view && form) {
+                        if (event.target.hasAttribute('data-original')) {
+                            event.target.value = event.target.getAttribute('data-original');
+                            const counter = form.querySelector('.js-char-count');
+                            if (counter) counter.textContent = event.target.value.length + '/80';
+                        }
+                        form.classList.add('hidden');
+                        view.classList.remove('hidden');
                     }
-                    form.classList.add('hidden');
-                    view.classList.remove('hidden');
                 }
+                return;
+            }
+
+            if (surface.open && surface.classList.contains('is-expanded') && !event.defaultPrevented) {
+                const confirmModal = document.getElementById('confirmModal');
+                if (confirmModal && confirmModal.open) return;
+                const openMenu = surface.querySelector('.js-menu-dropdown:not(.hidden)');
+                if (openMenu) {
+                    openMenu.classList.add('hidden');
+                    event.preventDefault();
+                    return;
+                }
+                event.preventDefault();
+                collapse();
+                return;
             }
         }
     });
@@ -152,12 +262,22 @@
     document.addEventListener('assistant-conversation', function (event) {
         const holder = document.getElementById('assistantConversationId');
         if (holder) holder.value = (event.detail && event.detail.id) || '';
+        syncRailActive();
     });
 
     // What this request sent, so the reply clears the box only if nothing new was typed meanwhile.
     let sentText = '';
     document.addEventListener('htmx:beforeRequest', function (event) {
         if (event.target === composer) sentText = composerInput.value;
+    });
+
+    document.addEventListener('htmx:configRequest', function (event) {
+        if (event.detail.path && event.detail.path.indexOf('/delete-dialog') !== -1) {
+            const elt = event.detail.elt;
+            if (elt && elt.closest('#assistantRail')) {
+                event.detail.parameters['target'] = '#assistantRailBody';
+            }
+        }
     });
 
     // A failed request must leave a message in the thread: main.js reports into <main>, which the
@@ -194,6 +314,25 @@
             if (markers.length && holder) holder.value = markers[markers.length - 1].getAttribute('data-conversation-id');
             if (thread.querySelector('[data-reset-conversation]') && holder) holder.value = '';
             thread.scrollTop = thread.scrollHeight;
+            updateTitle();
+            syncRailActive();
+        } else if (railBody && (railBody.contains(event.target) || event.target === railBody)) {
+            syncRailActive();
+            // If the deleted conversation was the active one
+            if (event.target.querySelector && event.target.querySelector('[data-reset-conversation]')) {
+                const holder = document.getElementById('assistantConversationId');
+                if (holder) holder.value = '';
+                htmx.ajax('GET', '/assistant/start?pageType=' + encodeURIComponent(pageType), { target: '#assistantThread', swap: 'innerHTML' });
+            }
+            // Update title if the active conversation was renamed
+            const holder = document.getElementById('assistantConversationId');
+            if (holder && holder.value && surface.classList.contains('is-expanded')) {
+                const convoItem = document.getElementById('assistant-convo-' + holder.value);
+                if (convoItem) {
+                    const titleSpan = convoItem.querySelector('.line-clamp-2');
+                    if (titleSpan && titleEl) titleEl.textContent = titleSpan.textContent.trim();
+                }
+            }
         }
     });
 

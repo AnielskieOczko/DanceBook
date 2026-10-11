@@ -128,4 +128,40 @@ class AssistantWidgetRenderingTest {
         mockMvc.perform(get("/").with(asAlice()))
             .andExpect(content().string(matchesPattern("(?s).*<button[^>]*data-assistant-mic[^>]*hidden[^>]*>.*")))
     }
+
+    @Test
+    fun `assistant dialog renders expand and collapse controls and conversations rail`() {
+        val result = mockMvc.perform(get("/").with(asAlice()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
+        val surface = doc.selectFirst("#assistantSurface")
+        org.junit.jupiter.api.Assertions.assertNotNull(surface, "#assistantSurface must be present")
+
+        val expandBtn = surface!!.selectFirst("#assistantExpandBtn")
+        org.junit.jupiter.api.Assertions.assertNotNull(expandBtn, "expand button must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(expandBtn!!.hasClass("hidden"), "expand button must be hidden on mobile")
+        org.junit.jupiter.api.Assertions.assertTrue(expandBtn.hasClass("md:flex"), "expand button must be flex on desktop")
+        org.junit.jupiter.api.Assertions.assertEquals("Expand to full window", expandBtn.attr("aria-label"))
+
+        val collapseBtn = surface.selectFirst("#assistantCollapseBtn")
+        org.junit.jupiter.api.Assertions.assertNotNull(collapseBtn, "collapse button must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(collapseBtn!!.hasClass("hidden"), "collapse button must start hidden")
+        org.junit.jupiter.api.Assertions.assertEquals("Collapse to side panel", collapseBtn.attr("aria-label"))
+
+        val rail = surface.selectFirst("#assistantRail")
+        org.junit.jupiter.api.Assertions.assertNotNull(rail, "#assistantRail must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(rail!!.hasClass("w-[292px]"), "rail must have 292px width token")
+        org.junit.jupiter.api.Assertions.assertNotNull(rail.selectFirst("#assistantRailBody"), "#assistantRailBody must be present")
+    }
+
+    @Test
+    fun `assistant dialog renders polish labels when locale is pl`() {
+        mockMvc.perform(get("/").with(asAlice()).locale(java.util.Locale.forLanguageTag("pl")))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("aria-label=\"Rozwiń na pełne okno\"")))
+            .andExpect(content().string(containsString("aria-label=\"Zwiń do panelu bocznego\"")))
+    }
 }
+

@@ -29,7 +29,7 @@
 </th:block>
 
 <!-- A saved conversation reopened: replaces the thread. -->
-<div th:fragment="conversation" id="assistantConversation" class="flex flex-col gap-4" th:attr="data-conversation-id=${view.id}">
+<div th:fragment="conversation" id="assistantConversation" class="flex flex-col gap-4" th:attr="data-conversation-id=${view.id}, data-conversation-title=${view.title}">
     <div class="text-xs font-semibold text-on-surface-variant" th:text="${view.title}">Title</div>
     <th:block th:each="m : ${view.messages}">
         <div th:replace="~{fragments/assistant :: assistantMessage(role=${m.role.name()}, text=${m.text}, cards=${m.cards}, error=${m.error}, drafts=${m.drafts})}"></div>
@@ -89,7 +89,7 @@
             <form class="js-convo-rename hidden flex-1 min-w-0 flex-col gap-2 p-1"
                   method="post"
                   th:attr="hx-post=@{/assistant/conversations/{id}/rename(id=${c.id})}"
-                  hx-target="#assistantThread" hx-swap="innerHTML">
+                  hx-target="closest #assistantHistory" hx-swap="outerHTML">
                 <input type="hidden" name="pageType" th:value="${pageType}">
                 <input type="text" name="title" maxlength="80" required
                        class="form-input w-full min-h-[44px] rounded-pill border border-outline bg-surface-container px-4 text-[15px] text-on-surface placeholder:text-on-surface-variant hover:bg-surface focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22 outline-none"

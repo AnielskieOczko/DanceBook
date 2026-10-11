@@ -47,62 +47,97 @@
     <!-- The conversation. A sheet on a phone (modal), a right-hand panel on desktop (not modal). -->
     <dialog id="assistantSurface" aria-labelledby="assistantTitle"
             class="fixed inset-0 m-0 h-full max-h-none w-full max-w-none flex-col bg-surface p-0 text-on-surface open:flex z-50 md:left-auto md:right-0 md:w-[400px] md:border-l md:border-outline-variant">
-        <header class="flex items-center gap-1 border-b border-outline-variant px-3 py-3">
-            <div class="min-w-0 flex-1 pl-1">
-                <h2 id="assistantTitle" class="text-base font-bold" th:text="#{assistant.title}">Assistant</h2>
-                <p th:if="${assistantNav.label != null}" class="truncate text-xs text-on-surface-variant">
-                    <th:block th:text="#{assistant.looking_at}">Looking at:</th:block> <span th:text="${assistantNav.label}">this page</span>
-                </p>
+        <div class="flex flex-1 min-h-0 w-full h-full overflow-hidden">
+            <!-- Rail: conversations list (Direction A Ledger: shown in expanded view on desktop) -->
+            <aside id="assistantRail" class="hidden w-[292px] shrink-0 flex-col border-r border-outline-variant bg-surface h-full">
+                <div class="flex min-h-[64px] items-center justify-between border-b border-outline-variant px-5 py-2.5">
+                    <h3 class="m-0 text-base font-bold text-on-surface" th:text="#{assistant.conversations}">Conversations</h3>
+                    <button type="button" id="assistantRailNewBtn"
+                            class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            th:attr="aria-label=#{assistant.new_conversation}, title=#{assistant.new_conversation}, hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
+                            hx-target="#assistantThread" hx-swap="innerHTML">
+                        <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
+                    </button>
+                </div>
+                <div id="assistantRailBody" class="flex-1 overflow-y-auto px-4 py-3"></div>
+            </aside>
+
+            <!-- Main Column (thread and composer) -->
+            <div class="flex flex-1 flex-col min-w-0 h-full">
+                <header class="flex min-h-[64px] items-center gap-1 border-b border-outline-variant px-3 py-3">
+                    <div class="min-w-0 flex-1 pl-1">
+                        <h2 id="assistantTitle" class="truncate text-base font-bold" th:text="#{assistant.title}">Assistant</h2>
+                        <p th:if="${assistantNav.label != null}" class="truncate text-xs text-on-surface-variant">
+                            <th:block th:text="#{assistant.looking_at}">Looking at:</th:block> <span th:text="${assistantNav.label}">this page</span>
+                        </p>
+                    </div>
+                    <!-- Collapsed-only navigation buttons -->
+                    <button type="button" id="assistantHistoryBtn" aria-label="Conversations" title="Conversations"
+                            class="js-assistant-collapsed-only flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            th:attr="aria-label=#{assistant.conversations}, title=#{assistant.conversations}, hx-get=@{/assistant/conversations(pageType=${assistantNav.page.type.name()})}"
+                            hx-target="#assistantThread" hx-swap="innerHTML">
+                        <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
+                    </button>
+                    <button type="button" id="assistantNewBtn" aria-label="New conversation" title="New conversation"
+                            class="js-assistant-collapsed-only flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            th:attr="aria-label=#{assistant.new_conversation}, title=#{assistant.new_conversation}, hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
+                            hx-target="#assistantThread" hx-swap="innerHTML">
+                        <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
+                    </button>
+                    <!-- Expand control (desktop only, collapsed only) -->
+                    <button type="button" id="assistantExpandBtn" aria-label="Expand to full window" title="Expand"
+                            class="js-assistant-collapsed-only hidden md:flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            th:attr="aria-label=#{assistant.expand}, title=#{assistant.expand_title}">
+                        <span th:replace="~{fragments/icon :: icon(name='open_in_full', size='md')}"></span>
+                    </button>
+                    <!-- Collapse control (desktop only, expanded only) -->
+                    <button type="button" id="assistantCollapseBtn" aria-label="Collapse to side panel" title="Collapse (Esc)"
+                            class="js-assistant-expanded-only hidden h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                            th:attr="aria-label=#{assistant.collapse}, title=#{assistant.collapse_title}">
+                        <span th:replace="~{fragments/icon :: icon(name='close_fullscreen', size='md')}"></span>
+                    </button>
+                    <!-- Close assistant -->
+                    <form method="dialog">
+                        <button type="submit" id="assistantCloseBtn" aria-label="Close assistant" title="Close"
+                                class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+                                th:attr="aria-label=#{assistant.close}, title=#{assistant.close_title}">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
+                        </button>
+                    </form>
+                </header>
+
+                <div id="assistantThread" class="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4" aria-live="polite"
+                     th:attr="hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
+                     hx-trigger="assistant-open once" hx-swap="innerHTML"></div>
+
+                <div id="assistantTyping" class="htmx-indicator px-4 pb-2 text-sm text-on-surface-variant" role="status" th:text="#{assistant.thinking}">Thinking…</div>
+
+                <form id="assistantComposer" autocomplete="off"
+                      class="border-t border-outline-variant px-3 py-3 pb-safe"
+                      hx-post="/assistant/messages" hx-target="#assistantThread" hx-swap="beforeend"
+                      hx-indicator="#assistantTyping" hx-disabled-elt="find button[type=submit]">
+                    <div class="flex items-center gap-2 max-w-[700px] mx-auto w-full">
+                        <input type="hidden" id="assistantConversationId" name="conversationId" value="">
+                        <input type="hidden" name="pageType" th:value="${assistantNav.page.type.name()}">
+                        <input type="hidden" name="pageId" th:value="${assistantNav.page.id}">
+                        <input id="assistantComposerInput" type="text" name="text" required maxlength="2000"
+                               class="form-input min-w-0 flex-1 rounded-pill text-[15px]"
+                               placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
+                               th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}">
+                        <button type="button" data-assistant-mic hidden aria-label="Dictate"
+                                class="flex h-11 w-11 items-center justify-center rounded-pill text-primary"
+                                th:attr="aria-label=#{assistant.dictate}">
+                            <span th:replace="~{fragments/icon :: icon(name='mic', size='md')}"></span>
+                        </button>
+                        <button type="submit" aria-label="Send"
+                                class="flex h-11 w-11 items-center justify-center rounded-pill bg-primary text-on-primary"
+                                th:attr="aria-label=#{assistant.send}">
+                            <span th:replace="~{fragments/icon :: icon(name='arrow_upward', size='md')}"></span>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <button type="button" aria-label="Conversations" title="Conversations"
-                    class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
-                    th:attr="aria-label=#{assistant.conversations}, title=#{assistant.conversations}, hx-get=@{/assistant/conversations(pageType=${assistantNav.page.type.name()})}"
-                    hx-target="#assistantThread" hx-swap="innerHTML">
-                <span th:replace="~{fragments/icon :: icon(name='history', size='md')}"></span>
-            </button>
-            <button type="button" aria-label="New conversation" title="New conversation"
-                    class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
-                    th:attr="aria-label=#{assistant.new_conversation}, title=#{assistant.new_conversation}, hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
-                    hx-target="#assistantThread" hx-swap="innerHTML">
-                <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
-            </button>
-            <form method="dialog">
-                <button type="submit" aria-label="Close assistant" title="Close"
-                        class="flex h-11 w-11 items-center justify-center rounded-pill text-on-surface-variant"
-                        th:attr="aria-label=#{assistant.close}, title=#{assistant.close_title}">
-                    <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
-                </button>
-            </form>
-        </header>
-
-        <div id="assistantThread" class="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4" aria-live="polite"
-             th:attr="hx-get=@{/assistant/start(pageType=${assistantNav.page.type.name()})}"
-             hx-trigger="assistant-open once" hx-swap="innerHTML"></div>
-
-        <div id="assistantTyping" class="htmx-indicator px-4 pb-2 text-sm text-on-surface-variant" role="status" th:text="#{assistant.thinking}">Thinking…</div>
-
-        <form id="assistantComposer" autocomplete="off"
-              class="flex items-center gap-2 border-t border-outline-variant px-3 py-3 pb-safe"
-              hx-post="/assistant/messages" hx-target="#assistantThread" hx-swap="beforeend"
-              hx-indicator="#assistantTyping" hx-disabled-elt="find button[type=submit]">
-            <input type="hidden" id="assistantConversationId" name="conversationId" value="">
-            <input type="hidden" name="pageType" th:value="${assistantNav.page.type.name()}">
-            <input type="hidden" name="pageId" th:value="${assistantNav.page.id}">
-            <input id="assistantComposerInput" type="text" name="text" required maxlength="2000"
-                   class="form-input min-w-0 flex-1 rounded-pill text-[15px]"
-                   placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
-                   th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}">
-            <button type="button" data-assistant-mic hidden aria-label="Dictate"
-                    class="flex h-11 w-11 items-center justify-center rounded-pill text-primary"
-                    th:attr="aria-label=#{assistant.dictate}">
-                <span th:replace="~{fragments/icon :: icon(name='mic', size='md')}"></span>
-            </button>
-            <button type="submit" aria-label="Send"
-                    class="flex h-11 w-11 items-center justify-center rounded-pill bg-primary text-on-primary"
-                    th:attr="aria-label=#{assistant.send}">
-                <span th:replace="~{fragments/icon :: icon(name='arrow_upward', size='md')}"></span>
-            </button>
-        </form>
+        </div>
     </dialog>
 </div>
 

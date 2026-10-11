@@ -106,4 +106,43 @@ class AssistantScriptGuardTest {
         assertTrue(branch.contains("composerInput.value"), "it fills the composer")
         assertFalse(branch.contains("requestSubmit"), "it must not send: the user still has to say what happened")
     }
+
+    @Test
+    fun `expand button is hidden on mobile and collapse button is hidden by default`() {
+        val expand = widget.substringAfter("id=\"assistantExpandBtn\"").substringBefore(">")
+        assertTrue(expand.contains("hidden md:flex"), "expand control must be hidden below desktop")
+        val collapse = widget.substringAfter("id=\"assistantCollapseBtn\"").substringBefore(">")
+        assertTrue(collapse.contains("hidden"), "collapse control must start hidden")
+        assertTrue(widget.contains("name='open_in_full'"), "expand icon must be open_in_full")
+        assertTrue(widget.contains("name='close_fullscreen'"), "collapse icon must be close_fullscreen")
+    }
+
+    @Test
+    fun `the rail is 292px wide, border-right, and hidden by default`() {
+        val rail = widget.substringAfter("id=\"assistantRail\"").substringBefore(">")
+        assertTrue(rail.contains("w-[292px]"), "rail width must be 292px per mock")
+        assertTrue(rail.contains("border-r"), "rail must have right border")
+        assertTrue(rail.contains("hidden"), "rail must be hidden until expanded")
+    }
+
+    @Test
+    fun `expanding adds is-expanded class and focuses collapse button, collapsing restores focus to expand button`() {
+        assertTrue(script.contains("surface.classList.add('is-expanded')"))
+        assertTrue(script.contains("surface.classList.remove('is-expanded')"))
+        assertTrue(script.contains("collapseBtn.focus()"))
+        assertTrue(script.contains("expandBtn.focus()"))
+    }
+
+    @Test
+    fun `escape and cancel restore collapsed panel instead of closing the dialog when expanded`() {
+        assertTrue(script.contains("surface.addEventListener('cancel'"))
+        val cancelBranch = script.substringAfter("surface.addEventListener('cancel'").substringBefore("});")
+        assertTrue(cancelBranch.contains("event.preventDefault()"))
+        assertTrue(cancelBranch.contains("collapse()"))
+
+        val escapeBranch = script.substringAfter("event.key === 'Escape'").substringBefore("bar.addEventListener")
+        assertTrue(escapeBranch.contains("surface.classList.contains('is-expanded')"))
+        assertTrue(escapeBranch.contains("collapse()"))
+    }
 }
+

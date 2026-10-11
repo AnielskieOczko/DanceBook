@@ -123,6 +123,7 @@ class AssistantFragmentRenderingTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("id=\"assistantConversation\"")))
             .andExpect(content().string(containsString("data-conversation-id=\"$id\"")))
+            .andExpect(content().string(containsString("data-conversation-title=\"Sway notes\"")))
     }
 
     @Test
@@ -157,6 +158,25 @@ class AssistantFragmentRenderingTest {
             .andExpect(content().string(containsString("Delete “Sway notes”? Its 2 messages are removed.")))
             .andExpect(content().string(containsString("Keep it")))
             .andExpect(content().string(containsString("/assistant/conversations/$id/delete?pageType=HOME")))
+    }
+
+    @Test
+    fun `delete-dialog uses custom target and swap when provided for rail`() {
+        val id = UUID.randomUUID()
+        val c = AssistantConversation().apply { this.id = id; title = "Sway notes" }
+        `when`(conversationService.findOwned(id)).thenReturn(c)
+        `when`(conversationService.messages(id)).thenReturn(emptyList())
+
+        mockMvc.perform(
+            get("/assistant/conversations/$id/delete-dialog")
+                .param("pageType", "HOME")
+                .param("target", "#assistantRailBody")
+                .param("swap", "innerHTML")
+                .header("HX-Request", "true")
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("hx-target=\"#assistantRailBody\"")))
+            .andExpect(content().string(containsString("hx-swap=\"innerHTML\"")))
     }
 
     @Test
