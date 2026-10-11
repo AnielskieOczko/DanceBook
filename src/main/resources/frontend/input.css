@@ -448,22 +448,19 @@ layer(base);
            max-lg:min-h-[44px] max-lg:text-[15px] max-lg:px-4
            hover:bg-surface hover:border-outline
            focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
-           focus-visible:outline-hidden! focus-visible:ring-3! focus-visible:ring-primary/22! focus-visible:ring-offset-0!
            disabled:opacity-50 disabled:cursor-not-allowed
            transition-[color,background-color,border-color,box-shadow] duration-150;
   border-radius: var(--radius-pill);
 }
 
 @utility dense-textarea {
-  @apply dense-input py-2 px-3.5 min-h-[52px] resize-y
-         focus-visible:outline-hidden! focus-visible:ring-3! focus-visible:ring-primary/22! focus-visible:ring-offset-0!;
+  @apply dense-input py-2 px-3.5 min-h-[52px] resize-y;
   border-radius: 20px;
   line-height: 1.4;
 }
 
 @utility dense-select {
-  @apply dense-input appearance-none bg-no-repeat pr-8 cursor-pointer
-         focus-visible:outline-hidden! focus-visible:ring-3! focus-visible:ring-primary/22! focus-visible:ring-offset-0!;
+  @apply dense-input appearance-none bg-no-repeat pr-8 cursor-pointer;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-size: 1rem;
   background-position: right 0.65rem center;
@@ -475,7 +472,6 @@ layer(base);
          text-on-surface placeholder:text-on-surface-variant text-[15px] min-h-[44px]
          hover:bg-surface hover:border-outline
          focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
-         focus-visible:outline-hidden! focus-visible:ring-3! focus-visible:ring-primary/22! focus-visible:ring-offset-0!
          disabled:opacity-50 disabled:cursor-not-allowed
          transition-[color,background-color,border-color,box-shadow] duration-150;
   border-radius: var(--radius-pill);
@@ -485,8 +481,7 @@ layer(base);
   @apply min-w-0 text-[22px] font-semibold leading-tight tracking-tight min-h-[52px] px-5.5
          bg-surface-container border border-transparent
          hover:bg-surface hover:border-outline
-         focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
-         focus-visible:outline-hidden! focus-visible:ring-3! focus-visible:ring-primary/22! focus-visible:ring-offset-0!;
+         focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22;
 }
 
 @utility seg-pill {
@@ -830,9 +825,10 @@ layer(base);
  * ──────────────────────────────────────────────── */
 @layer components {
   /* ── Accessible Keyboard Focus ────────────────── */
-  /* Form controls are excluded: they draw their own 3px ring that follows the pill (see
-   * form-input), and this rule's !important would replace it with a 2px offset ring. */
-  *:focus-visible:not(.form-input, .form-select, .form-textarea) {
+  /* Form controls are excluded: they draw their own border and 3px ring that follow the pill
+   * (see form-input, the #214 mock), and this rule's !important would stack a second, dark 2px
+   * offset ring on top. Any new text-entry utility must be added to this list. */
+  *:focus-visible:not(.form-input, .form-select, .form-textarea, .dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name) {
     @apply outline-hidden! ring-2! ring-primary! ring-offset-2!;
   }
 }

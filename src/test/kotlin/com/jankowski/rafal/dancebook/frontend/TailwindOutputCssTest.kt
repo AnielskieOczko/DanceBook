@@ -192,11 +192,17 @@ class TailwindOutputCssTest {
     }
 
     @Test
-    fun `global keyboard focus ring leaves form controls to their own ring`() {
+    fun `global keyboard focus ring leaves every text control to its own ring`() {
+        val exclusion = Regex(""":focus-visible:not\(([^)]*)\)""").find(css)?.groupValues?.get(1)
+            ?: error("The global *:focus-visible rule must exclude text controls, or its !important 2px ring replaces their own.")
+        val excluded = exclusion.split(",").map { it.trim() }.toSet()
+        val controls = setOf(
+            ".form-input", ".form-select", ".form-textarea",
+            ".dense-input", ".dense-select", ".dense-textarea", ".pill-input", ".ed-name"
+        )
         assertTrue(
-            css.contains(":focus-visible:not(.form-input,.form-select,.form-textarea)") ||
-                css.contains(":focus-visible:not(.form-input, .form-select, .form-textarea)"),
-            "The global *:focus-visible rule must exclude form controls, or its !important 2px ring replaces the 3px one."
+            excluded.containsAll(controls),
+            "Every text control draws its own border and 3px ring (the #214 mock), so the global rule must skip it or a second dark ring stacks on top. Missing: ${controls - excluded}"
         )
     }
 

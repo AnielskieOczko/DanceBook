@@ -261,9 +261,10 @@ class DanceFigureEditFormMockAlignmentTest {
 
         // Check rounded focus styling
         assertTrue(
-            css.contains("focus-visible:ring-offset-0!") &&
-            css.contains("focus:ring-primary/22"),
-            "Dense and pill inputs must define rounded focus rings without rectangular offset"
+            css.contains("focus:border-primary focus:ring-3 focus:ring-primary/22") &&
+            !css.contains("focus-visible:ring-offset-0!") &&
+            css.contains(".dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name"),
+            "Dense and pill inputs use the single #214 focus (border plus 3px ring) and are exempt from the global focus-visible ring"
         )
     }
 
