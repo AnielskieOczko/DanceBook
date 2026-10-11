@@ -10,6 +10,8 @@ import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import com.jankowski.rafal.dancebook.service.StorageCleanupJob
 import com.jankowski.rafal.dancebook.service.SyllabusImporterService
+import com.jankowski.rafal.dancebook.dto.FormSelectOption
+import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
@@ -67,6 +69,16 @@ class AdminController(
         // System Settings
         model.addAttribute("pollInterval", systemSettingService.getIntSetting("polling_interval_minutes", 5))
         model.addAttribute("autoLogout", systemSettingService.getIntSetting("auto_logout_minutes", 10))
+        val currentBadgeStyle = systemSettingService.getSetting("medal_badge_style", "rank_bars")
+        model.addAttribute("medalBadgeStyle", currentBadgeStyle)
+        val locale = org.springframework.context.i18n.LocaleContextHolder.getLocale()
+        val badgeStyleOptions = MedalBadgeStyle.entries.map {
+            FormSelectOption(
+                value = it.code,
+                label = messageSource?.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
+            )
+        }
+        model.addAttribute("badgeStyleOptions", badgeStyleOptions)
         
         // Provide fast lists
         model.addAttribute("users", appUserRepository.findAll())
@@ -131,17 +143,34 @@ class AdminController(
     fun updateSystemSettings(
         @org.springframework.web.bind.annotation.RequestParam("pollInterval") pollInterval: Int,
         @org.springframework.web.bind.annotation.RequestParam("autoLogout") autoLogout: Int,
+        @org.springframework.web.bind.annotation.RequestParam(value = "medalBadgeStyle", required = false) medalBadgeStyle: String?,
         model: Model
     ): String {
         try {
             systemSettingService.updateSetting("polling_interval_minutes", pollInterval.toString())
             systemSettingService.updateSetting("auto_logout_minutes", autoLogout.toString())
+            if (!medalBadgeStyle.isNullOrBlank()) {
+                val valid = MedalBadgeStyle.fromStringOrNull(medalBadgeStyle)
+                if (valid != null) {
+                    systemSettingService.updateSetting("medal_badge_style", valid.code)
+                }
+            }
             model.addAttribute("systemSettingsSuccess", "System settings updated successfully!")
         } catch (e: Exception) {
             model.addAttribute("systemSettingsError", "Failed to update settings: ${e.message}")
         }
+        val currentStyle = systemSettingService.getSetting("medal_badge_style", "rank_bars")
         model.addAttribute("pollInterval", pollInterval)
         model.addAttribute("autoLogout", autoLogout)
+        model.addAttribute("medalBadgeStyle", currentStyle)
+        val locale = org.springframework.context.i18n.LocaleContextHolder.getLocale()
+        val badgeStyleOptions = MedalBadgeStyle.entries.map {
+            FormSelectOption(
+                value = it.code,
+                label = messageSource?.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
+            )
+        }
+        model.addAttribute("badgeStyleOptions", badgeStyleOptions)
         return "admin/dashboard :: systemSettingsSection"
     }
 

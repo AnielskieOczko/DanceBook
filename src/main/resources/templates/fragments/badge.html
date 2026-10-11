@@ -30,23 +30,33 @@
                       (statusName == 'CANCELLED' ? #messages.msg('training.status.cancelled') : #messages.msg('training.status.planned'))))}">Planned</span>
 </th:block>
 
-<!-- Figure/Choreography Medal Badge (Rank Bars - Direction A) -->
+<!-- Figure/Choreography Medal Badge (5 directions: A Rank bars, B Medal shapes, C Ring and word, D Medal icon, D2 No numerals) -->
 <th:block th:fragment="medalBadge"
           th:with="lvlStr=${level != null ? level.toString() : null},
                    lvlLower=${lvlStr != null ? #strings.toLowerCase(lvlStr) : ''},
                    rank=${lvlLower == 'bronze' ? 1 : (lvlLower == 'silver' ? 2 : (lvlLower == 'gold' ? 3 : 0))},
                    effectiveStyle=${style != null ? style : (badgeStyle != null ? badgeStyle : 'rank_bars')},
-                   showWord=${word != null and word},
-                   isLg=${size == 'lg' or size == 18 or size == '18'}">
+                   styleKey=${effectiveStyle != null ? #strings.toLowerCase(effectiveStyle.toString()) : 'rank_bars'},
+                   isStyleA=${styleKey == 'rank_bars' or styleKey == 'a'},
+                   isStyleB=${styleKey == 'medal_shapes' or styleKey == 'b'},
+                   isStyleC=${styleKey == 'ring_and_word' or styleKey == 'c'},
+                   isStyleD=${styleKey == 'medal_icon' or styleKey == 'd'},
+                   isStyleD2=${styleKey == 'medal_no_numerals' or styleKey == 'd2'},
+                   showWord=${isStyleD2 ? true : (isStyleC ? (word == null ? true : word) : (word != null and word))},
+                   isSm=${size == 'sm' or size == 12 or size == '12'},
+                   isLg=${size == 'lg' or size == 18 or size == '18'},
+                   isXl=${size == 'xl' or size == 24 or size == '24'},
+                   sizeCls=${isSm ? 'w-3 h-3' : (isLg ? 'w-[18px] h-[18px]' : (isXl ? 'w-6 h-6' : 'w-4 h-4'))}">
     <th:block th:if="${rank &gt; 0}">
         <span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap"
               th:classappend="${(lvlLower == 'bronze' ? 'text-bronze medal-badge-bronze' : (lvlLower == 'silver' ? 'text-silver medal-badge-silver' : (lvlLower == 'gold' ? 'text-gold medal-badge-gold' : ''))) + (cls != null ? ' ' + cls : '')}"
               role="img"
               th:title="${#messages.msg('figures.medal.aria.' + lvlLower)}"
               th:attr="aria-label=${#messages.msg('figures.medal.aria.' + lvlLower)}">
-            <th:block th:if="${effectiveStyle == 'rank_bars' or effectiveStyle == 'RANK_BARS' or effectiveStyle == 'A'}">
+            <!-- A. Rank bars -->
+            <th:block th:if="${isStyleA}">
                 <svg class="block shrink-0"
-                     th:classappend="${isLg ? 'w-[18px] h-[18px]' : 'w-4 h-4'}"
+                     th:classappend="${sizeCls}"
                      viewBox="0 0 16 16"
                      fill="none"
                      aria-hidden="true">
@@ -57,7 +67,52 @@
                     <rect th:if="${rank &lt; 3}" x="11" y="2" width="4" height="13" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>
                 </svg>
             </th:block>
-            <!-- Seam: future badge styles plug in here -->
+
+            <!-- B. Medal shapes -->
+            <th:block th:if="${isStyleB}">
+                <svg class="block shrink-0"
+                     th:classappend="${sizeCls}"
+                     viewBox="0 0 16 16"
+                     fill="none"
+                     aria-hidden="true">
+                    <circle th:if="${lvlLower == 'bronze'}" cx="8" cy="8" r="6.2" fill="currentColor"/>
+                    <rect th:if="${lvlLower == 'silver'}" x="2.6" y="2.6" width="10.8" height="10.8" transform="rotate(45 8 8)" fill="currentColor"/>
+                    <polygon th:if="${lvlLower == 'gold'}" points="8.00,0.40 9.99,3.20 13.37,2.63 12.80,6.01 15.60,8.00 12.80,9.99 13.37,13.37 9.99,12.80 8.00,15.60 6.01,12.80 2.63,13.37 3.20,9.99 0.40,8.00 3.20,6.01 2.63,2.63 6.01,3.20" fill="currentColor"/>
+                </svg>
+            </th:block>
+
+            <!-- C. Ring and word -->
+            <th:block th:if="${isStyleC}">
+                <svg class="block shrink-0"
+                     th:classappend="${sizeCls}"
+                     viewBox="0 0 16 16"
+                     fill="none"
+                     aria-hidden="true">
+                    <path d="M9.45 2.18 A6 6 0 0 1 13.77 9.65" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                    <path th:if="${rank &gt;= 2}" d="M12.32 12.17 A6 6 0 0 1 3.68 12.17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                    <path th:if="${rank &lt; 2}" d="M12.32 12.17 A6 6 0 0 1 3.68 12.17" class="stroke-medal-empty" stroke-width="2.6" stroke-linecap="round"/>
+                    <path th:if="${rank &gt;= 3}" d="M2.23 9.65 A6 6 0 0 1 6.55 2.18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+                    <path th:if="${rank &lt; 3}" d="M2.23 9.65 A6 6 0 0 1 6.55 2.18" class="stroke-medal-empty" stroke-width="2.6" stroke-linecap="round"/>
+                </svg>
+            </th:block>
+
+            <!-- D and D2. Medal icon & Medal no numerals -->
+            <th:block th:if="${isStyleD or isStyleD2}">
+                <svg class="block shrink-0"
+                     th:classappend="${sizeCls}"
+                     th:attr="viewBox=${isSm ? '3 5.2 10 10' : '0 0 16 16'}"
+                     fill="none"
+                     aria-hidden="true">
+                    <path th:if="${!isSm}" d="M4.8 0.6 L7.5 5.6 M11.2 0.6 L8.5 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt"/>
+                    <circle cx="8" cy="10.3" r="5.3"
+                            th:classappend="${lvlLower == 'bronze' ? 'fill-bronze-soft' : (lvlLower == 'silver' ? 'fill-silver-soft' : 'fill-gold-soft')}"
+                            stroke="currentColor" stroke-width="1"/>
+                    <circle cx="8" cy="10.3" r="4" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.55"/>
+                    <text th:if="${isStyleD}" x="8" y="12.7" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="7" fill="currentColor"
+                          th:text="${rank == 3 ? '1' : (rank == 2 ? '2' : '3')}">1</text>
+                </svg>
+            </th:block>
+
             <span th:if="${showWord}" th:text="${#messages.msg('figures.medal.' + lvlLower)}">Bronze</span>
         </span>
     </th:block>

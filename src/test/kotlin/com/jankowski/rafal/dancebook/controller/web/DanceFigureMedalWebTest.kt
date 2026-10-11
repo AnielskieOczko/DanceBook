@@ -396,4 +396,181 @@ class DanceFigureMedalWebTest {
         assertTrue(optionTexts.contains("Srebro"), "Should contain Polish 'Srebro' option: $optionTexts")
         assertTrue(optionTexts.contains("Złoto"), "Should contain Polish 'Złoto' option: $optionTexts")
     }
+
+    @Test
+    fun `figures catalog list renders medal_shapes when badge style is configured as medal_shapes`() {
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val goldFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Gold Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.GOLD
+        }
+        val silverFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Silver Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.SILVER
+        }
+        val bronzeFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Bronze Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.BRONZE
+        }
+
+        `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_shapes")
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null))
+            .thenReturn(listOf(goldFigure, silverFigure, bronzeFigure))
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/dance-figures").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+
+        val doc = Jsoup.parse(html)
+        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        assertNotNull(goldBadge, "Gold badge must be rendered")
+        assertTrue(goldBadge!!.select("polygon").isNotEmpty(), "Medal shapes gold badge must contain a polygon")
+
+        val silverBadge = doc.selectFirst(".medal-badge-silver")
+        assertNotNull(silverBadge, "Silver badge must be rendered")
+        assertTrue(silverBadge!!.select("rect[transform*='rotate(45']").isNotEmpty(), "Medal shapes silver badge must contain rotated square")
+
+        val bronzeBadge = doc.selectFirst(".medal-badge-bronze")
+        assertNotNull(bronzeBadge, "Bronze badge must be rendered")
+        assertTrue(bronzeBadge!!.select("circle").isNotEmpty(), "Medal shapes bronze badge must contain a circle")
+    }
+
+    @Test
+    fun `figures catalog list renders ring_and_word with circular path and word`() {
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val goldFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Gold Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.GOLD
+        }
+
+        `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("ring_and_word")
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/dance-figures").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+
+        val doc = Jsoup.parse(html)
+        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        assertNotNull(goldBadge, "Gold badge must be rendered")
+        assertTrue(goldBadge!!.select("path").isNotEmpty(), "Ring and word must render svg path")
+        assertTrue(goldBadge.text().contains("Gold"), "Ring and word must show the medal word by default")
+    }
+
+    @Test
+    fun `figures catalog list renders medal_icon with ribbon and numerals`() {
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val goldFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Gold Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.GOLD
+        }
+
+        `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_icon")
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/dance-figures").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+
+        val doc = Jsoup.parse(html)
+        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        assertNotNull(goldBadge, "Gold badge must be rendered")
+        val textNum = goldBadge!!.select("text")
+        assertTrue(textNum.isNotEmpty(), "Medal icon must contain numeral text element")
+        assertEquals("1", textNum.text().trim(), "Gold medal numeral must be 1")
+    }
+
+    @Test
+    fun `figures catalog list renders medal_no_numerals with ribbon, no numerals, and forces word display`() {
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val goldFigure = DanceFigure().apply {
+            id = UUID.randomUUID()
+            name = "Gold Figure"
+            this.danceType = danceType
+            medalLevel = MedalLevel.GOLD
+        }
+
+        `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_no_numerals")
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+
+        val html = mockMvc.perform(get("/dance-figures").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+
+        val doc = Jsoup.parse(html)
+        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        assertNotNull(goldBadge, "Gold badge must be rendered")
+        val textNum = goldBadge!!.select("text")
+        assertTrue(textNum.isEmpty(), "Medal icon without numerals must not contain numeral text element")
+        assertTrue(goldBadge.text().contains("Gold"), "Medal icon without numerals must force medal word to be shown")
+    }
+
+    @Test
+    fun `figure edit form sticky header carries data-badge-style attribute`() {
+        val figureId = UUID.randomUUID()
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val figure = DanceFigure().apply {
+            id = figureId
+            name = "Natural Spin Turn"
+            this.danceType = danceType
+            medalLevel = MedalLevel.SILVER
+        }
+
+        `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_shapes")
+        `when`(danceFigureService.findById(figureId)).thenReturn(figure)
+        `when`(danceFigureService.findByDanceType(danceType.id!!)).thenReturn(listOf(figure))
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+
+        val html = mockMvc.perform(get("/dance-figures/{id}/edit", figureId).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+
+        val doc = Jsoup.parse(html)
+        val headerBadgeContainer = doc.selectFirst("#gradeMedalBadge")
+        assertNotNull(headerBadgeContainer, "Sticky header medal badge container must exist")
+        assertEquals("medal_shapes", headerBadgeContainer!!.attr("data-badge-style"), "Header badge container must carry data-badge-style")
+    }
 }

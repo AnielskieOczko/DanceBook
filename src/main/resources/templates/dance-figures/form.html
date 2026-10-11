@@ -53,7 +53,7 @@
                 </div>
                 <div class="flex items-center gap-2 min-h-[44px] md:min-h-[52px]" id="gradePreviewWrapper">
                     <span class="cls-badge" id="gradeClassBadge" th:text="${danceFigure.danceClass != null ? #messages.msg('figures.view.class_label', danceFigure.danceClass) : #messages.msg('figures.view.class_label', 'H')}">Class H</span>
-                    <span id="gradeMedalBadge">
+                    <span id="gradeMedalBadge" th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
                         <th:block th:if="${danceFigure.medalLevel != null}">
                             <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
                         </th:block>

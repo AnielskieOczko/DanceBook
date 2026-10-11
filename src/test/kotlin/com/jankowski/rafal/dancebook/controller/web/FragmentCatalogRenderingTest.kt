@@ -264,6 +264,10 @@ class FragmentCatalogRenderingTest {
             "badgeAll",
             "attendanceBadgeAll",
             "medalBadgeAll",
+            "medalBadgeShapes",
+            "medalBadgeRingWord",
+            "medalBadgeIcon",
+            "medalBadgeNoNumerals",
             "emptyStateAll",
             "alertAll",
             "modalAll",
@@ -575,6 +579,37 @@ class FragmentCatalogRenderingTest {
             .andReturn()
         val noneHtml = resultNone.response.contentAsString
         assertFalse(noneHtml.contains("<svg"), "Level null / none should render nothing:\n$noneHtml")
+
+        val resultShapes = mockMvc.perform(get("/test/catalog/medalBadgeShapes").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val shapesHtml = resultShapes.response.contentAsString
+        assertTrue(shapesHtml.contains("text-silver"), "Expected 'text-silver' in medalBadgeShapes:\n$shapesHtml")
+        assertTrue(shapesHtml.contains("transform=\"rotate(45 8 8)\""), "Expected rotated square for silver in medalBadgeShapes:\n$shapesHtml")
+
+        val resultRingWord = mockMvc.perform(get("/test/catalog/medalBadgeRingWord").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val ringWordHtml = resultRingWord.response.contentAsString
+        assertTrue(ringWordHtml.contains("text-gold"), "Expected 'text-gold' in medalBadgeRingWord:\n$ringWordHtml")
+        assertTrue(ringWordHtml.contains("<path"), "Expected path in medalBadgeRingWord:\n$ringWordHtml")
+        assertTrue(org.jsoup.Jsoup.parse(ringWordHtml).text().contains("Gold"), "Expected 'Gold' word in medalBadgeRingWord:\n$ringWordHtml")
+
+        val resultIcon = mockMvc.perform(get("/test/catalog/medalBadgeIcon").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val iconHtml = resultIcon.response.contentAsString
+        assertTrue(iconHtml.contains("text-bronze"), "Expected 'text-bronze' in medalBadgeIcon:\n$iconHtml")
+        assertTrue(iconHtml.contains("<text"), "Expected numeral text in medalBadgeIcon:\n$iconHtml")
+        assertEquals("3", org.jsoup.Jsoup.parse(iconHtml).select("text").text().trim(), "Bronze medal numeral must be 3")
+
+        val resultNoNumerals = mockMvc.perform(get("/test/catalog/medalBadgeNoNumerals").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val noNumeralsHtml = resultNoNumerals.response.contentAsString
+        assertTrue(noNumeralsHtml.contains("text-gold"), "Expected 'text-gold' in medalBadgeNoNumerals:\n$noNumeralsHtml")
+        assertFalse(noNumeralsHtml.contains("<text"), "Medal no numerals must not contain numeral text:\n$noNumeralsHtml")
+        assertTrue(org.jsoup.Jsoup.parse(noNumeralsHtml).text().contains("Gold"), "Medal no numerals must force word to show even when word=false:\n$noNumeralsHtml")
     }
 
 

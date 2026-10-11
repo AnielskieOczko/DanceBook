@@ -228,4 +228,46 @@ class AppUserServiceTest {
             appUserService.updateLocale(userId, "pl")
         }
     }
+
+    @Test
+    fun `updateMedalBadgeStyle saves chosen badge style`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            medalBadgeStyle = null
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        val updated = appUserService.updateMedalBadgeStyle(userId, com.jankowski.rafal.dancebook.model.MedalBadgeStyle.MEDAL_SHAPES)
+
+        assertEquals(com.jankowski.rafal.dancebook.model.MedalBadgeStyle.MEDAL_SHAPES, updated.medalBadgeStyle)
+    }
+
+    @Test
+    fun `updateMedalBadgeStyle sets null when given null to follow app default`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply {
+            id = userId
+            username = "testuser"
+            medalBadgeStyle = com.jankowski.rafal.dancebook.model.MedalBadgeStyle.MEDAL_ICON
+        }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        val updated = appUserService.updateMedalBadgeStyle(userId, null)
+
+        org.junit.jupiter.api.Assertions.assertNull(updated.medalBadgeStyle)
+    }
+
+    @Test
+    fun `updateMedalBadgeStyle throws when user does not exist`() {
+        val userId = UUID.randomUUID()
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.empty())
+
+        assertThrows(EntityNotFoundException::class.java) {
+            appUserService.updateMedalBadgeStyle(userId, com.jankowski.rafal.dancebook.model.MedalBadgeStyle.RANK_BARS)
+        }
+    }
 }

@@ -100,6 +100,41 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Medal Badge Style Setting -->
+            <div id="badge-style-section" class="space-y-4 mb-8">
+                <h3 class="font-body-lg font-medium text-on-surface" th:text="#{profile.badge_style}">Medal Badge Style</h3>
+
+                <th:block th:if="${badgeStyleSuccessMsg}">
+                    <div th:replace="~{fragments/alert :: alert(variant='success', text=#{profile.badge_style.saved})}"></div>
+                </th:block>
+                <th:block th:if="${badgeStyleErrorMsg}">
+                    <div th:replace="~{fragments/alert :: alert(variant='error', text=#{profile.badge_style.invalid})}"></div>
+                </th:block>
+
+                <form th:action="@{/profile/badge-style}" method="post" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
+                        <div>
+                            <div th:replace="~{fragments/form :: selectField(
+                                path='medalBadgeStyle',
+                                id='badgeStyleSelect',
+                                label=#{profile.badge_style.preferred},
+                                bound=false,
+                                value=${appUser.medalBadgeStyle != null ? appUser.medalBadgeStyle.name() : ''},
+                                placeholder=#{profile.badge_style.app_default},
+                                options=${badgeStyleOptions},
+                                optValue='value',
+                                optLabel='label'
+                            )}"></div>
+                        </div>
+                        <div class="flex justify-start sm:justify-end">
+                            <button type="submit" class="btn-outline" th:text="#{profile.badge_style.save}">
+                                Save Style
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
             
             <div th:fragment="passwordSection" id="password-section" class="space-y-6">
                 <h3 class="font-body-lg font-medium text-on-surface" th:text="#{profile.update_password}">Update Password</h3>

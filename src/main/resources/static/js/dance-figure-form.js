@@ -279,30 +279,81 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // -------------------------------------------------------------
-// Medal Badge Render Helper (Rank bars - Direction A)
+// Medal Badge Render Helper (5 directions: A, B, C, D, D2)
 // -------------------------------------------------------------
-function renderMedalBadgeHtml(lvl) {
+function getEffectiveMedalBadgeStyle() {
+    const el = document.getElementById('gradeMedalBadge');
+    if (el && el.getAttribute('data-badge-style')) return el.getAttribute('data-badge-style').toLowerCase();
+    if (document.body && document.body.getAttribute('data-badge-style')) return document.body.getAttribute('data-badge-style').toLowerCase();
+    return 'rank_bars';
+}
+
+function renderMedalBadgeHtml(lvl, customStyle) {
     if (!lvl) return '';
-    const nameMap = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' };
+    const styleKey = (customStyle || getEffectiveMedalBadgeStyle()).toLowerCase();
+    const nameMap = {
+        bronze: typeof I18n !== 'undefined' ? I18n.t('figures.medal.bronze', 'Bronze') : 'Bronze',
+        silver: typeof I18n !== 'undefined' ? I18n.t('figures.medal.silver', 'Silver') : 'Silver',
+        gold: typeof I18n !== 'undefined' ? I18n.t('figures.medal.gold', 'Gold') : 'Gold'
+    };
+    const ariaMap = {
+        bronze: typeof I18n !== 'undefined' ? I18n.t('figures.medal.aria.bronze', 'Bronze medal') : 'Bronze medal',
+        silver: typeof I18n !== 'undefined' ? I18n.t('figures.medal.aria.silver', 'Silver medal') : 'Silver medal',
+        gold: typeof I18n !== 'undefined' ? I18n.t('figures.medal.aria.gold', 'Gold medal') : 'Gold medal'
+    };
     const rankMap = { bronze: 1, silver: 2, gold: 3 };
     const rank = rankMap[lvl] || 0;
     if (rank === 0) return '';
 
     const name = nameMap[lvl] || lvl;
+    const ariaLabel = ariaMap[lvl] || `${name} medal`;
     const textClass = lvl === 'bronze' ? 'text-bronze' : (lvl === 'silver' ? 'text-silver' : 'text-gold');
+    const sizeCls = 'w-[18px] h-[18px]';
 
-    let svgBars = `
-        <rect x="1" y="10" width="4" height="5" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
-        ${rank >= 2
-            ? '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
-            : '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
-        ${rank >= 3
-            ? '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
-            : '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
-    `;
+    let svgContent = '';
+    const viewBox = '0 0 16 16';
 
-    return `<span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap ${textClass}" role="img" aria-label="${name} medal" title="${name} medal">
-        <svg class="block shrink-0 w-[18px] h-[18px]" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svgBars}</svg>
+    if (styleKey === 'medal_shapes' || styleKey === 'b') {
+        if (lvl === 'bronze') {
+            svgContent = '<circle cx="8" cy="8" r="6.2" fill="currentColor"/>';
+        } else if (lvl === 'silver') {
+            svgContent = '<rect x="2.6" y="2.6" width="10.8" height="10.8" transform="rotate(45 8 8)" fill="currentColor"/>';
+        } else {
+            svgContent = '<polygon points="8.00,0.40 9.99,3.20 13.37,2.63 12.80,6.01 15.60,8.00 12.80,9.99 13.37,13.37 9.99,12.80 8.00,15.60 6.01,12.80 2.63,13.37 3.20,9.99 0.40,8.00 3.20,6.01 2.63,2.63 6.01,3.20" fill="currentColor"/>';
+        }
+    } else if (styleKey === 'ring_and_word' || styleKey === 'c') {
+        svgContent = `
+            <path d="M9.45 2.18 A6 6 0 0 1 13.77 9.65" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+            ${rank >= 2
+                ? '<path d="M12.32 12.17 A6 6 0 0 1 3.68 12.17" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>'
+                : '<path d="M12.32 12.17 A6 6 0 0 1 3.68 12.17" class="stroke-medal-empty" stroke-width="2.6" stroke-linecap="round"/>'}
+            ${rank >= 3
+                ? '<path d="M2.23 9.65 A6 6 0 0 1 6.55 2.18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>'
+                : '<path d="M2.23 9.65 A6 6 0 0 1 6.55 2.18" class="stroke-medal-empty" stroke-width="2.6" stroke-linecap="round"/>'}
+        `;
+    } else if (styleKey === 'medal_icon' || styleKey === 'd' || styleKey === 'medal_no_numerals' || styleKey === 'd2') {
+        const num = (styleKey === 'medal_icon' || styleKey === 'd') ? (rank === 3 ? '1' : (rank === 2 ? '2' : '3')) : '';
+        const softFillClass = lvl === 'bronze' ? 'fill-bronze-soft' : (lvl === 'silver' ? 'fill-silver-soft' : 'fill-gold-soft');
+        svgContent = `
+            <path d="M4.8 0.6 L7.5 5.6 M11.2 0.6 L8.5 5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt"/>
+            <circle cx="8" cy="10.3" r="5.3" class="${softFillClass}" stroke="currentColor" stroke-width="1"/>
+            <circle cx="8" cy="10.3" r="4" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.55"/>
+            ${num ? `<text x="8" y="12.7" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="7" fill="currentColor">${num}</text>` : ''}
+        `;
+    } else {
+        svgContent = `
+            <rect x="1" y="10" width="4" height="5" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
+            ${rank >= 2
+                ? '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
+                : '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
+            ${rank >= 3
+                ? '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
+                : '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
+        `;
+    }
+
+    return `<span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap ${textClass}" role="img" aria-label="${ariaLabel}" title="${ariaLabel}">
+        <svg class="block shrink-0 ${sizeCls}" viewBox="${viewBox}" fill="none" aria-hidden="true">${svgContent}</svg>
         <span>${name}</span>
     </span>`;
 }
