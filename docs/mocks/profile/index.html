@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avatar Menu and Profile</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Review sheet for issue #217. Part 1: the avatar dropdown. Part 2: three profile page directions, each at desktop
+   and 375px. Every frame is live: menus open and close (click, Escape, outside click), tabs switch, rows expand.
+   Tokens are the DanceBook ones from docs/mocks/rounded-forms (light only), not the Stitch mocks. */
+:root {
+  --surface:#fff; --surface-container:#f5f5f3; --surface-highest:#e3e3e0; --outline:#8e9199; --outline-variant:#e3e3e0;
+  --on-surface:#16181a; --on-surface-variant:#5b6067; --primary:#1f4b4a; --primary-hover:#163736; --primary-soft:#e9eded;
+  --on-primary:#fff; --error:#b3261e; --error-soft:#f7e9e8; --gold:#8a6a12; --gold-soft:#f6efd9; --silver:#5b6067; --bronze:#8a4b1f; --bronze-soft:#f5e8dd;
+  --shadow-ambient:0 4px 20px rgba(22,24,26,.08); --shadow-float:0 8px 32px rgba(22,24,26,.14);
+  --ring:color-mix(in srgb,var(--primary) 22%,transparent);
+  --r-pill:9999px; --r-field:1.5rem; --r-card:1rem; --r-inset:.75rem;
+  --font-sans:'Inter',system-ui,sans-serif; --font-prose:'Source Serif 4',Georgia,serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--surface);color:var(--on-surface);font:14px/1.5 var(--font-sans);margin:0;padding:32px 16px 96px}
+.wrap{max-width:1200px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600;text-wrap:balance}
+h2{font-size:22px;line-height:28px;margin:0 0 4px;font-weight:600}
+h3{font-size:15px;font-weight:600;margin:0}
+p{margin:0}
+.lede{max-width:68ch;color:var(--on-surface-variant);font-size:16px;line-height:26px}
+.cap{font-size:13px;color:var(--on-surface-variant)} .cap b{color:var(--on-surface)}
+section.dir{display:flex;flex-direction:column;gap:24px;border-top:1px solid var(--outline-variant);padding-top:28px}
+.row{display:flex;flex-wrap:wrap;gap:28px 24px;align-items:flex-start}
+.item{display:flex;flex-direction:column;gap:8px;min-width:0;width:100%}
+.item.phone{max-width:375px}
+.item.desk{flex:1 1 100%}
+.cols{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.cols dl{margin:0}.cols dt{font-weight:600}.cols dd{margin:2px 0 12px;color:var(--on-surface-variant)}
+.ico{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ico.sm{width:16px;height:16px}
+:focus-visible{outline:none;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--primary)}
+button{font-family:inherit}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 var(--font-sans);min-height:44px;padding:8px 18px;border-radius:var(--r-pill);border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn.sm{min-height:36px;padding:6px 14px;font-size:13px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-outline{background:transparent;color:var(--on-surface);border-color:var(--outline)}.btn-outline:hover{background:var(--surface-container)}
+.btn-ghost{background:transparent;color:var(--on-surface-variant)}.btn-ghost:hover{background:var(--surface-container);color:var(--on-surface)}
+.field{width:100%;min-height:44px;padding:8px 18px;background:var(--surface-container);border:1px solid var(--outline);border-radius:var(--r-pill);font:400 15px/1.4 var(--font-sans);color:var(--on-surface)}
+.field:focus{outline:none;background:var(--surface);border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%235b6067' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+label.lbl{display:block;font-size:13px;font-weight:600;margin:0 0 6px 4px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:1px 10px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--primary-soft);color:var(--primary);white-space:nowrap}
+.chip.def{background:var(--primary);color:#fff}
+
+/* app frame */
+.frame{container-type:inline-size;position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--outline);border-radius:var(--r-card);display:flex;flex-direction:column;height:760px}
+.phone .frame{border-radius:28px;height:760px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;flex:none;box-shadow:var(--shadow-ambient);position:relative;z-index:30;background:var(--surface);min-height:64px}
+.phone .topbar{padding:10px 14px;padding-top:16px}
+.brand{font-weight:600;font-size:17px;letter-spacing:.2em;text-transform:uppercase}
+.nav{display:flex;gap:4px;font-size:14px;font-weight:600;color:var(--on-surface-variant)}
+.nav span{padding:8px 14px;border-radius:var(--r-pill)}
+.nav .on{background:var(--surface-container);color:var(--primary);font-weight:700}
+.phone .nav{display:none}
+.tr{display:flex;align-items:center;gap:6px}
+.tr .ib{width:44px;height:44px;display:grid;place-items:center;color:var(--outline);border-radius:var(--r-pill)}
+.page{flex:1;overflow-y:auto;padding:28px 28px 40px;min-height:0}
+.phone .page{padding:18px 16px 24px}
+.bottom{display:none;flex:none;justify-content:space-around;padding:10px 4px 18px;box-shadow:0 -4px 20px rgba(22,24,26,.08);border-radius:16px 16px 0 0;font-size:11px;font-weight:500;color:var(--outline);position:relative;z-index:5;background:var(--surface)}
+.bottom div{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.phone .bottom{display:flex}
+
+/* avatar + menu */
+.mwrap{position:relative}
+.av{width:40px;height:40px;border-radius:var(--r-pill);border:1px solid var(--outline-variant);background:#cfe0df;color:#12312f;font-weight:700;display:grid;place-items:center;cursor:pointer;padding:0;font-size:15px}
+.av:hover,.av[aria-expanded="true"]{border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+.av.big{width:96px;height:96px;font-size:36px;cursor:default}.av.big:hover{box-shadow:none;border-color:var(--outline-variant)}
+.av.mid{width:72px;height:72px;font-size:28px;cursor:default}.av.mid:hover{box-shadow:none;border-color:var(--outline-variant)}
+.menu{position:absolute;right:0;top:calc(100% + 8px);z-index:40;width:272px;padding:6px;background:var(--surface);border:1px solid var(--outline-variant);border-radius:var(--r-card);box-shadow:var(--shadow-float)}
+.menu[hidden]{display:none}
+.mhead{display:flex;align-items:center;gap:12px;padding:10px 12px 12px;border-bottom:1px solid var(--outline-variant);margin-bottom:6px}
+.mhead .av{cursor:default}.mhead b{display:block;font-size:15px;line-height:1.25}.mhead small{color:var(--on-surface-variant);font-size:12px}
+.mi{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:8px 12px;border:0;background:transparent;border-radius:var(--r-inset);font:500 14px/1.2 var(--font-sans);color:var(--on-surface);cursor:pointer;text-align:left}
+.mi:hover,.mi[aria-expanded="true"]{background:var(--surface-container)}
+.mi .ico{color:var(--outline)}
+.mi .end{margin-left:auto;display:flex;align-items:center;gap:4px;color:var(--on-surface-variant);font-size:13px;font-weight:400}
+.mi.danger{color:var(--error)}.mi.danger .ico{color:var(--error)}.mi.danger:hover{background:var(--error-soft)}
+.msep{height:1px;background:var(--outline-variant);margin:6px 8px}
+.langs{margin:2px 0 4px 12px;padding-left:12px;border-left:2px solid var(--primary-soft)}
+.langs[hidden]{display:none}
+.langs .mi{min-height:40px;font-weight:400}
+.langs .mi[aria-checked="true"]{color:var(--primary);font-weight:600}
+.langs .tick{margin-left:auto;color:var(--primary);visibility:hidden}.langs [aria-checked="true"] .tick{visibility:visible}
+.msg{font-size:12px;color:var(--on-surface-variant);padding:2px 12px 6px}
+
+/* profile building blocks */
+.card{border:1px solid var(--outline-variant);border-radius:var(--r-card);background:var(--surface);padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.card.soft{background:var(--surface-container);border-color:transparent}
+.card > header,.sechead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card h3,.sechead h3{font-size:16px}
+.card .sub,.sub{font-size:13px;color:var(--on-surface-variant)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g12{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
+.phone .g12,.phone .g3x{grid-template-columns:1fr}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-size:28px;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--on-surface-variant)}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.stats .card{padding:14px 16px;gap:2px}
+.streak{display:flex;gap:4px;align-items:flex-end}
+.streak i{flex:1;max-width:14px;border-radius:4px;background:var(--surface-highest);height:14px}
+.streak i.on{background:var(--primary)}.streak i.t{height:22px}
+.weekbar{display:flex;gap:4px;align-items:flex-end;height:44px}
+.weekbar i{flex:1;background:var(--primary-soft);border-radius:6px 6px 2px 2px}
+.weekbar i.now{background:var(--primary)}
+.bdg{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.phone .bdg{grid-template-columns:repeat(2,minmax(0,1fr))}
+.b{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--outline-variant);border-radius:var(--r-inset);min-width:0}
+.b .m{width:36px;height:36px;border-radius:var(--r-pill);display:grid;place-items:center;flex:none;font-weight:700;font-size:12px}
+.b.gold .m{background:var(--gold-soft);color:var(--gold)}.b.silver .m{background:var(--surface-container);color:var(--silver)}.b.bronze .m{background:var(--bronze-soft);color:var(--bronze)}
+.b.lock{opacity:.55;border-style:dashed}.b.lock .m{background:var(--surface-container);color:var(--outline)}
+.b b{display:block;font-size:13px;line-height:1.25}.b small{font-size:12px;color:var(--on-surface-variant);line-height:1.3;display:block}
+.prog{height:4px;border-radius:4px;background:var(--surface-highest);margin-top:5px;overflow:hidden}.prog i{display:block;height:100%;background:var(--primary)}
+.counts{display:flex;flex-direction:column}
+.counts a,.counts div.li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--outline-variant);color:inherit;text-decoration:none}
+.counts a:first-child,.counts div.li:first-child{border-top:0}
+.counts .n{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
+.counts .ico{color:var(--primary)}
+.counts small{color:var(--on-surface-variant);font-size:12px;display:block;line-height:1.3}
+.cal{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--outline-variant)}
+.cal:first-of-type{border-top:0}
+.dot{width:12px;height:12px;border-radius:var(--r-pill);flex:none}
+.cal .nm{flex:1;min-width:0}.cal .nm b{display:block;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cal .nm small{font-size:12px;color:var(--on-surface-variant)}
+.radio{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--on-surface-variant);cursor:pointer;min-height:32px}
+.radio input{accent-color:var(--primary);width:16px;height:16px;margin:0}
+.act{display:flex;flex-direction:column}
+.act .a{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--outline-variant);align-items:flex-start}
+.act .a:first-child{border-top:0}
+.act .a .ic{width:32px;height:32px;border-radius:var(--r-pill);background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}
+.act .a b{font-weight:600}.act .a div{min-width:0;font-size:14px;line-height:1.4}.act small{display:block;font-size:12px;color:var(--on-surface-variant)}
+.act .a time{margin-left:auto;font-size:12px;color:var(--on-surface-variant);white-space:nowrap}
+.form{display:flex;flex-direction:column;gap:14px}
+.form .two{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.phone .form .two{grid-template-columns:1fr}
+.toggle{display:flex;align-items:flex-start;gap:12px;justify-content:space-between;padding:8px 0}
+.toggle b{font-size:14px;display:block}.toggle small{font-size:12px;color:var(--on-surface-variant)}
+.sw{position:relative;width:44px;height:26px;flex:none;margin-top:2px}
+.sw input{appearance:none;position:absolute;inset:0;margin:0;border-radius:var(--r-pill);background:var(--surface-highest);border:1px solid var(--outline);cursor:pointer}
+.sw input:checked{background:var(--primary);border-color:var(--primary)}
+.sw::after{content:"";position:absolute;left:4px;top:5px;width:16px;height:16px;border-radius:50%;background:#fff;pointer-events:none;transition:translate .15s;box-shadow:0 1px 2px rgba(0,0,0,.3);}
+.sw:has(input:checked)::after{translate:18px 0}
+.ident{display:flex;align-items:center;gap:20px;min-width:0}
+.ident h2{font-size:26px;line-height:1.15;letter-spacing:-.01em;margin:0}
+.phone .ident{gap:14px}.phone .ident h2{font-size:22px}
+.ident .meta{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:6px;align-items:center;font-size:13px;color:var(--on-surface-variant)}
+.sechead{margin-bottom:10px}
+.stack{display:flex;flex-direction:column;gap:18px}
+.stack.lg{gap:28px}
+
+/* tabs (direction B) */
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--outline-variant);padding-bottom:10px}
+.tabs button{border:0;background:transparent;min-height:40px;padding:6px 16px;border-radius:var(--r-pill);font:600 14px/1 var(--font-sans);color:var(--on-surface-variant);cursor:pointer;white-space:nowrap}
+.tabs button:hover{background:var(--surface-container)}
+.tabs button[aria-selected="true"]{background:var(--primary-soft);color:var(--primary)}
+.tabs button .chip{margin-left:6px;padding:0 7px}
+.tp[hidden]{display:none}
+
+/* accordion rows (direction C) */
+.rows{border:1px solid var(--outline-variant);border-radius:var(--r-card);overflow:hidden}
+.rows details+details{border-top:1px solid var(--outline-variant)}
+.rows summary{list-style:none;display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 18px;cursor:pointer}
+.rows summary::-webkit-details-marker{display:none}
+.rows summary:hover{background:var(--surface-container)}
+.rows summary .ico:first-child{color:var(--primary)}
+.rows summary .t{flex:1;min-width:0}.rows summary .t b{display:block;font-size:15px;font-weight:600}.rows summary .t small{display:block;color:var(--on-surface-variant);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rows summary .chev{transition:rotate .15s;color:var(--outline)}
+.rows details[open] summary .chev{rotate:180deg}
+.rows .body{padding:6px 18px 20px 52px}
+.phone .rows .body{padding:6px 16px 18px}
+.hero{background:var(--surface-container);border-radius:var(--r-card);padding:22px;display:flex;flex-direction:column;gap:18px}
+.phone .hero{padding:16px}
+.two-col{display:grid;gap:24px;grid-template-columns:minmax(0,320px) minmax(0,1fr);align-items:start}
+.phone .two-col{grid-template-columns:1fr}
+.side{display:flex;flex-direction:column;gap:18px}
+@container (max-width:900px){.nav{display:none}}
+.tr .ib{flex:none}.topbar{min-width:0}
+@media(max-width:800px){.nav{display:none}.item.desk{flex-basis:100%}.g12{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></symbol>
+<symbol id="i-note" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-steps" viewBox="0 0 24 24"><path d="M4 16c0-3 2-4 2-7a3 3 0 0 1 6 0c0 3-2 4-2 7a2 2 0 0 1-6 0zM14 21c0-3 2-4 2-7a3 3 0 0 1 6 0c0 3-2 4-2 7a2 2 0 0 1-6 0z"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+<symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="15" r="6"/><path d="M8.2 10.5 6 3h4l2 5 2-5h4l-2.2 7.5"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.7 7-7 0-3-2-5-3-7-1 1-2 2-3 2 0-3-1-5-3-7-.5 4-5 6-5 12 0 4.3 3 7 7 7z"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</defs>
+</svg>
+
+<div class="wrap">
+<header>
+  <h1>Avatar menu and profile page</h1>
+  <p class="lede">Issue #217, part of #201. First the avatar dropdown, then three directions for the reworked profile page. All keep the full domain detail: training stats and streak, badges (#39), counts of Notes, choreographies and figures, calendars with the default one, language, medal badge style, password, assistant preferences and recent activity. Everything below is clickable. Nothing here is built yet.</p>
+</header>
+
+<section class="dir" id="menu">
+  <div><h2>1. Avatar dropdown</h2>
+  <p class="cap">One menu on every width: <b>Profile</b>, <b>Language</b> (expands in place, applies immediately, no trip to the profile page), <b>Log out</b>. Today desktop has no menu (the avatar links straight to the profile) and the phone menu mixes navigation with profile items. Keeping the phone-only shortcuts (Choreographies, Collections, Admin) in a top group, because the bottom bar only fits four tabs. Open it, press Escape, or click outside to close.</p></div>
+  <div class="row" id="menurow"></div>
+  <div class="cols">
+    <dl><dt>Header block</dt><dd>Name and role so the menu says whose session this is. Not a link.</dd></dl>
+    <dl><dt>Language row</dt><dd>Shows the current value on the right. Choosing one posts to the existing <code>/profile/locale</code> and reloads. "Browser default" stays an option.</dd></dl>
+    <dl><dt>Log out</dt><dd>Separated and red, last, a POST form as today. Moves out of the profile page foot in every direction below.</dd></dl>
+  </div>
+</section>
+
+<section class="dir" id="rec">
+  <div class="card" style="background:var(--primary-soft);border-color:var(--primary)">
+   <h2 style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">Recommendation: Direction C <span class="chip def">Recommended</span></h2>
+   <p style="max-width:75ch">Summary plus settings list fits this app best. Most visits are on a phone, where the hero keeps the streak and the Note, choreography and figure counts in the first screen and settings collapse to one line each with their current value. Badges, calendars, language, badge style, assistant and password all keep their place. It reuses existing pieces (cards, selects, forms), needs no routing for tabs, and the page stays one scroll. Take A's training chart and week bars into the hero later if the stats should carry more weight.</p>
+   <p class="cap"><b>Runner-up:</b> B Tabs, if Preferences and Security will keep growing. <b>Least suited:</b> A, which is long on a phone and makes settings an afterthought.</p>
+  </div>
+</section>
+
+<section class="dir" id="a">
+  <div><h2>2. Direction A: Dashboard</h2>
+  <p class="cap">One scrolling page, read-first. Identity and the numbers that matter (streak, hours, sessions) on top, then achievements and activity on the left, library counts and calendars on the right, with the settings as a quiet block at the bottom. Best when the page is mostly looked at. Everything is visible, so it is long on the phone.</p></div>
+  <div class="row"><div class="item desk" id="a-d"></div><div class="item phone" id="a-p"></div></div>
+</section>
+
+<section class="dir" id="b">
+  <div><h2>3. Direction B: Tabs</h2>
+  <p class="cap">Identity header stays put; <b>Overview</b> (stats, badges, counts, activity), <b>Calendars</b>, <b>Preferences</b> (language, badge style, assistant) and <b>Security</b> (password). Shorter screens, one concern at a time, deep-linkable per tab. Costs an extra tap to reach settings, and stats are hidden when you are on another tab.</p></div>
+  <div class="row"><div class="item desk" id="b-d"></div><div class="item phone" id="b-p"></div></div>
+</section>
+
+<section class="dir" id="c">
+  <div><h2>4. Direction C: Summary plus settings list <span class="chip def">Recommended</span></h2>
+  <p class="cap">A compact hero with the streak and counts, badges below, then settings as an accordion list where each row shows its current value (Language: English, Default calendar: Dance Training) and expands in place. On desktop the hero sits in a left column beside the list. The best phone experience and the least scrolling, but the density of the training stats is lower than A.</p></div>
+  <div class="row"><div class="item desk" id="c-d"></div><div class="item phone" id="c-p"></div></div>
+</section>
+
+<section class="dir">
+  <h2>Decisions for review</h2>
+  <div class="cols">
+    <dl><dt>Which direction?</dt><dd>A for the stats-first view, B for the cleanest structure, C for phone-first. Elements can be mixed, for example B's tabs with C's accordion inside Preferences.</dd></dl>
+    <dl><dt>Language in two places</dt><dd>The dropdown is the quick switch; the profile keeps the full Preferences entry. Both write the same preference.</dd></dl>
+    <dl><dt>Assistant preferences</dt><dd>Shown as example switches (suggest figures, remember history, open full window). Final list to be confirmed against #201.</dd></dl>
+    <dl><dt>Data shown</dt><dd>All numbers and names are sample data. The current page's "Library 124" and "Styles 12" placeholders are replaced with real counts.</dd></dl>
+  </div>
+</section>
+</div>
+
+<script>
+const ic=(n,c='')=>`<svg class="ico ${c}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+let uid=0;
+
+/* ---------- shared content blocks ---------- */
+const NAME='Rafal', INIT='R';
+const statsRow=()=>`<div class="stats">
+ <div class="card"><div class="stat"><b>12</b><span>Day streak (best 21)</span></div></div>
+ <div class="card"><div class="stat"><b>38.5h</b><span>Trained this year</span></div></div>
+ <div class="card"><div class="stat"><b>46</b><span>Sessions attended</span></div></div>
+ <div class="card"><div class="stat"><b>91%</b><span>Attendance, last 30 days</span></div></div></div>`;
+const streakCard=()=>`<div class="card"><header><h3>Training</h3><span class="chip">${ic('flame','sm')} 12 day streak</span></header>
+ <div class="streak" aria-label="Last 14 days">${[1,1,0,1,1,1,1,1,1,1,1,1,1,1].map((v,i)=>`<i class="${v?'on':''} ${i%7>4?'t':''}"></i>`).join('')}</div>
+ <div class="sub">Last 14 days. Weekly hours, last 8 weeks:</div>
+ <div class="weekbar">${[40,55,30,70,60,45,80,65].map((h,i)=>`<i class="${i==7?'now':''}" style="height:${h}%"></i>`).join('')}</div>
+ <div class="sub">Standard 58% / Latin 42% this month. <a href="#" style="color:var(--primary)">Open training</a></div></div>`;
+const badges=()=>`<div class="card"><header><h3>Badges</h3><span class="sub">5 of 9 earned</span></header><div class="bdg">
+ <div class="b gold"><span class="m">10</span><div><b>10 day streak</b><small>Earned 3 Oct</small></div></div>
+ <div class="b silver"><span class="m">5</span><div><b>5 day streak</b><small>Earned 18 Sep</small></div></div>
+ <div class="b bronze"><span class="m">50h</span><div><b>50 hours</b><small>Earned 2 Sep</small></div></div>
+ <div class="b gold"><span class="m">${ic('check','sm')}</span><div><b>Perfect month</b><small>September</small></div></div>
+ <div class="b silver"><span class="m">${ic('medal','sm')}</span><div><b>Style balance</b><small>Standard and Latin</small></div></div>
+ <div class="b lock"><span class="m">20</span><div><b>20 day streak</b><small>12 of 20</small><div class="prog"><i style="width:60%"></i></div></div></div>
+ <div class="b lock"><span class="m">100h</span><div><b>100 hours</b><small>38.5 of 100</small><div class="prog"><i style="width:38%"></i></div></div></div>
+ </div></div>`;
+const counts=()=>`<div class="card"><header><h3>My library</h3></header><div class="counts">
+ <a href="#">${ic('note')}<div>Notes<small>34 public, 90 private</small></div><span class="n">124</span></a>
+ <a href="#">${ic('route')}<div>Choreographies<small>2 in progress</small></div><span class="n">8</span></a>
+ <a href="#">${ic('steps')}<div>Figures pinned<small>across 12 dance styles</small></div><span class="n">57</span></a>
+ <a href="#">${ic('layers')}<div>Collections<small>3 private, 1 public</small></div><span class="n">4</span></a></div></div>`;
+const cals=(compact)=>{const id='cal'+(uid++);return `<div class="card"><header><h3>Calendars</h3><button class="btn btn-outline sm">${ic('plus','sm')} Connect</button></header>
+ <div>${[['Dance Training','#1f4b4a','Google, 31 sessions',1],['Studio Classes','#8a6a12','Google, 12 sessions',0],['Competitions','#b3261e','Google, 3 sessions',0]].map(([n,c,s,d])=>`<div class="cal"><span class="dot" style="background:${c}"></span><div class="nm"><b>${n}</b><small>${s}</small></div><label class="radio"><input type="radio" name="${id}" ${d?'checked':''}> Default</label></div>`).join('')}</div>
+ <p class="sub">New sessions are created in the default calendar. The calendar and DanceBook always show the same state.</p></div>`};
+const activity=()=>`<div class="card"><header><h3>Recent activity</h3><a class="sub" href="#" style="color:var(--primary)">See all</a></header><div class="act">
+ <div class="a"><span class="ic">${ic('cal','sm')}</span><div><b>Attended</b> Waltz technique<small>Dance Training</small></div><time>Today</time></div>
+ <div class="a"><span class="ic">${ic('medal','sm')}</span><div>Earned <b>10 day streak</b></div><time>3 Oct</time></div>
+ <div class="a"><span class="ic">${ic('note','sm')}</span><div>Edited Note <b>Viennese turns</b></div><time>2 Oct</time></div>
+ <div class="a"><span class="ic">${ic('steps','sm')}</span><div>Pinned <b>Natural Spin Turn</b> to a Note</div><time>30 Sep</time></div>
+ <div class="a"><span class="ic">${ic('route','sm')}</span><div>Updated choreography <b>Slow Waltz routine</b></div><time>28 Sep</time></div></div></div>`;
+const langForm=()=>`<div class="form"><div><label class="lbl">Preferred language</label><select class="field"><option>English</option><option>Polski</option><option>Browser default</option></select></div><div><button class="btn btn-primary sm">Save language</button></div></div>`;
+const badgeStyleForm=()=>`<div class="form"><div><label class="lbl">Medal badge style</label><select class="field"><option>Follow app default (Medal icon)</option><option>Rank bars</option><option>Medal shapes</option><option>Ring and word</option><option>Medal icon</option><option>Medal icon (no numerals)</option></select></div><div class="b gold" style="width:fit-content"><span class="m">${ic('medal','sm')}</span><div><b>Preview</b><small>Gold, Waltz</small></div></div><div><button class="btn btn-primary sm">Save style</button></div></div>`;
+const assistantForm=()=>`<div class="form">
+ <div class="toggle"><div><b>Suggest figures while I write a Note</b><small>The assistant proposes pins from the dance style.</small></div><span class="sw"><input type="checkbox" checked aria-label="Suggest figures"></span></div>
+ <div class="toggle"><div><b>Keep conversation history</b><small>Saved per user, can be deleted any time.</small></div><span class="sw"><input type="checkbox" checked aria-label="Keep history"></span></div>
+ <div class="toggle"><div><b>Open in the full window</b><small>Start the assistant expanded instead of as a side panel.</small></div><span class="sw"><input type="checkbox" aria-label="Full window"></span></div></div>`;
+const pwForm=()=>`<div class="form"><div><label class="lbl">Current password</label><input class="field" type="password" value="password123"></div><div class="two"><div><label class="lbl">New password</label><input class="field" type="password"></div><div><label class="lbl">Confirm new password</label><input class="field" type="password"></div></div><div><button class="btn btn-outline sm">Update password</button></div></div>`;
+const settingsCard=(t,body,sub)=>`<div class="card"><header><div><h3>${t}</h3>${sub?`<div class="sub">${sub}</div>`:''}</div></header>${body}</div>`;
+const ident=(size='big',extra='')=>`<div class="ident"><span class="av ${size}">${INIT}</span><div style="min-width:0"><h2>${NAME}</h2><div class="meta"><span class="chip">Administrator</span><span>Member since March 2025</span></div></div>${extra}</div>`;
+
+/* ---------- menu component ---------- */
+function menuHTML(phone){
+ const id='m'+(uid++);
+ return `<div class="mwrap" data-menuwrap>
+  <button class="av" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="${id}" aria-label="Account menu" data-menubtn>${INIT}</button>
+  <div class="menu" id="${id}" role="menu" hidden>
+   <div class="mhead"><span class="av">${INIT}</span><div><b>${NAME}</b><small>Administrator</small></div></div>
+   ${phone?`<a class="mi" role="menuitem" href="#">${ic('route')}Choreographies</a><a class="mi" role="menuitem" href="#">${ic('layers')}Collections</a><a class="mi" role="menuitem" href="#">${ic('gear')}Admin</a><div class="msep"></div>`:''}
+   <a class="mi" role="menuitem" href="#">${ic('user')}Profile</a>
+   <button class="mi" role="menuitem" type="button" aria-expanded="false" data-langbtn>${ic('globe')}Language<span class="end"><span data-langval>English</span>${ic('chev','sm')}</span></button>
+   <div class="langs" role="group" aria-label="Language" hidden>
+    ${[['English','en'],['Polski','pl'],['Browser default','']].map(([l],i)=>`<button class="mi" type="button" role="menuitemradio" aria-checked="${i==0}" data-lang="${l}">${l}${ic('check','sm tick')}</button>`).join('')}
+   </div>
+   <div class="msep"></div>
+   <button class="mi danger" role="menuitem" type="button">${ic('logout')}Log out</button>
+  </div></div>`;
+}
+function chrome(phone,active,inner){
+ return `<div class="frame"><div class="topbar"><span class="brand">DanceBook</span>
+  <div class="nav">${['Dashboard','Notes','Figures','Collections','Choreographies','Training'].map(n=>`<span>${n}</span>`).join('')}</div>
+  <div class="tr"><span class="ib">${ic('spark')}</span><span class="ib">${ic('bell')}</span>${menuHTML(phone)}</div></div>
+  <div class="page">${inner}</div>
+  <div class="bottom"><div>${ic('home')}Home</div><div>${ic('cal')}Training</div><div>${ic('note')}Notes</div><div>${ic('steps')}Figures</div></div></div>`;
+}
+function wire(root){
+ root.querySelectorAll('[data-menuwrap]').forEach(w=>{
+  const btn=w.querySelector('[data-menubtn]'),menu=w.querySelector('.menu'),lb=w.querySelector('[data-langbtn]'),langs=w.querySelector('.langs');
+  const close=()=>{menu.hidden=true;btn.setAttribute('aria-expanded','false');langs.hidden=true;lb.setAttribute('aria-expanded','false')};
+  w._close=close;
+  btn.addEventListener('click',e=>{e.stopPropagation();const open=menu.hidden;document.querySelectorAll('[data-menuwrap]').forEach(x=>x._close());if(open){menu.hidden=false;btn.setAttribute('aria-expanded','true');menu.querySelector('.mi').focus()}});
+  lb.addEventListener('click',()=>{langs.hidden=!langs.hidden;lb.setAttribute('aria-expanded',String(!langs.hidden))});
+  langs.querySelectorAll('[data-lang]').forEach(o=>o.addEventListener('click',()=>{langs.querySelectorAll('[data-lang]').forEach(x=>x.setAttribute('aria-checked','false'));o.setAttribute('aria-checked','true');w.querySelector('[data-langval]').textContent=o.dataset.lang;
+    let m=w.querySelector('.msg');if(!m){m=document.createElement('div');m.className='msg';menu.insertBefore(m,w.querySelector('.msep:last-of-type'))}m.textContent='Saved. The page reloads in '+o.dataset.lang+'.';}));
+  menu.addEventListener('keydown',e=>{if(e.key==='Escape'){close();btn.focus()}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const it=[...menu.querySelectorAll('.mi')].filter(x=>x.offsetParent);let i=it.indexOf(document.activeElement)+(e.key==='ArrowDown'?1:-1);it[(i+it.length)%it.length].focus()}});
+  btn.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ });
+}
+document.addEventListener('click',e=>{document.querySelectorAll('[data-menuwrap]').forEach(w=>{if(!w.contains(e.target))w._close&&w._close()})});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('[data-menuwrap]').forEach(w=>w._close&&w._close())});
+document.querySelectorAll('a[href="#"]').forEach(a=>a.addEventListener('click',e=>e.preventDefault()));
+
+/* ---------- 1. menu frames ---------- */
+const mrow=document.getElementById('menurow');
+const stub=`<div class="stack"><h2 style="font-size:24px">Notes</h2><p class="sub">Any page. The menu floats over the content.</p><div class="card soft" style="height:120px"></div><div class="card soft" style="height:120px"></div></div>`;
+mrow.innerHTML=`<div class="item desk"><div class="cap"><b>Desktop</b>, click the avatar</div>${chrome(false,'',stub).replace('class="frame"','class="frame" style="height:520px"')}</div>
+<div class="item phone"><div class="cap"><b>375px</b>, click the avatar</div>${chrome(true,'',stub).replace('class="frame"','class="frame" style="height:560px"')}</div>`;
+mrow.children[1].classList.add('phone');
+
+/* ---------- 2. direction A ---------- */
+const A=phone=>chrome(phone,'',`<div class="stack lg">
+ <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center">${ident(phone?'mid':'big')}<button class="btn btn-outline">${ic('edit','sm')} Edit profile</button></div>
+ ${statsRow()}
+ <div class="grid ${phone?'':'g12'}"><div class="stack">${streakCard()}${badges()}${activity()}</div><div class="stack">${counts()}${cals()}</div></div>
+ <div><div class="sechead"><h3>Settings</h3></div><div class="grid ${phone?'':'g2'}">
+  ${settingsCard('Language',langForm())}${settingsCard('Medal badge style',badgeStyleForm(),'Overrides the app default for your badges.')}
+  ${settingsCard('Assistant',assistantForm())}${settingsCard('Password',pwForm())}</div></div></div>`);
+/* ---------- 3. direction B ---------- */
+const B=phone=>{const k='t'+(uid++);return chrome(phone,'',`<div class="stack lg" data-tabs>
+ <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center">${ident(phone?'mid':'big')}${phone?'':`<button class="btn btn-outline">${ic('edit','sm')} Edit profile</button>`}</div>
+ <div class="tabs" role="tablist">${['Overview','Calendars','Preferences','Security'].map((t,i)=>`<button role="tab" id="${k}${i}" aria-selected="${i==0}" aria-controls="${k}p${i}" data-t="${i}">${t}${i==1?'<span class="chip">3</span>':''}</button>`).join('')}</div>
+ <div class="tp stack lg" id="${k}p0" role="tabpanel">${statsRow()}<div class="grid ${phone?'':'g12'}"><div class="stack">${streakCard()}${badges()}</div><div class="stack">${counts()}${activity()}</div></div></div>
+ <div class="tp stack" id="${k}p1" role="tabpanel" hidden>${cals()}<div class="card soft"><b style="font-size:14px">Mirror rule</b><p class="sub">Renaming or deleting a session in either place shows up in both. Disconnecting a calendar keeps the sessions already imported.</p></div></div>
+ <div class="tp stack" id="${k}p2" role="tabpanel" hidden><div class="grid ${phone?'':'g2'}">${settingsCard('Language',langForm())}${settingsCard('Medal badge style',badgeStyleForm())}</div>${settingsCard('Assistant',assistantForm(),'How the assistant behaves for you.')}</div>
+ <div class="tp stack" id="${k}p3" role="tabpanel" hidden>${settingsCard('Update password',pwForm())}</div></div>`)};
+/* ---------- 4. direction C ---------- */
+const row=(ico,t,val,body,open)=>`<details ${open?'open':''}><summary>${ic(ico)}<span class="t"><b>${t}</b><small>${val}</small></span>${ic('chev','chev')}</summary><div class="body">${body}</div></details>`;
+const C=phone=>{
+ const hero=`<div class="hero">${ident(phone?'mid':'big')}
+  <div class="card" style="gap:10px"><header><h3>${ic('flame','sm')} 12 day streak</h3><span class="sub">best 21</span></header><div class="streak">${[1,1,0,1,1,1,1,1,1,1,1,1,1,1].map(v=>`<i class="${v?'on':''}"></i>`).join('')}</div><div class="sub">38.5h this year, 46 sessions, 91% attendance</div></div>
+  <div class="counts" style="background:var(--surface);border-radius:var(--r-inset);padding:4px 14px">
+   <a href="#">${ic('note')}<div>Notes</div><span class="n">124</span></a><a href="#">${ic('route')}<div>Choreographies</div><span class="n">8</span></a><a href="#">${ic('steps')}<div>Figures pinned</div><span class="n">57</span></a></div></div>`;
+ const list=`<div class="stack lg"><div class="rows">
+  ${row('medal','Badges','5 of 9 earned, last: 10 day streak',badges().replace('class="card"','class="card" style="border:0;padding:0"').replace(/<header>.*?<\/header>/,''),false)}
+  ${row('cal','Calendars','Default: Dance Training, 3 connected',cals().replace('class="card"','class="card" style="border:0;padding:0"').replace(/<header>.*?<\/header>/,''))}
+  ${row('globe','Language','English',langForm())}
+  ${row('medal','Medal badge style','Follow app default',badgeStyleForm())}
+  ${row('spark','Assistant','3 preferences, history on',assistantForm())}
+  ${row('lock','Password','Change your password',pwForm())}</div>
+  ${activity()}</div>`;
+ return chrome(phone,'',phone?`<div class="stack lg">${hero}${list}</div>`:`<div class="two-col"><div class="side">${hero}</div>${list}</div>`);
+};
+function mount(id,fn,phone){const el=document.getElementById(id);el.innerHTML=`<div class="cap"><b>${phone?'375px':'Desktop'}</b></div>`+fn(phone);wire(el);
+ el.querySelectorAll('[data-tabs]').forEach(t=>t.querySelectorAll('[role=tab]').forEach(b=>b.addEventListener('click',()=>{t.querySelectorAll('[role=tab]').forEach(x=>x.setAttribute('aria-selected',x===b));t.querySelectorAll('[role=tabpanel]').forEach(p=>p.hidden=p.id!==b.getAttribute('aria-controls'))})));}
+wire(mrow);mrow.children[0].querySelector('[data-menubtn]').click();
+[['a',A],['b',B],['c',C]].forEach(([k,f])=>{mount(k+'-d',f,false);mount(k+'-p',f,true)});
+</script>
+</body>
+</html>

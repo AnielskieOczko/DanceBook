@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Training Timeline Directions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for #216 (part of #200). Tokens from src/main/resources/frontend/input.css, radii from docs/mocks/rounded-forms.
+   One teal accent, warning reserved for "unconfirmed" (#46), danger for skipped/cancelled-class states.
+   Bronze/silver/gold are the muted medal metals from docs/mocks/figures; they only appear in the badge slots (#35, #39). */
+:root {
+  --surface:#fff; --surface-container:#f5f5f3; --surface-highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on-surface:#16181a; --on-surface-variant:#5b6067;
+  --primary:#1f4b4a; --primary-hover:#163736; --primary-soft:#e9eded; --on-primary:#fff;
+  --error:#b3261e; --error-soft:#f7e9e8; --warning:#8a5a00; --warning-soft:#f6efe0;
+  --ring:color-mix(in srgb,var(--primary) 22%,transparent);
+  --r-pill:9999px; --r-field:24px; --r-card:16px; --r-inset:12px;
+  --bronze:#8a5a2e; --bronze-soft:#f5ece3; --silver:#66717e; --silver-soft:#eceef1; --gold:#8a6a0c; --gold-soft:#f6efd8;
+  --font-sans:'Inter',system-ui,sans-serif; --font-prose:'Source Serif 4',Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--surface);color:var(--on-surface);font:14px/1.5 var(--font-sans);margin:0;padding:32px 16px 96px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin-inline:auto;display:flex;flex-direction:column;gap:64px}
+h1{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+h3{font-size:14px;margin:0;font-weight:600}
+p{margin:0}
+.lede{max-width:70ch;color:var(--on-surface-variant);font:400 17px/28px var(--font-prose)}
+.note{font-size:13px;color:var(--on-surface-variant);max-width:70ch}
+.sheet{display:flex;flex-direction:column;gap:20px;border-top:1px solid var(--hair);padding-top:24px;min-width:0}
+.jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.jump a{text-decoration:none;border:1px solid var(--outline);border-radius:var(--r-pill);padding:8px 16px;font-weight:600;color:var(--on-surface)}
+.jump a:hover{background:var(--surface-container)}
+.cap{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface-variant);margin-bottom:8px}
+.pair{display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.phonerow>div:first-child{max-width:100%;min-width:0}
+.phonerow{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.phone{width:375px;max-width:100%;height:780px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--outline);border-radius:28px;background:var(--surface);position:relative}
+.frame{border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface);overflow:clip;padding:24px}
+.frame.compact,.phone .frame{border:0;padding:16px 16px 24px;border-radius:0}
+.why{flex:1;min-width:260px;max-width:52ch;display:flex;flex-direction:column;gap:12px}
+.why ul{margin:0;padding-left:18px;color:var(--on-surface-variant)}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;vertical-align:middle;-webkit-font-smoothing:antialiased;font-variation-settings:'FILL' 0,'wght' 400}
+.ms.sm{font-size:16px}.ms.fill{font-variation-settings:'FILL' 1,'wght' 400}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 var(--font-sans);min-height:44px;padding:8px 20px;border-radius:var(--r-pill);border:1px solid transparent;cursor:pointer;background:transparent;color:var(--on-surface)}
+.btn.sm{min-height:36px;padding:6px 14px;font-size:13px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-outline{border-color:var(--outline)}.btn-outline:hover{background:var(--surface-container)}
+button:focus-visible,a:focus-visible,.cell:focus-visible{outline:none;box-shadow:0 0 0 2px var(--surface),0 0 0 5px var(--primary)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--surface-container);border:1px solid var(--hair);border-radius:var(--r-field)}
+.seg button{min-height:36px;padding:6px 16px;border-radius:var(--r-pill);border:1px solid transparent;background:transparent;font:600 13px/1 var(--font-sans);color:var(--on-surface-variant);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--primary);border-color:var(--primary)}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.pagehead{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end;margin-bottom:16px}
+.pagehead h4{margin:0;font-size:24px;line-height:30px;font-weight:600;letter-spacing:-.01em}
+.pagehead p{color:var(--on-surface-variant)}
+
+/* badges (fragments/badge) */
+.badge{display:inline-flex;align-items:center;gap:4px;min-height:24px;padding:0 10px;border-radius:var(--r-pill);font:600 12px/1 var(--font-sans);border:1px solid transparent;white-space:nowrap}
+.b-primary{background:var(--primary-soft);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 20%,transparent)}
+.b-secondary{background:var(--surface);color:var(--on-surface);border-color:var(--outline)}
+.b-neutral{background:var(--surface-container);color:var(--on-surface-variant)}
+.b-success{background:var(--primary-soft);color:var(--primary);border-color:color-mix(in srgb,var(--primary) 25%,transparent)}
+.b-warning{background:var(--warning-soft);color:var(--warning);border-color:color-mix(in srgb,var(--warning) 25%,transparent)}
+.b-danger{background:var(--error-soft);color:var(--error);border-color:color-mix(in srgb,var(--error) 25%,transparent)}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+
+/* stat tiles (statCard) */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{border:1px solid var(--hair);border-radius:var(--r-card);padding:14px 16px;background:var(--surface)}
+.stat .l{font-size:12px;font-weight:600;color:var(--on-surface-variant)}
+.stat .v{font-size:26px;line-height:32px;font-weight:600;letter-spacing:-.02em}
+.stat .c{font-size:12px;color:var(--on-surface-variant)}
+.compact .stats{grid-template-columns:1fr 1fr}
+
+/* badge slots (#35, #39) */
+.slots{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.slot{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px 0 8px;border:1.5px dashed var(--outline);border-radius:var(--r-pill);color:var(--on-surface-variant);font-size:12px;font-weight:600;background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(0,0,0,.025) 6px 12px)}
+.slot i{width:22px;height:22px;border-radius:50%;border:1.5px dashed currentColor;display:grid;place-items:center;font-style:normal}
+.slot.bronze{color:var(--bronze);border-color:color-mix(in srgb,var(--bronze) 55%,transparent)}
+.slot.silver{color:var(--silver);border-color:color-mix(in srgb,var(--silver) 55%,transparent)}
+.slot.gold{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
+
+/* session detail (training-events/view) */
+.sess{border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface);overflow:clip;border-left:4px solid var(--st,var(--outline))}
+.sess .hd{padding:14px 16px 0}
+.sess h5{margin:0;font-size:17px;line-height:24px;font-weight:600}
+.sess .when{color:var(--on-surface-variant);font-size:13px;margin-top:2px}
+.sess .bd{padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.lbl{font-size:12px;font-weight:600;color:var(--on-surface-variant);margin-bottom:4px}
+.segbar{display:flex;height:10px;border-radius:var(--r-pill);overflow:hidden;background:var(--surface-container);gap:2px}
+.segbar span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--on-surface-variant)}
+.legend b{color:var(--on-surface);font-weight:600}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.desc{font:400 15px/24px var(--font-prose);color:var(--on-surface-variant)}
+.link{color:var(--primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.link:hover{text-decoration:underline}
+.meta{font-size:12px;color:var(--outline);border-top:1px solid var(--hair);padding-top:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.sessgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:12px}
+.compact .sessgrid{grid-template-columns:1fr}
+.detailhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:20px 0 10px}
+.detailhead h3{font-size:16px}
+
+/* legend of states */
+.states{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--on-surface-variant);margin:10px 0}
+.states span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border-radius:50%;display:inline-block;flex:none}
+.sw.attended{background:var(--primary)}
+.sw.skipped{background:var(--surface);border:2px solid var(--error)}
+.sw.cancelled{background:var(--error-soft);border:1px solid var(--error)}
+.sw.unconfirmed{background:var(--warning-soft);border:2px solid var(--warning)}
+.sw.upcoming{background:var(--surface);border:2px dashed var(--primary)}
+
+/* ===== direction 1: horizontal ===== */
+.tl-scroll{overflow-x:auto;border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface);scrollbar-width:thin}
+.tl-track{position:relative;height:292px}
+.tl-lane{position:absolute;left:0;right:0;border-bottom:1px dashed var(--hair)}
+.tl-lanelabel{position:sticky;left:8px;display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--outline);padding:6px 0 0 8px}
+.tl-axis{position:absolute;left:0;right:0;bottom:0;height:40px;border-top:1px solid var(--outline)}
+.tick{position:absolute;top:0;height:100%;border-left:1px solid var(--hair);padding:4px 6px;font-size:11px;color:var(--on-surface-variant);white-space:nowrap}
+.tick.major{border-left-color:var(--outline);font-weight:600;color:var(--on-surface)}
+.tl-today{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--primary);z-index:3}
+.tl-today span{position:absolute;top:4px;left:6px;background:var(--primary);color:#fff;font-size:11px;font-weight:600;border-radius:var(--r-pill);padding:2px 8px}
+.bub{position:absolute;border-radius:50%;display:grid;place-items:center;font:700 13px/1 var(--font-sans);cursor:pointer;border:2px solid var(--primary);background:var(--primary);color:#fff;transform:translate(-50%,0);transition:box-shadow .15s}
+.bub:hover{box-shadow:0 0 0 4px var(--ring)}
+.bub.sel{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--primary)}
+.bub.skipped{background:var(--surface);border-color:var(--error);color:var(--error)}
+.bub.cancelled{background:var(--error-soft);border-color:var(--error);color:var(--error)}
+.bub.unconfirmed{background:var(--warning-soft);border-color:var(--warning);color:var(--warning)}
+.bub.upcoming{background:var(--surface);border:2px dashed var(--primary);color:var(--primary)}
+.bublab{position:absolute;transform:translateX(-50%);font-size:10px;color:var(--on-surface-variant);white-space:nowrap;pointer-events:none}
+.card-s{position:absolute;width:104px;border:1px solid var(--hair);border-left:4px solid var(--st);border-radius:var(--r-inset);background:var(--surface);padding:6px 8px;cursor:pointer;font-size:11px;line-height:1.3}
+.card-s:hover{border-color:var(--outline);border-left-color:var(--st)}
+.card-s.sel{box-shadow:0 0 0 3px var(--ring);border-color:var(--primary);border-left-color:var(--st)}
+.card-s b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-s.upcoming{border-style:dashed;border-left-style:solid}
+.ms-marker{position:absolute;transform:translateX(-50%);top:30px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;color:var(--on-surface-variant);white-space:nowrap}
+.ms-marker i{width:26px;height:26px;border-radius:50%;border:1.5px dashed var(--outline);display:grid;place-items:center;font-style:normal;color:var(--bronze);border-color:var(--bronze)}
+.ms-marker.s i{color:var(--silver);border-color:var(--silver)}.ms-marker.g i{color:var(--gold);border-color:var(--gold)}
+.ms-line{position:absolute;width:0;border-left:1px dotted var(--outline);top:78px;bottom:40px}
+
+/* ===== direction 2: journey feed ===== */
+.feed{position:relative;display:flex;flex-direction:column;gap:20px;max-width:880px}
+.week{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px}
+.compact .week{grid-template-columns:minmax(0,1fr);gap:10px}
+.roll{border:1px solid var(--hair);border-radius:var(--r-card);padding:14px 16px;background:var(--surface-container);align-self:start;position:sticky;top:12px}
+.compact .roll{position:static}
+.roll .wk{font-weight:600;font-size:15px}
+.roll .rng{font-size:12px;color:var(--on-surface-variant);margin-bottom:8px}
+.roll dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px}
+.roll dt{color:var(--on-surface-variant)}.roll dd{margin:0;font-weight:600;text-align:right}
+.compact .roll dl{grid-template-columns:repeat(4,auto);justify-content:space-between;text-align:left}
+.compact .roll dd{text-align:left}
+.compact .roll dl>div{display:flex;flex-direction:column}
+.dots{display:flex;gap:4px;margin-top:10px}
+.dots i{flex:1;height:6px;border-radius:var(--r-pill);background:var(--surface-highest)}
+.dots i.a{background:var(--primary)}.dots i.s{background:var(--error)}.dots i.u{background:var(--warning)}.dots i.f{background:transparent;border:1px dashed var(--primary)}
+.spine{position:relative;padding-left:26px;display:flex;flex-direction:column;gap:12px}
+.spine::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;border-left:2px solid var(--hair)}
+.node{position:absolute;left:-26px;top:16px;width:16px;height:16px;border-radius:50%;border:2px solid var(--st);background:var(--bg,var(--surface))}
+.entry{position:relative}
+.entry .row{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:1px solid var(--hair);border-left:4px solid var(--st);border-radius:var(--r-card);background:var(--surface);padding:12px 14px;cursor:pointer;font:inherit;color:inherit}
+.entry .row:hover{border-color:var(--outline);border-left-color:var(--st)}
+.rail{width:46px;flex:none;text-align:center;border-radius:var(--r-inset);background:var(--bg);padding:4px 0}
+.rail b{display:block;font-size:20px;line-height:24px}.rail span{font-size:11px;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.04em}
+.entry .tt{font-weight:600;font-size:15px}.entry .sub{font-size:13px;color:var(--on-surface-variant);margin:1px 0 6px}
+.entry .more{margin-top:8px}
+.streak{display:flex;align-items:center;gap:12px;border:1.5px dashed var(--primary);border-radius:var(--r-card);padding:10px 14px;background:var(--primary-soft);color:var(--primary);font-weight:600}
+.streak small{display:block;font-weight:400;color:var(--on-surface-variant)}
+.streak .slot{margin-left:auto;background:var(--surface)}
+.compact .streak{flex-wrap:wrap}.compact .streak .slot{margin-left:0}
+.todaymark{display:flex;align-items:center;gap:12px;color:var(--primary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.todaymark::before,.todaymark::after{content:"";flex:1;border-top:2px solid var(--primary)}
+.monthhd{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--hair);padding-bottom:6px}
+.monthhd h3{font-size:20px;font-weight:600}.monthhd span{color:var(--on-surface-variant);font-size:13px}
+
+/* ===== direction 3: heat strip ===== */
+.heat{display:grid;gap:3px;--c:30px}
+.heat.h{grid-template-rows:20px repeat(7,var(--c));grid-auto-flow:column;grid-auto-columns:var(--c);overflow-x:auto;padding-bottom:6px}
+.heat.v{grid-template-columns:44px repeat(7,minmax(0,1fr));--c:40px;grid-auto-rows:var(--c)}
+.hl{font-size:11px;color:var(--on-surface-variant);display:flex;align-items:center;white-space:nowrap}
+.hl.m{font-weight:600;color:var(--on-surface)}
+.cell{border-radius:8px;border:0;padding:0;position:relative;font:600 11px/1 var(--font-sans);cursor:pointer;background:var(--surface-container);color:var(--on-surface-variant);display:grid;place-items:center}
+.cell.empty{cursor:default;background:var(--surface-container);opacity:.55}
+.cell.l1{background:color-mix(in srgb,var(--primary) 22%,white);color:var(--primary)}
+.cell.l2{background:color-mix(in srgb,var(--primary) 45%,white);color:#fff}
+.cell.l3{background:color-mix(in srgb,var(--primary) 72%,white);color:#fff}
+.cell.l4{background:var(--primary);color:#fff}
+.cell.skipped{background:var(--surface);box-shadow:inset 0 0 0 2px var(--error);color:var(--error)}
+.cell.cancelled{background:var(--error-soft);color:var(--error)}
+.cell.cancelled::after{content:"";position:absolute;left:5px;right:5px;top:50%;border-top:1.5px solid var(--error);transform:rotate(-20deg)}
+.cell.upcoming{background:var(--surface);box-shadow:inset 0 0 0 2px var(--primary);color:var(--primary);background-image:repeating-linear-gradient(135deg,transparent 0 4px,var(--primary-soft) 4px 8px)}
+.cell.today{outline:2px solid var(--on-surface);outline-offset:2px}
+.cell.sel{box-shadow:0 0 0 2px var(--surface),0 0 0 5px var(--primary)}
+.cell .pip{position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--warning);border:1.5px solid var(--surface)}
+.cell .st{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:9px;opacity:.9}
+.ramp{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--on-surface-variant)}
+.ramp i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.sheetpanel{border:1px solid var(--outline);border-radius:var(--r-card);background:var(--surface);padding:16px;margin-top:16px;box-shadow:0 -8px 24px rgba(22,24,26,.08)}
+.phone .sheetpanel{position:sticky;bottom:0;margin:12px -16px -24px;border-radius:20px 20px 0 0;max-height:44%;overflow:auto;border-bottom:0}
+.sheetpanel .grab{width:36px;height:4px;border-radius:2px;background:var(--surface-highest);margin:-6px auto 10px;display:none}
+.phone .sheetpanel .grab{display:block}
+.empty-day{color:var(--on-surface-variant);padding:8px 0}
+.weekstrip{display:flex;gap:6px;margin:8px 0 12px}
+.weekstrip button{flex:1;border:1px solid var(--hair);background:var(--surface);border-radius:var(--r-inset);padding:6px 0;font:600 12px/1.2 var(--font-sans);cursor:pointer;color:var(--on-surface-variant)}
+.weekstrip button[aria-pressed="true"]{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+
+/* ===== direction 4: fitted bubbles, no horizontal scroll ===== */
+.f-desk{position:relative;border:1px solid var(--hair);border-radius:var(--r-card);padding:0 16px 12px;overflow:hidden}
+.f-lane{position:relative;height:70px;border-bottom:1px dashed var(--hair)}
+.f-plot{position:relative;height:120px}
+.f-axis{position:relative;height:26px;border-top:1px solid var(--outline)}
+.f-axis span{position:absolute;top:4px;transform:translateX(-50%);font-size:10px;color:var(--on-surface-variant);white-space:nowrap}
+.f-axis span.maj{font-weight:700;color:var(--on-surface);font-size:11px;transform:none}
+.f-axis i{position:absolute;top:0;height:6px;border-left:1px solid var(--outline)}
+.f-roll{position:relative;height:46px;margin-top:6px}
+.f-seg{position:absolute;top:0;bottom:0;padding:0 3px}
+.f-seg>div{height:100%;border:1px solid var(--hair);border-radius:var(--r-inset);background:var(--surface-container);display:flex;align-items:center;gap:8px;padding:0 8px;overflow:hidden;font-size:12px;font-weight:600;white-space:nowrap}
+.f-sp{position:absolute;bottom:0;width:calc(100%/26 - 4px);transform:translateX(-50%);border-radius:4px 4px 0 0;background:var(--primary);min-height:2px}
+.f-sp.part{background:color-mix(in srgb,var(--primary) 35%,white)}
+.f-spline{position:relative;height:46px;border-bottom:1px solid var(--hair)}
+.fw{display:flex;flex-direction:column;align-items:center;gap:3px}
+.fw.abs{position:absolute;bottom:4px;transform:translateX(-50%)}
+.sds{display:flex;gap:2px;height:6px}.sds i{width:6px;height:6px;border-radius:50%}
+.fb{position:relative;border-radius:50%;display:grid;place-items:center;border:2px solid var(--primary);background:var(--primary);color:#fff;font:700 13px/1 var(--font-sans);cursor:pointer;padding:0;flex:none;transition:box-shadow .15s}
+.fb:hover{box-shadow:0 0 0 4px var(--ring)}
+.fb.sel{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--primary)}
+.fb.skipped{background:var(--surface);border-color:var(--error);color:var(--error)}
+.fb.cancelled{background:var(--error-soft);border-color:var(--error);color:var(--error)}
+.fb.unconfirmed{background:var(--warning-soft);border-color:var(--warning);color:var(--warning)}
+.fb.upcoming{background:var(--surface);border:2px dashed var(--primary);color:var(--primary)}
+.fb .ov{position:absolute;right:-5px;top:-5px;width:16px;height:16px;border-radius:50%;background:var(--surface);color:var(--st);border:1.5px solid var(--st);display:grid;place-items:center}
+.fb .ov .ms{font-size:11px;font-variation-settings:'wght' 700}
+.fb.mini{border-width:1.5px}
+.ring{--p:0;width:34px;height:34px;border-radius:50%;background:conic-gradient(var(--primary) calc(var(--p)*1%),var(--surface-highest) 0);display:grid;place-items:center;flex:none}
+.ring i{width:26px;height:26px;border-radius:50%;background:var(--surface-container);display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:700;color:var(--primary)}
+.ring.sm{width:28px;height:28px}.ring.sm i{width:21px;height:21px}
+.hb{height:8px;border-radius:var(--r-pill);background:var(--surface-highest);overflow:hidden;flex:1;min-width:20px}.hb b{display:block;height:100%;background:var(--primary);border-radius:var(--r-pill)}
+.ic{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.ic .ms{color:var(--primary)}
+.chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chipbar .ic{border:1px solid var(--hair);border-radius:var(--r-pill);padding:6px 14px 6px 10px;font-size:15px;min-height:40px}
+.f-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.f-wk>div{border:1px solid var(--hair);border-radius:var(--r-card);min-height:150px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--surface)}
+.f-wk .dh{font-size:11px;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:.05em;text-align:center}.f-wk .dh b{display:block;font-size:20px;color:var(--on-surface);letter-spacing:0}
+.f-wk .tm{font-size:11px;color:var(--on-surface-variant)}
+.f-wk .tdy{border-color:var(--primary);background:var(--primary-soft)}
+.f-strk{position:absolute;top:8px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--bronze);white-space:nowrap}
+.f-strk i{width:30px;height:30px;border-radius:50%;border:1.5px dashed currentColor;display:grid;place-items:center;font-style:normal;background:var(--surface)}
+.f-strk.s{color:var(--silver)}.f-strk.g{color:var(--gold)}
+.f-today{position:absolute;top:0;bottom:0;border-left:2px solid var(--primary);z-index:2;pointer-events:none}
+.f-today span{position:absolute;top:4px;left:5px;background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:1px 4px;display:grid;place-items:center}
+/* vertical spine (phone) */
+.v-spine{position:relative;display:flex;flex-direction:column;gap:6px}
+.vmh{display:flex;align-items:center;gap:10px;margin:10px 0 2px;font-weight:700;font-size:15px}
+.vmh .hb{max-width:120px}
+.vrow{display:grid;grid-template-columns:40px 36px minmax(0,1fr);align-items:center;min-height:44px;cursor:pointer;border-radius:var(--r-inset)}
+.vrow.sel{background:var(--primary-soft)}
+.vrow .lb{font-size:11px;color:var(--on-surface-variant);text-align:right;padding-right:8px;line-height:1.1}.vrow .lb b{display:block;font-size:14px;color:var(--on-surface)}
+.vrow .sp{position:relative;display:grid;place-items:center;align-self:stretch}
+.vrow .sp::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px solid var(--hair)}
+.vrow .sp .fw{position:relative;z-index:1;background:transparent}
+.vrow .ct{display:flex;align-items:center;gap:6px;padding-left:8px;min-width:0}
+.vstrk{margin-left:40px;display:flex;align-items:center;gap:8px;border:1.5px dashed var(--primary);border-radius:var(--r-pill);padding:4px 12px 4px 8px;color:var(--primary);font-weight:700;background:var(--primary-soft);width:max-content;max-width:100%}
+.vwk{border:1px solid var(--hair);border-radius:var(--r-card);padding:8px 8px 10px;display:flex;flex-direction:column;gap:6px}
+.vwk .hd{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--on-surface-variant)}
+.vwk .hd .ic{color:var(--on-surface)}
+.vdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.vdays>div{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--on-surface-variant);min-height:54px;border-radius:var(--r-inset);padding:2px 0}
+.vdays>div.tdy{background:var(--primary-soft)}
+.vdays>div.off{opacity:.35}
+.vdayrow{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:8px;border-bottom:1px solid var(--hair);padding:6px 0;min-height:56px}
+.vdayrow .dh{font-size:11px;color:var(--on-surface-variant);text-transform:uppercase;text-align:center}.vdayrow .dh b{display:block;font-size:18px;color:var(--on-surface)}
+.vdayrow .cs{display:flex;gap:10px;flex-wrap:wrap}
+.f-nav{display:flex;gap:6px;align-items:center}
+.pick{display:inline-block;margin-left:6px;background:var(--primary);color:#fff;border-radius:var(--r-pill);font-size:11px;padding:2px 8px;vertical-align:middle}
+@media (max-width:480px){.frame{padding:12px}.f-desk{padding:0 8px 8px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Training timeline: three directions</h1>
+  <p class="lede">Today the Training page's timeline reads like the calendar turned on its side: one card per session, month after month. These three directions each answer a different question. Where am I in the season? What did the week add up to? How consistent have I been, and what happened on that one day? Each is interactive and shown at desktop width and in a 375px phone frame. Every session carries the full detail the app records. The three directions share one dataset, so you can compare them directly.</p>
+  <p class="note" style="margin-top:12px"><b>Status:</b> direction 2 (journey feed) is the provisional pick while direction 4 is explored. Direction 4 combines the cluster bubbles, icons and zoom of 1 with the weekly rollup and streak markers of 2, drawn as graphics, with no horizontal scrolling. Mock data runs 4 May to 1 Nov 2026, with today set to Sun 11 Oct. It includes weekly series, a workshop, a competition, a three-day camp, skipped and cancelled sessions, and past sessions still unconfirmed. Dashed medal slots mark where badges from #35 and #39 will go. The badge designs themselves belong to those issues. Try the "I attended" and "I skipped" buttons on an unconfirmed session and watch all views update.</p>
+  <nav class="jump" aria-label="Directions">
+    <a href="#d1">1 Zoomable timeline</a><a href="#d2">2 Journey feed <span class="pick">current pick</span></a><a href="#d3">3 Season heat-strip</a><a href="#d4">4 Fitted bubbles (1 + 2)</a>
+  </nav>
+</header>
+
+<section class="sheet" id="d1">
+  <div><h2>1 &middot; Zoomable horizontal timeline with session clusters</h2>
+  <p class="note" style="margin-top:6px">One time axis for the whole season. Zoom between Season, Month and Week and the sessions regroup: a bubble per week, then per day, then individual cards. Click a cluster to read its sessions underneath.</p></div>
+  <div class="pair"><div><div class="cap">Desktop</div><div class="frame" id="d1-desk"></div></div></div>
+  <div class="phonerow"><div><div class="cap">375px</div><div class="phone"><div class="frame compact" id="d1-mob"></div></div></div>
+    <div class="why"><h3>What it is good at</h3><ul>
+      <li>Shows rhythm and gaps at a glance: holidays, camp week, and the competition spike are visible without reading anything.</li>
+      <li>Cluster size encodes hours, fill encodes outcome, so attendance reads before any label does.</li>
+      <li>The top lane carries streak milestones, which is where #39 badges would pin to a date.</li>
+      <li>Trade-off: on a phone the track is a horizontal scroll, and exact details are always one tap away in the panel below.</li></ul></div></div>
+</section>
+
+<section class="sheet" id="d2">
+  <div><h2>2 &middot; Vertical journey feed with weekly rollups and streak markers</h2>
+  <p class="note" style="margin-top:6px">The closest to today's timeline, but each week gets a summary and streak milestones interrupt the list. Newest first, with a Today line. Tap a session to expand its full detail.</p></div>
+  <div class="pair"><div><div class="cap">Desktop</div><div class="frame" id="d2-desk"></div></div></div>
+  <div class="phonerow"><div><div class="cap">375px</div><div class="phone"><div class="frame compact" id="d2-mob"></div></div></div>
+    <div class="why"><h3>What it is good at</h3><ul>
+      <li>Tells a story: "this week you trained 3.5 h and kept a streak of 10".</li>
+      <li>The weekly rollup pins beside the sessions on desktop and sits on top of them on a phone, so it never costs extra width.</li>
+      <li>Streak markers are natural homes for badge awards (#35, #39): the dashed slot turns into the earned badge.</li>
+      <li>Trade-off: it is the longest page of the three, so older history still needs "load older".</li></ul></div></div>
+</section>
+
+<section class="sheet" id="d3">
+  <div><h2>3 &middot; Season heat-strip with drill-down into a day</h2>
+  <p class="note" style="margin-top:6px">The whole season is one grid of days, shaded by minutes trained. Click a day for its sessions. On a phone the grid turns vertical (weeks as rows) and the drill-down becomes a bottom sheet.</p></div>
+  <div class="pair"><div><div class="cap">Desktop</div><div class="frame" id="d3-desk"></div></div></div>
+  <div class="phonerow"><div><div class="cap">375px</div><div class="phone"><div class="frame compact" id="d3-mob"></div></div></div>
+    <div class="why"><h3>What it is good at</h3><ul>
+      <li>The densest view: a whole season fits on one screen and consistency is visible as texture.</li>
+      <li>Outcomes keep distinct marks, so colour never carries the meaning alone: skipped is an outlined cell, cancelled is struck through, unconfirmed has a warning pip, upcoming is hatched.</li>
+      <li>Drill-down reuses the same session detail as the session page, with Note link, segments and attendance actions.</li>
+      <li>Trade-off: titles are hidden until you open a day.</li></ul></div></div>
+</section>
+
+<section class="sheet" id="d4">
+  <div><h2>4 &middot; Fitted bubbles: direction 1 meets direction 2 <span class="pick" style="background:var(--surface-container);color:var(--on-surface-variant)">exploring</span></h2>
+  <p class="note" style="margin-top:6px">Same bubbles, icons, streak lane and Season / Month / Week zoom as direction 1, but the range always fits the width: weeks across on desktop, a vertical spine on a phone. Weekly rollups and streaks are small graphics (rings, bars, icon plus number). Use the arrows to move through months and weeks; tap anything for the full session.</p></div>
+  <div class="pair"><div><div class="cap">Desktop</div><div class="frame" id="d4-desk"></div></div></div>
+  <div class="phonerow"><div><div class="cap">375px</div><div class="phone"><div class="frame compact" id="d4-mob"></div></div></div>
+    <div class="why"><h3>What it is good at</h3><ul>
+      <li>No sideways scrolling at any width: zoom changes the range, arrows move the window.</li>
+      <li>Icon = session kind (style, competition, camp, workshop); size = time trained; corner mark = outcome; coloured dots = styles.</li>
+      <li>Ring = attendance for the week, bar = hours; the dashed medals in the streak lane are the #35 / #39 slots.</li>
+      <li>Trade-off: the exact times and titles live in the tap panel, not on the chart.</li></ul></div></div>
+</section>
+
+</div>
+
+<script>
+/* ---------- data (shared by all three) ---------- */
+const MS = 864e5, START = new Date(2026,4,4), DAYS = 182, TODAY = new Date(2026,9,11,12,0);
+const D = (m,d,h=0,mi=0) => new Date(2026,m-1,d,h,mi);
+let seed = 7; const rnd = () => (seed = (seed*1664525+1013904223) % 4294967296) / 4294967296;
+const NOTES = ['Waltz basics','Quickstep running finish','Cha-cha timing drills','Rumba walks and cucarachas','Foxtrot feather and three-step','Samba bounce action'];
+const DESCS = ['<p>Worked on <b>frame and contact</b> in closed position. Coach asked for a lower heel lead on the natural turns.</p>','<p>Timing drills with the metronome at 112 bpm, then a full run of the routine.</p>','<p>Social floor practice, no coaching. Focus on navigating the line of dance.</p>'];
+const events = [];
+let uid = 1;
+function add(o){ events.push(Object.assign({id:'e'+(uid++), eventType:'TRAINING', segments:[], description:null, note:null, url:null, series:null, cal:'My training', by:'Rafal', added:'Apr 28 2026', status:'PLANNED'}, o)); }
+for (let w=0; w<26; w++) {
+  const mon = new Date(START.getTime()+w*7*MS);
+  const at = (dow,h,mi,dh,dmi) => { const s=new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+dow,h,mi); const e=new Date(s.getFullYear(),s.getMonth(),s.getDate(),dh,dmi); return [s,e]; };
+  let [s,e] = at(0,18,0,20,0);
+  add({title:'Monday practice', start:s, end:e, series:'Every Monday', segments:[['Standard',80],['Latin',30]], note: rnd()<.5?NOTES[w%NOTES.length]:null, description: rnd()<.35?DESCS[w%3]:null});
+  [s,e] = at(3,19,0,20,30);
+  add({title:'Thursday Latin group', start:s, end:e, series:'Every Thursday', segments:[['Latin',70]], note: rnd()<.35?NOTES[(w+2)%NOTES.length]:null, description: rnd()<.3?DESCS[(w+1)%3]:null});
+  if (w%3===1) { [s,e] = at(5,10,0,11,0); add({title:'Private lesson with Marta', start:s, end:e, segments:[['Standard',50]], description:'<p>Marta: shorten the step in the <b>reverse turn</b>, keep the head weight left.</p>', note:'Waltz basics'}); }
+}
+add({title:'Viennese Waltz clinic', eventType:'WORKSHOP', start:D(6,13,10), end:D(6,13,14), segments:[['Standard',210]], url:'https://example.org/vw-clinic', description:'<p>Four hours on rise and fall in fast turns, with partner switching.</p>', by:'Rafal', cal:'Studio Nova'});
+add({title:'Summer Open', eventType:'COMPETITION', start:D(7,18,8), end:D(7,18,18), segments:[], description:'<p>Adult amateur, Standard and Latin. Reached the semi-final in Quickstep.</p>', cal:'Studio Nova'});
+[[7,'Friday'],[8,'Saturday'],[9,'Sunday']].forEach(([dd,n],i) => add({title:`Summer camp, day ${i+1}`, eventType:'CAMP', start:D(8,dd,10), end:D(8,dd,16), segments:[['Standard',180],['Latin',120]], description:i===0?'<p>Camp in the mountains, six coaches. Morning technique, afternoon choreography.</p>':null, cal:'Studio Nova'}));
+events.forEach(e => { e.start = e.start; });
+events.sort((a,b)=>a.start-b.start);
+const cancelledTitles = new Set(); 
+events.forEach((e,i) => {
+  const future = e.end > TODAY;
+  const recent = e.end > new Date(TODAY.getTime()-12*MS);
+  if (e.eventType==='COMPETITION' || e.eventType==='WORKSHOP' || e.eventType==='CAMP') e.status = future?'PLANNED':'ATTENDED';
+  else if (future) e.status='PLANNED';
+  else { const r=rnd(); e.status = (e.start.getMonth()===7 && e.start.getDate()>=16 && e.start.getDate()<=20 && e.series) ? 'CANCELLED' : (r<.14 && e.end<new Date(TODAY.getTime()-14*MS))?'SKIPPED' : (recent && r<.55) ? 'PLANNED' : 'ATTENDED'; }
+  e.unconf = !future && e.status==='PLANNED';
+  e.dur = Math.round((e.end-e.start)/6e4);
+});
+/* streak: consecutive attended; skipped resets; cancelled and unconfirmed are ignored */
+let run = 0; const past = events.filter(e=>e.end<=TODAY);
+past.forEach(e => { if (e.status==='ATTENDED') { run++; if (run%10===0) e.milestone = run; } else if (e.status==='SKIPPED') run = 0; });
+const STREAK = run;
+const key = e => e.unconf?'unconfirmed': e.end>TODAY && e.status==='PLANNED'?'upcoming': e.status==='ATTENDED'?'attended': e.status==='SKIPPED'?'skipped': e.status==='CANCELLED'?'cancelled':'upcoming';
+const ST = {attended:'var(--primary)',skipped:'var(--error)',cancelled:'var(--error)',unconfirmed:'var(--warning)',upcoming:'var(--primary)'};
+const BG = {attended:'var(--primary-soft)',skipped:'var(--error-soft)',cancelled:'var(--error-soft)',unconfirmed:'var(--warning-soft)',upcoming:'var(--surface-container)'};
+const LABEL = {attended:'Attended',skipped:'Skipped',cancelled:'Cancelled',unconfirmed:'Unconfirmed',upcoming:'Planned'};
+const BCLS = {attended:'b-success',skipped:'b-danger',cancelled:'b-danger',unconfirmed:'b-warning',upcoming:'b-neutral'};
+const TYPE = {TRAINING:'Training',CAMP:'Camp',COMPETITION:'Competition',WORKSHOP:'Workshop',OTHER:'Other'};
+const fmtDur = m => m>=60 ? Math.floor(m/60)+'h'+(m%60?' '+(m%60)+'m':'') : m+'m';
+const pad = n => String(n).padStart(2,'0');
+const hhmm = d => pad(d.getHours())+':'+pad(d.getMinutes());
+const WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MOF = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const dayIdx = d => Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-START)/MS);
+const weekIdx = d => Math.floor(dayIdx(d)/7);
+const longDate = d => `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]}, ${MOF[d.getMonth()]} ${d.getDate()} ${d.getFullYear()}`;
+const SEGC = ['var(--primary)','color-mix(in srgb,var(--primary) 55%,white)','color-mix(in srgb,var(--primary) 30%,white)'];
+const segCat = []; const catColor = n => { if(!segCat.includes(n)) segCat.push(n); return SEGC[segCat.indexOf(n)%3]; };
+['Standard','Latin','Social'].forEach(catColor);
+const stat = list => { const att=list.filter(e=>key(e)==='attended'); const sk=list.filter(e=>key(e)==='skipped'); const mins=att.reduce((a,e)=>a+e.dur,0); const conf=att.length+sk.length; return {att:att.length,sk:sk.length,mins,rate:conf?Math.round(att.length/conf*100):null,up:list.filter(e=>key(e)==='upcoming').length,unc:list.filter(e=>key(e)==='unconfirmed').length,n:list.length}; };
+
+/* ---------- shared components ---------- */
+const ico = (n,c='') => `<span class="ms ${c}" aria-hidden="true">${n}</span>`;
+const badge = (cls,txt,icon) => `<span class="badge ${cls}">${icon?ico(icon,'sm'):''}${txt}</span>`;
+function badgesFor(e, withDur){
+  const k=key(e);
+  return `<div class="badges">${badge('b-primary',TYPE[e.eventType])}${e.series?badge('b-neutral','Repeating series','event_repeat'):''}${e.segments.map(([n,m])=>badge('b-secondary',`${n} ${m}min`)).join('')}${badge(BCLS[k],LABEL[k])}${withDur?badge('b-neutral',e.dur+' min'):''}</div>`;
+}
+function stats(list){
+  const s=stat(list);
+  return `<div class="stats">
+    <div class="stat"><div class="l">Hours trained</div><div class="v">${fmtDur(s.mins)}</div><div class="c">${s.att} attended sessions</div></div>
+    <div class="stat"><div class="l">Attendance</div><div class="v">${s.rate}%</div><div class="c">${s.att} attended · ${s.sk} skipped</div></div>
+    <div class="stat"><div class="l">Streak</div><div class="v">${STREAK}</div><div class="c">consecutive, all time</div></div>
+    <div class="stat"><div class="l">To confirm</div><div class="v">${s.unc}</div><div class="c">${s.up} upcoming</div></div></div>`;
+}
+const slots = () => `<div class="slots" aria-label="Badge slots (#35, #39)"><span class="slot bronze"><i>${ico('workspace_premium','sm')}</i>Badge slot · streak 10</span><span class="slot silver"><i>${ico('workspace_premium','sm')}</i>Badge slot · 25 sessions</span><span class="slot gold"><i>${ico('workspace_premium','sm')}</i>Badge slot · 100 hours</span></div>`;
+const states = () => `<div class="states"><span><i class="sw attended"></i>Attended</span><span><i class="sw skipped"></i>Skipped</span><span><i class="sw cancelled"></i>Cancelled</span><span><i class="sw unconfirmed"></i>Unconfirmed</span><span><i class="sw upcoming"></i>Planned</span></div>`;
+function pageHead(sub){ return `<div class="pagehead"><div><h4>Training</h4><p>${sub}</p></div><div class="badges"><span class="badge b-neutral">${ico('calendar_month','sm')}My training</span><span class="badge b-neutral">${ico('calendar_month','sm')}Studio Nova</span></div></div>`; }
+
+/* the full session detail, as training-events/view shows it */
+function sessionFull(e){
+  const k=key(e), total=e.segments.reduce((a,s)=>a+s[1],0);
+  const untracked = e.dur-total;
+  return `<article class="sess" style="--st:${ST[k]}" data-id="${e.id}">
+    <div class="hd"><h5>${e.title}</h5><div class="when">${longDate(e.start)} · ${hhmm(e.start)}–${hhmm(e.end)} · ${e.cal}</div></div>
+    <div class="bd">
+      ${badgesFor(e,true)}
+      ${e.unconf?`<div class="actions"><button class="btn btn-primary sm" data-act="ATTENDED" data-id="${e.id}">I attended</button><button class="btn btn-outline sm" data-act="SKIPPED" data-id="${e.id}">I skipped</button></div>`:''}
+      ${e.segments.length?`<div><div class="lbl">Time by style</div><div class="segbar" role="img" aria-label="${e.segments.map(s=>s[0]+' '+s[1]+' minutes').join(', ')}">${e.segments.map(([n,m])=>`<span style="flex:${m};background:${catColor(n)}"></span>`).join('')}${untracked>0?`<span style="flex:${untracked};background:var(--surface-highest)"></span>`:''}</div>
+        <div class="legend">${e.segments.map(([n,m])=>`<span><i style="background:${catColor(n)}"></i><b>${n}</b> ${m} min</span>`).join('')}${untracked>0?`<span><i style="background:var(--surface-highest)"></i>untracked ${untracked} min</span>`:''}</div></div>`:''}
+      ${e.description?`<div><div class="lbl">Notes</div><div class="desc">${e.description}</div></div>`:''}
+      ${e.note?`<div><div class="lbl">Linked note</div><a class="link" href="#" onclick="return false">${ico('description','sm')}${e.note}</a></div>`:''}
+      ${e.url?`<div><div class="lbl">External materials</div><a class="link" href="#" onclick="return false">${ico('open_in_new','sm')}${e.url}</a></div>`:''}
+      <div class="meta">Added by ${e.by} on ${e.added}${e.series?' · '+e.series:''}</div>
+    </div></article>`;
+}
+const views=[]; const refreshAll=()=>views.forEach(v=>v());
+document.addEventListener('click',ev=>{ const b=ev.target.closest('[data-act]'); if(!b) return; const e=events.find(x=>x.id===b.dataset.id); e.status=b.dataset.act; e.unconf=false; if(b.dataset.act==='ATTENDED'){ run=0; past.forEach(x=>{ if(x.status==='ATTENDED'){run++; x.milestone = run%10===0?run:undefined;} else if(x.status==='SKIPPED') run=0; }); } refreshAll(); });
+const detailBlock = (list, extra='') => `<div class="detailhead"><h3>${list.length} session${list.length===1?'':'s'}</h3>${extra}</div><div class="sessgrid">${list.map(sessionFull).join('')}</div>`;
+
+/* ================= DIRECTION 1 ================= */
+function dir1(el, compact){
+  let level = 1, sel = null; const PPD=[7,30,112]; const names=['Season','Month','Week'];
+  let first = true;
+  const initSel = () => { const nx = events.find(e=>e.end>TODAY && e.status!=='CANCELLED'); sel = [nx.id]; };
+  initSel();
+  function groups(){
+    const g = new Map();
+    events.forEach(e => { const k = level===0 ? weekIdx(e.start) : level===1 ? dayIdx(e.start) : e.id; if(!g.has(k)) g.set(k,[]); g.get(k).push(e); });
+    return [...g.values()];
+  }
+  const X = d => 24 + (d - START)/MS*PPD[level];
+  function render(){
+    const sc = el.querySelector('.tl-scroll'); const prev = sc ? sc.scrollLeft : null;
+    const ppd = PPD[level], W = DAYS*ppd+48;
+    let ticks='';
+    if (level===0){ for(let m=4;m<=10;m++){ const d=new Date(2026,m,1); const x=Math.max(24,X(d)); ticks+=`<div class="tick major" style="left:${x}px">${MO[m]}</div>`; } for(let w=0;w<26;w++) ticks+=`<div class="tick" style="left:${24+w*7*ppd}px;height:12px;top:auto;bottom:0;padding:0"></div>`; }
+    else if (level===1){ for(let i=0;i<DAYS;i++){ const d=new Date(START.getTime()+i*MS); if(d.getDay()===1||d.getDate()===1) ticks+=`<div class="tick ${d.getDate()===1?'major':''}" style="left:${24+i*ppd}px">${d.getDate()===1?MO[d.getMonth()]+' ':''}${d.getDay()===1?d.getDate():''}</div>`; } }
+    else { for(let i=0;i<DAYS;i++){ const d=new Date(START.getTime()+i*MS); ticks+=`<div class="tick ${d.getDay()===1?'major':''}" style="left:${24+i*ppd}px;width:${ppd}px">${WD[d.getDay()]} ${d.getDate()} ${d.getDate()===1||i===0?MO[d.getMonth()]:''}</div>`; } }
+    let items='';
+    groups().forEach(g => {
+      const ids=g.map(e=>e.id), isSel = sel && ids.some(i=>sel.includes(i));
+      if (level===2){
+        const e=g[0], k=key(e); const sameDay = events.filter(x=>dayIdx(x.start)===dayIdx(e.start)); const slot=sameDay.indexOf(e);
+        const top = 56 + (e.start.getHours()>=17?0:1)*0 + slot*0;
+        items += `<div class="card-s ${k} ${isSel?'sel':''}" data-ids="${ids.join(',')}" style="--st:${ST[k]};left:${X(new Date(e.start.getFullYear(),e.start.getMonth(),e.start.getDate()))+3}px;top:${86+slot*84}px;background:${BG[k]}" role="button" tabindex="0"><b>${e.title}</b>${hhmm(e.start)}–${hhmm(e.end)}<br>${LABEL[k]} · ${fmtDur(e.dur)}</div>`;
+      } else {
+        const mins=g.reduce((a,e)=>a+e.dur,0); const ks=g.map(key);
+        const k = ks.every(x=>x==='upcoming')?'upcoming': ks.includes('unconfirmed')?'unconfirmed': ks.every(x=>x==='skipped')?'skipped': ks.every(x=>x==='cancelled')?'cancelled':'attended';
+        const cap = level===0?44:28, dia = Math.min(cap, (level===0?14:12)+Math.sqrt(mins)*(level===0?2.1:1.1));
+        const cx = level===0 ? X(new Date(START.getTime()+(weekIdx(g[0].start)*7+3.5)*MS)) : X(g[0].start)+ppd/2-ppd/2+ (new Date(g[0].start.getFullYear(),g[0].start.getMonth(),g[0].start.getDate())-g[0].start)/MS*ppd + ppd/2;
+        const bottom = 52;
+        items += `<div class="bub ${k} ${isSel?'sel':''}" data-ids="${ids.join(',')}" role="button" tabindex="0" aria-label="${g.length} session${g.length>1?'s':''}, ${fmtDur(mins)}" style="left:${cx}px;bottom:${bottom}px;width:${dia}px;height:${dia}px">${g.length>1?g.length:ico(g[0].eventType==='COMPETITION'?'emoji_events':g[0].eventType==='CAMP'?'camping':'sports_gymnastics','sm')}</div>`;
+        if (level===1 && g.length) items += `<div class="bublab" style="left:${cx}px;bottom:${bottom-14}px">${g[0].start.getDate()}</div>`;
+      }
+    });
+    const ms = events.filter(e=>e.milestone).map(e=>{ const x = level===2? X(new Date(e.start.getFullYear(),e.start.getMonth(),e.start.getDate()))+ppd/2 : X(e.start); const metal = e.milestone>=30?'g':e.milestone>=20?'s':''; return `<div class="ms-line" style="left:${x}px"></div><div class="ms-marker ${metal}" style="left:${x}px" title="Badge slot: ${e.milestone}-session streak (#39)"><i>${ico('workspace_premium','sm')}</i>${e.milestone} in a row</div>`; }).join('');
+    const sessions = sel ? sel.map(i=>events.find(e=>e.id===i)) : [];
+    const selStats = sessions.length>1 ? ` · ${fmtDur(sessions.reduce((a,e)=>a+e.dur,0))}` : '';
+    el.innerHTML = `${pageHead('Zoom the season, then open a cluster.')}${stats(events)}${slots()}
+      <div class="toolbar" style="margin-bottom:10px"><div class="seg" role="group" aria-label="Zoom">${names.map((n,i)=>`<button type="button" data-lv="${i}" aria-pressed="${i===level}">${ico(['zoom_out_map','calendar_view_month','calendar_view_week'][i],'sm')}${n}</button>`).join('')}</div><button class="btn btn-outline sm" data-today>${ico('my_location','sm')}Today</button></div>
+      <div class="tl-scroll" tabindex="0" aria-label="Training timeline, scrolls sideways"><div class="tl-track" style="width:${W}px">
+        <div class="tl-lane" style="top:0;height:112px"><span class="tl-lanelabel">Badges &amp; streaks</span></div>
+        <div class="tl-lane" style="top:112px;bottom:40px;border-bottom:0"><span class="tl-lanelabel">Sessions</span></div>
+        ${ms}${items}
+        <div class="tl-today" style="left:${X(TODAY)}px"><span>Today</span></div>
+        <div class="tl-axis">${ticks}</div></div></div>
+      ${states()}
+      ${sessions.length?`<div class="detailhead"><h3>${sessions.length} session${sessions.length>1?'s':''}${selStats}</h3>${level<2?`<button class="btn btn-outline sm" data-zoom>${ico('zoom_in','sm')}Zoom to this</button>`:''}</div><div class="sessgrid">${sessions.map(sessionFull).join('')}</div>`:''}`;
+    const s2 = el.querySelector('.tl-scroll');
+    if (prev!==null && !first) s2.scrollLeft = prev; else { s2.scrollLeft = Math.max(0, X(TODAY)-s2.clientWidth*.6); first=false; }
+  }
+  el.addEventListener('click',ev=>{
+    const lv=ev.target.closest('[data-lv]'); const t=ev.target.closest('[data-ids]');
+    if(lv){ const c = el.querySelector('.tl-scroll'); const mid = c.scrollLeft + c.clientWidth/2; const day=(mid-24)/PPD[level]; level=+lv.dataset.lv; render(); const c2=el.querySelector('.tl-scroll'); c2.scrollLeft = 24+day*PPD[level]-c2.clientWidth/2; }
+    else if(ev.target.closest('[data-today]')){ const c=el.querySelector('.tl-scroll'); c.scrollTo({left:X(TODAY)-c.clientWidth/2,behavior:'smooth'}); }
+    else if(ev.target.closest('[data-zoom]')){ const e0=events.find(e=>e.id===sel[0]); level=Math.min(2,level+1); render(); const c=el.querySelector('.tl-scroll'); c.scrollLeft = X(e0.start)-c.clientWidth/2; }
+    else if(t){ sel=t.dataset.ids.split(','); const c=el.querySelector('.tl-scroll').scrollLeft; render(); el.querySelector('.tl-scroll').scrollLeft=c; }
+  });
+  el.addEventListener('keydown',ev=>{ if((ev.key==='Enter'||ev.key===' ')&&ev.target.dataset&&ev.target.dataset.ids){ ev.preventDefault(); ev.target.click(); } });
+  views.push(()=>{ render(); }); render();
+}
+
+/* ================= DIRECTION 2 ================= */
+function dir2(el, compact){
+  const open = new Set(['__']); 
+  const nxt = events.find(e=>e.end>TODAY && e.status!=='CANCELLED'); open.add(nxt.id);
+  const weeks = new Map(); events.forEach(e=>{ const w=weekIdx(e.start); if(!weeks.has(w)) weeks.set(w,[]); weeks.get(w).push(e); });
+  let monthFilter = 'all';
+  function entry(e){
+    const k=key(e), isOpen = open.has(e.id);
+    return `<div class="entry"><span class="node" style="--st:${ST[k]};--bg:${k==='attended'?ST[k]:BG[k]}"></span>
+      <button class="row" style="--st:${ST[k]}" data-toggle="${e.id}" aria-expanded="${isOpen}">
+        <div class="rail" style="--bg:${BG[k]}"><b>${e.start.getDate()}</b><span>${WD[e.start.getDay()]}</span></div>
+        <div style="flex:1;min-width:0"><div class="tt">${e.title}</div><div class="sub">${hhmm(e.start)}–${hhmm(e.end)} · ${e.dur} min · ${e.cal}</div>${badgesFor(e,false)}</div>
+        ${ico(isOpen?'expand_less':'expand_more')}
+      </button>${isOpen?`<div class="more">${sessionFull(e)}</div>`:''}</div>`;
+  }
+  function render(){
+    const keys=[...weeks.keys()].sort((a,b)=>b-a);
+    let out='', lastMonth='', todayDone=false;
+    const filtered = keys.filter(w=>monthFilter==='all'||weeks.get(w)[0].start.getMonth()===+monthFilter);
+    filtered.forEach(w=>{
+      const list=weeks.get(w), s=stat(list), mon=new Date(START.getTime()+w*7*MS), sun=new Date(mon.getTime()+6*MS);
+      const mkey = MOF[sun.getMonth()]+' '+sun.getFullYear();
+      if (mkey!==lastMonth){ const ml=events.filter(e=>e.start.getMonth()===sun.getMonth()); const ms=stat(ml); out+=`<div class="monthhd"><h3>${mkey}</h3><span>${ml.length} sessions · ${fmtDur(ms.mins)} trained</span></div>`; lastMonth=mkey; }
+      const isNow = TODAY>=mon && TODAY<new Date(mon.getTime()+7*MS);
+      const dots = [...list].sort((a,b)=>a.start-b.start).map(e=>{const k=key(e); return `<i class="${k==='attended'?'a':k==='skipped'?'s':k==='unconfirmed'?'u':k==='upcoming'?'f':''}" title="${e.title}"></i>`}).join('');
+      const styleMins={}; list.filter(e=>key(e)==='attended').forEach(e=>e.segments.forEach(([n,m])=>styleMins[n]=(styleMins[n]||0)+m));
+      const roll = `<aside class="roll"><div class="wk">Week ${w+1}${isNow?' · this week':''}</div><div class="rng">${MO[mon.getMonth()]} ${mon.getDate()} – ${MO[sun.getMonth()]} ${sun.getDate()}</div>
+        <dl><div style="display:contents"><dt>Sessions</dt><dd>${s.n}</dd></div><div style="display:contents"><dt>Trained</dt><dd>${fmtDur(s.mins)}</dd></div><div style="display:contents"><dt>Attended</dt><dd>${s.att}/${s.att+s.sk+s.unc||s.n}</dd></div>${Object.keys(styleMins).length?`<div style="display:contents"><dt>Styles</dt><dd>${Object.entries(styleMins).map(([n,m])=>n+' '+m).join(' · ')}</dd></div>`:''}</dl>
+        <div class="dots" aria-label="Outcome per session">${dots}</div></aside>`;
+      const sorted=[...list].sort((a,b)=>b.start-a.start);
+      let inner='';
+      sorted.forEach(e=>{
+        if (!todayDone && e.end<=TODAY && (monthFilter==='all')){ inner+=`<div class="todaymark">Today · Sun 11 Oct</div>`; todayDone=true; }
+        inner += (e.milestone?`<div class="streak">${ico('local_fire_department','fill')}<div>${e.milestone} sessions in a row<small>Streak reached on ${WD[e.start.getDay()]} ${e.start.getDate()} ${MO[e.start.getMonth()]}</small></div><span class="slot ${e.milestone>=30?'gold':e.milestone>=20?'silver':'bronze'}"><i>${ico('workspace_premium','sm')}</i>Badge slot</span></div>`:'')+entry(e);
+      });
+      out+=`<section class="week"><div>${roll}</div><div class="spine">${inner}</div></section>`;
+    });
+    el.innerHTML = `${pageHead('Your season as a journey, newest first.')}${stats(events)}${slots()}
+      <div class="toolbar" style="margin-bottom:16px"><div class="seg" role="group" aria-label="Month">${[['all','All'],[9,'Oct'],[8,'Sep'],[7,'Aug'],[6,'Jul']].map(([v,l])=>`<button data-m="${v}" aria-pressed="${monthFilter==v}">${l}</button>`).join('')}</div></div>${states()}<div class="feed">${out}</div>`;
+  }
+  el.addEventListener('click',ev=>{ const t=ev.target.closest('[data-toggle]'); const m=ev.target.closest('[data-m]'); if(t){ const id=t.dataset.toggle; open.has(id)?open.delete(id):open.add(id); render(); } else if(m){ monthFilter=m.dataset.m; render(); } });
+  views.push(render); render();
+}
+
+/* ================= DIRECTION 3 ================= */
+function dir3(el, compact){
+  let sel = dayIdx(nextDay()); 
+  function nextDay(){ const e=events.find(x=>x.end>TODAY && x.status!=='CANCELLED'); return e.start; }
+  const byDay = new Map(); events.forEach(e=>{ const i=dayIdx(e.start); if(!byDay.has(i)) byDay.set(i,[]); byDay.get(i).push(e); });
+  const level = list => { const m=list.filter(e=>key(e)==='attended').reduce((a,e)=>a+e.dur,0); return m===0?0:m<=90?1:m<=130?2:m<=240?3:4; };
+  function cellFor(i){
+    const list=byDay.get(i)||[], d=new Date(START.getTime()+i*MS); const isToday = dayIdx(TODAY)===i;
+    const lab = `${WD[d.getDay()]} ${d.getDate()} ${MO[d.getMonth()]}`;
+    if(!list.length) return `<div class="cell empty ${isToday?'today':''}" aria-label="${lab}, no sessions">${d.getDate()===1?'':''}</div>`;
+    const ks=list.map(key); let cls;
+    if(ks.every(k=>k==='upcoming')) cls='upcoming'; else if(ks.every(k=>k==='cancelled')) cls='cancelled'; else if(ks.every(k=>k==='skipped')) cls='skipped'; else if(ks.includes('attended')) cls='l'+level(list); else if(ks.includes('unconfirmed')) cls='l0'; else cls='l0';
+    const pip = ks.includes('unconfirmed')?'<span class="pip" title="Unconfirmed"></span>':'';
+    const tm = list.reduce((a,e)=>a+(key(e)==='attended'?e.dur:0),0);
+    const txt = list.some(e=>e.milestone)? ico('local_fire_department','sm fill') : (list.length>1?list.length:'');
+    return `<button class="cell ${cls} ${i===sel?'sel':''} ${isToday?'today':''}" data-d="${i}" aria-label="${lab}, ${list.length} session${list.length>1?'s':''}, ${ks.join(', ')}">${txt}${pip}</button>`;
+  }
+  function grid(){
+    if(!compact){
+      let g='<div class="hl"></div>'; // top-left spacer into first column handled below
+      g=''; const cols=[];
+      for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS); const showM = w===0 || mon.getDate()<=7; cols.push(`<div class="hl m">${showM?MO[mon.getMonth()]:''}</div>`+[0,1,2,3,4,5,6].map(dd=>cellFor(w*7+dd)).join('')); }
+      return `<div style="display:flex;gap:8px"><div class="heat" style="grid-template-rows:20px repeat(7,30px);grid-auto-flow:row"><div></div>${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(n=>`<div class="hl">${n}</div>`).join('')}</div><div class="heat h" style="flex:1" role="grid">${cols.join('')}</div></div>`;
+    }
+    let g='<div class="hl"></div>'+['M','T','W','T','F','S','S'].map(n=>`<div class="hl" style="justify-content:center">${n}</div>`).join('');
+    for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS); const showM = w===0 || mon.getDate()<=7; g+=`<div class="hl ${showM?'m':''}">${showM?MO[mon.getMonth()]:mon.getDate()}</div>`+[0,1,2,3,4,5,6].map(dd=>cellFor(w*7+dd)).join(''); }
+    return `<div class="heat v" role="grid">${g}</div>`;
+  }
+  function panel(){
+    const list = byDay.get(sel)||[]; const d=new Date(START.getTime()+sel*MS); const w=Math.floor(sel/7);
+    const wk=[0,1,2,3,4,5,6].map(dd=>w*7+dd);
+    return `<div class="sheetpanel" aria-live="polite"><div class="grab"></div>
+      <div class="detailhead" style="margin-top:0"><h3>${longDate(d)}</h3>${list.length?`<span class="badge b-neutral">${fmtDur(list.reduce((a,e)=>a+e.dur,0))} scheduled</span>`:''}</div>
+      <div class="weekstrip" role="group" aria-label="Days of this week">${wk.map(i=>{const dd=new Date(START.getTime()+i*MS); const has=(byDay.get(i)||[]).length; return `<button data-d="${i}" aria-pressed="${i===sel}">${WD[dd.getDay()]}<br>${dd.getDate()}${has?' •':''}</button>`}).join('')}</div>
+      ${list.length?`<div class="sessgrid">${list.map(sessionFull).join('')}</div>`:`<p class="empty-day">Rest day. Nothing scheduled.</p>${badge('b-neutral','Add session','add')}`}</div>`;
+  }
+  function render(){
+    const ps = el.closest('.phone'); const top = ps?ps.scrollTop:0;
+    el.innerHTML = `${pageHead('Your whole season at a glance, then drill into any day.')}${stats(events)}${slots()}
+      <div class="toolbar" style="margin-bottom:12px"><div class="ramp">Less ${[0,1,2,3,4].map(l=>`<i class="cell l${l}" style="display:inline-block"></i>`).join('')} More</div></div>
+      ${grid()}${states()}${panel()}`;
+    if(ps) ps.scrollTop=top;
+  }
+  el.addEventListener('click',ev=>{ const c=ev.target.closest('[data-d]'); if(c){ sel=+c.dataset.d; render(); const b=el.querySelector('.cell.sel'); } });
+  views.push(render); render();
+}
+
+/* ================= DIRECTION 4 ================= */
+function dir4(el, compact){
+  let level=0, month=9, week=weekIdx(TODAY), sel=null;
+  const SI={Standard:'accessibility_new',Latin:'music_note',Social:'celebration'};
+  const OI={attended:'check',skipped:'remove',cancelled:'close',unconfirmed:'question_mark',upcoming:'schedule'};
+  const evIcon=e=> e.eventType==='COMPETITION'?'emoji_events':e.eventType==='CAMP'?'camping':e.eventType==='WORKSHOP'?'school':(e.segments[0]?SI[e.segments[0][0]]:'sports_gymnastics');
+  const wkEv = w => events.filter(e=>weekIdx(e.start)===w);
+  const monthEv = m => events.filter(e=>e.start.getMonth()===m);
+  const nx = events.find(e=>e.end>TODAY && e.status!=='CANCELLED'); sel=[nx.id];
+  const gk = g => { const ks=g.map(key); return ks.every(x=>x==='upcoming')?'upcoming':ks.includes('unconfirmed')?'unconfirmed':ks.every(x=>x==='skipped')?'skipped':ks.every(x=>x==='cancelled')?'cancelled':'attended'; };
+  const dia = (m,cap,base)=>Math.round(Math.min(cap, base+Math.sqrt(m)*(cap/16)));
+  function dots(g){ const cats=[...new Set(g.flatMap(e=>e.segments.map(x=>x[0])))]; return `<span class="sds">${cats.map(c=>`<i style="background:${catColor(c)}"></i>`).join('')}</span>`; }
+  function bub(g,d,style='',abs=false,showDots=true){
+    const k=gk(g), ids=g.map(e=>e.id), on=sel&&ids.some(i=>sel.includes(i)), mins=g.reduce((a,e)=>a+e.dur,0);
+    const tt = g.length===1? `${g[0].title}, ${hhmm(g[0].start)}`:`${g.length} sessions`;
+    return `<div class="fw ${abs?'abs':''}" style="${style}"><button class="fb ${k} ${on?'sel':''}" style="--st:${ST[k]};width:${d}px;height:${d}px" data-ids="${ids.join(',')}" title="${tt}" aria-label="${tt}, ${fmtDur(mins)}, ${LABEL[k]}">${g.length>1?`<b>${g.length}</b>`:ico(evIcon(g[0]),d>=30?'':'sm')}<span class="ov">${ico(OI[k])}</span></button>${showDots?dots(g):''}</div>`;
+  }
+  function rollGfx(list,sm){ const s=stat(list); const conf=s.att+s.sk; const pct=conf?Math.round(s.att/conf*100):0;
+    return `<span class="ring ${sm?'sm':''}" style="--p:${pct}" title="${s.att} attended, ${s.sk} skipped"><i>${conf?pct:'–'}</i></span><span class="ic">${ico('schedule','sm')}${(s.mins/60).toFixed(1)}</span><span class="ic">${ico('event','sm')}${s.n}</span>${s.unc?`<span class="ic" style="color:var(--warning)">${ico('question_mark','sm')}${s.unc}</span>`:''}`; }
+  function strkChip(e,pos){ const metal=e.milestone>=30?'g':e.milestone>=20?'s':''; return `<div class="f-strk ${metal}" style="left:${pos}%" title="Badge slot: ${e.milestone} in a row (#39)"><i>${ico('local_fire_department','sm fill')}</i>${e.milestone}</div>`; }
+  function range(){ if(level===0) return [START, new Date(START.getTime()+DAYS*MS)]; if(level===1) return [new Date(2026,month,1), new Date(2026,month+1,1)]; const a=new Date(START.getTime()+week*7*MS); return [a,new Date(a.getTime()+7*MS)]; }
+  const pos = (d,[a,b]) => Math.max(0,Math.min(100,(d-a)/(b-a)*100));
+  function title(){ if(level===0) return 'May – Oct 2026'; if(level===1) return MOF[month]+' 2026'; const a=new Date(START.getTime()+week*7*MS), b=new Date(a.getTime()+6*MS); return `${MO[a.getMonth()]} ${a.getDate()} – ${MO[b.getMonth()]} ${b.getDate()}`; }
+  function visible(){ return level===0?events:level===1?monthEv(month):wkEv(week); }
+
+  function desktop(){
+    const R=range(); const [a,b]=R; let lane='',plot='',axis='',roll='',today='';
+    visible().filter(e=>e.milestone).forEach(e=>lane+=strkChip(e,pos(e.start,R)));
+    if(TODAY>=a && TODAY<b) today=`<div class="f-today" style="left:calc(16px + (100% - 32px)*${pos(TODAY,R)/100})"><span>${ico('my_location','sm')}</span></div>`;
+    if(level===0){
+      for(let w=0;w<26;w++){ const l=wkEv(w); const x=(w+.5)/26*100; if(l.length){ plot+=bub(l,dia(l.reduce((q,e)=>q+e.dur,0),38,12),`left:${x}%`,true,false);} }
+      for(let m=4;m<=10;m++){ const d=new Date(2026,m,1); const x=Math.max(0,pos(d,R)); axis+=`<i style="left:${x}%"></i><span class="maj" style="left:${x}%;padding-left:4px">${MO[m]}</span>`; }
+      const maxH=Math.max(...[...Array(26).keys()].map(w=>stat(wkEv(w)).mins||0),1);
+      let sp=''; for(let w=0;w<26;w++){ const s=stat(wkEv(w)); const h=Math.max(2,(s.mins/maxH)*42); sp+=`<div class="f-sp ${s.mins?'':'part'}" style="left:${(w+.5)/26*100}%;height:${s.mins?h:(wkEv(w).length?6:0)}px" title="Week ${w+1}: ${(s.mins/60).toFixed(1)} h"></div>`; }
+      roll=`<div class="f-spline" aria-label="Hours per week">${sp}</div>`;
+    } else if(level===1){
+      const n=Math.round((b-a)/MS);
+      const byd=new Map(); visible().forEach(e=>{const d=e.start.getDate(); if(!byd.has(d))byd.set(d,[]); byd.get(d).push(e);});
+      byd.forEach((g,d)=>plot+=bub(g,dia(g.reduce((q,e)=>q+e.dur,0),30,16),`left:${(d-.5)/n*100}%`,true));
+      for(let d=1;d<=n;d++){ const dt=new Date(2026,month,d); axis+=`<span style="left:${(d-.5)/n*100}%;${dt.getDay()===1?'font-weight:700;color:var(--on-surface)':''}">${d}</span>`; }
+      for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS), sun=new Date(mon.getTime()+7*MS); if(sun<=a||mon>=b) continue; const s=new Date(Math.max(mon,a)), e2=new Date(Math.min(sun,b)); const l=wkEv(w).filter(e=>e.start.getMonth()===month);
+        roll+=`<div class="f-seg" style="left:${pos(s,R)}%;width:${(e2-s)/(b-a)*100}%"><div>${l.length?rollGfx(l,true):''}</div></div>`; }
+      roll=`<div class="f-roll">${roll}</div>`;
+    } else {
+      const cols=[0,1,2,3,4,5,6].map(i=>{ const d=new Date(a.getTime()+i*MS); const l=events.filter(e=>dayIdx(e.start)===dayIdx(d)); const t=dayIdx(d)===dayIdx(TODAY);
+        return `<div class="${t?'tdy':''}"><div class="dh">${WD[d.getDay()]}<b>${d.getDate()}</b></div>${l.map(e=>bub([e],44,44)+`<span class="tm">${hhmm(e.start)}</span>`).join('')}${l.some(e=>e.milestone)?`<span class="ic" style="color:var(--bronze)">${ico('local_fire_department','sm fill')}${l.find(e=>e.milestone).milestone}</span>`:''}</div>`; }).join('');
+      return `<div class="f-desk" style="padding-top:12px"><div class="chipbar" style="margin-bottom:10px">${rollGfx(wkEv(week),false)}</div><div class="f-wk">${cols}</div></div>`;
+    }
+    return `<div class="f-desk">${today}<div class="f-lane"><span class="tl-lanelabel" style="position:absolute;left:0;padding:6px 0">Streaks &amp; badges</span>${lane}${slotMarks()}</div><div class="f-plot">${plot}</div><div class="f-axis">${axis}</div>${roll}</div>`;
+  }
+  function slotMarks(){ return `<span class="slot" style="position:absolute;left:0;top:30px;min-height:30px"><i>${ico('workspace_premium','sm')}</i>Badge slot</span>`; }
+
+  function phone(){
+    let out='';
+    const strk=e=>`<div class="vstrk">${ico('local_fire_department','fill')}${e.milestone}<span class="slot" style="min-height:26px;padding:0 10px 0 4px;border-width:1px"><i style="width:18px;height:18px">${ico('workspace_premium','sm')}</i></span></div>`;
+    const todayRow = `<div class="vstrk" style="border-style:solid;background:var(--primary);color:#fff">${ico('my_location','sm')}</div>`;
+    if(level===0){
+      const maxM=Math.max(...[...Array(26).keys()].map(w=>stat(wkEv(w)).mins),1); let lastM=-1, todayDone=false;
+      for(let w=0;w<26;w++){ const l=wkEv(w), mon=new Date(START.getTime()+w*7*MS); const mIdx=new Date(mon.getTime()+3*MS).getMonth();
+        if(mIdx!==lastM){ lastM=mIdx; const ml=monthEv(mIdx); out+=`<div class="vmh">${MO[mIdx]}<span class="ic" style="font-weight:600;font-size:12px">${rollGfx(ml,true)}</span></div>`; }
+        const mins=l.reduce((q,e)=>q+e.dur,0), s=stat(l); const ids=l.map(e=>e.id); const on=sel&&ids.some(i=>sel.includes(i)); const isNow=weekIdx(TODAY)===w;
+        out+=`<div class="vrow ${on?'sel':''}" data-ids="${ids.join(',')}" role="button" tabindex="0" aria-label="Week ${w+1}"><div class="lb"><b>${mon.getDate()}</b>${MO[mon.getMonth()]}</div><div class="sp">${l.length?bub(l,dia(mins,34,12),'',false,false):''}</div><div class="ct">${isNow?`<span style="color:var(--primary)">${ico('my_location','sm')}</span>`:''}${l.slice(0,5).map(e=>`<button class="fb mini ${key(e)}" style="--st:${ST[key(e)]};width:24px;height:24px" tabindex="-1" data-ids="${e.id}" title="${e.title}">${ico(evIcon(e),'sm')}</button>`).join('')}<span class="hb" title="${(mins/60).toFixed(1)} h"><b style="width:${mins/maxM*100}%"></b></span></div></div>`;
+        l.filter(e=>e.milestone).forEach(e=>out+=strk(e));
+      }
+    } else if(level===1){
+      const [a,b]=range(); out+=`<div class="chipbar" style="margin-bottom:8px">${rollGfx(monthEv(month),false)}</div>`;
+      for(let w=0;w<26;w++){ const mon=new Date(START.getTime()+w*7*MS), sun=new Date(mon.getTime()+7*MS); if(sun<=a||mon>=b) continue; const l=wkEv(w).filter(e=>e.start.getMonth()===month);
+        const days=[0,1,2,3,4,5,6].map(i=>{ const d=new Date(mon.getTime()+i*MS); const g=l.filter(e=>dayIdx(e.start)===dayIdx(d)); const off=d.getMonth()!==month; const t=dayIdx(d)===dayIdx(TODAY);
+          return `<div class="${off?'off':''} ${t?'tdy':''}">${WD[d.getDay()].slice(0,2)} ${d.getDate()}${g.length?bub(g,dia(g.reduce((q,e)=>q+e.dur,0),34,22)):''}</div>`; }).join('');
+        out+=`<div class="vwk"><div class="hd">${rollGfx(l,true)}</div><div class="vdays">${days}</div>${l.filter(e=>e.milestone).map(strk).join('')}</div>`; }
+      out=`<div class="v-spine">${out}</div>`;
+    } else {
+      const a=range()[0]; out+=`<div class="chipbar" style="margin-bottom:4px">${rollGfx(wkEv(week),false)}</div>`;
+      for(let i=0;i<7;i++){ const d=new Date(a.getTime()+i*MS); const l=events.filter(e=>dayIdx(e.start)===dayIdx(d));
+        out+=`<div class="vdayrow"><div class="dh">${WD[d.getDay()]}<b>${d.getDate()}</b></div><div class="cs">${l.map(e=>`<div style="display:flex;align-items:center;gap:6px">${bub([e],44,44)}<span class="tm" style="font-size:12px;color:var(--on-surface-variant)">${hhmm(e.start)}</span>${e.milestone?`<span class="ic" style="color:var(--bronze)">${ico('local_fire_department','sm fill')}${e.milestone}</span>`:''}</div>`).join('')}</div></div>`; }
+    }
+    return level===1?out:`<div class="v-spine">${out}</div>`;
+  }
+  function render(){
+    const sessions = sel?sel.map(i=>events.find(e=>e.id===i)):[];
+    el.innerHTML = `${pageHead('Zoom, step through time, tap a bubble.')}
+      <div class="chipbar">${rollGfx(events,false).replace('ring ','ring ')}<span class="ic">${ico('local_fire_department','fill')}${STREAK}</span><span class="slot bronze"><i>${ico('workspace_premium','sm')}</i>#35</span><span class="slot silver"><i>${ico('workspace_premium','sm')}</i>#39</span><span class="slot gold"><i>${ico('workspace_premium','sm')}</i></span></div>
+      <div class="toolbar" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Zoom">${['Season','Month','Week'].map((n,i)=>`<button type="button" data-lv="${i}" aria-pressed="${i===level}">${ico(['zoom_out_map','calendar_view_month','calendar_view_week'][i],'sm')}${n}</button>`).join('')}</div>
+        <div class="f-nav">${level?`<button class="btn btn-outline sm" data-nav="-1" aria-label="Previous">${ico('chevron_left','sm')}</button><b style="min-width:${compact?96:130}px;text-align:center">${title()}</b><button class="btn btn-outline sm" data-nav="1" aria-label="Next">${ico('chevron_right','sm')}</button>`:`<b>${title()}</b>`}<button class="btn btn-outline sm" data-today aria-label="Today">${ico('my_location','sm')}</button></div></div>
+      ${compact?phone():desktop()}${states()}
+      ${sessions.length?`<div class="detailhead"><h3>${sessions.length} session${sessions.length>1?'s':''} · ${fmtDur(sessions.reduce((q,e)=>q+e.dur,0))}</h3></div><div class="sessgrid">${sessions.map(sessionFull).join('')}</div>`:''}`;
+  }
+  el.addEventListener('click',ev=>{
+    const lv=ev.target.closest('[data-lv]'), nv=ev.target.closest('[data-nav]'), t=ev.target.closest('[data-ids]');
+    if(lv){ const n=+lv.dataset.lv; if(n===1&&sel&&level!==1) month=events.find(e=>e.id===sel[0]).start.getMonth(); if(n===2&&sel) week=weekIdx(events.find(e=>e.id===sel[0]).start); level=n; render(); }
+    else if(nv){ const d=+nv.dataset.nav; if(level===1) month=Math.max(4,Math.min(10,month+d)); else week=Math.max(0,Math.min(25,week+d)); render(); }
+    else if(ev.target.closest('[data-today]')){ month=TODAY.getMonth(); week=weekIdx(TODAY); render(); }
+    else if(t){ sel=t.dataset.ids.split(','); render(); }
+  });
+  el.addEventListener('keydown',ev=>{ if((ev.key==='Enter'||ev.key===' ')&&ev.target.classList&&ev.target.classList.contains('vrow')){ ev.preventDefault(); ev.target.click(); } });
+  views.push(render); render();
+}
+dir1(document.getElementById('d1-desk'),false); dir1(document.getElementById('d1-mob'),true);
+dir2(document.getElementById('d2-desk'),false); dir2(document.getElementById('d2-mob'),true);
+dir3(document.getElementById('d3-desk'),false);
+dir4(document.getElementById('d4-desk'),false); dir4(document.getElementById('d4-mob'),true); dir3(document.getElementById('d3-mob'),true);
+</script>
+</body>
+</html>
