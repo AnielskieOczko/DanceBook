@@ -163,17 +163,6 @@
                     </div>
                 </form>
             </div>
-            
-            <ul class="flex flex-col mt-8">
-                <li class="border-t border-outline-variant">
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="w-full flex items-center gap-sm py-4 text-error hover:opacity-70 transition-colors">
-                            <span th:replace="~{fragments/icon :: icon(name='logout', size='md')}"></span>
-                            <span class="font-body-md text-body-md font-medium" th:text="#{profile.logout}">Log Out</span>
-                        </button>
-                    </form>
-                </li>
-            </ul>
         </div>
     </section>
 

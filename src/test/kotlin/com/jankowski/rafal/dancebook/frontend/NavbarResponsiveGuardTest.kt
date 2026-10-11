@@ -58,18 +58,17 @@ class NavbarResponsiveGuardTest {
         assertTrue(layoutFile.isFile, "layout.html must exist")
         val doc = Jsoup.parse(layoutFile.readText())
 
-        // Mobile / tablet avatar details dropdown
+        // Unified avatar dropdown exists on all widths
         val profileMenu = doc.selectFirst("#profile-menu")
         assertNotNull(profileMenu, "#profile-menu must exist")
-        assertTrue(profileMenu!!.hasClass("xl:hidden"), "#profile-menu must be hidden only at xl:hidden")
-        assertFalse(profileMenu.hasClass("md:hidden"), "#profile-menu must not hide at md:hidden")
+        assertFalse(profileMenu!!.hasClass("hidden"), "#profile-menu must not be hidden")
+        assertFalse(profileMenu.hasClass("xl:hidden"), "#profile-menu is unified on all screen sizes")
 
-        // Desktop avatar container
-        val desktopAvatar = doc.selectFirst("header a[href='/profile']")?.parent()
-        assertNotNull(desktopAvatar, "Desktop avatar link must exist")
-        assertTrue(desktopAvatar!!.hasClass("hidden"), "Desktop avatar must be hidden below xl")
-        assertTrue(desktopAvatar.hasClass("xl:block"), "Desktop avatar must show at xl:block")
-        assertFalse(desktopAvatar.hasClass("md:block"), "Desktop avatar must not show at md:block")
+        // Phone shortcuts inside dropdown are hidden at xl breakpoint
+        val phoneShortcuts = doc.selectFirst("#profile-menu .phone-shortcuts")
+        assertNotNull(phoneShortcuts, "Phone shortcuts inside #profile-menu must exist")
+        assertTrue(phoneShortcuts!!.hasClass("xl:hidden"), "Phone shortcuts must be hidden only at xl:hidden")
+        assertFalse(phoneShortcuts.hasClass("md:hidden"), "Phone shortcuts must not hide at md:hidden")
 
         // Admin icon in header
         val adminIcon = doc.selectFirst("header a[href='/admin']")

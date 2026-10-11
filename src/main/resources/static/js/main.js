@@ -162,6 +162,9 @@ function closeAllMenus(exceptElement) {
     document.querySelectorAll('details.js-dropdown[open], #home-new-menu details[open], #profile-menu[open], #lod-color-guide[open]').forEach(details => {
         if (!exceptElement || (!details.contains(exceptElement) && details !== exceptElement)) {
             details.removeAttribute('open');
+            if (details.id === 'profile-menu') {
+                resetProfileMenuLanguages(details);
+            }
         }
     });
 
@@ -183,6 +186,16 @@ function closeAllMenus(exceptElement) {
             notifDropdown.classList.add('hidden');
         }
     }
+}
+
+function resetProfileMenuLanguages(menu) {
+    if (!menu) return;
+    const langs = menu.querySelector('[data-langs]');
+    const langBtn = menu.querySelector('[data-langbtn]');
+    const chev = langBtn?.querySelector('.js-lang-chev');
+    if (langs) langs.classList.add('hidden');
+    if (langBtn) langBtn.setAttribute('aria-expanded', 'false');
+    if (chev) chev.classList.remove('rotate-180');
 }
 
 /**
@@ -467,6 +480,38 @@ document.addEventListener('click', function(event) {
         return;
     }
 
+    // Language accordion toggle in avatar dropdown
+    const langBtn = event.target.closest('[data-langbtn]');
+    if (langBtn) {
+        event.preventDefault();
+        const menu = langBtn.closest('#profile-menu');
+        const langs = menu?.querySelector('[data-langs]');
+        const chev = langBtn.querySelector('.js-lang-chev');
+        if (langs) {
+            const isHidden = langs.classList.contains('hidden');
+            if (isHidden) {
+                langs.classList.remove('hidden');
+                langBtn.setAttribute('aria-expanded', 'true');
+                chev?.classList.add('rotate-180');
+            } else {
+                langs.classList.add('hidden');
+                langBtn.setAttribute('aria-expanded', 'false');
+                chev?.classList.remove('rotate-180');
+            }
+        }
+        return;
+    }
+
+    // Ensure redirect parameter in locale form reflects current URL
+    const langRadio = event.target.closest('[data-langs] button[type="submit"]');
+    if (langRadio) {
+        const form = langRadio.closest('form');
+        const redirectInput = form?.querySelector('input[name="redirect"]');
+        if (redirectInput) {
+            redirectInput.value = window.location.pathname + window.location.search;
+        }
+    }
+
     // Close dropdowns and menus when clicking outside
     closeAllMenus(event.target);
 });
@@ -475,6 +520,29 @@ document.addEventListener('click', function(event) {
  * Global keydown handler: closes open dropdown/popup menus on Escape and restores focus to trigger.
  */
 document.addEventListener('keydown', function(event) {
+    // Arrow key navigation in profile dropdown menu
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        const profileMenu = document.getElementById('profile-menu');
+        if (profileMenu && profileMenu.hasAttribute('open') && profileMenu.contains(event.target)) {
+            event.preventDefault();
+            const items = Array.from(profileMenu.querySelectorAll('a[role="menuitem"], button[role="menuitem"], button[role="menuitemradio"]'))
+                .filter(el => el.offsetParent !== null && !el.closest('.hidden'));
+            if (items.length > 0) {
+                const currentIndex = items.indexOf(document.activeElement);
+                let nextIndex = 0;
+                if (currentIndex === -1) {
+                    nextIndex = event.key === 'ArrowDown' ? 0 : items.length - 1;
+                } else if (event.key === 'ArrowDown') {
+                    nextIndex = (currentIndex + 1) % items.length;
+                } else {
+                    nextIndex = (currentIndex - 1 + items.length) % items.length;
+                }
+                items[nextIndex].focus();
+            }
+            return;
+        }
+    }
+
     if (event.key !== 'Escape' && event.key !== 'Esc') return;
     if (event.target && event.target.closest('dialog')) return;
 
@@ -485,6 +553,9 @@ document.addEventListener('keydown', function(event) {
     const openDetailsList = document.querySelectorAll('details.js-dropdown[open], #home-new-menu details[open], #profile-menu[open], #lod-color-guide[open]');
     openDetailsList.forEach(details => {
         details.removeAttribute('open');
+        if (details.id === 'profile-menu') {
+            resetProfileMenuLanguages(details);
+        }
         closedAny = true;
         if (!triggerToFocus || details.contains(document.activeElement)) {
             triggerToFocus = details.querySelector('summary');

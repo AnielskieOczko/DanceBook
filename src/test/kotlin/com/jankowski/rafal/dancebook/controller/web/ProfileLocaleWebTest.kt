@@ -233,4 +233,97 @@ class ProfileLocaleWebTest {
         val userAfter = appUserRepository.findById(testUser.id!!).get()
         assertEquals("en", userAfter.locale, "Stored locale must remain unchanged when over-long value is posted")
     }
+
+    @Test
+    fun `switching language with redirect parameter redirects to target without visiting profile`() {
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "/materials")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/materials"))
+
+        val userAfter = appUserRepository.findById(testUser.id!!).get()
+        assertEquals("pl", userAfter.locale)
+    }
+
+    @Test
+    fun `switching language with invalid redirect falls back to profile redirect`() {
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "https://evil.com")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/profile"))
+
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "//evil.com")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/profile"))
+
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "/\\evil.example")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/profile"))
+
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "/\t/evil.example")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/profile"))
+
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "/\n/evil.example")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/profile"))
+
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .param("locale", "pl")
+                .param("redirect", "/dance-figures?page=2")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/dance-figures?page=2"))
+    }
+
+    @Test
+    fun `switching language with redirect parameter via HTMX returns HX-Redirect to target`() {
+        mockMvc.perform(
+            post("/profile/locale")
+                .with(csrf())
+                .with(user(testUser.username).roles("USER"))
+                .header("HX-Request", "true")
+                .param("locale", "en")
+                .param("redirect", "/dance-figures")
+        )
+            .andExpect(status().is3xxRedirection)
+            .andExpect(header().string("HX-Redirect", "/dance-figures"))
+    }
 }

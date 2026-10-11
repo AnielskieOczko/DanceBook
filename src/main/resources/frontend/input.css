@@ -1657,3 +1657,11 @@ body:has(dialog[open]) .goto {
   }
 }
 
+.langs .tick {
+  visibility: hidden;
+}
+
+.langs [aria-checked="true"] .tick {
+  visibility: visible;
+}
+

@@ -102,38 +102,119 @@
                 <div id="notification-dropdown" class="hidden absolute right-0 top-full mt-2 w-80 md:w-96 z-50"></div>
             </div>
 
-            <!-- Desktop: the avatar goes straight to the profile, the nav already lists everything -->
-            <div class="hidden xl:block w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex-shrink-0 cursor-pointer hover:border-outline transition-colors">
-                <a href="/profile" aria-label="Profile" th:attr="aria-label=#{nav.profile}">
-                    <div class="w-full h-full flex items-center justify-center bg-primary-container text-on-primary-container font-bold">
-                        <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Phone: the bottom bar holds four tabs, so the rest lives behind the avatar -->
-            <details class="xl:hidden relative js-dropdown" id="profile-menu">
-                <summary class="w-11 h-11 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold list-none cursor-pointer [&::-webkit-details-marker]:hidden"
-                         aria-label="Menu" th:attr="aria-label=#{nav.menu}">
+            <!-- Avatar dropdown (desktop and phone) -->
+            <details class="relative js-dropdown" id="profile-menu">
+                <summary class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-base list-none cursor-pointer select-none hover:border-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden"
+                         aria-haspopup="menu"
+                         aria-label="Menu"
+                         th:attr="aria-label=#{nav.menu}">
                     <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
                 </summary>
-                <div class="absolute right-0 top-full mt-2 w-56 z-50 card shadow-ambient py-2">
-                    <a href="/profile" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
+                <div class="absolute right-0 top-full mt-2 w-[272px] p-1.5 bg-surface border border-outline-variant rounded-card shadow-ambient z-50 text-on-surface"
+                     role="menu"
+                     aria-label="Menu"
+                     th:attr="aria-label=#{nav.menu}">
+
+                    <!-- Header block (information only, not a link) -->
+                    <div class="flex items-center gap-3 px-3 py-2.5 pb-3 border-b border-outline-variant mb-1.5 select-none">
+                        <div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container font-bold text-base shrink-0">
+                            <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <b class="block text-[15px] font-semibold leading-tight text-on-surface truncate"
+                               th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName : (currentUser != null ? currentUser.username : '')}">User</b>
+                            <small class="block text-xs text-on-surface-variant truncate"
+                                   th:text="${currentUser != null && currentUser.role != null && currentUser.role.name() == 'ADMIN' ? #messages.msg('profile.role.admin') : #messages.msg('profile.role.user')}">Role</small>
+                        </div>
+                    </div>
+
+                    <!-- Phone-only shortcuts (Choreographies, Collections, Admin for admins) -->
+                    <div class="xl:hidden phone-shortcuts">
+                        <a href="/choreographies" role="menuitem"
+                           class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+                            <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-outline')}"></span>
+                            <span th:text="#{nav.choreographies}">Choreographies</span>
+                        </a>
+                        <a href="/lists" role="menuitem"
+                           class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+                            <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-outline')}"></span>
+                            <span th:text="#{nav.collections}">Collections</span>
+                        </a>
+                        <a sec:authorize="hasRole('ADMIN')" href="/admin" role="menuitem"
+                           class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+                            <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-outline')}"></span>
+                            <span th:text="#{nav.admin}">Admin</span>
+                        </a>
+                        <div class="h-px bg-outline-variant my-1.5 mx-2"></div>
+                    </div>
+
+                    <!-- Profile -->
+                    <a href="/profile" role="menuitem"
+                       aria-label="Profile" th:attr="aria-label=#{nav.profile}"
+                       class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
                         <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-outline')}"></span>
                         <span th:text="#{nav.profile}">Profile</span>
                     </a>
-                    <a href="/choreographies" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='route', size='md', cls='text-outline')}"></span>
-                        <span th:text="#{nav.choreographies}">Choreographies</span>
-                    </a>
-                    <a href="/lists" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='layers', size='md', cls='text-outline')}"></span>
-                        <span th:text="#{nav.collections}">Collections</span>
-                    </a>
-                    <a sec:authorize="hasRole('ADMIN')" href="/admin" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
-                        <span th:replace="~{fragments/icon :: icon(name='settings', size='md', cls='text-outline')}"></span>
-                        <span th:text="#{nav.admin}">Admin</span>
-                    </a>
+
+                    <!-- Language button -->
+                    <button type="button" role="menuitem" aria-expanded="false" aria-haspopup="true" data-langbtn
+                            class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors cursor-pointer text-left">
+                        <span th:replace="~{fragments/icon :: icon(name='language', size='md', cls='text-outline')}"></span>
+                        <span th:text="#{profile.language}">Language</span>
+                        <span class="ml-auto flex items-center gap-1 text-on-surface-variant text-[13px] font-normal">
+                            <span data-langval th:text="${currentUser != null && currentUser.locale == 'pl' ? #messages.msg('language.pl') : (currentUser != null && currentUser.locale == 'en' ? #messages.msg('language.en') : #messages.msg('language.browser_default'))}">English</span>
+                            <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='text-outline transition-transform duration-200 js-lang-chev')}"></span>
+                        </span>
+                    </button>
+
+                    <!-- Language options group (expanded in place) -->
+                    <div class="langs ml-3 pl-3 my-1 border-l-2 border-primary-soft hidden" role="group" aria-label="Language" th:attr="aria-label=#{profile.language}" data-langs>
+                        <form th:action="@{/profile/locale}" method="post" class="m-0">
+                            <input type="hidden" name="locale" value="en">
+                            <input type="hidden" name="redirect" th:value="${currentUri ?: ''}" data-current-url>
+                            <button type="submit" role="menuitemradio"
+                                    th:attr="aria-checked=${currentUser != null && currentUser.locale == 'en'}"
+                                    class="flex items-center gap-3 w-full min-h-[40px] px-3 py-1.5 rounded-[12px] text-sm text-left hover:bg-surface-container transition-colors cursor-pointer"
+                                    th:classappend="${currentUser != null && currentUser.locale == 'en' ? 'text-primary font-semibold' : 'text-on-surface font-normal'}">
+                                <span th:text="#{language.en}">English</span>
+                                <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='tick ml-auto text-primary')}"></span>
+                            </button>
+                        </form>
+                        <form th:action="@{/profile/locale}" method="post" class="m-0">
+                            <input type="hidden" name="locale" value="pl">
+                            <input type="hidden" name="redirect" th:value="${currentUri ?: ''}" data-current-url>
+                            <button type="submit" role="menuitemradio"
+                                    th:attr="aria-checked=${currentUser != null && currentUser.locale == 'pl'}"
+                                    class="flex items-center gap-3 w-full min-h-[40px] px-3 py-1.5 rounded-[12px] text-sm text-left hover:bg-surface-container transition-colors cursor-pointer"
+                                    th:classappend="${currentUser != null && currentUser.locale == 'pl' ? 'text-primary font-semibold' : 'text-on-surface font-normal'}">
+                                <span th:text="#{language.pl}">Polski</span>
+                                <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='tick ml-auto text-primary')}"></span>
+                            </button>
+                        </form>
+                        <form th:action="@{/profile/locale}" method="post" class="m-0">
+                            <input type="hidden" name="locale" value="">
+                            <input type="hidden" name="redirect" th:value="${currentUri ?: ''}" data-current-url>
+                            <button type="submit" role="menuitemradio"
+                                    th:attr="aria-checked=${currentUser == null || currentUser.locale == null || currentUser.locale.isEmpty()}"
+                                    class="flex items-center gap-3 w-full min-h-[40px] px-3 py-1.5 rounded-[12px] text-sm text-left hover:bg-surface-container transition-colors cursor-pointer"
+                                    th:classappend="${currentUser == null || currentUser.locale == null || currentUser.locale.isEmpty() ? 'text-primary font-semibold' : 'text-on-surface font-normal'}">
+                                <span th:text="#{language.browser_default}">Browser default</span>
+                                <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='tick ml-auto text-primary')}"></span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Separator -->
+                    <div class="h-px bg-outline-variant my-1.5 mx-2"></div>
+
+                    <!-- Log out -->
+                    <form th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" role="menuitem"
+                                class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-error hover:bg-error-container hover:text-error transition-colors cursor-pointer text-left">
+                            <span th:replace="~{fragments/icon :: icon(name='logout', size='md', cls='text-error')}"></span>
+                            <span th:text="#{profile.logout}">Log Out</span>
+                        </button>
+                    </form>
                 </div>
             </details>
         </div>

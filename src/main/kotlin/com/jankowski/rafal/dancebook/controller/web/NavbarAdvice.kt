@@ -110,5 +110,12 @@ class NavbarAdvice(
             else -> ""
         }
     }
+
+    @ModelAttribute("currentUri")
+    fun currentUri(request: HttpServletRequest): String {
+        val uri = request.requestURI
+        val query = request.queryString
+        return if (!query.isNullOrBlank()) "$uri?$query" else uri
+    }
 }
 
