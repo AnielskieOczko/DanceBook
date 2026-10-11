@@ -247,20 +247,17 @@ class DanceFigureViewRenderingTest {
         val form = doc.selectFirst("#figureForm")
         assertNotNull(form, "Figure form must be present")
 
-        // Top metadata grid: contains exactly 2 top-level children (lg:col-span-2 and lg:col-span-1)
-        val topGrid = form!!.children().first { it.hasClass("grid") && it.hasClass("grid-cols-1") && it.classNames().contains("lg:grid-cols-3") }
-        assertEquals(2, topGrid.childrenSize(), "Top metadata grid must have exactly 2 child columns (left 2/3 and right 1/3)")
+        // Steps section must be present as a hairline section of the form
+        val stepsSection = form!!.selectFirst("#sec-steps")
+        assertNotNull(stepsSection, "Steps section must be present")
+        assertTrue(stepsSection!!.hasClass("sec-hairline"), "Steps section must be a hairline section")
 
-        // Step sets card must NOT be nested inside the top metadata grid
-        assertNull(topGrid.selectFirst("#step-sets-card"), "Step sets card must not be nested inside top metadata grid")
-
-        // Step sets card must be inside a full-width container which is a direct child of the form
-        val stepSetsCard = form.selectFirst("#step-sets-card")
-        assertNotNull(stepSetsCard, "Step sets card must be present")
-        val stepSetsWrapper = stepSetsCard!!.parent()
-        assertNotNull(stepSetsWrapper)
-        assertTrue(stepSetsWrapper!!.hasClass("w-full"), "Step sets wrapper must be full width (w-full)")
-        assertEquals(form, stepSetsWrapper.parent(), "Step sets wrapper must be a direct child of #figureForm")
+        // Redesigned hairline sections for issue #230
+        assertNotNull(form.selectFirst("#sec-details"), "Details section must be present")
+        assertNotNull(form.selectFirst("#sec-feet"), "Positions and feet section must be present")
+        assertNotNull(form.selectFirst("#sec-flow"), "Flow section must be present")
+        assertNotNull(form.selectFirst("#sec-links"), "Resources section must be present")
+        assertNotNull(form.selectFirst("#sec-notes"), "Notes section must be present")
     }
 }
 
