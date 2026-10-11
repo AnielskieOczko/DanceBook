@@ -1053,9 +1053,11 @@ locales are listed in `config/AppLocales.kt`.
 - **Tests.** Each area has a `*LocaleWebTest` (`controller/web/ChoreographyLocaleWebTest.kt`
   is a good one to copy): a `@WebMvcTest` that renders its pages with a Polish locale and
   checks for Polish text and the absence of the English labels, then with an English locale
-  and checks nothing moved. Existing English rendering tests must pass unchanged. Nothing
-  yet checks key parity between the two bundles (#247), so compare the added keys of both
-  files yourself, and look for duplicate keys after resolving a merge conflict.
+  and checks nothing moved. Existing English rendering tests must pass unchanged. `MessageBundleParityGuardTest` (#247) fails the build on a key missing from either bundle or
+  declared twice. `TemplateHardcodedTextGuardTest` fails on visible text or a `placeholder`/`title`/
+  `aria-label`/`alt` attribute with no binding. Templates of areas still awaiting their sweep sit in its
+  `pendingSweep` map: remove a template's entry in the PR that translates it (the test fails on a stale
+  entry). Genuine non-text literals go in `allowedText` with a reason.
 - **Merging.** Every sweep appends a block to both bundles, so two open sweeps conflict on
   the same lines. Both sides only add keys: keep both blocks, remove the markers, check for
   duplicate keys.
