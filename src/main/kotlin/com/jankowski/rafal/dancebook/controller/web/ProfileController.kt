@@ -80,6 +80,7 @@ class ProfileController(
     @PostMapping("/locale", "/language")
     fun updateLocale(
         @RequestParam(required = false) locale: String?,
+        @RequestParam(required = false) redirect: String?,
         request: HttpServletRequest,
         response: HttpServletResponse,
         redirectAttributes: RedirectAttributes
@@ -87,12 +88,14 @@ class ProfileController(
         val user = appUserService.getCurrentUser()
         val trimmed = locale?.trim()
 
+        val target = sanitizeRedirect(redirect)
+
         if (!trimmed.isNullOrEmpty() && !AppLocales.isSupported(trimmed)) {
             redirectAttributes.addFlashAttribute("localeErrorMsg", true)
             if (request.getHeader("HX-Request") != null) {
-                response.setHeader("HX-Redirect", "/profile")
+                response.setHeader("HX-Redirect", target)
             }
-            return "redirect:/profile"
+            return "redirect:$target"
         }
 
         try {
@@ -103,9 +106,9 @@ class ProfileController(
         }
 
         if (request.getHeader("HX-Request") != null) {
-            response.setHeader("HX-Redirect", "/profile")
+            response.setHeader("HX-Redirect", target)
         }
-        return "redirect:/profile"
+        return "redirect:$target"
     }
 
     @PostMapping("/password")
@@ -137,5 +140,14 @@ class ProfileController(
         }
 
         return "profile/index :: passwordSection"
+    }
+
+    private fun sanitizeRedirect(redirect: String?): String {
+        if (redirect.isNullOrBlank()) return "/profile"
+        if (!redirect.startsWith("/")) return "/profile"
+        if (redirect.length > 1 && (redirect[1] == '/' || redirect[1] == '\\')) return "/profile"
+        if (redirect.contains('\\')) return "/profile"
+        if (redirect.any { it.code < 0x20 || it.code == 0x7F }) return "/profile"
+        return redirect
     }
 }
