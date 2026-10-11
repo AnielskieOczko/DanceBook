@@ -536,6 +536,45 @@ Category · Rating · Figures · Media · Created · Actions. Title, Rating and 
 - **Wording follows the UI name.** The page is titled "Notes", the count reads "1 note" or
   "N notes", and the action is "New note". No `materials/` template says "movement".
 
+### The edit-figure page and field focus (#300)
+
+The figure editor (`dance-figures/form.html`) matches the approved mock
+(`docs/mocks/figures/index.html`) at every width, by global styles only.
+
+- **Fields are borderless filled pills.** The `<form>` carries `ed-form`, which restyles the
+  shared `form-input` / `form-select` / `form-label` / `form-hint` inside it (44px, 15px,
+  outline revealed on hover, primary border on focus). Dense step and link cells use
+  `dense-input` / `dense-select` / `dense-textarea`, the position and foot fields `pill-input`
+  (through `feet-matrix`), the name `ed-name`. A new editor control uses one of these, never
+  a local border or colour.
+- **Focus is one frame: a primary border plus a 3px ring at 22%** (the #214 mock). The global
+  `*:focus-visible` rule in `input.css` draws a dark 2px offset ring with `!important`, so
+  every text-entry class must be on its `:not(...)` list (`form-*`, `dense-*`, `pill-input`,
+  `ed-name`, `trix-editor`). Forgetting that is what produced the "double line" on focused
+  fields: the control's own ring plus the global one. `TailwindOutputCssTest` fails if a class
+  is missing. Do not try to cancel the global ring with `focus-visible:...!` on the utility;
+  it loses on specificity.
+- **No horizontal scroll and no clipped text** at 375 to 1440px, in en and pl. The steps table
+  is a grid (`steps-table`) that fits its columns on desktop and reflows to stacked step cards
+  below 1024px; the links row reflows the same way. Check the real page at 375px, 768px and
+  1280px with a figure that has steps (the first figure in an empty database has none).
+- **The guided import panel lives outside `#figureForm`.** Guided mode hides the form, so a
+  panel inside it disappears with it. It only worked before because `flex` happened to beat
+  `hidden`; a CSS reorder broke it. `DanceFigureEditFormMockAlignmentTest` pins the order.
+  The mode buttons are `seg-pill-btn`s: switch `active` and `aria-pressed`, never reassign
+  `className` in script.
+- **Client strings go through the JS i18n bundle.** A key read with `I18n.t(...)` in
+  `static/js` must be exposed by `I18nJsBundleServiceImpl`, or the script writes the bare key
+  into the page (it showed `figures.form.steps.step_number` as a step heading on phones).
+
+**The Kotlin build is warning-free (#304).** `compileKotlin` and `compileTestKotlin` print no
+warnings, so a new one is a real signal. Fix the cause: tests exclude
+`OAuth2ClientAutoConfiguration` from `org.springframework.boot.autoconfigure.security.oauth2.client`
+(not the deprecated `.servlet` one), and an unavoidable deprecation or unchecked cast is
+suppressed at the smallest scope with a comment saying why (`AssistantDraftCodec`, and the
+`mockStringResponse()` helper in the provider tests). `allWarningsAsErrors` stays off so a
+library upgrade cannot break the build on a new deprecation.
+
 ### HTMX partial rendering
 
 Web controllers accept `@RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?`
