@@ -82,10 +82,7 @@ class NavbarAdvice(
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
         if (auth != null && auth.isAuthenticated && auth.principal != "anonymousUser") {
             try {
-                val user = appUserService.getCurrentUser()
-                if (user?.medalBadgeStyle != null) {
-                    return user.medalBadgeStyle!!.code
-                }
+                appUserService.getCurrentUser().medalBadgeStyle?.let { return it.code }
             } catch (_: Exception) {}
         }
         val adminSetting: String? = try {
