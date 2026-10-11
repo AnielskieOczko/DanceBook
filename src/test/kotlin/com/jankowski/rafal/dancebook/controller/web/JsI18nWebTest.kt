@@ -11,7 +11,7 @@ import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -82,6 +82,7 @@ class JsI18nWebTest {
             .andExpect(content().string(containsString("&quot;common.dismiss&quot;:&quot;Dismiss&quot;")))
             .andExpect(content().string(containsString("&quot;js.error.unexpected&quot;:&quot;An unexpected error occurred. Please try again.&quot;")))
             .andExpect(content().string(containsString("&quot;js.error.network&quot;:&quot;Network error. Please check your connection and try again.&quot;")))
+            .andExpect(content().string(containsString("&quot;figures.form.steps.step_number&quot;:&quot;Step {0}&quot;")))
             .andExpect(content().string(not(containsString("Asystent nie mógł teraz odpowiedzieć"))))
             .andExpect(content().string(not(containsString("&quot;common.dismiss&quot;:&quot;Zamknij&quot;"))))
     }
@@ -95,6 +96,7 @@ class JsI18nWebTest {
             .andExpect(content().string(containsString("&quot;common.dismiss&quot;:&quot;Zamknij&quot;")))
             .andExpect(content().string(containsString("&quot;js.error.unexpected&quot;:&quot;Wystąpił nieoczekiwany błąd. Spróbuj ponownie.&quot;")))
             .andExpect(content().string(containsString("&quot;js.error.network&quot;:&quot;Błąd sieci. Sprawdź połączenie i spróbuj ponownie.&quot;")))
+            .andExpect(content().string(containsString("&quot;figures.form.steps.step_number&quot;:&quot;Krok {0}&quot;")))
             .andExpect(content().string(not(containsString("The assistant couldn't answer just now"))))
             .andExpect(content().string(not(containsString("&quot;common.dismiss&quot;:&quot;Dismiss&quot;"))))
     }

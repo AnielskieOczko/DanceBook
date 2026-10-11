@@ -130,7 +130,11 @@ class I18nJsBundleServiceImpl(
             "figures.view.steps.th.action",
             "figures.view.steps.th.turn",
             "figures.form.steps.variant_number",
+            "figures.form.steps.step_number",
             "figures.form.steps.default_suffix",
+            "figures.form.steps.confirm_delete_title",
+            "figures.form.aria.which_role",
+            "figures.form.links.add",
             "figures.form.unsaved_changes",
             "training.form.scope.this_event_hint",
             "training.form.scope.hint"

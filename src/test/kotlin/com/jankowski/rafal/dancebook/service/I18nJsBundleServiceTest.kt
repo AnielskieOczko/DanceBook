@@ -109,4 +109,24 @@ class I18nJsBundleServiceTest {
             )
         }
     }
+
+    @Test
+    fun `all keys referenced by dance-figure-form js are exposed in the bundle for English and Polish`() {
+        val jsFile = java.io.File("src/main/resources/static/js/dance-figure-form.js")
+        assertTrue(jsFile.exists(), "dance-figure-form.js must exist")
+        val jsContent = jsFile.readText()
+        val regex = Regex("""I18n\.t\(['"]([^'"]+)['"]""")
+        val keysUsed = regex.findAll(jsContent).map { it.groupValues[1] }.toSet()
+
+        val enMap = service.getBundleMap(english)
+        val plMap = service.getBundleMap(polish)
+
+        for (key in keysUsed) {
+            assertTrue(enMap.containsKey(key), "Key '$key' used in dance-figure-form.js is missing from EN JS bundle")
+            assertTrue(plMap.containsKey(key), "Key '$key' used in dance-figure-form.js is missing from PL JS bundle")
+        }
+
+        assertEquals("Step {0}", enMap["figures.form.steps.step_number"])
+        assertEquals("Krok {0}", plMap["figures.form.steps.step_number"])
+    }
 }
