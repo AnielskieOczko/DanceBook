@@ -1,5 +1,104 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Step Sets Tab Switching
+    // -------------------------------------------------------------
+    // 1. Sticky Bar Live Previews & Dirty State Tracking
+    // -------------------------------------------------------------
+    const form = document.getElementById('figureForm');
+    const edState = document.getElementById('edStateIndicator');
+    let isDirty = false;
+
+    function markDirty() {
+        if (!isDirty && edState) {
+            isDirty = true;
+            edState.innerHTML = `<span class="w-2 h-2 rounded-full border-2 border-on-surface-variant shrink-0"></span><span>${I18n.t('figures.form.unsaved_changes')}</span>`;
+        }
+    }
+
+    if (form) {
+        form.addEventListener('input', markDirty);
+        form.addEventListener('change', markDirty);
+    }
+
+    // Dance style change mapping & breadcrumb sync
+    const danceTypeSelect = document.getElementById('danceTypeId');
+    const crumbStyle = document.getElementById('crumbStyle');
+    if (danceTypeSelect) {
+        danceTypeSelect.addEventListener('change', (e) => {
+            const danceTypeId = e.target.value;
+            const selectedText = danceTypeSelect.options[danceTypeSelect.selectedIndex]?.text || '';
+            if (crumbStyle) crumbStyle.textContent = selectedText;
+
+            // Update flow add selects
+            updateFlowDropdowns(danceTypeId);
+        });
+    }
+
+    // Dance class preview in sticky header
+    const danceClassSelect = document.getElementById('danceClass');
+    const gradeClassBadge = document.getElementById('gradeClassBadge');
+    if (danceClassSelect && gradeClassBadge) {
+        danceClassSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            gradeClassBadge.textContent = val ? I18n.t('figures.view.class_label', val) : I18n.t('figures.view.class_label', 'H');
+        });
+    }
+
+    // Medal level preview in sticky header
+    const medalRadios = document.querySelectorAll('.js-medal-radio');
+    const gradeMedalBadge = document.getElementById('gradeMedalBadge');
+    if (gradeMedalBadge) {
+        medalRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const val = e.target.value.toLowerCase();
+                gradeMedalBadge.innerHTML = renderMedalBadgeHtml(val);
+            });
+        });
+    }
+
+    // -------------------------------------------------------------
+    // 2. Jump Navigation Smooth Scrolling & Active State
+    // -------------------------------------------------------------
+    const jumpLinks = document.querySelectorAll('.jump-nav-link');
+    jumpLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-jump');
+            const targetEl = document.getElementById(targetId);
+            if (!targetEl) return;
+
+            const stickyHeader = document.querySelector('.sticky');
+            const offset = (stickyHeader ? stickyHeader.offsetHeight : 0) + 12;
+            const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: elementPosition - offset,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('[data-sec]');
+        const stickyHeader = document.querySelector('.sticky');
+        const offset = (stickyHeader ? stickyHeader.offsetHeight : 0) + 24;
+        let activeSectionId = null;
+
+        sections.forEach(sec => {
+            const rect = sec.getBoundingClientRect();
+            if (rect.top <= offset) {
+                activeSectionId = sec.getAttribute('data-sec');
+            }
+        });
+
+        if (activeSectionId) {
+            jumpLinks.forEach(link => {
+                const isCurrent = link.getAttribute('data-jump') === activeSectionId;
+                link.classList.toggle('on', isCurrent);
+            });
+        }
+    }, { passive: true });
+
+    // -------------------------------------------------------------
+    // 3. Step Sets Tab Switching (Desktop & Mobile)
+    // -------------------------------------------------------------
     const tabsContainer = document.getElementById('step-sets-tabs-container');
     if (tabsContainer) {
         tabsContainer.addEventListener('click', (e) => {
@@ -11,77 +110,152 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Add Step Set button
+    const mobileSetSelect = document.getElementById('step-sets-mobile-select');
+    if (mobileSetSelect) {
+        mobileSetSelect.addEventListener('change', (e) => {
+            setActiveStepSet(e.target.value);
+        });
+    }
+
     const addStepSetBtn = document.getElementById('add-step-set-btn');
     if (addStepSetBtn) {
         addStepSetBtn.addEventListener('click', addStepSet);
     }
 
-    // Event delegation for operations inside Step Sets Panels
+    // -------------------------------------------------------------
+    // 4. Step Sets Panels Operations (Event Delegation)
+    // -------------------------------------------------------------
     const panelsContainer = document.getElementById('step-sets-panels-container');
     if (panelsContainer) {
-        // Remove Step Set
-        panelsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.js-remove-step-set-btn');
-            if (btn) {
-                removeStepSet(btn);
-            }
-        });
-
-        // Set Default Radio Selection change
-        panelsContainer.addEventListener('change', (e) => {
-            const radio = e.target.closest('.js-set-default-radio');
-            if (radio) {
-                updateDefaultSetSelection(radio.value);
-            }
-        });
-
-        // Synchronization of combination name text inputs to tab titles
+        // Combination name input sync with tabs and select
         panelsContainer.addEventListener('input', (e) => {
             const nameInput = e.target.closest('.js-set-name-input');
             if (nameInput) {
                 const panel = nameInput.closest('.js-step-set-panel');
                 const idx = panel.getAttribute('data-set-idx');
+                const fallbackName = I18n.t('figures.form.steps.step_number', parseInt(idx) + 1);
+                const val = nameInput.value.trim() || fallbackName;
+
                 const tab = document.querySelector(`.js-step-set-tab[data-set-idx="${idx}"]`);
                 if (tab) {
                     const display = tab.querySelector('.js-tab-name-display');
-                    if (display) {
-                        display.textContent = nameInput.value.trim() || I18n.t('js.figure.set_name', parseInt(idx) + 1);
+                    if (display) display.textContent = val;
+                }
+
+                if (mobileSetSelect) {
+                    const opt = mobileSetSelect.querySelector(`option[value="${idx}"]`);
+                    if (opt) {
+                        const isDef = panel.querySelector('.js-set-default-radio')?.checked;
+                        opt.textContent = val + (isDef ? ` (${I18n.t('figures.form.steps.mark_default')})` : '');
                     }
                 }
             }
         });
 
-        // Role Tab Switching inside panel
+        // Make default variant button
         panelsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.js-panel-role-btn');
-            if (btn) {
-                const panel = btn.closest('.js-step-set-panel');
-                const role = btn.getAttribute('data-role');
-                switchPanelRole(panel, role);
+            const makeDefBtn = e.target.closest('.js-make-default-btn');
+            if (makeDefBtn) {
+                const panel = makeDefBtn.closest('.js-step-set-panel');
+                const idx = panel.getAttribute('data-set-idx');
+                updateDefaultSetSelection(idx);
             }
         });
 
-        // Add Step Row inside panel
+        // Delete variant click (show inline confirm)
         panelsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.js-add-step-btn');
-            if (btn) {
-                const panel = btn.closest('.js-step-set-panel');
-                const role = btn.getAttribute('data-role');
+            const delBtn = e.target.closest('.js-remove-step-set-btn');
+            if (delBtn) {
+                const panel = delBtn.closest('.js-step-set-panel');
+                const confirmBox = panel.querySelector('.js-del-confirm-box');
+                if (confirmBox) {
+                    const confirmText = confirmBox.querySelector('.js-del-confirm-text');
+                    if (confirmText) {
+                        const name = panel.querySelector('.js-set-name-input')?.value || '';
+                        const stepsCount = panel.querySelectorAll('.step-row').length;
+                        confirmText.textContent = I18n.t('figures.form.steps.delete_confirm', [name, stepsCount]);
+                    }
+                    confirmBox.classList.remove('hidden');
+                }
+            }
+        });
+
+        // Confirm delete variant
+        panelsContainer.addEventListener('click', (e) => {
+            const confirmBtn = e.target.closest('.js-confirm-del-btn');
+            if (confirmBtn) {
+                const panel = confirmBtn.closest('.js-step-set-panel');
+                removeStepSet(panel);
+            }
+        });
+
+        // Cancel delete variant
+        panelsContainer.addEventListener('click', (e) => {
+            const cancelBtn = e.target.closest('.js-cancel-del-btn');
+            if (cancelBtn) {
+                const panel = cancelBtn.closest('.js-step-set-panel');
+                const confirmBox = panel.querySelector('.js-del-confirm-box');
+                if (confirmBox) confirmBox.classList.add('hidden');
+            }
+        });
+
+        // Role View Switcher inside panel (Leader, Follower, Side by side)
+        panelsContainer.addEventListener('click', (e) => {
+            const roleBtn = e.target.closest('.js-view-role-btn');
+            if (roleBtn) {
+                const panel = roleBtn.closest('.js-step-set-panel');
+                const role = roleBtn.getAttribute('data-role');
+                switchRoleView(panel, role);
+            }
+        });
+
+        // Add Step Row button inside panel
+        panelsContainer.addEventListener('click', (e) => {
+            const addBtn = e.target.closest('.js-add-step-btn');
+            if (addBtn) {
+                const panel = addBtn.closest('.js-step-set-panel');
+                const role = addBtn.getAttribute('data-role');
                 addStepRow(panel, role);
             }
         });
 
-        // Remove Step Row inside panel
+        // Remove Step Row button
         panelsContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('.js-remove-step-btn');
-            if (btn) {
-                removeStepRow(btn);
+            const rmBtn = e.target.closest('.js-remove-step-btn');
+            if (rmBtn) {
+                removeStepRow(rmBtn);
             }
         });
     }
 
-    // Links list management
+    // -------------------------------------------------------------
+    // 5. Flow Section (Chips & Synchronized Hidden Multi-Select)
+    // -------------------------------------------------------------
+    document.querySelectorAll('.js-flow-add-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (!val) return;
+            const flowType = select.getAttribute('data-flow'); // "preceding" or "following"
+            addFlowFigure(flowType, val);
+            select.value = '';
+        });
+    });
+
+    document.querySelectorAll('.js-chips-list').forEach(list => {
+        list.addEventListener('click', (e) => {
+            const rmBtn = e.target.closest('.js-remove-flow-chip');
+            if (rmBtn) {
+                const chip = rmBtn.closest('.js-flow-chip');
+                const val = chip.getAttribute('data-fig');
+                const flowType = list.getAttribute('data-flow');
+                removeFlowFigure(flowType, val, chip);
+            }
+        });
+    });
+
+    // -------------------------------------------------------------
+    // 6. Resources Links Management
+    // -------------------------------------------------------------
     const addLinkBtn = document.getElementById('add-link-btn');
     if (addLinkBtn) {
         addLinkBtn.addEventListener('click', addLinkRow);
@@ -94,103 +268,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Dance style change mapping
-    const danceTypeSelect = document.getElementById('danceTypeId');
-    if (danceTypeSelect) {
-        danceTypeSelect.addEventListener('change', (e) => {
-            const danceTypeId = e.target.value;
-            const precedingSelect = document.getElementById('precedingFigureNames');
-            const followingSelect = document.getElementById('followingFigureNames');
-            
-            if (!precedingSelect || !followingSelect) return;
-
-            // Clear options
-            precedingSelect.innerHTML = '';
-            followingSelect.innerHTML = '';
-            
-            if (!danceTypeId) return;
-            
-            // Query dance figures via AJAX
-            fetch('/dance-figures/api?danceTypeId=' + danceTypeId)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(fig => {
-                        const nameField = document.getElementById('name');
-                        const currentFigureName = nameField ? nameField.value : '';
-                        if (fig.name === currentFigureName) return;
-                        
-                        const opt1 = document.createElement('option');
-                        opt1.value = fig.name;
-                        opt1.textContent = fig.name;
-                        precedingSelect.appendChild(opt1);
-                        
-                        const opt2 = document.createElement('option');
-                        opt2.value = fig.name;
-                        opt2.textContent = fig.name;
-                        followingSelect.appendChild(opt2);
-                    });
-                })
-                .catch(err => console.error("Could not fetch figures for dance style mapping", err));
-        });
-    }
-
-    // Toggle Mobile manual steps collapsible details
-    document.addEventListener('click', (e) => {
-        const toggleBtn = e.target.closest('.js-toggle-mobile-fields');
-        if (toggleBtn) {
-            const row = toggleBtn.closest('.step-row');
-            if (row) {
-                const collapsedFields = row.querySelectorAll('.js-mobile-collapsed');
-                const isHidden = collapsedFields[0].classList.contains('hidden');
-                collapsedFields.forEach(field => {
-                    if (isHidden) {
-                        field.classList.remove('hidden');
-                    } else {
-                        field.classList.add('hidden');
-                    }
-                });
-                
-                const arrow = toggleBtn.querySelector('.js-mobile-arrow');
-                const label = toggleBtn.querySelector('span');
-                if (arrow && label) {
-                    if (isHidden) {
-                        arrow.classList.add('rotate-180');
-                        label.textContent = I18n.t('js.figure.hide_technical_details');
-                    } else {
-                        arrow.classList.remove('rotate-180');
-                        label.textContent = I18n.t('figures.form.steps.show_technical_details');
-                    }
-                }
-            }
-        }
-    });
-
-    // Make sure we correctly initialize indicators on load
+    // Initialize state on page load
+    reindexStepSets();
     const checkedRadio = document.querySelector('.js-set-default-radio:checked');
     if (checkedRadio) {
         updateDefaultSetSelection(checkedRadio.value);
+    } else {
+        updateDefaultSetSelection("0");
     }
 });
 
+// -------------------------------------------------------------
+// Medal Badge Render Helper (Rank bars - Direction A)
+// -------------------------------------------------------------
+function renderMedalBadgeHtml(lvl) {
+    if (!lvl) return '';
+    const nameMap = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' };
+    const rankMap = { bronze: 1, silver: 2, gold: 3 };
+    const rank = rankMap[lvl] || 0;
+    if (rank === 0) return '';
+
+    const name = nameMap[lvl] || lvl;
+    const textClass = lvl === 'bronze' ? 'text-bronze' : (lvl === 'silver' ? 'text-silver' : 'text-gold');
+
+    let svgBars = `
+        <rect x="1" y="10" width="4" height="5" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>
+        ${rank >= 2
+            ? '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
+            : '<rect x="6" y="6" width="4" height="9" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
+        ${rank >= 3
+            ? '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="currentColor" stroke="currentColor" stroke-width="1.2"/>'
+            : '<rect x="11" y="2" width="4" height="13" rx="1.2" fill="none" class="stroke-medal-empty" stroke-width="1.2"/>'}
+    `;
+
+    return `<span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap ${textClass}" role="img" aria-label="${name} medal" title="${name} medal">
+        <svg class="block shrink-0 w-[18px] h-[18px]" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svgBars}</svg>
+        <span>${name}</span>
+    </span>`;
+}
+
+// -------------------------------------------------------------
+// Step Set Functions
+// -------------------------------------------------------------
 function setActiveStepSet(index) {
-    // Toggle active classes on tabs
     document.querySelectorAll('.js-step-set-tab').forEach(tab => {
         const idx = tab.getAttribute('data-set-idx');
-        if (idx === index) {
-            tab.className = 'js-step-set-tab flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold cursor-pointer transition-all shrink-0 bg-primary border-primary text-white';
-        } else {
-            tab.className = 'js-step-set-tab flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold cursor-pointer transition-all shrink-0 bg-surface border-border text-text-secondary hover:text-on-surface';
-        }
+        const isActive = idx === index.toString();
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
-    // Toggle visibility of panels
+    const mobileSelect = document.getElementById('step-sets-mobile-select');
+    if (mobileSelect && mobileSelect.value !== index.toString()) {
+        mobileSelect.value = index.toString();
+    }
+
     document.querySelectorAll('.js-step-set-panel').forEach(panel => {
         const idx = panel.getAttribute('data-set-idx');
-        if (idx === index) {
-            panel.classList.remove('hidden');
-        } else {
-            panel.classList.add('hidden');
-        }
+        panel.classList.toggle('hidden', idx !== index.toString());
     });
 }
 
@@ -200,89 +335,157 @@ function updateDefaultSetSelection(selectedIndex) {
         const defaultHidden = panel.querySelector('.js-set-default-hidden');
         const defaultRadio = panel.querySelector('.js-set-default-radio');
         const isDefault = idx === parseInt(selectedIndex);
-        
+
         if (defaultHidden) defaultHidden.value = isDefault ? "true" : "false";
         if (defaultRadio) defaultRadio.checked = isDefault;
 
-        // Update tab indicators
+        // Button vs Badge
+        const badge = panel.querySelector('.js-default-badge');
+        const makeDefBtn = panel.querySelector('.js-make-default-btn');
+        if (badge) badge.classList.toggle('hidden', !isDefault);
+        if (makeDefBtn) makeDefBtn.classList.toggle('hidden', isDefault);
+
+        // Tab indicator
         const tab = document.querySelector(`.js-step-set-tab[data-set-idx="${idx}"]`);
         if (tab) {
-            let indicator = tab.querySelector('.js-tab-default-indicator');
-            if (isDefault) {
-                if (!indicator) {
-                    indicator = document.createElement('span');
-                    indicator.className = 'js-tab-default-indicator material-symbols-outlined shrink-0 select-none text-[16px] icon-filled';
-                    indicator.setAttribute('aria-hidden', 'true');
-                    indicator.textContent = 'star';
-                    tab.appendChild(indicator);
-                }
-            } else {
-                if (indicator) indicator.remove();
+            const indicator = tab.querySelector('.js-tab-default-indicator');
+            if (indicator) indicator.classList.toggle('hidden', !isDefault);
+        }
+
+        // Mobile select option label
+        const mobileSelect = document.getElementById('step-sets-mobile-select');
+        if (mobileSelect) {
+            const opt = mobileSelect.querySelector(`option[value="${idx}"]`);
+            if (opt) {
+                const nameInput = panel.querySelector('.js-set-name-input');
+                const baseName = nameInput ? nameInput.value.trim() : I18n.t('figures.form.steps.variant_number', idx + 1);
+                opt.textContent = baseName + (isDefault ? I18n.t('figures.form.steps.default_suffix') : '');
             }
         }
     });
 }
 
-function switchPanelRole(panel, role) {
-    const isLeader = role === 'LEADER';
-    
-    panel.querySelectorAll('.js-panel-role-btn').forEach(btn => {
+function switchRoleView(panel, role) {
+    panel.querySelectorAll('.js-view-role-btn').forEach(btn => {
         const btnRole = btn.getAttribute('data-role');
-        if (btnRole === role) {
-            btn.className = 'js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs';
-        } else {
-            btn.className = 'js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface';
-        }
+        const isActive = btnRole === role;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
 
-    const leaderSec = panel.querySelector('.js-leader-steps-section');
-    const followerSec = panel.querySelector('.js-follower-steps-section');
+    const header = panel.querySelector('.js-steps-header');
+    const headerRoleCol = panel.querySelector('.js-col-header-role');
+    const roleCols = panel.querySelectorAll('.js-col-role');
+    const mobileRoleChips = panel.querySelectorAll('.js-mobile-role-chip');
+    const addLeaderBtn = panel.querySelector('.js-add-leader-btn');
+    const addFollowerBtn = panel.querySelector('.js-add-follower-btn');
 
-    if (isLeader) {
-        leaderSec.classList.remove('hidden');
-        followerSec.classList.add('hidden');
-    } else {
-        leaderSec.classList.add('hidden');
-        followerSec.classList.remove('hidden');
+    const isBoth = role === 'both';
+    const isLeader = role === 'LEADER';
+    const isFollower = role === 'FOLLOWER';
+
+    const colsBoth = '36px 104px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
+    const colsSingle = '36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
+
+    if (header) {
+        header.style.gridTemplateColumns = isBoth ? colsBoth : colsSingle;
     }
+    if (headerRoleCol) {
+        headerRoleCol.classList.toggle('hidden', !isBoth);
+    }
+
+    roleCols.forEach(col => col.classList.toggle('hidden', !isBoth));
+    mobileRoleChips.forEach(chip => chip.classList.toggle('hidden', !isBoth));
+
+    panel.querySelectorAll('.step-row').forEach(row => {
+        const rowRole = row.getAttribute('data-role');
+        const show = isBoth || (isLeader && rowRole === 'LEADER') || (isFollower && rowRole === 'FOLLOWER');
+        row.classList.toggle('hidden', !show);
+        row.style.gridTemplateColumns = isBoth ? colsBoth : colsSingle;
+    });
+
+    if (addLeaderBtn) addLeaderBtn.classList.toggle('hidden', isFollower);
+    if (addFollowerBtn) addFollowerBtn.classList.toggle('hidden', isLeader);
 }
 
 function reindexStepSets() {
     const panels = document.querySelectorAll('.js-step-set-panel');
     const tabs = document.querySelectorAll('.js-step-set-tab');
+    const variantsNote = document.getElementById('variantsCountNote');
+    if (variantsNote) {
+        variantsNote.textContent = I18n.t('figures.form.steps.variants_count', panels.length);
+    }
 
     panels.forEach((panel, setIdx) => {
         panel.setAttribute('data-set-idx', setIdx);
-        
-        // Update name indices
+
         panel.querySelectorAll('.step-set-id').forEach(el => el.name = `stepSets[${setIdx}].id`);
-        
         const nameInput = panel.querySelector('.js-set-name-input');
         if (nameInput) nameInput.name = `stepSets[${setIdx}].name`;
-        
+
         const radio = panel.querySelector('.js-set-default-radio');
         if (radio) {
             radio.id = `set-default-radio-${setIdx}`;
             radio.value = setIdx;
-            const label = panel.querySelector('label[for^="set-default-radio"]');
-            if (label) label.setAttribute('for', `set-default-radio-${setIdx}`);
         }
-        
+
         const defaultHidden = panel.querySelector('.js-set-default-hidden');
         if (defaultHidden) defaultHidden.name = `stepSets[${setIdx}].isDefault`;
 
-        // Reindex step numbers for leader/follower displays
-        const leaderRows = panel.querySelectorAll('.js-leader-steps-tbody .step-row');
+        // Number leader and follower steps
+        const leaderRows = panel.querySelectorAll('.step-row[data-role="LEADER"]');
         leaderRows.forEach((row, i) => {
-            row.querySelector('.step-number-display').textContent = i + 1;
+            const num = i + 1;
+            const display = row.querySelector('.step-number-display');
+            if (display) display.textContent = num;
+            const numInput = row.querySelector('.step-number');
+            if (numInput) numInput.value = num;
+            row.setAttribute('data-step-number', num);
+            row.style.order = num * 2;
         });
 
-        const followerRows = panel.querySelectorAll('.js-follower-steps-tbody .step-row');
+        const followerRows = panel.querySelectorAll('.step-row[data-role="FOLLOWER"]');
         followerRows.forEach((row, i) => {
-            row.querySelector('.step-number-display').textContent = i + 1;
+            const num = i + 1;
+            const display = row.querySelector('.step-number-display');
+            if (display) display.textContent = num;
+            const numInput = row.querySelector('.step-number');
+            if (numInput) numInput.value = num;
+            row.setAttribute('data-step-number', num);
+            row.style.order = num * 2 + 1;
         });
 
-        // Reindex all input names for steps under this set
+        const leaderCount = leaderRows.length;
+        const followerCount = followerRows.length;
+        const lCountEl = panel.querySelector('.js-leader-count');
+        const fCountEl = panel.querySelector('.js-follower-count');
+        if (lCountEl) lCountEl.textContent = leaderCount;
+        if (fCountEl) fCountEl.textContent = followerCount;
+
+        // Empty box display
+        const totalSteps = leaderCount + followerCount;
+        const emptyBox = panel.querySelector('.js-steps-empty-box');
+        const tableWrapper = panel.querySelector('.js-steps-table-wrapper');
+        const addLeaderBtn = panel.querySelector('.js-add-leader-btn');
+        const addFollowerBtn = panel.querySelector('.js-add-follower-btn');
+
+        if (emptyBox && tableWrapper) {
+            if (totalSteps === 0) {
+                emptyBox.classList.remove('hidden');
+                tableWrapper.classList.add('hidden');
+                if (addLeaderBtn) addLeaderBtn.classList.add('hidden');
+                if (addFollowerBtn) addFollowerBtn.classList.add('hidden');
+            } else {
+                emptyBox.classList.add('hidden');
+                tableWrapper.classList.remove('hidden');
+                // Role view visibility decides add buttons
+                const activeRoleBtn = panel.querySelector('.js-view-role-btn.active');
+                const curRole = activeRoleBtn ? activeRoleBtn.getAttribute('data-role') : 'LEADER';
+                switchRoleView(panel, curRole);
+            }
+        }
+
+        // Reindex all inputs under this set
         const allStepsInSet = panel.querySelectorAll('.step-row');
         allStepsInSet.forEach((row, stepIdx) => {
             row.querySelectorAll('input, select, textarea').forEach(input => {
@@ -302,125 +505,133 @@ function reindexStepSets() {
 function addStepSet() {
     const panelsContainer = document.getElementById('step-sets-panels-container');
     const tabsContainer = document.getElementById('step-sets-tabs-container');
-    const addSetBtn = document.getElementById('add-step-set-btn');
-
-    if (!panelsContainer || !tabsContainer || !addSetBtn) return;
+    const mobileSelect = document.getElementById('step-sets-mobile-select');
+    if (!panelsContainer) return;
 
     const setIdx = document.querySelectorAll('.js-step-set-panel').length;
+    const setName = I18n.t('figures.form.steps.variant_number', setIdx + 1);
 
-    // Prompt user for new combination name (pre-populated with Default)
-    const rawName = prompt(I18n.t('js.figure.combination_prompt'), I18n.t('js.figure.combination_default_name', setIdx + 1));
-    const setName = rawName ? rawName.trim() : "";
-    if (setName === "") return;
+    // Create desktop tab
+    if (tabsContainer) {
+        const tab = document.createElement('button');
+        tab.type = 'button';
+        tab.className = 'seg-pill-btn js-step-set-tab';
+        tab.setAttribute('data-set-idx', setIdx);
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-selected', 'false');
+        tab.innerHTML = `
+            <span class="js-tab-name-display">${setName}</span>
+            <span class="js-tab-default-indicator text-primary font-bold hidden">✓</span>
+        `;
+        tabsContainer.appendChild(tab);
+    }
 
-    // Create tab
-    const tab = document.createElement('div');
-    tab.className = 'js-step-set-tab flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold cursor-pointer transition-all shrink-0 bg-surface border-border text-text-secondary hover:text-on-surface';
-    tab.setAttribute('data-set-idx', setIdx);
-    tab.innerHTML = `
-        <span class="js-tab-name-display">${setName}</span>
-    `;
-    tabsContainer.insertBefore(tab, addSetBtn);
+    // Create mobile select option
+    if (mobileSelect) {
+        const opt = document.createElement('option');
+        opt.value = setIdx;
+        opt.textContent = setName;
+        mobileSelect.appendChild(opt);
+    }
 
     // Create panel
     const panel = document.createElement('div');
-    panel.className = 'js-step-set-panel space-y-6 hidden';
+    panel.className = 'js-step-set-panel space-y-4 hidden';
     panel.setAttribute('data-set-idx', setIdx);
     panel.innerHTML = `
-        <!-- Step Set Header / Metadata -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-surface-container-low p-4 rounded-lg border border-border/40">
-            <input type="hidden" class="step-set-id" name="stepSets[${setIdx}].id" value="" />
-            
+        <input type="hidden" class="step-set-id" name="stepSets[${setIdx}].id" value="" />
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-3 md:gap-6 items-end">
             <div>
-                <label class="block text-xs font-bold text-outline uppercase mb-1">${I18n.t('figures.form.steps.combination_name')}</label>
-                <input type="text" name="stepSets[${setIdx}].name" value="${setName}" required 
-                       class="form-input text-sm py-2 js-set-name-input" placeholder="${I18n.t('figures.form.steps.combination_name_placeholder')}" />
+                <label class="block text-sm font-semibold text-on-surface mb-1.5">${I18n.t('figures.form.steps.combination_name')}</label>
+                <input type="text" name="stepSets[${setIdx}].name" value="${setName}" required
+                       class="dense-input js-set-name-input" placeholder="${I18n.t('figures.form.steps.combination_name_placeholder')}" />
             </div>
-            
-            <div class="flex items-center gap-2 pt-5">
-                <input type="radio" id="set-default-radio-${setIdx}" name="default-set-radio" 
-                       value="${setIdx}" class="form-radio js-set-default-radio" />
+            <div class="flex flex-wrap gap-2 sm:gap-3 items-center justify-start md:justify-end min-h-[44px]">
+                <input type="radio" id="set-default-radio-${setIdx}" name="default-set-radio"
+                       value="${setIdx}" class="sr-only js-set-default-radio" />
                 <input type="hidden" class="js-set-default-hidden" name="stepSets[${setIdx}].isDefault" value="false" />
-                <label for="set-default-radio-${setIdx}" class="text-sm font-semibold text-on-surface cursor-pointer select-none">
-                    ${I18n.t('figures.form.steps.mark_default')}
-                </label>
-            </div>
-            
-            <div class="flex items-center justify-end pt-4">
-                <button type="button" class="btn-outline btn-sm text-danger hover:bg-danger-soft/20 border-danger/30 hover:border-danger js-remove-step-set-btn">
-                    ${renderIcon('delete', { size: 'sm', cls: 'mr-1' })} ${I18n.t('figures.form.steps.delete_combination')}
+                <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[13px] hidden">
+                    ${renderIcon('check_circle', { size: 'sm' })}
+                    <span>${I18n.t('figures.form.steps.mark_default')}</span>
+                </span>
+                <button type="button" class="btn-outline btn-sm js-make-default-btn">
+                    <span>${I18n.t('figures.form.steps.mark_default')}</span>
+                </button>
+                <button type="button" class="btn-ghost btn-sm text-on-surface-variant hover:text-danger js-remove-step-set-btn" title="${I18n.t('figures.form.steps.delete_combination')}">
+                    ${renderIcon('delete', { size: 'sm' })}
+                    <span>${I18n.t('figures.form.steps.delete_combination')}</span>
                 </button>
             </div>
         </div>
-
-        <!-- Role Tab Selector inside set panel -->
-        <div class="flex items-center justify-between border-b border-border/40 pb-2">
-            <span class="text-sm font-bold text-outline uppercase">${I18n.t('figures.form.steps.steps_list')}</span>
-            <div class="inline-flex bg-surface-container-high p-0.5 rounded-lg border border-border text-sm">
-                <button type="button" class="js-panel-role-btn active-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs" data-role="LEADER">
-                    ${renderIcon('face', { size: 'md' })} ${I18n.t('figures.role.leader')}
+        <div class="js-del-confirm-box hidden p-3 rounded-card bg-danger-soft border border-danger/30 text-xs flex flex-wrap items-center justify-between gap-3" role="alertdialog" aria-label="${I18n.t('figures.form.steps.confirm_delete_title')}">
+            <span class="text-on-surface js-del-confirm-text">${I18n.t('figures.form.steps.delete_confirm_generic')}</span>
+            <div class="flex gap-2">
+                <button type="button" class="btn-danger btn-sm py-1 px-3 text-xs js-confirm-del-btn">${I18n.t('figures.form.steps.delete_combination')}</button>
+                <button type="button" class="btn-ghost btn-sm py-1 px-3 text-xs js-cancel-del-btn">${I18n.t('figures.form.steps.keep_variant')}</button>
+            </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="seg-pill" role="group" aria-label="${I18n.t('figures.form.aria.which_role')}">
+                <button type="button" class="seg-pill-btn js-view-role-btn active" data-role="LEADER" aria-pressed="true">
+                    <span>${I18n.t('figures.role.leader')}</span>
+                    <span class="count text-xs font-semibold opacity-75 js-leader-count">0</span>
                 </button>
-                <button type="button" class="js-panel-role-btn flex items-center gap-1.5 px-4 py-1.5 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface" data-role="FOLLOWER">
-                    ${renderIcon('face_2', { size: 'md' })} ${I18n.t('figures.role.follower')}
+                <button type="button" class="seg-pill-btn js-view-role-btn" data-role="FOLLOWER" aria-pressed="false">
+                    <span>${I18n.t('figures.role.follower')}</span>
+                    <span class="count text-xs font-semibold opacity-75 js-follower-count">0</span>
+                </button>
+                <button type="button" class="seg-pill-btn js-view-role-btn" data-role="both" aria-pressed="false">
+                    <span>${I18n.t('figures.form.steps.side_by_side')}</span>
+                </button>
+            </div>
+            <span class="text-[13px] text-on-surface-variant">${I18n.t('figures.form.steps.required_note')}</span>
+        </div>
+        <div class="js-steps-empty-box p-8 text-center border border-dashed border-outline rounded-card flex flex-col gap-3 items-center">
+            <h3 class="text-base font-semibold text-on-surface">${I18n.t('figures.form.steps.empty_title')}</h3>
+            <p class="text-sm text-on-surface-variant max-w-[46ch]">${I18n.t('figures.form.steps.empty_desc')}</p>
+            <div class="flex flex-wrap gap-3 justify-center pt-2">
+                <button type="button" class="btn-primary btn-sm js-add-step-btn" data-role="LEADER">
+                    ${renderIcon('add', { size: 'sm' })}
+                    <span>${I18n.t('figures.form.steps.add_leader_step')}</span>
+                </button>
+                <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
+                    ${renderIcon('add', { size: 'sm' })}
+                    <span>${I18n.t('figures.form.steps.add_follower_step')}</span>
                 </button>
             </div>
         </div>
-
-        <!-- LEADER STEPS TABLE -->
-        <div class="js-leader-steps-section space-y-4">
-            <div class="overflow-x-auto min-h-[120px]">
-                <table class="w-full text-left border-collapse">
-                    <thead class="hidden md:table-header-group">
-                        <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
-                            <th class="py-2 pr-2 w-12">#</th>
-                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.timing')}</th>
-                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.foot')}</th>
-                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.action')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.footwork')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.alignment')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.turn')}</th>
-                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.comments')}</th>
-                            <th class="py-2 w-10 text-right"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="js-leader-steps-tbody">
-                    </tbody>
-                </table>
+        <div class="js-steps-table-wrapper w-full overflow-x-auto hidden">
+            <div class="hidden md:grid gap-2 items-center pb-2 border-b border-outline text-xs font-semibold text-on-surface-variant js-steps-header"
+                 style="grid-template-columns: 36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px;">
+                <div class="text-center">${I18n.t('figures.form.steps.th.number')}</div>
+                <div class="js-col-header-role hidden pl-2">${I18n.t('figures.view.steps.th.role')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.timing')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.foot')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.action')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.footwork')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.alignment')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.turn')}</div>
+                <div class="pl-2">${I18n.t('figures.form.steps.th.comments')}</div>
+                <div class="text-center"><span class="sr-only">${I18n.t('figures.form.steps.remove_step')}</span></div>
             </div>
-            <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="LEADER">
-                ${renderIcon('add', { size: 'sm' })} ${I18n.t('figures.form.steps.add_leader_step')}
+            <div class="js-steps-rows-container divide-y divide-border">
+                <div class="js-leader-steps-tbody contents"></div>
+                <div class="js-follower-steps-tbody contents"></div>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2 sm:gap-3 items-center pt-2">
+            <button type="button" class="btn-outline btn-sm js-add-step-btn js-add-leader-btn" data-role="LEADER">
+                ${renderIcon('add', { size: 'sm' })}
+                <span>${I18n.t('figures.form.steps.add_leader_step')}</span>
             </button>
-        </div>
-
-        <!-- FOLLOWER STEPS TABLE -->
-        <div class="js-follower-steps-section space-y-4 hidden">
-            <div class="overflow-x-auto min-h-[120px]">
-                <table class="w-full text-left border-collapse">
-                    <thead class="hidden md:table-header-group">
-                        <tr class="border-b border-border text-[11px] font-semibold uppercase tracking-wider text-outline">
-                            <th class="py-2 pr-2 w-12">#</th>
-                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.timing')}</th>
-                            <th class="py-2 pr-2 w-20">${I18n.t('figures.form.steps.th.foot')}</th>
-                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.action')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.footwork')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.alignment')}</th>
-                            <th class="py-2 pr-2 w-24">${I18n.t('figures.form.steps.th.turn')}</th>
-                            <th class="py-2 pr-2 min-w-[150px]">${I18n.t('figures.form.steps.th.comments')}</th>
-                            <th class="py-2 w-10 text-right"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="js-follower-steps-tbody">
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="btn-outline btn-sm js-add-step-btn" data-role="FOLLOWER">
-                ${renderIcon('add', { size: 'sm' })} ${I18n.t('figures.form.steps.add_follower_step')}
+            <button type="button" class="btn-outline btn-sm js-add-step-btn js-add-follower-btn" data-role="FOLLOWER">
+                ${renderIcon('add', { size: 'sm' })}
+                <span>${I18n.t('figures.form.steps.add_follower_step')}</span>
             </button>
         </div>
     `;
     panelsContainer.appendChild(panel);
 
-    // If this is the only step set, mark it default automatically
     if (setIdx === 0) {
         updateDefaultSetSelection("0");
     }
@@ -429,95 +640,108 @@ function addStepSet() {
     setActiveStepSet(setIdx.toString());
 }
 
-function removeStepSet(button) {
+function removeStepSet(panel) {
     const panels = document.querySelectorAll('.js-step-set-panel');
     if (panels.length <= 1) {
         alert(I18n.t('js.figure.alert_combination_required'));
         return;
     }
 
-    if (!confirm(I18n.t('js.figure.confirm_delete_combination'))) {
-        return;
-    }
-
-    const panel = button.closest('.js-step-set-panel');
     const idxToRemove = parseInt(panel.getAttribute('data-set-idx'));
     const tabToRemove = document.querySelector(`.js-step-set-tab[data-set-idx="${idxToRemove}"]`);
+    const mobileSelect = document.getElementById('step-sets-mobile-select');
+    if (mobileSelect) {
+        const opt = mobileSelect.querySelector(`option[value="${idxToRemove}"]`);
+        if (opt) opt.remove();
+    }
 
     const wasDefault = panel.querySelector('.js-set-default-radio').checked;
-
     panel.remove();
     if (tabToRemove) tabToRemove.remove();
 
-    // If default was deleted, mark first remaining set as default
     if (wasDefault) {
         updateDefaultSetSelection("0");
     }
 
     reindexStepSets();
-
-    // Select the first remaining step set
     setActiveStepSet("0");
 }
 
 function addStepRow(panel, role) {
+    const isLeader = role === 'LEADER';
     const tbody = panel.querySelector(`.js-${role.toLowerCase()}-steps-tbody`);
     if (!tbody) return;
 
-    const tr = document.createElement('tr');
-    tr.className = 'grid grid-cols-2 md:table-row gap-3 p-4 md:p-2 bg-white border border-border md:border-b md:border-0 rounded-lg md:rounded-none shadow-xs md:shadow-none mb-4 md:mb-0 relative step-row animate-fadeIn';
+    const tr = document.createElement('div');
+    tr.className = `step-row py-2 md:py-1.5 grid gap-2 items-start ${!isLeader ? 'step-row-follower' : ''}`;
+    tr.style.gridTemplateColumns = '36px 64px 64px minmax(110px, 1.1fr) 70px minmax(100px, .8fr) minmax(170px, 1.3fr) minmax(170px, 1.4fr) 36px';
     tr.setAttribute('data-role', role);
-    
-    // Default placeholders inside names; reindexStepSets will replace them
+
+    const roleName = isLeader ? I18n.t('figures.role.leader') : I18n.t('figures.role.follower');
+    const roleChipHtml = isLeader
+        ? `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-on-surface text-surface">L</i>${roleName}</span>`
+        : `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-surface text-on-surface ring-1 ring-inset ring-on-surface">F</i>${roleName}</span>`;
+
     tr.innerHTML = `
-        <td class="col-span-2 md:table-cell py-1 md:py-2 flex items-center justify-between border-b border-border/30 pb-2 md:border-b-0 md:pb-0">
-            <input type="hidden" class="step-id" name="stepSets[0].steps[0].id" value="" />
-            <input type="hidden" class="step-role" name="stepSets[0].steps[0].role" value="${role}" />
-            <span class="step-number-display text-sm font-bold text-primary md:text-xs md:font-semibold md:text-outline">1</span>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn md:hidden" aria-label="${I18n.t('figures.form.steps.remove_step')}" title="${I18n.t('figures.form.steps.remove_step')}">
-                ${renderIcon('delete', { size: 'md' })}
+        <input type="hidden" class="step-id" name="stepSets[0].steps[0].id" value="" />
+        <input type="hidden" class="step-role" name="stepSets[0].steps[0].role" value="${role}" />
+        <input type="hidden" class="step-number" name="stepSets[0].steps[0].stepNumber" value="1" />
+
+        <div class="c-n pt-2 text-center font-semibold text-[13px] text-on-surface max-md:col-span-full max-md:flex max-md:items-center max-md:justify-between">
+            <span class="step-number-display">1</span>
+            <div class="md:hidden flex items-center gap-2">
+                <span class="role-chip js-mobile-role-chip hidden">${roleChipHtml}</span>
+                <button type="button" class="btn-icon text-on-surface-variant hover:text-danger js-remove-step-btn" aria-label="${I18n.t('figures.form.steps.remove_step')}">
+                    ${renderIcon('delete', { size: 'sm' })}
+                </button>
+            </div>
+        </div>
+
+        <div class="c-role js-col-role hidden pt-1">
+            ${roleChipHtml}
+        </div>
+
+        <div class="max-md:col-span-1">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.timing')}</label>
+            <input type="text" name="stepSets[0].steps[0].timing" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.timing')}" />
+        </div>
+        <div class="max-md:col-span-1">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.foot')}</label>
+            <input type="text" name="stepSets[0].steps[0].foot" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.foot')}" />
+        </div>
+        <div class="max-md:col-span-full">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.action')}</label>
+            <input type="text" name="stepSets[0].steps[0].action" required class="dense-input" placeholder="${I18n.t('figures.view.steps.th.action')}" />
+        </div>
+        <div class="max-md:col-span-1">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.footwork')}</label>
+            <input type="text" name="stepSets[0].steps[0].footwork" class="dense-input" placeholder="${I18n.t('figures.form.steps.th.footwork')}" />
+        </div>
+        <div class="max-md:col-span-1">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.alignment')}</label>
+            <input type="text" name="stepSets[0].steps[0].alignment" class="dense-input" placeholder="${I18n.t('figures.form.steps.th.alignment')}" />
+        </div>
+        <div class="max-md:col-span-full">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.turn')}</label>
+            <input type="text" name="stepSets[0].steps[0].amountOfTurn" class="dense-input" placeholder="${I18n.t('figures.view.steps.th.turn')}" />
+        </div>
+        <div class="max-md:col-span-full">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.steps.th.comments')}</label>
+            <textarea name="stepSets[0].steps[0].commentsText" class="dense-textarea" rows="2" placeholder="${I18n.t('figures.form.steps.th.comments')}"></textarea>
+        </div>
+        <div class="c-x hidden md:block pt-1 text-center">
+            <button type="button" class="btn-icon text-on-surface-variant hover:text-danger js-remove-step-btn" aria-label="${I18n.t('figures.form.steps.remove_step')}">
+                ${renderIcon('delete', { size: 'sm' })}
             </button>
-        </td>
-        <td class="col-span-1 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.timing')}</label>
-            <input type="text" name="stepSets[0].steps[0].timing" required class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-1 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.foot')}</label>
-            <input type="text" name="stepSets[0].steps[0].foot" required class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('js.figure.action_description')}</label>
-            <input type="text" name="stepSets[0].steps[0].action" required class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.footwork')}</label>
-            <input type="text" name="stepSets[0].steps[0].footwork" class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.alignment')}</label>
-            <input type="text" name="stepSets[0].steps[0].alignment" class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.turn')}</label>
-            <input type="text" name="stepSets[0].steps[0].amountOfTurn" class="form-input text-xs py-1.5" />
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2 js-mobile-collapsed hidden md:table-cell">
-            <label class="block md:hidden text-[10px] font-semibold text-outline uppercase mb-1">${I18n.t('figures.form.steps.th.comments')}</label>
-            <textarea name="stepSets[0].steps[0].commentsText" class="form-textarea text-xs min-h-[38px] py-1.5" rows="1"></textarea>
-        </td>
-        <td class="col-span-2 md:table-cell py-1 md:py-2 text-right flex md:block items-center justify-between gap-2 border-t border-border/30 pt-2 md:border-t-0 md:pt-0">
-            <button type="button" class="text-xs text-primary font-medium flex items-center gap-0.5 md:hidden js-toggle-mobile-fields">
-                <span>${I18n.t('figures.form.steps.show_technical_details')}</span>
-                ${renderIcon('expand_more', { size: 'sm', cls: 'js-mobile-arrow' })}
-            </button>
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-step-btn hidden md:inline-flex" aria-label="${I18n.t('figures.form.steps.remove_step')}" title="${I18n.t('figures.form.steps.remove_step')}">
-                ${renderIcon('delete', { size: 'md' })}
-            </button>
-        </td>
+        </div>
     `;
+
     tbody.appendChild(tr);
     reindexStepSets();
+
+    const activeRoleBtn = panel.querySelector('.js-view-role-btn.active');
+    const curRole = activeRoleBtn ? activeRoleBtn.getAttribute('data-role') : role;
+    switchRoleView(panel, curRole);
 }
 
 function removeStepRow(button) {
@@ -528,6 +752,90 @@ function removeStepRow(button) {
     }
 }
 
+// -------------------------------------------------------------
+// Flow Figures Functions (Chips & Multi-Select Sync)
+// -------------------------------------------------------------
+function addFlowFigure(flowType, name) {
+    const hiddenSelect = document.getElementById(flowType === 'preceding' ? 'precedingFigureNames' : 'followingFigureNames');
+    const chipsList = document.querySelector(`.js-chips-list[data-flow="${flowType}"]`);
+    if (!hiddenSelect || !chipsList) return;
+
+    // Check if figure already selected
+    let opt = Array.from(hiddenSelect.options).find(o => o.value === name);
+    if (opt && opt.selected) return;
+
+    if (!opt) {
+        opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        hiddenSelect.appendChild(opt);
+    }
+    opt.selected = true;
+
+    // Hide None yet
+    const noneEl = chipsList.querySelector('.js-flow-none');
+    if (noneEl) noneEl.classList.add('hidden');
+
+    // Create chip element
+    const chip = document.createElement('span');
+    chip.className = 'inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[13px] js-flow-chip';
+    chip.setAttribute('data-fig', name);
+    chip.innerHTML = `
+        <span>${name}</span>
+        <button type="button" class="w-6 h-6 rounded-full hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant js-remove-flow-chip" aria-label="${I18n.t('figures.form.flow.remove_figure')}">
+            ${renderIcon('close', { size: 'sm' })}
+        </button>
+    `;
+    chipsList.appendChild(chip);
+}
+
+function removeFlowFigure(flowType, name, chipElement) {
+    const hiddenSelect = document.getElementById(flowType === 'preceding' ? 'precedingFigureNames' : 'followingFigureNames');
+    const chipsList = document.querySelector(`.js-chips-list[data-flow="${flowType}"]`);
+    if (!hiddenSelect || !chipsList) return;
+
+    // Unselect from hidden select
+    const opt = Array.from(hiddenSelect.options).find(o => o.value === name);
+    if (opt) opt.selected = false;
+
+    if (chipElement) chipElement.remove();
+
+    // Check if any chips remain
+    const remainingChips = chipsList.querySelectorAll('.js-flow-chip');
+    if (remainingChips.length === 0) {
+        const noneEl = chipsList.querySelector('.js-flow-none');
+        if (noneEl) noneEl.classList.remove('hidden');
+    }
+}
+
+function updateFlowDropdowns(danceTypeId) {
+    const preSelect = document.querySelector('.js-flow-add-select[data-flow="preceding"]');
+    const folSelect = document.querySelector('.js-flow-add-select[data-flow="following"]');
+    if (!preSelect || !folSelect || !danceTypeId) return;
+
+    fetch('/dance-figures/api?danceTypeId=' + danceTypeId)
+        .then(res => res.json())
+        .then(data => {
+            const currentName = document.getElementById('name')?.value || '';
+            const buildOptions = () => {
+                let html = `<option value="">${I18n.t('figures.form.flow.add_placeholder')}</option>`;
+                data.forEach(fig => {
+                    if (fig.name !== currentName) {
+                        html += `<option value="${fig.name}">${fig.name}</option>`;
+                    }
+                });
+                return html;
+            };
+
+            preSelect.innerHTML = buildOptions();
+            folSelect.innerHTML = buildOptions();
+        })
+        .catch(err => console.error("Could not fetch figures for dance style mapping", err));
+}
+
+// -------------------------------------------------------------
+// Links Management Functions
+// -------------------------------------------------------------
 function reindexLinks() {
     const linkRows = document.querySelectorAll('.link-row');
     linkRows.forEach((row, idx) => {
@@ -545,31 +853,34 @@ function addLinkRow() {
     if (!tbody) return;
 
     const totalIndex = document.querySelectorAll('.link-row').length;
-    
-    const tr = document.createElement('tr');
-    tr.className = 'link-row border-b border-border';
-    
+    const tr = document.createElement('div');
+    tr.className = 'link-row py-2 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_140px_36px] gap-2 items-center';
+
     tr.innerHTML = `
-        <td class="py-2 pr-2">
+        <div>
             <input type="hidden" name="links[${totalIndex}].id" value="" />
-            <input type="text" name="links[${totalIndex}].title" class="form-input text-xs py-1.5" placeholder="${I18n.t('figures.form.links.title_placeholder')}" />
-        </td>
-        <td class="py-2 pr-2">
-            <input type="text" name="links[${totalIndex}].url" required class="form-input text-xs py-1.5" placeholder="https://..." />
-        </td>
-        <td class="py-2 pr-2">
-            <select name="links[${totalIndex}].type" class="form-select text-xs py-1.5 pr-8">
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.title')}</label>
+            <input type="text" name="links[${totalIndex}].title" class="dense-input" placeholder="${I18n.t('figures.form.links.title_placeholder')}" />
+        </div>
+        <div>
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.url')}</label>
+            <input type="text" name="links[${totalIndex}].url" required class="dense-input" placeholder="https://" />
+        </div>
+        <div>
+            <label class="md:hidden block text-xs font-semibold text-on-surface-variant mb-1">${I18n.t('figures.form.links.th.type')}</label>
+            <select name="links[${totalIndex}].type" class="dense-select">
                 <option value="video">${I18n.t('figures.form.links.type.video')}</option>
                 <option value="syllabus">${I18n.t('figures.form.links.type.syllabus')}</option>
                 <option value="other">${I18n.t('figures.form.links.type.other')}</option>
             </select>
-        </td>
-        <td class="py-2 text-right">
-            <button type="button" class="btn-icon text-danger hover:bg-danger-soft/20 js-remove-link-btn" aria-label="${I18n.t('figures.form.links.remove')}" title="${I18n.t('figures.form.links.remove')}">
-                ${renderIcon('delete', { size: 'md' })}
+        </div>
+        <div class="flex justify-end md:justify-center">
+            <button type="button" aria-label="${I18n.t('figures.form.links.remove')}" class="btn-icon text-on-surface-variant hover:text-danger js-remove-link-btn">
+                ${renderIcon('delete', { size: 'sm' })}
             </button>
-        </td>
+        </div>
     `;
+
     tbody.appendChild(tr);
     reindexLinks();
 }

@@ -3,6 +3,8 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceFigure
+import com.jankowski.rafal.dancebook.model.DanceFigureStep
+import com.jankowski.rafal.dancebook.model.DanceFigureStepSet
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
@@ -16,6 +18,7 @@ import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -204,5 +207,115 @@ class DanceFigureLocaleWebTest {
             .andExpect(content().string(containsString("Style")))
             .andExpect(content().string(containsString("Steps")))
             .andExpect(content().string(containsString("Actions")))
+    }
+
+    @Test
+    fun `figure edit form renders in Polish without English section and header strings`() {
+        val figureId = UUID.randomUUID()
+        val waltz = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val figure = DanceFigure().apply {
+            id = figureId
+            name = "Natural Spin Turn"
+            danceType = waltz
+            startingPosition = "Closed Position"
+            startingFootLeader = "RF"
+            startingFootFollower = "LF"
+            endingPosition = "Promenade Position"
+            endingFootLeader = "LF"
+            endingFootFollower = "RF"
+        }
+        val stepSet = DanceFigureStepSet().apply {
+            id = UUID.randomUUID()
+            name = "Default"
+            isDefault = true
+            danceFigure = figure
+        }
+        val leaderStep = DanceFigureStep().apply {
+            id = UUID.randomUUID()
+            stepNumber = 1
+            timing = "1"
+            role = "LEADER"
+            foot = "RF"
+            action = "Forward right foot"
+            danceFigureStepSet = stepSet
+        }
+        val followerStep = DanceFigureStep().apply {
+            id = UUID.randomUUID()
+            stepNumber = 1
+            timing = "1"
+            role = "FOLLOWER"
+            foot = "LF"
+            action = "Back left foot"
+            danceFigureStepSet = stepSet
+        }
+        stepSet.steps.addAll(listOf(leaderStep, followerStep))
+        figure.stepSets.add(stepSet)
+
+        `when`(danceFigureService.findById(figureId)).thenReturn(figure)
+        `when`(danceTypeService.findAll()).thenReturn(listOf(waltz))
+        `when`(danceFigureService.findByDanceType(waltz.id!!)).thenReturn(listOf(figure))
+
+        mockMvc.perform(
+            get("/dance-figures/{id}/edit", figureId)
+                .locale(polishLocale)
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            // Polish section headings and jump nav links
+            .andExpect(content().string(containsString("Podstawowe informacje")))
+            .andExpect(content().string(containsString("Pozycje i praca stóp")))
+            .andExpect(content().string(containsString("Rozbicie kroków")))
+            .andExpect(content().string(containsString("Połączenia")))
+            .andExpect(content().string(containsString("Filmy i materiały")))
+            .andExpect(content().string(containsString("Notatki do figury")))
+            // Polish feet table headers & row labels
+            .andExpect(content().string(containsString("Pozycja")))
+            .andExpect(content().string(containsString("Stopa partnera")))
+            .andExpect(content().string(containsString("Stopa partnerki")))
+            .andExpect(content().string(containsString("Początek")))
+            .andExpect(content().string(containsString("Koniec")))
+            // Polish step table headers & mobile labels
+            .andExpect(content().string(containsString("Nr")))
+            .andExpect(content().string(containsString("Rola")))
+            .andExpect(content().string(containsString("Rytm *")))
+            .andExpect(content().string(containsString("Stopa *")))
+            .andExpect(content().string(containsString("Ruch *")))
+            .andExpect(content().string(containsString("Praca stóp")))
+            .andExpect(content().string(containsString("Ustawienie")))
+            .andExpect(content().string(containsString("Obrót")))
+            .andExpect(content().string(containsString("Uwagi techniczne")))
+            // Polish roles & variants
+            .andExpect(content().string(containsString("Partner")))
+            .andExpect(content().string(containsString("Partnerka")))
+            .andExpect(content().string(containsString("Obok siebie")))
+            .andExpect(content().string(containsString("wariantów. Każdy ma własne kroki")))
+            .andExpect(content().string(containsString("Usunąć ten wariant i jego kroki? Tej operacji nie można cofnąć.")))
+            .andExpect(content().string(containsString("Zachowaj")))
+            // Polish aria-labels & buttons
+            .andExpect(content().string(containsString("aria-label=\"Tryb edycji\"")))
+            .andExpect(content().string(containsString("aria-label=\"Odrzuć zmiany\"")))
+            .andExpect(content().string(containsString("aria-label=\"Sekcje\"")))
+            .andExpect(content().string(containsString("aria-label=\"Warianty kroków\"")))
+            .andExpect(content().string(containsString("aria-label=\"Wybór roli\"")))
+            .andExpect(content().string(containsString("aria-label=\"Potwierdź usunięcie\"")))
+            .andExpect(content().string(containsString("aria-label=\"Usuń krok\"")))
+            .andExpect(content().string(containsString("Zapisz figurę")))
+            .andExpect(content().string(containsString("Odrzuć")))
+            // Assert English section/header/button/aria strings do NOT appear
+            .andExpect(content().string(not(containsString(">Positions and feet<"))))
+            .andExpect(content().string(not(containsString(">Leader foot<"))))
+            .andExpect(content().string(not(containsString(">Follower foot<"))))
+            .andExpect(content().string(not(containsString(">Amount of turn<"))))
+            .andExpect(content().string(not(containsString(">Keep it<"))))
+            .andExpect(content().string(not(containsString("aria-label=\"Discard changes\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Edit mode\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Sections\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Step variants\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Which role to show\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Confirm delete\""))))
+            .andExpect(content().string(not(containsString("aria-label=\"Remove step\""))))
     }
 }

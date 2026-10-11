@@ -229,4 +229,76 @@ class DanceFigureWebControllerTest {
 
         assertEquals("", (model.getAttribute("danceFigure") as DanceFigureRequest).name)
     }
+
+    @Test
+    fun `should populate medal levels and map step sets and links on edit form`() {
+        val model = ConcurrentModel()
+        val figureId = UUID.randomUUID()
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Rumba"
+        }
+        val set = com.jankowski.rafal.dancebook.model.DanceFigureStepSet().apply {
+            id = UUID.randomUUID()
+            name = "Basic Movement"
+            isDefault = true
+            steps = mutableListOf(
+                com.jankowski.rafal.dancebook.model.DanceFigureStep().apply {
+                    id = UUID.randomUUID()
+                    stepNumber = 1
+                    role = "LEADER"
+                    timing = "2"
+                    foot = "LF"
+                    action = "Forward"
+                },
+                com.jankowski.rafal.dancebook.model.DanceFigureStep().apply {
+                    id = UUID.randomUUID()
+                    stepNumber = 1
+                    role = "FOLLOWER"
+                    timing = "2"
+                    foot = "RF"
+                    action = "Back"
+                }
+            )
+        }
+        val link = com.jankowski.rafal.dancebook.model.DanceFigureLink().apply {
+            id = UUID.randomUUID()
+            title = "Video Demo"
+            url = "https://example.com/rumba"
+            type = "video"
+        }
+        val figure = DanceFigure().apply {
+            id = figureId
+            name = "Rumba Basic"
+            this.danceType = danceType
+            danceClass = DanceClass.E
+            medalLevel = MedalLevel.SILVER
+            stepSets = mutableListOf(set)
+            links = mutableListOf(link)
+        }
+
+        `when`(danceFigureService.findById(figureId)).thenReturn(figure)
+        `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
+        `when`(danceFigureService.findByDanceType(danceType.id!!)).thenReturn(listOf(figure))
+
+        val viewName = controller.showEditForm(figureId, model)
+
+        assertEquals("dance-figures/form", viewName)
+        assertEquals(MedalLevel.values().toList(), (model["medalLevels"] as Array<*>).toList())
+        assertEquals(DanceClass.values().toList(), (model["danceClasses"] as Array<*>).toList())
+
+        val request = model["danceFigure"] as DanceFigureRequest
+        assertEquals("Rumba Basic", request.name)
+        assertEquals(MedalLevel.SILVER, request.medalLevel)
+        assertEquals(1, request.stepSets.size)
+        assertEquals("Basic Movement", request.stepSets[0].name)
+        assertEquals(true, request.stepSets[0].isDefault)
+        assertEquals(2, request.stepSets[0].steps.size)
+        assertEquals("LEADER", request.stepSets[0].steps[0].role)
+        assertEquals("FOLLOWER", request.stepSets[0].steps[1].role)
+
+        assertEquals(1, request.links.size)
+        assertEquals("Video Demo", request.links[0].title)
+        assertEquals("https://example.com/rumba", request.links[0].url)
+    }
 }
