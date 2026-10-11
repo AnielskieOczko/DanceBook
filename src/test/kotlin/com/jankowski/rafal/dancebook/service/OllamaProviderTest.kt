@@ -51,7 +51,7 @@ class OllamaProviderTest {
 
     @Test
     fun `should call Ollama Cloud and parse response correctly`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -79,7 +79,7 @@ class OllamaProviderTest {
 
     @Test
     fun `should throw exception if API returns error status`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(500)
         `when`(mockResponse.body()).thenReturn("Internal Server Error")
 
@@ -92,7 +92,7 @@ class OllamaProviderTest {
 
     @Test
     fun `should throw exception when response is truncated`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -113,4 +113,8 @@ class OllamaProviderTest {
         }
         assertTrue(exception.message!!.contains("truncated"))
     }
+
+    // HttpResponse is generic, so mocking HttpResponse<String> requires an unchecked cast from the raw class
+    @Suppress("UNCHECKED_CAST")
+    private fun mockStringResponse(): HttpResponse<String> = mock(HttpResponse::class.java) as HttpResponse<String>
 }

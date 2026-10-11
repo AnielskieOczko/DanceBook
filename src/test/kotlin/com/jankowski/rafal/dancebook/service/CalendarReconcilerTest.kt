@@ -41,6 +41,8 @@ class CalendarReconcilerTest {
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
         trainingEventPersistence = mock(TrainingEventPersistence::class.java)
+        `when`(trainingEventPersistence.insert(org.mockito.ArgumentMatchers.any() ?: TrainingEvent(), org.mockito.ArgumentMatchers.any() ?: AppUser()))
+            .thenAnswer { it.getArgument<TrainingEvent>(0) }
         appUserService = mock(AppUserService::class.java)
         trainingEventSourceRepository = mock(TrainingEventSourceRepository::class.java)
 

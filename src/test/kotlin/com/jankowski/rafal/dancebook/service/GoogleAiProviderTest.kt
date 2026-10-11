@@ -51,7 +51,7 @@ class GoogleAiProviderTest {
 
     @Test
     fun `should call Google AI and parse candidate content text and usage metadata`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -96,7 +96,7 @@ class GoogleAiProviderTest {
 
     @Test
     fun `should throw exception if API returns non-200 status`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(400)
         `when`(mockResponse.body()).thenReturn("Bad Request")
 
@@ -109,7 +109,7 @@ class GoogleAiProviderTest {
 
     @Test
     fun `should throw exception when response is truncated`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -138,7 +138,7 @@ class GoogleAiProviderTest {
 
     @Test
     fun `should map thinkingBudget to thinkingLevel for Gemini 3 models`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -176,7 +176,7 @@ class GoogleAiProviderTest {
 
     @Test
     fun `should not pass thinkingConfig for Gemma models`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -211,4 +211,8 @@ class GoogleAiProviderTest {
 
         assertEquals("{}", result.content)
     }
+
+    // HttpResponse is generic, so mocking HttpResponse<String> requires an unchecked cast from the raw class
+    @Suppress("UNCHECKED_CAST")
+    private fun mockStringResponse(): HttpResponse<String> = mock(HttpResponse::class.java) as HttpResponse<String>
 }

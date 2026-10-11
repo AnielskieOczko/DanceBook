@@ -141,7 +141,7 @@ class CalendarReconciler(
                         }
                         val inserted = trainingEventPersistence.insert(newEvent, actor)
 
-                        if (source != null && inserted?.id != null && source.id != null) {
+                        if (source != null && inserted.id != null && source.id != null) {
                             trainingEventSourceRepository.save(TrainingEventSource().apply {
                                 this.trainingEvent = inserted
                                 this.calendarSource = source

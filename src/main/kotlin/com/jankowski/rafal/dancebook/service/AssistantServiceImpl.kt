@@ -127,7 +127,7 @@ class AssistantServiceImpl(
         for (round in 1..AssistantService.MAX_TOOL_ROUNDS) {
             val response = gateway.call(prompt, remaining())
             if (!response.hasToolCalls()) {
-                text = response.result?.output?.text
+                text = response.results.firstOrNull()?.output?.text
                 break
             }
             val calls = response.result.output.toolCalls
@@ -139,7 +139,7 @@ class AssistantServiceImpl(
         if (text == null) {
             // Out of rounds, or the last round still wanted a tool: one more call with no tools.
             val noTools = GoogleGenAiChatOptions.builder().internalToolExecutionEnabled(false).build()
-            text = gateway.call(Prompt(prompt.instructions, noTools), remaining()).result?.output?.text
+            text = gateway.call(Prompt(prompt.instructions, noTools), remaining()).results.firstOrNull()?.output?.text
         }
 
         val finalText = text?.trim()?.takeIf { it.isNotEmpty() } ?: AssistantService.GAVE_UP_TEXT
