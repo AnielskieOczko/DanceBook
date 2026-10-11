@@ -77,6 +77,22 @@ class NavbarAdvice(
         return systemSettingService.getIntSetting("auto_logout_minutes", 10)
     }
 
+    @ModelAttribute("badgeStyle")
+    fun badgeStyle(): String {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth != null && auth.isAuthenticated && auth.principal != "anonymousUser") {
+            try {
+                appUserService.getCurrentUser().medalBadgeStyle?.let { return it.code }
+            } catch (_: Exception) {}
+        }
+        val adminSetting: String? = try {
+            systemSettingService.getSetting("medal_badge_style", "rank_bars")
+        } catch (_: Exception) {
+            "rank_bars"
+        }
+        return if (!adminSetting.isNullOrBlank()) adminSetting else "rank_bars"
+    }
+
     @ModelAttribute("activeNav")
     fun activeNav(request: HttpServletRequest): String {
         val path = request.requestURI

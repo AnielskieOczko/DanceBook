@@ -246,6 +246,23 @@
     <span th:replace="~{fragments/badge :: medalBadge(level=null)}"></span>
 </div>
 
+<div th:fragment="medalBadgeShapes">
+    <span th:replace="~{fragments/badge :: medalBadge(level='SILVER', style='medal_shapes')}"></span>
+</div>
+
+<div th:fragment="medalBadgeRingWord">
+    <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='ring_and_word')}"></span>
+</div>
+
+<div th:fragment="medalBadgeIcon">
+    <span th:replace="~{fragments/badge :: medalBadge(level='BRONZE', style='medal_icon')}"></span>
+</div>
+
+<div th:fragment="medalBadgeNoNumerals">
+    <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='medal_no_numerals', word=false)}"></span>
+</div>
+
+
 <!-- 21. EMPTY: emptyState -->
 <div th:fragment="emptyStateRequired">
     <div th:replace="~{fragments/empty :: emptyState(title='No items found')}"></div>

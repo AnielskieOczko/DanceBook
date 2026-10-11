@@ -192,4 +192,11 @@ class AppUserServiceImpl(
         user.locale = com.jankowski.rafal.dancebook.config.AppLocales.normalize(trimmed)
         return appUserRepository.save(user)
     }
+
+    override fun updateMedalBadgeStyle(userId: UUID, style: com.jankowski.rafal.dancebook.model.MedalBadgeStyle?): AppUser {
+        log.debug("Updating medal badge style for user id {} to {}", userId, style)
+        val user = findById(userId)
+        user.medalBadgeStyle = style
+        return appUserRepository.save(user)
+    }
 }

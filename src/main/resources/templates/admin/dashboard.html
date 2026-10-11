@@ -61,6 +61,19 @@
                     <input type="number" name="autoLogout" min="1" max="120" required class="form-input mt-1" th:value="${autoLogout}">
                     <p class="text-xs text-text-secondary mt-2" th:text="#{admin.settings.system.auto_logout_hint}">How long a user can be inactive before being automatically logged out.</p>
                 </div>
+                <div class="md:col-span-2">
+                    <div th:replace="~{fragments/form :: selectField(
+                        path='medalBadgeStyle',
+                        id='adminMedalBadgeStyleSelect',
+                        label=#{admin.settings.system.badge_style},
+                        hint=#{admin.settings.system.badge_style_hint},
+                        bound=false,
+                        value=${medalBadgeStyle ?: 'rank_bars'},
+                        options=${badgeStyleOptions},
+                        optValue='value',
+                        optLabel='label'
+                    )}"></div>
+                </div>
                 <div class="md:col-span-2 flex justify-end pt-2 border-t border-border">
                     <button type="submit" class="btn-primary" th:text="#{admin.settings.system.save}">Save Configuration</button>
                 </div>
@@ -316,7 +329,7 @@
                             <span th:if="${log.deletedFiles.isEmpty()}" class="text-text-secondary" th:text="#{admin.storage.no_files}">None</span>
                         </td>
                     </tr>
-                    <tr th:if="${cleanupLogs.isEmpty()}">
+                    <tr th:if="${cleanupLogs == null or cleanupLogs.isEmpty()}">
                         <td colspan="4" class="table-cell text-center text-text-secondary" th:text="#{admin.storage.no_history}">No cleanup history found.</td>
                     </tr>
                 </tbody>
@@ -383,7 +396,7 @@
                             <span th:replace="~{fragments/badge :: badge(label=(${f.isOrphaned ? #messages.msg('admin.storage.badge_orphaned') : #messages.msg('admin.storage.badge_linked')}), variant=(${f.isOrphaned ? 'danger' : 'success'}))}"></span>
                         </td>
                     </tr>
-                    <tr th:if="${driveFiles.isEmpty()}">
+                    <tr th:if="${driveFiles == null or driveFiles.isEmpty()}">
                         <td colspan="3" class="table-cell text-center text-text-secondary" th:text="#{admin.storage.no_files_found}">No files found on Google Drive.</td>
                     </tr>
                 </tbody>

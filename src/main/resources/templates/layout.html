@@ -27,7 +27,8 @@
 </head>
 <body class="bg-background text-on-background font-body-md antialiased min-h-screen pb-24 xl:pb-0"
       th:data-poll-interval="${pollInterval != null ? pollInterval : 5}"
-      th:data-logout-interval="${autoLogout != null ? autoLogout : 10}">
+      th:data-logout-interval="${autoLogout != null ? autoLogout : 10}"
+      th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
 
 <!-- ═══════════════════════════════════════════════
      TOP APP BAR (Sticky)

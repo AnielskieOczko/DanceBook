@@ -39,6 +39,9 @@ class AppUser {
 
     var locale: String? = null
 
+    @Enumerated(EnumType.STRING)
+    var medalBadgeStyle: MedalBadgeStyle? = null
+
     @Column(updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
 }

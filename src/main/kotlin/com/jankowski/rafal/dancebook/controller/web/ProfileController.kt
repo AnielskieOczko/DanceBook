@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import com.jankowski.rafal.dancebook.dto.FormSelectOption
+import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
 
 @Controller
 @RequestMapping("/profile")
@@ -29,10 +31,50 @@ class ProfileController(
     @GetMapping
     fun showProfile(model: Model): String {
         val user = appUserService.getCurrentUser()
+        val locale = LocaleContextHolder.getLocale()
+        val badgeStyleOptions = MedalBadgeStyle.entries.map {
+            FormSelectOption(
+                value = it.name,
+                label = messageSource.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
+            )
+        }
         model.addAttribute("appUser", user)
         model.addAttribute("passwordChangeRequest", PasswordChangeRequest())
         model.addAttribute("languageOptions", AppLocales.options())
+        model.addAttribute("badgeStyleOptions", badgeStyleOptions)
         return "profile/index"
+    }
+
+    @PostMapping("/badge-style", "/medal-badge-style")
+    fun updateMedalBadgeStyle(
+        @RequestParam(required = false) medalBadgeStyle: String?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val user = appUserService.getCurrentUser()
+        val trimmed = medalBadgeStyle?.trim()
+
+        if (!trimmed.isNullOrEmpty() && MedalBadgeStyle.fromStringOrNull(trimmed) == null) {
+            redirectAttributes.addFlashAttribute("badgeStyleErrorMsg", true)
+            if (request.getHeader("HX-Request") != null) {
+                response.setHeader("HX-Redirect", "/profile")
+            }
+            return "redirect:/profile"
+        }
+
+        try {
+            val style = if (trimmed.isNullOrEmpty()) null else MedalBadgeStyle.fromStringOrNull(trimmed)
+            appUserService.updateMedalBadgeStyle(user.id!!, style)
+            redirectAttributes.addFlashAttribute("badgeStyleSuccessMsg", true)
+        } catch (e: Exception) {
+            redirectAttributes.addFlashAttribute("badgeStyleErrorMsg", true)
+        }
+
+        if (request.getHeader("HX-Request") != null) {
+            response.setHeader("HX-Redirect", "/profile")
+        }
+        return "redirect:/profile"
     }
 
     @PostMapping("/locale", "/language")
