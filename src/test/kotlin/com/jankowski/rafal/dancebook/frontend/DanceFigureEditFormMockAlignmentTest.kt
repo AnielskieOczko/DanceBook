@@ -320,4 +320,12 @@ class DanceFigureEditFormMockAlignmentTest {
             .andExpect(content().string(containsString("step-sets-panels-container")))
             .andExpect(content().string(containsString("add-step-set-btn")))
     }
+
+    @Test
+    fun `guided import panel is not inside the figure form that guided mode hides`() {
+        val html = java.io.File("src/main/resources/templates/dance-figures/form.html").readText()
+        val panel = html.indexOf("id=\"guided-edit-panel\"")
+        val form = html.indexOf("id=\"figureForm\"")
+        assertTrue(panel in 0 until form, "Switching to guided mode hides #figureForm, so the panel must sit before it or it disappears with the form.")
+    }
 }

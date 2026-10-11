@@ -484,6 +484,37 @@ layer(base);
          focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22;
 }
 
+@utility ed-form {
+  /* ── Editor form language (figures mock .fld / .lab / .help) ──
+   * Borderless filled pills with the outline revealed on hover and the primary border plus
+   * 3px ring on focus, the same as pill-input, applied to the shared form-input / form-select
+   * the details section is built from. Focus stays form-input's own, so there is one frame. */
+  & .form-input,
+  & .form-select {
+    @apply min-h-[44px] py-2.5 pl-4.5 text-[15px] border-transparent;
+  }
+  & .form-input {
+    @apply pr-4.5;
+  }
+  & .form-select {
+    @apply pr-11;
+  }
+  & .form-input:hover,
+  & .form-select:hover {
+    border-color: var(--color-outline);
+  }
+  & .form-input:focus,
+  & .form-select:focus {
+    border-color: var(--color-primary);
+  }
+  & .form-label {
+    @apply text-sm mb-1.5 ml-1;
+  }
+  & .form-hint {
+    @apply text-[13px] mt-1.5 ml-4.5;
+  }
+}
+
 @utility seg-pill {
   @apply inline-flex flex-wrap gap-1 p-1 bg-surface-container border border-border rounded-field max-w-full;
 }
@@ -828,7 +859,7 @@ layer(base);
   /* Form controls are excluded: they draw their own border and 3px ring that follow the pill
    * (see form-input, the #214 mock), and this rule's !important would stack a second, dark 2px
    * offset ring on top. Any new text-entry utility must be added to this list. */
-  *:focus-visible:not(.form-input, .form-select, .form-textarea, .dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name) {
+  *:focus-visible:not(.form-input, .form-select, .form-textarea, .dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name, trix-editor) {
     @apply outline-hidden! ring-2! ring-primary! ring-offset-2!;
   }
 }

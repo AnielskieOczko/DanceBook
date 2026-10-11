@@ -13,12 +13,12 @@
             <span>/</span>
             <span th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : #messages.msg('figures.action.edit')}">Edit</span>
         </div>
-        <div class="seg-pill" role="group" aria-label="Edit mode" th:attr="aria-label=#{figures.form.aria.edit_mode}">
-            <button type="button" id="manual-edit-tab-btn" class="seg-pill-btn active" aria-pressed="true">
+        <div class="seg-pill max-md:flex max-md:flex-nowrap max-md:w-full" role="group" aria-label="Edit mode" th:attr="aria-label=#{figures.form.aria.edit_mode}">
+            <button type="button" id="manual-edit-tab-btn" class="seg-pill-btn active max-md:flex-1 max-md:justify-center max-md:px-3 max-md:min-w-0 max-md:whitespace-normal max-md:text-center max-md:leading-tight" aria-pressed="true">
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                 <span th:text="#{figures.form.tab.manual}">Manual Edit</span>
             </button>
-            <button type="button" id="guided-edit-tab-btn" class="seg-pill-btn" aria-pressed="false">
+            <button type="button" id="guided-edit-tab-btn" class="seg-pill-btn max-md:flex-1 max-md:justify-center max-md:px-3 max-md:min-w-0 max-md:whitespace-normal max-md:text-center max-md:leading-tight" aria-pressed="false">
                 <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm')}"></span>
                 <span th:text="#{figures.form.tab.guided}">Guided Import</span>
             </button>
@@ -26,62 +26,6 @@
     </div>
 
     <!-- Main Figure Form -->
-    <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
-          th:object="${danceFigure}" method="post" id="figureForm" class="flex flex-col">
-
-        <!-- Screen-reader accessible page heading -->
-        <h1 class="sr-only page-title"
-            th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))}">
-            Edit Figure
-        </h1>
-
-        <div th:replace="~{fragments/form :: errorSummary}"></div>
-
-        <!-- Optimistic-locking token: figures are edited by everyone -->
-        <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
-
-        <th:block th:if="${danceFigureId == null}">
-            <div th:replace="~{fragments/alert :: alert(variant='info', text=#{figures.form.alert.shared})}"></div>
-        </th:block>
-
-        <!-- Sticky Top Bar (Desktop & Mobile) -->
-        <div class="sticky top-0 z-30 bg-surface border-y border-border -mx-4 sm:-mx-6 px-4 sm:px-6">
-            <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_auto] gap-x-4 gap-y-2 items-center py-2.5">
-                <div class="min-w-0">
-                    <label class="sr-only" for="name" th:text="#{figures.form.field.name}">Figure Name</label>
-                    <div th:replace="~{fragments/form :: field(path='name', id='name', placeholder=#{figures.form.field.name_placeholder}, cls='mb-0 [&_input]:ed-name')}"></div>
-                </div>
-                <div class="flex items-center gap-2 min-h-[44px] md:min-h-[52px]" id="gradePreviewWrapper">
-                    <span class="cls-badge" id="gradeClassBadge" th:text="${danceFigure.danceClass != null ? #messages.msg('figures.view.class_label', danceFigure.danceClass) : #messages.msg('figures.view.class_label', 'H')}">Class H</span>
-                    <span id="gradeMedalBadge" th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
-                        <th:block th:if="${danceFigure.medalLevel != null}">
-                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
-                        </th:block>
-                    </span>
-                </div>
-                <div class="flex items-center gap-2 justify-end min-h-[44px] md:min-h-[52px]">
-                    <span class="text-[13px] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
-                    <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" class="btn-ghost btn-sm" aria-label="Discard changes" th:attr="aria-label=#{figures.form.aria.discard_changes}">
-                        <span class="max-md:hidden" th:text="#{figures.form.discard}">Discard</span>
-                        <span th:replace="~{fragments/icon :: icon(name='close', size='sm', cls='md:hidden')}"></span>
-                    </a>
-                    <button type="submit" class="btn-primary btn-sm flex items-center gap-1.5">
-                        <span th:text="#{figures.form.save}">Save Figure</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Jump Bar -->
-        <nav class="flex flex-wrap gap-1 py-2.5 border-b border-border" aria-label="Sections" th:attr="aria-label=#{figures.form.aria.sections}">
-            <a href="#sec-details" class="jump-nav-link on" data-jump="sec-details" th:text="#{figures.form.section.core}">Details</a>
-            <a href="#sec-feet" class="jump-nav-link" data-jump="sec-feet" th:text="#{figures.form.section.positions}">Positions and feet</a>
-            <a href="#sec-steps" class="jump-nav-link" data-jump="sec-steps" th:text="#{figures.form.section.steps_breakdown}">Steps</a>
-            <a href="#sec-flow" class="jump-nav-link" data-jump="sec-flow" th:text="#{figures.form.section.connections}">Flow</a>
-            <a href="#sec-links" class="jump-nav-link" data-jump="sec-links" th:text="#{figures.form.section.videos_resources}">Resources</a>
-            <a href="#sec-notes" class="jump-nav-link" data-jump="sec-notes" th:text="#{figures.form.section.notes}">Notes</a>
-        </nav>
-
     <!-- Guided Edit Panel (Hidden by Default) -->
     <div id="guided-edit-panel" class="hidden space-y-6 my-6 card p-6 sm:p-8 bg-surface border border-border rounded-card">
         <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -363,6 +307,63 @@
         </div>
     </div>
 
+    <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
+          th:object="${danceFigure}" method="post" id="figureForm" class="flex flex-col ed-form">
+
+        <!-- Screen-reader accessible page heading -->
+        <h1 class="sr-only page-title"
+            th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))}">
+            Edit Figure
+        </h1>
+
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
+        <!-- Optimistic-locking token: figures are edited by everyone -->
+        <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
+
+        <th:block th:if="${danceFigureId == null}">
+            <div th:replace="~{fragments/alert :: alert(variant='info', text=#{figures.form.alert.shared})}"></div>
+        </th:block>
+
+        <!-- Sticky Top Bar (Desktop & Mobile) -->
+        <div class="sticky top-0 z-30 bg-surface border-y border-border -mx-4 sm:-mx-6 px-4 sm:px-6">
+            <div class="grid grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_auto_auto] gap-x-4 gap-y-2 items-center py-2.5">
+                <div class="min-w-0 col-span-full md:col-span-1">
+                    <label class="sr-only" for="name" th:text="#{figures.form.field.name}">Figure Name</label>
+                    <div th:replace="~{fragments/form :: field(path='name', id='name', placeholder=#{figures.form.field.name_placeholder}, cls='mb-0 [&_input]:ed-name')}"></div>
+                </div>
+                <div class="flex items-center gap-2 min-h-[44px] md:min-h-[52px]" id="gradePreviewWrapper">
+                    <span class="cls-badge" id="gradeClassBadge" th:text="${danceFigure.danceClass != null ? #messages.msg('figures.view.class_label', danceFigure.danceClass) : #messages.msg('figures.view.class_label', 'H')}">Class H</span>
+                    <span id="gradeMedalBadge" th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
+                        <th:block th:if="${danceFigure.medalLevel != null}">
+                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
+                        </th:block>
+                    </span>
+                </div>
+                <div class="flex items-center gap-2 justify-end min-h-[44px] md:min-h-[52px]">
+                    <span class="text-[13px] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
+                    <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" class="btn-ghost btn-sm" aria-label="Discard changes" th:attr="aria-label=#{figures.form.aria.discard_changes}">
+                        <span class="max-md:hidden" th:text="#{figures.form.discard}">Discard</span>
+                        <span th:replace="~{fragments/icon :: icon(name='close', size='sm', cls='md:hidden')}"></span>
+                    </a>
+                    <button type="submit" class="btn-primary btn-sm flex items-center gap-1.5">
+                        <span th:text="#{figures.form.save}">Save Figure</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Jump Bar -->
+        <nav class="flex flex-wrap gap-1 py-2.5 border-b border-border" aria-label="Sections" th:attr="aria-label=#{figures.form.aria.sections}">
+            <a href="#sec-details" class="jump-nav-link on" data-jump="sec-details" th:text="#{figures.form.section.core}">Details</a>
+            <a href="#sec-feet" class="jump-nav-link" data-jump="sec-feet" th:text="#{figures.form.section.positions}">Positions and feet</a>
+            <a href="#sec-steps" class="jump-nav-link" data-jump="sec-steps" th:text="#{figures.form.section.steps_breakdown}">Steps</a>
+            <a href="#sec-flow" class="jump-nav-link" data-jump="sec-flow" th:text="#{figures.form.section.connections}">Flow</a>
+            <a href="#sec-links" class="jump-nav-link" data-jump="sec-links" th:text="#{figures.form.section.videos_resources}">Resources</a>
+            <a href="#sec-notes" class="jump-nav-link" data-jump="sec-notes" th:text="#{figures.form.section.notes}">Notes</a>
+        </nav>
+
+
 
         <!-- SECTION 1: Details -->
         <section class="sec-hairline" id="sec-details" data-sec="sec-details">
@@ -371,7 +372,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-[18px]">
                 <div th:replace="~{fragments/form :: selectField(path='danceTypeId', label=#{figures.form.field.dance_type}, required=true, options=${danceTypes}, optValue='id', optLabel='name', placeholder=#{figures.form.field.dance_type_placeholder}, id='danceTypeId')}"></div>
-                <div th:replace="~{fragments/form :: field(path='alternativeTiming', label=#{figures.form.field.alternative_timing}, placeholder=#{figures.form.field.alternative_timing_placeholder}, id='alternativeTiming')}"></div>
+                <div th:replace="~{fragments/form :: field(path='alternativeTiming', label=#{figures.form.field.alternative_timing}, placeholder=#{figures.form.field.alternative_timing_placeholder}, hint=#{figures.form.field.alternative_timing_hint}, id='alternativeTiming')}"></div>
                 <div th:replace="~{fragments/form :: selectField(path='danceClass', label=#{figures.form.field.dance_class}, options=${danceClasses}, msgPrefix='enum.dance_class.', placeholder=#{figures.form.field.dance_class_placeholder}, id='danceClass')}"></div>
                 <div class="form-group">
                     <label class="form-label" id="medalLevelLabel">
