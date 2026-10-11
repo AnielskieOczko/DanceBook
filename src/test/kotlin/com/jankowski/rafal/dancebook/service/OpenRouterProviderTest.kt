@@ -51,7 +51,7 @@ class OpenRouterProviderTest {
 
     @Test
     fun `should call LLM and extract clean content from JSON response`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -88,7 +88,7 @@ class OpenRouterProviderTest {
 
     @Test
     fun `should throw exception if API returns error status`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(401)
         `when`(mockResponse.body()).thenReturn("Unauthorized")
 
@@ -120,7 +120,7 @@ class OpenRouterProviderTest {
 
     @Test
     fun `should throw exception when LLM response is truncated due to token limit`() {
-        val mockResponse = mock(HttpResponse::class.java) as HttpResponse<String>
+        val mockResponse = mockStringResponse()
         `when`(mockResponse.statusCode()).thenReturn(200)
         `when`(mockResponse.body()).thenReturn("""
             {
@@ -143,4 +143,8 @@ class OpenRouterProviderTest {
         }
         assertTrue(exception.message!!.contains("truncated"))
     }
+
+    // HttpResponse is generic, so mocking HttpResponse<String> requires an unchecked cast from the raw class
+    @Suppress("UNCHECKED_CAST")
+    private fun mockStringResponse(): HttpResponse<String> = mock(HttpResponse::class.java) as HttpResponse<String>
 }

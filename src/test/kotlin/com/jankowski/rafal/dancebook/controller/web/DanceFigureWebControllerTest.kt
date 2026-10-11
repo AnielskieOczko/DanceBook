@@ -191,7 +191,7 @@ class DanceFigureWebControllerTest {
         assertEquals("dance-figures/view", viewName)
         assertEquals(danceFigure, model["danceFigure"])
         
-        val figureNameMap = model["figureNameMap"] as Map<String, UUID>
+        val figureNameMap = model["figureNameMap"] as Map<*, *>
         assertNotNull(figureNameMap)
         assertEquals(figureId, figureNameMap["Back Whisk"])
         assertEquals(otherFigureId, figureNameMap["Natural Spin Turn"])

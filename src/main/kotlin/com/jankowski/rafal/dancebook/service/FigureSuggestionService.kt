@@ -175,7 +175,7 @@ class FigureSuggestionService(
      * writes it, when the note names it as a whole word or phrase (any case). Null otherwise.
      */
     private fun nameAsWritten(figure: DanceFigure, noteText: String): String? {
-        val name = figure.name?.trim()?.takeIf { it.isNotEmpty() } ?: return null
+        val name = figure.name.trim().takeIf { it.isNotEmpty() } ?: return null
         val pattern = Regex("(?<![\\p{L}\\p{N}])${Regex.escape(name)}(?![\\p{L}\\p{N}])", RegexOption.IGNORE_CASE)
         return pattern.find(noteText)?.value
     }

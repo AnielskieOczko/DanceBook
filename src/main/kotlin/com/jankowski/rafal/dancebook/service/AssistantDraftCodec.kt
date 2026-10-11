@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component
 @ConditionalOnAssistant
 class AssistantDraftCodec(objectMapper: ObjectMapper) {
 
+    @Suppress("DEPRECATION") // Jackson 2.13 deprecated configure(MapperFeature) in favour of JsonMapper.builder(), but copying an injected ObjectMapper has no non-deprecated alternative in 2.x
     private val mapper: ObjectMapper = objectMapper.copy()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .configure(MapperFeature.USE_GETTERS_AS_SETTERS, false)

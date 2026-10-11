@@ -62,8 +62,8 @@ class TemplateHardcodedTextGuardTest {
         templatesDir.walkTopDown().filter { it.isFile && it.extension == "html" }.sortedBy { it.path }.forEach { file ->
             val rel = file.relativeTo(templatesDir).path
             val doc = Jsoup.parse(file.readText(), "", Parser.xmlParser())
-            doc.getAllElements().forEach { el ->
-                if (isBound(el)) return@forEach
+            for (el in doc.getAllElements()) {
+                if (isBound(el)) continue
                 el.textNodes().forEach { node -> checkText(rel, el, node, violations) }
                 textAttributes.forEach { attr -> checkAttr(rel, el, attr, violations) }
             }

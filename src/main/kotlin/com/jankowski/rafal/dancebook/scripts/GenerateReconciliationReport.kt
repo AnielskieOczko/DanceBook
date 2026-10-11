@@ -375,7 +375,6 @@ private fun findMatchingReferenceNameForReport(
     dbName: String
 ): String? {
     val lowerScraped = scrapedName.lowercase(java.util.Locale.ROOT).trim()
-    val lowerDb = dbName.lowercase(java.util.Locale.ROOT).trim()
 
     // 1. Check explicit alias map
     val aliasDbName = figureAliasesForReport[danceTypeName]?.get(lowerScraped)

@@ -128,7 +128,7 @@ class GoogleCalendarClientImpl(
         return try {
             val changes = mutableListOf<CalendarChange>()
             var pageToken: String? = null
-            var nextSyncToken: String? = null
+            var nextSyncToken: String?
             val isFullSync = syncToken.isNullOrBlank()
             val windowStart = if (isFullSync) LocalDateTime.now().minusYears(1) else null
 
