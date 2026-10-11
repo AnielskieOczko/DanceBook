@@ -91,6 +91,8 @@ class AssistantWebController(
     fun deleteDialog(
         @PathVariable id: UUID,
         @RequestParam(defaultValue = "OTHER") pageType: PageContextType,
+        @RequestParam(required = false) target: String?,
+        @RequestParam(defaultValue = "innerHTML") swap: String,
         model: Model
     ): String {
         val conversation = conversationService.findOwned(id)
@@ -104,8 +106,8 @@ class AssistantWebController(
         model.addAttribute("confirmLabel", "Delete conversation")
         model.addAttribute("cancelLabel", "Keep it")
         model.addAttribute("confirmUrl", "/assistant/conversations/$id/delete?pageType=$pageType")
-        model.addAttribute("hxTarget", "#assistantThread")
-        model.addAttribute("hxSwap", "innerHTML")
+        model.addAttribute("hxTarget", if (target in DELETE_TARGETS) target else "#assistantThread")
+        model.addAttribute("hxSwap", if (swap in DELETE_SWAPS) swap else "innerHTML")
         model.addAttribute("hxInclude", "#assistantConversationId")
         return "fragments/confirm-dialog :: confirmModal"
     }
@@ -169,3 +171,7 @@ class AssistantWebController(
         return "assistant/fragments :: history"
     }
 }
+
+// Where the delete confirmation may swap its result: the thread, or the history rail (#226).
+private val DELETE_TARGETS = setOf("#assistantThread", "#assistantRailBody")
+private val DELETE_SWAPS = setOf("innerHTML", "outerHTML")

@@ -1526,3 +1526,56 @@ body:has(dialog[open]) .goto {
     transition: none !important;
   }
 }
+
+/* Assistant expand / full-window view (Direction A Ledger, #226) */
+@media (min-width: 768px) {
+  #assistantSurface {
+    transition: width 240ms ease;
+  }
+
+  #assistantSurface.is-expanded {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    border-left-width: 0 !important;
+  }
+
+  #assistantSurface.is-expanded #assistantRail {
+    display: flex !important;
+  }
+
+  #assistantSurface.is-expanded .js-assistant-collapsed-only {
+    display: none !important;
+  }
+
+  #assistantSurface.is-expanded .js-assistant-expanded-only {
+    display: flex !important;
+  }
+
+  #assistantSurface.is-expanded #assistantThread > * {
+    max-width: 700px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #assistantRail #assistantHistory > div:first-child {
+    display: none;
+  }
+}
+
+#assistantHistory li.active button:first-child {
+  background-color: var(--color-primary-soft);
+}
+
+#assistantHistory li.active button:first-child span:first-child {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #assistantSurface {
+    transition: none !important;
+  }
+}
+
