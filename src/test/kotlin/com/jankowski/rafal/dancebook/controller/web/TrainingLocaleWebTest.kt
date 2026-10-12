@@ -4,11 +4,16 @@ import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.dto.SessionCounts
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingStats
+import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
+import com.jankowski.rafal.dancebook.dto.TrainingEventRow
 import com.jankowski.rafal.dancebook.dto.TrainingTimeline
+import com.jankowski.rafal.dancebook.dto.TrainingTimelineEntry
+import com.jankowski.rafal.dancebook.dto.TrainingTimelineMonth
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingEventType
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -229,6 +234,45 @@ class TrainingLocaleWebTest {
             .andExpect(content().string(containsString("No training logged yet")))
             .andExpect(content().string(containsString("Once you log a session it will show up here, newest first.")))
             .andExpect(content().string(containsString("Your training in order — what is coming, and everything behind it.")))
+    }
+
+    @Test
+    fun `timeline weekly rollups and streak markers render in Polish when locale is pl`() {
+        val event = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            title = "Trening poniedziałkowy"
+            startTime = LocalDateTime.now().minusDays(1)
+            endTime = startTime.plusMinutes(90)
+            setAttendance(testUser, AttendanceStatus.ATTENDED)
+            eventType = TrainingEventType.TRAINING
+            createdBy = testUser
+        }
+        val entry = TrainingTimelineEntry(
+            row = TrainingEventRow(event, TrainingEventPalette.ATTENDED),
+            isFuture = false,
+            startsTodayBoundary = false,
+            streakMilestone = 10,
+            streakReachedDate = "niedz. 11 paź",
+            streakTier = "bronze"
+        )
+        val month = TrainingTimelineMonth(
+            label = "Wrzesień 2026",
+            entries = listOf(entry),
+            totalMinutes = 90L
+        )
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java)))
+            .thenReturn(TrainingTimeline(months = listOf(month), hasMore = false, nextPage = 1, lastMonthLabel = "Wrzesień 2026", isFirstPage = true))
+
+        mockMvc.perform(get("/training-events/timeline").locale(polish).with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Treningi")))
+            .andExpect(content().string(containsString("Czas")))
+            .andExpect(content().string(containsString("Obecność")))
+            .andExpect(content().string(containsString("10 treningów z rzędu")))
+            .andExpect(content().string(containsString("Seria osiągnięta niedz. 11 paź")))
+            .andExpect(content().string(containsString("Miejsce na odznakę")))
+            .andExpect(content().string(not(containsString("sessions in a row"))))
+            .andExpect(content().string(not(containsString("Badge slot"))))
     }
 
     @Test

@@ -11,8 +11,8 @@
         </div>
     </div>
 
-    <!-- The swap target is the fragment itself, so a window can replace the "load more" control
-         with the sessions it fetched plus the next control. -->
+    <!--/* The swap target is the fragment itself, so a window can replace the "load more" control
+         with the sessions it fetched plus the next control. */-->
     <div th:fragment="timelinePage" class="space-y-lg">
 
         <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
@@ -28,74 +28,319 @@
             <div th:replace="~{fragments/empty :: emptyState(icon='timeline', title=#{training.timeline.empty_title}, text=#{training.timeline.empty_text}, actionHref=${canAddSession ? '/training-events/new' : null}, actionLabel=#{training.add_session})}"></div>
         </th:block>
 
-        <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
-
-            <!-- Suppressed when this window continues the month already on screen, so an
-                 appended page does not repeat a heading halfway down the timeline. -->
-            <div th:unless="${monthStat.first and month.label == continuedMonth}" class="tc-month-heading">
-                <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
-                <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
-                    <span th:text="#{training.list.count(${month.sessionCount})}">6 sessions</span>
-                    <span class="text-outline"> · </span>
-                    <span th:text="${month.totalLabel}">9h 30m</span>
-                </p>
+        <!--/* Top-of-page controls: summary tiles, dashed badge slots, month chips, and legend (shown on first page) */-->
+        <th:block th:if="${timeline.isFirstPage and not timeline.isEmpty}">
+            <!--/* Summary tiles */-->
+            <div th:if="${stats != null}" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label=#{training.stats.hours_trained}, caption=#{training.timeline.stats.attended_caption(${stats.counts.attended})})}"></div>
+                <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label=#{training.stats.attendance}, caption=#{training.timeline.stats.attendance_caption(${stats.counts.attended}, ${stats.counts.skipped})})}"></div>
+                <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.timeline.stats.streak_caption})}"></div>
+                <div th:replace="~{fragments/card :: statCard(value=${stats.counts.unconfirmed}, label=#{training.timeline.stats.to_confirm}, caption=#{training.timeline.stats.upcoming_caption(${stats.counts.upcoming})})}"></div>
             </div>
 
-            <!-- The connecting rule runs down the month; each session hangs a node off it. -->
-            <div class="tc-timeline">
-                <div th:each="entry : ${month.entries}" th:with="event=${entry.event}">
+            <!--/* Badge slots (#35, #39) */-->
+            <div class="slots flex flex-wrap gap-2 items-center mb-4" role="group" th:attr="aria-label=#{training.timeline.badge_slot}">
+                <span class="slot tc-slot tc-slot-bronze">
+                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
+                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
+                    </i>
+                    <span th:text="#{training.timeline.slot_streak}">Badge slot · streak 10</span>
+                </span>
+                <span class="slot tc-slot tc-slot-silver">
+                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
+                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
+                    </i>
+                    <span th:text="#{training.timeline.slot_sessions}">Badge slot · 25 sessions</span>
+                </span>
+                <span class="slot tc-slot tc-slot-gold">
+                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
+                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
+                    </i>
+                    <span th:text="#{training.timeline.slot_hours}">Badge slot · 100 hours</span>
+                </span>
+            </div>
 
-                    <!-- Where the present sits. Drawn above the first session that is no longer
-                         ahead of us, and only on the first window. -->
-                    <div th:if="${entry.startsTodayBoundary}" class="tc-timeline-today">
-                        <span th:text="#{training.today}">Today</span>
-                    </div>
+            <!--/* Month chips as same-page anchor links */-->
+            <div class="flex flex-wrap items-center gap-2 mb-4" role="group" th:attr="aria-label=#{training.timeline.month_filter_label}">
+                <a href="#timeline-feed" class="badge b-secondary" th:text="#{training.timeline.all_months}">All</a>
+                <a th:each="month : ${timeline.months}"
+                   th:href="${'#month-' + #strings.toLowerCase(#strings.replace(month.label, ' ', '-'))}"
+                   class="badge b-secondary"
+                   th:text="${month.label}">November 2026</a>
+            </div>
 
-                    <div class="tc-timeline-item">
-                        <span class="tc-timeline-node"
-                              th:classappend="${entry.isFuture} ? 'tc-timeline-node-future' : ''"
-                              th:style="'border-color:' + ${entry.swatch.color} + ';background-color:' + ${entry.swatch.tint}"
-                              aria-hidden="true"></span>
+            <!--/* Outcome states legend */-->
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-on-surface-variant mb-6 pb-2 border-b border-border">
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="w-3.5 h-3.5 rounded-full bg-primary inline-block shrink-0"></i>
+                    <span th:text="#{enum.attendance_status.ATTENDED}">Attended</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="w-3.5 h-3.5 rounded-full border-2 border-error bg-surface inline-block shrink-0"></i>
+                    <span th:text="#{enum.attendance_status.SKIPPED}">Skipped</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="w-3.5 h-3.5 rounded-full border border-error bg-error-container inline-block shrink-0"></i>
+                    <span th:text="#{enum.attendance_status.CANCELLED}">Cancelled</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="w-3.5 h-3.5 rounded-full border-2 border-warning bg-warning/15 inline-block shrink-0"></i>
+                    <span th:text="#{training.status.unconfirmed}">Unconfirmed</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="w-3.5 h-3.5 rounded-full border-2 border-dashed border-primary bg-surface inline-block shrink-0"></i>
+                    <span th:text="#{enum.attendance_status.PLANNED}">Planned</span>
+                </span>
+            </div>
+        </th:block>
 
-                        <div class="card p-4 sm:p-5 flex items-start gap-3 sm:gap-4"
-                             th:classappend="${entry.isFuture} ? 'tc-timeline-upcoming' : ''">
+        <div id="timeline-feed" class="space-y-gutter">
+            <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
 
-                            <!-- Date rail; the stripe and tint are the session's status. -->
-                            <div class="tc-rail"
-                                 th:style="'border-left-color:' + ${entry.swatch.color} + ';background-color:' + ${entry.swatch.tint}">
-                                <span class="tc-rail-day" th:text="${#temporals.format(event.startTime, 'd')}">10</span>
-                                <span class="tc-rail-weekday" th:text="${#temporals.format(event.startTime, 'EEE')}">Thu</span>
-                            </div>
+                <!--/* Suppressed when this window continues the month already on screen, so an
+                     appended page does not repeat a heading halfway down the timeline. */-->
+                <div th:unless="${monthStat.first and month.label == continuedMonth}"
+                     class="tc-month-heading"
+                     th:id="${'month-' + #strings.toLowerCase(#strings.replace(month.label, ' ', '-'))}">
+                    <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
+                    <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                        <span th:text="#{training.list.count(${month.sessionCount})}">6 sessions</span>
+                        <span class="text-outline"> · </span>
+                        <span th:text="${month.totalLabel}">9h 30m</span>
+                    </p>
+                </div>
 
-                            <div class="flex-1 min-w-0">
-                                <a th:href="@{/training-events/{id}(id=${event.id})}"
-                                   class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface
-                                          hover:text-primary transition-colors"
-                                   th:text="${event.title}">Monday practice</a>
-
-                                <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
-                                    <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
-                                    <span class="text-outline"> · </span>
-                                    <span th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
-                                </p>
-
-                                <div class="tc-badges mt-2">
-                                    <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + event.eventType.name())}">TRAINING</span>
-
-                                    <span th:each="segment : ${event.segments}" class="badge-secondary"
-                                          th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>
-
-                                    <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
+                <!--/* Vertical journey feed of weeks */-->
+                <div class="tc-feed space-y-6">
+                    <section th:each="week : ${month.weeks}" class="tc-week">
+                        <!--/* Weekly rollup aside: sticky on desktop, stacked on mobile */-->
+                        <div>
+                            <aside class="tc-roll">
+                                <div class="font-semibold text-[15px] text-on-surface">
+                                    <span th:text="#{training.timeline.week_label(${week.weekNumber})}">Week 41</span>
+                                    <span th:if="${week.isCurrentWeek}" class="text-on-surface-variant font-normal text-xs sm:text-sm">
+                                        · <span th:text="#{training.timeline.this_week}">this week</span>
+                                    </span>
                                 </div>
+                                <div class="text-xs text-on-surface-variant mb-2 tabular-nums" th:text="${week.dateRangeLabel}">Oct 5 – Oct 11</div>
+                                <dl class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[13px]">
+                                    <div class="flex flex-col md:contents">
+                                        <dt class="text-on-surface-variant" th:text="#{training.timeline.sessions}">Sessions</dt>
+                                        <dd class="font-semibold text-on-surface md:text-right tabular-nums" th:text="${week.sessionCount}">3</dd>
+                                    </div>
+                                    <div class="flex flex-col md:contents">
+                                        <dt class="text-on-surface-variant" th:text="#{training.timeline.trained}">Trained</dt>
+                                        <dd class="font-semibold text-on-surface md:text-right tabular-nums" th:text="${week.totalLabel}">3h 30m</dd>
+                                    </div>
+                                    <div class="flex flex-col md:contents">
+                                        <dt class="text-on-surface-variant" th:text="#{training.timeline.attended}">Attended</dt>
+                                        <dd class="font-semibold text-on-surface md:text-right tabular-nums" th:text="${week.attendanceRatioLabel}">2/3</dd>
+                                    </div>
+                                    <div th:if="${!#strings.isEmpty(week.stylesLabel)}" class="col-span-2 sm:col-span-4 md:contents flex flex-col md:contents">
+                                        <dt class="text-on-surface-variant" th:text="#{training.timeline.styles}">Styles</dt>
+                                        <dd class="font-semibold text-on-surface md:text-right truncate tabular-nums" th:title="${week.stylesLabel}" th:text="${week.stylesLabel}">Standard 80m · Latin 30m</dd>
+                                    </div>
+                                </dl>
+                                <div class="flex gap-1 mt-2.5" role="img" th:attr="aria-label=#{training.timeline.dots_label}">
+                                    <i th:each="dot : ${week.dots}"
+                                       class="h-1.5 flex-1 rounded-full"
+                                       th:classappend="${dot.statusClass == 'a' ? 'bg-primary' : dot.statusClass == 's' ? 'bg-error' : dot.statusClass == 'u' ? 'bg-warning' : 'border border-dashed border-primary bg-transparent'}"
+                                       th:title="${dot.title}"></i>
+                                </div>
+                            </aside>
+                        </div>
+
+                        <!--/* Spine with sessions */-->
+                        <div class="tc-spine">
+                            <div th:each="entry : ${week.entries}" th:with="event=${entry.event}">
+
+                                <!--/* Today line divider */-->
+                                <div th:if="${entry.startsTodayBoundary}" class="tc-timeline-today">
+                                    <span th:text="#{training.today}">Today</span>
+                                    <span th:if="${entry.todayFormatted != null}" class="font-normal normal-case text-on-surface-variant"> · <span th:text="${entry.todayFormatted}">Sun 11 Oct</span></span>
+                                </div>
+
+                                <!--/* Streak marker with badge slot */-->
+                                <div th:if="${(entry.activeStreak ?: entry.streakMilestone) != null}" class="tc-streak my-2">
+                                    <span th:replace="~{fragments/icon :: icon(name='local_fire_department', cls='icon-filled text-primary shrink-0')}"></span>
+                                    <div class="flex-1 min-w-0">
+                                        <div th:text="#{training.timeline.streak_in_a_row(${entry.activeStreak ?: entry.streakMilestone})}">5 sessions in a row</div>
+                                        <small class="block font-normal text-on-surface-variant text-xs" th:text="#{training.timeline.streak_reached(${entry.streakReachedDate})}">Streak reached on Sun 11 Oct</small>
+                                    </div>
+                                    <div class="tc-slot" th:classappend="${entry.streakTier == 'bronze' ? 'tc-slot-bronze' : (entry.streakTier == 'silver' ? 'tc-slot-silver' : (entry.streakTier == 'gold' ? 'tc-slot-gold' : ''))}">
+                                        <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
+                                            <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
+                                        </i>
+                                        <span th:text="#{training.timeline.badge_slot}">Badge slot</span>
+                                    </div>
+                                </div>
+
+                                <!--/* Session entry card (expandable via native details) */-->
+                                <details class="tc-timeline-entry group" th:open="${entry.startsTodayBoundary}">
+                                    <span class="tc-timeline-node"
+                                          th:classappend="${entry.isAttended ? 'tc-node-attended' : (entry.isSkipped ? 'tc-node-skipped' : (entry.isCancelled ? 'tc-node-cancelled' : (entry.isUnconfirmed ? 'tc-node-unconfirmed' : 'tc-node-planned')))}"
+                                          aria-hidden="true"></span>
+
+                                    <summary class="tc-timeline-row list-none [&::-webkit-details-marker]:hidden"
+                                             th:classappend="${entry.isFuture ? 'tc-timeline-upcoming' : ''}"
+                                             th:style="'border-left-width: 4px; border-left-color:' + ${entry.swatch.color}">
+                                        <!--/* Date rail */-->
+                                        <div class="tc-rail"
+                                             th:style="'border-left-color:' + ${entry.swatch.color} + ';background-color:' + ${entry.swatch.tint}">
+                                            <span class="tc-rail-day" th:text="${#temporals.format(event.startTime, 'd')}">10</span>
+                                            <span class="tc-rail-weekday" th:text="${#temporals.format(event.startTime, 'EEE')}">Thu</span>
+                                        </div>
+
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-headline-lg text-base sm:text-lg font-semibold text-on-surface truncate group-hover:text-primary transition-colors"
+                                                 th:text="${event.title}">Monday practice</div>
+
+                                            <p class="font-body-md text-[13px] sm:text-sm text-on-surface-variant mt-0.5 mb-1.5 tabular-nums">
+                                                <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
+                                                <span class="text-outline"> · </span>
+                                                <span th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
+                                                <span th:if="${event.calendar != null}">
+                                                    <span class="text-outline"> · </span>
+                                                    <span th:text="${event.calendar.displayName}">Studio Nova</span>
+                                                </span>
+                                            </p>
+
+                                            <div class="flex flex-wrap items-center gap-1.5">
+                                                <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + event.eventType.name())}">TRAINING</span>
+
+                                                <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
+                                                    <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
+                                                    <span th:text="#{training.view.repeating_series}">Repeating series</span>
+                                                </span>
+
+                                                <span th:each="segment : ${event.segments}" class="badge-secondary"
+                                                      th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>
+
+                                                <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
+                                            </div>
+                                        </div>
+
+                                        <span th:replace="~{fragments/icon :: icon(name='expand_more', cls='tc-chevron text-on-surface-variant shrink-0 mt-1')}"></span>
+                                    </summary>
+
+                                    <!--/* Expanded session detail in place */-->
+                                    <div class="tc-timeline-more"
+                                         th:style="'border-left-width: 4px; border-left-color:' + ${entry.swatch.color}">
+                                        <!--/* Heading & When */-->
+                                        <div class="border-b border-border pb-3">
+                                            <h5 class="text-base sm:text-lg font-semibold text-on-surface" th:text="${event.title}">Monday practice</h5>
+                                            <div class="text-xs sm:text-[13px] text-on-surface-variant mt-0.5 tabular-nums">
+                                                <span th:text="${#temporals.format(event.startTime, #messages.msg('training.timeline.session_date_format')) + ' · ' + #temporals.format(event.startTime, 'HH:mm') + '–' + #temporals.format(event.endTime, 'HH:mm')}">Sunday, October 11 2026 · 18:00–20:00</span>
+                                                <span th:if="${event.calendar != null}">
+                                                    <span> · </span>
+                                                    <span th:text="${event.calendar.displayName}">Studio Nova</span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!--/* Badges with duration */-->
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="badge-primary" th:text="${#messages.msg('enum.training_event_type.' + event.eventType.name())}">TRAINING</span>
+                                            <span th:if="${event.series != null}" class="badge-neutral flex items-center gap-1">
+                                                <span th:replace="~{fragments/icon :: icon(name='event_repeat', size='sm')}"></span>
+                                                <span th:text="#{training.view.repeating_series}">Repeating series</span>
+                                            </span>
+                                            <span th:each="segment : ${event.segments}" class="badge-secondary"
+                                                  th:text="#{training.segment_label(${segment.danceCategory.name}, ${segment.durationMinutes})}">Standard 60min</span>
+                                            <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
+                                            <span class="badge-neutral" th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
+                                        </div>
+
+                                        <!--/* Quick Attendance confirmation actions for unconfirmed sessions */-->
+                                        <div th:if="${event.isAwaitingConfirmationFor(currentUser)}" class="flex flex-wrap gap-2 pt-1">
+                                            <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post" class="inline">
+                                                <input type="hidden" name="status" value="ATTENDED" />
+                                                <input type="hidden" name="redirect" th:value="@{/training-events/timeline}" />
+                                                <button type="submit" class="btn-primary btn-sm flex items-center gap-1.5">
+                                                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span>
+                                                    <span th:text="#{training.view.i_attended}">I attended</span>
+                                                </button>
+                                            </form>
+                                            <form th:action="@{/training-events/{id}/attendance(id=${event.id})}" method="post" class="inline">
+                                                <input type="hidden" name="status" value="SKIPPED" />
+                                                <input type="hidden" name="redirect" th:value="@{/training-events/timeline}" />
+                                                <button type="submit" class="btn-outline btn-sm flex items-center gap-1.5">
+                                                    <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                                                    <span th:text="#{training.view.i_skipped}">I skipped</span>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <!--/* Time by style breakdown bar */-->
+                                        <div th:if="${not #lists.isEmpty(event.segments)}" class="space-y-1.5 pt-1">
+                                            <div class="form-label text-xs font-semibold text-on-surface-variant" th:text="#{training.timeline.time_by_style}">Time by style</div>
+                                            <div class="tc-segbar h-2.5 rounded-pill overflow-hidden flex bg-surface-container gap-0.5">
+                                                <span th:each="seg, iter : ${event.segments}"
+                                                      class="h-full block"
+                                                      th:style="'flex: ' + ${seg.durationMinutes} + '; background-color: ' + (${iter.index == 0} ? 'var(--color-primary)' : (${iter.index == 1} ? 'color-mix(in srgb, var(--color-primary) 60%, transparent)' : 'color-mix(in srgb, var(--color-primary) 35%, transparent)'))"></span>
+                                                <span th:if="${entry.untrackedMinutes > 0}"
+                                                      class="h-full block bg-outline-variant"
+                                                      th:style="'flex: ' + ${entry.untrackedMinutes}"></span>
+                                            </div>
+                                            <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-on-surface-variant pt-0.5">
+                                                <span th:each="seg, iter : ${event.segments}" class="inline-flex items-center gap-1.5">
+                                                    <i class="w-2 h-2 rounded-full inline-block shrink-0" th:style="'background-color: ' + (${iter.index == 0} ? 'var(--color-primary)' : (${iter.index == 1} ? 'color-mix(in srgb, var(--color-primary) 60%, transparent)' : 'color-mix(in srgb, var(--color-primary) 35%, transparent)'))"></i>
+                                                    <b class="text-on-surface" th:text="${seg.danceCategory?.name ?: ''}">Standard</b>
+                                                    <span th:text="#{training.minutes(${seg.durationMinutes})}">60 min</span>
+                                                </span>
+                                                <span th:if="${entry.untrackedMinutes > 0}" class="inline-flex items-center gap-1.5">
+                                                    <i class="w-2 h-2 rounded-full inline-block bg-outline-variant shrink-0"></i>
+                                                    <span th:text="#{training.timeline.untracked(${entry.untrackedMinutes})}">untracked 30 min</span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!--/* Notes */-->
+                                        <div th:if="${event.description != null}">
+                                            <h3 class="form-label text-xs font-semibold text-on-surface-variant mb-1" th:text="#{training.view.notes}">Notes</h3>
+                                            <div class="prose-text text-sm text-on-surface-variant bg-surface-container/60 p-3 rounded-card">
+                                                <div th:replace="~{fragments/rich-text :: content(value=${event.description})}"></div>
+                                            </div>
+                                        </div>
+
+                                        <!--/* Linked note */-->
+                                        <div th:if="${event.material != null}">
+                                            <h3 class="form-label text-xs font-semibold text-on-surface-variant mb-1" th:text="#{training.view.linked_material}">Linked material</h3>
+                                            <a th:href="@{/materials/{id}(id=${event.material.id})}"
+                                               class="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline text-sm">
+                                                <span th:replace="~{fragments/icon :: icon(name='description', size='sm')}"></span>
+                                                <span th:text="${event.material.name}">Material title</span>
+                                            </a>
+                                        </div>
+
+                                        <!--/* External materials */-->
+                                        <div th:if="${event.materialsUrl != null}">
+                                            <h3 class="form-label text-xs font-semibold text-on-surface-variant mb-1" th:text="#{training.view.external_materials}">External materials</h3>
+                                            <a th:href="${event.materialsUrl}" target="_blank" rel="noopener noreferrer"
+                                               class="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline text-sm break-all">
+                                                <span th:replace="~{fragments/icon :: icon(name='open_in_new', size='sm')}"></span>
+                                                <span th:text="${event.materialsUrl}">https://...</span>
+                                            </a>
+                                        </div>
+
+                                        <!--/* Meta footer */-->
+                                        <div class="text-xs text-outline pt-2.5 border-t border-border flex flex-wrap justify-between items-center gap-2">
+                                            <span th:text="#{training.view.added_by(${event.createdBy?.displayName ?: ''}, ${#temporals.format(event.createdAt, 'MMMM d yyyy')})}">Added by Test User on September 6 2026</span>
+                                            <a th:href="@{/training-events/{id}(id=${event.id})}" class="font-semibold text-primary hover:underline text-xs flex items-center gap-1">
+                                                <span th:text="#{training.timeline.view_session_page}">Session details</span>
+                                                <span th:replace="~{fragments/icon :: icon(name='arrow_forward', size='sm')}"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </details>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>
 
-        <!-- An explicit control rather than a scroll trigger: the user asked for older history,
-             so they should be the one to ask. Replaces itself with the window it fetches. -->
+        <!--/* Load older sessions button */-->
         <div th:if="${timeline.hasMore}" class="flex justify-center pt-2">
             <button type="button" class="btn-outline"
                     th:hx-get="@{/training-events/timeline(page=${timeline.nextPage},lastMonth=${timeline.lastMonthLabel})}"

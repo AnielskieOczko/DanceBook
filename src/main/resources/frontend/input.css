@@ -771,25 +771,43 @@ layer(base);
 }
 
 @utility tc-month-heading {
-  @apply flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-outline-variant/60 pb-2;
+  @apply flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-outline-variant/60 pb-2;
 }
 
 @utility tc-rail {
-  @apply flex w-12 shrink-0 flex-col items-center justify-center self-stretch rounded-sm border-l-[3px] py-1;
+  @apply flex w-11 sm:w-12 shrink-0 flex-col items-center justify-center self-stretch rounded-sm py-1;
 }
 
 @utility tc-rail-day {
-  @apply text-2xl font-bold leading-none tabular-nums text-on-surface;
+  @apply text-xl sm:text-2xl font-bold leading-none tabular-nums text-on-surface;
 }
 
 @utility tc-rail-weekday {
-  @apply mt-1 text-[11px] font-semibold text-on-surface-variant;
+  @apply mt-0.5 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider;
+}
+
+@utility tc-feed {
+  @apply relative flex flex-col gap-5 max-w-[880px];
+}
+
+@utility tc-week {
+  @apply grid grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] gap-3 md:gap-5;
+}
+
+@utility tc-roll {
+  @apply border border-outline-variant rounded-card p-3.5 sm:p-4 bg-surface-container self-start md:sticky md:top-24;
+}
+
+@utility tc-spine {
+  @apply relative pl-7 sm:pl-8 flex flex-col gap-3;
+  &::before {
+    @apply absolute left-[7px] sm:left-[11px] top-1.5 bottom-1.5 w-0.5 bg-outline-variant;
+    content: '';
+  }
 }
 
 @utility tc-timeline {
   /* ── Training timeline ────────────────────────── */
-  /* A rule down the left with a node per session, so the eye can follow the sequence rather
-     than re-reading dates. The rule is narrow on a phone: the cards need the width more. */
   @apply relative space-y-gutter pl-6 sm:pl-8;
   &::before {
     @apply absolute inset-y-0 left-[7px] sm:left-[11px] w-px bg-outline-variant;
@@ -802,27 +820,85 @@ layer(base);
 }
 
 @utility tc-timeline-node {
-  /* Sits on the rule, filled with the session's own status colour. */
-  @apply absolute -left-6 sm:-left-8 top-6 h-3.5 w-3.5 rounded-full border-2 bg-surface;
+  /* Sits on the spine rule, outcome look matching mock & legend */
+  @apply absolute -left-7 sm:-left-8 top-4 h-4 w-4 rounded-full;
 }
 
-@utility tc-timeline-node-future {
-  /* Nothing has happened yet, so the node is hollow rather than filled. */
-  @apply bg-surface;
+@utility tc-node-attended {
+  @apply bg-primary border-2 border-primary;
+}
+
+@utility tc-node-skipped {
+  @apply bg-surface border-2 border-error;
+}
+
+@utility tc-node-cancelled {
+  @apply bg-error-container border border-error;
+}
+
+@utility tc-node-unconfirmed {
+  @apply bg-warning/15 border-2 border-warning;
+}
+
+@utility tc-node-planned {
+  @apply bg-surface border-2 border-dashed border-primary;
 }
 
 @utility tc-timeline-upcoming {
-  /* Upcoming sessions read as provisional: a dashed edge, and they recede until hovered. */
-  @apply border-dashed opacity-80 transition-opacity hover:opacity-100;
+  border-style: dashed;
+  border-left-style: solid !important;
 }
 
 @utility tc-timeline-today {
-  /* Where the present sits in the scroll. */
-  @apply relative -ml-6 sm:-ml-8 mb-gutter flex items-center gap-3 text-meta font-bold text-primary;
-  &::after {
-    @apply h-px flex-1 bg-primary/40;
+  /* Where the present sits in the feed. */
+  @apply relative -ml-7 sm:-ml-8 flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-primary my-1;
+  &::before, &::after {
+    @apply h-0.5 flex-1 bg-primary;
     content: '';
   }
+}
+
+@utility tc-streak {
+  @apply flex items-center flex-wrap sm:flex-nowrap gap-3 p-3 sm:px-4 sm:py-2.5 rounded-card border-[1.5px] border-dashed border-primary bg-primary-soft text-primary font-semibold text-sm;
+}
+
+@utility tc-slot {
+  @apply inline-flex items-center gap-2 min-h-9 px-3.5 py-1 rounded-pill border-[1.5px] border-dashed text-xs font-semibold bg-surface;
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, rgba(0, 0, 0, 0.025) 6px 12px);
+}
+
+@utility tc-slot-bronze {
+  @apply text-bronze border-bronze/55;
+}
+
+@utility tc-slot-silver {
+  @apply text-silver border-silver/55;
+}
+
+@utility tc-slot-gold {
+  @apply text-gold border-gold/55;
+}
+
+@utility tc-timeline-entry {
+  @apply relative;
+}
+
+.tc-timeline-entry summary .tc-chevron {
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.tc-timeline-entry[open] summary .tc-chevron {
+  transform: rotate(180deg);
+}
+
+@utility tc-timeline-row {
+  @apply flex items-start gap-3 sm:gap-4 p-3 sm:p-3.5 border border-outline-variant rounded-card bg-surface hover:border-outline cursor-pointer transition-colors w-full text-left;
+  border-left-style: solid !important;
+}
+
+@utility tc-timeline-more {
+  @apply mt-2 p-4 sm:p-5 border border-outline-variant rounded-card bg-surface space-y-4;
 }
 
 @utility prose-text {

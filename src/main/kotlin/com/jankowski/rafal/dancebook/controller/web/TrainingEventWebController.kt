@@ -74,6 +74,20 @@ class TrainingEventWebController(
 
         /** Evening default for a day clicked in month view; most training is after work. */
         private const val DEFAULT_HOUR = 18
+
+        /**
+         * Validates and sanitizes a post-attendance redirect candidate path.
+         * Only allows same-site paths: single leading `/`, second character not `/` or `\`,
+         * no backslashes anywhere in the path, and no ASCII control characters (< 0x20 or 0x7F DEL).
+         */
+        fun sanitizeRedirectPath(path: String?): String? {
+            if (path.isNullOrEmpty()) return null
+            if (!path.startsWith("/")) return null
+            if (path.length > 1 && (path[1] == '/' || path[1] == '\\')) return null
+            if (path.contains('\\')) return null
+            if (path.any { it < ' ' || it.code == 0x7F }) return null
+            return path
+        }
     }
 
     @PostMapping("/sync")
@@ -448,12 +462,18 @@ class TrainingEventWebController(
         @PathVariable id: UUID,
         @RequestParam status: AttendanceStatus,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
-        model: Model
+        model: Model,
+        @RequestParam(required = false) redirect: String? = null
     ): String {
         trainingEventService.updateAttendance(id, status)
 
         if (isHtmxRequest != true) {
-            return "redirect:/training-events/$id"
+            val safeRedirect = sanitizeRedirectPath(redirect)
+            return if (safeRedirect != null) {
+                "redirect:$safeRedirect"
+            } else {
+                "redirect:/training-events/$id"
+            }
         }
 
         // This swaps the whole #events-list fragment the user is looking at, so it has to

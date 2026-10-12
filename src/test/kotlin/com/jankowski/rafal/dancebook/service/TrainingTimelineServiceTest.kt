@@ -1,7 +1,11 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.SessionCounts
+import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
 import com.jankowski.rafal.dancebook.model.TrainingEventType
@@ -14,19 +18,21 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyCollection
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.springframework.data.domain.Pageable
+import java.time.DayOfWeek
 import java.time.LocalDateTime
+import java.time.temporal.TemporalAdjusters
 import java.util.UUID
 
 class TrainingTimelineServiceTest {
 
     private lateinit var trainingEventRepository: TrainingEventRepository
     private lateinit var appUserService: AppUserService
+    private lateinit var trainingStatsService: TrainingStatsService
     private lateinit var trainingTimelineService: TrainingTimelineServiceImpl
     private lateinit var currentUser: AppUser
 
@@ -34,6 +40,7 @@ class TrainingTimelineServiceTest {
     fun setUp() {
         trainingEventRepository = mock(TrainingEventRepository::class.java)
         appUserService = mock(AppUserService::class.java)
+        trainingStatsService = mock(TrainingStatsService::class.java)
 
         currentUser = AppUser().apply {
             id = UUID.randomUUID()
@@ -42,7 +49,11 @@ class TrainingTimelineServiceTest {
         }
         `when`(appUserService.getCurrentUser()).thenReturn(currentUser)
 
-        trainingTimelineService = TrainingTimelineServiceImpl(trainingEventRepository, appUserService)
+        trainingTimelineService = TrainingTimelineServiceImpl(
+            trainingEventRepository = trainingEventRepository,
+            appUserService = appUserService,
+            trainingStatsService = trainingStatsService
+        )
     }
 
     @Test
@@ -223,6 +234,129 @@ class TrainingTimelineServiceTest {
     }
 
     @Test
+    fun `groups sessions into weeks with correct weekly rollups`() {
+        val now = LocalDateTime.now()
+        val monday = now.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).atTime(18, 0)
+        val cat = DanceCategory().apply { name = "Standard" }
+        val ev1 = eventAt(monday, AttendanceStatus.ATTENDED, minutes = 90).apply {
+            segments = mutableListOf(TrainingEventSegment().apply {
+                danceCategory = cat
+                durationMinutes = 60
+                sortOrder = 0
+            })
+        }
+        val ev2 = eventAt(monday.plusDays(2), AttendanceStatus.SKIPPED, minutes = 60)
+
+        givenWindow(ev1, ev2)
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
+        val week = timeline.months.single().weeks.single()
+
+        assertEquals(2, week.sessionCount)
+        assertEquals(90L, week.totalMinutes)
+        assertEquals("1h 30m", week.totalLabel)
+        assertEquals(1, week.attendedCount)
+        assertEquals(2, week.totalDecidedCount)
+        assertEquals("1/2", week.attendanceRatioLabel)
+        assertEquals("Standard 60m", week.stylesLabel)
+        assertEquals(listOf("a", "s"), week.dots.map { it.statusClass })
+    }
+
+    @Test
+    fun `a week crossing a month boundary is shown once with complete rollup under newest session month`() {
+        // Oct 30, 2026 (Friday) and Nov 1, 2026 (Sunday) are in the same ISO week (week 44).
+        val nov1 = LocalDateTime.of(2026, 11, 1, 18, 0)
+        val oct30 = LocalDateTime.of(2026, 10, 30, 18, 0)
+        val evNov = eventAt(nov1, AttendanceStatus.ATTENDED, minutes = 60)
+        val evOct = eventAt(oct30, AttendanceStatus.ATTENDED, minutes = 90)
+
+        givenWindow(evNov, evOct)
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
+
+        // The week is decided by the week's newest session (Nov 1), so it is placed in November.
+        assertEquals(1, timeline.months.size)
+        assertTrue(timeline.months[0].label.contains("2026"))
+        val weeks = timeline.months.flatMap { it.weeks }
+        assertEquals(1, weeks.size)
+        val week = weeks.single()
+
+        assertEquals(2, week.sessionCount)
+        assertEquals(150L, week.totalMinutes)
+        assertEquals(2, week.attendedCount)
+        assertEquals(2, week.totalDecidedCount)
+        assertEquals(2, week.dots.size)
+    }
+
+    @Test
+    fun `a week that straddles two loaded windows shows a complete rollup`() {
+        val nov6 = LocalDateTime.of(2026, 11, 6, 18, 0) // Friday
+        val nov4 = LocalDateTime.of(2026, 11, 4, 18, 0) // Wednesday
+        val nov3 = LocalDateTime.of(2026, 11, 3, 18, 0) // Tuesday
+        val ev1 = eventAt(nov6, AttendanceStatus.ATTENDED, minutes = 60)
+        val ev2 = eventAt(nov4, AttendanceStatus.ATTENDED, minutes = 60)
+        val ev3 = eventAt(nov3, AttendanceStatus.ATTENDED, minutes = 60)
+
+        // 23 padding events in another month to fill out the 25-item page 0 window with ev1 & ev2, leaving ev3 on page 1
+        val earlierEvents = (1..23).map {
+            eventAt(LocalDateTime.of(2026, 12, 1, 18, 0).plusDays(it.toLong()), AttendanceStatus.ATTENDED, minutes = 60)
+        }
+        val window = earlierEvents + listOf(ev1, ev2)
+        `when`(
+            trainingEventRepository.findAll(
+                anySpec(),
+                any(Pageable::class.java) ?: Pageable.unpaged()
+            )
+        ).thenReturn(org.springframework.data.domain.PageImpl(window + listOf(ev3)))
+        `when`(trainingEventRepository.findAll(anySpec())).thenReturn(listOf(ev1, ev2, ev3))
+        `when`(trainingEventRepository.findAllByIdIn(anyCollection())).thenReturn(window)
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
+        val novMonth = timeline.months.first { it.label.contains("November") || it.label.contains("listopad") }
+        val week = novMonth.weeks.single()
+
+        // Rollup numbers equal what all 3 sessions in that week add up to
+        assertEquals(3, week.sessionCount)
+        assertEquals(180L, week.totalMinutes)
+        assertEquals(3, week.attendedCount)
+        assertEquals(3, week.dots.size)
+    }
+
+    @Test
+    fun `marks current active streak on latest attended session when user has a streak`() {
+        val now = LocalDateTime.now()
+        val ev1 = eventAt(now.minusDays(7), AttendanceStatus.ATTENDED, minutes = 60)
+        val ev2 = eventAt(now.minusDays(5), AttendanceStatus.ATTENDED, minutes = 60)
+        val ev3 = eventAt(now.minusDays(2), AttendanceStatus.ATTENDED, minutes = 60)
+
+        givenWindow(ev1, ev2, ev3)
+        givenStats(streak = 5)
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
+        val entries = timeline.months.flatMap { it.entries }
+
+        val activeStreakEntry = entries.firstOrNull { it.activeStreak == 5 }
+        assertTrue(activeStreakEntry != null)
+        assertEquals(ev3.id, activeStreakEntry?.event?.id)
+        assertTrue(activeStreakEntry?.streakReachedDate != null)
+    }
+
+    @Test
+    fun `shows no streak marker when user has no streak`() {
+        val now = LocalDateTime.now()
+        val ev1 = eventAt(now.minusDays(5), AttendanceStatus.ATTENDED, minutes = 60)
+        val ev2 = eventAt(now.minusDays(2), AttendanceStatus.ATTENDED, minutes = 60)
+
+        givenWindow(ev1, ev2)
+        givenStats(streak = 0)
+
+        val timeline = trainingTimelineService.timelineForCurrentUser(page = 0)
+        val entries = timeline.months.flatMap { it.entries }
+
+        assertTrue(entries.none { it.activeStreak != null })
+    }
+
+    @Test
     fun `reads the window through the calendar membership rule, not the session's creator`() {
         givenWindow()
 
@@ -255,11 +389,27 @@ class TrainingTimelineServiceTest {
                 any(Pageable::class.java) ?: Pageable.unpaged()
             )
         ).thenReturn(org.springframework.data.domain.PageImpl(ordered))
+        `when`(trainingEventRepository.findAll(anySpec())).thenReturn(ordered)
         `when`(trainingEventRepository.findAllByIdIn(anyCollection()))
             .thenAnswer { invocation ->
                 val ids = invocation.getArgument<Collection<UUID>>(0).toSet()
                 ordered.filter { it.id in ids }.shuffled()
             }
+    }
+
+    private fun givenStats(streak: Int = 0) {
+        val counts = SessionCounts(0, 0, 0, 0, 0)
+        val stats = TrainingStats(
+            period = StatsPeriod.ALL_TIME,
+            totalMinutesTrained = 0L,
+            counts = counts,
+            attendanceRatePercent = null,
+            currentStreak = streak,
+            byCategory = emptyList(),
+            byEventType = emptyList()
+        )
+        `when`(trainingStatsService.statsForCurrentUser(any() ?: StatsPeriod.ALL_TIME, any()))
+            .thenReturn(stats)
     }
 
     /** @param daysAgo negative values put the session in the future. */
