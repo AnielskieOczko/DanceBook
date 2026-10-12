@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Badge Visuals</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for issue #39 (part of #35). Visuals for the badge families in the #39 spec, in the places that already reserve a slot:
+   the profile Badges row (#229), the Training timeline slots (#227) and the notifications list. Opt-out is #317.
+   Tokens from src/main/resources/frontend/input.css, radii from docs/mocks/rounded-forms, bronze/silver/gold from docs/mocks/figures.
+   The profile mock (#217) already showed earned and locked medallions; this mock settles the family look, the states and the copy. */
+:root {
+  --surface:#fff; --surface-container:#f5f5f3; --surface-highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on-surface:#16181a; --on-surface-variant:#5b6067;
+  --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --bronze:#8a5a2e; --bronze-soft:#f5ece3; --silver:#66717e; --silver-soft:#eceef1; --gold:#8a6a0c; --gold-soft:#f6efd8;
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font-sans:'Inter',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 96px;background:var(--surface);color:var(--on-surface);font:14px/1.5 var(--font-sans)}
+.wrap{max-width:1120px;margin-inline:auto;display:flex;flex-direction:column;gap:52px}
+h1{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+h3{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--on-surface-variant)}
+p{margin:0}
+.lede{max-width:70ch;color:var(--on-surface-variant);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-surface-variant);max-width:74ch}
+section{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.grid2{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:start}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-feature-settings:'liga';font-feature-settings:'liga'}
+.ms.sm{font-size:18px}
+.table-scroll{overflow-x:auto}
+table.t{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+.t th,.t td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--hair);vertical-align:top}
+.t th{font-weight:600;color:var(--on-surface-variant)}
+
+/* ---------- medallion: the badge itself ---------- */
+.m{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:700;font-size:12px;position:relative}
+.m.bronze{background:var(--bronze-soft);color:var(--bronze);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--bronze) 45%,transparent)}
+.m.silver{background:var(--silver-soft);color:var(--silver);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--silver) 45%,transparent)}
+.m.gold{background:var(--gold-soft);color:var(--gold);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--gold) 45%,transparent)}
+.m.ink{background:var(--primary-soft);color:var(--primary);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--primary) 40%,transparent)}
+.m.lock{background:var(--surface-container);color:var(--outline);box-shadow:inset 0 0 0 1.5px var(--surface-highest)}
+.m .tier{position:absolute;right:-3px;bottom:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--surface);border:1px solid var(--hair);font-size:10px;font-weight:700;display:grid;place-items:center;color:var(--on-surface-variant)}
+.b{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--hair);border-radius:var(--r-inset);background:var(--surface);min-width:0}
+.b>div{min-width:0}
+.b b{display:block;font-size:13px;line-height:18px;font-weight:600}
+.b small{display:block;font-size:12px;line-height:16px;color:var(--on-surface-variant)}
+.b.lock{border-style:dashed;background:transparent}
+.b.lock b{color:var(--on-surface-variant)}
+.prog{height:4px;border-radius:4px;background:var(--surface-highest);margin-top:6px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--primary);border-radius:4px}
+.bdg{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.phone .bdg{grid-template-columns:1fr}
+
+/* ---------- frames ---------- */
+.frame{border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface);overflow:hidden}
+.frame-bar{padding:8px 12px;background:var(--surface-container);border-bottom:1px solid var(--hair);font-size:12px;color:var(--on-surface-variant)}
+.frame-bar b{color:var(--on-surface)}
+.page{padding:18px;display:flex;flex-direction:column;gap:14px}
+.phone{width:375px;max-width:100%;border:1px solid var(--outline);border-radius:28px;overflow:hidden;background:var(--surface)}
+.phone .page{padding:14px;gap:10px}
+.phones{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.cap{font-size:12px;color:var(--on-surface-variant);margin-top:6px;max-width:375px}
+.acc{border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
+.acc .row{display:flex;gap:14px;align-items:center;min-height:60px;padding:10px 16px;border-bottom:1px solid var(--hair)}
+.acc .row:last-child{border-bottom:0}
+.acc .row .ms{color:var(--primary)}
+.acc .row b{display:block;font-size:15px;font-weight:600}
+.acc .row small{display:block;font-size:12px;color:var(--on-surface-variant)}
+.acc .row .chev{margin-left:auto;color:var(--outline)}
+.acc .open{display:flex;flex-direction:column;gap:12px;padding:6px 16px 18px 50px;border-bottom:1px solid var(--hair)}
+.phone .acc .open{padding-left:16px}
+.hero{border:1px solid var(--hair);border-radius:var(--r-card);padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--surface-container)}
+.hero b{font-size:14px}
+.hero small{display:block;color:var(--on-surface-variant);font-size:12px}
+.hero a{color:var(--primary);font-size:12px;font-weight:600;text-decoration:none}
+
+/* ---------- timeline pieces ---------- */
+.slots{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px 0 6px;border-radius:var(--r-pill);font-size:12px;font-weight:600;border:1px solid var(--hair);background:var(--surface)}
+.chip .m{width:26px;height:26px;font-size:10px}
+.chip.slot{border:1.5px dashed var(--outline);color:var(--on-surface-variant);background:transparent;padding-left:12px}
+.node{display:flex;gap:12px;align-items:flex-start;padding-left:6px}
+.spine{width:2px;background:var(--hair);margin-left:10px;align-self:stretch;flex:none}
+.sess{flex:1;border:1px solid var(--hair);border-radius:var(--r-inset);padding:10px 12px;border-left:4px solid var(--primary);min-width:0}
+.sess b{font-size:14px}
+.sess small{display:block;color:var(--on-surface-variant);font-size:12px}
+.sess .earned{display:flex;gap:10px;align-items:center;margin-top:8px;padding:8px 10px;border-radius:var(--r-inset);background:var(--surface-container);font-size:12px}
+.sess .earned .m{width:28px;height:28px;font-size:10px}
+
+/* ---------- notification ---------- */
+.feed{border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden}
+.feed .it{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hair);align-items:flex-start}
+.feed .it:last-child{border-bottom:0}
+.feed .ic{width:32px;height:32px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}
+.feed .it.badge .ic{background:transparent;padding:0}
+.feed .it.badge .m{width:32px;height:32px;font-size:11px}
+.feed b{font-size:13px;display:block;font-weight:600}
+.feed small{font-size:12px;color:var(--on-surface-variant)}
+.feed .new{width:8px;height:8px;border-radius:50%;background:var(--primary);margin-left:auto;margin-top:6px;flex:none}
+
+/* ---------- switch row ---------- */
+.sw{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.tog{width:44px;height:24px;border-radius:12px;background:var(--surface-container);border:1px solid var(--outline);position:relative;flex:none}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--outline)}
+.tog.on{background:var(--primary);border-color:var(--primary)}
+.tog.on::after{left:22px;border-color:#fff}
+.cost{border-left:3px solid var(--outline);padding:2px 0 2px 12px;font-size:13px;color:var(--on-surface-variant);max-width:76ch}
+.cost b{color:var(--on-surface)}
+.spec{font-size:13px;display:grid;gap:4px;margin:0;padding-left:18px;max-width:82ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:8px">
+  <h1>Badge visuals</h1>
+  <p class="lede">Issue #39, part of #35. How the eight badges of the #39 spec look and where they appear: the profile Badges row, the Training timeline, and one notification line. The tone follows the owner's note that not everyone likes gamification: quiet, no confetti, no exclamation marks, nothing that nags. A user who has turned gamification off (#317) sees none of it.</p>
+  <p class="note">Wording says “Note”, never “Material”. Dates are the day a badge was earned. Names come from the spec: Streak 5/10/20 (consecutive attended sessions), Hours 50/100/250, Perfect month, Style balance.</p>
+</header>
+
+<section>
+  <h2>1. The eight badges</h2>
+  <p class="note">One medallion per badge. <b>Tiered families</b> (Streak, Hours) use the bronze, silver and gold already in the app, one metal per tier, with the threshold number inside. <b>One-off badges</b> (Perfect month, Style balance) use the deep teal, never a metal. That keeps metals meaning “a tier of the same ladder”, and keeps them apart from the Bronze/Silver/Gold <em>difficulty</em> markers on figures, which are drawn as rising bars next to the class letter and never as a round medallion.</p>
+  <div class="bdg" id="catalog"></div>
+  <p class="note"><b>Locked</b> badges stay visible as dashed rows with a plain progress line (“12 of 20 sessions”), so the next target is clear without any prompt. The list is fixed at eight, so “5 of 8 earned” is always a true fraction. Perfect month can be earned many times: it stays one row that counts them (“×2, last September”).</p>
+</section>
+
+<section>
+  <h2>2. Profile Badges row</h2>
+  <p class="note">The row exists today as a placeholder (#229). Collapsed it shows the count and the latest badge. Expanded it shows earned badges first, newest first, then locked ones with progress.</p>
+  <div class="grid2">
+    <div>
+      <h3>Desktop, expanded</h3>
+      <div class="acc" id="acc-desktop"></div>
+    </div>
+    <div>
+      <h3>375px, expanded</h3>
+      <div class="phone"><div class="page"><div class="acc phone" id="acc-phone"></div></div></div>
+      <p class="cap">Single column. Each row keeps name, date or progress, and the progress bar.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>3. Training timeline</h2>
+  <p class="note">The dashed slots in the timeline summary (#227) become the badges the user has earned, with the next target still shown dashed. A badge also appears once, on the session that earned it, as a small quiet line inside the expanded session. There is no animation and no banner.</p>
+  <div class="grid2">
+    <div>
+      <h3>Summary slots, desktop</h3>
+      <div class="frame"><div class="page">
+        <div class="slots" id="slots"></div>
+        <div class="node"><div class="spine"></div><div class="sess"><b>Waltz · lesson with Anna</b><small>Sat 10 Oct, 18:00 · 90 min · attended</small>
+          <div class="earned" id="earned-line"></div></div></div>
+      </div></div>
+    </div>
+    <div>
+      <h3>375px</h3>
+      <div class="phone"><div class="page">
+        <div class="slots" id="slots-phone"></div>
+        <div class="node"><div class="sess"><b>Waltz · lesson with Anna</b><small>Sat 10 Oct · 90 min · attended</small>
+          <div class="earned" id="earned-line-phone"></div></div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>4. Notification</h2>
+  <p class="note">One entry in the existing notifications list, only for the person who earned it, with the medallion in place of the generic icon. Tapping it opens the profile Badges row. No toast and no sound. Several badges earned by the same change appear as separate lines.</p>
+  <div class="grid2">
+    <div class="feed" id="feed"></div>
+    <div>
+      <ul class="spec">
+        <li><b>Title:</b> the badge name. <b>Line under it:</b> what it was for, plain.</li>
+        <li>Unread dot like any other notification, cleared the same way.</li>
+        <li>A badge earned while the user has gamification off does not exist: nothing is evaluated (#317), so nothing is waiting when they turn it back on.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>5. States</h2>
+  <div class="grid2">
+    <div>
+      <h3>New user: nothing earned</h3>
+      <div class="acc" id="acc-zero"></div>
+      <p class="cap" style="max-width:none">No “you have no badges” message and no count of zero. Just the targets, as quiet as the rest of the page.</p>
+    </div>
+    <div>
+      <h3>Switch off (#317): profile</h3>
+      <div class="acc">
+        <div class="row"><span class="ms">language</span><div><b>Language</b><small>English</small></div><span class="ms chev">expand_more</span></div>
+        <div class="row"><span class="ms">calendar_month</span><div><b>Calendars</b><small>Default: Primary calendar</small></div><span class="ms chev">expand_more</span></div>
+        <div class="row" style="background:var(--surface-container)"><span class="ms">emoji_events</span><div style="flex:1"><div class="sw"><div><b>Show streaks and badges</b><small>Off. Streak and badges are hidden and nothing is awarded.</small></div><span class="tog"></span></div></div></div>
+      </div>
+      <p class="cap" style="max-width:none">The Badges row is gone, not collapsed. The profile hero loses its streak line and keeps hours, sessions and attendance. The timeline summary loses the slots. The switch row is the only trace.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>6. Copy</h2>
+  <div class="table-scroll"><table class="t">
+    <thead><tr><th>Badge</th><th>English</th><th>Polish</th><th>Earned when</th></tr></thead>
+    <tbody>
+      <tr><th>Streak 5</th><td>Streak of 5</td><td>Seria 5 treningów</td><td>5 attended sessions in a row</td></tr>
+      <tr><th>Streak 10 / 20</th><td>Streak of 10 / 20</td><td>Seria 10 / 20 treningów</td><td>10 / 20 in a row</td></tr>
+      <tr><th>Hours 50 / 100 / 250</th><td>50 / 100 / 250 hours</td><td>50 / 100 / 250 godzin</td><td>total attended hours</td></tr>
+      <tr><th>Perfect month</th><td>Perfect month</td><td>Idealny miesiąc</td><td>a finished month with sessions and none skipped</td></tr>
+      <tr><th>Style balance</th><td>Style balance</td><td>Równowaga stylów</td><td>Standard and Latin each 40 to 60% over 30 days</td></tr>
+      <tr><th>Progress</th><td>12 of 20 sessions</td><td>Treningi: 12 z 20</td><td>number after the label (Polish plurals rule)</td></tr>
+      <tr><th>Notification</th><td>You earned “Streak of 10”</td><td>Zdobyto „Seria 10 treningów”</td><td>line under it: “10 attended sessions in a row”</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Rules: no exclamation marks, no “congratulations”, no ranking words. Past tense and plain facts.</p>
+</section>
+
+<section>
+  <h2>Open points for review</h2>
+  <ul class="spec">
+    <li><b>Metals and the figure medal levels.</b> Both use bronze, silver and gold. The shapes differ (round medallion with a number, against rising bars beside a class letter) and the places differ (profile and timeline, against figure and choreography lists), but if you want zero overlap the tiers could use teal at three strengths instead. Say if you prefer that.</li>
+    <li><b>Perfect month as one counting row</b> keeps “N of 8” honest. The alternative is one row per month earned, which grows without limit.</li>
+    <li><b>Dashed slots on the timeline</b> show the next target. They could also be removed entirely there and kept on the profile only, which is the quietest version.</li>
+    <li><b>Artwork.</b> One icon per family (flame, clock, calendar tick, balance), no illustrations, as the spec says.</li>
+  </ul>
+</section>
+
+</div>
+
+<script>
+const B = [
+  {k:'s5',  name:'Streak of 5',    metal:'bronze', ic:'local_fire_department', n:'5',   tier:'1', date:'18 Sep', what:'5 attended sessions in a row'},
+  {k:'s10', name:'Streak of 10',   metal:'silver', ic:'local_fire_department', n:'10',  tier:'2', date:'3 Oct',  what:'10 attended sessions in a row'},
+  {k:'s20', name:'Streak of 20',   metal:'gold',   ic:'local_fire_department', n:'20',  tier:'3', prog:[12,20], unit:'sessions'},
+  {k:'h50', name:'50 hours',       metal:'bronze', ic:'schedule',              n:'50h', tier:'1', date:'2 Sep',  what:'50 attended hours'},
+  {k:'h100',name:'100 hours',      metal:'silver', ic:'schedule',              n:'100h',tier:'2', prog:[38.5,100], unit:'hours'},
+  {k:'h250',name:'250 hours',      metal:'gold',   ic:'schedule',              n:'250h',tier:'3', prog:[38.5,250], unit:'hours'},
+  {k:'pm',  name:'Perfect month',  metal:'ink',    ic:'event_available',       n:'',    date:'September', extra:'×2', what:'A finished month with sessions and none skipped', hint:'A finished month with sessions and none skipped'},
+  {k:'sb',  name:'Style balance',  metal:'ink',    ic:'balance',               n:'',    prog:[0,1], unit:'', hint:'Standard and Latin each 40 to 60% over 30 days'}
+];
+const med = (b, locked) => `<span class="m ${locked?'lock':b.metal}" aria-hidden="true"><span class="ms sm">${locked?'lock':b.ic}</span>${b.tier?`<span class="tier">${locked?b.n:b.n||b.tier}</span>`:''}</span>`;
+const medNum = (b, locked) => `<span class="m ${locked?'lock':b.metal}" aria-hidden="true">${b.n && !locked ? b.n : `<span class="ms sm">${locked?'lock':b.ic}</span>`}</span>`;
+function earnedCard(b){ return `<div class="b">${b.n?medNum(b,false):med(b,false)}<div><b>${b.name}${b.extra?` <span style="color:var(--on-surface-variant);font-weight:500">${b.extra}</span>`:''}</b><small>Earned ${b.date}${b.extra?' (last)':''}</small></div></div>`; }
+function lockedCard(b){
+  const line = b.prog && b.prog[1]>1 ? `${b.prog[0]} of ${b.prog[1]} ${b.unit}` : (b.hint||'');
+  const pct = b.prog && b.prog[1]>1 ? Math.round(b.prog[0]/b.prog[1]*100) : 0;
+  return `<div class="b lock">${b.n?medNum(b,true):med(b,true)}<div><b>${b.name}</b><small>${line}</small>${pct?`<div class="prog"><i style="width:${pct}%"></i></div>`:''}</div></div>`; }
+const earned = ['s10','s5','h50','pm'].map(k=>B.find(b=>b.k===k));
+const locked = ['s20','h100','h250','sb'].map(k=>B.find(b=>b.k===k));
+const rowsFor = (earnedList, lockedList, summary) => `
+  <div class="row"><span class="ms">emoji_events</span><div><b>Badges</b><small>${summary}</small></div><span class="ms chev">expand_less</span></div>
+  <div class="open">${earnedList.map(earnedCard).join('')}${lockedList.map(lockedCard).join('')}</div>`;
+const closed = `
+  <div class="row"><span class="ms">calendar_month</span><div><b>Calendars</b><small>Default: Primary calendar</small></div><span class="ms chev">expand_more</span></div>
+  <div class="row"><span class="ms">language</span><div><b>Language</b><small>English</small></div><span class="ms chev">expand_more</span></div>`;
+
+// 1 catalog: all eight, earned and locked states side by side
+document.getElementById('catalog').innerHTML = B.map(b => (b.date ? earnedCard(b) : lockedCard(b))).join('');
+// 2 profile row
+const sum = '4 of 8 earned, latest: Streak of 10';
+document.getElementById('acc-desktop').innerHTML = rowsFor(earned, locked, sum) + closed;
+document.getElementById('acc-phone').innerHTML = rowsFor(earned, locked, sum) + closed;
+// 3 timeline
+const chipE = b => `<span class="chip">${medNum(b,false)}${b.name}</span>`;
+const chipS = b => `<span class="chip slot">Next: ${b.name} · 12 of 20</span>`;
+const slotsHtml = chipE(B[0]) + chipE(B[1]) + chipE(B[3]) + chipS(B[2]);
+document.getElementById('slots').innerHTML = slotsHtml;
+document.getElementById('slots-phone').innerHTML = chipE(B[1]) + chipS(B[2]);
+const line = `${medNum(B[1],false)}<div><b style="font-size:12px">Earned “Streak of 10”</b><small>10 attended sessions in a row</small></div>`;
+document.getElementById('earned-line').innerHTML = line;
+document.getElementById('earned-line-phone').innerHTML = line;
+// 4 notification
+document.getElementById('feed').innerHTML = `
+  <div class="it badge">${medNum(B[1],false)}<div><b>You earned “Streak of 10”</b><small>10 attended sessions in a row · today</small></div><span class="new"></span></div>
+  <div class="it"><span class="ic"><span class="ms sm">edit_note</span></span><div><b>Updated figure Viennese Waltz - Natural Turn</b><small>11 Oct</small></div></div>
+  <div class="it"><span class="ic"><span class="ms sm">event_available</span></span><div><b>Training confirmed: lesson with Anna</b><small>10 Oct</small></div></div>`;
+// 5 zero state
+document.getElementById('acc-zero').innerHTML = rowsFor([], [B[0],B[3],B[6],B[7]].map(b=>({...b,prog:b.prog||[0,b.k==='s5'?5:(b.k==='h50'?50:1)],unit:b.k==='h50'?'hours':'sessions'})), 'None earned yet') + closed;
+</script>
+</body>
+</html>
