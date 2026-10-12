@@ -36,7 +36,8 @@ class HybridSearchServiceImpl(
     private val embeddingBudget: EmbeddingBudget,
     private val googleAiProperties: GoogleAiProperties,
     private val assistantFeature: AssistantFeature,
-    transactionTemplate: org.springframework.transaction.support.TransactionTemplate
+    transactionTemplate: org.springframework.transaction.support.TransactionTemplate,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) : HybridSearchService {
 
     companion object {
@@ -100,6 +101,9 @@ class HybridSearchServiceImpl(
                 return none
             }
             val user = appUserService.getCurrentUserOrNull()
+            if (assistantPreferencesService?.forUser(user)?.semanticSearchEnabled == false) {
+                return none
+            }
             if (!embeddingBudget.tryAcquireForSearch(user?.id)) {
                 log.debug("Embedding rate limit reached, searching by keyword only")
                 return none

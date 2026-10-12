@@ -51,6 +51,7 @@ class MaterialWebController(
     private val noteRewriteService: NoteRewriteService,
     private val figureSuggestionService: FigureSuggestionService,
     private val trainingEventService: TrainingEventService,
+    private val assistantPreferencesService: com.jankowski.rafal.dancebook.service.AssistantPreferencesService? = null,
     private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
     private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
     private val semanticSearchFilterHelper: com.jankowski.rafal.dancebook.service.SemanticSearchFilterHelper? = null
@@ -201,9 +202,11 @@ class MaterialWebController(
         model.addAttribute("pinnedFigureIds", pinnedFigureIds)
         model.addAttribute("allStyles", danceTypeId == null)
         model.addAttribute("query", "")
+        val currentUser = appUserService.getCurrentUser()
+        val prefs = assistantPreferencesService?.forUser(currentUser) ?: com.jankowski.rafal.dancebook.dto.AssistantPreferences.DEFAULTS
         model.addAttribute(
             "suggestionsAvailable",
-            figureSuggestionService.isAvailable() && !material.description.isNullOrBlank()
+            prefs.suggestFiguresEnabled && figureSuggestionService.isAvailable() && !material.description.isNullOrBlank()
         )
         return "materials/fragments/figure-picker :: figurePickerDialog"
     }
@@ -290,6 +293,11 @@ class MaterialWebController(
         val currentUser = appUserService.getCurrentUser()
         if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw EntityNotFoundException("Could not find material with id $materialId")
+        }
+
+        val prefs = assistantPreferencesService?.forUser(currentUser) ?: com.jankowski.rafal.dancebook.dto.AssistantPreferences.DEFAULTS
+        if (!prefs.suggestFiguresEnabled) {
+            throw org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN, "Suggest figures is disabled in preferences.")
         }
 
         if (!figureSuggestionService.isAvailable()) {

@@ -664,7 +664,7 @@ pass claimed a fit that the browser showed was false.
   attendance, and counts of Notes, choreographies and figures created) and settings as an
   accordion where each row shows its current value and expands in place: Badges (dashed
   placeholder slots), Calendars (default calendar), Language, Medal badge style, Assistant
-  (reserved until #309) and Password. Log out is not on this page. Recent activity shows only
+  (live since #309) and Password. Log out is not on this page. Recent activity shows only
   the signed-in user's own events, through the activity service and the normal visibility
   rule. A new setting is a new row, not a new card. The mock's 14-day streak bar and best
   streak are left out on purpose because the app does not compute them.
@@ -1032,6 +1032,29 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   hides the markup. New assistant code needs the annotation too. `/assistant/*` is in
   `AssistantWebController`; each user is limited to 20 messages a minute
   (`AssistantRateLimiter`, in memory).
+- **Per-user assistant preferences (#309).** `AssistantPreferencesService` is the one place every
+  feature asks for a user's preferences; nothing else reads `user_assistant_preferences` (V44).
+  Six switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
+  assistant on, semantic search in standard search, related notes, suggest figures, open in full
+  window (default off), and the reply language (follow the app, Polish or English). Defaults leave
+  behaviour as it was. `forUser()` is what features use: it folds in the missing-API-key case (a
+  saved "on" never turns anything on without a key), and a failed read falls back to the defaults,
+  never to "off". `rawForUser()` is for the profile page only, which must show what is saved.
+  Reading never creates a row; the first save does.
+  - **Where each one is enforced:** assistant off is the nav support (no markup) plus a 404 from
+    `AssistantWebController`; semantic search off returns before the embedding budget is touched, so
+    it makes no embedding call; related notes off returns an empty list before any embedding work;
+    suggest figures off hides the button and refuses the endpoint with 403; full window sets
+    `data-full-window` on the dialog and `assistant.js` expands it on **every** open, not only the
+    first; the reply language picks the locale the answer is asked for.
+  - **Do not hold a preference lookup inside a transaction that also calls the model or the
+    embedding provider.** All lookups are outside those calls.
+  - **A new preference is a new column, a field on the DTO and entity, one row in the profile
+    section, and en and pl keys.** The save must not depend on another switch: the first version
+    disabled the other rows and the save button while the assistant was off, so the user could not
+    turn it back on, and because a disabled checkbox is not submitted while its hidden marker is, a
+    save would have switched the other choices off. Keep every row and Save enabled unless the
+    server has no key.
 - **Tools go through services, never repositories**, so the access rules apply to whatever
   the model asks for. Read tools are in `AssistantReadTools` (`search_figures`,
   `search_notes`, `search_knowledge`, `list_sessions`, `get_note`, `get_figure`).
@@ -1242,6 +1265,12 @@ locales are listed in `config/AppLocales.kt`.
   `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`. The build
   and the tests cannot see this. #142's figure picker shipped `max-w-lg`, passed a green
   build, and opened as a 48px strip until someone looked at it at 375px.
+- **No inline event handlers.** `script-src 'self' https://unpkg.com` has no `'unsafe-inline'`, so the
+  browser silently ignores `onchange=`, `onclick=` and `onsubmit=`: the control looks fine, does
+  nothing, and every test still passes because MockMvc does not enforce the policy. This broke the
+  assistant switches (#309) and left the default-calendar radio and three admin delete buttons
+  without their behaviour or their confirmation. Put behaviour in `static/js` (a delegated handler),
+  and use `data-confirm` for a delete confirmation. A guard test for this is tracked in #323.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
   the policy allowlists only `unpkg.com` (HTMX, SortableJS, Trix), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.

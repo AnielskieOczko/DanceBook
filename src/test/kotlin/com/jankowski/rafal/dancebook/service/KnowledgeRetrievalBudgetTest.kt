@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.config.AssistantFeature
 import com.jankowski.rafal.dancebook.config.GoogleAiProperties
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.KnowledgeChunk
 import com.jankowski.rafal.dancebook.model.KnowledgeSourceType
@@ -123,6 +124,24 @@ class KnowledgeRetrievalBudgetTest {
     @Test
     fun `an anonymous visitor gets no related-note embedding`() {
         assertEquals(emptyList<Material>(), service(keyed).findRelatedNotesForMaterial(id, null))
+        assertEquals(0, model.calls)
+    }
+
+    @Test
+    fun `when relatedNotesEnabled preference is false, related notes query is skipped and embeddings are not called`() {
+        val prefsService = mock(AssistantPreferencesService::class.java)
+        `when`(prefsService.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(relatedNotesEnabled = false))
+        val materials = mock(MaterialRepository::class.java)
+        `when`(materials.findById(id)).thenReturn(Optional.of(Material().apply { this.id = id; name = "n" }))
+        val disabledService = KnowledgeRetrievalServiceImpl(
+            NoChunks(), materials, mock(DanceFigureRepository::class.java), mock(MaterialService::class.java),
+            RichTextServiceImpl(), model, EmbeddingBudget(keyed, Clock.systemUTC()), AssistantFeature(keyed),
+            TransactionTemplate(tx), prefsService
+        )
+
+        val related = disabledService.findRelatedNotesForMaterial(id, user)
+
+        assertTrue(related.isEmpty())
         assertEquals(0, model.calls)
     }
 }

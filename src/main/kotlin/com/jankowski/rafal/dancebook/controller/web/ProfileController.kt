@@ -31,6 +31,13 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import com.jankowski.rafal.dancebook.config.AssistantFeature
+import com.jankowski.rafal.dancebook.dto.AssistantPreferencesUpdateRequest
+import com.jankowski.rafal.dancebook.model.AssistantReplyLanguage
+import com.jankowski.rafal.dancebook.model.UserAssistantPreferences
+import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -47,7 +54,9 @@ class ProfileController(
     private val materialService: MaterialService,
     private val choreographyService: ChoreographyService,
     private val danceFigureService: DanceFigureService,
-    private val activityEventService: ActivityEventService
+    private val activityEventService: ActivityEventService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null,
+    private val assistantFeature: AssistantFeature? = null
 ) {
     @GetMapping
     fun showProfile(model: Model): String {
@@ -80,6 +89,9 @@ class ProfileController(
         model.addAttribute("defaultCalendar", defaultCalendar)
         model.addAttribute("recentEvents", recentEvents)
         model.addAttribute("memberSince", memberSince)
+        model.addAttribute("assistantPreferences", assistantPreferencesService?.rawForUser(user) ?: UserAssistantPreferences().apply { userId = user.id })
+        model.addAttribute("assistantFeatureEnabled", assistantFeature?.enabled ?: true)
+        model.addAttribute("replyLanguageOptions", replyLanguageOptions(locale))
         return "profile/index"
     }
 
@@ -214,6 +226,85 @@ class ProfileController(
 
         return "profile/index :: passwordSection"
     }
+
+    @PostMapping("/assistant-preferences")
+    fun updateAssistantPreferences(
+        @RequestParam(required = false) assistantEnabled: Boolean?,
+        @RequestParam(required = false) semanticSearchEnabled: Boolean?,
+        @RequestParam(required = false) relatedNotesEnabled: Boolean?,
+        @RequestParam(required = false) suggestFiguresEnabled: Boolean?,
+        @RequestParam(required = false) openInFullWindow: Boolean?,
+        @RequestParam(required = false) replyLanguage: String?,
+        @RequestParam(name = "_assistantEnabled", required = false) hasAssistantMarker: String?,
+        @RequestParam(name = "_semanticSearchEnabled", required = false) hasSemanticMarker: String?,
+        @RequestParam(name = "_relatedNotesEnabled", required = false) hasRelatedNotesMarker: String?,
+        @RequestParam(name = "_suggestFiguresEnabled", required = false) hasSuggestMarker: String?,
+        @RequestParam(name = "_openInFullWindow", required = false) hasFullWindowMarker: String?,
+        request: HttpServletRequest,
+        model: Model,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val user = appUserService.getCurrentUser()
+        val locale = LocaleContextHolder.getLocale()
+
+        val parsedLang = if (!replyLanguage.isNullOrBlank()) {
+            AssistantReplyLanguage.fromStringOrNull(replyLanguage)
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown reply language: $replyLanguage")
+        } else {
+            null
+        }
+
+        val effectiveAssistantEnabled = if (hasAssistantMarker != null) assistantEnabled == true else assistantEnabled
+        val effectiveSemanticSearch = if (hasSemanticMarker != null) semanticSearchEnabled == true else semanticSearchEnabled
+        val effectiveRelatedNotes = if (hasRelatedNotesMarker != null) relatedNotesEnabled == true else relatedNotesEnabled
+        val effectiveSuggestFigures = if (hasSuggestMarker != null) suggestFiguresEnabled == true else suggestFiguresEnabled
+        val effectiveFullWindow = if (hasFullWindowMarker != null) openInFullWindow == true else openInFullWindow
+
+        val update = AssistantPreferencesUpdateRequest(
+            assistantEnabled = effectiveAssistantEnabled,
+            semanticSearchEnabled = effectiveSemanticSearch,
+            relatedNotesEnabled = effectiveRelatedNotes,
+            suggestFiguresEnabled = effectiveSuggestFigures,
+            openInFullWindow = effectiveFullWindow,
+            replyLanguage = parsedLang
+        )
+
+        try {
+            val updated = assistantPreferencesService?.updatePreferences(user, update)
+                ?: UserAssistantPreferences().apply { userId = user.id }
+            model.addAttribute("assistantPreferences", updated)
+            model.addAttribute("assistantSuccessMsg", true)
+            redirectAttributes.addFlashAttribute("assistantSuccessMsg", true)
+        } catch (e: Exception) {
+            val current = assistantPreferencesService?.rawForUser(user)
+                ?: UserAssistantPreferences().apply { userId = user.id }
+            model.addAttribute("assistantPreferences", current)
+            model.addAttribute("assistantErrorMsg", true)
+            redirectAttributes.addFlashAttribute("assistantErrorMsg", true)
+        }
+
+        model.addAttribute("assistantFeatureEnabled", assistantFeature?.enabled ?: true)
+        model.addAttribute("replyLanguageOptions", replyLanguageOptions(locale))
+        model.addAttribute("assistantOpen", true)
+
+        if (request.getHeader("HX-Request") != null) {
+            return "profile/index :: assistantSection"
+        }
+        return "redirect:/profile"
+    }
+
+    private fun replyLanguageOptions(locale: Locale): List<FormSelectOption> =
+        AssistantReplyLanguage.entries.map {
+            val labelKey = when (it) {
+                AssistantReplyLanguage.APP -> "profile.assistant.reply_language.app"
+                AssistantReplyLanguage.PL -> "profile.assistant.reply_language.pl"
+                AssistantReplyLanguage.EN -> "profile.assistant.reply_language.en"
+            }
+            FormSelectOption(
+                value = it.name,
+                label = messageSource.getMessage(labelKey, null, it.name, locale) ?: it.name
+            )
+        }
 
     private fun toProfileActivityItem(event: ActivityEvent, locale: Locale): ProfileActivityItem {
         val icon = when (event.eventType) {

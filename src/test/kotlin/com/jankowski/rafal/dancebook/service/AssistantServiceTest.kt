@@ -1,8 +1,10 @@
 package com.jankowski.rafal.dancebook.service
 
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
 import com.jankowski.rafal.dancebook.dto.PageContext
 import com.jankowski.rafal.dancebook.dto.PageContextType
 import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.AssistantReplyLanguage
 import com.jankowski.rafal.dancebook.model.AssistantRole
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -59,7 +61,12 @@ class AssistantServiceTest {
         )
     }
 
-    private fun service(model: org.springframework.ai.chat.model.ChatModel, timeout: Duration = Duration.ofSeconds(5), limiter: AssistantRateLimiter = AssistantRateLimiter(clock)): AssistantServiceImpl {
+    private fun service(
+        model: org.springframework.ai.chat.model.ChatModel,
+        timeout: Duration = Duration.ofSeconds(5),
+        limiter: AssistantRateLimiter = AssistantRateLimiter(clock),
+        prefsService: AssistantPreferencesService? = null
+    ): AssistantServiceImpl {
         val mapper = DraftTestSupport.mapper()
         val drafts = FakeAssistantDraftService()
         val turns = AssistantTurnScope()
@@ -71,7 +78,7 @@ class AssistantServiceTest {
         )
         return AssistantServiceImpl(
             AssistantModelGateway(model), ToolCallingManager.builder().build(), tools, draftTools, drafts, turns, conversations,
-            pageContexts, appUserService, limiter, mapper, clock, timeout
+            pageContexts, appUserService, limiter, mapper, clock, timeout, prefsService
         )
     }
 
@@ -146,6 +153,28 @@ class AssistantServiceTest {
         } finally {
             org.springframework.context.i18n.LocaleContextHolder.resetLocaleContext()
         }
+    }
+
+    @Test
+    fun `replyLanguage preference PL forces Polish even if user locale is en`() {
+        user.locale = "en"
+        val prefsService = mock(AssistantPreferencesService::class.java)
+        `when`(prefsService.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(replyLanguage = AssistantReplyLanguage.PL))
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+        service(model, prefsService = prefsService).send(null, "Hi", home)
+        assertTrue(systemOf(model).contains("The user's language is Polish"))
+        user.locale = null
+    }
+
+    @Test
+    fun `replyLanguage preference EN forces English even if user locale is pl`() {
+        user.locale = "pl"
+        val prefsService = mock(AssistantPreferencesService::class.java)
+        `when`(prefsService.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(replyLanguage = AssistantReplyLanguage.EN))
+        val model = ScriptedChatModel(listOf(ScriptedChatModel.text("ok")))
+        service(model, prefsService = prefsService).send(null, "Hi", home)
+        assertTrue(systemOf(model).contains("The user's language is English"))
+        user.locale = null
     }
 
     @Test

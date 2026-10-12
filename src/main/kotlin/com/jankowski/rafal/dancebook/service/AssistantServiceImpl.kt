@@ -12,6 +12,7 @@ import com.jankowski.rafal.dancebook.dto.ResolvedPage
 import com.jankowski.rafal.dancebook.dto.ResultCard
 import com.jankowski.rafal.dancebook.dto.ToolResult
 import com.jankowski.rafal.dancebook.model.AssistantMessage
+import com.jankowski.rafal.dancebook.model.AssistantReplyLanguage
 import com.jankowski.rafal.dancebook.model.AssistantRole
 import org.slf4j.LoggerFactory
 import org.springframework.ai.chat.messages.AssistantMessage as AiAssistantMessage
@@ -45,7 +46,8 @@ class AssistantServiceImpl(
     private val rateLimiter: AssistantRateLimiter,
     private val objectMapper: ObjectMapper,
     private val clock: Clock,
-    private val timeout: Duration
+    private val timeout: Duration,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) : AssistantService {
 
     /** Spring's constructor: the timeout comes from configuration. */
@@ -63,10 +65,12 @@ class AssistantServiceImpl(
         rateLimiter: AssistantRateLimiter,
         objectMapper: ObjectMapper,
         clock: Clock,
-        googleAi: GoogleAiProperties
+        googleAi: GoogleAiProperties,
+        assistantPreferencesService: AssistantPreferencesService
     ) : this(
         gateway, toolCallingManager, readTools, draftTools, drafts, turnScope, conversations, pageContexts,
-        appUserService, rateLimiter, objectMapper, clock, Duration.ofSeconds(googleAi.assistantTimeoutSeconds)
+        appUserService, rateLimiter, objectMapper, clock, Duration.ofSeconds(googleAi.assistantTimeoutSeconds),
+        assistantPreferencesService
     )
 
     private val log = LoggerFactory.getLogger(AssistantServiceImpl::class.java)
@@ -88,7 +92,13 @@ class AssistantServiceImpl(
         val userView = AssistantMessageView(AssistantRole.USER, clean)
 
         val assistantView = try {
-            answer(id, user.displayName, pageContexts.resolve(page), replyLocale(user.locale))
+            val prefs = assistantPreferencesService?.forUser(user)
+            val targetLocale = when (prefs?.replyLanguage) {
+                AssistantReplyLanguage.PL -> AppLocales.POLISH
+                AssistantReplyLanguage.EN -> AppLocales.ENGLISH
+                AssistantReplyLanguage.APP, null -> replyLocale(user.locale)
+            }
+            answer(id, user.displayName, pageContexts.resolve(page), targetLocale)
         } catch (e: AssistantUnavailableException) {
             log.warn("Assistant could not answer: {}", e.message)
             AssistantMessageView(AssistantRole.ASSISTANT, AssistantService.ERROR_TEXT, error = true)

@@ -5,7 +5,11 @@ import com.jankowski.rafal.dancebook.dto.PageContext
 import org.springframework.stereotype.Component
 
 /** What the layout needs to draw the assistant: the page it is on and the "Looking at" label. */
-data class AssistantNav(val page: PageContext, val label: String?)
+data class AssistantNav(
+    val page: PageContext,
+    val label: String?,
+    val openInFullWindow: Boolean = false
+)
 
 /**
  * The single question `NavbarAdvice` asks. It returns null when the feature is off or nobody
@@ -16,12 +20,15 @@ data class AssistantNav(val page: PageContext, val label: String?)
 class AssistantNavSupport(
     private val feature: AssistantFeature,
     private val pageContexts: AssistantPageContextResolver,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) {
     fun forPath(path: String): AssistantNav? {
         if (!feature.enabled) return null
-        if (appUserService.getCurrentUserOrNull() == null) return null
+        val user = appUserService.getCurrentUserOrNull() ?: return null
+        val prefs = assistantPreferencesService?.forUser(user) ?: com.jankowski.rafal.dancebook.dto.AssistantPreferences.DEFAULTS
+        if (!prefs.assistantEnabled) return null
         val page = pageContexts.fromPath(path)
-        return AssistantNav(page, pageContexts.resolve(page).label)
+        return AssistantNav(page, pageContexts.resolve(page).label, openInFullWindow = prefs.openInFullWindow)
     }
 }
