@@ -39,4 +39,6 @@ interface MaterialService {
         minRating: Short?,
         nameSearch: String?
     ): Boolean
+
+    fun countByOwner(owner: com.jankowski.rafal.dancebook.model.AppUser): Long
 }

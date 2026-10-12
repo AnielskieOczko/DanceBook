@@ -259,6 +259,10 @@ class ChoreographyServiceImpl(
         return saved
     }
 
+    override fun countByOwner(owner: AppUser): Long {
+        return choreographyRepository.countByOwner(owner)
+    }
+
     private fun checkOwnership(choreography: Choreography, currentUser: AppUser) {
         if (choreography.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw AccessDeniedException("You don't have permission to modify this choreography")

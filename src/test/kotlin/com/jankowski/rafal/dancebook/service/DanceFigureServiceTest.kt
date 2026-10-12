@@ -507,5 +507,16 @@ class DanceFigureServiceTest {
         assertEquals(null, cleared.medalLevel)
     }
 
+    @Test
+    fun `should count figures by created by`() {
+        val user = AppUser().apply { id = UUID.randomUUID() }
+        `when`(danceFigureRepository.countByCreatedBy(user)).thenReturn(12L)
+
+        val count = danceFigureService.countByCreatedBy(user)
+
+        assertEquals(12L, count)
+        verify(danceFigureRepository).countByCreatedBy(user)
+    }
+
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
 }

@@ -291,4 +291,14 @@ class MaterialServiceFigureTest {
         assertEquals(mapOf(id1 to 3, id2 to 1), result)
         verify(figureRepository).countFiguresByMaterialIds(listOf(id1, id2))
     }
+
+    @Test
+    fun `should count materials by owner`() {
+        `when`(materialRepository.countByOwner(currentUser)).thenReturn(7L)
+
+        val count = materialService.countByOwner(currentUser)
+
+        assertEquals(7L, count)
+        verify(materialRepository).countByOwner(currentUser)
+    }
 }

@@ -28,5 +28,6 @@ interface DanceFigureService {
     fun create(request: DanceFigureRequest): DanceFigure
     fun update(id: UUID, request: DanceFigureRequest): DanceFigure
     fun delete(id: UUID)
+    fun countByCreatedBy(createdBy: com.jankowski.rafal.dancebook.model.AppUser): Long
 }
 

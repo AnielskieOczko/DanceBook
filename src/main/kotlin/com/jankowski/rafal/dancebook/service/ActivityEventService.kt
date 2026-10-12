@@ -9,6 +9,7 @@ interface ActivityEventService {
     fun getUnreadCount(userId: UUID): Long
     fun getUnreadEvents(userId: UUID): List<ActivityEvent>
     fun getRecentEvents(limit: Int): List<ActivityEvent>
+    fun getRecentEventsByActor(user: com.jankowski.rafal.dancebook.model.AppUser, limit: Int): List<ActivityEvent>
     fun markAllAsRead(userId: UUID)
     fun markAsRead(eventId: UUID, userId: UUID)
     fun getAllEvents(pageable: Pageable): Page<ActivityEvent>

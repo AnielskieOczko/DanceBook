@@ -17,4 +17,5 @@ interface ChoreographyService {
     fun removeEntry(choreographyId: UUID, entryId: UUID): Choreography
     fun reorderEntries(choreographyId: UUID, entryIds: List<UUID>): Choreography
     fun updateEntry(choreographyId: UUID, entryId: UUID, request: ChoreographyEntryRequest): Choreography
+    fun countByOwner(owner: com.jankowski.rafal.dancebook.model.AppUser): Long
 }

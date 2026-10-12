@@ -302,6 +302,10 @@ class MaterialServiceImpl(
         return materialRepository.count(privateNotesSpec) > 0
     }
 
+    override fun countByOwner(owner: AppUser): Long {
+        return materialRepository.countByOwner(owner)
+    }
+
     private fun checkOwnership(material: Material, currentUser: AppUser) {
         if (material.owner?.id != currentUser.id && currentUser.role != Role.ADMIN) {
             throw AccessDeniedException("You don't have permission to modify this note")

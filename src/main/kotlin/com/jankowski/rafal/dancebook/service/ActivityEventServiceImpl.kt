@@ -45,6 +45,12 @@ class ActivityEventServiceImpl(
         return activityEventRepository.findAll(spec, pageable).content
     }
 
+    override fun getRecentEventsByActor(user: com.jankowski.rafal.dancebook.model.AppUser, limit: Int): List<ActivityEvent> {
+        val spec = ActivityEventSpecification.visibleTo(user).and(ActivityEventSpecification.byActor(user))
+        val pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"))
+        return activityEventRepository.findAll(spec, pageable).content
+    }
+
     @Transactional
     override fun markAllAsRead(userId: UUID) {
         log.debug("Marking all events as read for user {}", userId)
