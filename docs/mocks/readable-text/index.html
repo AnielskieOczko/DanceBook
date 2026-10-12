@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Readable Text Styles</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Mock for issue #301. Four ways to show long text (Notes, figure remarks, choreography descriptions, comments),
+   every one drawn on the same four samples at desktop and 375px, in English and Polish.
+   Colour, radius and font tokens are copied from src/main/resources/frontend/input.css and the approved rounded-forms mock;
+   light only, as in the app. Sample content is made up for the mock. */
+:root {
+  --surface: #ffffff; --surface-container: #f5f5f3; --outline: #8e9199; --outline-variant: #e3e3e0;
+  --on-surface: #16181a; --on-surface-variant: #5b6067;
+  --primary: #1f4b4a; --primary-hover: #163736; --primary-soft: #e9eded; --on-primary: #fff;
+  --r-pill: 9999px; --r-field: 1.5rem; --r-card: 1rem; --r-inset: .75rem;
+  --font-sans: 'Inter', system-ui, sans-serif; --font-prose: 'Source Serif 4', Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--surface); color: var(--on-surface); font: 14px/1.5 var(--font-sans); margin: 0; padding: 32px 16px 96px; }
+.wrap { max-width: 1180px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1 { font-size: 30px; line-height: 36px; letter-spacing: -.02em; margin: 0 0 8px; font-weight: 600; }
+h2 { font-size: 22px; line-height: 28px; margin: 0; font-weight: 600; }
+h3 { font-size: 13px; font-weight: 600; margin: 0 0 6px; color: var(--on-surface-variant); }
+p { margin: 0; }
+.lede { max-width: 70ch; color: var(--on-surface-variant); font-size: 16px; line-height: 26px; }
+.note { font-size: 13px; color: var(--on-surface-variant); max-width: 72ch; }
+section { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--outline-variant); padding-top: 24px; min-width: 0; }
+.pick { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary); margin-left: 8px; vertical-align: middle; }
+.table-scroll { overflow-x: auto; }
+table.cmp { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 760px; }
+.cmp th, .cmp td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--outline-variant); vertical-align: top; }
+.cmp th { font-weight: 600; color: var(--on-surface-variant); }
+.toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.seg { display: inline-flex; padding: 3px; border-radius: var(--r-pill); background: var(--surface-container); border: 1px solid var(--outline-variant); }
+.seg button { border: 0; min-height: 34px; padding: 0 16px; border-radius: var(--r-pill); background: transparent; font: 600 13px var(--font-sans); color: var(--on-surface-variant); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px rgba(22,24,26,.14); }
+.seg button:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 22%, transparent); }
+
+/* spec card for each direction */
+.spec { display: grid; gap: 8px 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); font-size: 13px; }
+.spec div { min-width: 0; }
+.spec dt { font-weight: 600; color: var(--on-surface-variant); margin-bottom: 2px; }
+.spec dd { margin: 0; }
+.cost { border-left: 3px solid var(--outline); padding: 2px 0 2px 12px; font-size: 13px; color: var(--on-surface-variant); max-width: 76ch; }
+.cost b { color: var(--on-surface); }
+.tok { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--surface-container); padding: 1px 6px; border-radius: var(--r-pill); }
+
+/* frames */
+.row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.frame { border: 1px solid var(--outline-variant); border-radius: var(--r-card); background: var(--surface); overflow: hidden; flex: 1 1 640px; min-width: 0; }
+.frame-bar { padding: 8px 12px; background: var(--surface-container); border-bottom: 1px solid var(--outline-variant); font-size: 12px; color: var(--on-surface-variant); }
+.frame-bar b { color: var(--on-surface); }
+.page { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px; align-items: start; }
+.sample { container-type: inline-size; min-width: 0; }
+.sample.wide { grid-column: 1 / -1; }
+.phone { width: 375px; max-width: 100%; border: 1px solid var(--outline); border-radius: 28px; overflow: hidden; background: var(--surface); flex: none; }
+.phonewrap { min-width: 0; max-width: 100%; }
+.phone .page { grid-template-columns: 1fr; padding: 16px; gap: 22px; }
+.phone .sample.wide { grid-column: auto; }
+.cap { font-size: 12px; color: var(--on-surface-variant); margin-top: 6px; }
+.label { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); margin-bottom: 8px; }
+@media (max-width: 760px) { .page { grid-template-columns: 1fr; } .sample.wide { grid-column: auto; } }
+
+/* ---------- shared content atoms (each direction restyles them) ---------- */
+.rd .title { margin: 0; }
+.rd .meta { font-size: 12px; color: var(--on-surface-variant); }
+.rd p, .rd li { overflow-wrap: anywhere; }
+.rd ul { margin: 0; padding-left: 1.2em; }
+.rd .ts { font-variant-numeric: tabular-nums; font-weight: 600; }
+.rd a { color: var(--primary); text-underline-offset: 2px; }
+.rd .facts { display: grid; gap: 4px 12px; margin: 0; grid-template-columns: auto 1fr; }
+.rd .facts dt { color: var(--on-surface-variant); font-size: 12px; }
+.rd .facts dd { margin: 0; font-weight: 500; }
+.rd .who { font-weight: 600; }
+.rd .when { color: var(--on-surface-variant); font-size: 12px; }
+.rd .cm { min-width: 0; }
+.rd .reply { margin-left: 20px; }
+
+/* ===== A. Outlined card (the "Recommendation" card, as it is in the figures mock) ===== */
+.dA .sample > .box { padding: 16px 20px; border: 1px solid var(--primary); border-radius: var(--r-card); max-width: 76ch; display: flex; flex-direction: column; gap: 8px; font: 400 14px/1.5 var(--font-sans); }
+.dA .title { font-size: 15px; font-weight: 600; color: var(--primary); }
+.dA .lead { font-weight: 600; color: var(--primary); font-size: 14px; }
+.dA ul { display: grid; gap: 4px; }
+.dA .quote { margin: 0; padding: 8px 12px; border-radius: var(--r-inset); background: var(--primary-soft); }
+.dA .cm { padding: 12px 16px; border: 1px solid var(--outline-variant); border-radius: var(--r-card); display: flex; flex-direction: column; gap: 4px; }
+.dA .cmwrap { display: flex; flex-direction: column; gap: 8px; }
+.dA .facts { padding: 8px 12px; background: var(--surface-container); border-radius: var(--r-inset); }
+
+/* ===== B. Open serif column ===== */
+.dB .box { max-width: 62ch; display: flex; flex-direction: column; gap: 14px; font: 400 17px/28px var(--font-prose); }
+.dB .sample + .sample { }
+.dB .title { font: 600 22px/30px var(--font-sans); letter-spacing: -.01em; }
+.dB .meta { font-family: var(--font-sans); }
+.dB .lead { font: 600 14px/20px var(--font-sans); color: var(--primary); }
+.dB .hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 2px 0; }
+.dB ul { display: grid; gap: 6px; }
+.dB .quote { margin: 0; padding-left: 20px; font-style: italic; color: var(--on-surface); font-size: 18px; line-height: 29px; }
+.dB .facts { font: 400 13px/20px var(--font-sans); grid-template-columns: auto 1fr auto 1fr; }
+.dB .cm { padding-block: 12px; border-top: 1px solid var(--outline-variant); display: flex; flex-direction: column; gap: 2px; }
+.dB .who, .dB .when { font-family: var(--font-sans); }
+.dB .cmwrap { display: flex; flex-direction: column; }
+
+/* ===== C. Sharp sans ===== */
+.dC .box { max-width: 66ch; display: flex; flex-direction: column; gap: 14px; font: 400 16px/26px var(--font-sans); letter-spacing: -.005em; }
+.dC .title { font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -.02em; }
+.dC .lead { font-size: 18px; line-height: 26px; font-weight: 700; letter-spacing: -.015em; }
+.dC ul { display: grid; gap: 8px; list-style: none; padding: 0; counter-reset: li; }
+.dC li { counter-increment: li; padding-left: 28px; position: relative; }
+.dC li::before { content: counter(li); position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary); font-size: 12px; line-height: 20px; text-align: center; font-weight: 600; }
+.dC .quote { margin: 0; padding: 14px 18px; border-radius: var(--r-inset); background: var(--primary-soft); font-weight: 500; font-size: 17px; line-height: 26px; }
+.dC .facts { grid-template-columns: repeat(2, auto 1fr); gap: 6px 10px; font-size: 14px; }
+.dC .cm { display: grid; grid-template-columns: 36px 1fr; gap: 2px 12px; padding: 12px 0; border-top: 1px solid var(--outline-variant); }
+.dC .av { width: 36px; height: 36px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary); font-weight: 700; display: grid; place-items: center; grid-row: span 2; }
+.dC .cm > div { min-width: 0; }
+.dC .cmwrap { display: flex; flex-direction: column; }
+
+/* ===== D. Inset panel with a margin rail ===== */
+.dD .box { background: var(--surface-container); border-radius: var(--r-card); padding: 20px 24px; display: grid; gap: 14px 28px; font: 400 16px/27px var(--font-prose); max-width: 920px; }
+@container (min-width: 640px) { .dD .box.hasrail { grid-template-columns: minmax(0, 1fr) 210px; } .dD .box.hasrail .main { grid-column: 1; } .dD .box.hasrail .rail { grid-column: 2; grid-row: 1 / span 6; } }
+.dD .main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.dD .title { font: 600 20px/28px var(--font-sans); }
+.dD .meta { font-family: var(--font-sans); }
+.dD .lead { font: 600 13px/18px var(--font-sans); color: var(--primary); }
+.dD ul { display: grid; gap: 4px; }
+.dD .quote { margin: 0; font-style: italic; }
+.dD .rail { font: 400 13px/19px var(--font-sans); display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--outline-variant); padding-top: 12px; }
+@container (min-width: 640px) { .dD .rail { border-top: 0; padding-top: 0; border-left: 1px solid var(--outline-variant); padding-left: 16px; } }
+.dD .rail h4 { margin: 0; font-size: 12px; color: var(--on-surface-variant); font-weight: 600; }
+.dD .rail .rq { font-weight: 500; }
+.dD .facts { grid-template-columns: auto 1fr; font-size: 13px; }
+.dD .cm { padding: 12px 16px; background: var(--surface); border-radius: var(--r-inset); display: flex; flex-direction: column; gap: 2px; font: 400 15px/24px var(--font-prose); }
+.dD .cm .who, .dD .cm .when { font-family: var(--font-sans); }
+.dD .cmwrap { display: flex; flex-direction: column; gap: 8px; }
+.dD .box.plain { padding: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Readable text styles</h1>
+  <p class="lede">Issue #301. The “Recommendation” card in the figures mock reads sharp and comfortable, and the owner asked whether that look should become the way the app shows text. Below are <b>four proposals</b>, each drawn on the same four samples: a Note body, a figure’s technical remarks, a choreography description and a comment thread with a reply. Each is shown at desktop width and at 375px. Use the switch to see Polish.</p>
+  <div class="toolbar" style="margin-top:12px">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="pl" aria-pressed="false">Polski</button>
+    </div>
+    <span class="note">Light only, as the app is. A Material is called a “Note”. Sample content is made up.</span>
+  </div>
+</header>
+
+<section>
+  <h2>What makes the reference card readable</h2>
+  <div class="table-scroll"><table class="cmp">
+    <thead><tr><th>Property</th><th>Value in the figures mock</th><th>Why it helps</th></tr></thead>
+    <tbody>
+      <tr><th>Container</th><td>1px outline in the accent, 16px radius, 16px / 20px padding</td><td>Marks one self-contained piece of advice and gives the eye an edge to rest on.</td></tr>
+      <tr><th>Heading</th><td>15px, 600, accent colour, sentence case</td><td>The only coloured text, so it is the one thing that jumps out.</td></tr>
+      <tr><th>Body</th><td>14px / 21px Inter (<span class="tok">font-sans</span>), ink on white</td><td>Same face as the rest of the UI, so the card does not feel pasted in.</td></tr>
+      <tr><th>Measure</th><td>max <span class="tok">76ch</span></td><td>Lines stay in the 60 to 80 character range that reads comfortably.</td></tr>
+      <tr><th>Paragraphs</th><td>8px gap, short paragraphs</td><td>White space between ideas replaces headings and bullets.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">All four directions reuse existing tokens (<span class="tok">--primary</span>, <span class="tok">--primary-soft</span>, <span class="tok">--surface-container</span>, <span class="tok">--outline-variant</span>, the radius ladder, Inter and Source Serif 4). The missing pieces are a small named text scale and a measure token; they are listed in each proposal and again in the recommendation.</p>
+</section>
+
+<section>
+  <h2>At a glance</h2>
+  <div class="table-scroll"><table class="cmp">
+    <thead><tr><th></th><th>A. Outlined card</th><th>B. Open serif column</th><th>C. Sharp sans</th><th>D. Inset panel with margin rail</th></tr></thead>
+    <tbody>
+      <tr><th>Body</th><td>Inter 14 / 21</td><td>Source Serif 4 17 / 28</td><td>Inter 16 / 26</td><td>Source Serif 4 16 / 27</td></tr>
+      <tr><th>Measure</th><td>76ch</td><td>62ch</td><td>66ch</td><td>about 60ch + 210px rail</td></tr>
+      <tr><th>Container</th><td>Outlined accent card</td><td>None, hairline rules</td><td>None, tinted pull-quote</td><td>Soft grey panel</td></tr>
+      <tr><th>Technique data</th><td>Grey inset block</td><td>One quiet line</td><td>Two-column facts</td><td>Margin rail</td></tr>
+      <tr><th>Fits dense pages</th><td>Yes, compact</td><td>No, tall</td><td>Medium</td><td>No, wide</td></tr>
+      <tr><th>Reads long text</th><td>OK</td><td>Best</td><td>Good</td><td>Very good</td></tr>
+      <tr><th>New tokens</th><td>None</td><td>Prose 17/28, measure 62ch</td><td>Text 16/26, display 22/28</td><td>Prose 16/27, rail width</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Recommendation: use A for short advice and remarks, and C for long reading.</b> Reasoning is at the end of the page.</p>
+</section>
+
+<!-- DIRECTIONS rendered by script -->
+<div id="dirs" style="display:flex;flex-direction:column;gap:56px"></div>
+
+<section id="reco">
+  <h2>Recommendation</h2>
+  <p class="lede" style="font-size:15px;line-height:24px">Do not make one container the app-wide rule. The card’s strength is that it frames <em>one</em> piece of advice; applied to every block of text it becomes a stack of identical bordered boxes, which is exactly the busy look the owner has been removing elsewhere. Split by what the text is.</p>
+  <div class="table-scroll"><table class="cmp">
+    <thead><tr><th>Where</th><th>Use</th><th>Reason</th></tr></thead>
+    <tbody>
+      <tr><th>Recommendations, tips, assistant replies, empty states, figure “technical remarks”</th><td>A, the full card</td><td>Short, self-contained, one lead-in each. The card is the right size for them.</td></tr>
+      <tr><th>Note body, choreography description, long figure description</th><td>C, prose only, no card</td><td>These are read for minutes. C’s larger size and spacing do the work, and the page stays calm. The pull-quote and numbered list carry the structure the card’s border would have.</td></tr>
+      <tr><th>Comments and step comments</th><td>Today’s compact list, with C’s type scale</td><td>Many short items in a row; a box around each one is too heavy. Hairline separators and a 36px avatar keep the thread scannable.</td></tr>
+      <tr><th>Dense tables, tooltips, short labels, form fields</th><td>No change</td><td>The scale below is too large for them.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Why not B or D:</b> B is the most pleasant to read but the tallest, and the serif at 17/28 makes a Note page about 30% longer than C. D needs width for the rail and has nothing to offer on a phone, where the rail simply stacks under the text. Both are good for a future “read mode” and are cheap to add later because they use only the tokens listed below.</p>
+  <h3 style="margin-top:8px">Tokens to add (nothing else is new)</h3>
+  <div class="table-scroll"><table class="cmp">
+    <thead><tr><th>Token</th><th>Value</th><th>Used by</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tok">text-card</span></td><td>14 / 21, 400 (exists as <span class="tok">body</span>)</td><td>A card body</td></tr>
+      <tr><td><span class="tok">text-read</span></td><td>16 / 26, 400, -0.005em</td><td>C body (Notes, descriptions)</td></tr>
+      <tr><td><span class="tok">text-read-lead</span></td><td>18 / 26, 700, -0.015em</td><td>C lead-in</td></tr>
+      <tr><td><span class="tok">text-read-title</span></td><td>22 / 28, 700, -0.02em</td><td>C title (same as the page <span class="tok">display</span> minus 8px)</td></tr>
+      <tr><td><span class="tok">measure-read</span></td><td>66ch, and 76ch for cards</td><td>every long-text container</td></tr>
+      <tr><td><span class="tok">space-para</span></td><td>14px between paragraphs, 8px inside cards</td><td>both</td></tr>
+    </tbody>
+  </table></div>
+  <p class="cost"><b>The case against:</b> a larger reading size costs vertical space, and on pages that mix a Note with its figures table the longer page pushes the table down. Comments and step comments should keep today’s density; if everything were 16/26 the Training and Notes lists would feel heavy. Source Serif 4 is already loaded, so B and D add no download.</p>
+</section>
+
+</div>
+
+<script>
+const CONTENT = {
+  en: {
+    note: { title: 'Natural Spin Turn: head and frame', meta: 'Waltz · Standard · ★★★★ · 3 figures · video',
+      lead: 'What to fix first',
+      p1: 'Your head drops on step 4 and the frame goes with it. Keep the left side of the body long through the whole turn, and let the head turn <em>with</em> the frame, not ahead of it.',
+      listLead: 'Where it shows in the video',
+      items: ['<span class="ts">0:42</span> Natural Spin Turn, steps 1 to 3: the rise starts too early.', '<span class="ts">1:15</span> Pivot on step 4: <b>weight stays over the right foot</b>, the head follows the shoulders.', '<span class="ts">2:08</span> Closing to the Reverse Turn: the frame is steady, copy this one.'],
+      quote: 'Think of one long line from the left hip to the ear, and keep it long until step 6.',
+      p2: 'Practise it slowly at 24 beats per minute with the metronome, then add the Reverse Turn. See also <a href="#">Reverse Turn: closing the frame</a>.' },
+    fig: { title: 'Natural Spin Turn · technical remarks', meta: 'Waltz · Class M · Timing 1 2 3 / 1 2 3',
+      facts: [['Timing', '1 2 3'], ['Foot', 'RF forward'], ['Alignment', 'Step 1 facing DW'], ['Turn', '3/8 on steps 1 to 3']],
+      lead: 'Do not over-rotate step 3',
+      p1: 'The man turns on the heel of the right foot for steps 1 to 3 and then the lady steps between his feet. The common error is to finish the turn on step 3 and arrive on the wrong line.',
+      p2: 'Keep the shoulders level and let the <b>left foot brush</b> the right as the body turns, not as a separate action.',
+      rail: ['Step 3: toe, closing, weight over the right foot.', 'Contra body movement on step 1, no sway.'] },
+    cho: { title: 'Bronze Waltz, long wall opening', meta: 'Waltz · Standard · 6 figures',
+      lead: 'How the routine opens',
+      p1: 'Start in closed hold on the long wall. The first two bars are a Closed Change, then the Natural Turn travels along the wall and arrives in the corner on bar 5.',
+      items: ['Closed Change, long wall, 1 2 3', 'Natural Turn, long wall, 1 2 3 / 1 2 3', 'Turning Lock, corner, 1 2 3'],
+      quote: 'Count the corner aloud: bar 5, step 1 is where you turn.' },
+    cm: [{ who: 'Anna Kowalska', when: 'Coach · 2 days ago', text: 'The head drops again on <b>step 4</b>. Watch 1:15 once more: it looks like the weight moves early.', reply: false },
+         { who: 'Rafał', when: 'Yesterday', text: 'Thanks. I will drill it at 24 bpm and send a new clip on Friday.', reply: true }],
+    labels: { rail: 'Technique points', commentsTitle: 'Comments', desktop: 'Desktop layout', phone: '375px' }
+  },
+  pl: {
+    note: { title: 'Natural Spin Turn: głowa i rama', meta: 'Walc angielski · Standard · ★★★★ · 3 figury · wideo',
+      lead: 'Co poprawić najpierw',
+      p1: 'Głowa opada na kroku 4 i razem z nią rama. Utrzymaj lewy bok długi przez cały obrót, a głowa niech obraca się <em>razem</em> z ramą, nie przed nią.',
+      listLead: 'Gdzie widać to na nagraniu',
+      items: ['<span class="ts">0:42</span> Natural Spin Turn, kroki 1 do 3: wznios zaczyna się za wcześnie.', '<span class="ts">1:15</span> Pivot na kroku 4: <b>ciężar zostaje na prawej nodze</b>, głowa idzie za barkami.', '<span class="ts">2:08</span> Zamknięcie do Reverse Turn: rama jest stabilna, tak ma być.'],
+      quote: 'Wyobraź sobie jedną długą linię od lewego biodra do ucha i trzymaj ją do kroku 6.',
+      p2: 'Ćwicz powoli, 24 uderzenia na minutę z metronomem, potem dodaj Reverse Turn. Zobacz też <a href="#">Reverse Turn: zamykanie ramy</a>.' },
+    fig: { title: 'Natural Spin Turn · uwagi techniczne', meta: 'Walc angielski · Klasa M · Rytm 1 2 3 / 1 2 3',
+      facts: [['Rytm', '1 2 3'], ['Noga', 'PN do przodu'], ['Ustawienie', 'Krok 1 twarzą do DW'], ['Obrót', '3/8 na krokach 1 do 3']],
+      lead: 'Nie przekręcaj kroku 3',
+      p1: 'Partner obraca się na pięcie prawej nogi na krokach 1 do 3, a partnerka wchodzi między jego stopy. Najczęstszy błąd to skończenie obrotu już na kroku 3 i lądowanie na złej linii.',
+      p2: 'Trzymaj barki na jednym poziomie, a <b>lewa stopa muska</b> prawą w trakcie obrotu ciała, nie jako osobny ruch.',
+      rail: ['Krok 3: palce, zamknięcie, ciężar na prawej nodze.', 'Ruch przeciwstawny ciała na kroku 1, bez sway.'] },
+    cho: { title: 'Walc brąz, otwarcie na długiej ścianie', meta: 'Walc angielski · Standard · 6 figur',
+      lead: 'Jak zaczyna się układ',
+      p1: 'Zaczynasz w zamkniętym chwycie na długiej ścianie. Pierwsze dwa takty to Closed Change, potem Natural Turn jedzie wzdłuż ściany i w takcie 5 dociera do narożnika.',
+      items: ['Closed Change, długa ściana, 1 2 3', 'Natural Turn, długa ściana, 1 2 3 / 1 2 3', 'Turning Lock, narożnik, 1 2 3'],
+      quote: 'Policz narożnik na głos: takt 5, krok 1 to moment obrotu.' },
+    cm: [{ who: 'Anna Kowalska', when: 'Trener · 2 dni temu', text: 'Głowa znów opada na <b>kroku 4</b>. Obejrzyj jeszcze raz 1:15: wygląda, jakby ciężar przechodził za wcześnie.', reply: false },
+         { who: 'Rafał', when: 'Wczoraj', text: 'Dzięki. Przećwiczę to na 24 uderzeniach i wyślę nowe nagranie w piątek.', reply: true }],
+    labels: { rail: 'Punkty techniczne', commentsTitle: 'Komentarze', desktop: 'Desktop layout', phone: '375px' }
+  }
+};
+
+const DIRS = [
+  { id: 'A', name: 'A. Outlined card', pick: 'for short advice and remarks',
+    blurb: 'The “Recommendation” card used as it is, on every sample. Each piece of text is one outlined card with a coloured lead-in. Technique data sits in a small grey inset.',
+    spec: { 'Scale': 'Inter 14 / 21, title 15 / 600 in the accent', 'Measure': '76ch', 'Paragraph spacing': '8px inside the card', 'Lead-in': 'Accent colour, 14px, 600, first line of the card', 'List': 'Plain, 4px gap, no markers', 'Quote': 'Pale accent block, 12px radius', 'New tokens': 'None' },
+    cost: '<b>Trade-off:</b> compact and consistent with the figures mock, but a page of Note, remarks, description and comments becomes four bordered boxes. Long reading at 14px is the weakest point.' },
+  { id: 'B', name: 'B. Open serif column', pick: '',
+    blurb: 'No containers. Source Serif 4 at a book-like size, a small accent lead-in above each passage, and hairline rules between sections.',
+    spec: { 'Scale': 'Source Serif 4 17 / 28, title Inter 22 / 30 / 600', 'Measure': '62ch', 'Paragraph spacing': '14px', 'Lead-in': 'Inter 14 / 600 in the accent, above the text', 'List': 'Serif, 6px gap', 'Quote': 'Italic serif 18 / 29, 20px indent, no box', 'New tokens': 'Prose 17/28, measure 62ch' },
+    cost: '<b>Trade-off:</b> the best to read for a long time and the quietest. It is also the tallest (about 30% longer than C), and the serif sits next to an all-Inter UI, so it feels like a different product on pages that mix both.' },
+  { id: 'C', name: 'C. Sharp sans', pick: 'for long reading',
+    blurb: 'Inter at 16 / 26 with tight tracking, strong headings, a pale accent pull-quote for the key technique point, and numbered markers for lists. No containers, so it also works inside any existing page.',
+    spec: { 'Scale': 'Inter 16 / 26, lead-in 18 / 26 / 700, title 22 / 28 / 700', 'Measure': '66ch', 'Paragraph spacing': '14px', 'Lead-in': 'Ink, 18 / 700, a heading in its own right', 'List': 'Numbered accent badges, 8px gap', 'Quote': 'Pale accent block 17 / 26, 12px radius', 'New tokens': 'text-read, text-read-lead, text-read-title' },
+    cost: '<b>Trade-off:</b> sharp, scannable, calm and one font family. Less warm than B and gives no frame to short advice, which is where A is better.' },
+  { id: 'D', name: 'D. Inset panel with margin rail', pick: '',
+    blurb: 'A soft grey panel with serif text, and a margin rail that pulls the technique points (timing, foot, alignment, turn) out of the prose. On a phone the rail stacks under the text.',
+    spec: { 'Scale': 'Source Serif 4 16 / 27, rail Inter 13 / 19', 'Measure': 'about 60ch plus a 210px rail', 'Paragraph spacing': '12px', 'Lead-in': 'Inter 13 / 600 in the accent', 'List': 'Serif, 4px gap', 'Quote': 'Italic serif, no box', 'New tokens': 'Prose 16/27, rail width 210px' },
+    cost: '<b>Trade-off:</b> the best use of the domain data, because a figure’s timing, foot, alignment and turn stay visible next to the prose. It needs about 900px to work and gives nothing extra on a phone.' }
+];
+
+function li(items) { return '<ul>' + items.map(i => '<li>' + i + '</li>').join('') + '</ul>'; }
+function comments(c, dir) {
+  const initials = n => n.split(' ').map(w => w[0]).join('').slice(0, 2);
+  return '<div class="cmwrap">' + c.cm.map(m => {
+    const body = '<p>' + m.text + '</p>';
+    if (dir === 'C') return '<div class="cm' + (m.reply ? ' reply' : '') + '"><div class="av">' + initials(m.who) + '</div><div><span class="who">' + m.who + '</span> <span class="when">' + m.when + '</span></div><div>' + body + '</div></div>';
+    return '<div class="cm' + (m.reply ? ' reply' : '') + '"><div><span class="who">' + m.who + '</span> <span class="when">' + m.when + '</span></div>' + body + '</div>';
+  }).join('') + '</div>';
+}
+function facts(f) { return '<dl class="facts">' + f.map(x => '<dt>' + x[0] + '</dt><dd>' + x[1] + '</dd>').join('') + '</dl>'; }
+
+function samples(dir, c) {
+  const n = c.note, f = c.fig, ch = c.cho;
+  const hr = dir === 'B' ? '<hr class="hr">' : '';
+  const lead = t => '<div class="lead">' + t + '</div>';
+  let note, fig, cho, com;
+  if (dir === 'D') {
+    note = '<div class="box plain"><div class="main"><h4 class="title">' + n.title + '</h4><div class="meta">' + n.meta + '</div>' + lead(n.lead) + '<p>' + n.p1 + '</p>' + lead(n.listLead) + li(n.items) + '<blockquote class="quote">' + n.quote + '</blockquote><p>' + n.p2 + '</p></div></div>';
+    fig = '<div class="box hasrail"><div class="main"><h4 class="title">' + f.title + '</h4><div class="meta">' + f.meta + '</div>' + lead(f.lead) + '<p>' + f.p1 + '</p><p>' + f.p2 + '</p></div><aside class="rail"><h4>' + c.labels.rail + '</h4>' + facts(f.facts) + f.rail.map(r => '<p class="rq">' + r + '</p>').join('') + '</aside></div>';
+    cho = '<div class="box plain"><div class="main"><h4 class="title">' + ch.title + '</h4><div class="meta">' + ch.meta + '</div>' + lead(ch.lead) + '<p>' + ch.p1 + '</p>' + li(ch.items) + '<blockquote class="quote">' + ch.quote + '</blockquote></div></div>';
+    com = '<div class="main"><h4 class="title" style="font:600 16px/22px var(--font-sans)">' + c.labels.commentsTitle + '</h4>' + comments(c, dir) + '</div>';
+  } else {
+    const wrapOpen = '<div class="box">', wrapClose = '</div>';
+    note = wrapOpen + '<h4 class="title">' + n.title + '</h4><div class="meta">' + n.meta + '</div>' + hr + lead(n.lead) + '<p>' + n.p1 + '</p>' + lead(n.listLead) + li(n.items) + '<blockquote class="quote">' + n.quote + '</blockquote><p>' + n.p2 + '</p>' + wrapClose;
+    fig = wrapOpen + '<h4 class="title">' + f.title + '</h4><div class="meta">' + f.meta + '</div>' + facts(f.facts) + hr + lead(f.lead) + '<p>' + f.p1 + '</p><p>' + f.p2 + '</p>' + wrapClose;
+    cho = wrapOpen + '<h4 class="title">' + ch.title + '</h4><div class="meta">' + ch.meta + '</div>' + lead(ch.lead) + '<p>' + ch.p1 + '</p>' + li(ch.items) + '<blockquote class="quote">' + ch.quote + '</blockquote>' + wrapClose;
+    com = '<div class="box"><h4 class="title" style="font-size:16px">' + c.labels.commentsTitle + '</h4>' + comments(c, dir) + '</div>';
+  }
+  return '<div class="sample wide">' + note + '</div><div class="sample wide">' + fig + '</div><div class="sample">' + cho + '</div><div class="sample">' + com + '</div>';
+}
+
+function render(lang) {
+  const c = CONTENT[lang];
+  document.getElementById('dirs').innerHTML = DIRS.map(d => {
+    const spec = Object.entries(d.spec).map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('');
+    return '<section id="d' + d.id + '"><div><h2>' + d.name + (d.pick ? '<span class="pick">' + d.pick + '</span>' : '') + '</h2><p class="note" style="margin-top:6px">' + d.blurb + '</p></div>' +
+      '<dl class="spec">' + spec + '</dl>' +
+      '<div class="row rd d' + d.id + '"><div class="frame"><div class="frame-bar"><b>' + c.labels.desktop + '</b></div><div class="page">' + samples(d.id, c) + '</div></div>' +
+      '<div class="phonewrap"><div class="phone"><div class="page">' + samples(d.id, c) + '</div></div><p class="cap">' + c.labels.phone + '</p></div></div>' +
+      '<p class="cost">' + d.cost + '</p></section>';
+  }).join('');
+}
+render('en');
+document.querySelectorAll('button[data-lang]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('button[data-lang]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  render(b.dataset.lang);
+}));
+</script>
+</body>
+</html>
