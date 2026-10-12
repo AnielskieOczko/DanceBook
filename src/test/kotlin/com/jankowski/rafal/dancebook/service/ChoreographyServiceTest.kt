@@ -135,4 +135,14 @@ class ChoreographyServiceTest {
         assertEquals(MedalLevel.BRONZE, result.first().medalLevel)
         verify(choreographyRepository).findAll(any<Specification<Choreography>>(), any(Sort::class.java))
     }
+
+    @Test
+    fun `should count choreographies by owner`() {
+        `when`(choreographyRepository.countByOwner(currentUser)).thenReturn(4L)
+
+        val count = choreographyService.countByOwner(currentUser)
+
+        assertEquals(4L, count)
+        verify(choreographyRepository).countByOwner(currentUser)
+    }
 }

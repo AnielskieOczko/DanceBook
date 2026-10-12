@@ -3,12 +3,20 @@ package com.jankowski.rafal.dancebook.controller.web
 import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.dto.SessionCounts
+import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.dto.TrainingStats
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.AssistantNavSupport
+import com.jankowski.rafal.dancebook.service.ChoreographyService
 import com.jankowski.rafal.dancebook.service.CustomListService
+import com.jankowski.rafal.dancebook.service.DanceFigureService
+import com.jankowski.rafal.dancebook.service.MaterialService
 import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
+import com.jankowski.rafal.dancebook.service.TrainingStatsService
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -83,6 +91,11 @@ class AvatarDropdownWebTest {
     @MockitoBean private lateinit var assistantNavSupport: AssistantNavSupport
     @MockitoBean private lateinit var calendarSyncService: com.jankowski.rafal.dancebook.service.CalendarSyncService
     @MockitoBean private lateinit var activeCalendarService: com.jankowski.rafal.dancebook.service.ActiveCalendarService
+    @MockitoBean private lateinit var trainingStatsService: TrainingStatsService
+    @MockitoBean private lateinit var trainingCalendarService: TrainingCalendarService
+    @MockitoBean private lateinit var materialService: MaterialService
+    @MockitoBean private lateinit var choreographyService: ChoreographyService
+    @MockitoBean private lateinit var danceFigureService: DanceFigureService
 
     private lateinit var adminUser: AppUser
     private lateinit var regularUser: AppUser
@@ -107,9 +120,26 @@ class AvatarDropdownWebTest {
             locale = null
         }
 
+        val emptyStats = TrainingStats(
+            period = StatsPeriod.THIS_YEAR,
+            totalMinutesTrained = 0,
+            counts = SessionCounts(0, 0, 0, 0, 0),
+            attendanceRatePercent = null,
+            currentStreak = 0,
+            byCategory = emptyList(),
+            byEventType = emptyList()
+        )
+        `when`(trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_YEAR)).thenReturn(emptyStats)
+        `when`(trainingCalendarService.findAllVisibleTo(anyNonNull(adminUser))).thenReturn(emptyList())
+        `when`(activityEventService.getRecentEventsByActor(anyNonNull(adminUser), org.mockito.ArgumentMatchers.anyInt())).thenReturn(emptyList())
         `when`(customListService.findVisibleByCurrentUser()).thenReturn(emptyList())
         `when`(systemSettingService.getIntSetting("polling_interval_minutes", 5)).thenReturn(5)
         `when`(systemSettingService.getIntSetting("auto_logout_minutes", 10)).thenReturn(10)
+    }
+
+    private fun <T> anyNonNull(dummy: T): T {
+        org.mockito.Mockito.any<T>()
+        return dummy
     }
 
     @AfterEach

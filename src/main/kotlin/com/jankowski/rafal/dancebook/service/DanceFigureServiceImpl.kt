@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -257,5 +258,9 @@ class DanceFigureServiceImpl(
          eventPublisher.publishEvent(
              DanceFigureDeletedEvent(id, formattedName, currentUser)
          )
+     }
+
+     override fun countByCreatedBy(createdBy: AppUser): Long {
+         return danceFigureRepository.countByCreatedBy(createdBy)
      }
  }

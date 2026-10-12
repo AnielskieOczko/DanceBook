@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.repository
 
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -20,4 +21,6 @@ interface DanceFigureRepository : JpaRepository<DanceFigure, UUID>, JpaSpecifica
     /** Choreographies owned by someone other than [userId] that use the figure, private ones included. */
     @Query("SELECT COUNT(DISTINCT e.choreography.id) FROM ChoreographyEntry e WHERE e.danceFigure.id = :figureId AND e.choreography.owner.id <> :userId")
     fun countOtherUsersChoreographiesUsing(@Param("figureId") figureId: UUID, @Param("userId") userId: UUID): Long
+
+    fun countByCreatedBy(createdBy: AppUser): Long
 }

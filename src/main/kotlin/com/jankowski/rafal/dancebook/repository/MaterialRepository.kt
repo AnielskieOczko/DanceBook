@@ -24,4 +24,6 @@ interface MaterialRepository : JpaRepository<Material, UUID>, JpaSpecificationEx
      */
     @Query("SELECT m FROM Material m WHERE m.owner = :owner ORDER BY COALESCE(m.updatedAt, m.createdAt) DESC")
     fun findRecentByOwner(owner: AppUser, pageable: Pageable): List<Material>
+
+    fun countByOwner(owner: AppUser): Long
 }

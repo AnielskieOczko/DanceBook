@@ -79,7 +79,7 @@ class ProfileLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Ustawienia konta")))
-            .andExpect(content().string(containsString("Moje kolekcje")))
+            .andExpect(content().string(containsString("Kalendarze")))
             .andExpect(content().string(containsString("Zmień hasło")))
             .andExpect(content().string(containsString("Wyloguj się")))
             .andExpect(content().string(containsString("DanceBook")))
@@ -104,7 +104,7 @@ class ProfileLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Account Settings")))
-            .andExpect(content().string(containsString("My Collections")))
+            .andExpect(content().string(containsString("Calendars")))
             .andExpect(content().string(containsString("Update Password")))
             .andExpect(content().string(containsString("Log Out")))
             .andExpect(content().string(containsString("DanceBook")))
@@ -129,7 +129,7 @@ class ProfileLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Ustawienia konta")))
-            .andExpect(content().string(containsString("Moje kolekcje")))
+            .andExpect(content().string(containsString("Kalendarze")))
 
         mockMvc.perform(
             get("/profile")
@@ -138,7 +138,7 @@ class ProfileLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Account Settings")))
-            .andExpect(content().string(containsString("My Collections")))
+            .andExpect(content().string(containsString("Calendars")))
     }
 
     @Test

@@ -151,4 +151,10 @@ object ActivityEventSpecification {
             cb.not(cb.exists(readSubquery))
         }
     }
+
+    fun byActor(user: AppUser): Specification<ActivityEvent> {
+        return Specification { root, _, cb ->
+            cb.equal(root.get<AppUser>("actor").get<UUID>("id"), user.id)
+        }
+    }
 }

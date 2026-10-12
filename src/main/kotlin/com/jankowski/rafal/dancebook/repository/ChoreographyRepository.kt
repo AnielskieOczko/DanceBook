@@ -11,4 +11,5 @@ import java.util.UUID
 interface ChoreographyRepository : JpaRepository<Choreography, UUID>, JpaSpecificationExecutor<Choreography> {
 
     fun findAllByOwner(owner: AppUser): List<Choreography>
+    fun countByOwner(owner: AppUser): Long
 }

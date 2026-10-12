@@ -1,8 +1,21 @@
 package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.config.AppLocales
+import com.jankowski.rafal.dancebook.dto.FormSelectOption
 import com.jankowski.rafal.dancebook.dto.PasswordChangeRequest
+import com.jankowski.rafal.dancebook.dto.ProfileActivityItem
+import com.jankowski.rafal.dancebook.dto.StatsPeriod
+import com.jankowski.rafal.dancebook.model.ActivityEvent
+import com.jankowski.rafal.dancebook.model.EventType
+import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
+import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.ChoreographyService
+import com.jankowski.rafal.dancebook.service.DanceFigureService
+import com.jankowski.rafal.dancebook.service.MaterialService
+import com.jankowski.rafal.dancebook.service.TrainingCalendarService
+import com.jankowski.rafal.dancebook.service.TrainingStatsService
+import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
@@ -18,15 +31,23 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
-import com.jankowski.rafal.dancebook.dto.FormSelectOption
-import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import java.util.UUID
 
 @Controller
 @RequestMapping("/profile")
 @PreAuthorize("isAuthenticated()")
 class ProfileController(
     private val appUserService: AppUserService,
-    private val messageSource: MessageSource
+    private val messageSource: MessageSource,
+    private val trainingStatsService: TrainingStatsService,
+    private val trainingCalendarService: TrainingCalendarService,
+    private val materialService: MaterialService,
+    private val choreographyService: ChoreographyService,
+    private val danceFigureService: DanceFigureService,
+    private val activityEventService: ActivityEventService
 ) {
     @GetMapping
     fun showProfile(model: Model): String {
@@ -38,11 +59,63 @@ class ProfileController(
                 label = messageSource.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
             )
         }
+        val trainingStats = trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_YEAR)
+        val notesCount = materialService.countByOwner(user)
+        val choreographiesCount = choreographyService.countByOwner(user)
+        val figuresCount = danceFigureService.countByCreatedBy(user)
+        val calendars = trainingCalendarService.findAllVisibleTo(user)
+        val defaultCalendar = user.defaultCalendar ?: trainingCalendarService.findDefault(user)
+        val recentEvents = activityEventService.getRecentEventsByActor(user, 5).map { toProfileActivityItem(it, locale) }
+        val memberSince = user.createdAt.format(DateTimeFormatter.ofPattern("MMMM yyyy", locale))
+
         model.addAttribute("appUser", user)
         model.addAttribute("passwordChangeRequest", PasswordChangeRequest())
         model.addAttribute("languageOptions", AppLocales.options())
         model.addAttribute("badgeStyleOptions", badgeStyleOptions)
+        model.addAttribute("trainingStats", trainingStats)
+        model.addAttribute("notesCount", notesCount)
+        model.addAttribute("choreographiesCount", choreographiesCount)
+        model.addAttribute("figuresCount", figuresCount)
+        model.addAttribute("calendars", calendars)
+        model.addAttribute("defaultCalendar", defaultCalendar)
+        model.addAttribute("recentEvents", recentEvents)
+        model.addAttribute("memberSince", memberSince)
         return "profile/index"
+    }
+
+    @PostMapping("/default-calendar")
+    fun updateDefaultCalendar(
+        @RequestParam id: UUID,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val user = appUserService.getCurrentUser()
+        val locale = LocaleContextHolder.getLocale()
+        try {
+            val calendar = trainingCalendarService.findByIdVisibleTo(id, user)
+                ?: throw EntityNotFoundException("Training calendar with id $id not found")
+            trainingCalendarService.setDefault(id, user)
+            val successMsg = messageSource.getMessage(
+                "profile.settings.calendars.success",
+                arrayOf(calendar.displayName),
+                "\"${calendar.displayName}\" is now your default calendar.",
+                locale
+            )
+            redirectAttributes.addFlashAttribute("calendarSuccess", successMsg)
+        } catch (e: Exception) {
+            val errorMsg = messageSource.getMessage(
+                "profile.settings.calendars.error",
+                null,
+                e.message ?: "Failed to set default calendar",
+                locale
+            )
+            redirectAttributes.addFlashAttribute("calendarError", errorMsg)
+        }
+        if (request.getHeader("HX-Request") != null) {
+            response.setHeader("HX-Redirect", "/profile")
+        }
+        return "redirect:/profile"
     }
 
     @PostMapping("/badge-style", "/medal-badge-style")
@@ -140,6 +213,72 @@ class ProfileController(
         }
 
         return "profile/index :: passwordSection"
+    }
+
+    private fun toProfileActivityItem(event: ActivityEvent, locale: Locale): ProfileActivityItem {
+        val icon = when (event.eventType) {
+            EventType.MATERIAL_CREATED -> "description"
+            EventType.MATERIAL_UPDATED -> "edit"
+            EventType.MATERIAL_DELETED -> "delete"
+            EventType.MATERIAL_VISIBILITY_CHANGED -> "visibility"
+            EventType.COMMENT_ADDED -> "chat_bubble"
+            EventType.LIST_CREATED -> "layers"
+            EventType.LIST_MADE_PUBLIC -> "public"
+            EventType.MATERIAL_FIGURE_ADDED -> "playlist_add"
+            EventType.MATERIAL_FIGURE_UPDATED -> "playlist_add_check"
+            EventType.MATERIAL_FIGURE_DELETED -> "playlist_remove"
+            EventType.DANCE_FIGURE_CREATED -> "star"
+            EventType.DANCE_FIGURE_UPDATED -> "edit_note"
+            EventType.DANCE_FIGURE_DELETED -> "delete"
+            EventType.TRAINING_EVENT_CREATED -> "event_available"
+            EventType.TRAINING_EVENT_UPDATED -> "edit_calendar"
+            EventType.TRAINING_EVENT_DELETED -> "event_busy"
+            EventType.TRAINING_SERIES_CREATED -> "event_repeat"
+            EventType.TRAINING_SERIES_DELETED -> "event_busy"
+            EventType.TRAINING_BULK_ATTENDANCE_UPDATED -> "fact_check"
+            EventType.TRAINING_BULK_DELETED -> "event_busy"
+            EventType.TRAINING_BULK_UPDATED -> "edit_calendar"
+        }
+
+        val messageKey = when (event.eventType) {
+            EventType.MATERIAL_CREATED -> "profile.activity.material_created"
+            EventType.MATERIAL_UPDATED -> "profile.activity.material_updated"
+            EventType.MATERIAL_DELETED -> "profile.activity.material_deleted"
+            EventType.MATERIAL_VISIBILITY_CHANGED -> "profile.activity.visibility_changed"
+            EventType.COMMENT_ADDED -> "profile.activity.comment_added"
+            EventType.LIST_CREATED -> "profile.activity.list_created"
+            EventType.LIST_MADE_PUBLIC -> "profile.activity.list_shared"
+            EventType.MATERIAL_FIGURE_ADDED -> "profile.activity.figure_added"
+            EventType.MATERIAL_FIGURE_UPDATED -> "profile.activity.figure_updated"
+            EventType.MATERIAL_FIGURE_DELETED -> "profile.activity.figure_deleted"
+            EventType.DANCE_FIGURE_CREATED -> "profile.activity.dance_figure_created"
+            EventType.DANCE_FIGURE_UPDATED -> "profile.activity.dance_figure_updated"
+            EventType.DANCE_FIGURE_DELETED -> "profile.activity.dance_figure_deleted"
+            EventType.TRAINING_EVENT_CREATED -> "profile.activity.training_created"
+            EventType.TRAINING_EVENT_UPDATED -> "profile.activity.training_updated"
+            EventType.TRAINING_EVENT_DELETED -> "profile.activity.training_deleted"
+            EventType.TRAINING_SERIES_CREATED -> "profile.activity.training_series_created"
+            EventType.TRAINING_SERIES_DELETED -> "profile.activity.training_series_deleted"
+            EventType.TRAINING_BULK_ATTENDANCE_UPDATED -> "profile.activity.bulk_attendance"
+            EventType.TRAINING_BULK_DELETED -> "profile.activity.bulk_deleted"
+            EventType.TRAINING_BULK_UPDATED -> "profile.activity.bulk_updated"
+        }
+
+        val actionText = messageSource.getMessage(messageKey, null, event.eventType.name, locale) ?: event.eventType.name
+        val createdAt = event.createdAt
+        val dateLabel = if (createdAt.toLocalDate() == LocalDate.now()) {
+            messageSource.getMessage("training.today", null, "Today", locale) ?: "Today"
+        } else {
+            DateTimeFormatter.ofPattern("d MMM", locale).format(createdAt)
+        }
+
+        return ProfileActivityItem(
+            icon = icon,
+            actionText = actionText,
+            targetName = event.targetName,
+            dateLabel = dateLabel,
+            createdAt = createdAt
+        )
     }
 
     private fun sanitizeRedirect(redirect: String?): String {
