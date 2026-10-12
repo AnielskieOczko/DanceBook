@@ -184,8 +184,7 @@ class ProfileAssistantPreferencesWebTest {
     }
 
     @Test
-    fun `when assistant is off dependent rows are disabled with reason`() {
-        // Save assistantEnabled = false
+    fun `when assistant is off the other rows and the save button stay usable`() {
         mockMvc.perform(
             post("/profile/assistant-preferences")
                 .with(asUser())
@@ -198,25 +197,68 @@ class ProfileAssistantPreferencesWebTest {
         val result = mockMvc.perform(get("/profile").with(asUser()))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Assistant off")))
-            .andExpect(content().string(containsString("Disabled: Assistant is off.")))
             .andReturn()
 
         val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
         val section = doc.selectFirst("#assistant-section")
         org.junit.jupiter.api.Assertions.assertNotNull(section)
 
-        // Assistant on input is not disabled (user can turn it back on)
         val asstInput = section!!.selectFirst("input[name=assistantEnabled]")
         org.junit.jupiter.api.Assertions.assertNotNull(asstInput)
         assertFalse(asstInput!!.hasAttr("disabled"))
         assertFalse(asstInput.hasAttr("checked"))
 
-        // Dependent inputs are disabled
-        val semInput = section.selectFirst("input[name=semanticSearchEnabled]")
-        assertTrue(semInput!!.hasAttr("disabled"))
-        val fullWindowInput = section.selectFirst("input[name=openInFullWindow]")
-        assertTrue(fullWindowInput!!.hasAttr("disabled"))
-        val selectLang = section.selectFirst("select[name=replyLanguage]")
-        assertTrue(selectLang!!.hasAttr("disabled"))
+        // A disabled checkbox is not submitted while its hidden marker is, so disabling the other rows would
+        // switch their saved choices off when the assistant is turned back on. They must stay enabled.
+        for (name in listOf("semanticSearchEnabled", "relatedNotesEnabled", "suggestFiguresEnabled", "openInFullWindow")) {
+            assertFalse(section.selectFirst("input[name=$name]")!!.hasAttr("disabled"), name)
+        }
+        assertFalse(section.selectFirst("select[name=replyLanguage]")!!.hasAttr("disabled"))
+
+        // With the assistant off the user must still be able to save, or they could never turn it on again.
+        assertFalse(section.selectFirst("button[type=submit]")!!.hasAttr("disabled"))
+    }
+
+    @Test
+    fun `the assistant row uses no inline event handlers because the content security policy blocks them`() {
+        val result = mockMvc.perform(get("/profile").with(asUser()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val section = org.jsoup.Jsoup.parse(result.response.contentAsString).selectFirst("#assistant-section")
+        org.junit.jupiter.api.Assertions.assertNotNull(section)
+        val withHandler = section!!.getAllElements().filter { el -> el.attributes().any { it.key.startsWith("on") } }
+        assertTrue(withHandler.isEmpty(), "inline handlers: " + withHandler.map { it.tagName() })
+    }
+
+    @Test
+    fun `turning the assistant back on keeps the other saved choices`() {
+        mockMvc.perform(
+            post("/profile/assistant-preferences")
+                .with(asUser()).with(csrf())
+                .param("assistantEnabled", "false").param("_assistantEnabled", "on")
+                .param("_semanticSearchEnabled", "on")
+                .param("relatedNotesEnabled", "true").param("_relatedNotesEnabled", "on")
+                .param("suggestFiguresEnabled", "true").param("_suggestFiguresEnabled", "on")
+                .param("_openInFullWindow", "on")
+        ).andExpect(status().is3xxRedirection)
+        assertFalse(preferencesRepository.findById(testUser.id!!).get().semanticSearchEnabled)
+
+        // The browser submits exactly what the page shows: semantic search unchecked, the others as saved.
+        mockMvc.perform(
+            post("/profile/assistant-preferences")
+                .with(asUser()).with(csrf())
+                .param("assistantEnabled", "true").param("_assistantEnabled", "on")
+                .param("_semanticSearchEnabled", "on")
+                .param("relatedNotesEnabled", "true").param("_relatedNotesEnabled", "on")
+                .param("suggestFiguresEnabled", "true").param("_suggestFiguresEnabled", "on")
+                .param("_openInFullWindow", "on")
+        ).andExpect(status().is3xxRedirection)
+
+        val saved = preferencesRepository.findById(testUser.id!!).get()
+        assertTrue(saved.assistantEnabled)
+        assertFalse(saved.semanticSearchEnabled)
+        assertTrue(saved.relatedNotesEnabled)
+        assertTrue(saved.suggestFiguresEnabled)
     }
 }
