@@ -44,13 +44,17 @@
     });
 
     function openSurface() {
-        if (!surface.open) {
+        const opening = !surface.open;
+        if (opening) {
             // Desktop: a side panel the page stays usable next to. Phone: a full-height modal sheet.
             if (wide.matches) surface.show(); else surface.showModal();
         }
         if (firstOpen) {
             firstOpen = false;
             thread.dispatchEvent(new CustomEvent('assistant-open'));
+        }
+        if (opening && surface.getAttribute('data-full-window') === 'true' && wide.matches) {
+            expand();
         }
         syncBar();
         composerInput.focus();

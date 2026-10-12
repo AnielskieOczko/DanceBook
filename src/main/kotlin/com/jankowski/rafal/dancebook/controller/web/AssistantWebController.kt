@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
+import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
+import org.springframework.web.bind.annotation.ModelAttribute
+
 /**
  * The assistant's HTMX endpoints. They exist only when a chat model is configured, so without
  * one every path here is a 404. Each returns a fragment; there is no full-page assistant.
@@ -33,8 +37,18 @@ import java.util.UUID
 class AssistantWebController(
     private val assistantService: AssistantService,
     private val conversationService: AssistantConversationService,
-    private val draftService: AssistantDraftService
+    private val draftService: AssistantDraftService,
+    private val appUserService: AppUserService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) {
+
+    @ModelAttribute
+    fun checkAssistantEnabled() {
+        val user = appUserService.getCurrentUserOrNull()
+        if (user != null && assistantPreferencesService?.forUser(user)?.assistantEnabled == false) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+    }
 
     @GetMapping("/start")
     fun start(

@@ -263,17 +263,160 @@
                 </details>
 
                 <!-- 5. Assistant Row -->
-                <details class="group opacity-70">
+                <details th:fragment="assistantSection" id="assistant-section"
+                         th:open="${assistantOpen == true or assistantSuccessMsg != null or assistantErrorMsg != null}"
+                         class="group"
+                         th:classappend="${!assistantFeatureEnabled} ? 'opacity-70' : ''">
                     <summary class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 cursor-pointer hover:bg-surface-container list-none select-none [&::-webkit-details-marker]:hidden">
                         <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary shrink-0')}"></span>
                         <span class="flex-1 min-w-0">
                             <b class="block text-[15px] font-semibold text-on-surface" th:text="#{profile.settings.assistant}">Assistant</b>
-                            <small class="block text-xs text-on-surface-variant break-words" th:text="#{profile.settings.assistant.desc}">Preferences coming soon</small>
+                            <small class="block text-xs text-on-surface-variant break-words"
+                                   th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.not_configured') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.summary.off') : #messages.msg('profile.assistant.summary.configured'))}">Preferences configured</small>
                         </span>
                         <span th:replace="~{fragments/icon :: icon(name='expand_more', size='md', cls='text-outline group-open:rotate-180 transition-transform duration-150 shrink-0')}"></span>
                     </summary>
-                    <div class="px-4.5 pb-5 pt-1.5 sm:pl-13 text-xs text-on-surface-variant">
-                        <p class="break-words" th:text="#{profile.settings.assistant.desc}">Preferences coming soon</p>
+                    <div class="px-4.5 pb-5 pt-1.5 sm:pl-13 ed-form space-y-4">
+                        <th:block th:if="${assistantSuccessMsg}">
+                            <div th:replace="~{fragments/alert :: alert(variant='success', text=#{profile.assistant.saved})}"></div>
+                        </th:block>
+                        <th:block th:if="${assistantErrorMsg}">
+                            <div th:replace="~{fragments/alert :: alert(variant='error', text=#{profile.assistant.invalid})}"></div>
+                        </th:block>
+
+                        <th:block th:if="${!assistantFeatureEnabled}">
+                            <p id="assistantNotConfiguredMsg" class="text-xs text-on-surface-variant break-words" th:text="#{profile.assistant.not_configured}">The assistant isn't set up on this server.</p>
+                        </th:block>
+
+                        <form id="assistantPreferencesForm"
+                              th:action="@{/profile/assistant-preferences}"
+                              th:hx-post="@{/profile/assistant-preferences}"
+                              hx-target="#assistant-section"
+                              hx-swap="outerHTML"
+                              method="post"
+                              class="space-y-4">
+
+                            <!-- Row 1: Assistant on -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.enabled}">Assistant on</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : #messages.msg('profile.assistant.enabled.desc')}">Enable assistant panel, routes and features.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_assistantEnabled" value="on"/>
+                                    <input type="checkbox" name="assistantEnabled" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.assistantEnabled}"
+                                           th:disabled="${!assistantFeatureEnabled}"
+                                           onchange="this.form.requestSubmit()"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
+                            <!-- Row 2: Semantic search -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.semantic_search}">Semantic search</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.disabled_because_off') : #messages.msg('profile.assistant.semantic_search.desc'))}">Include meaning-based results in standard search.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_semanticSearchEnabled" value="on"/>
+                                    <input type="checkbox" name="semanticSearchEnabled" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.semanticSearchEnabled}"
+                                           th:disabled="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}"
+                                           onchange="this.form.requestSubmit()"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
+                            <!-- Row 3: Related notes -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.related_notes}">Related notes</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.disabled_because_off') : #messages.msg('profile.assistant.related_notes.desc'))}">Show related notes on note and figure pages.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_relatedNotesEnabled" value="on"/>
+                                    <input type="checkbox" name="relatedNotesEnabled" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.relatedNotesEnabled}"
+                                           th:disabled="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}"
+                                           onchange="this.form.requestSubmit()"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
+                            <!-- Row 4: Suggest figures -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.suggest_figures}">Suggest figures</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.disabled_because_off') : #messages.msg('profile.assistant.suggest_figures.desc'))}">Suggest figures from note text when pinning.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_suggestFiguresEnabled" value="on"/>
+                                    <input type="checkbox" name="suggestFiguresEnabled" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.suggestFiguresEnabled}"
+                                           th:disabled="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}"
+                                           onchange="this.form.requestSubmit()"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
+                            <!-- Row 5: Open in full window -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.open_in_full_window}">Open in full window</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.disabled_because_off') : #messages.msg('profile.assistant.open_in_full_window.desc'))}">Open the assistant expanded instead of as a side panel by default.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_openInFullWindow" value="on"/>
+                                    <input type="checkbox" name="openInFullWindow" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.openInFullWindow}"
+                                           th:disabled="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}"
+                                           onchange="this.form.requestSubmit()"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
+                            <!-- Row 6: Reply language -->
+                            <div class="py-2 space-y-2">
+                                <div>
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.reply_language}">Assistant reply language</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : (assistantPreferences != null and !assistantPreferences.assistantEnabled ? #messages.msg('profile.assistant.disabled_because_off') : #messages.msg('profile.assistant.reply_language.desc'))}">Choose which language the assistant writes in.</small>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                                    <div>
+                                        <div th:replace="~{fragments/form :: selectField(
+                                            path='replyLanguage',
+                                            id='assistantReplyLanguageSelect',
+                                            label=null,
+                                            bound=false,
+                                            value=${assistantPreferences != null ? assistantPreferences.replyLanguage.name() : 'APP'},
+                                            options=${replyLanguageOptions},
+                                            optValue='value',
+                                            optLabel='label',
+                                            disabled=${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}
+                                        )}"></div>
+                                    </div>
+                                    <div class="flex justify-start sm:justify-end">
+                                        <button type="submit"
+                                                th:disabled="${!assistantFeatureEnabled or (assistantPreferences != null and !assistantPreferences.assistantEnabled)}"
+                                                class="btn-primary btn-sm"
+                                                th:text="#{profile.assistant.save}">Save Preferences</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
                     </div>
                 </details>
 
