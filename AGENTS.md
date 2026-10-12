@@ -1111,6 +1111,33 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   as a figure's steps or a note's comments, is not loaded; add it there if a consumer needs it.
   Semantic
   matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
+- **Semantic results in Notes and Figures search (#233, #234).** `HybridSearchService.search`
+  returns hits flagged `KEYWORD`, `SEMANTIC` or `BOTH`. The list pages (`MaterialWebController.listMaterials`,
+  `DanceFigureWebController`) call it only when there is a name search, show their own keyword list
+  exactly as before, and add an "Also related · N" group below it made only of the `SEMANTIC`-only
+  hits. Everything else about the group is a rule:
+  - **The controllers only call; the rules live in `SemanticSearchFilterHelper`** (a `@Component` next
+    to the search service). It drops hits already in the keyword list, applies the active filters
+    (style, category, rating floor; class, medal level and steps for figures) so a related item never
+    shows past a filter that hides keyword results, and sorts inside the group. Test any change
+    there in `SemanticSearchFilterHelperTest`.
+  - **Failure means keyword only, silently.** If the hybrid search throws, or embeddings are
+    unavailable or rate limited, the page renders today's list with no banner and no empty group. A
+    search with nothing in either list shows plain guidance ("Try fewer words or check the style
+    filter"); never say that nothing was found *by meaning*, because when embeddings are off the
+    semantic search did not run.
+  - **One source per row.** `materialGridCard`, `materialMobileCard`, `materialTableRow` (and the
+    `figure…` equivalents) take `isRelated`, which adds the tint (`table-row-related`,
+    `card-related`) and the "Related" chip beside the title. The chip is in the title cell, not a new
+    column, so the table headers stay frozen. The frozen ids `#materials-grid` and `#figures-grid`
+    are unchanged.
+  - **Counts read label first in Polish** (`Wyniki: 2, powiązane: 3 dla „…”`), per the plural rule
+    above, one message per case with no separate mobile variants.
+  - **Each name search also spends embedding budget** (one hybrid search per request, with the
+    existing per-user limit), and the per-user "Semantic search" preference (#309) turns it off.
+  - **Relevance is not tuned yet.** The related group can show weak matches; the cutoff
+    (`google.ai.semantic-search-max-distance`) and the cap of 5 are being evaluated in #331. Don't
+    paper over it in the templates.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.
