@@ -316,6 +316,11 @@ layer(base);
            transition-all duration-300;
 }
 
+@utility card-related {
+  background-color: color-mix(in srgb, var(--color-primary-soft) 55%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-outline-variant));
+}
+
 @utility comment-card {
   /* ── Comment Card ────────────────────────────── */
   @apply flex-1 min-w-0 bg-surface border border-outline-variant p-3 sm:px-5 sm:py-3.5;
@@ -370,6 +375,10 @@ layer(base);
 
 @utility badge-warning {
   @apply badge bg-warning/10 text-warning border border-warning/20;
+}
+
+@utility badge-related {
+  @apply badge bg-primary-soft text-primary border-0 rounded-pill text-xs font-semibold px-2.5 py-0.5;
 }
 
 @utility stat-card {
@@ -663,6 +672,13 @@ layer(base);
 
 @utility table-row {
   @apply bg-surface border-b border-outline-variant hover:bg-surface-container/50 transition-colors;
+}
+
+@utility table-row-related {
+  background-color: color-mix(in srgb, var(--color-primary-soft) 55%, var(--color-surface));
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-primary-soft) 75%, var(--color-surface));
+  }
 }
 
 @utility divider {

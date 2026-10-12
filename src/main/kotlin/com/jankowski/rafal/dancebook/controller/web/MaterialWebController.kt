@@ -51,7 +51,9 @@ class MaterialWebController(
     private val noteRewriteService: NoteRewriteService,
     private val figureSuggestionService: FigureSuggestionService,
     private val trainingEventService: TrainingEventService,
-    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null
+    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
+    private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
+    private val semanticSearchFilterHelper: com.jankowski.rafal.dancebook.service.SemanticSearchFilterHelper? = null
 ) {
 
     /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
@@ -84,9 +86,41 @@ class MaterialWebController(
             nameSearch = nameSearch,
             pageable = pageable
         )
-        val materialIds = materialsPage.content.mapNotNull { it.id }
-        val figureCounts = if (materialIds.isEmpty()) emptyMap() else materialService.findFigureCounts(materialIds)
+
+        val candidateNotes = if (!nameSearch.isNullOrBlank() && hybridSearchService != null) {
+            try {
+                val singleDanceTypeId = if (typeIds?.size == 1) typeIds.first() else null
+                hybridSearchService.search(nameSearch, singleDanceTypeId)
+                    .filter { it.type == com.jankowski.rafal.dancebook.service.SearchHitType.NOTE && it.match == com.jankowski.rafal.dancebook.service.SearchMatch.SEMANTIC }
+                    .mapNotNull { it.note }
+            } catch (e: Exception) {
+                log.warn("Semantic search unavailable: {}", e.message)
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+
+        val currentSort = pageable.sort.map { "${it.property},${it.direction.name.lowercase()}" }.firstOrNull() ?: "createdAt,desc"
+
+        val relatedMaterials = if (candidateNotes.isNotEmpty() && semanticSearchFilterHelper != null) {
+            semanticSearchFilterHelper.filterAndSortNotes(
+                notes = candidateNotes,
+                typeIds = typeIds,
+                categoryIds = categoryIds,
+                minRating = minRating,
+                sort = currentSort,
+                excludeIds = materialsPage.content.mapNotNull { it.id }.toSet()
+            )
+        } else {
+            emptyList()
+        }
+
+        val allMaterialIds = (materialsPage.content.mapNotNull { it.id } + relatedMaterials.mapNotNull { it.id }).distinct()
+        val figureCounts = if (allMaterialIds.isEmpty()) emptyMap() else materialService.findFigureCounts(allMaterialIds)
+
         model.addAttribute("materials", materialsPage.content)
+        model.addAttribute("relatedMaterials", relatedMaterials)
         model.addAttribute("figureCounts", figureCounts)
         // Optimisation: We only need to fetch dropdown choices if we are rendering the full page.
         // HTMX requests only swap the table fragment, which doesn't contain the dropdowns!
@@ -94,8 +128,6 @@ class MaterialWebController(
             model.addAttribute("danceTypes", danceTypeService.findAll())
             model.addAttribute("danceCategories", danceCategoryService.findAll())
         }
-        
-        val currentSort = pageable.sort.map { "${it.property},${it.direction.name.lowercase()}" }.firstOrNull() ?: "createdAt,desc"
 
         model.addAttribute("selectedTypeIds", typeIds ?: emptyList<UUID>())
         model.addAttribute("selectedCategoryIds", categoryIds ?: emptyList<UUID>())
