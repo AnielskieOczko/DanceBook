@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Semantic Search Results</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Mock for issue #219 (epic #203). Three directions for showing semantic ("found by meaning") results in the Notes and
+   Figures lists, plus the empty state and the embeddings-unavailable fallback for each.
+   Tokens are copied from src/main/resources/frontend/input.css (light only, as in the app); radius follows the approved
+   rounded-forms mock (#214): pill for single-line controls, 16px cards, 24px multi-line surfaces.
+   The backend (#233) returns, per result, only an origin flag: keyword, semantic or both. Nothing in these mocks needs more,
+   except where a direction says so. */
+:root {
+  --surface: #ffffff; --surface-container: #f5f5f3; --surface-highest: #e3e3e0; --outline: #8e9199; --outline-variant: #e3e3e0;
+  --on-surface: #16181a; --on-surface-variant: #5b6067;
+  --primary: #1f4b4a; --primary-hover: #163736; --primary-soft: #e9eded; --on-primary: #fff;
+  --warn: #8a5a00; --warn-soft: #fbf1dc;
+  --ring: color-mix(in srgb, var(--primary) 22%, transparent);
+  --r-pill: 9999px; --r-field: 1.5rem; --r-card: 1rem; --r-inset: .75rem;
+  --font-sans: 'Inter', system-ui, sans-serif; --font-prose: 'Source Serif 4', Georgia, serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { background: var(--surface); color: var(--on-surface); font-family: var(--font-sans); font-size: 14px; line-height: 1.5; margin: 0; padding: 32px 16px 96px; }
+.wrap { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1 { font-size: 30px; line-height: 36px; letter-spacing: -.02em; margin: 0 0 8px; font-weight: 600; }
+h2 { font-size: 22px; line-height: 28px; margin: 0; font-weight: 600; }
+h3 { font-size: 13px; font-weight: 600; margin: 0 0 8px; color: var(--on-surface-variant); }
+p { margin: 0; }
+.lede { max-width: 70ch; color: var(--on-surface-variant); font-size: 16px; line-height: 26px; }
+.note { font-size: 13px; color: var(--on-surface-variant); max-width: 72ch; }
+section { display: flex; flex-direction: column; gap: 20px; border-top: 1px solid var(--outline-variant); padding-top: 24px; }
+.pick { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary); margin-left: 8px; vertical-align: middle; }
+.grid2 { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); align-items: start; }
+.table-scroll { overflow-x: auto; }
+table.cmp { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 640px; }
+.cmp th, .cmp td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--outline-variant); vertical-align: top; }
+.cmp th { font-weight: 600; color: var(--on-surface-variant); }
+.ico { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- app frame ---------- */
+.frame { border: 1px solid var(--outline-variant); border-radius: var(--r-card); background: var(--surface); overflow: hidden; }
+.frame-bar { display: flex; gap: 6px; padding: 8px 12px; background: var(--surface-container); border-bottom: 1px solid var(--outline-variant); font-size: 12px; color: var(--on-surface-variant); align-items: center; }
+.frame-bar b { color: var(--on-surface); }
+.page { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.page-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.page-h h4 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+.btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 18px; border-radius: var(--r-pill); border: 1px solid transparent; background: var(--primary); color: var(--on-primary); font: 600 14px var(--font-sans); }
+.search { position: relative; }
+.search .ico { position: absolute; left: 16px; top: 50%; translate: 0 -50%; color: var(--on-surface-variant); width: 18px; height: 18px; }
+.search input { width: 100%; min-height: 44px; padding: 0 20px 0 44px; border-radius: var(--r-pill); border: 1px solid var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--ring); font: 400 14px var(--font-sans); color: var(--on-surface); }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: var(--r-pill); border: 1px solid var(--outline); font-size: 13px; color: var(--on-surface-variant); background: var(--surface); }
+.chip.on { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); font-weight: 600; }
+.count { font-size: 13px; color: var(--on-surface-variant); }
+
+/* ---------- list table ---------- */
+.dt { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dt th { text-align: left; font-weight: 600; color: var(--on-surface-variant); padding: 8px 12px; border-bottom: 1px solid var(--outline); white-space: nowrap; background: var(--surface); }
+.dt td { padding: 10px 12px; border-bottom: 1px solid var(--outline-variant); vertical-align: middle; }
+.dt td.name { font-weight: 600; min-width: 220px; }
+.dt tr.sem td { background: color-mix(in srgb, var(--primary-soft) 55%, var(--surface)); }
+.cls { display: inline-flex; min-width: 22px; justify-content: center; padding: 0 6px; border-radius: var(--r-pill); background: var(--surface-container); font-weight: 600; font-size: 12px; }
+
+/* ---------- match chips ---------- */
+.m { display: inline-flex; align-items: center; gap: 4px; min-height: 22px; padding: 0 10px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.m.kw { background: var(--surface-container); color: var(--on-surface); }
+.m.sem { background: var(--primary-soft); color: var(--primary); }
+.m.both { background: var(--primary); color: var(--on-primary); }
+mark { background: color-mix(in srgb, var(--primary) 16%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
+
+/* ---------- group divider (direction 1) ---------- */
+.divider { display: flex; gap: 12px; align-items: flex-start; padding: 14px 4px 6px; }
+.divider .ico { width: 20px; height: 20px; color: var(--primary); margin-top: 2px; }
+.divider b { font-size: 15px; display: block; }
+.divider small { color: var(--on-surface-variant); font-size: 13px; }
+
+/* ---------- segmented toggle (direction 3) ---------- */
+.seg { display: inline-flex; padding: 3px; border-radius: var(--r-pill); background: var(--surface-container); border: 1px solid var(--outline-variant); }
+.seg button { border: 0; min-height: 34px; padding: 0 16px; border-radius: var(--r-pill); background: transparent; font: 600 13px var(--font-sans); color: var(--on-surface-variant); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px rgba(22,24,26,.14); }
+.seg button .n { font-weight: 500; opacity: .8; }
+.seg button:focus-visible { outline: 3px solid var(--ring); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* ---------- state banners / empty ---------- */
+.banner { display: flex; gap: 10px; align-items: flex-start; padding: 10px 16px; border-radius: var(--r-card); background: var(--warn-soft); color: var(--warn); font-size: 13px; }
+.banner .ico { margin-top: 2px; }
+.empty { text-align: center; padding: 28px 16px; border: 1px dashed var(--outline); border-radius: var(--r-card); display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.empty b { font-size: 15px; }
+.empty span { color: var(--on-surface-variant); font-size: 13px; max-width: 46ch; }
+.empty .btn.ghost { background: transparent; color: var(--primary); border-color: var(--primary); min-height: 36px; margin-top: 6px; }
+
+/* ---------- phone ---------- */
+.phone { width: 375px; max-width: 100%; border: 1px solid var(--outline); border-radius: 28px; overflow: hidden; background: var(--surface); }
+.phone .page { padding: 14px; gap: 10px; }
+.card { border: 1px solid var(--outline-variant); border-radius: var(--r-card); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; background: var(--surface); }
+.card.sem { background: color-mix(in srgb, var(--primary-soft) 55%, var(--surface)); border-color: color-mix(in srgb, var(--primary) 30%, var(--outline-variant)); }
+.card .t { font-weight: 600; font-size: 14px; }
+.card .meta { font-size: 12px; color: var(--on-surface-variant); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.phones { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.cap { font-size: 12px; color: var(--on-surface-variant); margin-top: 6px; max-width: 375px; }
+.spec { font-size: 13px; display: grid; gap: 4px; margin: 0; padding-left: 18px; max-width: 80ch; }
+.cost { border-left: 3px solid var(--outline); padding: 2px 0 2px 12px; font-size: 13px; color: var(--on-surface-variant); max-width: 74ch; }
+.cost b { color: var(--on-surface); }
+.dirhead { display: flex; flex-direction: column; gap: 6px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17.5v.01"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+<div class="wrap">
+
+<header class="dirhead">
+  <h1>Semantic results in standard search</h1>
+  <p class="lede">Issue #219, epic #203. Notes and Figures search today matches keywords only. The backend from #233 adds items found <em>by meaning</em>
+  and flags each result as keyword, semantic or both. Three ways to show that, each drawn for Notes and Figures at desktop and 375px, with the empty state
+  and the fallback when embeddings are unavailable. Query used throughout: <b>“head dropping”</b>, which a good Note may word as “keep the left side long”.</p>
+  <p class="note">Every list keeps the columns it has today (Notes: Title, Style, Category, Rating, Figures, Media, Created; Figures: Name, Style, Class, Steps, Source), so a related result is as informative as a keyword hit. Wording says “Note”, never “Material”.</p>
+</header>
+
+<section>
+  <h2>At a glance</h2>
+  <div class="table-scroll">
+  <table class="cmp">
+    <thead><tr><th></th><th>1. Also related section</th><th>2. One blended list</th><th>3. Keyword / Smart toggle</th></tr></thead>
+    <tbody>
+      <tr><th>Idea</th><td>Keyword hits first, untouched. A second group below: “Also related”.</td><td>One list ranked by the backend. A “Match” chip says why each row is there.</td><td>Two views of the same search. Keyword is today’s behaviour; Smart adds meaning.</td></tr>
+      <tr><th>Keyword trust</th><td>Highest. Exact hits can never be pushed down by a vague one.</td><td>Depends on the ranking. An exact figure name must still win (RAG spec).</td><td>Highest in Keyword view; Smart view is the blended one.</td></tr>
+      <tr><th>Discoverability</th><td>Visible without any choice. Reads as “and more”.</td><td>Visible, but mixed in.</td><td>Hidden until the user switches. Counts on the toggle hint at it.</td></tr>
+      <tr><th>Sorting by a column</th><td>Sort applies to each group separately.</td><td>Sorting by a column loses the relevance order; the chip stays.</td><td>Keyword view sorts as today. Smart view is relevance only.</td></tr>
+      <tr><th>Data needed</th><td>Origin flag only.</td><td>Origin flag only.</td><td>Origin flag and two counts.</td></tr>
+      <tr><th>Fits #234 as written</th><td>Yes, one extra htmx block.</td><td>Yes, one column.</td><td>Needs a new control and a second request on toggle.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note"><b>Recommendation: direction 1.</b> It never reorders what the user already trusts, it needs the least backend, and the group heading explains itself, so there is nothing to learn. Direction 2 is the close second if you prefer a single list.</p>
+</section>
+
+<!-- =========================== DIRECTION 1 =========================== -->
+<section id="d1">
+  <div class="dirhead"><h2>1. “Also related” section <span class="pick">recommended</span></h2>
+  <p class="note">Keyword results stay exactly as today. Below them a quieter group lists items found by meaning. The group has its own heading and count, and its rows carry a short “Related” chip so a row copied elsewhere still says why it was there. Related rows are tinted, not hidden or truncated: all columns stay.</p></div>
+
+  <div class="frame"><div class="frame-bar"><b>Notes</b> · desktop 1280px</div>
+    <div class="page">
+      <div class="page-h"><h4>Notes</h4><span class="btn"><svg class="ico"><use href="#i-plus"/></svg>New Note</span></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" aria-label="Search" readonly></div>
+      <div class="filters"><span class="chip on">All styles</span><span class="chip">Waltz</span><span class="chip">Tango</span><span class="chip">Quickstep</span><span class="chip">Rating: any</span></div>
+      <p class="count">2 results · 3 related for “head dropping”</p>
+      <div class="table-scroll"><table class="dt" id="d1-notes-kw"></table></div>
+      <div class="divider"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 3</b><small>Found by meaning, not by the exact words you typed.</small></div></div>
+      <div class="table-scroll"><table class="dt" id="d1-notes-sem"></table></div>
+    </div>
+  </div>
+
+  <div class="frame"><div class="frame-bar"><b>Figures</b> · desktop 1280px</div>
+    <div class="page">
+      <div class="page-h"><h4>Figures</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" aria-label="Search" readonly></div>
+      <p class="count">1 result · 3 related for “head dropping”</p>
+      <div class="table-scroll"><table class="dt" id="d1-fig-kw"></table></div>
+      <div class="divider"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 3</b><small>Found by meaning, not by the exact words you typed.</small></div></div>
+      <div class="table-scroll"><table class="dt" id="d1-fig-sem"></table></div>
+    </div>
+  </div>
+
+  <div class="phones">
+    <div><div class="phone"><div class="page">
+      <div class="page-h"><h4>Notes</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
+      <p class="count">2 results · 3 related</p>
+      <div class="card"><div class="top"><span class="t">Natural Spin Turn: <mark>head</mark> position</span></div><div class="meta">Waltz · Standard · ★★★★ · 4 figures · video</div></div>
+      <div class="card"><div class="top"><span class="t">Contra Check, <mark>head</mark> and frame</span></div><div class="meta">Tango · Standard · ★★★ · 2 figures</div></div>
+      <div class="divider" style="padding-inline:0"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 3</b><small>Found by meaning.</small></div></div>
+      <div class="card sem"><div class="top"><span class="t">Keeping the left side long through the turn</span><span class="m sem">Related</span></div><div class="meta">Waltz · Standard · ★★★★★ · 6 figures · video</div></div>
+      <div class="card sem"><div class="top"><span class="t">Rise and sway: where the weight sits</span><span class="m sem">Related</span></div><div class="meta">Waltz · Standard · ★★★★ · 3 figures</div></div>
+    </div></div><p class="cap">375px: Notes. Group heading is full width; cards keep style, category, rating, figure count and media.</p></div>
+    <div><div class="phone"><div class="page">
+      <div class="page-h"><h4>Figures</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
+      <p class="count">1 result · 3 related</p>
+      <div class="card"><div class="top"><span class="t">Natural Spin Turn</span></div><div class="meta">Waltz <span class="cls">M</span> · Steps: yes · ISTD</div></div>
+      <div class="divider" style="padding-inline:0"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 3</b><small>Found by meaning.</small></div></div>
+      <div class="card sem"><div class="top"><span class="t">Reverse Turn</span><span class="m sem">Related</span></div><div class="meta">Waltz <span class="cls">H</span> · Steps: yes · ISTD</div></div>
+      <div class="card sem"><div class="top"><span class="t">Closed Telemark</span><span class="m sem">Related</span></div><div class="meta">Waltz <span class="cls">M</span> · Steps: yes · ISTD</div></div>
+    </div></div><p class="cap">375px: Figures.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div><h3>Empty: nothing by keyword, something by meaning</h3>
+      <div class="frame"><div class="page">
+        <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="shoulder lead" readonly aria-label="Search"></div>
+        <div class="empty"><b>No Notes match “shoulder lead”</b><span>Nothing contains those words, but 2 Notes are related by meaning.</span></div>
+        <div class="divider"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 2</b><small>Found by meaning, not by the exact words you typed.</small></div></div>
+        <div id="d1-empty-sem" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div></div></div>
+    <div><h3>Empty: nothing at all</h3>
+      <div class="frame"><div class="page">
+        <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="zzxq" readonly aria-label="Search"></div>
+        <div class="empty"><b>No Notes match “zzxq”</b><span>Try fewer words or check the style filter. Nothing related by meaning was found either.</span><span class="btn ghost">Clear filters</span></div>
+      </div></div></div>
+    <div><h3>Embeddings unavailable (fallback)</h3>
+      <div class="frame"><div class="page">
+        <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
+        <p class="count">2 results for “head dropping”</p>
+        <div id="d1-fb-kw" style="display:flex;flex-direction:column;gap:10px"></div>
+        <p class="note">Nothing else is shown: no banner, no empty group. The user gets today’s keyword search. Nothing the user asked for is missing, so no alarm is raised.</p>
+      </div></div></div>
+  </div>
+  <ul class="spec"><li><b>Backend contract:</b> origin flag per result, as #233 already returns. The related group size is the backend’s “how many semantic results to add”, shown as the count.</li>
+  <li><b>Sort and filters:</b> the style and rating filters narrow both groups (a related item must still pass the filters). Sorting applies inside each group.</li>
+  <li><b>htmx:</b> one extra target for the related group, swapped with the table. Frozen fragment ids stay.</li></ul>
+  <p class="cost"><b>Cost:</b> a long keyword list pushes the related group below the fold, so it is only found by scrolling. Mitigation: the count appears next to the result count at the top (“2 results · 3 related”).</p>
+</section>
+
+<!-- =========================== DIRECTION 2 =========================== -->
+<section id="d2">
+  <div class="dirhead"><h2>2. One blended list with a match chip</h2>
+  <p class="note">A single list in the backend’s ranking order. A “Match” column says why: <span class="m kw">Keyword</span> exact words, <span class="m sem">Meaning</span> found by meaning, <span class="m both">Both</span> words and meaning agree. Rows found by meaning only carry the tint.</p></div>
+
+  <div class="frame"><div class="frame-bar"><b>Notes</b> · desktop 1280px</div>
+    <div class="page">
+      <div class="page-h"><h4>Notes</h4><span class="btn"><svg class="ico"><use href="#i-plus"/></svg>New Note</span></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" aria-label="Search" readonly></div>
+      <p class="count">5 results for “head dropping”: 2 by keyword, 3 by meaning</p>
+      <div class="table-scroll"><table class="dt" id="d2-notes"></table></div>
+    </div>
+  </div>
+  <div class="frame"><div class="frame-bar"><b>Figures</b> · desktop 1280px</div>
+    <div class="page">
+      <div class="page-h"><h4>Figures</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" aria-label="Search" readonly></div>
+      <p class="count">4 results for “head dropping”: 1 by keyword, 3 by meaning</p>
+      <div class="table-scroll"><table class="dt" id="d2-fig"></table></div>
+    </div>
+  </div>
+
+  <div class="phones">
+    <div><div class="phone"><div class="page">
+      <div class="page-h"><h4>Notes</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
+      <p class="count">5 results</p>
+      <div class="card"><div class="top"><span class="t">Natural Spin Turn: <mark>head</mark> position</span><span class="m both">Both</span></div><div class="meta">Waltz · Standard · ★★★★ · 4 figures · video</div></div>
+      <div class="card sem"><div class="top"><span class="t">Keeping the left side long through the turn</span><span class="m sem">Meaning</span></div><div class="meta">Waltz · Standard · ★★★★★ · 6 figures · video</div></div>
+      <div class="card"><div class="top"><span class="t">Contra Check, <mark>head</mark> and frame</span><span class="m kw">Keyword</span></div><div class="meta">Tango · Standard · ★★★ · 2 figures</div></div>
+      <div class="card sem"><div class="top"><span class="t">Rise and sway: where the weight sits</span><span class="m sem">Meaning</span></div><div class="meta">Waltz · Standard · ★★★★ · 3 figures</div></div>
+    </div></div><p class="cap">375px: the chip sits at the card’s top right, on the title row.</p></div>
+    <div>
+      <h3>Empty and fallback</h3>
+      <div class="frame" style="width:375px;max-width:100%"><div class="page">
+        <div class="empty"><b>No Notes match “zzxq”</b><span>Try fewer words or check the style filter.</span></div>
+        <p class="count">Fallback (embeddings unavailable): the list is keyword only, so every chip would read “Keyword”. The Match column and the count split are left out. Same screen as today.</p>
+      </div></div>
+    </div>
+  </div>
+  <ul class="spec"><li><b>Backend contract:</b> origin flag per result in ranking order. An exact figure-name match must outrank a vague similar Note (RAG spec, hybrid ranking).</li>
+  <li><b>Sort:</b> choosing a column sort reorders by that column, drops relevance order, and keeps the chip. The default sort is Relevance whenever there is a query.</li></ul>
+  <p class="cost"><b>Cost:</b> keyword hits and meaning hits interleave, so a user who types an exact title may see a related row above a loosely matching keyword row. The chip explains it but does not prevent it.</p>
+</section>
+
+<!-- =========================== DIRECTION 3 =========================== -->
+<section id="d3">
+  <div class="dirhead"><h2>3. Keyword / Smart toggle</h2>
+  <p class="note">A segmented control beside the result count. <b>Keyword</b> is exactly today’s search. <b>Smart</b> shows the blended list from direction 2 with its chips. The toggle is live in this mock. The counts hint at what Smart would add before the user switches.</p></div>
+
+  <div class="frame"><div class="frame-bar"><b>Notes</b> · desktop 1280px · try the toggle</div>
+    <div class="page">
+      <div class="page-h"><h4>Notes</h4><span class="btn"><svg class="ico"><use href="#i-plus"/></svg>New Note</span></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" aria-label="Search" readonly></div>
+      <div class="bar">
+        <p class="count" id="d3-count">2 results for “head dropping”</p>
+        <div class="seg" role="group" aria-label="Search mode">
+          <button type="button" data-mode="kw" aria-pressed="true">Keyword <span class="n">2</span></button>
+          <button type="button" data-mode="smart" aria-pressed="false"><svg class="ico"><use href="#i-spark"/></svg>Smart <span class="n">5</span></button>
+        </div>
+      </div>
+      <div class="table-scroll"><table class="dt" id="d3-notes"></table></div>
+    </div>
+  </div>
+
+  <div class="phones">
+    <div><div class="phone"><div class="page">
+      <div class="page-h"><h4>Figures</h4></div>
+      <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
+      <div class="seg" role="group" aria-label="Search mode" style="align-self:flex-start">
+        <button type="button" aria-pressed="false">Keyword <span class="n">1</span></button>
+        <button type="button" aria-pressed="true"><svg class="ico"><use href="#i-spark"/></svg>Smart <span class="n">4</span></button>
+      </div>
+      <div class="card"><div class="top"><span class="t">Natural Spin Turn</span><span class="m both">Both</span></div><div class="meta">Waltz <span class="cls">M</span> · Steps: yes · ISTD</div></div>
+      <div class="card sem"><div class="top"><span class="t">Reverse Turn</span><span class="m sem">Meaning</span></div><div class="meta">Waltz <span class="cls">H</span> · Steps: yes · ISTD</div></div>
+      <div class="card sem"><div class="top"><span class="t">Closed Telemark</span><span class="m sem">Meaning</span></div><div class="meta">Waltz <span class="cls">M</span> · Steps: yes · ISTD</div></div>
+    </div></div><p class="cap">375px with Smart selected. The toggle stays on one row and does not wrap.</p></div>
+    <div>
+      <h3>Fallback (embeddings unavailable)</h3>
+      <div class="frame" style="width:375px;max-width:100%"><div class="page">
+        <div class="bar"><p class="count">2 results</p>
+          <div class="seg" role="group" aria-label="Search mode"><button type="button" aria-pressed="true">Keyword</button><button type="button" aria-pressed="false" disabled style="opacity:.5;cursor:not-allowed"><svg class="ico"><use href="#i-spark"/></svg>Smart</button></div></div>
+        <div class="banner"><svg class="ico"><use href="#i-warn"/></svg><div><b>Smart search is unavailable right now.</b> Showing keyword results only.</div></div>
+      </div></div>
+      <h3 style="margin-top:16px">Empty</h3>
+      <div class="frame" style="width:375px;max-width:100%"><div class="page">
+        <div class="empty"><b>No Notes match “zzxq”</b><span>Keyword and Smart both found nothing.</span></div>
+      </div></div>
+    </div>
+  </div>
+  <ul class="spec"><li><b>Backend contract:</b> origin flag per result, plus the two totals for the toggle. Smart is one request with semantic enabled; Keyword is the request without it, so keyword mode makes no embedding call.</li>
+  <li><b>Remembering the choice:</b> persisting the last mode per user would need a setting, which this mock does not assume. It could default to Keyword on every visit.</li>
+  <li><b>Fallback:</b> the only direction where the fallback is visible, because Smart is something the user explicitly asked for.</li></ul>
+  <p class="cost"><b>Cost:</b> most users never touch a toggle, so semantic results go unseen unless the counts draw the eye. It also adds a control to the filter bar of two lists.</p>
+</section>
+
+<section>
+  <h2>Open points for review</h2>
+  <ul class="spec">
+    <li><b>Match reason text.</b> The backend only says keyword, semantic or both. A snippet such as “mentions: left side long” would need the matching passage returned too, a change to #233 and the knowledge index. None of these mocks needs it.</li>
+    <li><b>Polish.</b> “Also related” and “Found by meaning” need Polish strings with the same key parity as the rest of the app. “Smart” is the hardest word to translate; a neutral “Wg znaczenia” reads better than a literal one.</li>
+    <li><b>Scope.</b> The same pattern applies to Notes and Figures only. Choreographies and Collections are untouched, as #203 names only those two.</li>
+    <li><b>Dashboard assistant box.</b> Not affected; it already uses meaning.</li>
+  </ul>
+</section>
+
+</div>
+
+<script>
+const rating = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+const chip = {kw:'<span class="m kw">Keyword</span>', sem:'<span class="m sem">Related</span>', semM:'<span class="m sem">Meaning</span>', both:'<span class="m both">Both</span>'};
+const NOTES = {
+  a: ['Natural Spin Turn: <mark>head</mark> position','Waltz','Standard',4,4,'video','12 Sep'],
+  b: ['Contra Check, <mark>head</mark> and frame','Tango','Standard',3,2,'','03 Aug'],
+  c: ['Keeping the left side long through the turn','Waltz','Standard',5,6,'video','21 Sep'],
+  d: ['Rise and sway: where the weight sits','Waltz','Standard',4,3,'','30 Aug'],
+  e: ['Frame in closed position: top line','Quickstep','Standard',3,5,'video','14 Jul']
+};
+const FIGS = {
+  a: ['Natural Spin Turn','Waltz','M','Yes','ISTD'],
+  r: ['Reverse Turn','Waltz','H','Yes','ISTD'],
+  t: ['Closed Telemark','Waltz','M','Yes','ISTD'],
+  h: ['Hover Corté','Waltz','M','Yes','ISTD']
+};
+const isSem = c => c === 'sem' || c === 'semM';
+function noteRows(items, withChip) {
+  const head = `<thead><tr><th>Title</th><th>Style</th><th>Category</th><th>Rating</th><th>Figures</th><th>Media</th><th>Created</th>${withChip?'<th>Match</th>':''}</tr></thead>`;
+  return head + '<tbody>' + items.map(([k,c]) => { const n = NOTES[k];
+    return `<tr class="${isSem(c)?'sem':''}"><td class="name">${n[0]}</td><td>${n[1]}</td><td>${n[2]}</td><td><span aria-label="${n[3]} of 5">${rating(n[3])}</span></td><td>${n[4]}</td><td>${n[5]||'—'}</td><td>${n[6]}</td>${withChip?`<td>${chip[c]}</td>`:''}</tr>`; }).join('') + '</tbody>';
+}
+function figRows(items, withChip) {
+  const head = `<thead><tr><th>Name</th><th>Style</th><th>Class</th><th>Steps</th><th>Source</th>${withChip?'<th>Match</th>':''}</tr></thead>`;
+  return head + '<tbody>' + items.map(([k,c]) => { const f = FIGS[k];
+    return `<tr class="${isSem(c)?'sem':''}"><td class="name">${f[0]}</td><td>${f[1]}</td><td><span class="cls">${f[2]}</span></td><td>${f[3]}</td><td>${f[4]}</td>${withChip?`<td>${chip[c]}</td>`:''}</tr>`; }).join('') + '</tbody>';
+}
+function noteCards(items, withChip) {
+  return items.map(([k,c]) => { const n = NOTES[k];
+    return `<div class="card ${isSem(c)?'sem':''}"><div class="top"><span class="t">${n[0]}</span>${withChip?chip[c]:''}</div><div class="meta">${n[1]} · ${n[2]} · ${rating(n[3])} · ${n[4]} figures${n[5]?' · '+n[5]:''}</div></div>`; }).join('');
+}
+const put = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+
+// Direction 1: keyword group has no chip column, related group has "Related"
+put('d1-notes-kw', noteRows([['a','kw'],['b','kw']], false));
+put('d1-notes-sem', noteRows([['c','sem'],['d','sem'],['e','sem']], true));
+put('d1-fig-kw', figRows([['a','kw']], false));
+put('d1-fig-sem', figRows([['r','sem'],['t','sem'],['h','sem']], true));
+put('d1-empty-sem', noteCards([['c','sem'],['d','sem']], true));
+put('d1-fb-kw', noteCards([['a','kw'],['b','kw']], false));
+// Direction 2
+put('d2-notes', noteRows([['a','both'],['c','semM'],['b','kw'],['d','semM'],['e','semM']], true));
+put('d2-fig', figRows([['a','both'],['r','semM'],['t','semM'],['h','semM']], true));
+// Direction 3 (live toggle)
+function d3render(mode) {
+  if (mode === 'kw') {
+    put('d3-notes', noteRows([['a','kw'],['b','kw']], false));
+    document.getElementById('d3-count').textContent = '2 results for “head dropping”';
+  } else {
+    put('d3-notes', noteRows([['a','both'],['c','semM'],['b','kw'],['d','semM'],['e','semM']], true));
+    document.getElementById('d3-count').textContent = '5 results for “head dropping”: 2 by keyword, 3 by meaning';
+  }
+  document.querySelectorAll('button[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+}
+d3render('kw');
+document.querySelectorAll('button[data-mode]').forEach(b => b.addEventListener('click', () => d3render(b.dataset.mode)));
+</script>
+</body>
+</html>
