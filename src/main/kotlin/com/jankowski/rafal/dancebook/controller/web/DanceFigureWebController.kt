@@ -37,8 +37,14 @@ class DanceFigureWebController(
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
     private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService? = null,
-    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null
+    private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
+    private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
+    private val semanticSearchFilterHelper: com.jankowski.rafal.dancebook.service.SemanticSearchFilterHelper? = null
 ) {
+
+    companion object {
+        private val log = org.slf4j.LoggerFactory.getLogger(DanceFigureWebController::class.java)
+    }
 
     /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
     @Autowired(required = false)
@@ -68,10 +74,44 @@ class DanceFigureWebController(
             medalLevel = medalLevel
         )
 
-        val figureIds = figures.mapNotNull { it.id }
-        val figuresWithSteps = if (figureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(figureIds)
+        val candidateFigures = if (!nameSearch.isNullOrBlank() && hybridSearchService != null) {
+            try {
+                val singleDanceTypeId = if (typeIds?.size == 1) typeIds.first() else null
+                hybridSearchService.search(nameSearch, singleDanceTypeId)
+                    .filter { it.type == com.jankowski.rafal.dancebook.service.SearchHitType.FIGURE && it.match == com.jankowski.rafal.dancebook.service.SearchMatch.SEMANTIC }
+                    .mapNotNull { it.figure }
+            } catch (e: Exception) {
+                log.warn("Semantic search unavailable: {}", e.message)
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+
+        val candidateFigureIds = candidateFigures.mapNotNull { it.id }
+        val candidateSteps = if (candidateFigureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(candidateFigureIds)
+
+        val relatedFigures = if (candidateFigures.isNotEmpty() && semanticSearchFilterHelper != null) {
+            semanticSearchFilterHelper.filterAndSortFigures(
+                figures = candidateFigures,
+                typeIds = typeIds,
+                categoryIds = categoryIds,
+                danceClass = danceClass,
+                medalLevel = medalLevel,
+                hasSteps = hasSteps,
+                figureIdsWithSteps = candidateSteps,
+                sortBy = sortBy,
+                excludeIds = figures.mapNotNull { it.id }.toSet()
+            )
+        } else {
+            emptyList()
+        }
+
+        val allFigureIds = (figures.mapNotNull { it.id } + relatedFigures.mapNotNull { it.id }).distinct()
+        val figuresWithSteps = if (allFigureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(allFigureIds)
 
         model.addAttribute("figures", figures)
+        model.addAttribute("relatedFigures", relatedFigures)
         model.addAttribute("figuresWithSteps", figuresWithSteps)
         if (isHtmxRequest != true) {
             model.addAttribute("danceTypes", danceTypeService.findAll())

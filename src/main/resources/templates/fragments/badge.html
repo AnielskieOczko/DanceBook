@@ -8,7 +8,7 @@
 <!-- Standard Badge -->
 <span th:fragment="badge"
       class="badge"
-      th:classappend="${(variant == 'primary' ? 'badge-primary' : (variant == 'secondary' ? 'badge-secondary' : (variant == 'accent' ? 'badge-accent' : (variant == 'danger' or variant == 'error' ? 'badge-danger' : (variant == 'success' ? 'badge-success' : (variant == 'warning' ? 'badge-warning' : 'badge-neutral')))))) + (cls != null ? ' ' + cls : '')}">
+      th:classappend="${(variant == 'primary' ? 'badge-primary' : (variant == 'secondary' ? 'badge-secondary' : (variant == 'accent' ? 'badge-accent' : (variant == 'danger' or variant == 'error' ? 'badge-danger' : (variant == 'success' ? 'badge-success' : (variant == 'warning' ? 'badge-warning' : (variant == 'related' ? 'badge-related' : 'badge-neutral'))))))) + (cls != null ? ' ' + cls : '')}">
     <th:block th:if="${icon != null}">
         <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm')}"></span>
     </th:block>
