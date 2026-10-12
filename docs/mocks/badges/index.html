@@ -65,6 +65,7 @@ table.t{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 .phone{width:375px;max-width:100%;border:1px solid var(--outline);border-radius:28px;overflow:hidden;background:var(--surface)}
 .phone .page{padding:14px;gap:10px}
 .phones{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.phones>div{max-width:100%;min-width:0}
 .cap{font-size:12px;color:var(--on-surface-variant);margin-top:6px;max-width:375px}
 .acc{border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
 .acc .row{display:flex;gap:14px;align-items:center;min-height:60px;padding:10px 16px;border-bottom:1px solid var(--hair)}
@@ -110,6 +111,40 @@ table.t{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 .tog::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--outline)}
 .tog.on{background:var(--primary);border-color:var(--primary)}
 .tog.on::after{left:22px;border-color:#fff}
+
+/* ---------- direction B: rosette and dance card (ballroom) ---------- */
+.ros{display:block;width:46px;height:56px;position:relative;flex:none}
+.ros .tl,.ros .tr{position:absolute;bottom:0;width:15px;height:24px;background:var(--rc);opacity:.8;clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+.ros .tl{left:9px;transform:rotate(14deg);transform-origin:top center}
+.ros .tr{right:9px;transform:rotate(-14deg);transform-origin:top center;opacity:.95}
+.ros .disc{position:absolute;top:0;left:3px;width:40px;height:40px;background:var(--rc);display:grid;place-items:center}
+.ros .disc i{width:30px;height:30px;border-radius:50%;background:var(--rs);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:11px;color:var(--rc)}
+.ros.bronze{--rc:var(--bronze);--rs:var(--bronze-soft)}.ros.silver{--rc:var(--silver);--rs:var(--silver-soft)}.ros.gold{--rc:var(--gold);--rs:var(--gold-soft)}.ros.ink{--rc:var(--primary);--rs:var(--primary-soft)}
+.ros.lock{--rc:var(--outline);--rs:var(--surface-container)}
+.ros.lock .disc,.ros.lock .tl,.ros.lock .tr{opacity:.45}
+.card-d{border:1px solid var(--hair);border-radius:var(--r-card);background:var(--surface-container);padding:6px 16px 14px;position:relative}
+.card-d::before{content:'';position:absolute;left:10px;top:18px;bottom:18px;width:0;border-left:2px dotted var(--hair)}
+.card-d h4{margin:10px 0 2px;font-size:12px;font-weight:600;color:var(--on-surface-variant);text-align:center}
+.dc{display:flex;align-items:center;gap:12px;padding:8px 0}
+.dc .nm{font-size:13px;font-weight:600;white-space:nowrap}
+.dc .ld{flex:1;border-bottom:1.5px dotted var(--outline);align-self:flex-end;margin-bottom:6px;min-width:12px}
+.dc .dt{font-size:12px;color:var(--on-surface-variant);white-space:nowrap}
+.dc.lock .nm{color:var(--on-surface-variant);font-weight:500}
+.dc .pg{font-size:11px;color:var(--on-surface-variant);display:block;font-weight:400}
+.dc .tx{min-width:0}
+.dc.lock .ld{border-bottom-style:solid;border-bottom-color:var(--hair)}
+
+/* ---------- direction C: tempo and vinyl (music) ---------- */
+.vin{display:block;width:44px;height:44px;border-radius:50%;position:relative;flex:none;background:repeating-radial-gradient(circle at center,var(--vg) 0 1px,transparent 1px 3px),var(--vs);box-shadow:inset 0 0 0 1.5px var(--vg)}
+.vin .lab{position:absolute;inset:12px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:10px;line-height:1;overflow:hidden;font-weight:700;color:var(--vg);box-shadow:0 0 0 1px var(--vg)}
+.vin.bronze{--vg:var(--bronze);--vs:var(--bronze-soft)}.vin.silver{--vg:var(--silver);--vs:var(--silver-soft)}.vin.gold{--vg:var(--gold);--vs:var(--gold-soft)}.vin.ink{--vg:var(--primary);--vs:var(--primary-soft)}
+.vin.lock{--vg:var(--outline);--vs:var(--surface-container);opacity:.7}
+.tempo{font-style:italic;font-family:Georgia,'Times New Roman',serif;color:var(--on-surface-variant);font-size:12px}
+.vchip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px 0 4px;border-radius:var(--r-pill);font-size:12px;font-weight:600;border:1px solid var(--hair);background:var(--surface)}
+.vchip .vin{width:28px;height:28px}.vchip .vin .lab{inset:8px;font-size:8px}
+.staff{height:18px;background:repeating-linear-gradient(to bottom,var(--hair) 0 1px,transparent 1px 4px);margin:4px 0 2px;position:relative;border-radius:2px}
+.staff b{position:absolute;top:-6px;font-size:18px;font-weight:400;color:var(--primary);line-height:1}
+.vplay{display:flex;gap:10px;align-items:center}
 .cost{border-left:3px solid var(--outline);padding:2px 0 2px 12px;font-size:13px;color:var(--on-surface-variant);max-width:76ch}
 .cost b{color:var(--on-surface)}
 .spec{font-size:13px;display:grid;gap:4px;margin:0;padding-left:18px;max-width:82ch}
@@ -120,19 +155,55 @@ table.t{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 
 <header style="display:flex;flex-direction:column;gap:8px">
   <h1>Badge visuals</h1>
-  <p class="lede">Issue #39, part of #35. How the eight badges of the #39 spec look and where they appear: the profile Badges row, the Training timeline, and one notification line. The tone follows the owner's note that not everyone likes gamification: quiet, no confetti, no exclamation marks, nothing that nags. A user who has turned gamification off (#317) sees none of it.</p>
+  <p class="lede">Issue #39, part of #35. How the eight badges of the #39 spec look and where they appear: the profile Badges row, the Training timeline, and one notification line. The tone follows the owner's note that not everyone likes gamification: quiet, no confetti, no exclamation marks, nothing that nags. A user who has turned gamification off (#317) sees none of it. Three visual directions for the badge itself: <b>A</b> round medallion, <b>B</b> ballroom rosette and dance card, <b>C</b> music vinyl and tempo marks. Placement, states and copy (sections 2 to 6) are the same for all three.</p>
   <p class="note">Wording says “Note”, never “Material”. Dates are the day a badge was earned. Names come from the spec: Streak 5/10/20 (consecutive attended sessions), Hours 50/100/250, Perfect month, Style balance.</p>
 </header>
 
 <section>
-  <h2>1. The eight badges</h2>
+  <h2>1. The eight badges: direction A, medallion</h2>
   <p class="note">One medallion per badge. <b>Tiered families</b> (Streak, Hours) use the bronze, silver and gold already in the app, one metal per tier, with the threshold number inside. <b>One-off badges</b> (Perfect month, Style balance) use the deep teal, never a metal. That keeps metals meaning “a tier of the same ladder”, and keeps them apart from the Bronze/Silver/Gold <em>difficulty</em> markers on figures, which are drawn as rising bars next to the class letter and never as a round medallion.</p>
   <div class="bdg" id="catalog"></div>
   <p class="note"><b>Locked</b> badges stay visible as dashed rows with a plain progress line (“12 of 20 sessions”), so the next target is clear without any prompt. The list is fixed at eight, so “5 of 8 earned” is always a true fraction. Perfect month can be earned many times: it stays one row that counts them (“×2, last September”).</p>
 </section>
 
+
+<section id="dirb">
+  <h2>1b. Direction B: rosette and dance card <span style="font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);padding:2px 10px;border-radius:9999px;margin-left:6px;vertical-align:middle">ballroom</span></h2>
+  <p class="note">Borrowed from the competition floor. Each badge is a <b>rosette</b>, the ribbon rosette a dancer pins on after a heat, with the threshold number in the centre. Bronze, silver and gold ribbons for the tiers, teal for the one-offs. The Badges row becomes a <b>dance card</b>: the paper programme a dancer once carried, each line a dance with a dotted leader to the date it was earned. A locked badge is a line still waiting to be filled in, with its progress written under the name. It is the most ballroom of the three and the most decorative, so it is the one most at risk of feeling busy.</p>
+  <div class="grid2">
+    <div><h3>The eight badges</h3><div class="bdg" id="b-catalog"></div></div>
+    <div><h3>Profile Badges row, as a dance card</h3><div class="card-d" id="b-card"></div></div>
+  </div>
+  <div class="phones">
+    <div><div class="phone"><div class="page"><div class="card-d" id="b-card-phone"></div></div></div><p class="cap">375px: the card is one column; the dotted leader shrinks, the date never wraps.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:260px;flex:1">
+      <div><h3>Timeline chips</h3><div class="slots" id="b-slots"></div></div>
+      <div><h3>Notification</h3><div class="feed"><div class="it badge"><div id="b-notif" style="flex:none;width:46px"></div><div><b>You earned “Streak of 10”</b><small>10 attended sessions in a row · today</small></div><span class="new"></span></div></div></div>
+    </div>
+  </div>
+  <p class="cost"><b>Cost:</b> rosettes are taller than they are wide, so a grid of them is slightly busier than round medallions. Mitigation: the rosette is only drawn in the profile row and the notification; the timeline chips use a flat disc.</p>
+</section>
+
+<section id="dirc">
+  <h2>1c. Direction C: tempo and vinyl <span style="font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);padding:2px 10px;border-radius:9999px;margin-left:6px;vertical-align:middle">music</span></h2>
+  <p class="note">Every ballroom dance is a tempo. Each badge is a small <b>vinyl record</b> with grooves in the tier colour and the number on its label. The name stays plain (“Streak of 10”) so it reads and translates the same everywhere; a tempo mark sits beside it in italic as a quiet nod: <span class="tempo">Andante</span> for 5, <span class="tempo">Allegro</span> for 10, <span class="tempo">Presto</span> for 20 in a row, and dynamics for hours (<span class="tempo">p</span> 50h, <span class="tempo">mf</span> 100h, <span class="tempo">ff</span> 250h). The one-offs get <span class="tempo">fermata</span> for Perfect month (a pause held) and <span class="tempo">duet</span> for Style balance. A thin music staff under the earned list shows the user’s next target as a note not yet placed.</p>
+  <div class="grid2">
+    <div><h3>The eight badges</h3><div class="bdg" id="c-catalog"></div></div>
+    <div><h3>Profile Badges row</h3><div class="acc"><div class="row"><span class="ms">album</span><div><b>Badges</b><small>4 of 8 earned, latest: Streak of 10</small></div><span class="ms chev">expand_less</span></div><div class="open" id="c-open"></div></div></div>
+  </div>
+  <div class="phones">
+    <div><div class="phone"><div class="page"><div class="acc phone"><div class="row"><span class="ms">album</span><div><b>Badges</b><small>4 of 8 earned, latest: Streak of 10</small></div><span class="ms chev">expand_less</span></div><div class="open" id="c-open-phone"></div></div></div></div><p class="cap">375px: one column, tempo mark under the name so it never competes with the date.</p></div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:260px;flex:1">
+      <div><h3>Timeline chips</h3><div class="slots" id="c-slots"></div></div>
+      <div><h3>Next target on a staff</h3><div class="staff" id="c-staff"><b style="left:6%">♩</b><b style="left:20%">♩</b><b style="left:34%">♩</b><b style="left:48%">♩</b><b style="left:62%;opacity:.35">♩</b><b style="left:76%;opacity:.35">♩</b></div><p class="note">Six notes for the six steps of the nearest target; four are placed, two still to come. Decorative and optional: the text progress line stays.</p></div>
+      <div><h3>Notification</h3><div class="feed"><div class="it badge"><div id="c-notif" style="flex:none;width:44px"></div><div><b>You earned “Streak of 10”</b><small>Allegro · 10 attended sessions in a row · today</small></div><span class="new"></span></div></div></div>
+    </div>
+  </div>
+  <p class="cost"><b>Cost:</b> musical terms are Italian in both languages, so Polish users read them as the same borrowed words; only the plain names are translated. The staff is the most playful element and can be dropped without losing anything.</p>
+</section>
+
 <section>
-  <h2>2. Profile Badges row</h2>
+  <h2>2. Profile Badges row (direction A shown; B and C use the same placement)</h2>
   <p class="note">The row exists today as a placeholder (#229). Collapsed it shows the count and the latest badge. Expanded it shows earned badges first, newest first, then locked ones with progress.</p>
   <div class="grid2">
     <div>
@@ -228,6 +299,7 @@ table.t{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
     <li><b>Metals and the figure medal levels.</b> Both use bronze, silver and gold. The shapes differ (round medallion with a number, against rising bars beside a class letter) and the places differ (profile and timeline, against figure and choreography lists), but if you want zero overlap the tiers could use teal at three strengths instead. Say if you prefer that.</li>
     <li><b>Perfect month as one counting row</b> keeps “N of 8” honest. The alternative is one row per month earned, which grows without limit.</li>
     <li><b>Dashed slots on the timeline</b> show the next target. They could also be removed entirely there and kept on the profile only, which is the quietest version.</li>
+    <li><b>Which direction.</b> A is the calmest and already matches the approved profile mock. B is the most ballroom and the busiest. C is the most playful and its musical terms are a nod, not required reading. They can be mixed: for example A in the lists and C’s tempo mark as the notification subtitle.</li>
     <li><b>Artwork.</b> One icon per family (flame, clock, calendar tick, balance), no illustrations, as the spec says.</li>
   </ul>
 </section>
@@ -283,6 +355,39 @@ document.getElementById('feed').innerHTML = `
   <div class="it"><span class="ic"><span class="ms sm">event_available</span></span><div><b>Training confirmed: lesson with Anna</b><small>10 Oct</small></div></div>`;
 // 5 zero state
 document.getElementById('acc-zero').innerHTML = rowsFor([], [B[0],B[3],B[6],B[7]].map(b=>({...b,prog:b.prog||[0,b.k==='s5'?5:(b.k==='h50'?50:1)],unit:b.k==='h50'?'hours':'sessions'})), 'None earned yet') + closed;
+
+// ---- direction B: rosette ----
+const scallop = n => { const pts=[]; for(let i=0;i<n*2;i++){ const a=i/(n*2)*Math.PI*2, r=i%2?44:50; pts.push((50+r*Math.cos(a)).toFixed(1)+'% '+(50+r*Math.sin(a)).toFixed(1)+'%'); } return 'polygon('+pts.join(',')+')'; };
+const SC = scallop(14);
+const ros = (b, locked) => `<span class="ros ${locked?'lock':b.metal}" aria-hidden="true"><span class="tl"></span><span class="tr"></span><span class="disc" style="clip-path:${SC}"><i>${locked?'<span class="ms sm" style="font-size:14px">lock</span>':(b.n||`<span class="ms sm" style="font-size:15px">${b.ic}</span>`)}</i></span></span>`;
+const danceLine = (b, locked) => {
+  const sub = locked ? (b.prog && b.prog[1]>1 ? `<span class="pg">${b.prog[0]} of ${b.prog[1]} ${b.unit}</span>` : `<span class="pg">${b.hint||''}</span>`) : '';
+  return `<div class="dc ${locked?'lock':''}">${ros(b,locked)}<div class="tx"><span class="nm">${b.name}${b.extra&&!locked?' '+b.extra:''}</span>${sub}</div><span class="ld"></span><span class="dt">${locked?'':b.date}</span></div>`;
+};
+const bGrid = B.map(b => `<div class="b ${b.date?'':'lock'}">${ros(b,!b.date)}<div><b>${b.name}${b.extra?' '+b.extra:''}</b><small>${b.date?'Earned '+b.date:(b.prog&&b.prog[1]>1?b.prog[0]+' of '+b.prog[1]+' '+b.unit:(b.hint||''))}</small></div></div>`).join('');
+document.getElementById('b-catalog').innerHTML = bGrid;
+const cardHtml = '<h4>Dance card · earned in order</h4>' + earned.map(b=>danceLine(b,false)).join('') + locked.map(b=>danceLine(b,true)).join('');
+document.getElementById('b-card').innerHTML = cardHtml;
+document.getElementById('b-card-phone').innerHTML = cardHtml;
+const flat = b => `<span class="chip"><span class="m ${b.metal}" style="width:26px;height:26px;font-size:10px">${b.n||'<span class="ms sm" style="font-size:14px">'+b.ic+'</span>'}</span>${b.name}</span>`;
+document.getElementById('b-slots').innerHTML = flat(B[0])+flat(B[1])+flat(B[3])+'<span class="chip slot">Next: Streak of 20 · 12 of 20</span>';
+document.getElementById('b-notif').innerHTML = ros(B[1],false);
+
+// ---- direction C: vinyl and tempo ----
+const TEMPO = {s5:'Andante',s10:'Allegro',s20:'Presto',h50:'p',h100:'mf',h250:'ff',pm:'fermata',sb:'duet'};
+const vin = (b, locked) => `<span class="vin ${locked?'lock':b.metal}" aria-hidden="true"><span class="lab">${locked?'<span class="ms sm" style="font-size:12px">lock</span>':(b.n?`<span style="font-size:${b.n.length>2?7:10}px">${b.n}</span>`:`<span class="ms sm" style="font-size:12px">${b.ic}</span>`)}</span></span>`;
+const vRow = (b, locked) => {
+  const line = locked ? (b.prog && b.prog[1]>1 ? `${b.prog[0]} of ${b.prog[1]} ${b.unit}` : (b.hint||'')) : 'Earned '+b.date;
+  const pct = locked && b.prog && b.prog[1]>1 ? Math.round(b.prog[0]/b.prog[1]*100) : 0;
+  return `<div class="b ${locked?'lock':''}">${vin(b,locked)}<div><b>${b.name}${b.extra&&!locked?' '+b.extra:''} <span class="tempo">${TEMPO[b.k]}</span></b><small>${line}</small>${pct?`<div class="prog"><i style="width:${pct}%"></i></div>`:''}</div></div>`;
+};
+document.getElementById('c-catalog').innerHTML = B.map(b=>vRow(b,!b.date)).join('');
+const cOpen = earned.map(b=>vRow(b,false)).join('') + locked.map(b=>vRow(b,true)).join('');
+document.getElementById('c-open').innerHTML = cOpen;
+document.getElementById('c-open-phone').innerHTML = cOpen;
+const vchip = b => `<span class="vchip">${vin(b,false)}${b.name}</span>`;
+document.getElementById('c-slots').innerHTML = vchip(B[0])+vchip(B[1])+vchip(B[3])+'<span class="chip slot">Next: Streak of 20 · 12 of 20</span>';
+document.getElementById('c-notif').innerHTML = vin(B[1],false);
 </script>
 </body>
 </html>
