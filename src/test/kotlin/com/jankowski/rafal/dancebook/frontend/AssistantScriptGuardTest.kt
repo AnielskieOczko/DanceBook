@@ -144,5 +144,19 @@ class AssistantScriptGuardTest {
         assertTrue(escapeBranch.contains("surface.classList.contains('is-expanded')"))
         assertTrue(escapeBranch.contains("collapse()"))
     }
+
+    @Test
+    fun `openSurface expands on each open when data-full-window is true and screen is wide, while firstOpen runs once`() {
+        val openFunc = script.substringAfter("function openSurface()").substringBefore("function updateTitle()")
+        assertTrue(openFunc.contains("if (firstOpen)"), "firstOpen guard must be present")
+        assertTrue(openFunc.contains("thread.dispatchEvent(new CustomEvent('assistant-open'))"), "thread setup must be dispatched")
+        assertTrue(openFunc.contains("surface.getAttribute('data-full-window') === 'true'"), "must check data-full-window attribute")
+        assertTrue(openFunc.contains("expand()"), "must call expand when full-window is set")
+
+        // In widget.html, data-full-window is present but is-expanded is not pre-rendered on the surface
+        val surfaceTag = widget.substringAfter("<dialog id=\"assistantSurface\"").substringBefore(">")
+        assertTrue(surfaceTag.contains("data-full-window"), "surface dialog must carry data-full-window")
+        assertFalse(surfaceTag.contains("is-expanded"), "surface dialog must not have server-rendered is-expanded class")
+    }
 }
 

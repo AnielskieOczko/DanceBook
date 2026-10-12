@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.config.AssistantFeature
 import com.jankowski.rafal.dancebook.config.GoogleAiProperties
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Comment
 import com.jankowski.rafal.dancebook.model.DanceFigure
@@ -151,6 +152,26 @@ class HybridSearchServiceTest {
         assertEquals(listOf(SearchMatch.KEYWORD, SearchMatch.SEMANTIC, SearchMatch.SEMANTIC), hits.map { it.match })
         assertNull(chunks.lastQuery, "the semantic leg must be vector-only, keyword matching is done by the existing services")
         assertEquals(user, chunks.lastUser)
+    }
+
+    @Test
+    fun `when semanticSearchEnabled preference is false, semantic search is skipped and embeddings are not called`() {
+        val prefsService = mock(AssistantPreferencesService::class.java)
+        `when`(prefsService.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(semanticSearchEnabled = false))
+        val disabledService = HybridSearchServiceImpl(
+            materialService, danceFigureService, appUserService, commentRepository,
+            chunks, embeddings, EmbeddingBudget(props, Clock.systemUTC()), props, AssistantFeature(props),
+            org.springframework.transaction.support.TransactionTemplate(NoOpTransactions()),
+            prefsService
+        )
+        val kw = note("Sway notes")
+        keywordNotes(kw); keywordFigures()
+        chunks.results = listOf(chunk(KnowledgeSourceType.NOTE, UUID.randomUUID()))
+
+        val hits = disabledService.search("sway")
+
+        assertEquals(listOf(kw.id), hits.map { it.id })
+        assertEquals(0, embeddings.calls)
     }
 
     @Test

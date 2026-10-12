@@ -22,7 +22,8 @@ class KnowledgeRetrievalServiceImpl(
     private val embeddingModel: EmbeddingModel,
     private val embeddingBudget: EmbeddingBudget,
     private val assistantFeature: com.jankowski.rafal.dancebook.config.AssistantFeature,
-    transactionTemplate: org.springframework.transaction.support.TransactionTemplate
+    transactionTemplate: org.springframework.transaction.support.TransactionTemplate,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) : KnowledgeRetrievalService {
 
     companion object {
@@ -49,6 +50,7 @@ class KnowledgeRetrievalServiceImpl(
         transactionTemplate.execute { block() }
 
     override fun findRelatedNotesForMaterial(materialId: UUID, currentUser: AppUser?, limit: Int): List<Material> {
+        if (assistantPreferencesService?.forUser(currentUser)?.relatedNotesEnabled == false) return emptyList()
         val chunk = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.NOTE, materialId)
         val embedding = chunk?.embedding ?: run {
             val text = readOnly {
@@ -73,6 +75,7 @@ class KnowledgeRetrievalServiceImpl(
     }.distinctBy { it.id }
 
     override fun findRelatedNotesForFigure(figureId: UUID, currentUser: AppUser?, limit: Int): List<Material> {
+        if (assistantPreferencesService?.forUser(currentUser)?.relatedNotesEnabled == false) return emptyList()
         val chunk = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.FIGURE, figureId)
         val embedding = chunk?.embedding ?: run {
             val text = readOnly {

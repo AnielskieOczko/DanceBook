@@ -46,6 +46,7 @@
 
     <!-- The conversation. A sheet on a phone (modal), a right-hand panel on desktop (not modal). -->
     <dialog id="assistantSurface" aria-labelledby="assistantTitle"
+            th:data-full-window="${assistantNav != null and assistantNav.openInFullWindow ? 'true' : 'false'}"
             class="fixed inset-0 m-0 h-full max-h-none w-full max-w-none flex-col bg-surface p-0 text-on-surface open:flex z-50 md:left-auto md:right-0 md:w-[400px] md:border-l md:border-outline-variant">
         <div class="flex flex-1 min-h-0 w-full h-full overflow-hidden">
             <!-- Rail: conversations list (Direction A Ledger: shown in expanded view on desktop) -->
