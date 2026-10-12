@@ -201,7 +201,7 @@ mark { background: color-mix(in srgb, var(--primary) 16%, transparent); color: i
         <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="shoulder lead" readonly aria-label="Search"></div>
         <div class="empty"><b>No Notes match “shoulder lead”</b><span>Nothing contains those words, but 2 Notes are related by meaning.</span></div>
         <div class="divider"><svg class="ico"><use href="#i-spark"/></svg><div><b>Also related · 2</b><small>Found by meaning, not by the exact words you typed.</small></div></div>
-        <div class="table-scroll"><table class="dt" id="d1-empty-sem"></table></div>
+        <div id="d1-empty-sem" style="display:flex;flex-direction:column;gap:10px"></div>
       </div></div></div>
     <div><h3>Empty: nothing at all</h3>
       <div class="frame"><div class="page">
@@ -212,7 +212,7 @@ mark { background: color-mix(in srgb, var(--primary) 16%, transparent); color: i
       <div class="frame"><div class="page">
         <div class="search"><svg class="ico"><use href="#i-search"/></svg><input value="head dropping" readonly aria-label="Search"></div>
         <p class="count">2 results for “head dropping”</p>
-        <div class="table-scroll"><table class="dt" id="d1-fb-kw"></table></div>
+        <div id="d1-fb-kw" style="display:flex;flex-direction:column;gap:10px"></div>
         <p class="note">Nothing else is shown: no banner, no empty group. The user gets today’s keyword search. Nothing the user asked for is missing, so no alarm is raised.</p>
       </div></div></div>
   </div>
@@ -357,6 +357,10 @@ function figRows(items, withChip) {
   return head + '<tbody>' + items.map(([k,c]) => { const f = FIGS[k];
     return `<tr class="${isSem(c)?'sem':''}"><td class="name">${f[0]}</td><td>${f[1]}</td><td><span class="cls">${f[2]}</span></td><td>${f[3]}</td><td>${f[4]}</td>${withChip?`<td>${chip[c]}</td>`:''}</tr>`; }).join('') + '</tbody>';
 }
+function noteCards(items, withChip) {
+  return items.map(([k,c]) => { const n = NOTES[k];
+    return `<div class="card ${isSem(c)?'sem':''}"><div class="top"><span class="t">${n[0]}</span>${withChip?chip[c]:''}</div><div class="meta">${n[1]} · ${n[2]} · ${rating(n[3])} · ${n[4]} figures${n[5]?' · '+n[5]:''}</div></div>`; }).join('');
+}
 const put = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
 // Direction 1: keyword group has no chip column, related group has "Related"
@@ -364,8 +368,8 @@ put('d1-notes-kw', noteRows([['a','kw'],['b','kw']], false));
 put('d1-notes-sem', noteRows([['c','sem'],['d','sem'],['e','sem']], true));
 put('d1-fig-kw', figRows([['a','kw']], false));
 put('d1-fig-sem', figRows([['r','sem'],['t','sem'],['h','sem']], true));
-put('d1-empty-sem', noteRows([['c','sem'],['d','sem']], true));
-put('d1-fb-kw', noteRows([['a','kw'],['b','kw']], false));
+put('d1-empty-sem', noteCards([['c','sem'],['d','sem']], true));
+put('d1-fb-kw', noteCards([['a','kw'],['b','kw']], false));
 // Direction 2
 put('d2-notes', noteRows([['a','both'],['c','semM'],['b','kw'],['d','semM'],['e','semM']], true));
 put('d2-fig', figRows([['a','both'],['r','semM'],['t','semM'],['h','semM']], true));
