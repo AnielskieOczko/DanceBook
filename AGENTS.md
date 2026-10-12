@@ -599,15 +599,16 @@ root id.
 ### Global template model
 
 `controller/web/NavbarAdvice.kt` is a `@ControllerAdvice` supplying `currentUser`,
-`navLists`, `unreadNotificationCount`, `pollInterval`, `autoLogout`, and `activeNav` to
-every template. Adding a new top-level route means adding a branch to `activeNav()`
+`navLists`, `unreadNotificationCount`, `pollInterval`, `autoLogout`, `activeNav` and
+`currentUri` (request path plus query string, used by the avatar menu's language form so a
+language change returns to the same page) to every template. Adding a new top-level route means adding a branch to `activeNav()`
 for the navbar to highlight correctly.
 
 ### Navigation
 
 Since #137 the nav has **six items, identical on desktop and mobile, in the same order**:
 Dashboard, Notes, Figures, Collections, Choreographies, Training. Profile is reached
-through the avatar, and admin through the gear icon; neither is a nav item. A seventh item
+through the avatar menu, and admin through the gear icon; neither is a nav item. A seventh item
 is a design decision for #46, not something to add alongside a feature. The mobile bar
 has no room for one.
 
@@ -641,6 +642,48 @@ tracked-out uppercase they used to carry was retired in #93, and it does not fit
 That is the one deliberate label difference between the two navs. Check a label change by
 measuring it in a 375px viewport; a MockMvc test cannot see overflow, and #137's first
 pass claimed a fit that the browser showed was false.
+
+### The avatar menu, profile page and training timeline (#228, #229, #227)
+
+- **The avatar opens a dropdown on every width (#228).** It lives in `layout.html`: a header
+  block (name and role, not a link), Profile, Language (expands in place, applies at once),
+  and a separated Log out, which is still a POST. Below the bottom-navigation breakpoint a top
+  group adds Choreographies, Collections and Admin (admins only), the items the six-slot
+  mobile bar has no room for. It closes on Escape and outside click, arrow keys move through
+  the items, and focus returns to the avatar (`static/js/main.js`). The items are repeated
+  markup, not a catalog fragment; make one if a second menu appears.
+- **Redirect parameters take a plain same-site path only.** `POST /profile/locale` and the
+  attendance action in `TrainingEventWebController` accept an optional `redirect`. The rule
+  (`ProfileController.sanitizeRedirect`) is one leading slash, then not `/` or `\`, no
+  backslash anywhere, no control characters; anything else falls back to the default page.
+  The first versions of both accepted `//evil.example` and `/\evil.example` (an open
+  redirect) and were caught only in review. The rule now exists in two copies; share it
+  rather than writing a third.
+- **Profile is a summary plus a settings list (#229, direction C).** `profile/index.html` has
+  a hero (name, role, member since, real training streak and this year's hours, sessions and
+  attendance, and counts of Notes, choreographies and figures created) and settings as an
+  accordion where each row shows its current value and expands in place: Badges (dashed
+  placeholder slots), Calendars (default calendar), Language, Medal badge style, Assistant
+  (reserved until #309) and Password. Log out is not on this page. Recent activity shows only
+  the signed-in user's own events, through the activity service and the normal visibility
+  rule. A new setting is a new row, not a new card. The mock's 14-day streak bar and best
+  streak are left out on purpose because the app does not compute them.
+- **The controller never reads repositories.** The profile counts go through the Note,
+  Choreography and Figure services (`countByOwner` and the like). The activity icon is computed in
+  Kotlin (`ProfileActivityItem`), because a template expression for it could not be parsed and
+  made the page return 500 for any user with recent activity; the test that renders the page
+  with activity events is there to catch that.
+- **Training timeline is a vertical journey feed (#227).** One card per ISO week, newest first,
+  with its rollup; a week appears once with its full rollup even when it crosses a month
+  boundary or two loaded windows (`dto/TrainingTimeline.kt`, `TrainingTimelineServiceImpl`).
+  The summary tiles reuse the all-time training statistics for the streak; do not recompute it
+  from the loaded window, and do not invent milestone or tier rules (that is #35 and #39).
+  Polish months are the nominative ("listopad 2026") and the session date is "sobota,
+  21 listopada 2026".
+- **Message keys must exist in both bundles.** Two keys the timeline template used
+  (`training.status.unconfirmed`, `training.view.notes`) existed in neither file and
+  rendered as `??key??` in review. `TrainingTimelineViewRenderingTest` now checks that every
+  key in the template resolves in both languages.
 
 ### Who the current user is
 
