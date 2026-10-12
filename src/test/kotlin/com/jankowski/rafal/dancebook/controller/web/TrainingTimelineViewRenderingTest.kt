@@ -20,6 +20,7 @@ import com.jankowski.rafal.dancebook.service.SystemSettingService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -40,7 +41,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import java.io.File
 import java.time.LocalDateTime
+import java.util.Properties
 import java.util.UUID
 
 /**
@@ -189,6 +192,107 @@ class TrainingTimelineViewRenderingTest {
         mockMvc.perform(get("/training-events/timeline").with(csrf()))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("No training logged yet")))
+    }
+
+    @Test
+    fun `renders weekly rollup with week label, trained time, attendance ratio, and dots`() {
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
+            timeline(
+                month(
+                    "September 2026",
+                    entry(daysAgo = 2, status = AttendanceStatus.ATTENDED),
+                    entry(daysAgo = 4, status = AttendanceStatus.SKIPPED)
+                )
+            )
+        )
+
+        mockMvc.perform(get("/training-events/timeline").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Week ")))
+            .andExpect(content().string(containsString("Sessions")))
+            .andExpect(content().string(containsString("Trained")))
+            .andExpect(content().string(containsString("Attended")))
+            .andExpect(content().string(containsString("1/2")))
+            .andExpect(content().string(containsString("tc-roll")))
+    }
+
+    @Test
+    fun `renders streak milestone marker with badge slot and fire icon`() {
+        val entryWithStreak = entry(daysAgo = 2, status = AttendanceStatus.ATTENDED).copy(
+            streakMilestone = 10,
+            streakReachedDate = "Sun 11 Oct",
+            streakTier = "bronze"
+        )
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
+            timeline(month("October 2026", entryWithStreak))
+        )
+
+        mockMvc.perform(get("/training-events/timeline").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("10 sessions in a row")))
+            .andExpect(content().string(containsString("Streak reached on Sun 11 Oct")))
+            .andExpect(content().string(containsString("Badge slot")))
+            .andExpect(content().string(containsString("tc-slot-bronze")))
+            .andExpect(content().string(containsString("local_fire_department")))
+    }
+
+    @Test
+    fun `renders session details with attendance actions for unconfirmed session`() {
+        val start = LocalDateTime.now().minusDays(1)
+        val unconfirmedEvent = TrainingEvent().apply {
+            id = UUID.randomUUID()
+            title = "Unconfirmed drill"
+            startTime = start
+            endTime = start.plusMinutes(90)
+            setAttendance(testUser, AttendanceStatus.PLANNED)
+            eventType = TrainingEventType.TRAINING
+            createdBy = testUser
+        }
+        val unconfirmedEntry = TrainingTimelineEntry(
+            row = TrainingEventRow(unconfirmedEvent, TrainingEventPalette.UNCONFIRMED),
+            isFuture = false,
+            startsTodayBoundary = false
+        )
+
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
+            timeline(month("September 2026", unconfirmedEntry))
+        )
+
+        mockMvc.perform(get("/training-events/timeline").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Unconfirmed drill")))
+            .andExpect(content().string(containsString("I attended")))
+            .andExpect(content().string(containsString("I skipped")))
+            .andExpect(content().string(containsString("action=\"/training-events/${unconfirmedEvent.id}/attendance\"")))
+    }
+
+    @Test
+    fun `every message key used in timeline template exists in both English and Polish message bundles`() {
+        val templateFile = File("src/main/resources/templates/training-events/timeline.html")
+        assertTrue(templateFile.isFile, "timeline.html must exist")
+        val content = templateFile.readText(Charsets.UTF_8)
+
+        val regex = Regex("""#\{([a-zA-Z0-9_.-]+)""")
+        val keysUsed = regex.findAll(content).map { it.groupValues[1] }.toSet()
+
+        val enProps = Properties().apply {
+            File("src/main/resources/messages.properties").reader(Charsets.UTF_8).use { load(it) }
+        }
+        val plProps = Properties().apply {
+            File("src/main/resources/messages_pl.properties").reader(Charsets.UTF_8).use { load(it) }
+        }
+
+        val missingInEn = keysUsed.filterNot { enProps.containsKey(it) }.sorted()
+        val missingInPl = keysUsed.filterNot { plProps.containsKey(it) }.sorted()
+
+        assertTrue(
+            missingInEn.isEmpty(),
+            "Message keys in timeline.html missing from messages.properties:\n" + missingInEn.joinToString("\n")
+        )
+        assertTrue(
+            missingInPl.isEmpty(),
+            "Message keys in timeline.html missing from messages_pl.properties:\n" + missingInPl.joinToString("\n")
+        )
     }
 
     private fun timeline(

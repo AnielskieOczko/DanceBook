@@ -41,6 +41,7 @@ class TrainingTimelineWebController(
         )
 
         model.addAttribute("timeline", timeline)
+        model.addAttribute("stats", timeline.stats)
         model.addAttribute("currentUser", appUserService.getCurrentUser())
         // The month already on screen when this window was requested. The first heading is
         // suppressed when it matches, so an appended window continues a month rather than
