@@ -301,27 +301,6 @@ class TrainingEventWebControllerTest {
     }
 
     @Test
-    fun `sanitizeRedirectPath rejects off-site and control character paths and accepts valid same-site paths`() {
-        assertNull(TrainingEventWebController.sanitizeRedirectPath(null))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath(""))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("https://evil.example"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("relative/path"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("//evil.example"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("/\\evil.example"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("/\tevil.example"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("/foo\nbar"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("/path\\with\\backslash"))
-        assertNull(TrainingEventWebController.sanitizeRedirectPath("/path\u007Fdel"))
-
-        assertEquals("/", TrainingEventWebController.sanitizeRedirectPath("/"))
-        assertEquals("/training-events", TrainingEventWebController.sanitizeRedirectPath("/training-events"))
-        assertEquals(
-            "/training-events/timeline?page=1&lastMonth=listopad",
-            TrainingEventWebController.sanitizeRedirectPath("/training-events/timeline?page=1&lastMonth=listopad")
-        )
-    }
-
-    @Test
     fun `updateAttendance redirects to sanitized path when valid same-site redirect is given`() {
         val model = ConcurrentModel()
         val id = UUID.randomUUID()

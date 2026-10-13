@@ -173,7 +173,7 @@ class ProfileController(
         val user = appUserService.getCurrentUser()
         val trimmed = locale?.trim()
 
-        val target = sanitizeRedirect(redirect)
+        val target = SafeRedirect.orDefault(redirect, "/profile")
 
         if (!trimmed.isNullOrEmpty() && !AppLocales.isSupported(trimmed)) {
             redirectAttributes.addFlashAttribute("localeErrorMsg", true)
@@ -370,14 +370,5 @@ class ProfileController(
             dateLabel = dateLabel,
             createdAt = createdAt
         )
-    }
-
-    private fun sanitizeRedirect(redirect: String?): String {
-        if (redirect.isNullOrBlank()) return "/profile"
-        if (!redirect.startsWith("/")) return "/profile"
-        if (redirect.length > 1 && (redirect[1] == '/' || redirect[1] == '\\')) return "/profile"
-        if (redirect.contains('\\')) return "/profile"
-        if (redirect.any { it.code < 0x20 || it.code == 0x7F }) return "/profile"
-        return redirect
     }
 }
