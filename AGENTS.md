@@ -1424,6 +1424,25 @@ them rather than flagging their absence.
 
 Project-specific agent rules and skills live in `.agents/rules/` and `.agents/skills/`.
 
+### Design mocks (`docs/mocks/`)
+
+UI work is built from an approved mock, not from prose. Each mock is one standalone HTML file
+that copies its tokens from `src/main/resources/frontend/input.css`; it is the contract for
+layout, order, spacing and copy, and anything it shows that its issue does not build is listed in
+that issue. A mock reaches an implementer only if it is on `main`, so merge the mock PR before
+delegating. Several mocks show directions that were **not** chosen; the issue names the chosen one.
+
+| Folder | Issue | Chosen |
+| --- | --- | --- |
+| `rounded-forms` | #214 | Pill controls, 16px cards, 24px multi-line surfaces, 3px focus ring; go-to-top control |
+| `assistant` | #215 | Direction A "Ledger": history inside the 400px panel, list column beside a reading column in full window |
+| `profile` | #217 | Avatar dropdown, and the profile as summary plus settings list (direction C) |
+| `training-timeline` | #216 | Direction 2, the vertical journey feed |
+| `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
+| `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
+| `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline |
+| `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments (#327, #328) |
+
 ## Agent delegation contract
 
 Implementation work on an issue labelled `ready-for-agent` may be delegated to an
