@@ -47,7 +47,9 @@
                     <a th:href="@{/dance-categories/{id}/edit(id=${dc.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-sm font-label-sm" title="Edit Category">
                         <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span><span>Edit</span>
                     </a>
-                    <form th:action="@{/dance-categories/{id}/delete(id=${dc.id})}" method="post" class="contents" onsubmit="return confirm('Delete this category and all its styles?')">
+                    <form th:action="@{/dance-categories/{id}/delete(id=${dc.id})}" method="post" class="contents"
+                          data-confirm="Delete this category and all its styles?"
+                          th:data-confirm="#{dance_categories.delete_confirm}">
                         <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1 text-sm font-label-sm" title="Delete Category">
                             <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span><span>Delete</span>
                         </button>
@@ -74,7 +76,9 @@
                     <a th:href="@{/dance-types/{id}/edit(id=${dt.id})}" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1.5 text-sm font-label-sm">
                         <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> Edit
                     </a>
-                    <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post" class="contents" onsubmit="return confirm('Delete this style?')">
+                    <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post" class="contents"
+                          data-confirm="Delete this style?"
+                          th:data-confirm="#{dance_types.delete_confirm}">
                         <button type="submit" class="text-on-surface-variant hover:text-danger transition-colors flex items-center gap-1.5 text-sm font-label-sm">
                             <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> Delete
                         </button>

@@ -141,6 +141,23 @@ class ProfileWebTest {
     }
 
     @Test
+    fun `profile page renders default calendar radio with js-auto-submit class and no inline onchange`() {
+        trainingCalendarRepository.save(TrainingCalendar().apply {
+            displayName = "My Auto Submit Calendar"
+            owner = testUser
+            enabled = true
+        })
+
+        mockMvc.perform(
+            get("/profile")
+                .with(user(testUser.username).roles("USER"))
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("js-auto-submit")))
+            .andExpect(content().string(not(containsString("onchange="))))
+    }
+
+    @Test
     fun `locale redirect rejects open redirect attempts off-site and accepts safe local paths`() {
         // Attempt //evil.example
         mockMvc.perform(

@@ -87,7 +87,8 @@ document.addEventListener('htmx:afterRequest', function(event) {
  */
 document.addEventListener('submit', function(event) {
     const form = event.target;
-    const message = form.getAttribute('data-confirm');
+    const submitter = event.submitter;
+    const message = (submitter && submitter.getAttribute('data-confirm')) || form.getAttribute('data-confirm');
     if (message && !confirm(message)) {
         event.preventDefault();
     }
@@ -95,13 +96,16 @@ document.addEventListener('submit', function(event) {
 
 /**
  * Generic auto-submit on change handler.
- * Usage: <select class="js-filter-select">
+ * Usage: <select class="js-filter-select"> or <input class="js-auto-submit">
  */
 document.addEventListener('change', function(event) {
-    const select = event.target.closest('.js-filter-select');
-    if (select) {
-        select.form.submit();
-        return;
+    const autoSubmit = event.target.closest('.js-filter-select, .js-auto-submit, [data-auto-submit]');
+    if (autoSubmit) {
+        const form = autoSubmit.form || autoSubmit.closest('form');
+        if (form) {
+            form.submit();
+            return;
+        }
     }
 
     // Bulk select-all handler
@@ -129,6 +133,19 @@ document.addEventListener('change', function(event) {
         return;
     }
 });
+
+/**
+ * Generic fallback for broken images, replacing inline onerror blocked by CSP.
+ * Usage: <img src="..." data-fallback="/images/placeholder.png">
+ */
+window.addEventListener('error', function(event) {
+    if (event.target && event.target.tagName === 'IMG') {
+        const fallback = event.target.getAttribute('data-fallback');
+        if (fallback && event.target.src && !event.target.src.endsWith(fallback)) {
+            event.target.src = fallback;
+        }
+    }
+}, true);
 
 function updateBulkActionBar() {
     const checked = document.querySelectorAll('.js-session-checkbox:checked');
