@@ -154,7 +154,7 @@
                 <h3 class="font-medium text-text-primary mb-2 text-sm" th:text="#{admin.settings.defaults.collection_image}">Default Collection Image</h3>
                 <div class="flex items-start gap-4">
                     <div class="w-24 h-24 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
-                        <img th:src="@{/uploads/defaults/list-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" th:attr="alt=#{admin.settings.defaults.list_alt}" alt="Default List" class="w-full h-full object-cover">
+                        <img th:src="@{/uploads/defaults/list-placeholder.png}" data-fallback="/images/categories/placeholder.png" th:attr="alt=#{admin.settings.defaults.list_alt}" alt="Default List" class="w-full h-full object-cover">
                     </div>
                     <form th:action="@{/admin/settings/default-list-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
                         <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">
@@ -168,7 +168,7 @@
                 <h3 class="font-medium text-text-primary mb-2 text-sm" th:text="#{admin.settings.defaults.category_image}">Default Category Image</h3>
                 <div class="flex items-start gap-4">
                     <div class="w-24 h-16 shrink-0 rounded border border-outline-variant overflow-hidden bg-white">
-                        <img th:src="@{/uploads/defaults/category-placeholder.png}" onerror="this.src='/images/categories/placeholder.png'" th:attr="alt=#{admin.settings.defaults.category_alt}" alt="Default Category" class="w-full h-full object-cover">
+                        <img th:src="@{/uploads/defaults/category-placeholder.png}" data-fallback="/images/categories/placeholder.png" th:attr="alt=#{admin.settings.defaults.category_alt}" alt="Default Category" class="w-full h-full object-cover">
                     </div>
                     <form th:action="@{/admin/settings/default-category-image(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data" class="flex-1 space-y-3">
                         <input type="file" name="image" accept="image/*" required class="block w-full text-xs text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-button file:border-0 file:text-xs file:font-semibold file:bg-primary-soft file:text-primary hover:file:bg-primary-soft/80 cursor-pointer">

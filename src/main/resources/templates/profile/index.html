@@ -159,7 +159,7 @@
                                 <form th:action="@{/profile/default-calendar}" method="post" class="shrink-0 m-0">
                                     <input type="hidden" name="id" th:value="${cal.id}">
                                     <label class="inline-flex items-center gap-1.5 text-xs font-medium text-on-surface cursor-pointer select-none">
-                                        <input type="radio" name="defaultCalRadio" th:checked="${cal.id == defaultCalendar?.id}" onchange="this.form.submit()" class="accent-primary">
+                                        <input type="radio" name="defaultCalRadio" th:checked="${cal.id == defaultCalendar?.id}" class="accent-primary js-auto-submit">
                                         <span th:text="#{profile.settings.calendars.default}">Default</span>
                                     </label>
                                 </form>

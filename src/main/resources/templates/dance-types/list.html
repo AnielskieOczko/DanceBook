@@ -34,7 +34,8 @@
                     <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                 </a>
                 <form th:action="@{/dance-types/{id}/delete(id=${dt.id})}" method="post"
-                      onsubmit="return confirm('Delete this style?')">
+                      data-confirm="Delete this style?"
+                      th:data-confirm="#{dance_types.delete_confirm}">
                     <button type="submit" class="flex items-center gap-1.5 px-3 min-h-[44px] rounded-md text-error hover:bg-danger-soft/20 text-sm font-label-sm" title="Delete">
                         <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                         <span>Delete</span>
