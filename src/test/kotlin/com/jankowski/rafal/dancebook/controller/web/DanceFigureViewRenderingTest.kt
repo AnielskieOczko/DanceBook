@@ -98,6 +98,7 @@ class DanceFigureViewRenderingTest {
 
         mockMvc.perform(get("/dance-figures/{id}", figureId).with(csrf()))
             .andExpect(status().isOk)
+            .andExpect(content().string(containsString("card-remarks")))
             .andExpect(content().string(containsString("No notes available for this figure.")))
             .andExpect(content().string(not(containsString("rich-text text-on-surface"))))
     }
@@ -121,6 +122,8 @@ class DanceFigureViewRenderingTest {
 
         mockMvc.perform(get("/dance-figures/{id}", figureId).with(csrf()))
             .andExpect(status().isOk)
+            .andExpect(content().string(containsString("card-remarks")))
+            .andExpect(content().string(containsString("card-remarks-title")))
             .andExpect(content().string(containsString("Key note for <strong>Leader</strong>")))
             .andExpect(content().string(not(containsString("No notes available for this figure."))))
     }
@@ -258,6 +261,30 @@ class DanceFigureViewRenderingTest {
         assertNotNull(form.selectFirst("#sec-flow"), "Flow section must be present")
         assertNotNull(form.selectFirst("#sec-links"), "Resources section must be present")
         assertNotNull(form.selectFirst("#sec-notes"), "Notes section must be present")
+    }
+
+    @Test
+    fun `figure view renders technical remarks card with Polish heading when Polish locale requested`() {
+        val figureId = UUID.randomUUID()
+        val danceType = DanceType().apply {
+            id = UUID.randomUUID()
+            name = "Waltz"
+        }
+        val figure = DanceFigure().apply {
+            id = figureId
+            name = "Natural Spin Turn"
+            this.danceType = danceType
+            notes = "<div>Uwagi techniczne dla partnera</div>"
+        }
+
+        `when`(danceFigureService.findById(figureId)).thenReturn(figure)
+        `when`(danceFigureService.findByDanceType(danceType.id!!)).thenReturn(listOf(figure))
+
+        mockMvc.perform(get("/dance-figures/{id}", figureId).locale(java.util.Locale.forLanguageTag("pl")).with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("card-remarks")))
+            .andExpect(content().string(containsString("Notatki do figury")))
+            .andExpect(content().string(containsString("Uwagi techniczne dla partnera")))
     }
 }
 

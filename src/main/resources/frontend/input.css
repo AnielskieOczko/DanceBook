@@ -223,6 +223,25 @@ layer(base);
   --text-tabular--line-height: 20px;
   --text-tabular--font-weight: 500;
 
+  --text-read: 16px;
+  --text-read--line-height: 26px;
+  --text-read--letter-spacing: -0.005em;
+  --text-read--font-weight: 400;
+
+  --text-read-lead: 18px;
+  --text-read-lead--line-height: 26px;
+  --text-read-lead--letter-spacing: -0.015em;
+  --text-read-lead--font-weight: 700;
+
+  --text-read-title: 22px;
+  --text-read-title--line-height: 28px;
+  --text-read-title--letter-spacing: -0.02em;
+  --text-read-title--font-weight: 700;
+
+  --text-card: 14px;
+  --text-card--line-height: 21px;
+  --text-card--font-weight: 400;
+
   --shadow-level-0: none;
   --shadow-level-1: 0 4px 20px rgba(22, 24, 26, 0.08);
 
@@ -245,6 +264,10 @@ layer(base);
  * an unreferenced theme variable otherwise. */
 @theme static {
   --radius-inset: 12px;
+  --measure-read: 66ch;
+  --measure-card: 76ch;
+  --space-para: 14px;
+  --space-card-para: 8px;
 }
 
 /*
@@ -917,8 +940,16 @@ layer(base);
   @apply mt-2 p-4 sm:p-5 border border-outline-variant rounded-card bg-surface space-y-4;
 }
 
+@utility max-w-read {
+  max-width: var(--measure-read, 66ch);
+}
+
+@utility max-w-card {
+  max-width: var(--measure-card, 76ch);
+}
+
 @utility prose-text {
-  @apply font-serif text-prose max-w-[68ch];
+  @apply font-sans text-read max-w-read;
 }
 
 @media (min-width: 768px) {
@@ -1574,30 +1605,109 @@ trix-editor a {
   text-underline-offset: 2px;
 }
 
-/* ── Rich Text Prose Display ────────────────────── */
+/* ── Rich Text Reading Display (Direction C) ────────────────────── */
 @layer components {
   .rich-text {
-    font-family: inherit;
+    font-family: var(--font-sans);
+    font-size: var(--text-read);
+    line-height: var(--text-read--line-height);
+    letter-spacing: var(--text-read--letter-spacing, -0.005em);
+    max-width: var(--measure-read, 66ch);
+    color: var(--color-on-surface);
   }
 }
 
-.rich-text ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+.rich-text p,
+.rich-text > div {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.rich-text p:last-child,
+.rich-text > div:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text .lead,
+.rich-text .read-lead {
+  font-size: var(--text-read-lead);
+  line-height: var(--text-read-lead--line-height);
+  font-weight: var(--text-read-lead--font-weight, 700);
+  letter-spacing: var(--text-read-lead--letter-spacing, -0.015em);
+  color: var(--color-on-surface);
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.rich-text h1:first-child,
+.rich-text h2:first-child,
+.rich-text h3:first-child,
+.rich-text h4:first-child,
+.rich-text .lead:first-child,
+.rich-text .read-lead:first-child {
+  margin-top: 0;
+}
+
+.rich-text blockquote,
+.rich-text .quote {
+  margin: 14px 0;
+  padding: 14px 18px;
+  border-radius: var(--radius-inset);
+  background-color: var(--color-primary-soft);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 26px;
+  color: var(--color-on-surface);
 }
 
 .rich-text ol {
-  list-style-type: decimal;
-  padding-left: 1.5rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  counter-reset: li;
+  margin-top: 14px;
+  margin-bottom: 14px;
 }
 
-.rich-text li {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
+.rich-text ol > li {
+  counter-increment: li;
+  padding-left: 28px;
+  position: relative;
+  margin: 0;
+}
+
+.rich-text ol > li::before {
+  content: counter(li);
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.rich-text ul {
+  display: grid;
+  gap: 8px;
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+.rich-text ul > li {
+  margin: 0;
 }
 
 .rich-text a {
@@ -1618,6 +1728,100 @@ trix-editor a {
 .rich-text em,
 .rich-text i {
   font-style: italic;
+}
+
+/* ── Outlined Remarks Card (Direction A) ────────────────────── */
+@utility card-remarks {
+  padding: 16px 20px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-card);
+  max-width: var(--measure-card, 76ch);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: var(--text-card);
+  line-height: var(--text-card--line-height);
+  font-weight: 400;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+@utility card-remarks-title {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.card-remarks .lead {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.card-remarks ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.card-remarks .quote,
+.card-remarks blockquote {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-inset);
+  background-color: var(--color-primary-soft);
+  color: var(--color-on-surface);
+}
+
+.card-remarks .facts,
+.card-remarks dl {
+  padding: 8px 12px;
+  background-color: var(--color-surface-container);
+  border-radius: var(--radius-inset);
+  display: grid;
+  gap: 4px 12px;
+  margin: 0;
+  grid-template-columns: auto 1fr;
+}
+
+.card-remarks .facts dt,
+.card-remarks dl dt {
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+}
+
+.card-remarks .facts dd,
+.card-remarks dl dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.card-remarks .rich-text {
+  font-size: 14px;
+  line-height: 21px;
+  max-width: 100%;
+}
+
+.card-remarks .rich-text p,
+.card-remarks .rich-text > div {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.card-remarks .rich-text p:last-child,
+.card-remarks .rich-text > div:last-child {
+  margin-bottom: 0;
+}
+
+.card-remarks .rich-text ol,
+.card-remarks .rich-text ul {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  gap: 4px;
 }
 
 /* ── Go-to-top / Go-to-bottom floating control (#224) ── */

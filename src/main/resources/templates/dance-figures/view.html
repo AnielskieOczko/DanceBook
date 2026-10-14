@@ -522,15 +522,19 @@
         </div>
 
         <!-- Notes (2/3 Width) -->
-        <div class="card p-8 space-y-6 text-base lg:col-span-2">
-            <h2 class="text-xl font-bold text-on-surface border-b border-outline-variant pb-3 flex items-center gap-2">
-                <span th:replace="~{fragments/icon :: icon(name='description', size='md', cls='text-primary')}"></span> <span th:text="#{figures.view.section.notes}">Figure Notes</span>
-            </h2>
-            <th:block th:if="${danceFigure.notes != null}">
-                <div th:replace="~{fragments/rich-text :: content(value=${danceFigure.notes}, cls='prose-text leading-relaxed bg-surface-container-low p-6 rounded-md border border-outline-variant text-base')}"></div>
-            </th:block>
-            <div th:if="${danceFigure.notes == null}" class="prose-text text-on-surface-variant italic bg-surface-container-low p-6 rounded-md border border-outline-variant text-base" th:text="#{figures.view.notes.empty}">
-                No notes available for this figure.
+        <div class="lg:col-span-2">
+            <div th:replace="~{fragments/card :: remarksCard(
+                    title=#{figures.view.section.notes},
+                    icon='description',
+                    body=~{::figureNotesBody})}">
+                <div th:fragment="figureNotesBody">
+                    <th:block th:if="${danceFigure.notes != null}">
+                        <div th:replace="~{fragments/rich-text :: content(value=${danceFigure.notes})}"></div>
+                    </th:block>
+                    <div th:if="${danceFigure.notes == null}" class="italic text-on-surface-variant text-sm" th:text="#{figures.view.notes.empty}">
+                        No notes available for this figure.
+                    </div>
+                </div>
             </div>
         </div>
     </div>

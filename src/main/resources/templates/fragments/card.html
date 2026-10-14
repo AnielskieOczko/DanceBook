@@ -50,5 +50,24 @@
     </div>
 </th:block>
 
+<!-- Remarks Card (Direction A: outlined card for advice, technical remarks, recommendations) -->
+<div th:fragment="remarksCard"
+     class="card-remarks"
+     th:classappend="${cls}">
+    <div th:if="${title != null}" class="flex items-center gap-2">
+        <th:block th:if="${icon != null}">
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls='text-primary')}"></span>
+        </th:block>
+        <h3 class="card-remarks-title" th:text="${title}">Title</h3>
+    </div>
+    <div th:if="${lead != null}" class="lead" th:text="${lead}">Lead-in</div>
+    <th:block th:if="${body != null}">
+        <th:block th:replace="${body}"></th:block>
+    </th:block>
+    <th:block th:if="${text != null}">
+        <div th:replace="~{fragments/rich-text :: content(value=${text})}"></div>
+    </th:block>
+</div>
+
 </body>
 </html>
