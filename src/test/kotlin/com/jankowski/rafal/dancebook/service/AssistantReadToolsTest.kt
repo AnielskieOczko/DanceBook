@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.MedalLevel
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventSegment
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
 import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
@@ -143,6 +144,40 @@ class AssistantReadToolsTest {
         assertTrue(card.snippet!!.contains("sway"))
         assertEquals("Waltz · 11 Sep 2026", card.subtitle)
         assertEquals(listOf("Natural Turn · 1 2 3"), card.chips)
+    }
+
+    private fun toolsWithIncludeShared(include: Boolean): AssistantReadTools {
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(user)
+        val prefs = mock(AssistantPreferencesService::class.java)
+        `when`(prefs.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(includeSharedItems = include))
+        return AssistantReadTools(
+            materialService, danceFigureService, danceTypeService, trainingEventService,
+            appUserService, RichTextServiceImpl(), clock, assistantPreferencesService = prefs
+        )
+    }
+
+    @Test
+    fun `search_notes asks only for owned notes when include shared items is off`() {
+        val mine = note("Mine", "sway").apply { owner = user }
+        `when`(materialService.searchNotes("sway", null, null, 10, true)).thenReturn(listOf(mine))
+
+        val result = toolsWithIncludeShared(false).searchNotes("sway", null, null)
+
+        assertEquals(listOf(mine.id.toString()), result.items.map { it.id })
+    }
+
+    @Test
+    fun `get_note hides someone else's note when include shared items is off, and shows it when on`() {
+        val other = AppUser().apply { id = UUID.randomUUID() }
+        val theirs = note("Theirs", "sway").apply { owner = other; visibility = Visibility.PUBLIC }
+        val mine = note("Mine", "sway").apply { owner = user }
+        `when`(materialService.findById(theirs.id!!)).thenReturn(theirs)
+        `when`(materialService.findById(mine.id!!)).thenReturn(mine)
+
+        val off = toolsWithIncludeShared(false)
+        assertEquals(0, off.getNote(theirs.id.toString()).items.size)
+        assertEquals(1, off.getNote(mine.id.toString()).items.size)
+        assertEquals(1, toolsWithIncludeShared(true).getNote(theirs.id.toString()).items.size)
     }
 
     @Test

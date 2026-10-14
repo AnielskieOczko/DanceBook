@@ -196,9 +196,10 @@ class MaterialServiceImpl(
         return materialRepository.findAll(spec, pageable)
     }
 
-    override fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int): List<Material> {
+    override fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int, ownedOnly: Boolean): List<Material> {
         val currentUser = appUserService.getCurrentUserOrNull()
-        val spec = MaterialSpecification.withTextSearch(currentUser, query, figureId, danceTypeId)
+        var spec = MaterialSpecification.withTextSearch(currentUser, query, figureId, danceTypeId)
+        if (ownedOnly && currentUser != null) spec = spec.and(MaterialSpecification.ownedBy(currentUser))
         return materialRepository.findAll(
             spec, org.springframework.data.domain.PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"))
         ).content

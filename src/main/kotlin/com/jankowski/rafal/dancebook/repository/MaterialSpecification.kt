@@ -26,6 +26,11 @@ object MaterialSpecification {
         }
     }
 
+    /** Only the user's own notes. Combine with [visibleTo]; it only ever narrows. */
+    fun ownedBy(user: AppUser): Specification<Material> {
+        return Specification { root, _, cb -> cb.equal(root.get<AppUser>("owner"), user) }
+    }
+
     fun byId(id: UUID): Specification<Material> {
         return Specification { root, _, cb ->
             cb.equal(root.get<UUID>("id"), id)

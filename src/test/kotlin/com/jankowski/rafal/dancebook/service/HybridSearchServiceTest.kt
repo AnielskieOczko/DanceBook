@@ -53,11 +53,13 @@ class HybridSearchServiceTest {
         var lastMaxDistance: Double? = null
         var lastTopK: Int? = null
         var lastDanceTypeId: UUID? = null
+        var lastOwnedOnly: Boolean? = null
         override fun hybridSearch(
             query: String?, queryEmbedding: FloatArray?, sourceTypes: List<KnowledgeSourceType>?,
             currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double,
-            danceTypeId: UUID?
+            danceTypeId: UUID?, ownedOnly: Boolean
         ): List<KnowledgeSearchResult> {
+            lastOwnedOnly = ownedOnly
             lastMaxDistance = maxDistance
             lastTopK = topK
             lastDanceTypeId = danceTypeId
@@ -172,6 +174,26 @@ class HybridSearchServiceTest {
 
         assertEquals(listOf(kw.id), hits.map { it.id })
         assertEquals(0, embeddings.calls)
+    }
+
+    @Test
+    fun `the semantic query is narrowed to owned items only when include shared items is off`() {
+        fun searchWith(include: Boolean): Boolean? {
+            val prefsService = mock(AssistantPreferencesService::class.java)
+            `when`(prefsService.forUser(user)).thenReturn(AssistantPreferences.DEFAULTS.copy(includeSharedItems = include))
+            val svc = HybridSearchServiceImpl(
+                materialService, danceFigureService, appUserService, commentRepository,
+                chunks, embeddings, EmbeddingBudget(props, Clock.systemUTC()), props, AssistantFeature(props),
+                org.springframework.transaction.support.TransactionTemplate(NoOpTransactions()),
+                prefsService
+            )
+            keywordNotes(); keywordFigures()
+            svc.search("sway")
+            return chunks.lastOwnedOnly
+        }
+
+        assertEquals(true, searchWith(false))
+        assertEquals(false, searchWith(true))
     }
 
     @Test

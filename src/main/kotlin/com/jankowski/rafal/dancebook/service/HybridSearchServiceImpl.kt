@@ -118,7 +118,8 @@ class HybridSearchServiceImpl(
                 limit = SEMANTIC_CANDIDATES,
                 topK = SEMANTIC_CANDIDATES,
                 maxDistance = maxDistance,
-                danceTypeId = danceTypeId
+                danceTypeId = danceTypeId,
+                ownedOnly = assistantPreferencesService?.forUser(user)?.includeSharedItems == false
             )
 
             val near = chunks.filter { (it.distance ?: Double.MAX_VALUE) < maxDistance }

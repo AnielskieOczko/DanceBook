@@ -206,6 +206,27 @@ class KnowledgeChunkRepository(
     }
 
     /**
+     * The one access rule for chunks, appending its placeholders to [params]. With [ownedOnly] it
+     * narrows to chunks the user owns (figures have no owner and keep the normal rule), and so
+     * never admits more than the rule alone would. Anonymous callers are not narrowed: they only
+     * ever see public chunks.
+     */
+    private fun accessCondition(currentUser: AppUser?, ownedOnly: Boolean, params: MutableList<Any?>): String {
+        val base = when {
+            currentUser?.role == Role.ADMIN -> "TRUE"
+            currentUser != null -> {
+                params.add(currentUser.id)
+                params.add(currentUser.id)
+                "(visibility = 'PUBLIC' OR owner_id = ? OR (source_type = 'NOTE' AND EXISTS (SELECT 1 FROM share s WHERE s.item_type = 'MATERIAL' AND s.item_id = source_id AND s.grantee_user_id = ?)))"
+            }
+            else -> "(visibility = 'PUBLIC')"
+        }
+        if (!ownedOnly || currentUser == null) return base
+        params.add(currentUser.id)
+        return "($base AND (source_type = 'FIGURE' OR owner_id = ?))"
+    }
+
+    /**
      * Hybrid search using Reciprocal Rank Fusion (RRF) between vector similarity and full-text search.
      * Filtered by access rules: User B never sees User A's private notes or comments.
      */
@@ -218,7 +239,8 @@ class KnowledgeChunkRepository(
         topK: Int = 20,
         k: Int = 60,
         maxDistance: Double = DEFAULT_MAX_DISTANCE,
-        danceTypeId: UUID? = null
+        danceTypeId: UUID? = null,
+        ownedOnly: Boolean = false
     ): List<KnowledgeSearchResult> {
         val hasVector = queryEmbedding != null
         val hasText = !query.isNullOrBlank()
@@ -230,18 +252,9 @@ class KnowledgeChunkRepository(
         val embStr = queryEmbedding?.let { "[${it.joinToString(",")}]" }
         val cleanQuery = query?.trim().orEmpty()
 
-        val params = mutableListOf<Any?>()
-
         // 1. Access predicate
-        val accessCondition = when {
-            currentUser?.role == Role.ADMIN -> "TRUE"
-            currentUser != null -> {
-                params.add(currentUser.id)
-                params.add(currentUser.id)
-                "(visibility = 'PUBLIC' OR owner_id = ? OR (source_type = 'NOTE' AND EXISTS (SELECT 1 FROM share s WHERE s.item_type = 'MATERIAL' AND s.item_id = source_id AND s.grantee_user_id = ?)))"
-            }
-            else -> "(visibility = 'PUBLIC')"
-        }
+        val accessParams = mutableListOf<Any?>()
+        val accessCondition = accessCondition(currentUser, ownedOnly, accessParams)
 
         // 2. Source type predicate
         val sourceCondition = if (!sourceTypes.isNullOrEmpty()) {
@@ -266,10 +279,7 @@ class KnowledgeChunkRepository(
             vectorCteParams.add(embStr)
             vectorCteParams.add(embStr)
             vectorCteParams.add(maxDistance)
-            if (currentUser != null && currentUser.role != Role.ADMIN) {
-                vectorCteParams.add(currentUser.id)
-                vectorCteParams.add(currentUser.id)
-            }
+            vectorCteParams.addAll(accessParams)
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { vectorCteParams.add(it.name) }
             }
@@ -302,10 +312,7 @@ class KnowledgeChunkRepository(
         val textCte = if (hasText) {
             textCteParams.add(cleanQuery)
             textCteParams.add(cleanQuery)
-            if (currentUser != null && currentUser.role != Role.ADMIN) {
-                textCteParams.add(currentUser.id)
-                textCteParams.add(currentUser.id)
-            }
+            textCteParams.addAll(accessParams)
             if (!sourceTypes.isNullOrEmpty()) {
                 sourceTypes.forEach { textCteParams.add(it.name) }
             }
@@ -366,7 +373,8 @@ class KnowledgeChunkRepository(
         queryEmbedding: FloatArray,
         excludeSourceId: UUID?,
         currentUser: AppUser?,
-        limit: Int = 3
+        limit: Int = 3,
+        ownedOnly: Boolean = false
     ): List<KnowledgeChunk> {
         val embStr = "[${queryEmbedding.joinToString(",")}]"
         val params = mutableListOf<Any?>()
@@ -377,15 +385,7 @@ class KnowledgeChunkRepository(
             "source_id != ?"
         } else "TRUE"
 
-        val accessCondition = when {
-            currentUser?.role == Role.ADMIN -> "TRUE"
-            currentUser != null -> {
-                params.add(currentUser.id)
-                params.add(currentUser.id)
-                "(visibility = 'PUBLIC' OR owner_id = ? OR (source_type = 'NOTE' AND EXISTS (SELECT 1 FROM share s WHERE s.item_type = 'MATERIAL' AND s.item_id = source_id AND s.grantee_user_id = ?)))"
-            }
-            else -> "(visibility = 'PUBLIC')"
-        }
+        val accessCondition = accessCondition(currentUser, ownedOnly, params)
 
         params.add(limit)
 

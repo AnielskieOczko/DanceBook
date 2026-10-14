@@ -234,12 +234,14 @@ class ProfileController(
         @RequestParam(required = false) relatedNotesEnabled: Boolean?,
         @RequestParam(required = false) suggestFiguresEnabled: Boolean?,
         @RequestParam(required = false) openInFullWindow: Boolean?,
+        @RequestParam(required = false) includeSharedItems: Boolean?,
         @RequestParam(required = false) replyLanguage: String?,
         @RequestParam(name = "_assistantEnabled", required = false) hasAssistantMarker: String?,
         @RequestParam(name = "_semanticSearchEnabled", required = false) hasSemanticMarker: String?,
         @RequestParam(name = "_relatedNotesEnabled", required = false) hasRelatedNotesMarker: String?,
         @RequestParam(name = "_suggestFiguresEnabled", required = false) hasSuggestMarker: String?,
         @RequestParam(name = "_openInFullWindow", required = false) hasFullWindowMarker: String?,
+        @RequestParam(name = "_includeSharedItems", required = false) hasIncludeSharedMarker: String?,
         request: HttpServletRequest,
         model: Model,
         redirectAttributes: RedirectAttributes
@@ -259,6 +261,7 @@ class ProfileController(
         val effectiveRelatedNotes = if (hasRelatedNotesMarker != null) relatedNotesEnabled == true else relatedNotesEnabled
         val effectiveSuggestFigures = if (hasSuggestMarker != null) suggestFiguresEnabled == true else suggestFiguresEnabled
         val effectiveFullWindow = if (hasFullWindowMarker != null) openInFullWindow == true else openInFullWindow
+        val effectiveIncludeShared = if (hasIncludeSharedMarker != null) includeSharedItems == true else includeSharedItems
 
         val update = AssistantPreferencesUpdateRequest(
             assistantEnabled = effectiveAssistantEnabled,
@@ -266,6 +269,7 @@ class ProfileController(
             relatedNotesEnabled = effectiveRelatedNotes,
             suggestFiguresEnabled = effectiveSuggestFigures,
             openInFullWindow = effectiveFullWindow,
+            includeSharedItems = effectiveIncludeShared,
             replyLanguage = parsedLang
         )
 

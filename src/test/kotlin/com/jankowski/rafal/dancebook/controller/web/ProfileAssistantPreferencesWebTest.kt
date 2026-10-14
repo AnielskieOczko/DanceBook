@@ -102,6 +102,32 @@ class ProfileAssistantPreferencesWebTest {
     }
 
     @Test
+    fun `include shared items is saved off only when the form says so and defaults on`() {
+        mockMvc.perform(
+            post("/profile/assistant-preferences").with(asUser()).with(csrf())
+                .param("includeSharedItems", "false").param("_includeSharedItems", "on")
+        ).andExpect(status().is3xxRedirection)
+        assertFalse(preferencesRepository.findById(testUser.id!!).get().includeSharedItems)
+
+        mockMvc.perform(
+            post("/profile/assistant-preferences").with(asUser()).with(csrf())
+                .param("includeSharedItems", "true").param("_includeSharedItems", "on")
+        ).andExpect(status().is3xxRedirection)
+        assertTrue(preferencesRepository.findById(testUser.id!!).get().includeSharedItems)
+    }
+
+    @Test
+    fun `the profile shows the include shared items row, on by default, in both languages`() {
+        val en = mockMvc.perform(get("/profile").with(asUser())).andExpect(status().isOk).andReturn().response.contentAsString
+        val input = org.jsoup.Jsoup.parse(en).selectFirst("input[name=includeSharedItems]")!!
+        assertTrue(input.hasAttr("checked"))
+        assertTrue(en.contains("Include shared items"))
+
+        val pl = mockMvc.perform(get("/profile").with(asUser()).locale(Locale.forLanguageTag("pl"))).andReturn().response.contentAsString
+        assertTrue(pl.contains("Uwzględniaj udostępnione"))
+    }
+
+    @Test
     fun `updating assistant preferences persists and redirects`() {
         mockMvc.perform(
             post("/profile/assistant-preferences")

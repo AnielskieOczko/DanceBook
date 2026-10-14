@@ -90,6 +90,17 @@ class AssistantPreferencesServiceTest {
     }
 
     @Test
+    fun `include shared items defaults on and a saved off is read back, with or without an API key`() {
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.empty())
+        assertTrue(serviceWithKey.forUser(user).includeSharedItems)
+
+        val entity = UserAssistantPreferences().apply { userId = user.id; includeSharedItems = false }
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.of(entity))
+        assertFalse(serviceWithKey.forUser(user).includeSharedItems)
+        assertFalse(serviceWithoutKey.forUser(user).includeSharedItems)
+    }
+
+    @Test
     fun `missing API key forces assistant dependent flags off even if saved on`() {
         val entity = UserAssistantPreferences().apply {
             userId = user.id

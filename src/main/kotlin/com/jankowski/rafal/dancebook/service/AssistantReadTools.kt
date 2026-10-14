@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.Material
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
 import com.jankowski.rafal.dancebook.repository.CommentRepository
+import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.ai.embedding.EmbeddingModel
@@ -49,7 +50,8 @@ class AssistantReadTools(
     private val choreographyRepository: ChoreographyRepository? = null,
     private val commentRepository: CommentRepository? = null,
     private val embeddingBudget: EmbeddingBudget? = null,
-    private val assistantFeature: com.jankowski.rafal.dancebook.config.AssistantFeature? = null
+    private val assistantFeature: com.jankowski.rafal.dancebook.config.AssistantFeature? = null,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) {
 
     companion object {
@@ -66,6 +68,10 @@ class AssistantReadTools(
         if (embeddingBudget != null && !embeddingBudget.tryAcquireInteractive(appUserService.getCurrentUserOrNull()?.id)) return null
         return model.embed(text)
     }
+
+    /** True when the user turned "Include shared items" off: the tools then see only what they own. */
+    private fun ownedOnly(user: AppUser?): Boolean =
+        assistantPreferencesService?.forUser(user)?.includeSharedItems == false
 
     val callbacks: List<ToolCallback> by lazy { ToolCallbacks.from(this).toList() }
 
@@ -91,7 +97,8 @@ class AssistantReadTools(
                 queryEmbedding = queryEmbedding,
                 sourceTypes = listOf(KnowledgeSourceType.FIGURE),
                 currentUser = user,
-                limit = 20
+                limit = 20,
+                ownedOnly = ownedOnly(user)
             )
             if (searchResults.isNotEmpty()) {
                 val figureMap = danceFigureService.findAll(typeIds.takeIf { it.isNotEmpty() }, null, cls.value, null, null, null)
@@ -132,7 +139,8 @@ class AssistantReadTools(
                 queryEmbedding = queryEmbedding,
                 sourceTypes = listOf(KnowledgeSourceType.NOTE, KnowledgeSourceType.NOTE_COMMENT),
                 currentUser = user,
-                limit = 20
+                limit = 20,
+                ownedOnly = ownedOnly(user)
             )
             val noteIds = searchResults.mapNotNull {
                 when (it.chunk.sourceType) {
@@ -153,7 +161,11 @@ class AssistantReadTools(
             }
         }
 
-        val notes = materialService.searchNotes(query?.trim(), figure, typeIds.firstOrNull(), MAX_RESULTS)
+        val notes = if (ownedOnly(user)) {
+            materialService.searchNotes(query?.trim(), figure, typeIds.firstOrNull(), MAX_RESULTS, true)
+        } else {
+            materialService.searchNotes(query?.trim(), figure, typeIds.firstOrNull(), MAX_RESULTS)
+        }
         return ToolResult(notes.size, notes.map { noteCard(it, terms) })
     }
 
@@ -174,7 +186,8 @@ class AssistantReadTools(
             queryEmbedding = queryEmbedding,
             sourceTypes = null,
             currentUser = user,
-            limit = 5
+            limit = 5,
+            ownedOnly = ownedOnly(user)
         )
         if (searchResults.isEmpty()) {
             return ToolResult(0, emptyList(), "Nothing found in your notes.")
@@ -276,7 +289,12 @@ class AssistantReadTools(
     fun getNote(@ToolParam(description = "The note's id") id: String): ToolResult {
         val uuid = parse(id) ?: return badId()
         return try {
-            ToolResult(1, listOf(noteCard(materialService.findById(uuid), emptyList())))
+            val note = materialService.findById(uuid)
+            val user = appUserService.getCurrentUserOrNull()
+            if (ownedOnly(user) && note.owner?.id != user?.id) {
+                return ToolResult(0, emptyList(), "No note with that id is available.")
+            }
+            ToolResult(1, listOf(noteCard(note, emptyList())))
         } catch (e: EntityNotFoundException) {
             ToolResult(0, emptyList(), "No note with that id is available.")
         } catch (e: AccessDeniedException) {
