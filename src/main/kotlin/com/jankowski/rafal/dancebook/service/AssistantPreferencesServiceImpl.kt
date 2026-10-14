@@ -69,6 +69,7 @@ class AssistantPreferencesServiceImpl(
         update.suggestFiguresEnabled?.let { entity.suggestFiguresEnabled = it }
         update.openInFullWindow?.let { entity.openInFullWindow = it }
         update.replyLanguage?.let { entity.replyLanguage = it }
+        update.includeSharedItems?.let { entity.includeSharedItems = it }
         entity.updatedAt = LocalDateTime.now()
 
         val saved = repository.save(entity)
@@ -82,6 +83,7 @@ class AssistantPreferencesServiceImpl(
             relatedNotesEnabled = entity.relatedNotesEnabled,
             suggestFiguresEnabled = entity.suggestFiguresEnabled,
             openInFullWindow = entity.openInFullWindow,
-            replyLanguage = entity.replyLanguage
+            replyLanguage = entity.replyLanguage,
+            includeSharedItems = entity.includeSharedItems
         )
 }

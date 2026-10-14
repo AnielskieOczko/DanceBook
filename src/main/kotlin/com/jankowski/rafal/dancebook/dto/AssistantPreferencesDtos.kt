@@ -14,7 +14,9 @@ data class AssistantPreferences(
     val relatedNotesEnabled: Boolean = true,
     val suggestFiguresEnabled: Boolean = true,
     val openInFullWindow: Boolean = false,
-    val replyLanguage: AssistantReplyLanguage = AssistantReplyLanguage.APP
+    val replyLanguage: AssistantReplyLanguage = AssistantReplyLanguage.APP,
+    /** Off narrows the assistant and semantic retrieval to items the user owns; it never widens access. */
+    val includeSharedItems: Boolean = true
 ) {
     companion object {
         val DEFAULTS = AssistantPreferences()
@@ -30,5 +32,6 @@ data class AssistantPreferencesUpdateRequest(
     val relatedNotesEnabled: Boolean? = null,
     val suggestFiguresEnabled: Boolean? = null,
     val openInFullWindow: Boolean? = null,
-    val replyLanguage: AssistantReplyLanguage? = null
+    val replyLanguage: AssistantReplyLanguage? = null,
+    val includeSharedItems: Boolean? = null
 )

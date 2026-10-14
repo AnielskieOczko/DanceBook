@@ -34,7 +34,8 @@ class AssistantReadToolsBudgetTest {
     private class EmptyChunks : KnowledgeChunkRepository(mock(JdbcTemplate::class.java)) {
         override fun hybridSearch(
             query: String?, queryEmbedding: FloatArray?, sourceTypes: List<KnowledgeSourceType>?,
-            currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double, danceTypeId: UUID?
+            currentUser: AppUser?, limit: Int, topK: Int, k: Int, maxDistance: Double, danceTypeId: UUID?,
+            ownedOnly: Boolean
         ): List<KnowledgeSearchResult> = emptyList()
     }
 

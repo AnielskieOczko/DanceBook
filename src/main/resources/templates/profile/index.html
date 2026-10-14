@@ -381,6 +381,23 @@
                                 </label>
                             </div>
 
+                            <!-- Row 5b: Include shared items -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.include_shared}">Include shared items</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : #messages.msg('profile.assistant.include_shared.desc')}">Let the assistant and meaning-based search use shared and public items.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_includeSharedItems" value="on"/>
+                                    <input type="checkbox" name="includeSharedItems" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.includeSharedItems}"
+                                           th:disabled="${!assistantFeatureEnabled}"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
                             <!-- Row 6: Reply language -->
                             <div class="py-2 space-y-2">
                                 <div>

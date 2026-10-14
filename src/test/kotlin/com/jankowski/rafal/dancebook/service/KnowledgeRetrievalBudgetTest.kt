@@ -58,7 +58,7 @@ class KnowledgeRetrievalBudgetTest {
     private class NoChunks : KnowledgeChunkRepository(mock(JdbcTemplate::class.java)) {
         override fun findFirstChunkBySource(sourceType: KnowledgeSourceType, sourceId: UUID): KnowledgeChunk? = null
         override fun findRelatedNotes(
-            queryEmbedding: FloatArray, excludeSourceId: UUID?, currentUser: AppUser?, limit: Int
+            queryEmbedding: FloatArray, excludeSourceId: UUID?, currentUser: AppUser?, limit: Int, ownedOnly: Boolean
         ): List<KnowledgeChunk> = emptyList()
     }
 

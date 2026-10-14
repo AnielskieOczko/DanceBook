@@ -4,7 +4,9 @@ import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.DanceCategory
 import com.jankowski.rafal.dancebook.model.DanceType
 import com.jankowski.rafal.dancebook.model.Material
+import com.jankowski.rafal.dancebook.dto.AssistantPreferencesUpdateRequest
 import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.Share
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.repository.AppUserRepository
 import com.jankowski.rafal.dancebook.repository.DanceCategoryRepository
@@ -12,6 +14,7 @@ import com.jankowski.rafal.dancebook.repository.DanceFigureRepository
 import com.jankowski.rafal.dancebook.repository.DanceTypeRepository
 import com.jankowski.rafal.dancebook.repository.KnowledgeChunkRepository
 import com.jankowski.rafal.dancebook.repository.MaterialRepository
+import com.jankowski.rafal.dancebook.repository.ShareRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -56,6 +59,8 @@ class HybridSearchIntegrationTest {
     @Autowired private lateinit var danceTypeRepository: DanceTypeRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var appUserRepository: AppUserRepository
+    @Autowired private lateinit var shareRepository: ShareRepository
+    @Autowired private lateinit var assistantPreferencesService: AssistantPreferencesService
 
     @Autowired private lateinit var testEmbeddingModel: RagIntegrationTest.RagTestConfig.TestEmbeddingModel
 
@@ -182,5 +187,75 @@ class HybridSearchIntegrationTest {
         assertEquals(1, within.size)
         assertTrue(within.single().distance!! in 0.2..0.4, "distance was ${within.single().distance}")
         assertTrue(run(0.1).isEmpty())
+    }
+
+    // ── Include shared items (#311) ────────────────────────────────────────
+
+    private val swayVector get() = FloatArray(768).also { it[0] = 1f }
+
+    private fun chunkSources(user: AppUser, ownedOnly: Boolean) = knowledgeChunkRepository.hybridSearch(
+        query = null, queryEmbedding = swayVector, currentUser = user, ownedOnly = ownedOnly
+    ).map { it.chunk.sourceId }.toSet()
+
+    @Test
+    fun `owned only narrows to the user's own notes and never admits what the access rule hides`() {
+        val ownPrivate = note(userA, "Mine private", "sway", Visibility.PRIVATE)
+        val ownPublic = note(userA, "Mine public", "sway", Visibility.PUBLIC)
+        val otherPrivate = note(userB, "Theirs private", "sway", Visibility.PRIVATE)
+        val otherPublic = note(userB, "Theirs public", "sway", Visibility.PUBLIC)
+        val sharedToMe = note(userB, "Theirs shared", "sway", Visibility.PRIVATE)
+        shareRepository.save(Share().apply { itemType = "MATERIAL"; itemId = sharedToMe.id; granteeUser = userA })
+
+        assertEquals(
+            setOf(ownPrivate.id, ownPublic.id, otherPublic.id, sharedToMe.id), chunkSources(userA, ownedOnly = false),
+            "switch on: exactly today's rule"
+        )
+        assertEquals(
+            setOf(ownPrivate.id, ownPublic.id), chunkSources(userA, ownedOnly = true),
+            "switch off: only owned, and the other user's private note is still hidden"
+        )
+        assertFalse(otherPrivate.id in chunkSources(userA, ownedOnly = true))
+    }
+
+    @Test
+    fun `owned only for an admin keeps only the admin's own notes`() {
+        val admin = appUserRepository.save(AppUser().apply {
+            username = "admin-${UUID.randomUUID()}"; displayName = "Admin"; password = "x"; role = Role.ADMIN
+        })
+        val adminNote = note(admin, "Admin note", "sway", Visibility.PRIVATE)
+        val otherPrivate = note(userA, "Alice private", "sway", Visibility.PRIVATE)
+
+        assertEquals(setOf(adminNote.id, otherPrivate.id), chunkSources(admin, ownedOnly = false))
+        assertEquals(setOf(adminNote.id), chunkSources(admin, ownedOnly = true))
+    }
+
+    @Test
+    fun `owned only leaves figures, which have no owner, alone`() {
+        val figure = danceFigureRepository.save(com.jankowski.rafal.dancebook.model.DanceFigure().apply {
+            name = "Sway figure"; danceType = waltz
+        })
+        knowledgeIndexService.indexFigure(figure.id!!); awaitEmbedded()
+
+        assertTrue(figure.id in chunkSources(userA, ownedOnly = true))
+    }
+
+    @Test
+    fun `the standard search's semantic leg and the related notes follow the preference together`() {
+        val own = note(userA, "Body motion", "all about sway", Visibility.PRIVATE)
+        val theirs = note(userB, "Their motion", "also about sway", Visibility.PUBLIC)
+        `when`(appUserService.getCurrentUserOrNull()).thenReturn(userA)
+
+        // "sway waltz" needs both words for a keyword match, so these two can only be semantic hits.
+        assertEquals(setOf(own.id, theirs.id), hybridSearchService.search("sway waltz").map { it.id }.toSet())
+
+        assistantPreferencesService.updatePreferences(userA, AssistantPreferencesUpdateRequest(includeSharedItems = false))
+        assertEquals(setOf(own.id), hybridSearchService.search("sway waltz").map { it.id }.toSet())
+
+        val related = { owned: Boolean ->
+            knowledgeChunkRepository.findRelatedNotes(swayVector, excludeSourceId = null, currentUser = userA, ownedOnly = owned)
+                .map { it.sourceId }.toSet()
+        }
+        assertEquals(setOf(own.id, theirs.id), related(false))
+        assertEquals(setOf(own.id), related(true))
     }
 }

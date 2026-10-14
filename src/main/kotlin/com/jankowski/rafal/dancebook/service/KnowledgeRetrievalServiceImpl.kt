@@ -49,6 +49,9 @@ class KnowledgeRetrievalServiceImpl(
     private fun <T> readOnly(block: () -> T?): T? =
         transactionTemplate.execute { block() }
 
+    private fun ownedOnly(user: AppUser?): Boolean =
+        assistantPreferencesService?.forUser(user)?.includeSharedItems == false
+
     override fun findRelatedNotesForMaterial(materialId: UUID, currentUser: AppUser?, limit: Int): List<Material> {
         if (assistantPreferencesService?.forUser(currentUser)?.relatedNotesEnabled == false) return emptyList()
         val chunk = knowledgeChunkRepository.findFirstChunkBySource(KnowledgeSourceType.NOTE, materialId)
@@ -60,7 +63,7 @@ class KnowledgeRetrievalServiceImpl(
             embedQuery(text, currentUser)
         } ?: return emptyList()
 
-        val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = materialId, currentUser = currentUser, limit = limit)
+        val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = materialId, currentUser = currentUser, limit = limit, ownedOnly = ownedOnly(currentUser))
         return openRelated(relatedChunks)
     }
 
@@ -85,7 +88,7 @@ class KnowledgeRetrievalServiceImpl(
             embedQuery(text, currentUser)
         } ?: return emptyList()
 
-        val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = figureId, currentUser = currentUser, limit = limit)
+        val relatedChunks = knowledgeChunkRepository.findRelatedNotes(embedding, excludeSourceId = figureId, currentUser = currentUser, limit = limit, ownedOnly = ownedOnly(currentUser))
         return openRelated(relatedChunks)
     }
 }
