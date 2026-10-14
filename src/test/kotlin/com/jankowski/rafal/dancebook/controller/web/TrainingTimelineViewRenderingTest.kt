@@ -200,8 +200,9 @@ class TrainingTimelineViewRenderingTest {
             timeline(
                 month(
                     "September 2026",
-                    entry(daysAgo = 2, status = AttendanceStatus.ATTENDED),
-                    entry(daysAgo = 4, status = AttendanceStatus.SKIPPED)
+                    // Fixed Monday and Tuesday: "N days ago" only shares a week on some weekdays.
+                    entryAt(LocalDateTime.of(2026, 9, 15, 18, 0), AttendanceStatus.ATTENDED),
+                    entryAt(LocalDateTime.of(2026, 9, 14, 18, 0), AttendanceStatus.SKIPPED)
                 )
             )
         )
@@ -319,8 +320,14 @@ class TrainingTimelineViewRenderingTest {
         daysAgo: Long,
         status: AttendanceStatus,
         boundary: Boolean = false
+    ) = entryAt(LocalDateTime.now().minusDays(daysAgo), status, boundary, isFuture = daysAgo < 0)
+
+    private fun entryAt(
+        start: LocalDateTime,
+        status: AttendanceStatus,
+        boundary: Boolean = false,
+        isFuture: Boolean = false
     ): TrainingTimelineEntry {
-        val start = LocalDateTime.now().minusDays(daysAgo)
         val event = TrainingEvent().apply {
             id = UUID.randomUUID()
             title = "Evening practice"
@@ -332,7 +339,7 @@ class TrainingTimelineViewRenderingTest {
         }
         return TrainingTimelineEntry(
             row = TrainingEventRow(event, TrainingEventPalette.swatchFor(event, testUser)),
-            isFuture = daysAgo < 0,
+            isFuture = isFuture,
             startsTodayBoundary = boundary
         )
     }
