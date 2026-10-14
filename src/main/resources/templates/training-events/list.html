@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='training-events'" class="space-y-lg relative">
+<section th:with="activeNav='training-events'" class="space-y-12 relative">
 
     <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? #messages.msg('training.list.subtitle_no_calendar') : #messages.msg('training.list.subtitle_count', #lists.size(events))}, toolbar=~{::listToolbar})}">
         <div th:fragment="listToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
@@ -78,7 +78,7 @@
     </div>
 
     <!-- Agenda list (HTMX swap target) -->
-    <div th:fragment="eventsList" id="events-list" class="space-y-lg">
+    <div th:fragment="eventsList" id="events-list" class="space-y-12">
 
         <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
             <div th:replace="~{fragments/empty :: emptyState(
@@ -179,7 +179,7 @@
         </form>
 
         <!-- A training log is read in months: how much was scheduled, how many hours it came to. -->
-        <div th:each="group : ${monthGroups}" class="space-y-gutter">
+        <div th:each="group : ${monthGroups}" class="space-y-8">
 
             <div class="tc-month-heading">
                 <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${group.label}">September 2026</h2>

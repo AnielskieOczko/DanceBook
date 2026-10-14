@@ -78,6 +78,44 @@ class TailwindOutputCssTest {
         )
     }
 
+    @Test
+    fun `max-w-md container utility resolves to stock container width`() {
+        assertTrue(
+            css.contains("--container-md:28rem"),
+            "Expected output.css to define --container-md:28rem"
+        )
+        assertTrue(
+            css.contains(".max-w-md{max-width:var(--container-md)}"),
+            "Expected .max-w-md to use var(--container-md)"
+        )
+        assertFalse(
+            css.contains(".max-w-md{max-width:24px}"),
+            ".max-w-md must not resolve to shadowed 24px spacing."
+        )
+    }
+
+    @ParameterizedTest(name = "retired design token {0} is absent from output.css")
+    @ValueSource(
+        strings = [
+            "--color-text-primary",
+            "--color-text-secondary",
+            "--spacing-base",
+            "--spacing-xs",
+            "--spacing-sm",
+            "--spacing-md",
+            "--spacing-lg",
+            "--spacing-xl",
+            "--spacing-gutter",
+            "--spacing-margin"
+        ]
+    )
+    fun `retired design tokens are absent from output css`(tokenName: String) {
+        assertFalse(
+            css.contains("$tokenName:"),
+            "`$tokenName` should have been retired from input.css but is still declared in output.css."
+        )
+    }
+
     @ParameterizedTest(name = "type token {0} is emitted in output.css")
     @ValueSource(
         strings = [

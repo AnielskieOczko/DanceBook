@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-lg">
+<section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-12">
 
     <div th:replace="~{fragments/page :: pageHeader(title=${event.title}, subtitleSlot=~{::eventSubtitle}, toolbar=~{::eventToolbar})}">
         <th:block th:fragment="eventSubtitle">

@@ -9,7 +9,7 @@
 
     <div th:if="${#lists.isEmpty(danceTypes)}" class="empty-state">
         <div class="empty-state-icon">
-            <span th:replace="~{fragments/icon :: icon(name='category', size='lg', cls='text-text-secondary')}"></span>
+            <span th:replace="~{fragments/icon :: icon(name='category', size='lg', cls='text-on-surface-variant')}"></span>
         </div>
         <h3 class="empty-state-title">No dance styles</h3>
         <p class="empty-state-text">Add your first dance style to start categorizing materials.</p>
@@ -23,7 +23,7 @@
                     <span th:replace="~{fragments/icon :: icon(name='category', size='sm', cls='text-primary')}"></span>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                    <span class="font-medium text-text-primary" th:text="${dt.name}">Name</span>
+                    <span class="font-medium text-on-surface" th:text="${dt.name}">Name</span>
                     <th:block th:if="${dt.category != null}">
                         <span th:replace="~{fragments/badge :: badge(label=${dt.category.name}, variant='secondary')}"></span>
                     </th:block>

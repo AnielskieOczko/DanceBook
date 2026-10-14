@@ -5,10 +5,10 @@
 <section th:with="activeNav='lists'">
 
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-text-secondary mb-6">
+    <nav class="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
         <a href="/lists" class="hover:text-primary transition-colors" th:text="#{nav.collections}">Lists</a>
         <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-outline')}"></span>
-        <span class="text-text-primary font-medium truncate" th:text="${customList.name}">List Name</span>
+        <span class="text-on-surface font-medium truncate" th:text="${customList.name}">List Name</span>
     </nav>
 
     <!--/* Warning alert for owner when collection has private notes */-->

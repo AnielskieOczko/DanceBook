@@ -637,7 +637,7 @@ class TrainingEventViewRenderingTest {
             .andReturn().response.contentAsString
 
         val doc = Jsoup.parse(html)
-        val syncText = doc.select(".text-text-secondary:contains(Synced 14:45)")
+        val syncText = doc.select(".text-on-surface-variant:contains(Synced 14:45)")
         assertEquals(1, syncText.size, "Should display formatted lastSyncedAt time")
     }
 
@@ -660,7 +660,7 @@ class TrainingEventViewRenderingTest {
             .andReturn().response.contentAsString
 
         val doc = Jsoup.parse(html)
-        val syncText = doc.select(".text-text-secondary:contains(Never synced)")
+        val syncText = doc.select(".text-on-surface-variant:contains(Never synced)")
         assertEquals(1, syncText.size, "Should display Never synced when null")
     }
 

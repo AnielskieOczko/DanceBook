@@ -28,7 +28,7 @@
                 <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
                 <span th:text="#{training.selector.sync_now}">Sync now</span>
             </button>
-            <span class="text-xs text-text-secondary whitespace-nowrap"
+            <span class="text-xs text-on-surface-variant whitespace-nowrap"
                   th:text="${lastSyncedAt != null ? #messages.msg('training.selector.synced', #temporals.format(lastSyncedAt, 'HH:mm')) : #messages.msg('training.selector.never_synced')}"
                   th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : #messages.msg('training.selector.never_synced')}">Never synced</span>
         </div>

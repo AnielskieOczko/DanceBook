@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='training-events'" class="space-y-lg">
+<section th:with="activeNav='training-events'" class="space-y-12">
 
     <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=${#messages.msg('enum.stats_period.' + stats.period.name())}, toolbar=~{::statsToolbar})}">
         <div th:fragment="statsToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
@@ -44,10 +44,10 @@
             actionLabel=#{training.add_session})}"></div>
     </th:block>
 
-    <div th:if="${stats.counts.total > 0}" class="space-y-lg">
+    <div th:if="${stats.counts.total > 0}" class="space-y-12">
 
         <!-- KPI cards. Two up on a phone, four across from md. -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label=#{training.stats.hours_trained})}"></div>
             <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label=#{training.stats.attendance})}"></div>
             <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.stats.streak_caption})}"></div>
@@ -61,10 +61,10 @@
            class="card p-4 flex items-center gap-4 hover:border-outline transition-colors">
             <span th:replace="~{fragments/icon :: icon(name='help', size='md', cls='text-secondary')}"></span>
             <div>
-                <p class="font-semibold text-text-primary"
+                <p class="font-semibold text-on-surface"
                    th:text="#{training.stats.unconfirmed_title(${stats.counts.unconfirmed})}">
                     3 past sessions need confirming</p>
-                <p class="text-sm text-text-secondary" th:text="#{training.stats.unconfirmed_text}">They count towards nothing above until
+                <p class="text-sm text-on-surface-variant" th:text="#{training.stats.unconfirmed_text}">They count towards nothing above until
                     you mark them attended or skipped.</p>
             </div>
         </a>
@@ -72,38 +72,38 @@
         <!-- Charts. Each canvas carries its own slices; training-stats.js reads them and
              owns no data or colours of its own. The list beneath is the legend, the
              accessible form of the chart, and what you see when JavaScript does not run. -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
             <div class="card p-6 space-y-4">
-                <h2 class="text-lg font-heading font-medium text-text-primary" th:text="#{training.stats.time_by_style}">Time by style</h2>
+                <h2 class="text-lg font-heading font-medium text-on-surface" th:text="#{training.stats.time_by_style}">Time by style</h2>
                 <div th:if="${!#lists.isEmpty(stats.byCategory)}" class="relative h-64">
                     <canvas id="category-chart" aria-hidden="true" th:attr="data-slices=${categoryChartJson}"></canvas>
                 </div>
                 <ul class="space-y-2">
                     <li th:each="slice : ${stats.byCategory}" class="flex items-center gap-3 text-sm">
                         <span class="w-3 h-3 rounded-full shrink-0" th:style="'background-color:' + ${slice.color}"></span>
-                        <span class="text-text-primary flex-1" th:text="${slice.label}">Standard</span>
-                        <span class="text-text-secondary" th:text="${slice.durationLabel}">6h</span>
+                        <span class="text-on-surface flex-1" th:text="${slice.label}">Standard</span>
+                        <span class="text-on-surface-variant" th:text="${slice.durationLabel}">6h</span>
                     </li>
                 </ul>
-                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-text-secondary" th:text="#{training.stats.no_attended}">
+                <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-on-surface-variant" th:text="#{training.stats.no_attended}">
                     No attended sessions in this period yet</p>
             </div>
 
             <div class="card p-6 space-y-4">
-                <h2 class="text-lg font-heading font-medium text-text-primary" th:text="#{training.stats.time_by_type}">Time by session type</h2>
+                <h2 class="text-lg font-heading font-medium text-on-surface" th:text="#{training.stats.time_by_type}">Time by session type</h2>
                 <div th:if="${!#lists.isEmpty(stats.byEventType)}" class="relative h-64">
                     <canvas id="event-type-chart" aria-hidden="true" th:attr="data-slices=${eventTypeChartJson}, data-grid-color=${chartGridColor}"></canvas>
                 </div>
                 <ul class="space-y-2">
                     <li th:each="slice : ${stats.byEventType}" class="flex items-center gap-3 text-sm">
                         <span class="w-3 h-3 rounded-full shrink-0" th:style="'background-color:' + ${slice.color}"></span>
-                        <span class="text-text-primary flex-1" th:text="${slice.label}">TRAINING</span>
-                        <span class="text-text-secondary"
+                        <span class="text-on-surface flex-1" th:text="${slice.label}">TRAINING</span>
+                        <span class="text-on-surface-variant"
                               th:text="#{training.stats.slice_sessions(${slice.durationLabel}, ${slice.sessionCount})}">6h · 4 sessions</span>
                     </li>
                 </ul>
-                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-text-secondary" th:text="#{training.stats.no_attended}">
+                <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-on-surface-variant" th:text="#{training.stats.no_attended}">
                     No attended sessions in this period yet</p>
             </div>
         </div>

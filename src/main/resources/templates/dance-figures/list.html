@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='dance-figures'" class="space-y-lg relative">
+<section th:with="activeNav='dance-figures'" class="space-y-12 relative">
 
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title=#{figures.list.title}, subtitle=#{figures.list.subtitle(${#lists.size(figures)})}, actionUrl='/dance-figures/new', actionText=#{figures.list.add_figure}, actionIcon='add', actionVariant='primary')}"></div>
@@ -152,7 +152,7 @@
     </section>
 
     <!-- Figures Grid/List (HTMX swappable) -->
-    <div th:fragment="figuresTable" id="figures-grid" class="space-y-gutter">
+    <div th:fragment="figuresTable" id="figures-grid" class="space-y-8">
         <!-- Search Result Count -->
         <p th:if="${selectedNameSearch != null and !#strings.isEmpty(selectedNameSearch) and !#lists.isEmpty(figures)}"
            class="text-sm text-on-surface-variant">
