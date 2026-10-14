@@ -49,8 +49,6 @@ layer(base);
 
   --color-on-surface: #16181a;
   --color-on-surface-variant: #5b6067;
-  --color-text-primary: #16181a;
-  --color-text-secondary: #5b6067;
   --color-background: #ffffff;
   --color-on-background: #16181a;
   --color-inverse-surface: #16181a;
@@ -134,20 +132,6 @@ layer(base);
   --radius-field: 24px;
   --radius-card: 16px;
   --radius-button: var(--radius-pill);
-
-  /* Careful: a --spacing-<name> token shadows the stock --container-<name> one,
-   * so defining sm/md/lg/xl here makes max-w-md resolve to 24px instead of
-   * 28rem. Declaring --container-* does not win it back. The 13 affected call
-   * sites therefore use explicit values (max-w-[28rem]); prefer those over
-   * max-w-{xs,sm,md,lg,xl} until this alphabetic scale is retired. */
-  --spacing-base: 8px;
-  --spacing-xs: 4px;
-  --spacing-sm: 12px;
-  --spacing-md: 24px;
-  --spacing-lg: 48px;
-  --spacing-xl: 80px;
-  --spacing-gutter: 32px;
-  --spacing-margin: 40px;
 
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Source Serif 4', serif;
@@ -672,7 +656,7 @@ layer(base);
 }
 
 @utility empty-state-text {
-  @apply text-body text-on-surface-variant max-w-[24rem] mb-6;
+  @apply text-body text-on-surface-variant max-w-sm mb-6;
 }
 
 @utility table-header {
@@ -847,7 +831,7 @@ layer(base);
 
 @utility tc-timeline {
   /* ── Training timeline ────────────────────────── */
-  @apply relative space-y-gutter pl-6 sm:pl-8;
+  @apply relative space-y-8 pl-6 sm:pl-8;
   &::before {
     @apply absolute inset-y-0 left-[7px] sm:left-[11px] w-px bg-outline-variant;
     content: '';

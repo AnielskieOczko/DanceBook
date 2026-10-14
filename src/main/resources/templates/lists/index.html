@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='lists'" class="space-y-lg relative">
+<section th:with="activeNav='lists'" class="space-y-12 relative">
 
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title=#{collections.title}, subtitle=#{collections.subtitle(${#lists.size(lists)})}, actionUrl='/lists/new', actionText=#{collections.new}, actionIcon='add', actionVariant='primary')}"></div>
@@ -107,7 +107,7 @@
     </section>
 
     <!-- Collections Grid/List (HTMX swappable) -->
-    <div th:fragment="collectionsTable" id="collections-grid" class="space-y-gutter">
+    <div th:fragment="collectionsTable" id="collections-grid" class="space-y-8">
         <!-- Empty State -->
         <div th:if="${#lists.isEmpty(lists)}" class="empty-state">
             <div class="empty-state-icon">

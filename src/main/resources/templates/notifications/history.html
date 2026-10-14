@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='', pageTitle=#{notifications.history.title}" class="space-y-xl">
+<section th:with="activeNav='', pageTitle=#{notifications.history.title}" class="space-y-20">
 
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title=${pageTitle}, subtitle=#{notifications.history.subtitle}, actionUrl='/', actionText=#{nav.dashboard}, actionIcon='arrow_back', actionVariant='outline')}"></div>
 
     <!-- Timeline -->
-    <div class="card p-md md:p-margin">
+    <div class="card p-6 md:p-10">
         <div th:if="${events != null && !events.isEmpty()}" class="relative border-l border-surface-variant ml-4 space-y-8">
             <div th:each="event : ${events}" class="relative pl-8">
                 <!-- Timeline Dot -->

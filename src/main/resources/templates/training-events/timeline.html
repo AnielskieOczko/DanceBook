@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='training-events'" class="space-y-lg">
+<section th:with="activeNav='training-events'" class="space-y-12">
 
     <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=#{training.timeline.subtitle}, toolbar=~{::timelineToolbar})}">
         <div th:fragment="timelineToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
@@ -13,7 +13,7 @@
 
     <!--/* The swap target is the fragment itself, so a window can replace the "load more" control
          with the sessions it fetched plus the next control. */-->
-    <div th:fragment="timelinePage" class="space-y-lg">
+    <div th:fragment="timelinePage" class="space-y-12">
 
         <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
             <div th:replace="~{fragments/empty :: emptyState(
@@ -94,8 +94,8 @@
             </div>
         </th:block>
 
-        <div id="timeline-feed" class="space-y-gutter">
-            <div th:each="month, monthStat : ${timeline.months}" class="space-y-gutter">
+        <div id="timeline-feed" class="space-y-8">
+            <div th:each="month, monthStat : ${timeline.months}" class="space-y-8">
 
                 <!--/* Suppressed when this window continues the month already on screen, so an
                      appended page does not repeat a heading halfway down the timeline. */-->

@@ -18,14 +18,14 @@
             <div class="w-12 h-12 rounded-card bg-primary flex items-center justify-center shadow-warm-sm">
                 <span th:replace="~{fragments/icon :: icon(name='menu_book', size='lg', cls='text-white')}"></span>
             </div>
-            <h1 class="font-heading font-bold text-3xl text-text-primary" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
+            <h1 class="font-heading font-bold text-3xl text-on-surface" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
         </div>
-        <p class="text-text-secondary text-sm" th:text="#{auth.login.tagline}">Your personal dance library</p>
+        <p class="text-on-surface-variant text-sm" th:text="#{auth.login.tagline}">Your personal dance library</p>
     </div>
 
     <!-- Sign In Card -->
-    <div class="card p-8 w-full max-w-[28rem] shadow-warm-md">
-        <h2 class="font-heading font-bold text-xl text-text-primary mb-6" th:text="#{auth.login.heading}">Sign in</h2>
+    <div class="card p-8 w-full max-w-md shadow-warm-md">
+        <h2 class="font-heading font-bold text-xl text-on-surface mb-6" th:text="#{auth.login.heading}">Sign in</h2>
 
         <!-- Error message -->
         <div th:if="${param.error}" class="mb-4 p-3 rounded-button bg-danger-soft text-danger text-sm font-medium flex items-center gap-2">
@@ -45,7 +45,7 @@
                 <label for="username" class="form-label" th:text="#{auth.login.username}">Username</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-text-secondary')}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name='person', size='md', cls='text-on-surface-variant')}"></span>
                     </div>
                     <input id="username" name="username" type="text" required
                            class="form-input pl-10" placeholder="Enter your username"
@@ -57,7 +57,7 @@
                 <label for="password" class="form-label" th:text="#{auth.login.password}">Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span th:replace="~{fragments/icon :: icon(name='lock', size='md', cls='text-text-secondary')}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name='lock', size='md', cls='text-on-surface-variant')}"></span>
                     </div>
                     <input id="password" name="password" type="password" required
                            class="form-input pl-10" placeholder="Enter your password"
@@ -68,7 +68,7 @@
             <div class="flex items-center justify-between">
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" name="remember-me" class="rounded border-border text-primary focus:ring-primary">
-                    <span class="text-sm text-text-secondary" th:text="#{auth.login.remember_me}">Remember me</span>
+                    <span class="text-sm text-on-surface-variant" th:text="#{auth.login.remember_me}">Remember me</span>
                 </label>
             </div>
 
@@ -83,7 +83,7 @@
                 <div class="w-full border-t border-border"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-                <span class="px-3 bg-surface text-text-secondary" th:text="#{auth.login.or_continue_with}">Or continue with</span>
+                <span class="px-3 bg-surface text-on-surface-variant" th:text="#{auth.login.or_continue_with}">Or continue with</span>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Footer -->
-    <p class="mt-8 text-xs text-text-secondary"><span th:text="${brandName ?: 'DanceBook'}">DanceBook</span> · <span th:text="#{auth.login.made_with}">Made with</span> <span class="text-danger">&#10084;</span></p>
+    <p class="mt-8 text-xs text-on-surface-variant"><span th:text="${brandName ?: 'DanceBook'}">DanceBook</span> · <span th:text="#{auth.login.made_with}">Made with</span> <span class="text-danger">&#10084;</span></p>
 
 </body>
 </html>

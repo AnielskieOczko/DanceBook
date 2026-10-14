@@ -201,7 +201,7 @@
                     <button type="button" id="leader-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-bold transition-all bg-primary-container text-on-primary-container shadow-xs">
                         <span th:replace="~{fragments/icon :: icon(name='face', size='md')}"></span> <span th:text="#{figures.role.leader}">Leader</span>
                     </button>
-                    <button type="button" id="follower-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-text-secondary hover:text-on-surface">
+                    <button type="button" id="follower-tab-btn" class="flex items-center gap-2 px-5 py-2 rounded-md font-semibold transition-all text-on-surface-variant hover:text-on-surface">
                         <span th:replace="~{fragments/icon :: icon(name='face_2', size='md')}"></span> <span th:text="#{figures.role.follower}">Follower</span>
                     </button>
                 </div>
@@ -484,7 +484,7 @@
 
             <!-- Preceding Figures -->
             <div class="space-y-3">
-                <span class="block text-sm font-bold text-text-primary uppercase tracking-wider" th:text="#{figures.view.connections.preceding}">Preceding Figures</span>
+                <span class="block text-sm font-bold text-on-surface uppercase tracking-wider" th:text="#{figures.view.connections.preceding}">Preceding Figures</span>
                 <ul th:if="${!#lists.isEmpty(danceFigure.precedingFigureNames)}" class="space-y-2">
                     <li th:each="name : ${danceFigure.precedingFigureNames}">
                         <a th:if="${figureNameMap[name] != null}" th:href="@{/dance-figures/{id}(id=${figureNameMap[name]})}" 
@@ -492,7 +492,7 @@
                            <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-primary')}"></span>
                            <span th:text="${name}">Figure</span>
                         </a>
-                        <span th:if="${figureNameMap[name] == null}" class="text-base text-text-secondary flex items-center gap-1.5">
+                        <span th:if="${figureNameMap[name] == null}" class="text-base text-on-surface-variant flex items-center gap-1.5">
                            <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm')}"></span>
                            <span th:text="${name}">Figure</span>
                         </span>
@@ -503,7 +503,7 @@
 
             <!-- Following Figures -->
             <div class="space-y-3 border-t border-border pt-5">
-                <span class="block text-sm font-bold text-text-primary uppercase tracking-wider" th:text="#{figures.view.connections.following}">Following Figures</span>
+                <span class="block text-sm font-bold text-on-surface uppercase tracking-wider" th:text="#{figures.view.connections.following}">Following Figures</span>
                 <ul th:if="${!#lists.isEmpty(danceFigure.followingFigureNames)}" class="space-y-2">
                     <li th:each="name : ${danceFigure.followingFigureNames}">
                         <a th:if="${figureNameMap[name] != null}" th:href="@{/dance-figures/{id}(id=${figureNameMap[name]})}" 
@@ -511,7 +511,7 @@
                            <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-primary')}"></span>
                            <span th:text="${name}">Figure</span>
                         </a>
-                        <span th:if="${figureNameMap[name] == null}" class="text-base text-text-secondary flex items-center gap-1.5">
+                        <span th:if="${figureNameMap[name] == null}" class="text-base text-on-surface-variant flex items-center gap-1.5">
                            <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm')}"></span>
                            <span th:text="${name}">Figure</span>
                         </span>

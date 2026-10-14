@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const file = this.files[0];
       if (file) {
         document.getElementById('fileLabel').innerHTML = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)';
-        document.getElementById('fileLabel').classList.add('border-primary', 'bg-surface', 'text-text-primary', 'font-medium');
+        document.getElementById('fileLabel').classList.add('border-primary', 'bg-surface', 'text-on-surface', 'font-medium');
         document.getElementById('uploadBtn').disabled = false;
       }
     });
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Reset the file picker
         document.getElementById('fileLabel').innerHTML = I18n.t('notes.form.drive.select_file');
-        document.getElementById('fileLabel').classList.remove('border-primary', 'bg-surface', 'text-text-primary', 'font-medium');
+        document.getElementById('fileLabel').classList.remove('border-primary', 'bg-surface', 'text-on-surface', 'font-medium');
         document.getElementById('videoFile').value = '';
 
         // Disable upload button until a new file is picked

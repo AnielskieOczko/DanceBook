@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='dance-categories'" class="space-y-lg">
+<section th:with="activeNav='dance-categories'" class="space-y-12">
 
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title='Dance Styles', subtitle=${#lists.size(danceCategories)} + ' categories defined', actionUrl='/dance-categories/new', actionText='Add Category', actionIcon='add', actionVariant='primary')}"></div>

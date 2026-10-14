@@ -124,7 +124,7 @@
             <div id="currentVideo" class="hidden mb-3 bg-surface rounded-button border border-success p-3 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <span th:replace="~{fragments/icon :: icon(name='check_circle', size='md', cls='text-primary flex-shrink-0')}"></span>
-                    <span class="text-sm text-text-primary"><span th:text="#{notes.form.drive.video_linked}">Video linked:</span> <strong id="currentVideoId" class="text-primary font-mono text-xs"></strong></span>
+                    <span class="text-sm text-on-surface"><span th:text="#{notes.form.drive.video_linked}">Video linked:</span> <strong id="currentVideoId" class="text-primary font-mono text-xs"></strong></span>
                 </div>
                 <button type="button" id="removeVideoBtn" class="btn btn-sm bg-danger text-white hover:bg-red-700 focus:ring-danger" th:text="#{notes.form.drive.remove_video}">
                     Remove Video
@@ -134,7 +134,7 @@
             <!-- File input + upload button -->
             <div class="flex items-center gap-3">
                 <label for="videoFile" class="flex-1 cursor-pointer">
-                    <div id="fileLabel" class="w-full px-4 py-3 border-2 border-dashed border-border rounded-button text-center text-sm text-text-secondary hover:border-primary hover:bg-surface transition" th:text="#{notes.form.drive.select_file}">
+                    <div id="fileLabel" class="w-full px-4 py-3 border-2 border-dashed border-border rounded-button text-center text-sm text-on-surface-variant hover:border-primary hover:bg-surface transition" th:text="#{notes.form.drive.select_file}">
                         Click to select a video file...
                     </div>
                     <input type="file" id="videoFile" accept="video/*" class="hidden"/>
@@ -148,7 +148,7 @@
 
             <!-- Progress bar -->
             <div id="progressContainer" class="hidden mt-3">
-                <div class="flex justify-between text-xs text-text-secondary mb-1">
+                <div class="flex justify-between text-xs text-on-surface-variant mb-1">
                     <span id="progressLabel" th:text="#{notes.form.drive.uploading}">Uploading...</span>
                     <span id="progressPercent">0%</span>
                 </div>
@@ -162,7 +162,7 @@
 
             <!-- Manual ID fallback -->
             <details class="mt-3">
-                <summary class="text-xs text-text-secondary cursor-pointer hover:text-text-primary" th:text="#{notes.form.drive.manual_id}">Or enter Drive File ID manually</summary>
+                <summary class="text-xs text-on-surface-variant cursor-pointer hover:text-on-surface" th:text="#{notes.form.drive.manual_id}">Or enter Drive File ID manually</summary>
                 <input type="text" id="manualDriveId" placeholder="e.g. 1FhnSuC88na_OrlBbgIzCyK8r4U1Jg_pb"
                        class="mt-2 form-input text-sm"/>
             </details>

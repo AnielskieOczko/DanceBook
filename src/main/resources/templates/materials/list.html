@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'" class="space-y-lg relative">
+<section th:with="activeNav='materials'" class="space-y-12 relative">
 
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title=#{notes.title}, subtitle=${#lists.size(materials) == 1 ? #messages.msg('notes.subtitle.single') : #messages.msg('notes.subtitle.multiple', #lists.size(materials))}, actionUrl='/materials/new', actionText=#{notes.action.new}, actionIcon='add', actionVariant='primary')}"></div>
@@ -131,7 +131,7 @@
     </section>
 
     <!-- Materials Grid (HTMX swappable) -->
-    <div th:fragment="materialsTable" id="materials-grid" class="space-y-gutter">
+    <div th:fragment="materialsTable" id="materials-grid" class="space-y-8">
         <!-- Search Result Count -->
         <p th:if="${selectedNameSearch != null and !#strings.isEmpty(selectedNameSearch) and !#lists.isEmpty(materials)}"
            class="text-sm text-on-surface-variant">
