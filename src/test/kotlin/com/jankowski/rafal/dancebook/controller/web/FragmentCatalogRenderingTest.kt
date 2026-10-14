@@ -224,6 +224,7 @@ class FragmentCatalogRenderingTest {
             "sectionTitleRequired",
             "viewSwitcherRequired",
             "statCardRequired",
+            "remarksCardRequired",
             "dataTableRequired",
             "stepTableRequired",
             "badgeRequired",
@@ -259,6 +260,7 @@ class FragmentCatalogRenderingTest {
             "viewSwitcherAll",
             "statCardAll",
             "statCardTrendNoIcon",
+            "remarksCardAll",
             "dataTableAll",
             "stepTableAll",
             "badgeAll",
@@ -535,6 +537,29 @@ class FragmentCatalogRenderingTest {
             .andReturn()
         val reqHtml = resultRequired.response.contentAsString
         assertFalse(reqHtml.contains("text-sm text-on-surface-variant"), "statCardRequired must not render caption element:\n$reqHtml")
+    }
+
+    @Test
+    fun `remarks card renders title, lead, icon, and card classes correctly`() {
+        val resultRequired = mockMvc.perform(get("/test/catalog/remarksCardRequired").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val reqHtml = resultRequired.response.contentAsString
+        assertTrue(reqHtml.contains("card-remarks"), "Expected 'card-remarks' in remarksCardRequired:\n$reqHtml")
+        assertTrue(reqHtml.contains("Figure Notes"), "Expected 'Figure Notes' in remarksCardRequired:\n$reqHtml")
+        assertFalse(reqHtml.contains("material-symbols-outlined"), "remarksCardRequired without icon must not emit icon")
+
+        val resultAll = mockMvc.perform(get("/test/catalog/remarksCardAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+        val allHtml = resultAll.response.contentAsString
+        assertTrue(allHtml.contains("card-remarks"), "Expected 'card-remarks' in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("card-remarks-title"), "Expected 'card-remarks-title' in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("Technical Remarks"), "Expected 'Technical Remarks' in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("Key instruction"), "Expected lead-in 'Key instruction' in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("Cleaned remark"), "Expected content in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("extra-cls"), "Expected 'extra-cls' in remarksCardAll:\n$allHtml")
+        assertTrue(allHtml.contains("material-symbols-outlined"), "remarksCardAll with icon must emit icon")
     }
 
     @Test

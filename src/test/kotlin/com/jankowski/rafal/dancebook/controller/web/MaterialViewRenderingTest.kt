@@ -366,4 +366,89 @@ class MaterialViewRenderingTest {
             .andExpect(content().string(containsString("id=\"scrollToTopBtn\"")))
             .andExpect(content().string(containsString("id=\"scrollToBottomBtn\"")))
     }
+
+    @Test
+    fun `note detail view renders long rich text body with Direction C reading style`() {
+        val longBody = "<div>First paragraph of <strong>important advice</strong>.</div>" +
+            "<ol><li>Step one: prep</li><li>Step two: rotate</li></ol>" +
+            "<div>Final practice note.</div>"
+        val material = Material().apply {
+            id = materialId
+            name = "Waltz: Long Study Note"
+            description = longBody
+            owner = ownerUser
+            this.danceType = this@MaterialViewRenderingTest.danceType
+            visibility = Visibility.PUBLIC
+            createdAt = LocalDateTime.now()
+        }
+
+        `when`(materialService.findById(materialId)).thenReturn(material)
+
+        val result = mockMvc.perform(get("/materials/$materialId").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+        val prose = doc.selectFirst(".rich-text")
+        assertNotNull(prose)
+        assertTrue(prose!!.classNames().contains("prose-text"))
+        val html = prose.html()
+        assertTrue(html.contains("First paragraph of <strong>important advice</strong>."))
+        assertTrue(html.contains("<ol>"))
+        assertTrue(html.contains("<li>Step one: prep</li>"))
+    }
+
+    @Test
+    fun `note detail view renders legacy plain text body safely within rich-text element`() {
+        val legacyText = "Line 1 notes\nLine 2 notes with a < b & special chars"
+        val material = Material().apply {
+            id = materialId
+            name = "Legacy Note"
+            description = legacyText
+            owner = ownerUser
+            this.danceType = this@MaterialViewRenderingTest.danceType
+            visibility = Visibility.PUBLIC
+            createdAt = LocalDateTime.now()
+        }
+
+        `when`(materialService.findById(materialId)).thenReturn(material)
+
+        val result = mockMvc.perform(get("/materials/$materialId").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+        val prose = doc.selectFirst(".rich-text")
+        assertNotNull(prose)
+        assertTrue(prose!!.classNames().contains("prose-text"))
+        val rawHtml = result.response.contentAsString
+        assertTrue(rawHtml.contains("Line 1 notes<br>Line 2 notes with a &lt; b &amp; special chars"))
+    }
+
+    @Test
+    fun `note detail view renders Polish labels when Polish locale requested`() {
+        val material = Material().apply {
+            id = materialId
+            name = "Polskie notatki"
+            description = "<div>Opis notatki</div>"
+            owner = ownerUser
+            this.danceType = this@MaterialViewRenderingTest.danceType
+            visibility = Visibility.PUBLIC
+            createdAt = LocalDateTime.now()
+        }
+
+        `when`(materialService.findById(materialId)).thenReturn(material)
+
+        val result = mockMvc.perform(get("/materials/$materialId").locale(java.util.Locale.forLanguageTag("pl")).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+        val badge = doc.selectFirst(".badge-success")
+        assertNotNull(badge)
+        assertEquals("Publiczna", badge!!.text().trim())
+        val backLink = doc.selectFirst("header a[href='/materials']")
+        assertNotNull(backLink)
+        assertTrue(backLink!!.text().contains("Notatki"))
+    }
 }

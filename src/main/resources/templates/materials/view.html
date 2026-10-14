@@ -50,7 +50,7 @@
                   th:text="#{notes.meta.updated(${#temporals.format(material.updatedAt, 'd MMM yyyy')})}">Updated 22 Sep 2026</span>
         </div>
 
-        <!-- Note text in Source Serif 4 -->
+        <!-- Note text in reading style (Direction C) -->
         <th:block th:if="${material.description != null}">
             <div class="pt-2">
                 <div th:replace="~{fragments/rich-text :: content(value=${material.description}, cls='prose-text')}"></div>
