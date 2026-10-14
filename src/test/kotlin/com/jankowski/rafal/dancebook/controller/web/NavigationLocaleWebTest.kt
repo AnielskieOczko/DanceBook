@@ -25,6 +25,7 @@ import org.jsoup.Jsoup
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -219,7 +220,8 @@ class NavigationLocaleWebTest {
         assertEquals(listOf("List", "Calendar", "Timeline", "Stats", "History"), switcherLabels)
 
         // Assistant widget launcher chrome
-        val assistantInput = doc.selectFirst("#assistantBarInput")
+        assertNull(doc.selectFirst("#assistantBarInput"), "Bottom assistant bar input must not be present")
+        val assistantInput = doc.selectFirst("#assistantComposerInput")
         assertNotNull(assistantInput)
         assertEquals("Ask or tell DanceBook…", assistantInput!!.attr("placeholder"))
         assertEquals("Message the assistant", assistantInput.attr("aria-label"))
@@ -313,7 +315,8 @@ class NavigationLocaleWebTest {
         assertEquals(listOf("Lista", "Kalendarz", "Oś czasu", "Statystyki", "Historia"), switcherLabels)
 
         // Assistant widget launcher chrome in Polish
-        val assistantInput = doc.selectFirst("#assistantBarInput")
+        assertNull(doc.selectFirst("#assistantBarInput"), "Bottom assistant bar input must not be present")
+        val assistantInput = doc.selectFirst("#assistantComposerInput")
         assertNotNull(assistantInput)
         assertEquals("Zapytaj lub powiedz DanceBook…", assistantInput!!.attr("placeholder"))
         assertEquals("Wiadomość do asystenta", assistantInput.attr("aria-label"))

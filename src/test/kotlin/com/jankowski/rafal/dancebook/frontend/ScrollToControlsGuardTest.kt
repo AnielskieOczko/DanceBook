@@ -15,7 +15,7 @@ import java.util.Properties
  * Requirements:
  * - Floating vertical pill at bottom-right in the shared layout (`layout.html`).
  * - Two buttons (top and bottom) with localized labels (en and pl) and 3px visible focus ring matching mock.
- * - Sits above mobile navigation and assistant launcher; clear on desktop.
+ * - Sits above mobile navigation; clear on desktop.
  * - Hidden by default and on short pages without relying on a utility class that unlayered CSS would defeat.
  * - Disappears when dialogs are open (`body:has(dialog[open])`).
  * - Skips smooth scrolling when user prefers reduced motion.
@@ -116,10 +116,10 @@ class ScrollToControlsGuardTest {
             ".goto button:focus-visible must use 3px primary ring to match mock"
         )
 
-        // Clearance above mobile navigation and assistant bar
+        // Clearance above mobile navigation (assistant bar removed in #322)
         assertTrue(css.contains("84px"), ".goto must clear mobile nav (84px bottom)")
         assertTrue(css.contains("env(safe-area-inset-bottom"), ".goto must account for safe-area-inset-bottom")
-        assertTrue(css.contains("140px"), ".goto must clear mobile assistant bar when visible (140px)")
+        assertFalse(css.contains("#assistantBar"), "input.css must not reference removed #assistantBar")
 
         // Desktop positioning
         assertTrue(css.contains("28px"), ".goto must use 28px bottom/right positioning on desktop")

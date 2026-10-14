@@ -71,10 +71,11 @@ class AssistantScriptGuardTest {
     }
 
     @Test
-    fun `the floating bar steps aside while the desktop panel is open, and the slash key then focuses the composer`() {
-        assertTrue(script.contains("bar.hidden = surface.open && wide.matches"))
-        assertTrue(script.contains("surface.addEventListener('close'"))
-        assertTrue(script.contains("if (surface.open) { composerInput.focus(); return; }"))
+    fun `the slash key opens the assistant surface and focuses the composer on desktop`() {
+        assertFalse(script.contains("assistantBar"), "assistant.js must not reference assistantBar")
+        val slashBranch = script.substringAfter("event.key !== '/'").substringBefore("SpeechRecognition")
+        assertTrue(slashBranch.contains("openSurface()"), "slash shortcut must call openSurface()")
+        assertTrue(slashBranch.contains("wide.matches"), "slash shortcut must respect wide viewport")
     }
 
     @Test
@@ -140,7 +141,7 @@ class AssistantScriptGuardTest {
         assertTrue(cancelBranch.contains("event.preventDefault()"))
         assertTrue(cancelBranch.contains("collapse()"))
 
-        val escapeBranch = script.substringAfter("event.key === 'Escape'").substringBefore("bar.addEventListener")
+        val escapeBranch = script.substringAfter("event.key === 'Escape'").substringBefore("assistant-conversation")
         assertTrue(escapeBranch.contains("surface.classList.contains('is-expanded')"))
         assertTrue(escapeBranch.contains("collapse()"))
     }
