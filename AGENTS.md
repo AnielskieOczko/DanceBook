@@ -362,6 +362,21 @@ a stored bullet list rendered as flat lines until `.rich-text` got its own.
 `TailwindOutputCssTest` asserts both blocks survive into `output.css`, because a rendering test
 asserts on HTML and cannot see a missing rule.
 
+**Reading style (#327, from the #301 mock).** Long text is read card-less in Inter 16/26 with a
+66ch measure, 18/26 bold lead-in headings, 14px between paragraphs, a pale accent pull-quote and
+numbered accent markers on ordered lists. It lives in `input.css` as the `.rich-text` display rules
+and the `prose-text` utility (now sans, not serif), so every place that renders through
+`fragments/rich-text :: content` picks it up. **Those descendant rules (`.rich-text p`, `h1`–`h4`,
+`blockquote`, `ol`, `ul`) are unlayered, so they beat Tailwind utilities on the same elements**: a
+caller's `cls` can still size the wrapper but not the paragraphs and lists inside it. Comments, the
+assistant bubbles, training-event descriptions and the AI rewrite panel are consumers, and the
+comment and choreography-description restyle is #328, so check them when you touch these rules.
+Short, self-contained remarks (a figure's technical remarks, a recommendation) go in the outlined
+card: `fragments/card :: remarksCard(title, icon, lead, body | text, cls)`, styled by the
+`card-remarks` utility. Tokens added for it: `--text-read`, `--text-read-lead`, `--text-read-title`,
+`--text-card`, `--measure-read`, `--measure-card`, `--space-para`, `--space-card-para`. Dense things
+(tables, tooltips, labels, fields) are unchanged.
+
 **The comments section follows the rounded form language (#222).** The editor and the link
 dialog take `--radius-field`, the toolbar groups and buttons are pills, and focus and error
 draw a 3px ring (`border-error` on the editor). Comment cards are the `comment-card` utility:
@@ -654,11 +669,12 @@ pass claimed a fit that the browser showed was false.
   markup, not a catalog fragment; make one if a second menu appears.
 - **Redirect parameters take a plain same-site path only.** `POST /profile/locale` and the
   attendance action in `TrainingEventWebController` accept an optional `redirect`. The rule
-  (`ProfileController.sanitizeRedirect`) is one leading slash, then not `/` or `\`, no
-  backslash anywhere, no control characters; anything else falls back to the default page.
-  The first versions of both accepted `//evil.example` and `/\evil.example` (an open
-  redirect) and were caught only in review. The rule now exists in two copies; share it
-  rather than writing a third.
+  lives once, in `controller/web/SafeRedirect` (#324): one leading slash, then not `/` or `\`,
+  no backslash anywhere, no control characters; anything else falls back to the caller's own
+  default page (`SafeRedirect.sanitize` returns null, `orDefault` takes the default). The first
+  versions of both accepted `//evil.example` and `/\evil.example` (an open redirect) and were
+  caught only in review. Never build a `redirect:` from request input without going through
+  `SafeRedirect`, and never write another copy of the rule; `SafeRedirectTest` pins it.
 - **Profile is a summary plus a settings list (#229, direction C).** `profile/index.html` has
   a hero (name, role, member since, real training streak and this year's hours, sessions and
   attendance, and counts of Notes, choreographies and figures created) and settings as an
@@ -1248,7 +1264,9 @@ locales are listed in `config/AppLocales.kt`.
   collapse #46 exists to end.
 - **Two type faces, by role.** Inter for UI, labels, navigation and all tabular data;
   Source Serif 4 for long-form prose only. Nothing else — Atkinson Hyperlegible and Manrope
-  were retired in #93, and the tracked-out ALL-CAPS label style went with them.
+  were retired in #93, and the tracked-out ALL-CAPS label style went with them. #301 chose
+  Inter for long reading as well (see **Reading style** below), so the serif is on its way out of
+  the Note and figure pages (#327); comments and choreography descriptions still use it until #328.
 - **Elevation has exactly two levels.** Level 0 is flat with a 1px `outline-variant`
   hairline — every card, table, input and panel — so the stock shadow tokens (`shadow-xs`,
   `-sm`, `-md`) resolve to `none`, and a flat surface stays flat in every state, hover
@@ -1297,7 +1315,14 @@ locales are listed in `config/AppLocales.kt`.
   nothing, and every test still passes because MockMvc does not enforce the policy. This broke the
   assistant switches (#309) and left the default-calendar radio and three admin delete buttons
   without their behaviour or their confirmation. Put behaviour in `static/js` (a delegated handler),
-  and use `data-confirm` for a delete confirmation. A guard test for this is tracked in #323.
+  and use `data-confirm` for a delete confirmation. #323 fixed the four known places and added
+  `InlineEventHandlerGuardTest`, which scans every template (fragments included, `th:on…` and
+  `th:attr` too) and fails with the file and line, so a new `onclick=` now fails the build. The
+  delegated hooks in `main.js` are: `data-confirm` on a form, or on the submitting button (the
+  button's wins); `js-auto-submit` (or `js-filter-select`, `data-auto-submit`) to submit the form
+  on change; and `data-fallback="/path"` on an `<img>` to swap the source when it fails to load,
+  which replaced `onerror=`. A confirmation text is a message key in both bundles
+  (`th:data-confirm="#{…}"`); the plain `data-confirm` beside it is only the no-render fallback.
 - **Adding an external script/style needs a CSP edit** in `config/SecurityConfig.kt` —
   the policy allowlists only `unpkg.com` (HTMX, SortableJS, Trix), Google Fonts, and Drive.
 - **Everything is authenticated** except `/css/**`, `/js/**`, `/images/**`, `/login`.
@@ -1315,6 +1340,12 @@ repositories and a mocked `ApplicationEventPublisher`. Integration tests use
 `@ServiceConnection` (`service/SyllabusImporterIntegrationTest.kt`) — these need Docker
 running and the env vars above. `src/test/resources/application-test.properties` holds
 dummy datasource values.
+
+**A test must not depend on today's date.** `LocalDateTime.now().minusDays(n)` lands in a different
+calendar week depending on the weekday, so the timeline weekly-rollup test passed Friday to Sunday
+and failed Monday to Thursday, turning `main` red for unrelated PRs (#337). Anything asserting on a
+week, month or "today" boundary takes fixed dates or a fixed clock; `entryAt(start, …)` in
+`TrainingTimelineViewRenderingTest` is the pattern.
 
 **There is no `@DataJpaTest` in this project.** Anything that needs a real database — a
 repository query, a Specification predicate, a migration — uses the `@SpringBootTest` +
@@ -1343,6 +1374,9 @@ working around them. `FragmentCatalogRenderingTest` renders every catalog fragme
 against a test-only harness template under `src/test/resources/templates/test/`, which is
 where a new fragment's two cases go. `HtmxFragmentRenderingTest` pins the root id of every
 controller-named htmx fragment.
+
+`InlineEventHandlerGuardTest` (#323) is the fourth: it fails on any `on…=` attribute in a template,
+and also runs its detector against deliberately bad template strings so it cannot go quiet.
 
 `UnescapedTemplateOutputTest` (#114) is the third template guard and the one with teeth: it
 walks the template tree and fails if unescaped output appears outside
@@ -1441,7 +1475,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline |
-| `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments (#327, #328) |
+| `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions are #328 |
 
 ## Agent delegation contract
 
