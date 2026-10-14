@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.service.GoogleCalendarClient
 import com.jankowski.rafal.dancebook.service.ScriptedChatModel
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.matchesPattern
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.ai.chat.model.ChatModel
@@ -77,10 +78,10 @@ class AssistantWidgetRenderingTest {
     private fun asAlice() = user(alice.username).roles("USER")
 
     @Test
-    fun `home renders the bar, the dialog, the header button and the script`() {
+    fun `home renders the dialog, the header button and the script, but no assistant bar`() {
         mockMvc.perform(get("/").with(asAlice()))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("id=\"assistantBar\"")))
+            .andExpect(content().string(not(containsString("id=\"assistantBar\""))))
             .andExpect(content().string(containsString("<dialog id=\"assistantSurface\"")))
             .andExpect(content().string(containsString("fixed inset-0")))
             .andExpect(content().string(containsString("md:w-[400px]")))
@@ -91,21 +92,22 @@ class AssistantWidgetRenderingTest {
     }
 
     @Test
-    fun `assistant bar uses rounded-pill, ambient shadow and focus-within ring tokens`() {
+    fun `assistant bar is not rendered and composer uses rounded-pill tokens`() {
         val result = mockMvc.perform(get("/").with(asAlice()))
             .andExpect(status().isOk)
             .andReturn()
 
         val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
         val bar = doc.selectFirst("#assistantBar")
-        org.junit.jupiter.api.Assertions.assertNotNull(bar, "#assistantBar must be present")
-        org.junit.jupiter.api.Assertions.assertTrue(bar!!.hasClass("rounded-pill"), "#assistantBar must use rounded-pill token")
-        org.junit.jupiter.api.Assertions.assertTrue(bar.hasClass("shadow-ambient"), "#assistantBar must use shadow-ambient token")
-        org.junit.jupiter.api.Assertions.assertTrue(bar.className().contains("focus-within:ring-3"), "#assistantBar must draw 3px focus ring on focus-within")
+        org.junit.jupiter.api.Assertions.assertNull(bar, "#assistantBar must not be present")
 
-        val kbd = bar.selectFirst("kbd")
-        org.junit.jupiter.api.Assertions.assertNotNull(kbd, "kbd shortcut hint must be present")
-        org.junit.jupiter.api.Assertions.assertTrue(kbd!!.hasClass("rounded-pill"), "kbd shortcut hint must use rounded-pill token")
+        val composerInput = doc.selectFirst("#assistantComposerInput")
+        org.junit.jupiter.api.Assertions.assertNotNull(composerInput, "#assistantComposerInput must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(composerInput!!.hasClass("rounded-pill"), "#assistantComposerInput must use rounded-pill token")
+
+        val composerSendBtn = doc.selectFirst("#assistantComposer button[type=submit]")
+        org.junit.jupiter.api.Assertions.assertNotNull(composerSendBtn, "composer send button must be present")
+        org.junit.jupiter.api.Assertions.assertTrue(composerSendBtn!!.hasClass("rounded-pill"), "composer send button must use rounded-pill token")
     }
 
     @Test

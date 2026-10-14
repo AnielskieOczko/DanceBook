@@ -8,9 +8,7 @@
     const thread = document.getElementById('assistantThread');
     const composer = document.getElementById('assistantComposer');
     const composerInput = document.getElementById('assistantComposerInput');
-    const bar = document.getElementById('assistantBar');
-    const barInput = document.getElementById('assistantBarInput');
-    if (!surface || !thread || !composer || !composerInput || !bar || !barInput) return;
+    if (!surface || !thread || !composer || !composerInput) return;
 
     const expandBtn = document.getElementById('assistantExpandBtn');
     const collapseBtn = document.getElementById('assistantCollapseBtn');
@@ -24,16 +22,11 @@
     const wide = window.matchMedia('(min-width: 768px)');
     let firstOpen = true;
 
-    // On desktop the open panel has its own composer, so the floating bar steps aside rather than overlap it.
-    function syncBar() {
-        bar.hidden = surface.open && wide.matches;
-    }
     surface.addEventListener('close', function () {
         if (surface.classList.contains('is-expanded')) {
             surface.classList.remove('is-expanded');
             surface.removeAttribute('data-expanded');
         }
-        syncBar();
     });
 
     surface.addEventListener('cancel', function (event) {
@@ -56,7 +49,6 @@
         if (opening && surface.getAttribute('data-full-window') === 'true' && wide.matches) {
             expand();
         }
-        syncBar();
         composerInput.focus();
     }
 
@@ -254,14 +246,6 @@
         }
     });
 
-    bar.addEventListener('submit', function (event) {
-        event.preventDefault();
-        if (composer.classList.contains('htmx-request')) return; // keep the text; a send is in flight
-        const message = barInput.value;
-        barInput.value = '';
-        ask(message);
-    });
-
     // The server says which conversation the composer is in (an empty id means a new one).
     document.addEventListener('assistant-conversation', function (event) {
         const holder = document.getElementById('assistantConversationId');
@@ -340,15 +324,14 @@
         }
     });
 
-    // `/` focuses the bar on desktop, except while typing somewhere else.
+    // `/` opens the assistant and focuses its composer on desktop, except while typing somewhere else.
     document.addEventListener('keydown', function (event) {
         if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
         const target = event.target;
         if (target && (target.isContentEditable || target.closest('input, textarea, select, trix-editor, [contenteditable="true"]'))) return;
         if (!wide.matches) return;
         event.preventDefault();
-        if (surface.open) { composerInput.focus(); return; }
-        barInput.focus();
+        openSurface();
     });
 
     // Dictation: the browser's Web Speech API fills the input. Nothing but the text is sent anywhere.
