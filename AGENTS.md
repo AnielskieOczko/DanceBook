@@ -644,10 +644,13 @@ large rounded blob on a phone. It is therefore a single row that scrolls horizon
 (`max-w-full overflow-x-auto`, items `shrink-0 whitespace-nowrap`), never `flex-wrap`. FullCalendar's
 buttons and button groups are restyled in the unlayered FullCalendar block of `input.css` with
 `--radius-pill`, including the outer ends of a group, because the library's own rule rounds
-every corner by 2px. The dashboard assistant bar (`assistant/widget.html`) is a pill with an
-ambient shadow and a primary `focus-within` ring, and it renders only when `assistantNav` is
-set, which needs the assistant feature enabled, so it is absent on a database where it is
-off. The assistant has no scope dropdown; its scope travels in hidden inputs.
+every corner by 2px. There is no assistant text bar fixed to the bottom of the page any more
+(#322): the assistant opens from the top-bar button or the `/` key, as a side panel on desktop and
+a sheet on a phone, and `assistant/widget.html` renders only when `assistantNav` is set, which
+needs the assistant feature enabled, so it is absent when it is off. `/` opens the panel if it is
+closed and focuses its own composer (`assistantComposerInput`); dictation lives in that composer.
+Nothing reserves space at the bottom of a page for the assistant, so do not add padding for it.
+The assistant has no scope dropdown; its scope travels in hidden inputs.
 
 **Mobile labels must fit a sixth of 375px, about 61px each.** Each item is `flex-1`,
 which is what keeps the six evenly spaced. The labels are sentence case at 11px. The
@@ -1050,9 +1053,10 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   (`AssistantRateLimiter`, in memory).
 - **Per-user assistant preferences (#309).** `AssistantPreferencesService` is the one place every
   feature asks for a user's preferences; nothing else reads `user_assistant_preferences` (V44).
-  Six switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
+  Seven switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
   assistant on, semantic search in standard search, related notes, suggest figures, open in full
-  window (default off), and the reply language (follow the app, Polish or English). Defaults leave
+  window (default off), include shared items (#311, V45), and the reply language (follow the app,
+  Polish or English). Defaults leave
   behaviour as it was. `forUser()` is what features use: it folds in the missing-API-key case (a
   saved "on" never turns anything on without a key), and a failed read falls back to the defaults,
   never to "off". `rawForUser()` is for the profile page only, which must show what is saved.
@@ -1063,6 +1067,15 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     suggest figures off hides the button and refuses the endpoint with 403; full window sets
     `data-full-window` on the dialog and `assistant.js` expands it on **every** open, not only the
     first; the reply language picks the locale the answer is asked for.
+  - **Include shared items (#311) only narrows.** Off, the assistant read tools, the semantic leg of
+    standard search and related notes use only items the user owns; the normal access rule is applied
+    first and ownership is ANDed on, so it never shows more than the rule allows (an admin is narrowed
+    too). Figures have no owner and are untouched; standard keyword search is unchanged. The chunk
+    access rule now exists once, `KnowledgeChunkRepository.accessCondition`, shared by `hybridSearch`
+    and `findRelatedNotes` through an `ownedOnly` parameter. Callers read the switch with
+    `forUser(user).includeSharedItems == false` (a failed read means "on"). The tools' keyword paths
+    use `MaterialService.searchNotes(..., ownedOnly)` and `get_note` hides someone else's note, so a
+    new retrieval path must take the same parameter or it silently ignores the switch.
   - **Do not hold a preference lookup inside a transaction that also calls the model or the
     embedding provider.** All lookups are outside those calls.
   - **A new preference is a new column, a field on the DTO and entity, one row in the profile
@@ -1277,9 +1290,13 @@ locales are listed in `config/AppLocales.kt`.
   mistake it exists to prevent.
 - **The component layer is the `@utility` blocks in `frontend/input.css`** — 70 of them,
   consumed heavily by the templates (`card`, `form-input`, `form-label`, `table-cell`,
-  `badge`). #95 put every one on the canonical tokens, so nothing in the stylesheet reaches
-  for a legacy alias any more, even though the aliases stay *defined* in `@theme` for the
-  ~30 templates that still name them. Write a new utility in canonical tokens only.
+  `badge`). #95 put every one on the canonical tokens and #319 finished the job: the legacy
+  colour aliases (`text-text-primary` and `text-text-secondary`, now `text-on-surface` and
+  `text-on-surface-variant`) and the alphabetic spacing scale (`xs` `sm` `md` `lg` `xl` `base`
+  `gutter` `margin`, now the stock numeric steps at the same pixel value) are deleted from `@theme`,
+  not just unused. `LegacyTokenGuardTest` scans templates, `static/js` and `input.css` and
+  `TailwindOutputCssTest` checks `output.css`, so reintroducing one fails the build. Write a new
+  utility in canonical tokens only.
   A `@utility` emits no CSS until a scanned source names it, so a dead one is invisible in
   the output and accumulates silently — #95 deleted 25. Search templates, `static/js` and
   `src/main/kotlin` before deleting or renaming one.
@@ -1304,12 +1321,14 @@ locales are listed in `config/AppLocales.kt`.
   `oklch(92.8% .006 264.531)`, not to `outline-variant`. So a bare `border` class, which
   the templates carry ~176 of, paints a colour the design system never picked. Name the
   colour (`border border-outline-variant`) rather than relying on the default.
-- **Do not use `max-w-{xs,sm,md,lg,xl}`.** The named spacing scale defines
-  `--spacing-md` and friends, and a `--spacing-<name>` token shadows the stock
-  `--container-<name>`, so `max-w-md` resolves to 24px rather than 28rem. Declaring
-  `--container-*` does not win it back. Use an explicit value: `max-w-[28rem]`. The build
-  and the tests cannot see this. #142's figure picker shipped `max-w-lg`, passed a green
-  build, and opened as a 48px strip until someone looked at it at 375px.
+- **`max-w-{xs,sm,md,lg,xl}` are the stock container sizes again (#319).** Until then the
+  alphabetic spacing scale defined `--spacing-md` and friends, which shadowed the stock
+  `--container-<name>` so `max-w-md` resolved to 24px rather than 28rem, and templates had to
+  write `max-w-[28rem]`. Those spacing tokens are gone; the login card and the empty state now use
+  `max-w-md` and `max-w-sm`, and `TailwindOutputCssTest` pins `--container-md: 28rem`. Remaining
+  `max-w-[28rem]`-style literals are equivalent and can be left. Do not reintroduce a
+  `--spacing-<name>` token with a container name, or the shadowing returns and nothing but a look
+  at 375px will show it (#142's figure picker shipped `max-w-lg` and opened as a 48px strip).
 - **No inline event handlers.** `script-src 'self' https://unpkg.com` has no `'unsafe-inline'`, so the
   browser silently ignores `onchange=`, `onclick=` and `onsubmit=`: the control looks fine, does
   nothing, and every test still passes because MockMvc does not enforce the policy. This broke the
