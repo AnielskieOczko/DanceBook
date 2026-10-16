@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import com.jankowski.rafal.dancebook.config.AssistantFeature
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
 import com.jankowski.rafal.dancebook.dto.AssistantPreferencesUpdateRequest
 import com.jankowski.rafal.dancebook.model.AssistantReplyLanguage
 import com.jankowski.rafal.dancebook.model.UserAssistantPreferences
@@ -92,7 +93,59 @@ class ProfileController(
         model.addAttribute("assistantPreferences", assistantPreferencesService?.rawForUser(user) ?: UserAssistantPreferences().apply { userId = user.id })
         model.addAttribute("assistantFeatureEnabled", assistantFeature?.enabled ?: true)
         model.addAttribute("replyLanguageOptions", replyLanguageOptions(locale))
+        val showStreaks = assistantPreferencesService?.forUser(user)?.showStreaksAndBadges ?: true
+        model.addAttribute("showStreaksAndBadges", showStreaks)
         return "profile/index"
+    }
+
+    @PostMapping("/streaks-and-badges")
+    fun updateStreaksAndBadges(
+        @RequestParam(required = false) showStreaksAndBadges: String?,
+        @RequestParam(name = "_showStreaksAndBadges", required = false) hasMarker: String?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        model: Model,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val user = appUserService.getCurrentUser()
+
+        val effectiveValue = when {
+            hasMarker != null -> when (showStreaksAndBadges) {
+                null, "false", "off" -> false
+                "true", "on" -> true
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown value for showStreaksAndBadges: $showStreaksAndBadges")
+            }
+            showStreaksAndBadges != null -> when (showStreaksAndBadges.trim().lowercase()) {
+                "true", "on", "1" -> true
+                "false", "off", "0" -> false
+                else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown value for showStreaksAndBadges: $showStreaksAndBadges")
+            }
+            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing value for showStreaksAndBadges")
+        }
+
+        var savedValue: Boolean
+        try {
+            val updated = assistantPreferencesService?.updatePreferences(
+                user,
+                AssistantPreferencesUpdateRequest(showStreaksAndBadges = effectiveValue)
+            ) ?: AssistantPreferences.DEFAULTS.copy(showStreaksAndBadges = effectiveValue)
+            savedValue = updated.showStreaksAndBadges
+            model.addAttribute("showStreaksAndBadgesSuccessMsg", true)
+            redirectAttributes.addFlashAttribute("showStreaksAndBadgesSuccessMsg", true)
+        } catch (e: Exception) {
+            val current = assistantPreferencesService?.forUser(user) ?: AssistantPreferences.DEFAULTS
+            savedValue = current.showStreaksAndBadges
+            model.addAttribute("showStreaksAndBadgesErrorMsg", true)
+            redirectAttributes.addFlashAttribute("showStreaksAndBadgesErrorMsg", true)
+        }
+
+        model.addAttribute("showStreaksAndBadges", savedValue)
+        model.addAttribute("streaksAndBadgesOpen", true)
+
+        if (request.getHeader("HX-Request") != null) {
+            return "profile/index :: streaksAndBadgesSection"
+        }
+        return "redirect:/profile"
     }
 
     @PostMapping("/default-calendar")

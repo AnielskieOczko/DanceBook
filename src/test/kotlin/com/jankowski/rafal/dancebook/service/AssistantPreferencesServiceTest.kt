@@ -101,6 +101,17 @@ class AssistantPreferencesServiceTest {
     }
 
     @Test
+    fun `show streaks and badges defaults on and a saved off is read back, with or without an API key`() {
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.empty())
+        assertTrue(serviceWithKey.forUser(user).showStreaksAndBadges)
+
+        val entity = UserAssistantPreferences().apply { userId = user.id; showStreaksAndBadges = false }
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.of(entity))
+        assertFalse(serviceWithKey.forUser(user).showStreaksAndBadges)
+        assertFalse(serviceWithoutKey.forUser(user).showStreaksAndBadges)
+    }
+
+    @Test
     fun `missing API key forces assistant dependent flags off even if saved on`() {
         val entity = UserAssistantPreferences().apply {
             userId = user.id
@@ -181,18 +192,21 @@ class AssistantPreferencesServiceTest {
             AssistantPreferencesUpdateRequest(
                 assistantEnabled = false,
                 openInFullWindow = true,
-                replyLanguage = AssistantReplyLanguage.PL
+                replyLanguage = AssistantReplyLanguage.PL,
+                showStreaksAndBadges = false
             )
         )
 
         assertFalse(result.assistantEnabled)
         assertTrue(result.openInFullWindow)
         assertEquals(AssistantReplyLanguage.PL, result.replyLanguage)
+        assertFalse(result.showStreaksAndBadges)
         assertTrue(result.semanticSearchEnabled) // unchanged default
         val saved = captor.value
         assertEquals(user.id, saved.userId)
         assertFalse(saved.assistantEnabled)
         assertTrue(saved.openInFullWindow)
         assertEquals(AssistantReplyLanguage.PL, saved.replyLanguage)
+        assertFalse(saved.showStreaksAndBadges)
     }
 }

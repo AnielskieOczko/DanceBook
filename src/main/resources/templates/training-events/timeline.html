@@ -31,14 +31,17 @@
         <!--/* Top-of-page controls: summary tiles, dashed badge slots, month chips, and legend (shown on first page) */-->
         <th:block th:if="${timeline.isFirstPage and not timeline.isEmpty}">
             <!--/* Summary tiles */-->
-            <div th:if="${stats != null}" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div th:if="${stats != null}" class="grid grid-cols-2 gap-3 mb-4" th:classappend="${showStreaksAndBadges} ? 'md:grid-cols-4' : 'md:grid-cols-3'">
                 <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label=#{training.stats.hours_trained}, caption=#{training.timeline.stats.attended_caption(${stats.counts.attended})})}"></div>
                 <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label=#{training.stats.attendance}, caption=#{training.timeline.stats.attendance_caption(${stats.counts.attended}, ${stats.counts.skipped})})}"></div>
-                <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.timeline.stats.streak_caption})}"></div>
+                <th:block th:if="${showStreaksAndBadges}">
+                    <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.timeline.stats.streak_caption})}"></div>
+                </th:block>
                 <div th:replace="~{fragments/card :: statCard(value=${stats.counts.unconfirmed}, label=#{training.timeline.stats.to_confirm}, caption=#{training.timeline.stats.upcoming_caption(${stats.counts.upcoming})})}"></div>
             </div>
 
             <!--/* Badge slots (#35, #39) */-->
+            <th:block th:if="${showStreaksAndBadges}">
             <div class="slots flex flex-wrap gap-2 items-center mb-4" role="group" th:attr="aria-label=#{training.timeline.badge_slot}">
                 <span class="slot tc-slot tc-slot-bronze">
                     <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
@@ -59,6 +62,7 @@
                     <span th:text="#{training.timeline.slot_hours}">Badge slot · 100 hours</span>
                 </span>
             </div>
+            </th:block>
 
             <!--/* Month chips as same-page anchor links */-->
             <div class="flex flex-wrap items-center gap-2 mb-4" role="group" th:attr="aria-label=#{training.timeline.month_filter_label}">
@@ -161,7 +165,7 @@
                                 </div>
 
                                 <!--/* Streak marker with badge slot */-->
-                                <div th:if="${(entry.activeStreak ?: entry.streakMilestone) != null}" class="tc-streak my-2">
+                                <div th:if="${showStreaksAndBadges and (entry.activeStreak ?: entry.streakMilestone) != null}" class="tc-streak my-2">
                                     <span th:replace="~{fragments/icon :: icon(name='local_fire_department', cls='icon-filled text-primary shrink-0')}"></span>
                                     <div class="flex-1 min-w-0">
                                         <div th:text="#{training.timeline.streak_in_a_row(${entry.activeStreak ?: entry.streakMilestone})}">5 sessions in a row</div>

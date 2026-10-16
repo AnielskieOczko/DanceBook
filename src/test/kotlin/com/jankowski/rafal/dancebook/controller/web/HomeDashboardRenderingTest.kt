@@ -16,6 +16,26 @@ import com.jankowski.rafal.dancebook.dto.WeekDayState
 import com.jankowski.rafal.dancebook.dto.WeekStrip
 import com.jankowski.rafal.dancebook.dto.WrapUp
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
+import com.jankowski.rafal.dancebook.dto.AssistantPreferences
+import com.jankowski.rafal.dancebook.model.AppUser
+import com.jankowski.rafal.dancebook.model.Role
+import com.jankowski.rafal.dancebook.model.TrainingEvent
+import com.jankowski.rafal.dancebook.model.TrainingOutcome
+import com.jankowski.rafal.dancebook.model.TrainingRecord
+import com.jankowski.rafal.dancebook.repository.ChoreographyRepository
+import com.jankowski.rafal.dancebook.repository.CustomListRepository
+import com.jankowski.rafal.dancebook.repository.MaterialRepository
+import com.jankowski.rafal.dancebook.repository.TrainingEventRepository
+import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
+import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
+import com.jankowski.rafal.dancebook.service.DashboardServiceImpl
+import com.jankowski.rafal.dancebook.service.TrainingStatsServiceImpl
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.Mockito.mock
+import org.springframework.data.jpa.domain.Specification
+import java.time.Clock
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
@@ -251,6 +271,93 @@ class HomeDashboardRenderingTest {
             .andExpect(content().string(containsString("Saturday practice")))
             .andExpect(content().string(containsString("You are all caught up.")))
             .andExpect(content().string(not(containsString("Attended</button>"))))
+    }
+
+    @Test
+    fun `dashboard week view shows streak when preference is on and hides it when preference is off while preserving hours sessions and attendance`() {
+        val user = AppUser().apply {
+            id = UUID.randomUUID()
+            username = "alex"
+            displayName = "Alex"
+            role = Role.USER
+        }
+        `when`(appUserService.getCurrentUser()).thenReturn(user)
+        `when`(activeCalendarService.active()).thenReturn(null)
+
+        val mockEventRepo = mock(TrainingEventRepository::class.java)
+        val mockRecordRepo = mock(TrainingRecordRepository::class.java)
+        val mockAssistantPrefsService = mock(AssistantPreferencesService::class.java)
+        val mockMaterialRepo = mock(MaterialRepository::class.java)
+        val mockChoreographyRepo = mock(ChoreographyRepository::class.java)
+        val mockCustomListRepo = mock(CustomListRepository::class.java)
+
+        // Two attended records in this month on consecutive days -> streak of 2
+        val now = LocalDateTime.now()
+        val record1 = TrainingRecord().apply {
+            id = UUID.randomUUID()
+            trainingEventId = UUID.randomUUID()
+            createdBy = user
+            occurredAt = now.minusDays(1)
+            durationMinutes = 90
+            outcome = TrainingOutcome.ATTENDED
+        }
+        val record2 = TrainingRecord().apply {
+            id = UUID.randomUUID()
+            trainingEventId = UUID.randomUUID()
+            createdBy = user
+            occurredAt = now
+            durationMinutes = 90
+            outcome = TrainingOutcome.ATTENDED
+        }
+        val records = listOf(record2, record1)
+        `when`(mockRecordRepo.findAllByCreatedByOrderByOccurredAtDesc(user)).thenReturn(records)
+        `when`(mockEventRepo.findAll(org.mockito.ArgumentMatchers.any<Specification<TrainingEvent>>())).thenReturn(emptyList())
+        `when`(mockMaterialRepo.findRecentByOwner(eq(user) ?: user, org.mockito.ArgumentMatchers.any(org.springframework.data.domain.Pageable::class.java) ?: org.springframework.data.domain.PageRequest.of(0, 3))).thenReturn(emptyList())
+        `when`(mockChoreographyRepo.findAllByOwner(user)).thenReturn(emptyList())
+        `when`(mockCustomListRepo.findAllByOwner(user)).thenReturn(emptyList())
+        `when`(trainingEventService.findByCurrentUser(null, null, null, null, true, null)).thenReturn(emptyList())
+        `when`(trainingEventService.findInRange(org.mockito.ArgumentMatchers.any() ?: now, org.mockito.ArgumentMatchers.any() ?: now.plusDays(7), eq(null))).thenReturn(emptyList())
+
+        val realStatsService = TrainingStatsServiceImpl(
+            trainingEventRepository = mockEventRepo,
+            trainingRecordRepository = mockRecordRepo,
+            appUserService = appUserService,
+            assistantPreferencesService = mockAssistantPrefsService
+        )
+        val realDashboardService = DashboardServiceImpl(
+            trainingEventService = trainingEventService,
+            trainingStatsService = realStatsService,
+            activeCalendarService = activeCalendarService,
+            appUserService = appUserService,
+            materialRepository = mockMaterialRepo,
+            choreographyRepository = mockChoreographyRepo,
+            customListRepository = mockCustomListRepo,
+            clock = Clock.systemDefaultZone()
+        )
+
+        `when`(dashboardService.dashboardForCurrentUser()).thenAnswer { realDashboardService.dashboardForCurrentUser() }
+
+        // 1. With preference ON: streak is visible in week view, hours, sessions and attendance are visible in month summary
+        `when`(mockAssistantPrefsService.forUser(user)).thenReturn(AssistantPreferences(showStreaksAndBadges = true))
+
+        mockMvc.perform(get("/").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("2-session streak")))
+            .andExpect(content().string(containsString("3h")))
+            .andExpect(content().string(containsString("sessions attended")))
+            .andExpect(content().string(containsString("attendance")))
+            .andExpect(content().string(containsString("100%")))
+
+        // 2. With preference OFF: streak is hidden from week view, but hours, sessions and attendance remain visible
+        `when`(mockAssistantPrefsService.forUser(user)).thenReturn(AssistantPreferences(showStreaksAndBadges = false))
+
+        mockMvc.perform(get("/").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(not(containsString("streak"))))
+            .andExpect(content().string(containsString("3h")))
+            .andExpect(content().string(containsString("sessions attended")))
+            .andExpect(content().string(containsString("attendance")))
+            .andExpect(content().string(containsString("100%")))
     }
 
     @Test

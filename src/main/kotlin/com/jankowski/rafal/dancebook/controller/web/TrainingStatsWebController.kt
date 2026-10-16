@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.dto.TrainingEventPalette
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
+import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
 import com.jankowski.rafal.dancebook.service.TrainingStatsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam
 class TrainingStatsWebController(
     private val trainingStatsService: TrainingStatsService,
     private val activeCalendarService: ActiveCalendarService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val appUserService: AppUserService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) {
 
     @GetMapping
@@ -33,7 +37,9 @@ class TrainingStatsWebController(
         @RequestParam(defaultValue = "ALL_TIME") period: StatsPeriod,
         model: Model
     ): String {
+        val user = try { appUserService.getCurrentUser() } catch (e: Exception) { null }
         val stats = trainingStatsService.statsForCurrentUser(period, activeCalendarService.active()?.id)
+        val showStreaks = user?.let { assistantPreferencesService?.forUser(it)?.showStreaksAndBadges } ?: true
 
         model.addAttribute("pageTitle", "Training stats")
         model.addAttribute("stats", stats)
@@ -42,6 +48,7 @@ class TrainingStatsWebController(
         model.addAttribute("categoryChartJson", objectMapper.writeValueAsString(stats.byCategory))
         model.addAttribute("eventTypeChartJson", objectMapper.writeValueAsString(stats.byEventType))
         model.addAttribute("chartGridColor", TrainingEventPalette.CHART_GRID_COLOR)
+        model.addAttribute("showStreaksAndBadges", showStreaks)
 
         return "training-events/stats"
     }
