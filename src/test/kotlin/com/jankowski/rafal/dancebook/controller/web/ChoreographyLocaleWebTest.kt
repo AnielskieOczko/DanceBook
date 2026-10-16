@@ -513,4 +513,29 @@ class ChoreographyLocaleWebTest {
             .andExpect(content().string(not(containsString("This choreography doesn't have any figures yet."))))
             .andExpect(content().string(not(containsString("Open Builder"))))
     }
+
+    @Test
+    fun `choreography view page renders long description with Direction C reading style`() {
+        val longDescription = "<div>Start in closed hold on the long wall.</div>" +
+            "<ol><li>Closed Change, long wall</li><li>Natural Turn, corner</li></ol>" +
+            "<div><strong>Count the corner aloud:</strong> bar 5 is where you turn.</div>"
+        val (choreo, _) = createTestChoreography(description = longDescription)
+        `when`(choreographyService.findById(choreo.id!!)).thenReturn(choreo)
+
+        val result = mockMvc.perform(
+            get("/choreographies/{id}", choreo.id)
+                .with(csrf())
+        )
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = org.jsoup.Jsoup.parse(result.response.contentAsString)
+        val prose = doc.selectFirst(".rich-text")
+        org.junit.jupiter.api.Assertions.assertNotNull(prose)
+        org.junit.jupiter.api.Assertions.assertTrue(prose!!.classNames().contains("prose-text"))
+        val html = prose.html()
+        org.junit.jupiter.api.Assertions.assertTrue(html.contains("Start in closed hold on the long wall."))
+        org.junit.jupiter.api.Assertions.assertTrue(html.contains("<ol>"))
+        org.junit.jupiter.api.Assertions.assertTrue(html.contains("<strong>Count the corner aloud:</strong> bar 5 is where you turn."))
+    }
 }

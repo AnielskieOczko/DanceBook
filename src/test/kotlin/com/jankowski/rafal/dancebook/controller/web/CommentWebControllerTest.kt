@@ -286,15 +286,21 @@ class CommentWebControllerTest {
 
     @Test
     @WithMockUser(username = "dancer")
-    fun `comment item renders rounded comment-card with author corner and link-pill actions`() {
+    fun `comment item renders Direction C compact layout with 36px avatar, hairline separator and link-pill actions`() {
         mockMvc.perform(
             get("/materials/$materialId/comments/$commentId")
                 .with(csrf())
         )
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("comment-card")))
+            .andExpect(content().string(containsString("comment-item")))
+            .andExpect(content().string(containsString("comment-avatar")))
+            .andExpect(content().string(not(containsString("comment-card\""))))
             .andExpect(content().string(containsString("link-pill")))
             .andExpect(content().string(containsString("link-pill del")))
+            // Confirms rich text receives the shared reading style from fragments/rich-text :: content with no extra classes
+            .andExpect(content().string(containsString("rich-text text-on-surface")))
+            .andExpect(content().string(not(containsString("font-prose"))))
+            .andExpect(content().string(not(containsString("text-prose"))))
     }
 
     @Test
@@ -305,6 +311,7 @@ class CommentWebControllerTest {
                 .with(csrf())
         )
             .andExpect(status().isOk)
+            .andExpect(content().string(containsString("comment-avatar")))
             .andExpect(content().string(containsString("comment-card-editing")))
             .andExpect(content().string(containsString("Editing")))
             .andExpect(content().string(containsString("btn-ghost btn-sm")))
