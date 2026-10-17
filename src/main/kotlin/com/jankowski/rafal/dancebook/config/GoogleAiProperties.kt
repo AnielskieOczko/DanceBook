@@ -28,9 +28,12 @@ data class GoogleAiProperties(
     val embeddingRequestsPerMinute: Int = 90,
     /**
      * Cosine distance (0 identical, 1 unrelated) beyond which a semantic search match is dropped.
-     * 0.65 is the cutoff the knowledge index's hybrid query has always used.
+     * Applies to the Notes and Figures search boxes only; the assistant's read tools keep the
+     * repository default. 0.42 comes from #331: with `gemini-embedding-001` a query that has real
+     * answers has its nearest match at 0.23 to 0.37, while a query with none starts at 0.43 or more,
+     * so the old 0.65 never dropped anything (the 30th candidate was never past 0.53).
      */
-    val semanticSearchMaxDistance: Double = 0.65,
+    val semanticSearchMaxDistance: Double = 0.42,
     /** Share of the per-minute embedding budget live searches may use; the index worker keeps the rest. */
     val embeddingSearchSharePercent: Int = 30,
     /** Searches that may embed per user per minute, so one user cannot use up the search share. */
