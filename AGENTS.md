@@ -369,22 +369,30 @@ and the `prose-text` utility (now sans, not serif), so every place that renders 
 `fragments/rich-text :: content` picks it up. **Those descendant rules (`.rich-text p`, `h1`–`h4`,
 `blockquote`, `ol`, `ul`) are unlayered, so they beat Tailwind utilities on the same elements**: a
 caller's `cls` can still size the wrapper but not the paragraphs and lists inside it. Comments, the
-assistant bubbles, training-event descriptions and the AI rewrite panel are consumers, and the
-comment and choreography-description restyle is #328, so check them when you touch these rules.
+assistant bubbles, training-event descriptions, choreography descriptions (#328) and the AI rewrite
+panel are consumers, so check them when you touch these rules. **`.rich-text` breaks an unbroken long
+word** (`overflow-wrap: break-word`), added in #328 after a comment holding one 85-character token made
+the whole note page scroll sideways at 375px. A grid or flex column that holds rich text also needs
+`min-w-0`, or the track grows to the word's width and the wrap never happens.
 Short, self-contained remarks (a figure's technical remarks, a recommendation) go in the outlined
 card: `fragments/card :: remarksCard(title, icon, lead, body | text, cls)`, styled by the
 `card-remarks` utility. Tokens added for it: `--text-read`, `--text-read-lead`, `--text-read-title`,
 `--text-card`, `--measure-read`, `--measure-card`, `--space-para`, `--space-card-para`. Dense things
 (tables, tooltips, labels, fields) are unchanged.
 
-**The comments section follows the rounded form language (#222).** The editor and the link
-dialog take `--radius-field`, the toolbar groups and buttons are pills, and focus and error
-draw a 3px ring (`border-error` on the editor). Comment cards are the `comment-card` utility:
-field radius with the 12px `--radius-inset` on the author's side, and `comment-card-editing`
-for the inline edit card, which hosts the editor without a second border through
-`cls='comment-edit-editor'`. Card actions are `link-pill` (`link-pill del` for delete).
-`richText` takes a `hasError` parameter that adds `border-error` to the unbound editor, so a
-failed comment save shows the error ring. Trix's
+**The comments section is card-less and compact, with the rounded editor (#222, #328).** A comment is
+the `comment-item` utility (a grid: 36px avatar and a column, a 1px `outline-variant` line above, no
+box) with the `comment-avatar` utility (36px circle on `primary-soft`) and the shared reading style for
+its text, which comes from `fragments/rich-text :: content` with no extra classes. The editor and the
+link dialog keep the rounded form language of #222: they take `--radius-field`, the toolbar groups and
+buttons are pills, and focus and error draw a 3px ring (`border-error` on the editor). The inline edit
+card is still a card: `comment-card` with `comment-card-editing`, which hosts the editor without a
+second border through `cls='comment-edit-editor'`. Card actions are `link-pill` (`link-pill del` for
+delete). `richText` takes a `hasError` parameter that adds `border-error` to the unbound editor, so a
+failed comment save shows the error ring. **Comments have no replies**: `Comment` has no parent and the
+UI has no reply action, so there is no indented reply layout. #328's text asked for one and agy first
+invented it by looking for `data-reply` in the comment text; that was removed in review, and if replies
+are ever built the indent belongs with them. Trix's
 own stylesheet is never edited, only overridden in the unlayered block of `input.css`.
 
 **To send the editor's text with an htmx request that isn't a form submit, write it into
@@ -682,8 +690,8 @@ pass claimed a fit that the browser showed was false.
   a hero (name, role, member since, real training streak and this year's hours, sessions and
   attendance, and counts of Notes, choreographies and figures created) and settings as an
   accordion where each row shows its current value and expands in place: Badges (dashed
-  placeholder slots), Calendars (default calendar), Language, Medal badge style, Assistant
-  (live since #309) and Password. Log out is not on this page. Recent activity shows only
+  placeholder slots), Calendars (default calendar), Language, Medal badge style, Streaks and
+  badges (#317), Assistant (live since #309) and Password. Log out is not on this page. Recent activity shows only
   the signed-in user's own events, through the activity service and the normal visibility
   rule. A new setting is a new row, not a new card. The mock's 14-day streak bar and best
   streak are left out on purpose because the app does not compute them.
@@ -1053,7 +1061,7 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   (`AssistantRateLimiter`, in memory).
 - **Per-user assistant preferences (#309).** `AssistantPreferencesService` is the one place every
   feature asks for a user's preferences; nothing else reads `user_assistant_preferences` (V44).
-  Seven switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
+  Seven assistant switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
   assistant on, semantic search in standard search, related notes, suggest figures, open in full
   window (default off), include shared items (#311, V45), and the reply language (follow the app,
   Polish or English). Defaults leave
@@ -1067,6 +1075,20 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     suggest figures off hides the button and refuses the endpoint with 403; full window sets
     `data-full-window` on the dialog and `assistant.js` expands it on **every** open, not only the
     first; the reply language picks the locale the answer is asked for.
+  - **Show streaks and badges (#317, V46)** is the eighth column on the same table and goes through the
+    same service, although it is not an assistant setting: it has its own profile row (Streaks and
+    badges) and its own endpoint, `POST /profile/streaks-and-badges`, which answers 400 to an unknown
+    value and, when the save fails, keeps the old value and shows the error in the row. Default on.
+    Off, for that user only, the streak is hidden on the profile hero (a plain "Training" title takes
+    its place), the timeline summary tile and journey markers, the Training stats card and the
+    dashboard week view, and the Badges row and timeline badge slots are removed. Hours, sessions and
+    attendance stay, and so do medal levels and the "Medal badge style" setting. **It is hidden by not
+    computing and not rendering, never by CSS:** `TrainingStatsServiceImpl` returns a streak of 0 when
+    the signed-in user opted out, and the templates guard with `th:if`. The dashboard week view has no
+    guard of its own: it takes the streak from the stats service and its existing `streak > 0` check
+    hides it, so a new place that shows a streak must either read the stats service or ask
+    `AssistantPreferencesService.forUser(...).showStreaksAndBadges`. **#39 must honour it:** with the
+    switch off nothing is evaluated, awarded or notified.
   - **Include shared items (#311) only narrows.** Off, the assistant read tools, the semantic leg of
     standard search and related notes use only items the user owns; the normal access rule is applied
     first and ownership is ANDed on, so it never shows more than the rule allows (an admin is narrowed
@@ -1172,7 +1194,9 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     matches still overlap between about 0.39 and 0.42, and a short vague query (one word) can lose
     its real answers, so don't read the number as exact. The evaluation set and the data that
     produced it are in `docs/evaluation/semantic-search/`; re-run it before changing the model or the cutoff. Don't
-    paper over relevance in the templates.
+    paper over relevance in the templates. Known gap (#346): a note that holds every typed word is
+    marked as a keyword hit by the service but is missing from the Notes page's own list, so it can
+    appear nowhere; #347 covers trying query and document task types and newer embedding models.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.
@@ -1284,8 +1308,8 @@ locales are listed in `config/AppLocales.kt`.
 - **Two type faces, by role.** Inter for UI, labels, navigation and all tabular data;
   Source Serif 4 for long-form prose only. Nothing else — Atkinson Hyperlegible and Manrope
   were retired in #93, and the tracked-out ALL-CAPS label style went with them. #301 chose
-  Inter for long reading as well (see **Reading style** below), so the serif is on its way out of
-  the Note and figure pages (#327); comments and choreography descriptions still use it until #328.
+  Inter for long reading as well (see **Reading style** below), so the serif is out of
+  the Note and figure pages (#327) and of choreography descriptions and comments (#328).
 - **Elevation has exactly two levels.** Level 0 is flat with a 1px `outline-variant`
   hairline — every card, table, input and panel — so the stock shadow tokens (`shadow-xs`,
   `-sm`, `-md`) resolve to `none`, and a flat surface stays flat in every state, hover
@@ -1365,6 +1389,9 @@ repositories and a mocked `ApplicationEventPublisher`. Integration tests use
 `@ServiceConnection` (`service/SyllabusImporterIntegrationTest.kt`) — these need Docker
 running and the env vars above. `src/test/resources/application-test.properties` holds
 dummy datasource values.
+
+**A Kotlin test name in backticks cannot contain a dot.** `` fun `the cutoff is 0.42`() `` fails to
+compile with "Name contains illegal characters: ."; write the number out or leave it to the assertion.
 
 **A test must not depend on today's date.** `LocalDateTime.now().minusDays(n)` lands in a different
 calendar week depending on the weekday, so the timeline weekly-rollup test passed Friday to Sunday
@@ -1500,7 +1527,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline |
-| `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions are #328 |
+| `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
 
@@ -1542,6 +1569,11 @@ wait to be told where the code lives; go and find it.
 It will be, in places. Pick the reading most consistent with the existing code, implement
 it, and record the choice under a `## Decisions` heading in `.agy-plan.md`. Do not stop to
 ask — nobody is reading the run live, so a question ends the run without an answer.
+
+**When the spec names something the app does not have, say so; do not build it.** #328 asked for a reply
+thread's indentation, but comments have no replies, and the first run invented reply detection by
+looking for `data-reply` in the comment text. Record it in `## Decisions` as a gap in the spec, build
+the part that exists, and leave the rest out.
 
 ### Pattern map — where to find the shape to copy
 
