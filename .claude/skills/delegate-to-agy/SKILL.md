@@ -205,7 +205,8 @@ the real price of the issue, and the only honest input to "can Pro sustain this"
 
 | Group | Model | When |
 |---|---|---|
-| Gemini | `gemini-3.8-flash-high` | Default, when the Gemini quota can carry the whole issue |
+| Gemini | `gemini-4-argon-medium` | Default, when the Gemini quota can carry the whole issue. New (Gemini 4 Argon, also -high/-low; move to -high if medium falls short); its quota cost per issue is not measured yet, so record it from `usage.py` |
+| Gemini | `gemini-3.8-flash-high` | Fallback if Argon misbehaves or its quota is short |
 | Claude and GPT | `claude-sonnet-5-5-high` | When the Gemini quota is low (roughly under 20% weekly for a feature-sized issue) |
 | Claude and GPT | `claude-opus-5-5-high` | Only for an unusually hard issue, since it uses up that quota fastest |
 
