@@ -291,13 +291,17 @@ class HomeDashboardRenderingTest {
         val mockChoreographyRepo = mock(ChoreographyRepository::class.java)
         val mockCustomListRepo = mock(CustomListRepository::class.java)
 
-        // Two attended records in this month on consecutive days -> streak of 2
+        // Two attended sessions on the same day, so both are in "this month" whatever day the test runs
+        // (the month summary comes from the stats service, which reads the system date itself, so a
+        // fixed date or a fixed dashboard clock cannot pin it). "Yesterday" was the previous month on
+        // the 1st of every month and made this test fail then. A streak counts sessions, not days.
         val now = LocalDateTime.now()
+        val dayStart = now.toLocalDate().atStartOfDay()
         val record1 = TrainingRecord().apply {
             id = UUID.randomUUID()
             trainingEventId = UUID.randomUUID()
             createdBy = user
-            occurredAt = now.minusDays(1)
+            occurredAt = dayStart
             durationMinutes = 90
             outcome = TrainingOutcome.ATTENDED
         }
@@ -305,7 +309,7 @@ class HomeDashboardRenderingTest {
             id = UUID.randomUUID()
             trainingEventId = UUID.randomUUID()
             createdBy = user
-            occurredAt = now
+            occurredAt = dayStart.plusMinutes(1)
             durationMinutes = 90
             outcome = TrainingOutcome.ATTENDED
         }
