@@ -47,10 +47,12 @@
     <div th:if="${stats.counts.total > 0}" class="space-y-12">
 
         <!-- KPI cards. Two up on a phone, four across from md. -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 gap-8" th:classappend="${showStreaksAndBadges} ? 'md:grid-cols-4' : 'md:grid-cols-3'">
             <div th:replace="~{fragments/card :: statCard(value=${stats.totalTrainedLabel}, label=#{training.stats.hours_trained})}"></div>
             <div th:replace="~{fragments/card :: statCard(value=(${stats.attendanceRatePercent != null ? stats.attendanceRatePercent + '%' : '—'}), label=#{training.stats.attendance})}"></div>
-            <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.stats.streak_caption})}"></div>
+            <th:block th:if="${showStreaksAndBadges}">
+                <div th:replace="~{fragments/card :: statCard(value=${stats.currentStreak}, label=#{training.stats.streak}, caption=#{training.stats.streak_caption})}"></div>
+            </th:block>
             <div th:replace="~{fragments/card :: statCard(value=${stats.counts.attended}, label=#{training.stats.attended}, caption=#{training.stats.attended_caption(${stats.counts.skipped}, ${stats.counts.upcoming})})}"></div>
         </div>
 

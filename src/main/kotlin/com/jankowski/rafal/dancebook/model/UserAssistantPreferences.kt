@@ -35,6 +35,9 @@ class UserAssistantPreferences {
     @Column(name = "include_shared_items", nullable = false)
     var includeSharedItems: Boolean = true
 
+    @Column(name = "show_streaks_and_badges", nullable = false)
+    var showStreaksAndBadges: Boolean = true
+
     @Enumerated(EnumType.STRING)
     @Column(name = "reply_language", nullable = false, length = 10)
     var replyLanguage: AssistantReplyLanguage = AssistantReplyLanguage.APP

@@ -29,11 +29,19 @@
             <!-- Streak and Training Stats Card -->
             <div class="bg-surface rounded-card p-3.5 border border-outline-variant space-y-2">
                 <div class="flex items-center justify-between gap-2">
-                    <h3 class="font-semibold text-sm text-on-surface flex items-center gap-1.5">
-                        <span th:replace="~{fragments/icon :: icon(name='local_fire_department', size='sm', cls='text-primary')}"></span>
-                        <span th:if="${trainingStats != null and trainingStats.currentStreak > 0}" th:text="#{profile.streak.title(${trainingStats.currentStreak})}">12-session streak</span>
-                        <span th:if="${trainingStats == null or trainingStats.currentStreak == 0}" th:text="#{profile.streak.none}">No active streak</span>
-                    </h3>
+                    <th:block th:if="${showStreaksAndBadges}">
+                        <h3 class="font-semibold text-sm text-on-surface flex items-center gap-1.5">
+                            <span th:replace="~{fragments/icon :: icon(name='local_fire_department', size='sm', cls='text-primary')}"></span>
+                            <span th:if="${trainingStats != null and trainingStats.currentStreak > 0}" th:text="#{profile.streak.title(${trainingStats.currentStreak})}">12-session streak</span>
+                            <span th:if="${trainingStats == null or trainingStats.currentStreak == 0}" th:text="#{profile.streak.none}">No active streak</span>
+                        </h3>
+                    </th:block>
+                    <th:block th:unless="${showStreaksAndBadges}">
+                        <h3 class="font-semibold text-sm text-on-surface flex items-center gap-1.5">
+                            <span th:replace="~{fragments/icon :: icon(name='event_available', size='sm', cls='text-primary')}"></span>
+                            <span th:text="#{profile.training.title}">Training</span>
+                        </h3>
+                    </th:block>
                     <a href="/training-events" class="text-xs text-primary hover:underline font-medium shrink-0" th:text="#{profile.open_training}">Open training</a>
                 </div>
                 <div class="text-xs text-on-surface-variant break-words">
@@ -82,6 +90,7 @@
             <div class="border border-outline-variant rounded-card bg-surface overflow-hidden divide-y divide-outline-variant">
 
                 <!-- 1. Badges Row -->
+                <th:block th:if="${showStreaksAndBadges}">
                 <details class="group">
                     <summary class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 cursor-pointer hover:bg-surface-container list-none select-none [&::-webkit-details-marker]:hidden">
                         <span th:replace="~{fragments/icon :: icon(name='military_tech', size='md', cls='text-primary shrink-0')}"></span>
@@ -114,6 +123,7 @@
                         </div>
                     </div>
                 </details>
+                </th:block>
 
                 <!-- 2. Calendars Row -->
                 <details th:open="${calendarSuccess != null or calendarError != null}" class="group">
@@ -257,6 +267,58 @@
                                     </div>
                                     <button type="submit" class="btn-primary btn-sm" th:text="#{profile.badge_style.save}">Save Style</button>
                                 </div>
+                            </div>
+                        </form>
+                    </div>
+                </details>
+
+                <!-- 4b. Streaks and Badges Row -->
+                <details th:fragment="streaksAndBadgesSection" id="streaks-badges-section"
+                         th:open="${streaksAndBadgesOpen == true or showStreaksAndBadgesSuccessMsg != null or showStreaksAndBadgesErrorMsg != null}"
+                         class="group">
+                    <summary class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 cursor-pointer hover:bg-surface-container list-none select-none [&::-webkit-details-marker]:hidden">
+                        <span th:replace="~{fragments/icon :: icon(name='local_fire_department', size='md', cls='text-primary shrink-0')}"></span>
+                        <span class="flex-1 min-w-0">
+                            <b class="block text-[15px] font-semibold text-on-surface" th:text="#{profile.settings.streaks_and_badges}">Streaks and badges</b>
+                            <small class="block text-xs text-on-surface-variant break-words"
+                                   th:text="${showStreaksAndBadges ? #messages.msg('profile.streaks_and_badges.summary.on') : #messages.msg('profile.streaks_and_badges.summary.off')}">Showing streaks and badges</small>
+                        </span>
+                        <span th:replace="~{fragments/icon :: icon(name='expand_more', size='md', cls='text-outline group-open:rotate-180 transition-transform duration-150 shrink-0')}"></span>
+                    </summary>
+                    <div class="px-4.5 pb-5 pt-1.5 sm:pl-13 ed-form space-y-4">
+                        <th:block th:if="${showStreaksAndBadgesSuccessMsg}">
+                            <div th:replace="~{fragments/alert :: alert(variant='success', text=#{profile.streaks_and_badges.saved})}"></div>
+                        </th:block>
+                        <th:block th:if="${showStreaksAndBadgesErrorMsg}">
+                            <div th:replace="~{fragments/alert :: alert(variant='error', text=#{profile.streaks_and_badges.error})}"></div>
+                        </th:block>
+
+                        <p class="text-xs text-on-surface-variant break-words" th:text="#{profile.streaks_and_badges.desc}">Choose whether training streaks, milestones and badge slots appear for you.</p>
+
+                        <form id="streaksAndBadgesForm"
+                              th:action="@{/profile/streaks-and-badges}"
+                              th:hx-post="@{/profile/streaks-and-badges}"
+                              hx-target="#streaks-badges-section"
+                              hx-swap="outerHTML"
+                              method="post"
+                              class="space-y-4">
+
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.streaks_and_badges.enabled}">Show streaks and badges</b>
+                                    <small class="block text-xs text-on-surface-variant break-words" th:text="#{profile.streaks_and_badges.enabled.desc}">Display training streaks, milestones and badge slots across the app.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative">
+                                    <input type="hidden" name="_showStreaksAndBadges" value="on"/>
+                                    <input type="checkbox" name="showStreaksAndBadges" value="true"
+                                           th:checked="${showStreaksAndBadges}"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary relative"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex justify-start sm:justify-end">
+                                <button type="submit" class="btn-primary btn-sm" th:text="#{profile.streaks_and_badges.save}">Save Preferences</button>
                             </div>
                         </form>
                     </div>

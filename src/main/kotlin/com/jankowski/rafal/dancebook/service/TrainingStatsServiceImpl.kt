@@ -40,7 +40,8 @@ import kotlin.math.roundToInt
 class TrainingStatsServiceImpl(
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingRecordRepository: TrainingRecordRepository,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) : TrainingStatsService {
 
     companion object {
@@ -72,12 +73,14 @@ class TrainingStatsServiceImpl(
         val attended = recordsInPeriod.filter { it.outcome == TrainingOutcome.ATTENDED }
         val counts = countsOf(recordsInPeriod, eventsInPeriod, currentUser)
 
+        val showStreaks = assistantPreferencesService?.forUser(currentUser)?.showStreaksAndBadges ?: true
+
         return TrainingStats(
             period = period,
             totalMinutesTrained = attended.sumOf { it.durationMinutes.toLong() },
             counts = counts,
             attendanceRatePercent = attendanceRate(counts),
-            currentStreak = currentStreak(allRecords),
+            currentStreak = if (showStreaks) currentStreak(allRecords) else 0,
             byCategory = categoryBreakdown(attended),
             byEventType = eventTypeBreakdown(attended)
         )

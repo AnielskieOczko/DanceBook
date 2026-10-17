@@ -2,6 +2,7 @@ package com.jankowski.rafal.dancebook.controller.web
 
 import com.jankowski.rafal.dancebook.service.ActiveCalendarService
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
 import com.jankowski.rafal.dancebook.service.TrainingTimelineService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -25,7 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam
 class TrainingTimelineWebController(
     private val trainingTimelineService: TrainingTimelineService,
     private val activeCalendarService: ActiveCalendarService,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val assistantPreferencesService: AssistantPreferencesService? = null
 ) {
 
     @GetMapping
@@ -35,18 +37,18 @@ class TrainingTimelineWebController(
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {
-        // A negative page would page backwards off the end of the history.
+        val user = try { appUserService.getCurrentUser() } catch (e: Exception) { null }
         val timeline = trainingTimelineService.timelineForCurrentUser(
             page.coerceAtLeast(0), activeCalendarService.active()?.id
         )
 
+        val showStreaks = user?.let { assistantPreferencesService?.forUser(it)?.showStreaksAndBadges } ?: true
+
         model.addAttribute("timeline", timeline)
         model.addAttribute("stats", timeline.stats)
-        model.addAttribute("currentUser", appUserService.getCurrentUser())
-        // The month already on screen when this window was requested. The first heading is
-        // suppressed when it matches, so an appended window continues a month rather than
-        // repeating its heading halfway down the page.
+        model.addAttribute("currentUser", user)
         model.addAttribute("continuedMonth", lastMonth)
+        model.addAttribute("showStreaksAndBadges", showStreaks)
 
         if (isHtmxRequest != true) {
             model.addAttribute("pageTitle", "Training timeline")

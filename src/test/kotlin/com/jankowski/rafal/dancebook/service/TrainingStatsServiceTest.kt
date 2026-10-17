@@ -314,6 +314,26 @@ class TrainingStatsServiceTest {
     }
 
     @Test
+    fun `when show streaks and badges preference is off, streak is zero even with attended sessions`() {
+        given(
+            session(daysAgo = 1, status = AttendanceStatus.ATTENDED),
+            session(daysAgo = 2, status = AttendanceStatus.ATTENDED)
+        )
+
+        val prefsService = mock(AssistantPreferencesService::class.java)
+        `when`(prefsService.forUser(currentUser)).thenReturn(
+            com.jankowski.rafal.dancebook.dto.AssistantPreferences(showStreaksAndBadges = false)
+        )
+        val serviceWithPrefs = TrainingStatsServiceImpl(
+            trainingEventRepository, trainingRecordRepository, appUserService, prefsService
+        )
+
+        val stats = serviceWithPrefs.statsForCurrentUser(StatsPeriod.ALL_TIME)
+        assertEquals(0, stats.currentStreak)
+        assertEquals(2, stats.counts.attended)
+    }
+
+    @Test
     fun `the this-year period excludes sessions from a previous year`() {
         given(
             session(daysAgo = 0, status = AttendanceStatus.ATTENDED, minutes = 60),
