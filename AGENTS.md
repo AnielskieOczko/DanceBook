@@ -1139,7 +1139,9 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   entry, type and category; figure: dance type and category, creator). Anything beyond that, such
   as a figure's steps or a note's comments, is not loaded; add it there if a consumer needs it.
   Semantic
-  matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.65) are dropped.
+  matches farther than `google.ai.semantic-search-max-distance` (cosine, default 0.42 since #331) are
+  dropped; that setting is the search boxes' only. The assistant's read tools call the vector query
+  with `KnowledgeChunkRepository.DEFAULT_MAX_DISTANCE` (0.65), which #331 did not evaluate.
 - **Semantic results in Notes and Figures search (#233, #234).** `HybridSearchService.search`
   returns hits flagged `KEYWORD`, `SEMANTIC` or `BOTH`. The list pages (`MaterialWebController.listMaterials`,
   `DanceFigureWebController`) call it only when there is a name search, show their own keyword list
@@ -1164,9 +1166,13 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     above, one message per case with no separate mobile variants.
   - **Each name search also spends embedding budget** (one hybrid search per request, with the
     existing per-user limit), and the per-user "Semantic search" preference (#309) turns it off.
-  - **Relevance is not tuned yet.** The related group can show weak matches; the cutoff
-    (`google.ai.semantic-search-max-distance`) and the cap of 5 are being evaluated in #331. Don't
-    paper over it in the templates.
+  - **Relevance (#331).** The cutoff was 0.65, which never dropped anything: with `gemini-embedding-001`
+    the nearest match of a query that has real answers is at 0.23 to 0.37 and that of a query with
+    none starts at 0.43, and the 30th candidate was never past 0.53. It is now 0.42. Good and bad
+    matches still overlap between about 0.39 and 0.42, and a short vague query (one word) can lose
+    its real answers, so don't read the number as exact. The evaluation set and the data that
+    produced it are in `docs/evaluation/semantic-search/`; re-run it before changing the model or the cutoff. Don't
+    paper over relevance in the templates.
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.

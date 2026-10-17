@@ -197,6 +197,30 @@ class HybridSearchServiceTest {
     }
 
     @Test
+    fun `the default search box cutoff drops a distant candidate and keeps a near one`() {
+        assertEquals(0.42, GoogleAiProperties(apiKey = "key").semanticSearchMaxDistance)
+
+        val defaults = GoogleAiProperties(apiKey = "key", embeddingRequestsPerMinute = 100)
+        val svc = HybridSearchServiceImpl(
+            materialService, danceFigureService, appUserService, commentRepository,
+            chunks, embeddings, EmbeddingBudget(defaults, Clock.systemUTC()), defaults, AssistantFeature(defaults),
+            org.springframework.transaction.support.TransactionTemplate(NoOpTransactions())
+        )
+        val near = note("Keep the neck long"); val far = note("Shoe care")
+        keywordNotes(); keywordFigures()
+        visibleNote(near); visibleNote(far)
+        chunks.results = listOf(
+            chunk(KnowledgeSourceType.NOTE, near.id!!, distance = 0.40),
+            chunk(KnowledgeSourceType.NOTE, far.id!!, distance = 0.44)
+        )
+
+        val hits = svc.search("sway")
+
+        assertEquals(listOf(near.id), hits.map { it.id })
+        assertEquals(0.42, chunks.lastMaxDistance, "the same cutoff is handed to the vector query")
+    }
+
+    @Test
     fun `an item found both ways appears once, marked BOTH, ahead of keyword-only hits`() {
         val a = note("A"); val b = note("B")
         keywordNotes(a, b); keywordFigures()

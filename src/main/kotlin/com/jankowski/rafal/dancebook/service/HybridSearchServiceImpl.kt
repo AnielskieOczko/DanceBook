@@ -122,6 +122,16 @@ class HybridSearchServiceImpl(
                 ownedOnly = assistantPreferencesService?.forUser(user)?.includeSharedItems == false
             )
 
+            if (log.isDebugEnabled) {
+                // Relevance tuning (#331): every candidate with its distance, before the cutoff applies.
+                log.debug(
+                    "Semantic candidates for '{}' (cutoff {}):\n{}", query, maxDistance,
+                    chunks.joinToString("\n") { r ->
+                        "  %.3f %s %s".format(r.distance ?: Double.NaN, r.chunk.sourceType,
+                            r.chunk.content.replace('\n', ' ').take(60))
+                    }
+                )
+            }
             val near = chunks.filter { (it.distance ?: Double.MAX_VALUE) < maxDistance }
             // One query for every comment chunk, instead of one per chunk.
             val commentIds = near.filter { it.chunk.sourceType == KnowledgeSourceType.NOTE_COMMENT }.map { it.chunk.sourceId }.distinct()
