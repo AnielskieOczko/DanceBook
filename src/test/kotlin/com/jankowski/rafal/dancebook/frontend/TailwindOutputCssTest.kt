@@ -123,7 +123,6 @@ class TailwindOutputCssTest {
             "var(--text-section)",
             "var(--text-meta)",
             "var(--text-tabular)",
-            "var(--text-prose)"
         ]
     )
     fun `type tokens are emitted in output css`(token: String) {
@@ -483,6 +482,41 @@ class TailwindOutputCssTest {
         assertTrue(
             linkPillRule.contains("border-radius:var(--radius-pill)"),
             ".link-pill must use var(--radius-pill)."
+        )
+    }
+
+    @Test
+    fun `comment item and avatar utilities survive into output css`() {
+        val commentItemRule = Regex("""\.comment-item\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for .comment-item")
+        assertTrue(
+            commentItemRule.contains("36px 1fr"),
+            ".comment-item must define grid-template-columns: 36px 1fr."
+        )
+        assertTrue(
+            commentItemRule.contains("var(--color-outline-variant)"),
+            ".comment-item must use var(--color-outline-variant) for hairline border."
+        )
+
+        val avatarRule = Regex("""\.comment-avatar\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for .comment-avatar")
+        assertTrue(
+            avatarRule.contains("36px"),
+            ".comment-avatar must be 36px."
+        )
+        assertTrue(
+            avatarRule.contains("var(--color-primary-soft)"),
+            ".comment-avatar must use var(--color-primary-soft) background."
+        )
+    }
+
+    @Test
+    fun `rich-text reading style breaks long unbroken words to prevent horizontal scroll`() {
+        val richTextRule = Regex("""\.rich-text\s*\{[^}]*\}""").find(css)?.value
+            ?: error("Expected output.css to contain a rule for .rich-text")
+        assertTrue(
+            richTextRule.contains("overflow-wrap:break-word"),
+            ".rich-text must define overflow-wrap: break-word so long tokens break within the column."
         )
     }
 

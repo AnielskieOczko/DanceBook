@@ -339,6 +339,30 @@ layer(base);
   @apply border-primary ring-3 ring-primary/22;
 }
 
+@utility comment-item {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 2px 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-outline-variant);
+  min-width: 0;
+}
+
+@utility comment-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  grid-row: span 2;
+  font-size: 14px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
 @utility link-pill {
   /* ── Link Pill Buttons ───────────────────────── */
   @apply inline-flex items-center justify-center border-0 bg-transparent px-3 py-1.5 min-h-[32px]
@@ -1598,6 +1622,7 @@ trix-editor a {
     letter-spacing: var(--text-read--letter-spacing, -0.005em);
     max-width: var(--measure-read, 66ch);
     color: var(--color-on-surface);
+    overflow-wrap: break-word;
   }
 }
 
