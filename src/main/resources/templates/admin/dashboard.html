@@ -186,7 +186,7 @@
             <th:block th:text="#{admin.storage.heading}">Google Drive Maintenance</th:block>
         </h2>
         <p class="text-sm text-on-surface-variant mb-6" th:text="#{admin.storage.description}">
-            Finds Google Drive videos uploaded over 24 hours ago that were never saved to a material (orphaned files).
+            Finds Google Drive videos uploaded over 24 hours ago that were never saved to a note (orphaned files).
         </p>
         <div class="flex flex-wrap gap-3 mb-4">
             <button hx-post="/admin/storage/simulate" hx-target="#results" hx-swap="innerHTML" class="btn-secondary">
@@ -330,7 +330,7 @@
                         </td>
                     </tr>
                     <tr th:if="${cleanupLogs == null or cleanupLogs.isEmpty()}">
-                        <td colspan="4" class="table-cell text-center text-on-surface-variant" th:text="#{admin.storage.no_history}">No cleanup history found.</td>
+                        <td colspan="4" class="table-cell text-center text-on-surface-variant" th:text="#{admin.storage.no_history}">Cleanup job runs will appear here. Click Simulate Cleanup or Run Deletion above to start a run.</td>
                     </tr>
                 </tbody>
             </table>
@@ -364,7 +364,7 @@
                 </div>
             </div>
             <div class="stat-card bg-success-soft border border-success/30">
-                <div class="stat-card-label text-success" th:text="#{admin.storage.linked_materials}">Linked Materials</div>
+                <div class="stat-card-label text-success" th:text="#{admin.storage.linked_materials}">Linked Notes</div>
                 <div class="flex items-baseline gap-2">
                     <span class="stat-card-value text-success" th:text="${T(java.lang.String).format(#locale, '%.2f MB', linkedSize / 1048576.0)}">0 MB</span>
                     <span class="text-sm font-medium text-success/80" th:text="#{admin.storage.file_count(${linkedCount})}">(0 files)</span>
@@ -397,7 +397,7 @@
                         </td>
                     </tr>
                     <tr th:if="${driveFiles == null or driveFiles.isEmpty()}">
-                        <td colspan="3" class="table-cell text-center text-on-surface-variant" th:text="#{admin.storage.no_files_found}">No files found on Google Drive.</td>
+                        <td colspan="3" class="table-cell text-center text-on-surface-variant" th:text="#{admin.storage.no_files_found}">Uploaded video files on Google Drive will appear here once you upload a video to a note.</td>
                     </tr>
                 </tbody>
             </table>

@@ -541,7 +541,7 @@
                 <a href="/notifications" class="text-xs text-primary hover:underline font-medium" th:text="#{profile.activity.see_all}">See all</a>
             </div>
             <div th:if="${recentEvents == null or recentEvents.isEmpty()}" class="py-4 text-center text-xs text-on-surface-variant italic" th:text="#{profile.activity.empty}">
-                No recent activity
+                Your recent activity will appear here as you create notes, figures, and training sessions.
             </div>
             <div th:if="${recentEvents != null and !recentEvents.isEmpty()}" class="divide-y divide-outline-variant">
                 <div th:each="act : ${recentEvents}" class="flex items-start gap-3 py-2.5 first:pt-1 last:pb-1">

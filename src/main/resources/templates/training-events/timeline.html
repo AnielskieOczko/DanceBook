@@ -309,11 +309,11 @@
 
                                         <!--/* Linked note */-->
                                         <div th:if="${event.material != null}">
-                                            <h3 class="form-label text-xs font-semibold text-on-surface-variant mb-1" th:text="#{training.view.linked_material}">Linked material</h3>
+                                            <h3 class="form-label text-xs font-semibold text-on-surface-variant mb-1" th:text="#{training.view.linked_material}">Linked note</h3>
                                             <a th:href="@{/materials/{id}(id=${event.material.id})}"
                                                class="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline text-sm">
                                                 <span th:replace="~{fragments/icon :: icon(name='description', size='sm')}"></span>
-                                                <span th:text="${event.material.name}">Material title</span>
+                                                <span th:text="${event.material.name}">Note title</span>
                                             </a>
                                         </div>
 

@@ -122,7 +122,7 @@ class NotificationLocaleWebTest {
             .andExpect(content().string(containsString("Historia aktywności")))
             .andExpect(content().string(containsString("Kompletna oś czasu wszystkich działań w Twoim obszarze roboczym.")))
             .andExpect(content().string(containsString("Brak aktywności")))
-            .andExpect(content().string(containsString("Zdarzenia pojawią się tutaj, gdy utworzysz materiały, dodasz komentarze i zaczniesz zarządzać kolekcjami.")))
+            .andExpect(content().string(containsString("Zdarzenia pojawią się tutaj, gdy utworzysz notatki, dodasz komentarze i zaczniesz zarządzać kolekcjami.")))
             .andExpect(content().string(not(containsString("No activity yet"))))
             .andExpect(content().string(not(containsString("A complete timeline of all actions across your workspace."))))
     }
@@ -138,7 +138,7 @@ class NotificationLocaleWebTest {
             .andExpect(content().string(containsString("Activity History")))
             .andExpect(content().string(containsString("A complete timeline of all actions across your workspace.")))
             .andExpect(content().string(containsString("No activity yet")))
-            .andExpect(content().string(containsString("Events will appear here as you create materials, add comments, and manage collections.")))
+            .andExpect(content().string(containsString("Events will appear here as you create notes, add comments, and manage collections.")))
             .andExpect(content().string(not(containsString("Historia aktywności"))))
             .andExpect(content().string(not(containsString("Brak aktywności"))))
     }
@@ -156,13 +156,13 @@ class NotificationLocaleWebTest {
 
         mockMvc.perform(get("/activity-history").locale(polish))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("utworzył(a) materiał")))
+            .andExpect(content().string(containsString("utworzył(a) notatkę")))
             .andExpect(content().string(containsString("dodał(a) komentarz do")))
             .andExpect(content().string(containsString("zaplanował(a) trening")))
             .andExpect(content().string(containsString("oznaczył(a)")))
             .andExpect(content().string(containsString("treningi: 5")))
             .andExpect(content().string(containsString("jako attended")))
-            .andExpect(content().string(not(containsString("created material"))))
+            .andExpect(content().string(not(containsString("created note"))))
             .andExpect(content().string(not(containsString("commented on"))))
             .andExpect(content().string(not(containsString("scheduled training"))))
     }
@@ -180,13 +180,13 @@ class NotificationLocaleWebTest {
 
         mockMvc.perform(get("/activity-history").locale(english))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("created material")))
+            .andExpect(content().string(containsString("created note")))
             .andExpect(content().string(containsString("commented on")))
             .andExpect(content().string(containsString("scheduled training")))
             .andExpect(content().string(containsString("marked")))
             .andExpect(content().string(containsString("5 sessions")))
             .andExpect(content().string(containsString("as attended")))
-            .andExpect(content().string(not(containsString("utworzył(a) materiał"))))
+            .andExpect(content().string(not(containsString("utworzył(a) notatkę"))))
             .andExpect(content().string(not(containsString("dodał(a) komentarz do"))))
             .andExpect(content().string(not(containsString("zaplanował(a) trening"))))
     }

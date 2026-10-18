@@ -87,14 +87,14 @@
                     </a>
                     <form th:action="@{/choreographies/{id}/duplicate(id=${choreography.id})}" method="post">
                         <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.clone_routine}">Clone Routine</span>
+                            <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.clone_routine}">Duplicate</span>
                         </button>
                     </form>
                     <hr class="border-border my-1">
                     <form th:action="@{/choreographies/{id}/delete(id=${choreography.id})}" method="post"
                           th:data-confirm="#{choreographies.delete_confirm}">
                         <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{choreographies.action.delete_routine}">Delete Routine</span>
+                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{choreographies.action.delete_routine}">Delete</span>
                         </button>
                     </form>
                 </div>
@@ -142,8 +142,8 @@
         <!-- Empty state warning -->
         <div th:if="${#lists.isEmpty(choreography.entries)}" class="text-center py-12 text-on-surface-variant">
             <span th:replace="~{fragments/icon :: icon(name='playlist_add', size='lg', cls='block mb-2 text-outline')}"></span>
-            <p class="font-medium text-base" th:text="#{choreographies.view.empty_text}">This choreography doesn't have any figures yet.</p>
-            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary mt-4 inline-flex no-print" th:text="#{choreographies.view.open_builder}">Open Builder</a>
+            <p class="font-medium text-base" th:text="#{choreographies.view.empty_text}">Figures and section markers in this routine will appear here. Open the builder to add your first figure.</p>
+            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary mt-4 inline-flex no-print" th:text="#{choreographies.view.open_builder}">Build Sequence</a>
         </div>
 
         <!-- Routine Timeline Sequence -->

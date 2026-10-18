@@ -89,7 +89,7 @@
                     </li>
                 </ul>
                 <p th:if="${#lists.isEmpty(stats.byCategory)}" class="text-sm text-on-surface-variant" th:text="#{training.stats.no_attended}">
-                    No attended sessions in this period yet</p>
+                    Attended session breakdown will appear here once you mark a session as attended.</p>
             </div>
 
             <div class="card p-6 space-y-4">
@@ -106,7 +106,7 @@
                     </li>
                 </ul>
                 <p th:if="${#lists.isEmpty(stats.byEventType)}" class="text-sm text-on-surface-variant" th:text="#{training.stats.no_attended}">
-                    No attended sessions in this period yet</p>
+                    Attended session breakdown will appear here once you mark a session as attended.</p>
             </div>
         </div>
     </div>

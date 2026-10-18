@@ -73,7 +73,7 @@
         </div>
 
         <div th:if="${event.material != null}">
-            <h3 class="form-label" th:text="#{training.view.linked_material}">Linked material</h3>
+            <h3 class="form-label" th:text="#{training.view.linked_material}">Linked note</h3>
             <a th:href="@{/materials/{id}(id=${event.material.id})}"
                class="font-semibold text-primary hover:underline" th:text="${event.material.name}">Waltz basics</a>
         </div>

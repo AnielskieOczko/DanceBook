@@ -162,7 +162,7 @@
 
         <!-- RIGHT PANEL: Videos & Resources (Spans 1/3) -->
         <div class="lg:col-span-1">
-            <!-- Card 5: Study Materials -->
+            <!-- Card 5: Videos & Resources -->
             <div class="card p-8 space-y-6 bg-white text-base h-full flex flex-col">
                 <h2 class="text-xl font-bold text-on-surface border-b border-border pb-3 flex items-center gap-2 flex-shrink-0">
                     <span th:replace="~{fragments/icon :: icon(name='smart_display', size='md', cls='text-primary')}"></span> <span th:text="#{figures.view.section.videos_resources}">Videos &amp; Resources</span>
@@ -180,7 +180,7 @@
                         </a>
                     </div>
                     <div th:if="${#lists.isEmpty(danceFigure.links)}" class="py-12 text-center text-on-surface-variant/50 italic text-base" th:text="#{figures.view.videos_resources.empty}">
-                        No external study materials registered for this figure.
+                        External study material links will appear here. Edit this figure to add a resource link.
                     </div>
                 </div>
             </div>
@@ -276,7 +276,7 @@
                                     </td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(set.getLeaderSteps())}">
-                                    <td colspan="8" class="py-12 text-center text-on-surface-variant/50 italic text-base" th:text="#{figures.view.steps.empty_leader}">No Leader steps registered for this figure.</td>
+                                    <td colspan="8" class="py-12 text-center text-on-surface-variant/50 italic text-base" th:text="#{figures.view.steps.empty_leader}">Leader steps will appear here. Edit this figure to add leader steps.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -341,7 +341,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div th:if="${#lists.isEmpty(set.getLeaderSteps())}" class="py-4 text-center text-on-surface-variant/50 italic text-xs" th:text="#{figures.view.steps.empty_leader_mobile}">No Leader steps registered.</div>
+                        <div th:if="${#lists.isEmpty(set.getLeaderSteps())}" class="py-4 text-center text-on-surface-variant/50 italic text-xs" th:text="#{figures.view.steps.empty_leader_mobile}">Leader steps will appear here. Edit this figure to add leader steps.</div>
                     </div>
                 </div>
 
@@ -401,7 +401,7 @@
                                     </td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(set.getFollowerSteps())}">
-                                    <td colspan="8" class="py-12 text-center text-on-surface-variant/50 italic text-base" th:text="#{figures.view.steps.empty_follower}">No Follower steps registered for this figure.</td>
+                                    <td colspan="8" class="py-12 text-center text-on-surface-variant/50 italic text-base" th:text="#{figures.view.steps.empty_follower}">Follower steps will appear here. Edit this figure to add follower steps.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -466,7 +466,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div th:if="${#lists.isEmpty(set.getFollowerSteps())}" class="py-4 text-center text-on-surface-variant/50 italic text-xs" th:text="#{figures.view.steps.empty_follower_mobile}">No Follower steps registered.</div>
+                        <div th:if="${#lists.isEmpty(set.getFollowerSteps())}" class="py-4 text-center text-on-surface-variant/50 italic text-xs" th:text="#{figures.view.steps.empty_follower_mobile}">Follower steps will appear here. Edit this figure to add follower steps.</div>
                     </div>
                 </div>
             </div>
@@ -484,7 +484,7 @@
 
             <!-- Preceding Figures -->
             <div class="space-y-3">
-                <span class="block text-sm font-bold text-on-surface uppercase tracking-wider" th:text="#{figures.view.connections.preceding}">Preceding Figures</span>
+                <span class="block text-sm font-semibold text-on-surface uppercase tracking-wider" th:text="#{figures.view.connections.preceding}">Preceding Figures</span>
                 <ul th:if="${!#lists.isEmpty(danceFigure.precedingFigureNames)}" class="space-y-2">
                     <li th:each="name : ${danceFigure.precedingFigureNames}">
                         <a th:if="${figureNameMap[name] != null}" th:href="@{/dance-figures/{id}(id=${figureNameMap[name]})}" 
@@ -498,7 +498,7 @@
                         </span>
                     </li>
                 </ul>
-                <div th:if="${#lists.isEmpty(danceFigure.precedingFigureNames)}" class="text-on-surface-variant/50 italic text-sm pl-2" th:text="#{figures.view.connections.empty_preceding}">No preceding figures registered.</div>
+                <div th:if="${#lists.isEmpty(danceFigure.precedingFigureNames)}" class="text-on-surface-variant/50 italic text-sm pl-2" th:text="#{figures.view.connections.empty_preceding}">Figures that come before this one will appear here. Edit this figure to link preceding figures.</div>
             </div>
 
             <!-- Following Figures -->
@@ -517,7 +517,7 @@
                         </span>
                     </li>
                 </ul>
-                <div th:if="${#lists.isEmpty(danceFigure.followingFigureNames)}" class="text-on-surface-variant/50 italic text-sm pl-2" th:text="#{figures.view.connections.empty_following}">No following figures registered.</div>
+                <div th:if="${#lists.isEmpty(danceFigure.followingFigureNames)}" class="text-on-surface-variant/50 italic text-sm pl-2" th:text="#{figures.view.connections.empty_following}">Figures that follow this one will appear here. Edit this figure to link following figures.</div>
             </div>
         </div>
 
@@ -532,7 +532,7 @@
                         <div th:replace="~{fragments/rich-text :: content(value=${danceFigure.notes})}"></div>
                     </th:block>
                     <div th:if="${danceFigure.notes == null}" class="italic text-on-surface-variant text-sm" th:text="#{figures.view.notes.empty}">
-                        No notes available for this figure.
+                        Technical remarks and tips for this figure will appear here. Edit this figure to add notes.
                     </div>
                 </div>
             </div>

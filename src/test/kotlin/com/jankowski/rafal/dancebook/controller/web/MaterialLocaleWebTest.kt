@@ -321,27 +321,27 @@ class MaterialLocaleWebTest {
         assertNotNull(pinButton)
         assertTrue(pinButton!!.text().contains("Przypnij figurę"))
 
-        assertTrue(html.contains("Brak przypiętych figur do tej notatki."))
+        assertTrue(html.contains("Brak przypiętych figur do tej notatki. Kliknij Przypnij figurę, aby powiązać figurę z katalogu."))
 
         // Media section
         assertTrue(html.contains("Wideo i źródło"))
         assertTrue(html.contains("Wideo do obejrzenia dla tej notatki"))
-        assertTrue(html.contains("Skąd pochodzi ten materiał"))
+        assertTrue(html.contains("Skąd pochodzi ta notatka"))
 
         // Comments heading & empty state
         val commentsHeading = doc.selectFirst("#comment-section h2")
         assertNotNull(commentsHeading)
         assertTrue(commentsHeading!!.text().contains("Komentarze"))
-        assertTrue(html.contains("Brak komentarzy."))
+        assertTrue(html.contains("Brak komentarzy. Napisz komentarz poniżej, aby dodać uwagi z treningu lub pytania."))
 
         // Verify English leftovers are absent
         assertFalse(html.contains("Edit note"))
         assertFalse(html.contains("Pin figure"))
-        assertFalse(html.contains("No figures pinned yet."))
+        assertFalse(html.contains("No figures pinned to this note yet."))
         assertFalse(html.contains("Video and source"))
         assertFalse(html.contains("A video to watch for this note"))
-        assertFalse(html.contains("Where this material came from"))
-        assertFalse(html.contains("No comments yet."))
+        assertFalse(html.contains("Where this note came from"))
+        assertFalse(html.contains("No comments yet. Write a comment below to add practice feedback or questions."))
     }
 
     @Test
@@ -361,7 +361,7 @@ class MaterialLocaleWebTest {
         // Page title & subtitle
         val pageTitle = doc.selectFirst(".page-title")
         assertNotNull(pageTitle)
-        assertEquals("Nowy materiał", pageTitle!!.text().trim())
+        assertEquals("Nowa notatka", pageTitle!!.text().trim())
 
         // Labels
         assertTrue(html.contains("Nazwa"))
@@ -388,11 +388,11 @@ class MaterialLocaleWebTest {
 
         val saveBtn = doc.selectFirst("#saveBtn")
         assertNotNull(saveBtn)
-        assertTrue(saveBtn!!.text().contains("Zapisz materiał"))
+        assertTrue(saveBtn!!.text().contains("Zapisz notatkę"))
 
         // Verify English text is absent
-        assertFalse(html.contains("New Material"))
-        assertFalse(html.contains("Save Material"))
+        assertFalse(html.contains("New note"))
+        assertFalse(html.contains("Save note"))
         assertFalse(html.contains("Upload Video to Google Drive"))
         assertFalse(html.contains("Click to select a video file..."))
         assertFalse(html.contains("Public Note"))
