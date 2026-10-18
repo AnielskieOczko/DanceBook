@@ -689,8 +689,8 @@ pass claimed a fit that the browser showed was false.
 - **Profile is a summary plus a settings list (#229, direction C).** `profile/index.html` has
   a hero (name, role, member since, real training streak and this year's hours, sessions and
   attendance, and counts of Notes, choreographies and figures created) and settings as an
-  accordion where each row shows its current value and expands in place: Badges (dashed
-  placeholder slots), Calendars (default calendar), Language, Medal badge style, Streaks and
+  accordion where each row shows its current value and expands in place: Badges (earned
+  badges first, then locked ones with their progress; #39), Calendars (default calendar), Language, Medal badge style, Streaks and
   badges (#317), Assistant (live since #309) and Password. Log out is not on this page. Recent activity shows only
   the signed-in user's own events, through the activity service and the normal visibility
   rule. A new setting is a new row, not a new card. The mock's 14-day streak bar and best
@@ -704,7 +704,8 @@ pass claimed a fit that the browser showed was false.
   with its rollup; a week appears once with its full rollup even when it crosses a month
   boundary or two loaded windows (`dto/TrainingTimeline.kt`, `TrainingTimelineServiceImpl`).
   The summary tiles reuse the all-time training statistics for the streak; do not recompute it
-  from the loaded window, and do not invent milestone or tier rules (that is #35 and #39).
+  from the loaded window. Badge rules live in `BadgeService` (#39), not in the timeline: the timeline
+  only shows the badges it is handed (see "Badges are earned, permanent and per user").
   Polish months are the nominative ("listopad 2026") and the session date is "sobota,
   21 listopada 2026".
 - **Message keys must exist in both bundles.** Two keys the timeline template used
@@ -894,6 +895,40 @@ This groundwork lets two people share a session once calendars are shared (#154,
   pins the backfill, and `TrainingAttendancePerUserIntegrationTest` covers two users on one
   session: separate outcomes, stats and history, a refused non-owner, and both records orphaned
   on delete.
+
+### Badges are earned, permanent and per user (#39)
+
+Eight fixed badges, each its own row: Streak of 5, 10 and 20; 50, 100 and 250 hours; Perfect
+month; Style balance. `BadgeType` carries the icon, tier (bronze, silver, gold; the two one-offs
+use the teal) and message keys, so a new badge is one enum entry, its strings in both bundles and
+its rule in `BadgeServiceImpl`. There is deliberately no rules engine or configuration.
+
+- **`user_badge` (V47)** is unique on `(user_id, badge_type, month_key)`. `month_key` is `''` for
+  badges earned once and `YYYY-MM` for Perfect month, which can be earned once per finished month.
+  `training_event_id` has no foreign key, so deleting a session never removes a badge: badges are
+  permanent, and a later skip or corrected attendance does not revoke one.
+- **Evaluation** is `BadgeService.evaluateForUser(actor, eventId)`, called from
+  `TrainingEventPersistence` and `TrainingSeriesPersistence` after every attendance write, for the
+  acting user only, inside the same transaction. It is a required constructor dependency of both;
+  do not make it optional to keep an old test compiling, fix the test. A shared session evaluates
+  only the user whose attendance changed. The streak is `TrainingStatsService.currentStreak`, the
+  one definition the Stats page uses; do not recompute it.
+- **Perfect month** needs no scheduler: every evaluation looks at all finished months in the
+  history, so a month is awarded on the first attendance change after it ends.
+- **There is no backfill, and that is a decision, not a gap.** The first evaluation after release
+  awards every threshold the user's history already meets (the app only has test data). So a
+  profile can show "5 of 5" on a locked badge until the user's next attendance change. Do not
+  add a release cutoff without a reason; the issue said there is no production data to migrate.
+- **Style balance** matches the segment's category by name ("Standard", "Latin"), case-insensitive.
+- **Notification.** `BadgeEarnedEvent` goes through the activity feed like any domain event
+  (`EventType.BADGE_EARNED`, `TargetType.BADGE`, visibility `PRIVATE`). `ActivityEventSpecification.visibleTo`
+  restricts a badge event to its earner **before** the admin bypass, so an admin does not see
+  other people's badges either. Any new query over `ActivityEvent` that bypasses `visibleTo` would leak them.
+- **Views.** The profile Badges row and the timeline chips and per-session lines read
+  `profileSummaryForUser`, `timelineBadgesForUser` and `badgesByEventForUser`. The timeline has
+  **no** dashed next-target slot anywhere: the first version left one in the streak banner, found
+  only by driving the app, and a test that asserted the old "Badge slot" text had to be inverted.
+  Next targets belong on the profile only.
 
 ### Calendars are owned, with sources and a per-user default
 
@@ -1087,8 +1122,9 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     the signed-in user opted out, and the templates guard with `th:if`. The dashboard week view has no
     guard of its own: it takes the streak from the stats service and its existing `streak > 0` check
     hides it, so a new place that shows a streak must either read the stats service or ask
-    `AssistantPreferencesService.forUser(...).showStreaksAndBadges`. **#39 must honour it:** with the
-    switch off nothing is evaluated, awarded or notified.
+    `AssistantPreferencesService.forUser(...).showStreaksAndBadges`. **#39 honours it:**
+    `BadgeServiceImpl.evaluateForUser` returns at once when it is off, so nothing is evaluated,
+    awarded or notified, and the badge views are not rendered.
   - **Include shared items (#311) only narrows.** Off, the assistant read tools, the semantic leg of
     standard search and related notes use only items the user owns; the normal access rule is applied
     first and ownership is ANDed on, so it never shows more than the rule allows (an admin is narrowed
@@ -1249,6 +1285,15 @@ locales are listed in `config/AppLocales.kt`.
   `aria-label`/`alt` attribute with no binding. Templates of areas still awaiting their sweep sit in its
   `pendingSweep` map: remove a template's entry in the PR that translates it (the test fails on a stale
   entry). Genuine non-text literals go in `allowedText` with a reason.
+- **A copy pass changes text, never keys (#320).** The user-facing word for a Material is "Note";
+  "material" stays only for external study links and "sequence" only for a choreography's ordered
+  figures. One verb per action within a flow (New/Save/Delete; Remove for rows inside a form),
+  every empty state says what the list will hold and how to add the first item, and every
+  validation message says how to fix the problem. No key, route, entity or class is renamed, so
+  existing tests keep finding their keys, but the tests that assert the *wording* must be updated
+  in the same change (the first attempt left 23 failing). `CopyPassGuardTest` guards the
+  terminology. A message that quotes a limit should use its `{min}` or `{max}` placeholder, not
+  the number: two password messages still say "8" in the text.
 - **Merging.** Every sweep appends a block to both bundles, so two open sweeps conflict on
   the same lines. Both sides only add keys: keep both blocks, remove the markers, check for
   duplicate keys.
@@ -1526,7 +1571,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `training-timeline` | #216 | Direction 2, the vertical journey feed |
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
-| `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline |
+| `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
