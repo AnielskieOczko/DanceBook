@@ -12,29 +12,22 @@
         <form id="filterForm" th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
-                <div class="relative flex-1 group">
-                    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
-                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
-                           placeholder="Search collections..."
-                           th:attr="placeholder=#{collections.search_placeholder}"
-                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                </div>
+                <div th:replace="~{fragments/form :: searchField(name='nameSearch', value=${selectedNameSearch}, placeholder=#{collections.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/lists}, hxTarget='#collections-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                 <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]" aria-label="Filters" th:attr="aria-label=#{common.filters}">
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]" aria-label="Filters" th:attr="aria-label=#{common.filters}">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
                     <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none" th:text="#{common.filters}">Filters</span>
                 </button>
 
                 <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 min-h-[44px] items-center">
+                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view" th:attr="aria-label=#{common.view_list}"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
@@ -43,7 +36,7 @@
                                aria-label="Grid view" th:attr="aria-label=#{common.view_grid}"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
@@ -91,16 +84,8 @@
                 </div>
 
                 <!-- Column 3: Sorting -->
-                <div class="flex flex-col gap-1 mt-4">
-                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{common.sort_by}">Sort By</label>
-                    <select name="sortBy" id="filterSortBy" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                            th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="name_asc" th:selected="${selectedSortBy == 'name_asc' || selectedSortBy == null || selectedSortBy == ''}" th:text="#{common.sort.name_asc}">Name (A-Z)</option>
-                        <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}" th:text="#{common.sort.name_desc}">Name (Z-A)</option>
-                        <option value="newest" th:selected="${selectedSortBy == 'newest'}" th:text="#{common.sort.newest}">Newest</option>
-                        <option value="oldest" th:selected="${selectedSortBy == 'oldest'}" th:text="#{common.sort.oldest}">Oldest</option>
-                    </select>
+                <div class="flex flex-col gap-4 mt-4">
+                    <div th:replace="~{fragments/form :: filterSelect(name='sortBy', id='filterSortBy', label=#{common.sort_by}, optionsFragment=~{::collectionSortOptions}, hxGet=@{/lists}, hxTarget='#collections-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
                 </div>
             </div>
         </form>
@@ -240,4 +225,10 @@
     </div>
 
 </section>
+<th:block th:fragment="collectionSortOptions">
+    <option value="name_asc" th:selected="${selectedSortBy == 'name_asc' || selectedSortBy == null || selectedSortBy == ''}" th:text="#{common.sort.name_asc}">Name (A-Z)</option>
+    <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}" th:text="#{common.sort.name_desc}">Name (Z-A)</option>
+    <option value="newest" th:selected="${selectedSortBy == 'newest'}" th:text="#{common.sort.newest}">Newest</option>
+    <option value="oldest" th:selected="${selectedSortBy == 'oldest'}" th:text="#{common.sort.oldest}">Oldest</option>
+</th:block>
 </html>

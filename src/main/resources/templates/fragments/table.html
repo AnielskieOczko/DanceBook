@@ -36,16 +36,16 @@
             <tr th:each="step : ${steps}" class="table-row">
                 <td class="table-cell text-center font-bold text-primary" th:text="${step.stepNumber}">1</td>
                 <td class="table-cell">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container rounded border border-outline-variant">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container rounded-pill border border-outline-variant">
                         <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
                         <span th:text="${step.timing}">S</span>
                     </span>
                 </td>
                 <td class="table-cell">
-                    <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded border border-outline-variant">
+                    <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded-pill border border-outline-variant">
                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1]')}"></span> L
                     </span>
-                    <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded border border-outline-variant">
+                    <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-surface-container rounded-pill border border-outline-variant">
                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true)}"></span> R
                     </span>
                     <span th:if="${step.foot != 'LF' and step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
@@ -53,7 +53,7 @@
                 <td class="table-cell font-medium text-on-surface" th:text="${step.action}">Step forward</td>
                 <td class="table-cell">
                     <span th:if="${step.footwork != null and step.footwork != '' and step.footwork != '-'}"
-                          class="inline-flex items-center px-2 py-0.5 font-mono text-sm font-bold bg-surface-container border border-outline-variant rounded text-on-surface"
+                          class="inline-flex items-center px-2 py-0.5 font-mono text-sm font-bold bg-surface-container border border-outline-variant rounded-pill text-on-surface"
                           th:text="${step.footwork}">HT</span>
                     <span th:if="${step.footwork == null or step.footwork == '' or step.footwork == '-'}"
                           class="text-on-surface-variant font-bold text-sm">-</span>

@@ -111,25 +111,22 @@
          class="js-figure-row flex items-center justify-between gap-3 p-3 rounded-lg hover:bg-surface-container/50 transition-colors">
         <div class="min-w-0 flex-1">
             <div class="font-medium text-body-md text-on-surface line-clamp-2 break-words" th:text="${fig.name}">Figure Name</div>
-            <div class="flex flex-wrap items-center gap-1.5 mt-1 text-label-sm">
-                <span th:if="${fig.danceType != null}"
-                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]"
-                      th:text="${fig.danceType.name}">Style</span>
-                <span th:if="${fig.danceClass != null}"
-                      class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface text-[11px] font-medium"
-                      th:text="#{notes.figures.class(${fig.danceClass})}">Class H</span>
-                <span th:if="${fig.alternativeTiming != null and !#strings.isEmpty(#strings.trim(fig.alternativeTiming))}"
-                      class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px]"
-                      th:text="${fig.alternativeTiming.trim()}">12&amp;3</span>
+            <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                <th:block th:if="${fig.danceType != null}">
+                    <span th:replace="~{fragments/badge :: badge(label=${fig.danceType.name}, variant='neutral')}"></span>
+                </th:block>
+                <th:block th:if="${fig.danceClass != null}">
+                    <span th:replace="~{fragments/badge :: badge(label=#{notes.figures.class(${fig.danceClass})}, variant='secondary')}"></span>
+                </th:block>
+                <th:block th:if="${fig.alternativeTiming != null and !#strings.isEmpty(#strings.trim(fig.alternativeTiming))}">
+                    <span th:replace="~{fragments/badge :: badge(label=${fig.alternativeTiming.trim()}, variant='neutral')}"></span>
+                </th:block>
             </div>
         </div>
 
         <div class="js-figure-action shrink-0">
             <th:block th:if="${pinnedFigureIds != null and #sets.contains(pinnedFigureIds, fig.id)}">
-                <span class="inline-flex items-center gap-1 text-label-sm text-on-surface-variant font-medium py-1 px-2.5 rounded bg-surface-container">
-                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='text-primary')}"></span>
-                    <span th:text="#{notes.picker.pinned}">Pinned</span>
-                </span>
+                <span th:replace="~{fragments/badge :: badge(label=#{notes.picker.pinned}, icon='check', variant='neutral')}"></span>
             </th:block>
             <th:block th:if="${pinnedFigureIds == null or !#sets.contains(pinnedFigureIds, fig.id)}">
                 <form th:action="@{/materials/{mId}/figures(mId=${material.id})}"
@@ -154,9 +151,8 @@
 </div>
 
 <!-- HTMX Response on Pin -->
-<div th:fragment="figurePinResponse" class="inline-flex items-center gap-1 text-label-sm text-on-surface-variant font-medium py-1 px-2.5 rounded bg-surface-container">
-    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='text-primary')}"></span>
-    <span th:text="#{notes.picker.pinned}">Pinned</span>
+<div th:fragment="figurePinResponse" class="inline-flex items-center">
+    <span th:replace="~{fragments/badge :: badge(label=#{notes.picker.pinned}, icon='check', variant='neutral')}"></span>
     <th:block th:replace="~{materials/view :: pinnedFiguresSection(oobSwap=true)}"></th:block>
 </div>
 

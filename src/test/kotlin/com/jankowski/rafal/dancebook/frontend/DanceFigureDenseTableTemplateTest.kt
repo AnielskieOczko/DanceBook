@@ -117,7 +117,7 @@ class DanceFigureDenseTableTemplateTest {
     }
 
     @Test
-    fun `rendered table has exact 6 columns in order`() {
+    fun `rendered table has exact 5 columns in order`() {
         val figures = listOf(createSampleFigure(predefined = true))
         `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(figures)
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
@@ -141,9 +141,9 @@ class DanceFigureDenseTableTemplateTest {
         }
 
         val expected = listOf(
-            "Name", "Style", "Class", "Steps", "Source", "Actions"
+            "Name", "Style", "Class", "Steps", "Actions"
         )
-        assertEquals(expected, headerNames, "Dense table columns must match expected 6 columns in order")
+        assertEquals(expected, headerNames, "Dense table columns must match expected 5 columns in order")
     }
 
     @Test
@@ -238,7 +238,7 @@ class DanceFigureDenseTableTemplateTest {
     }
 
     @Test
-    fun `steps and source values render correctly and delete is offered only where the viewer may delete`() {
+    fun `steps values render correctly and delete is offered only where the viewer may delete`() {
         val viewer = AppUser().apply { id = UUID.randomUUID(); username = "viewer"; role = Role.USER }
         val predefinedFigId = UUID.randomUUID()
         val customFigId = UUID.randomUUID()
@@ -287,38 +287,34 @@ class DanceFigureDenseTableTemplateTest {
         // ── Predefined Row ──────────────────────────────────────────────
         val row1 = rows[0]
         val cells1 = row1.select("td")
-        assertEquals(6, cells1.size)
+        assertEquals(5, cells1.size)
         assertEquals("Predefined Figure", cells1[0].text().trim())
         assertEquals("Waltz", cells1[1].text().trim())
         assertEquals("D", cells1[2].text().trim())
         // Steps column has steps -> "Yes"
         assertTrue(cells1[3].text().contains("Yes"), "Steps column must render 'Yes' for figure with syllabus")
-        // Source column predefined -> "Predefined"
-        assertTrue(cells1[4].text().contains("Predefined"), "Source column must render 'Predefined'")
         // Actions: Edit is present, Delete form is ABSENT
-        val editLink1 = cells1[5].selectFirst("a[href*='/edit']")
+        val editLink1 = cells1[4].selectFirst("a[href*='/edit']")
         assertNotNull(editLink1, "Edit link must be present")
         assertEquals("Edit", editLink1?.attr("aria-label"), "Edit link must have aria-label='Edit'")
         assertEquals("Edit", editLink1?.attr("title"), "Edit link must have title='Edit'")
-        assertNull(cells1[5].selectFirst("form[action*='/delete']"), "Delete form must NEVER be offered on predefined figure")
+        assertNull(cells1[4].selectFirst("form[action*='/delete']"), "Delete form must NEVER be offered on predefined figure")
 
         // ── Custom Row ──────────────────────────────────────────────────
         val row2 = rows[1]
         val cells2 = row2.select("td")
-        assertEquals(6, cells2.size)
+        assertEquals(5, cells2.size)
         assertEquals("Custom Figure", cells2[0].text().trim())
         assertEquals("Waltz", cells2[1].text().trim())
         assertEquals("D", cells2[2].text().trim())
         // Steps column has no steps -> "-"
         assertEquals("-", cells2[3].text().trim(), "Steps column must render '-' for figure without syllabus")
-        // Source column custom -> "Custom"
-        assertTrue(cells2[4].text().contains("Custom"), "Source column must render 'Custom'")
         // Actions: Edit is present, Delete form IS present with data-confirm
-        val editLink2 = cells2[5].selectFirst("a[href*='/edit']")
+        val editLink2 = cells2[4].selectFirst("a[href*='/edit']")
         assertNotNull(editLink2, "Edit link must be present")
         assertEquals("Edit", editLink2?.attr("aria-label"), "Edit link must have aria-label='Edit'")
         assertEquals("Edit", editLink2?.attr("title"), "Edit link must have title='Edit'")
-        val deleteForm = cells2[5].selectFirst("form[action*='/delete']")
+        val deleteForm = cells2[4].selectFirst("form[action*='/delete']")
         assertNotNull(deleteForm, "Delete form must be present on custom figure")
         assertEquals(
             "Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.",

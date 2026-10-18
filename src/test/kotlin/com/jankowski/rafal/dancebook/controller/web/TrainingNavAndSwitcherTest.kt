@@ -278,8 +278,8 @@ class TrainingNavAndSwitcherTest {
         val doc = Jsoup.parse(result.response.contentAsString)
         val searchInput = doc.selectFirst("input[type='search'][name='search']")
         assertNotNull(searchInput, "Search input must be present")
-        assertTrue(searchInput!!.hasClass("form-input"), "Search input must have form-input class (pill radius)")
-        assertTrue(searchInput.hasClass("pl-12"), "Search input must have pl-12 for the search icon")
+        assertTrue(searchInput!!.hasClass("pill-input"), "Search input must have pill-input class (pill radius)")
+        assertTrue(searchInput.hasClass("pl-11"), "Search input must have pl-11 for the search icon")
 
         val searchWrapper = searchInput.parent()
         assertNotNull(searchWrapper, "Search input wrapper must be present")
