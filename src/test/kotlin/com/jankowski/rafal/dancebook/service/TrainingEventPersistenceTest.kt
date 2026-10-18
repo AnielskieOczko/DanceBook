@@ -35,6 +35,7 @@ class TrainingEventPersistenceTest {
     private lateinit var trainingSeriesRepository: TrainingSeriesRepository
     private lateinit var trainingRecordWriter: TrainingRecordWriter
     private lateinit var eventPublisher: ApplicationEventPublisher
+    private lateinit var badgeService: BadgeService
     private lateinit var persistence: TrainingEventPersistence
     private lateinit var actor: AppUser
 
@@ -44,11 +45,13 @@ class TrainingEventPersistenceTest {
         trainingSeriesRepository = mock(TrainingSeriesRepository::class.java)
         trainingRecordWriter = mock(TrainingRecordWriter::class.java)
         eventPublisher = mock(ApplicationEventPublisher::class.java)
+        badgeService = mock(BadgeService::class.java)
         persistence = TrainingEventPersistence(
             trainingEventRepository,
             trainingSeriesRepository,
             trainingRecordWriter,
-            eventPublisher
+            eventPublisher,
+            badgeService
         )
         actor = AppUser().apply {
             id = UUID.randomUUID()

@@ -44,7 +44,8 @@ import java.util.UUID
 class TrainingTimelineServiceImpl @Autowired constructor(
     private val trainingEventRepository: TrainingEventRepository,
     private val appUserService: AppUserService,
-    private val trainingStatsService: TrainingStatsService? = null
+    private val trainingStatsService: TrainingStatsService? = null,
+    private val badgeService: BadgeService? = null
 ) : TrainingTimelineService {
 
     companion object {
@@ -74,6 +75,8 @@ class TrainingTimelineServiceImpl @Autowired constructor(
         // session in the future and the next in the past by the same instant.
         val now = LocalDateTime.now()
         val stats = trainingStatsService?.statsForCurrentUser(StatsPeriod.ALL_TIME, calendarId)
+        val earnedBadges = if (page == 0) (badgeService?.timelineBadgesForUser(currentUser) ?: emptyList()) else emptyList()
+        val badgesByEvent = badgeService?.badgesByEventForUser(currentUser, events.mapNotNull { it.id }) ?: emptyMap()
         val months = toMonths(
             events = events,
             now = now,
@@ -82,7 +85,8 @@ class TrainingTimelineServiceImpl @Autowired constructor(
             page = page,
             calendarId = calendarId,
             currentUser = currentUser,
-            currentStreak = stats?.currentStreak ?: 0
+            currentStreak = stats?.currentStreak ?: 0,
+            badgesByEvent = badgesByEvent
         )
 
         return TrainingTimeline(
@@ -91,7 +95,8 @@ class TrainingTimelineServiceImpl @Autowired constructor(
             nextPage = page + 1,
             lastMonthLabel = months.lastOrNull()?.label,
             isFirstPage = page == 0,
-            stats = stats
+            stats = stats,
+            earnedBadges = earnedBadges
         )
     }
 
@@ -117,7 +122,8 @@ class TrainingTimelineServiceImpl @Autowired constructor(
         page: Int,
         calendarId: UUID?,
         currentUser: AppUser,
-        currentStreak: Int
+        currentStreak: Int,
+        badgesByEvent: Map<UUID, List<com.jankowski.rafal.dancebook.model.BadgeType>> = emptyMap()
     ): List<TrainingTimelineMonth> {
         if (events.isEmpty()) return emptyList()
 
@@ -138,7 +144,8 @@ class TrainingTimelineServiceImpl @Autowired constructor(
                 startsTodayBoundary = event === boundary,
                 activeStreak = if (isLatestAttendedWithStreak) currentStreak else null,
                 streakReachedDate = if (isLatestAttendedWithStreak) event.startTime.format(dateFormatter) else null,
-                todayFormatted = if (event === boundary) todayFormatted else null
+                todayFormatted = if (event === boundary) todayFormatted else null,
+                earnedBadges = event.id?.let { badgesByEvent[it] } ?: emptyList()
             )
         }
 

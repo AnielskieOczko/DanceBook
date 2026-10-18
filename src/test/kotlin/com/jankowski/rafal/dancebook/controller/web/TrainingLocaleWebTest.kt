@@ -270,7 +270,7 @@ class TrainingLocaleWebTest {
             .andExpect(content().string(containsString("Obecność")))
             .andExpect(content().string(containsString("10 treningów z rzędu")))
             .andExpect(content().string(containsString("Seria osiągnięta niedz. 11 paź")))
-            .andExpect(content().string(containsString("Miejsce na odznakę")))
+            .andExpect(content().string(not(containsString("Miejsce na odznakę"))))
             .andExpect(content().string(not(containsString("sessions in a row"))))
             .andExpect(content().string(not(containsString("Badge slot"))))
     }

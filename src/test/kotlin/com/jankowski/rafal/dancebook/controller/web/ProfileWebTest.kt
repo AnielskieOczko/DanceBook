@@ -93,12 +93,15 @@ class ProfileWebTest {
             .andExpect(content().string(containsString("Notes")))
             .andExpect(content().string(containsString("Choreographies")))
             .andExpect(content().string(containsString("Figures created")))
-            // Badges row in accordion with dashed placeholder slots
+            // Badges row in accordion with next-target dashed cards
             .andExpect(content().string(containsString("Badges")))
-            .andExpect(content().string(containsString("0 of 0 earned")))
-            .andExpect(content().string(containsString("Training streak")))
-            .andExpect(content().string(containsString("Training hours")))
-            .andExpect(content().string(containsString("Coming soon")))
+            .andExpect(content().string(containsString("0 of 8 earned")))
+            .andExpect(content().string(containsString("Streak of 5")))
+            .andExpect(content().string(containsString("0 of 5 sessions")))
+            .andExpect(content().string(containsString("50 hours")))
+            .andExpect(content().string(containsString("0 of 50 hours")))
+            .andExpect(content().string(not(containsString("Coming soon"))))
+            .andExpect(content().string(not(containsString("0 of 0 earned"))))
             // No issue numbers in user-facing text
             .andExpect(content().string(not(containsString("(#35"))))
             .andExpect(content().string(not(containsString("(#39"))))

@@ -35,7 +35,8 @@ enum class EventType {
     TRAINING_SERIES_DELETED,
     TRAINING_BULK_ATTENDANCE_UPDATED,
     TRAINING_BULK_DELETED,
-    TRAINING_BULK_UPDATED
+    TRAINING_BULK_UPDATED,
+    BADGE_EARNED
 }
 
 enum class TargetType {
@@ -43,7 +44,8 @@ enum class TargetType {
     COMMENT,
     CUSTOM_LIST,
     DANCE_FIGURE,
-    TRAINING_EVENT
+    TRAINING_EVENT,
+    BADGE
 }
 
 @Entity
@@ -83,4 +85,11 @@ class ActivityEvent {
 
     @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
+
+    val badgeType: BadgeType?
+        get() = if (targetType == TargetType.BADGE && !targetName.isNullOrBlank()) {
+            runCatching { BadgeType.valueOf(targetName!!) }.getOrNull()
+        } else {
+            null
+        }
 }

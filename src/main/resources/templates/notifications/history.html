@@ -20,6 +20,31 @@
 
                 <!-- Event Content -->
                 <div class="flex items-start gap-3">
+                    <th:block th:if="${event.eventType.name() == 'BADGE_EARNED' and event.badgeType != null}">
+                        <div class="medallion flex-shrink-0"
+                             th:classappend="${event.badgeType.tier.cssClass + (event.badgeType.isIconOnly ? ' icon-only' : '')}">
+                            <span th:replace="~{fragments/icon :: icon(name=${event.badgeType.icon}, size=${event.badgeType.isIconOnly ? 'md' : 'sm'}, title=null)}"></span>
+                            <span th:if="${!event.badgeType.isIconOnly}" class="num" th:text="${event.badgeType.medallionLabel}">10</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-body-md text-body-md text-on-surface font-semibold">
+                                <a th:href="@{/profile#badges-section}"
+                                   class="text-on-surface hover:underline"
+                                   th:text="#{notifications.event.badge_earned_title(#{${event.badgeType.nameKey}})}">You earned “Streak of 10”</a>
+                            </p>
+                            <p class="font-label-sm text-label-sm text-ink-soft mt-0.5">
+                                <span th:text="#{${event.badgeType.descKey}}">10 attended sessions in a row</span>
+                                <span> · </span>
+                                <a th:href="@{/profile#badges-section}"
+                                   class="text-primary hover:underline"
+                                   th:text="#{notifications.event.badge_view_on_profile}">View on profile →</a>
+                            </p>
+                            <p class="font-label-sm text-label-sm text-outline mt-1"
+                               th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:unless="${event.eventType.name() == 'BADGE_EARNED' and event.badgeType != null}">
                     <!-- Icon -->
                     <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                          th:classappend="${event.eventType.name() == 'MATERIAL_CREATED' || event.eventType.name() == 'LIST_CREATED' || event.eventType.name() == 'DANCE_FIGURE_CREATED' || event.eventType.name() == 'TRAINING_EVENT_CREATED' ? 'bg-primary-container text-on-primary-container' :
@@ -122,6 +147,7 @@
                         <p class="font-label-sm text-label-sm text-outline mt-1"
                            th:text="${#temporals.format(event.createdAt, 'EEEE, MMMM d · HH:mm')}">Tuesday, May 13 · 14:30</p>
                     </div>
+                    </th:block>
                 </div>
             </div>
         </div>

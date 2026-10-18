@@ -37,6 +37,9 @@ import com.jankowski.rafal.dancebook.dto.AssistantPreferencesUpdateRequest
 import com.jankowski.rafal.dancebook.model.AssistantReplyLanguage
 import com.jankowski.rafal.dancebook.model.UserAssistantPreferences
 import com.jankowski.rafal.dancebook.service.AssistantPreferencesService
+import com.jankowski.rafal.dancebook.service.BadgeProfileSummary
+import com.jankowski.rafal.dancebook.service.BadgeService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
@@ -47,7 +50,7 @@ import java.util.UUID
 @Controller
 @RequestMapping("/profile")
 @PreAuthorize("isAuthenticated()")
-class ProfileController(
+class ProfileController @Autowired constructor(
     private val appUserService: AppUserService,
     private val messageSource: MessageSource,
     private val trainingStatsService: TrainingStatsService,
@@ -57,7 +60,8 @@ class ProfileController(
     private val danceFigureService: DanceFigureService,
     private val activityEventService: ActivityEventService,
     private val assistantPreferencesService: AssistantPreferencesService? = null,
-    private val assistantFeature: AssistantFeature? = null
+    private val assistantFeature: AssistantFeature? = null,
+    private val badgeService: BadgeService? = null
 ) {
     @GetMapping
     fun showProfile(model: Model): String {
@@ -95,6 +99,12 @@ class ProfileController(
         model.addAttribute("replyLanguageOptions", replyLanguageOptions(locale))
         val showStreaks = assistantPreferencesService?.forUser(user)?.showStreaksAndBadges ?: true
         model.addAttribute("showStreaksAndBadges", showStreaks)
+        val badgeSummary = if (showStreaks) {
+            badgeService?.profileSummaryForUser(user, locale) ?: BadgeProfileSummary.empty()
+        } else {
+            BadgeProfileSummary.empty()
+        }
+        model.addAttribute("badgeSummary", badgeSummary)
         return "profile/index"
     }
 
@@ -386,6 +396,7 @@ class ProfileController(
             EventType.TRAINING_BULK_ATTENDANCE_UPDATED -> "fact_check"
             EventType.TRAINING_BULK_DELETED -> "event_busy"
             EventType.TRAINING_BULK_UPDATED -> "edit_calendar"
+            EventType.BADGE_EARNED -> "military_tech"
         }
 
         val messageKey = when (event.eventType) {
@@ -410,9 +421,15 @@ class ProfileController(
             EventType.TRAINING_BULK_ATTENDANCE_UPDATED -> "profile.activity.bulk_attendance"
             EventType.TRAINING_BULK_DELETED -> "profile.activity.bulk_deleted"
             EventType.TRAINING_BULK_UPDATED -> "profile.activity.bulk_updated"
+            EventType.BADGE_EARNED -> "profile.activity.badge_earned"
         }
 
         val actionText = messageSource.getMessage(messageKey, null, event.eventType.name, locale) ?: event.eventType.name
+        val resolvedTargetName = if (event.eventType == EventType.BADGE_EARNED) {
+            event.badgeType?.let { messageSource.getMessage(it.nameKey, null, it.name, locale) } ?: event.targetName
+        } else {
+            event.targetName
+        }
         val createdAt = event.createdAt
         val dateLabel = if (createdAt.toLocalDate() == LocalDate.now()) {
             messageSource.getMessage("training.today", null, "Today", locale) ?: "Today"
@@ -423,7 +440,7 @@ class ProfileController(
         return ProfileActivityItem(
             icon = icon,
             actionText = actionText,
-            targetName = event.targetName,
+            targetName = resolvedTargetName,
             dateLabel = dateLabel,
             createdAt = createdAt
         )

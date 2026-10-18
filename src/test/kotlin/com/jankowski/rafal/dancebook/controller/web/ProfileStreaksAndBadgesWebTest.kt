@@ -136,6 +136,7 @@ class ProfileStreaksAndBadgesWebTest {
             .andExpect(content().string(not(containsString("No active streak"))))
             .andExpect(content().string(not(containsString("12-session streak"))))
             .andExpect(content().string(not(containsString("0 of 0 earned"))))
+            .andExpect(content().string(not(containsString("0 of 8 earned"))))
             .andExpect(content().string(containsString("Training")))
             .andExpect(content().string(containsString("No training sessions this year")))
             .andReturn()

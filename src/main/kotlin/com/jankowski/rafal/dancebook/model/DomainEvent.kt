@@ -182,4 +182,9 @@ class CommentDeletedEvent(
     actor: AppUser
 ) : DomainEvent(actor)
 
+class BadgeEarnedEvent(
+    val userBadge: UserBadge,
+    actor: AppUser
+) : DomainEvent(actor)
+
 

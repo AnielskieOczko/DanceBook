@@ -126,7 +126,8 @@ class TrainingStreaksAndBadgesWebTest {
             startsTodayBoundary = false,
             activeStreak = 4,
             streakReachedDate = "Sun 11 Oct",
-            streakTier = "bronze"
+            streakTier = "bronze",
+            earnedBadges = listOf(com.jankowski.rafal.dancebook.model.BadgeType.STREAK_10)
         )
         val month = TrainingTimelineMonth(
             label = "October 2026",
@@ -139,7 +140,8 @@ class TrainingStreaksAndBadgesWebTest {
             nextPage = 1,
             lastMonthLabel = "October 2026",
             isFirstPage = true,
-            stats = sampleStats
+            stats = sampleStats,
+            earnedBadges = listOf(com.jankowski.rafal.dancebook.service.TimelineBadgeChip(com.jankowski.rafal.dancebook.model.BadgeType.STREAK_10))
         )
     }
 
@@ -156,7 +158,8 @@ class TrainingStreaksAndBadgesWebTest {
             .andExpect(content().string(containsString("Attendance")))
             .andExpect(content().string(containsString("Streak")))
             .andExpect(content().string(containsString("consecutive, all time")))
-            .andExpect(content().string(containsString("Badge slot · streak 10")))
+            .andExpect(content().string(containsString("Streak of 10")))
+            .andExpect(content().string(containsString("Earned “Streak of 10”")))
             .andExpect(content().string(containsString("sessions in a row")))
     }
 
@@ -173,7 +176,8 @@ class TrainingStreaksAndBadgesWebTest {
             .andExpect(content().string(containsString("Attendance")))
             .andExpect(content().string(containsString("To confirm")))
             .andExpect(content().string(not(containsString("consecutive, all time"))))
-            .andExpect(content().string(not(containsString("Badge slot · streak 10"))))
+            .andExpect(content().string(not(containsString("Streak of 10"))))
+            .andExpect(content().string(not(containsString("Earned “Streak of 10”"))))
             .andExpect(content().string(not(containsString("sessions in a row"))))
     }
 

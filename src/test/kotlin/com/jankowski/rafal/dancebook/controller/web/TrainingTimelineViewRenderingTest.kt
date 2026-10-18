@@ -218,7 +218,7 @@ class TrainingTimelineViewRenderingTest {
     }
 
     @Test
-    fun `renders streak milestone marker with badge slot and fire icon`() {
+    fun `renders streak milestone marker with fire icon and no badge slot`() {
         val entryWithStreak = entry(daysAgo = 2, status = AttendanceStatus.ATTENDED).copy(
             streakMilestone = 10,
             streakReachedDate = "Sun 11 Oct",
@@ -232,9 +232,37 @@ class TrainingTimelineViewRenderingTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("10 sessions in a row")))
             .andExpect(content().string(containsString("Streak reached on Sun 11 Oct")))
-            .andExpect(content().string(containsString("Badge slot")))
-            .andExpect(content().string(containsString("tc-slot-bronze")))
+            .andExpect(content().string(not(containsString("Badge slot"))))
+            .andExpect(content().string(not(containsString("tc-slot-bronze"))))
             .andExpect(content().string(containsString("local_fire_department")))
+    }
+
+    @Test
+    fun `renders earned badge chips in timeline summary and earned badge line inside session card`() {
+        val entryWithBadge = entry(daysAgo = 2, status = AttendanceStatus.ATTENDED).copy(
+            earnedBadges = listOf(com.jankowski.rafal.dancebook.model.BadgeType.STREAK_10)
+        )
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), nullable(UUID::class.java))).thenReturn(
+            timeline(month("October 2026", entryWithBadge)).copy(
+                earnedBadges = listOf(
+                    com.jankowski.rafal.dancebook.service.TimelineBadgeChip(com.jankowski.rafal.dancebook.model.BadgeType.STREAK_5),
+                    com.jankowski.rafal.dancebook.service.TimelineBadgeChip(com.jankowski.rafal.dancebook.model.BadgeType.STREAK_10),
+                    com.jankowski.rafal.dancebook.service.TimelineBadgeChip(com.jankowski.rafal.dancebook.model.BadgeType.PERFECT_MONTH, repeatCount = 2)
+                )
+            )
+        )
+
+        mockMvc.perform(get("/training-events/timeline").with(csrf()))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("badge-chip")))
+            .andExpect(content().string(containsString("Streak of 5")))
+            .andExpect(content().string(containsString("Streak of 10")))
+            .andExpect(content().string(containsString("Perfect month")))
+            .andExpect(content().string(containsString("×2")))
+            .andExpect(content().string(containsString("session-badge-line")))
+            .andExpect(content().string(containsString("Earned “Streak of 10”")))
+            .andExpect(content().string(containsString("10 attended sessions in a row")))
+            .andExpect(content().string(not(containsString("Badge slot ·"))))
     }
 
     @Test

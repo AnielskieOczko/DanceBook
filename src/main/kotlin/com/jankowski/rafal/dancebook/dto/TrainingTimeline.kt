@@ -1,5 +1,7 @@
 package com.jankowski.rafal.dancebook.dto
 
+import com.jankowski.rafal.dancebook.model.BadgeType
+import com.jankowski.rafal.dancebook.service.TimelineBadgeChip
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -40,7 +42,8 @@ data class TrainingTimelineEntry(
     val streakReachedDate: String? = null,
     val todayFormatted: String? = null,
     val streakMilestone: Int? = activeStreak,
-    val streakTier: String? = null
+    val streakTier: String? = null,
+    val earnedBadges: List<BadgeType> = emptyList()
 ) {
     val event get() = row.event
     val swatch get() = row.swatch
@@ -168,7 +171,8 @@ data class TrainingTimeline(
     val lastMonthLabel: String?,
     /** True only for the very first window, which is the one that owns the empty state. */
     val isFirstPage: Boolean,
-    val stats: TrainingStats? = null
+    val stats: TrainingStats? = null,
+    val earnedBadges: List<TimelineBadgeChip> = emptyList()
 ) {
     val isEmpty: Boolean get() = months.isEmpty() || months.all { it.entries.isEmpty() && it.weeks.isEmpty() }
 }
