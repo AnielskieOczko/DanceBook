@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Detail Headers</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for #360 (back navigation) and #361 (action placement): one header pattern for every detail and edit page.
+   Tokens from src/main/resources/frontend/input.css, radii from docs/mocks/rounded-forms, medal colours from docs/mocks/figures.
+   Pages shown: Figure, Note, Training, Choreography (the four detail pages) and the Figure edit page. */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --bronze:#8a5a2e; --danger:#b3261e; --danger-soft:#f7e9e8;
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,sans-serif; --serif:'Source Serif 4',Georgia,serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 96px;background:var(--surface);color:var(--on);font:14px/1.5 var(--font)}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1.pt{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+p{margin:0}
+.lede{max-width:72ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:78ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.pros{display:grid;gap:8px 32px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));font-size:13px;color:var(--on-var);max-width:960px}
+.pros b{color:var(--on)}
+.rules{font-size:13px;color:var(--on-var);max-width:80ch;padding-left:18px;margin:0}
+.rules li{margin:2px 0}.rules b{color:var(--on)}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.cols{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:18px}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}
+
+/* frames */
+.page{width:760px;max-width:100%;border:1px solid var(--hair);border-radius:var(--r-card);padding:20px 24px 18px;position:relative;background:var(--surface)}
+.m .page,.page.m{width:375px;padding:14px 16px 16px;border-radius:28px}
+.fake{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.fake i{display:block;height:8px;border-radius:4px;background:var(--container)}
+.fake i:nth-child(2){width:82%}.fake i:nth-child(3){width:60%}
+
+/* shared parts */
+.btn{height:44px;border-radius:var(--r-pill);padding:0 20px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;border:1px solid transparent;white-space:nowrap;flex:none}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.o{background:var(--surface);border-color:var(--outline);color:var(--on)}
+.btn.d{background:var(--surface);border-color:#e4b9b6;color:var(--danger)}
+.btn.sm{height:40px;padding:0 16px}
+.ib{width:44px;height:44px;border-radius:var(--r-pill);border:1px solid var(--outline);display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--surface)}
+.ib.open{background:var(--container)}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--on-var);font-weight:500;font-size:14px;margin-left:-6px;padding:0 6px}
+.crumb{display:flex;align-items:center;gap:6px;min-height:36px;font-size:13px;color:var(--on-var)}
+.crumb b{color:var(--on);font-weight:500}
+.title{margin:0;font-size:32px;line-height:38px;font-weight:600;letter-spacing:-.015em}
+.title.serif{font-family:var(--serif);font-size:36px;line-height:42px}
+.m .title{font-size:26px;line-height:32px}.m .title.serif{font-size:30px;line-height:36px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.sub{color:var(--on-var);font-size:14px;margin-top:6px}
+.b{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--container);color:var(--on-var);white-space:nowrap}
+.b.p{background:var(--primary-soft);color:var(--primary)}.b.cls{background:var(--primary);color:var(--on-primary)}
+.med{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--bronze)}
+
+/* overflow menu (floats, keeps its shadow) */
+.menu{position:absolute;z-index:3;width:210px;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-inset);box-shadow:0 8px 28px rgba(22,24,26,.16);padding:6px}
+.menu div{display:flex;align-items:center;gap:10px;padding:0 12px;min-height:44px;border-radius:.5rem;font-size:14px}
+.menu .dng{color:var(--danger)}.menu hr{border:0;border-top:1px solid var(--hair);margin:4px 0}
+
+/* A: back row above, title left, actions right */
+.A .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.A .acts{display:flex;gap:8px;align-items:center;flex:none;padding-top:2px}
+.m.A .acts,.A.m .acts{display:none}
+.A .macts{display:none}.A.m .macts{display:flex;gap:8px;margin-top:14px}
+.A .macts .btn{flex:1;justify-content:center}
+
+/* B: slim bar */
+.B .bar{display:flex;justify-content:space-between;align-items:center;min-height:56px;margin:-20px -24px 14px;padding:0 24px;border-bottom:1px solid var(--hair)}
+.B.m .bar{margin:-14px -16px 14px;padding:0 16px}
+.B .bar .acts{display:flex;gap:8px;align-items:center}
+
+/* C: breadcrumb, actions left under title */
+.C .arow{display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.C.m .arow .btn.p{flex:1;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="pt">Detail page headers: back navigation and actions</h1>
+    <p class="lede">One header pattern for every detail and edit page, settling two issues together: <b>#360</b> (five different "back to list" styles) and <b>#361</b> (actions in different places, the Figure page wrapping onto a second row). Each option is shown on the four detail pages (Figure, Note, Training, Choreography), on the Figure edit page, and at phone width.</p>
+    <p class="note" style="margin-top:10px">What differs between pages today and is kept: the Note title is serif, the Figure title carries class, medal and "Wbudowana w syllabus"; Choreography has the most actions (print, build, details, duplicate, delete). Delete is destructive and not a daily action, so options A and B move it into a "more" menu; option C keeps it visible but quiet. The back label always names the list it returns to ("Figury", "Notatki", "Treningi", "Choreografie"), never "Back".</p>
+  </header>
+
+  <section class="opt">
+    <h2>A · Back row above the title, actions on the right <span class="rec"><span class="ms sm">star</span> Recommended</span></h2>
+    <ul class="rules">
+      <li><b>Back:</b> text link with arrow, always the first row, always on the left, 44 px tall, named after the list. On edit pages it returns to the detail page.</li>
+      <li><b>Actions:</b> to the right of the title, one filled primary action, at most one outline secondary, everything else (and Delete) in a <b>⋯</b> menu. Never a filled red button.</li>
+      <li><b>Phone:</b> the actions drop below the title as one row: primary fills the width, <b>⋯</b> beside it. Choreography's Print moves into the menu.</li>
+      <li><b>Build:</b> the existing <code>pageHeader</code> already puts the title left and a toolbar right, so it gains <code>backHref</code> / <code>backLabel</code> parameters and a menu slot, and the Figure page moves onto it.</li>
+    </ul>
+    <div class="cols"><div class="stack" id="A-d"></div><div class="stack" id="A-m"></div></div>
+  </section>
+
+  <section class="opt">
+    <h2>B · Slim top bar: back on the left, actions on the right</h2>
+    <ul class="rules">
+      <li><b>Back and actions share one bar</b> above the title, like the Note page today. The title block below is free of controls.</li>
+      <li><b>Phone:</b> the same bar, sticky while scrolling, so Edit and Back stay reachable on a long figure or note. Labels shorten to icons where there is no room.</li>
+    </ul>
+    <p class="note"><b>Trade-off:</b> best for long pages, but the bar competes with the app's own top navigation, and a second row of chrome above every title costs height on phones.</p>
+    <div class="cols"><div class="stack" id="B-d"></div><div class="stack" id="B-m"></div></div>
+  </section>
+
+  <section class="opt">
+    <h2>C · Breadcrumb above, actions on the left under the title</h2>
+    <ul class="rules">
+      <li><b>Back is a breadcrumb</b> ("Figury / Advanced Hip Twist"): the list name is the link and the current page is plain text.</li>
+      <li><b>Actions are a left-aligned row under the title</b>, the position you described for Training: primary, then secondary, then a quiet red text-outline Delete, all visible.</li>
+    </ul>
+    <p class="note"><b>Trade-off:</b> nothing is hidden in a menu, but Choreography's five actions need a second row on a phone, and a breadcrumb is a weaker tap target than an arrow row.</p>
+    <div class="cols"><div class="stack" id="C-d"></div><div class="stack" id="C-m"></div></div>
+  </section>
+</div>
+
+<script>
+const ico=(n,c='')=>`<span class="ms ${c}">${n}</span>`;
+const fake=`<div class="fake"><i></i><i></i><i></i></div>`;
+const medal=`<span class="med">${ico('workspace_premium','sm')}Brąz</span>`;
+const pages={
+ figure:{back:'Figury',title:'Advanced Hip Twist',meta:`<span class="b cls">Klasa F</span>${medal}<span class="b">Wbudowana w syllabus</span>`,sub:'Cha Cha',
+  primary:['edit','Edytuj figurę'],menu:[['delete','Usuń figurę',1]],cap:'Figura'},
+ note:{back:'Notatki',title:'Another user’s private note on rise and fall',serif:1,meta:`<span class="b p">Walc angielski</span><span class="b">Standard</span><span class="b">${ico('lock','sm')}Prywatna</span>`,sub:'Utworzono 14 paź 2026',
+  primary:['edit','Edytuj notatkę'],menu:[],cap:'Notatka'},
+ training:{back:'Treningi',title:'Latin technique',meta:'',sub:'czwartek, 10 września 2026 · 18:00 – 20:00',
+  primary:['edit','Edytuj trening'],menu:[['delete','Usuń trening',1]],cap:'Trening'},
+ choreo:{back:'Choreografie',title:'Competition Waltz',meta:`<span class="b p">Walc angielski</span>${medal}`,sub:'',
+  primary:['edit','Zbuduj sekwencję'],secondary:['print','Drukuj / PDF'],menu:[['settings','Edytuj szczegóły'],['content_copy','Duplikuj'],['delete','Usuń choreografię',1]],cap:'Choreografia'},
+ edit:{back:'Advanced Hip Twist',title:'Edytuj figurę',meta:'',sub:'Cha Cha',primary:null,menu:[],cap:'Edycja figury (zapis jest w stopce formularza)'}
+};
+const menuHtml=(items,style)=>`<div class="menu" style="${style}">${items.map((x,i)=>(x[2]&&i>0?'<hr>':'')+`<div class="${x[2]?'dng':''}">${ico(x[0],'sm')}${x[1]}</div>`).join('')}</div>`;
+const titleBlock=p=>`<div><h2 class="title ${p.serif?'serif':''}" style="font-size:inherit">${''}</h2></div>`;
+const tb=p=>`<div style="min-width:0"><div class="title ${p.serif?'serif':''}">${p.title}</div>${p.meta?`<div class="meta">${p.meta}</div>`:''}${p.sub?`<div class="sub">${p.sub}</div>`:''}</div>`;
+const more=open=>`<span class="ib ${open?'open':''}">${ico('more_horiz')}</span>`;
+
+/* A */
+function A(p,mobile,openMenu){
+ const hasMenu=p.menu.length>0;
+ const desk=`<div class="acts">${p.secondary?`<span class="btn o">${ico(p.secondary[0],'sm')}${p.secondary[1]}</span>`:''}${p.primary?`<span class="btn p">${ico(p.primary[0],'sm')}${p.primary[1]}</span>`:''}${hasMenu?more(openMenu):''}</div>`;
+ const mob=p.primary?`<div class="macts"><span class="btn p">${ico(p.primary[0],'sm')}${p.primary[1]}</span>${hasMenu||p.secondary?more(openMenu):''}</div>`:'';
+ const items=(mobile&&p.secondary?[[p.secondary[0],p.secondary[1]]]:[]).concat(p.menu);
+ const menu=openMenu&&hasMenu?menuHtml(items,mobile?'right:16px;top:'+(p.sub||p.meta?210:170)+'px':'right:24px;top:'+(p.secondary?112:104)+'px'):'';
+ return `<div class="A ${mobile?'m':''}"><div class="page ${mobile?'m':''}" ${openMenu&&hasMenu?'style="min-height:'+(mobile?400:(p.menu.length>2?290:200))+'px"':''}><a class="back">${ico('arrow_back','sm')}${p.back}</a><div class="head">${tb(p)}${mobile?'':desk}</div>${mobile?mob:''}${fake}${menu}</div></div>`;
+}
+/* B */
+function B(p,mobile,openMenu){
+ const hasMenu=p.menu.length>0;
+ const act=mobile
+  ?`<div class="acts">${p.primary?`<span class="btn p sm">${ico(p.primary[0],'sm')}${p.primary[1].split(' ')[0]}</span>`:''}${hasMenu||p.secondary?more(openMenu):''}</div>`
+  :`<div class="acts">${p.secondary?`<span class="btn o sm">${ico(p.secondary[0],'sm')}${p.secondary[1]}</span>`:''}${p.primary?`<span class="btn p sm">${ico(p.primary[0],'sm')}${p.primary[1]}</span>`:''}${hasMenu?more(openMenu):''}</div>`;
+ const items=(mobile&&p.secondary?[[p.secondary[0],p.secondary[1]]]:[]).concat(p.menu);
+ const menu=openMenu&&hasMenu?menuHtml(items,'right:'+(mobile?16:24)+'px;top:64px'):'';
+ return `<div class="B ${mobile?'m':''}"><div class="page ${mobile?'m':''}" ${openMenu&&hasMenu?'style="min-height:'+(mobile?400:(p.menu.length>2?290:200))+'px"':''}><div class="bar"><a class="back">${ico('arrow_back','sm')}${p.back}</a>${act}</div>${tb(p)}${fake}${menu}</div></div>`;
+}
+/* C */
+function C(p,mobile,openMenu){
+ const hasMenu=p.menu.filter(x=>!x[2]).length>0;
+ const dng=p.menu.find(x=>x[2]);
+ const acts=p.primary?`<div class="arow">${p.primary?`<span class="btn p">${ico(p.primary[0],'sm')}${p.primary[1]}</span>`:''}${p.secondary?`<span class="btn o">${ico(p.secondary[0],'sm')}${p.secondary[1]}</span>`:''}${hasMenu?`<span class="btn o">${ico('more_horiz','sm')}Więcej</span>`:''}${dng?`<span class="btn d">${ico(dng[0],'sm')}${dng[1]}</span>`:''}</div>`:'';
+ return `<div class="C ${mobile?'m':''}"><div class="page ${mobile?'m':''}" ${openMenu&&hasMenu?'style="min-height:'+(mobile?400:(p.menu.length>2?290:200))+'px"':''}><div class="crumb"><a>${p.back}</a>${ico('chevron_right','sm')}<b>${p.title.length>22?p.title.slice(0,20)+'…':p.title}</b></div>${tb(p)}${acts}${fake}</div></div>`;
+}
+const cap=(t,h)=>`<div><p class="cap">${t}</p>${h}</div>`;
+function render(id,fn){
+ document.getElementById(id+'-d').innerHTML=
+  cap('Figura · desktop (menu otwarte)',fn(pages.figure,false,true))+
+  cap('Notatka · desktop',fn(pages.note,false))+
+  cap('Trening · desktop',fn(pages.training,false))+
+  cap('Choreografia · desktop (najwięcej akcji)',fn(pages.choreo,false,id!='C'))+
+  cap('Edycja figury · desktop',fn(pages.edit,false));
+ document.getElementById(id+'-m').innerHTML=
+  cap('Figura · telefon',fn(pages.figure,true))+
+  cap('Choreografia · telefon (menu otwarte)',fn(pages.choreo,true,id!='C'))+
+  cap('Notatka · telefon',fn(pages.note,true))+
+  cap('Trening · telefon',fn(pages.training,true));
+}
+render('A',A);render('B',B);render('C',C);
+</script>
+</body>
+</html>
