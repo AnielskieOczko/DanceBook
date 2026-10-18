@@ -146,7 +146,7 @@ class HtmxFragmentRenderingTest {
 
     @Test
     fun `materials list htmx returns materialsTable fragment with id materials-grid`() {
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
             .thenReturn(PageImpl(emptyList()))
 
         mockMvc.perform(get("/materials").header("HX-Request", "true").with(csrf()))

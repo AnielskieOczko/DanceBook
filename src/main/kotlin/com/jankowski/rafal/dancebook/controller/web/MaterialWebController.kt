@@ -84,7 +84,7 @@ class MaterialWebController(
             typeIds = typeIds,
             categoryIds = categoryIds,
             minRating = minRating,
-            nameSearch = nameSearch,
+            textSearch = nameSearch,
             pageable = pageable
         )
 

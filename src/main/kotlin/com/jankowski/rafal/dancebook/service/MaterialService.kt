@@ -21,6 +21,14 @@ interface MaterialService {
         nameSearch: String? = null,
         pageable: Pageable
     ): Page<Material>
+    fun findAll(
+        typeIds: List<UUID>? = null,
+        categoryIds: List<UUID>? = null,
+        minRating: Short? = null,
+        nameSearch: String? = null,
+        textSearch: String? = null,
+        pageable: Pageable
+    ): Page<Material>
 
     fun downloadVideo(id: UUID, rangeHeader: String?): GoogleDriveService.DriveMediaDownload
 

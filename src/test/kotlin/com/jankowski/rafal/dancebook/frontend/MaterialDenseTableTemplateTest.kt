@@ -133,7 +133,7 @@ class MaterialDenseTableTemplateTest {
     @Test
     fun `rendered table has exact 8 columns in order`() {
         val material = createSampleMaterial()
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(material)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList()))).thenReturn(mapOf(material.id!! to 2))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
@@ -163,7 +163,7 @@ class MaterialDenseTableTemplateTest {
     @Test
     fun `title column is pinned with table-header-pinned and table-cell-pinned`() {
         val material = createSampleMaterial()
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(material)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList()))).thenReturn(mapOf(material.id!! to 2))
 
@@ -200,7 +200,7 @@ class MaterialDenseTableTemplateTest {
     @Test
     fun `header sort state reflects currentSort and sets correct aria-sort`() {
         val material = createSampleMaterial()
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(material)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList()))).thenReturn(emptyMap())
 
@@ -283,7 +283,7 @@ class MaterialDenseTableTemplateTest {
             isPublic = true
         ).apply { owner = AppUser().apply { id = UUID.randomUUID() } }
 
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(completeNote, minimalNote)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList())))
             .thenReturn(mapOf(completeNote.id!! to 4, minimalNote.id!! to 0))
@@ -342,7 +342,7 @@ class MaterialDenseTableTemplateTest {
     @Test
     fun `wording reflects notes terminology and contains no occurrences of movement`() {
         val singleNote = createSampleMaterial(name = "Solo Note")
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(singleNote)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList()))).thenReturn(emptyMap())
 
@@ -358,7 +358,7 @@ class MaterialDenseTableTemplateTest {
         assertFalse(content.contains("movement", ignoreCase = true), "Rendered page must not contain 'movement'")
 
         // Empty state check
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(Pageable.unpaged())))
             .thenReturn(PageImpl(emptyList()))
 
         val emptyResult = mockMvc.perform(get("/materials").with(csrf()))
