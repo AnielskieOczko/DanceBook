@@ -112,6 +112,17 @@ class AssistantPreferencesServiceTest {
     }
 
     @Test
+    fun `remember chat history defaults on and a saved off is read back, with or without an API key`() {
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.empty())
+        assertTrue(serviceWithKey.forUser(user).rememberChatHistory)
+
+        val entity = UserAssistantPreferences().apply { userId = user.id; rememberChatHistory = false }
+        `when`(repository.findById(user.id!!)).thenReturn(Optional.of(entity))
+        assertFalse(serviceWithKey.forUser(user).rememberChatHistory)
+        assertFalse(serviceWithoutKey.forUser(user).rememberChatHistory)
+    }
+
+    @Test
     fun `missing API key forces assistant dependent flags off even if saved on`() {
         val entity = UserAssistantPreferences().apply {
             userId = user.id

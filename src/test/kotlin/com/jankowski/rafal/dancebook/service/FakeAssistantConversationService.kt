@@ -13,17 +13,18 @@ class FakeAssistantConversationService(private val currentUser: AppUser) : Assis
     val conversations = mutableListOf<AssistantConversation>()
     val stored = mutableListOf<AssistantMessage>()
 
-    override fun list() = conversations.filter { it.owner?.id == currentUser.id }
+    override fun list() = conversations.filter { it.owner?.id == currentUser.id && !it.ephemeral }
 
     override fun findOwned(id: UUID): AssistantConversation =
         conversations.firstOrNull { it.id == id && it.owner?.id == currentUser.id }
             ?: throw EntityNotFoundException("Conversation not found")
 
-    override fun start(firstMessage: String): AssistantConversation {
+    override fun start(firstMessage: String, ephemeral: Boolean): AssistantConversation {
         val conversation = AssistantConversation().apply {
             id = UUID.randomUUID()
             owner = currentUser
             title = firstMessage.trim().take(AssistantConversationService.MAX_TITLE_LENGTH)
+            this.ephemeral = ephemeral
         }
         conversations += conversation
         return conversation

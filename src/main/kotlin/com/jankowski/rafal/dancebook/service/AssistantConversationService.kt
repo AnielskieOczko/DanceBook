@@ -12,7 +12,7 @@ interface AssistantConversationService {
 
     fun list(): List<AssistantConversation>
     fun findOwned(id: UUID): AssistantConversation
-    fun start(firstMessage: String): AssistantConversation
+    fun start(firstMessage: String, ephemeral: Boolean = false): AssistantConversation
     fun messages(conversationId: UUID): List<AssistantMessage>
     fun recentContext(conversationId: UUID, limit: Int = 20): List<AssistantMessage>
     fun append(

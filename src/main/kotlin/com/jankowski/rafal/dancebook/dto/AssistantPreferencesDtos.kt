@@ -17,7 +17,8 @@ data class AssistantPreferences(
     val replyLanguage: AssistantReplyLanguage = AssistantReplyLanguage.APP,
     /** Off narrows the assistant and semantic retrieval to items the user owns; it never widens access. */
     val includeSharedItems: Boolean = true,
-    val showStreaksAndBadges: Boolean = true
+    val showStreaksAndBadges: Boolean = true,
+    val rememberChatHistory: Boolean = true
 ) {
     companion object {
         val DEFAULTS = AssistantPreferences()
@@ -35,5 +36,6 @@ data class AssistantPreferencesUpdateRequest(
     val openInFullWindow: Boolean? = null,
     val replyLanguage: AssistantReplyLanguage? = null,
     val includeSharedItems: Boolean? = null,
-    val showStreaksAndBadges: Boolean? = null
+    val showStreaksAndBadges: Boolean? = null,
+    val rememberChatHistory: Boolean? = null
 )

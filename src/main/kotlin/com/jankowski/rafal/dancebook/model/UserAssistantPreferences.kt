@@ -38,6 +38,9 @@ class UserAssistantPreferences {
     @Column(name = "show_streaks_and_badges", nullable = false)
     var showStreaksAndBadges: Boolean = true
 
+    @Column(name = "remember_chat_history", nullable = false)
+    var rememberChatHistory: Boolean = true
+
     @Enumerated(EnumType.STRING)
     @Column(name = "reply_language", nullable = false, length = 10)
     var replyLanguage: AssistantReplyLanguage = AssistantReplyLanguage.APP
