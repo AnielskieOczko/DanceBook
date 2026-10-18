@@ -205,8 +205,8 @@ the real price of the issue, and the only honest input to "can Pro sustain this"
 
 | Group | Model | When |
 |---|---|---|
-| Gemini | `gemini-4-argon-medium` | Default, when the Gemini quota can carry the whole issue. New (Gemini 4 Argon, also -high/-low; move to -high if medium falls short); its quota cost per issue is not measured yet, so record it from `usage.py` |
-| Gemini | `gemini-3.8-flash-high` | Fallback if Argon misbehaves or its quota is short |
+| Gemini | `gemini-3.8-flash-high` | Default, when the Gemini quota can carry the whole issue |
+| Gemini 4 Argon | `gemini-4-argon-medium` | **Only when the user says so.** It has its own weekly quota (a third line in `usage.py`); see the measurements below |
 | Claude and GPT | `claude-sonnet-5-5-high` | When the Gemini quota is low (roughly under 20% weekly for a feature-sized issue) |
 | Claude and GPT | `claude-opus-5-5-high` | Only for an unusually hard issue, since it uses up that quota fastest |
 
@@ -215,6 +215,17 @@ Pick a group whose quota covers the first run **and** the fix rounds. Then keep 
 conversation on a different model makes agy reprocess the whole conversation, which would
 cost more than it saves. That is **unverified**. Probe it before relying on a switch
 mid-issue. If the quota runs out mid-run, wait for the reset rather than changing model.
+
+**Argon (`gemini-4-argon-*`) is opt-in, measured on #320 and #39 (2026-10-17).** Both ran on
+`-medium`, started together, and each hit the 45-minute print timeout (about an hour of wall
+clock). Together they took Argon's weekly quota from 100% to 34.4%, so roughly three issues a
+week. The Gemini and Claude/GPT groups did not move. #39 (a feature: migration, service, events,
+two pages) reached a green build; #320 (a copy pass) left 23 failing tests because it changed the
+wording and not the tests that assert it, and the validator found no full `./gradlew build` in its
+task logs, so the Stop gate did not force one. A fix round on #39 cost about 1.1M tokens (34.4% to 29.2%). The
+fix-round run also ended with a `broken pipe` network error after the work was done: judge by
+the diff and your own build. Do not use Argon unless the user asks; `-medium` is what was
+tested, so go to `-high` only on request.
 
 **Do not assume the Claude group is the cheap fallback for a big issue.** On #241 (a Polish
 translation sweep: ten templates and 144 message keys) `claude-sonnet-5-5-high` took the
@@ -318,7 +329,7 @@ cd /Volumes/my-data/Developer/Projects/DanceBook-agy-<N> && date +%s > .agy-star
 `<model>` is the id chosen in preflight and saved in `.agy-model`. Write it out literally,
 not as `$(cat .agy-model)`.
 
-**On Gemini, default to `-high`.** agy is doing the thinking now, not the typing; `-medium`
+**On `gemini-3.8-flash`, default to `-high`.** agy is doing the thinking now, not the typing; `-medium`
 is for genuinely mechanical issues where the shape of the change is not in question. The
 Claude models carry no effort suffix.
 
