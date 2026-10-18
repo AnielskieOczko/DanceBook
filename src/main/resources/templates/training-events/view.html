@@ -4,7 +4,18 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto space-y-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${event.title}, subtitleSlot=~{::eventSubtitle}, toolbar=~{::eventToolbar})}">
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref='/training-events',
+        backLabel=#{training.back_to_list},
+        title=${event.title},
+        subtitleSlot=~{::eventSubtitle},
+        primaryUrl=@{/training-events/{id}/edit(id=${event.id})},
+        primaryText=#{common.edit},
+        primaryIcon='edit',
+        hasPrimary=${currentUser != null and (event.calendar == null or event.calendar.owner?.id == currentUser.id or currentUser.role.name() == 'ADMIN')},
+        menuSlot=~{::eventMenu},
+        hasMenu=${currentUser != null and (event.calendar == null or event.calendar.owner?.id == currentUser.id or currentUser.role.name() == 'ADMIN')})}">
+
         <th:block th:fragment="eventSubtitle">
             <p class="page-subtitle">
                 <span th:text="${#temporals.format(event.startTime, 'EEEE, MMMM d yyyy · HH:mm')}">Thursday, September 10 2026 · 18:00</span>
@@ -12,29 +23,30 @@
                 <span th:text="${#temporals.format(event.endTime, 'HH:mm')}">20:00</span>
             </p>
         </th:block>
-        <div th:fragment="eventToolbar" class="flex items-center gap-3 shrink-0">
-            <th:block th:if="${event.calendar == null || event.calendar.owner?.id == currentUser.id || currentUser.role == T(com.jankowski.rafal.dancebook.model.Role).ADMIN}">
-                <a th:replace="~{fragments/button :: iconButton(href=@{/training-events/{id}/edit(id=${event.id})}, icon='edit', label=#{common.edit})}"></a>
-                <button th:if="${event.series != null}"
-                        type="button"
-                        class="btn-icon text-danger hover:bg-danger-soft"
-                        aria-label="Delete"
-                        title="Delete"
-                        th:attr="aria-label=#{common.delete}, title=#{common.delete}"
-                        th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
-                        hx-target="#confirmModalContainer"
-                        hx-swap="innerHTML">
-                    <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
+
+        <th:block th:fragment="eventMenu">
+            <button th:if="${event.series != null}"
+                    type="button"
+                    class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none"
+                    aria-label="Delete"
+                    th:attr="aria-label=#{common.delete}"
+                    th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
+                    hx-target="#confirmModalContainer"
+                    hx-swap="innerHTML">
+                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                <span th:text="#{common.delete}">Delete</span>
+            </button>
+            <form th:if="${event.series == null}"
+                  th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
+                  data-confirm="Delete this training session? It will also be removed from your Google Calendar."
+                  th:attr="data-confirm=#{training.delete_confirm}">
+                <button type="submit"
+                        class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                    <span th:text="#{common.delete}">Delete</span>
                 </button>
-                <form th:if="${event.series == null}"
-                      th:action="@{/training-events/{id}/delete(id=${event.id})}" method="post"
-                      data-confirm="Delete this training session? It will also be removed from your Google Calendar."
-                      th:attr="data-confirm=#{training.delete_confirm}">
-                    <button th:replace="~{fragments/button :: iconButton(icon='delete', label=#{common.delete}, type='submit', cls='text-danger hover:bg-danger-soft')}"></button>
-                </form>
-            </th:block>
-            <a href="/training-events" class="btn-outline" th:text="#{training.view.back}">Back</a>
-        </div>
+            </form>
+        </th:block>
     </div>
 
     <div class="card p-8 space-y-6">

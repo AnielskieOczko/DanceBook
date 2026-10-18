@@ -7,38 +7,143 @@
 
 <!-- Standard Page Header -->
 <div th:fragment="pageHeader"
-     class="flex flex-col lg:flex-row lg:items-center lg:justify-between flex-wrap gap-4 mb-6"
+     class="mb-6"
      th:classappend="${cls}">
-    <div class="page-header mb-0">
-        <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
-            <th:block th:if="${icon != null}">
-                <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
-            </th:block>
-            <span th:text="${title}">Page Title</span>
-        </h1>
-        <p th:if="${subtitle != null and subtitleSlot == null}" class="page-subtitle" th:text="${subtitle}">Subtitle</p>
-        <th:block th:if="${subtitleSlot != null}">
-            <th:block th:replace="${subtitleSlot}"></th:block>
-        </th:block>
-    </div>
-
-    <!-- Toolbar slot or single action -->
-    <th:block th:if="${toolbar != null}">
-        <div class="shrink-0" th:replace="${toolbar}"></div>
-    </th:block>
-    <th:block th:if="${toolbar == null and actionUrl != null}">
-        <div class="shrink-0">
-            <a th:href="${actionUrl}"
-               class="btn"
-               th:classappend="${actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary'}">
-                <th:block th:if="${actionIcon != null}">
-                    <span th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
-                </th:block>
-                <span th:text="${actionText}">Action</span>
+    <!-- Back row (first row above title, left-aligned, min-h 44px) -->
+    <th:block th:if="${backHref != null}">
+        <div class="mb-1">
+            <a th:href="${backHref}"
+               class="inline-flex items-center gap-1.5 min-h-[44px] text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors group">
+                <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-0.5 transition-transform')}"></span>
+                <span th:text="${backLabel ?: 'Back'}">Back</span>
             </a>
         </div>
     </th:block>
+
+    <!-- Main Header Row: Title & Actions -->
+    <div class="flex flex-wrap sm:flex-nowrap items-start justify-between gap-y-3.5 gap-x-4">
+        <div class="page-header mb-0 min-w-0 w-full sm:w-auto sm:flex-1">
+            <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
+                <th:block th:if="${icon != null}">
+                    <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
+                </th:block>
+                <span th:text="${title}">Page Title</span>
+            </h1>
+            <th:block th:if="${metaSlot != null}">
+                <div class="flex flex-wrap items-center gap-2 mt-2">
+                    <th:block th:replace="${metaSlot}"></th:block>
+                </div>
+            </th:block>
+            <p th:if="${subtitle != null and subtitleSlot == null}" class="page-subtitle mt-1" th:text="${subtitle}">Subtitle</p>
+            <th:block th:if="${subtitleSlot != null}">
+                <div class="mt-1">
+                    <th:block th:replace="${subtitleSlot}"></th:block>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- Toolbar slot -->
+        <th:block th:if="${toolbar != null}">
+            <div class="shrink-0 w-full sm:w-auto" th:replace="${toolbar}"></div>
+        </th:block>
+
+        <!-- Legacy single actionUrl (used by list views when no detail actions are defined) -->
+        <th:block th:if="${toolbar == null and primaryUrl == null and primarySlot == null and secondaryUrl == null and secondarySlot == null and menuSlot == null and actionUrl != null}">
+            <div class="shrink-0">
+                <a th:href="${actionUrl}"
+                   class="btn"
+                   th:classappend="${actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary'}">
+                    <th:block th:if="${actionIcon != null}">
+                        <span th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
+                    </th:block>
+                    <span th:text="${actionText}">Action</span>
+                </a>
+            </div>
+        </th:block>
+
+        <!-- Detail Actions: Responsive row (on desktop: right of title; on phone: full width row below title) -->
+        <th:block th:if="${toolbar == null and ((primaryUrl != null and (hasPrimary == null or hasPrimary)) or primarySlot != null or secondaryUrl != null or secondarySlot != null or (menuSlot != null and (hasMenu == null or hasMenu)))}">
+            <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 pt-0.5">
+                <!-- Secondary action (at most one, outline, hidden on mobile) -->
+                <th:block th:if="${secondarySlot != null}">
+                    <div class="hidden sm:inline-flex">
+                        <th:block th:replace="${secondarySlot}"></th:block>
+                    </div>
+                </th:block>
+                <th:block th:if="${secondarySlot == null and secondaryUrl != null}">
+                    <a th:href="${secondaryUrl}"
+                       th:id="${secondaryId}"
+                       class="hidden sm:inline-flex btn-outline btn-sm min-h-[44px] items-center gap-1.5">
+                        <th:block th:if="${secondaryIcon != null}">
+                            <span th:replace="~{fragments/icon :: icon(name=${secondaryIcon}, size='sm')}"></span>
+                        </th:block>
+                        <span th:text="${secondaryText}">Secondary</span>
+                    </a>
+                </th:block>
+
+                <!-- Primary action (at most one, filled, fills width on mobile) -->
+                <th:block th:if="${primarySlot != null}">
+                    <div class="flex-1 sm:flex-initial min-w-0" th:replace="${primarySlot}"></div>
+                </th:block>
+                <th:block th:if="${primarySlot == null and primaryUrl != null and (hasPrimary == null or hasPrimary)}">
+                    <a th:href="${primaryUrl}"
+                       class="btn-primary btn-sm min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-1.5 min-w-0">
+                        <th:block th:if="${primaryIcon != null}">
+                            <span th:replace="~{fragments/icon :: icon(name=${primaryIcon}, size='sm')}"></span>
+                        </th:block>
+                        <span th:text="${primaryText}">Primary</span>
+                    </a>
+                </th:block>
+
+                <!-- ⋯ Menu (everything else, Delete included) -->
+                <th:block th:if="${menuSlot != null and (hasMenu == null or hasMenu)}">
+                    <div class="shrink-0" th:replace="~{fragments/page :: overflowMenu(menuSlot=${menuSlot}, cls=${menuCls})}"></div>
+                </th:block>
+            </div>
+        </th:block>
+    </div>
 </div>
+
+<!-- Overflow Menu (3-dots) -->
+<div th:fragment="overflowMenu"
+     class="relative inline-block text-left"
+     th:classappend="${cls}">
+    <button type="button"
+            class="js-menu-btn btn-outline btn-sm min-w-[44px] min-h-[44px] !p-0 rounded-pill flex items-center justify-center cursor-pointer select-none"
+            aria-label="More actions"
+            th:attr="aria-label=#{common.more_actions}"
+            aria-haspopup="true"
+            aria-expanded="false">
+        <span th:replace="~{fragments/icon :: icon(name='more_horiz', size='md')}"></span>
+    </button>
+    <div class="js-menu-dropdown absolute right-0 top-full mt-2 w-56 bg-surface rounded-xl shadow-ambient border border-border p-1.5 hidden z-50 space-y-0.5">
+        <th:block th:if="${menuSlot != null}">
+            <th:block th:replace="${menuSlot}"></th:block>
+        </th:block>
+    </div>
+</div>
+
+<!-- Overflow Menu Item -->
+<th:block th:fragment="menuItem">
+    <a th:if="${href != null}"
+       th:href="${href}"
+       class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-colors"
+       th:classappend="${(variant == 'danger' ? 'text-danger hover:bg-danger-soft' : 'text-on-surface hover:bg-surface-container') + (cls != null ? ' ' + cls : '')}">
+        <th:block th:if="${icon != null}">
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null})}"></span>
+        </th:block>
+        <span th:text="${text}">Action</span>
+    </a>
+    <button th:if="${href == null}"
+            th:type="${type ?: 'button'}"
+            class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-colors cursor-pointer select-none"
+            th:classappend="${(variant == 'danger' ? 'text-danger hover:bg-danger-soft' : 'text-on-surface hover:bg-surface-container') + (cls != null ? ' ' + cls : '')}">
+        <th:block th:if="${icon != null}">
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null})}"></span>
+        </th:block>
+        <span th:text="${text}">Action</span>
+    </button>
+</th:block>
 
 <!-- Section Title -->
 <div th:fragment="sectionTitle"

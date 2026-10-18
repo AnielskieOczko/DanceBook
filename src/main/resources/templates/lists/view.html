@@ -4,12 +4,14 @@
 
 <section th:with="activeNav='lists'">
 
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
-        <a href="/lists" class="hover:text-primary transition-colors" th:text="#{nav.collections}">Lists</a>
-        <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='sm', cls='text-outline')}"></span>
-        <span class="text-on-surface font-medium truncate" th:text="${customList.name}">List Name</span>
-    </nav>
+    <!-- Back row -->
+    <div class="mb-2">
+        <a href="/lists"
+           class="inline-flex items-center gap-1.5 min-h-[44px] text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors group">
+            <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-0.5 transition-transform')}"></span>
+            <span th:text="#{collections.back_to_list}">Collections</span>
+        </a>
+    </div>
 
     <!--/* Warning alert for owner when collection has private notes */-->
     <th:block th:if="${privateNotesWarning}">
@@ -76,15 +78,22 @@
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-2" th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or customList.owner?.id == currentUser.id)}">
                     <a th:href="@{/lists/{id}/edit(id=${customList.id})}" 
-                       class="flex items-center justify-center w-11 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-primary hover:bg-white transition-colors" title="Edit Collection" aria-label="Edit Collection"
+                       class="btn-primary btn-sm min-h-[44px] flex items-center gap-1.5"
+                       title="Edit Collection" aria-label="Edit Collection"
                        th:attr="title=#{collections.edit}, aria-label=#{collections.edit}">
-                        <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
+                        <span th:text="#{collections.edit}">Edit</span>
                     </a>
-                    <button type="button" class="js-open-delete-modal flex items-center justify-center px-3 h-11 rounded-full bg-white/60 backdrop-blur-md border border-outline-variant/30 text-on-surface-variant hover:text-danger hover:bg-danger-soft hover:border-danger/30 transition-colors gap-1.5 font-label-md" title="Delete Collection"
-                            th:attr="title=#{collections.delete}">
-                        <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span>
-                        <span th:text="#{common.delete}">Delete</span>
-                    </button>
+                    <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::listMenu})}">
+                        <th:block th:fragment="listMenu">
+                            <button type="button" class="js-open-delete-modal flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none"
+                                    title="Delete Collection"
+                                    th:attr="title=#{collections.delete}">
+                                <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                                <span th:text="#{collections.delete}">Delete</span>
+                            </button>
+                        </th:block>
+                    </div>
                 </div>
             </div>
         </div>

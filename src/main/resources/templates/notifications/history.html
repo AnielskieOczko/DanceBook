@@ -5,7 +5,7 @@
 <section th:with="activeNav='', pageTitle=#{notifications.history.title}" class="space-y-20">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: pageHeader(title=${pageTitle}, subtitle=#{notifications.history.subtitle}, actionUrl='/', actionText=#{nav.dashboard}, actionIcon='arrow_back', actionVariant='outline')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(backHref='/', backLabel=#{nav.dashboard}, title=${pageTitle}, subtitle=#{notifications.history.subtitle})}"></div>
 
     <!-- Timeline -->
     <div class="card p-6 md:p-10">

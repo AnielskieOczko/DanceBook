@@ -4,7 +4,11 @@
 
 <section th:with="activeNav='choreographies'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=(${choreographyId == null ? #messages.msg('choreographies.form.title.new') : #messages.msg('choreographies.form.title.edit')}), subtitle=#{choreographies.form.subtitle})}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref=${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId},
+        backLabel=${choreographyId == null ? #messages.msg('choreographies.back_to_list') : ((choreographyRequest.name != null and !choreographyRequest.name.isEmpty()) ? choreographyRequest.name : #messages.msg('choreographies.back_to_list'))},
+        title=(${choreographyId == null ? #messages.msg('choreographies.form.title.new') : #messages.msg('choreographies.form.title.edit')}),
+        subtitle=#{choreographies.form.subtitle})}"></div>
 
     <form th:action="@{${choreographyId == null ? '/choreographies' : '/choreographies/' + choreographyId + '/metadata'}}"
           th:object="${choreographyRequest}" method="post" class="card p-8 space-y-8">

@@ -4,7 +4,11 @@
 
 <section th:with="activeNav='training-events'" class="max-w-3xl mx-auto">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${trainingEventId == null ? #messages.msg('training.form.title.add') : #messages.msg('training.form.title.edit')}, subtitle=#{training.form.subtitle})}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref=${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId},
+        backLabel=${trainingEventId == null ? #messages.msg('training.back_to_list') : ((trainingEvent.title != null and !trainingEvent.title.isEmpty()) ? trainingEvent.title : #messages.msg('training.back_to_list'))},
+        title=${trainingEventId == null ? #messages.msg('training.form.title.add') : #messages.msg('training.form.title.edit')},
+        subtitle=#{training.form.subtitle})}"></div>
 
     <form th:action="${trainingEventId == null ? '/training-events' : '/training-events/' + trainingEventId}"
           th:object="${trainingEvent}" method="post" class="card p-8 space-y-6" id="trainingEventForm"

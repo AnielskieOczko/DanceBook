@@ -4,16 +4,15 @@
 
 <section th:with="activeNav='dance-figures'" class="max-w-[1240px] mx-auto pt-6 pb-28 sm:pb-32 px-4 sm:px-6">
 
-    <!-- Breadcrumb & Mode Switcher -->
-    <div class="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 py-3 px-1 text-[13px] text-on-surface-variant mb-2">
-        <div class="flex items-center gap-1.5 flex-wrap">
-            <a href="/dance-figures" class="text-primary hover:underline" th:text="#{figures.list.title}">Figures</a>
-            <span>/</span>
-            <span id="crumbStyle" class="font-medium text-on-surface" th:text="${danceFigure.danceTypeId != null && !#lists.isEmpty(danceTypes.?[id == #root.danceFigure.danceTypeId]) ? danceTypes.?[id == #root.danceFigure.danceTypeId][0].name : 'Style'}">Waltz</span>
-            <span>/</span>
-            <span th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : #messages.msg('figures.action.edit')}">Edit</span>
-        </div>
-        <div class="seg-pill max-md:flex max-md:flex-nowrap max-md:w-full" role="group" aria-label="Edit mode" th:attr="aria-label=#{figures.form.aria.edit_mode}">
+    <!-- Page Header & Mode Switcher -->
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref=${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId},
+        backLabel=${danceFigureId == null ? #messages.msg('figures.back_to_list') : ((danceFigure.name != null and !danceFigure.name.isEmpty()) ? danceFigure.name : #messages.msg('figures.back_to_list'))},
+        title=${danceFigureId == null ? #messages.msg('figures.form.title.create') : ((danceFigure.name != null and !danceFigure.name.isEmpty()) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))},
+        subtitle=${danceFigure.danceTypeId != null && !#lists.isEmpty(danceTypes.?[id == #root.danceFigure.danceTypeId]) ? danceTypes.?[id == #root.danceFigure.danceTypeId][0].name : null},
+        toolbar=~{::figureModeSwitcher})}">
+
+        <div th:fragment="figureModeSwitcher" class="seg-pill max-md:flex max-md:flex-nowrap max-md:w-full" role="group" aria-label="Edit mode" th:attr="aria-label=#{figures.form.aria.edit_mode}">
             <button type="button" id="manual-edit-tab-btn" class="seg-pill-btn active max-md:flex-1 max-md:justify-center max-md:px-3 max-md:min-w-0 max-md:whitespace-normal max-md:text-center max-md:leading-tight" aria-pressed="true">
                 <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                 <span th:text="#{figures.form.tab.manual}">Manual Edit</span>

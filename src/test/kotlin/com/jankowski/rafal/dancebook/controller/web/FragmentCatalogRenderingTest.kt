@@ -11,8 +11,10 @@ import com.jankowski.rafal.dancebook.service.RichTextServiceImpl
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
+import org.jsoup.Jsoup
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -223,6 +225,8 @@ class FragmentCatalogRenderingTest {
             "searchFieldRequired",
             "filterSelectRequired",
             "headerRequired",
+            "overflowMenuRequired",
+            "menuItemRequired",
             "sectionTitleRequired",
             "viewSwitcherRequired",
             "statCardRequired",
@@ -260,6 +264,9 @@ class FragmentCatalogRenderingTest {
             "searchFieldAll",
             "filterSelectAll",
             "headerAll",
+            "headerDetailAll",
+            "overflowMenuAll",
+            "menuItemAll",
             "sectionTitleAll",
             "viewSwitcherAll",
             "statCardAll",
@@ -480,6 +487,51 @@ class FragmentCatalogRenderingTest {
             html.contains("material-symbols-outlined"),
             "Header rendered without icon must not emit any icon element, but found:\n$html"
         )
+    }
+
+    @Test
+    fun `page header detail variant renders all Option A components cleanly`() {
+        val result = mockMvc.perform(get("/test/catalog/headerDetailAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val html = result.response.contentAsString
+        val doc = Jsoup.parse(html)
+
+        // Back row link with arrow
+        val backLink = doc.selectFirst("a[href='/dance-figures']")
+        assertNotNull(backLink, "Back row link must exist")
+        assertTrue(backLink!!.text().contains("Figures"), "Back link must contain 'Figures'")
+        assertNotNull(backLink.selectFirst(".material-symbols-outlined"), "Back link must have arrow icon")
+
+        // Title and metadata
+        val title = doc.selectFirst(".page-title")
+        assertNotNull(title)
+        assertTrue(title!!.text().contains("Advanced Hip Twist"))
+        assertTrue(title.hasClass("extra-title-cls"))
+
+        // Secondary outline button
+        val secondary = doc.selectFirst("a[href='/dance-figures/1/print']")
+        assertNotNull(secondary, "Secondary action button must exist")
+        assertTrue(secondary!!.hasClass("btn-outline"))
+        assertTrue(secondary.text().contains("Print"))
+
+        // Primary filled button
+        val primary = doc.selectFirst("a[href='/dance-figures/1/edit']")
+        assertNotNull(primary, "Primary action button must exist")
+        assertTrue(primary!!.hasClass("btn-primary"))
+        assertTrue(primary.text().contains("Edit Figure"))
+
+        // ⋯ Overflow menu trigger and dropdown
+        val menuBtn = doc.selectFirst(".js-menu-btn")
+        assertNotNull(menuBtn, "Overflow menu trigger must exist")
+        assertEquals("true", menuBtn!!.attr("aria-haspopup"))
+        assertEquals("false", menuBtn.attr("aria-expanded"))
+
+        val dropdown = doc.selectFirst(".js-menu-dropdown")
+        assertNotNull(dropdown, "Overflow dropdown must exist")
+        assertTrue(dropdown!!.hasClass("hidden"))
+        assertTrue(dropdown.text().contains("Delete"))
     }
 
     @Test

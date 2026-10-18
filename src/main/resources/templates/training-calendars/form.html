@@ -5,6 +5,8 @@
 <section th:with="activeNav='training-events'" class="max-w-2xl mx-auto py-12 space-y-8">
 
     <div th:replace="~{fragments/page :: pageHeader(
+        backHref='/training-events',
+        backLabel=#{training.back_to_list},
         title=${isNew ? 'Connect Training Calendar' : 'Edit Calendar'},
         subtitle=${isNew ? 'Link a Google Calendar to track and schedule training sessions.' : 'Update calendar settings and manage linked Google Calendar sources.'})}"></div>
 
