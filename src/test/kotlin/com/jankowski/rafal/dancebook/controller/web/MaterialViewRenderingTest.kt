@@ -147,7 +147,7 @@ class MaterialViewRenderingTest {
             .andExpect(content().string(not(containsString("Video and source"))))
             .andExpect(content().string(not(containsString("<video"))))
             .andExpect(content().string(not(containsString("A video to watch for this note"))))
-            .andExpect(content().string(not(containsString("Where this material came from"))))
+            .andExpect(content().string(not(containsString("Where this note came from"))))
     }
 
     @Test
@@ -192,7 +192,7 @@ class MaterialViewRenderingTest {
         val videoElement = doc.selectFirst("video[src='/materials/$materialId/video']")
         assertNotNull(videoElement, "Must render video player with stream endpoint")
         assertNull(doc.selectFirst("a:contains(A video to watch)"), "Must not render video link text")
-        assertNull(doc.selectFirst("a:contains(Where this material came from)"), "Must not render source link text")
+        assertNull(doc.selectFirst("a:contains(Where this note came from)"), "Must not render source link text")
     }
 
     @Test
@@ -220,7 +220,7 @@ class MaterialViewRenderingTest {
         val link = doc.selectFirst("a[href='https://youtube.com/watch?v=samba123']")
         assertNotNull(link, "Must render external video link")
         assertTrue(html.contains("A video to watch for this note"))
-        assertFalse(html.contains("Where this material came from"))
+        assertFalse(html.contains("Where this note came from"))
     }
 
     @Test
@@ -247,7 +247,7 @@ class MaterialViewRenderingTest {
         assertNull(doc.selectFirst("video"), "Must not render video player")
         val source = doc.selectFirst("a[href='https://instagram.com/p/dance456']")
         assertNotNull(source, "Must render source link")
-        assertTrue(html.contains("Where this material came from"))
+        assertTrue(html.contains("Where this note came from"))
         assertFalse(html.contains("A video to watch for this note"))
     }
 
@@ -275,7 +275,7 @@ class MaterialViewRenderingTest {
         assertNotNull(doc.selectFirst("a[href='https://vimeo.com/999']"), "Must render external video link")
         assertNotNull(doc.selectFirst("a[href='https://facebook.com/dance/posts/111']"), "Must render source link")
         assertTrue(html.contains("A video to watch for this note"))
-        assertTrue(html.contains("Where this material came from"))
+        assertTrue(html.contains("Where this note came from"))
     }
 
     @Test

@@ -11,8 +11,8 @@
     <div th:if="${#lists.isEmpty(danceCategories)}" class="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-outline-variant border-dashed">
         <span th:replace="~{fragments/icon :: icon(name='category', size='lg', cls='text-outline/30 mb-4')}"></span>
         <h3 class="text-xl font-headline-md text-on-surface mb-2">No categories defined</h3>
-        <p class="text-on-surface-variant font-body-md mb-6">Create your first category to start organizing your dance styles.</p>
-        <a href="/dance-categories/new" class="btn-primary">Add First Category</a>
+        <p class="text-on-surface-variant font-body-md mb-6">Dance categories and their styles will appear here. Add a category to start organizing your dance styles.</p>
+        <a href="/dance-categories/new" class="btn-primary">Add Category</a>
     </div>
 
     <!-- Categories & Styles List -->
@@ -60,7 +60,7 @@
             <!-- Empty State for Category -->
             <div th:if="${#lists.isEmpty(dc.danceTypes)}" class="bg-surface p-4 sm:px-6 sm:py-4 pl-12 sm:pl-18">
                 <span class="text-sm font-body-md text-outline italic">
-                    No styles added to this category yet.
+                    Dance styles in this category will appear here. Click Add Style above to add the first style.
                 </span>
             </div>
 

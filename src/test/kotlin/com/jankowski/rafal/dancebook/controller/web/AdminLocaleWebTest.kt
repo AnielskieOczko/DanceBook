@@ -122,7 +122,7 @@ class AdminLocaleWebTest {
             .andExpect(content().string(not(containsString("Admin Dashboard"))))
             // Stats cards
             .andExpect(content().string(containsString("Użytkownicy")))
-            .andExpect(content().string(containsString("Materiały")))
+            .andExpect(content().string(containsString("Notatki")))
             // Section headings
             .andExpect(content().string(containsString("Konfiguracja aplikacji")))
             .andExpect(content().string(containsString("Import figur z programu (syllabus)")))
@@ -170,7 +170,7 @@ class AdminLocaleWebTest {
             .andExpect(content().string(containsString("Admin Dashboard")))
             .andExpect(content().string(containsString("System overview and storage maintenance")))
             .andExpect(content().string(containsString("Users")))
-            .andExpect(content().string(containsString("Materials")))
+            .andExpect(content().string(containsString("Notes")))
             .andExpect(content().string(containsString("Application Configuration")))
             .andExpect(content().string(containsString("Syllabus Figures Import")))
             .andExpect(content().string(containsString("Knowledge Index (RAG)")))
@@ -261,14 +261,14 @@ class AdminLocaleWebTest {
         mockMvc.perform(get("/admin/storage/files").with(csrf()).locale(polishLocale))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Całkowita przestrzeń w chmurze")))
-            .andExpect(content().string(containsString("Powiązane materiały")))
+            .andExpect(content().string(containsString("Powiązane notatki")))
             .andExpect(content().string(containsString("Osierocone pliki")))
             .andExpect(content().string(containsString("Nazwa pliku")))
             .andExpect(content().string(containsString("Rozmiar")))
             .andExpect(content().string(containsString("Status")))
             .andExpect(content().string(containsString("Osierocony")))
             .andExpect(content().string(not(containsString("Total Cloud Space"))))
-            .andExpect(content().string(not(containsString("Linked Materials"))))
+            .andExpect(content().string(not(containsString("Linked Notes"))))
             .andExpect(content().string(not(containsString("Orphaned Waste"))))
     }
 }

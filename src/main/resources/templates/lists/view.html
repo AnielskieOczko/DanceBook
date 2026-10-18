@@ -99,7 +99,7 @@
             <h3 class="font-headline-md text-on-surface text-xl" th:text="#{collections.view.delete_modal_title}">Delete Collection?</h3>
         </div>
         <p class="text-on-surface-variant font-body-md mb-6" th:text="#{collections.view.delete_modal_message(${customList.name})}">
-            Are you sure you want to delete "<span class="font-semibold text-on-surface" th:text="${customList.name}"></span>"? This action cannot be undone, but the materials inside will not be deleted.
+            Are you sure you want to delete "<span class="font-semibold text-on-surface" th:text="${customList.name}"></span>"? This action cannot be undone, but the notes inside will not be deleted.
         </p>
         <div class="flex justify-end gap-3">
             <form method="dialog" class="inline">
@@ -111,7 +111,7 @@
         </div>
     </dialog>
 
-    <!-- Materials in this list -->
+    <!-- Notes in this collection -->
     <div th:replace="~{materials/list :: materialsTable}"></div>
 
 </section>

@@ -189,7 +189,7 @@ class ChoreographyLocaleWebTest {
             .andExpect(content().string(containsString("Moje układy")))
             .andExpect(content().string(containsString("Brak choreografii")))
             .andExpect(content().string(containsString("Utwórz swój pierwszy układ taneczny, łącząc figury ze sobą!")))
-            .andExpect(content().string(containsString("Utwórz choreografię")))
+            .andExpect(content().string(containsString("Nowa choreografia")))
             .andExpect(content().string(not(containsString("0 choreography routines created"))))
             .andExpect(content().string(not(containsString("New Choreography"))))
             .andExpect(content().string(not(containsString("My Routines"))))
@@ -213,7 +213,7 @@ class ChoreographyLocaleWebTest {
             .andExpect(content().string(containsString("My Routines")))
             .andExpect(content().string(containsString("No choreographies yet")))
             .andExpect(content().string(containsString("Create your first dance choreography routine by chaining figures together!")))
-            .andExpect(content().string(containsString("Create Choreography")))
+            .andExpect(content().string(containsString("New Choreography")))
     }
 
     @Test
@@ -418,9 +418,9 @@ class ChoreographyLocaleWebTest {
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Sekwencja jest pusta")))
             .andExpect(content().string(containsString("Rozpocznij układanie, wybierając figury z listy po prawej stronie lub dodając podział sekcji.")))
-            .andExpect(content().string(containsString("Nie znaleziono figur dla tego stylu.")))
+            .andExpect(content().string(containsString("Nie znaleziono figur dla tego stylu. Dodaj najpierw figurę do bazy, aby użyć jej w tym układzie.")))
             .andExpect(content().string(not(containsString("Sequence is empty"))))
-            .andExpect(content().string(not(containsString("No figures found for this style."))))
+            .andExpect(content().string(not(containsString("No figures found for this style. Add a figure to the database first to use it in this routine."))))
     }
 
     @Test
@@ -439,8 +439,8 @@ class ChoreographyLocaleWebTest {
             .andExpect(content().string(containsString("Drukuj / PDF")))
             .andExpect(content().string(containsString("Układaj sekwencję")))
             .andExpect(content().string(containsString("Edytuj szczegóły")))
-            .andExpect(content().string(containsString("Klonuj układ")))
-            .andExpect(content().string(containsString("Usuń układ")))
+            .andExpect(content().string(containsString("Duplikuj")))
+            .andExpect(content().string(containsString("Usuń")))
             .andExpect(content().string(containsString("Właściciel:")))
             .andExpect(content().string(containsString("Styl tańca:")))
             .andExpect(content().string(containsString("Zaktualizowano:")))
@@ -475,8 +475,8 @@ class ChoreographyLocaleWebTest {
             .andExpect(content().string(containsString("Print / PDF")))
             .andExpect(content().string(containsString("Build Sequence")))
             .andExpect(content().string(containsString("Edit Details")))
-            .andExpect(content().string(containsString("Clone Routine")))
-            .andExpect(content().string(containsString("Delete Routine")))
+            .andExpect(content().string(containsString("Duplicate")))
+            .andExpect(content().string(containsString("Delete")))
             .andExpect(content().string(containsString("Owner:")))
             .andExpect(content().string(containsString("Dance Style:")))
             .andExpect(content().string(containsString("Updated:")))
@@ -509,7 +509,7 @@ class ChoreographyLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Ta choreografia nie zawiera jeszcze żadnych figur.")))
-            .andExpect(content().string(containsString("Otwórz edytor")))
+            .andExpect(content().string(containsString("Układaj sekwencję")))
             .andExpect(content().string(not(containsString("This choreography doesn't have any figures yet."))))
             .andExpect(content().string(not(containsString("Open Builder"))))
     }

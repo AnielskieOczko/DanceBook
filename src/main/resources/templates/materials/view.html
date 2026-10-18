@@ -36,7 +36,7 @@
 
         <!-- Title in Source Serif 4 -->
         <h1 class="font-serif text-[30px] md:text-[42px] leading-[1.2] md:leading-[1.15] font-semibold tracking-[-0.01em] md:tracking-[-0.015em] text-on-surface m-0"
-            th:text="${material.name}">Material Name</h1>
+            th:text="${material.name}">Note Title</h1>
 
         <!-- Meta items -->
         <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-on-surface-variant">
@@ -81,7 +81,7 @@
 
         <!-- Empty state -->
         <div th:if="${#lists.isEmpty(figures)}" class="p-8 border border-dashed border-outline-variant rounded-xl text-center text-on-surface-variant text-sm" th:text="#{notes.figures.empty}">
-            No figures pinned to this note yet.
+            No figures pinned to this note yet. Click Pin figure to link a figure from the catalog.
         </div>
 
         <!-- Pinned figures grid -->
@@ -166,7 +166,7 @@
                             <a th:href="${material.sourceLink}" target="_blank" rel="noopener"
                                class="font-medium text-primary hover:text-primary-hover break-all transition-colors"
                                th:text="${material.sourceLink}">Source link</a>
-                            <span class="text-xs text-on-surface-variant" th:text="#{notes.media.source_hint}">Where this material came from</span>
+                            <span class="text-xs text-on-surface-variant" th:text="#{notes.media.source_hint}">Where this note came from</span>
                         </dd>
                     </th:block>
                 </dl>

@@ -437,7 +437,7 @@ document.addEventListener('click', function(event) {
         }
     }
 
-    // 10. Edit figure in sequence handler
+    // 10. Edit pinned figure handler
     const editFigureBtn = event.target.closest('.js-edit-figure-btn');
     if (editFigureBtn) {
         event.preventDefault();
@@ -472,7 +472,7 @@ document.addEventListener('click', function(event) {
         return;
     }
 
-    // 11. Cancel edit figure in sequence handler
+    // 11. Cancel edit pinned figure handler
     const cancelEditBtn = event.target.closest('#cancelEditFigureBtn');
     if (cancelEditBtn) {
         event.preventDefault();

@@ -104,7 +104,7 @@
 <!-- Figure Picker Results Fragment -->
 <div th:fragment="figurePickerResults" id="figurePickerResultsList" class="space-y-2">
     <div th:if="${#lists.isEmpty(figures)}" class="py-8 text-center text-sm text-on-surface-variant" th:text="#{notes.picker.no_figures}">
-        No figures found.
+        Matching syllabus figures will appear here. Try a broader search term or check Search all dance styles above.
     </div>
 
     <div th:each="fig : ${figures}"

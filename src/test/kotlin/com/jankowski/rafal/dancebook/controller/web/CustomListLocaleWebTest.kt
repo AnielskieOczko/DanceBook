@@ -133,12 +133,12 @@ class CustomListLocaleWebTest {
             .andExpect(content().string(containsString("Najnowsze")))
             .andExpect(content().string(containsString("Najstarsze")))
             .andExpect(content().string(containsString("Nie znaleziono kolekcji")))
-            .andExpect(content().string(containsString("Żadne kolekcje nie pasują do wybranych filtrów ani kryteriów wyszukiwania.")))
-            .andExpect(content().string(containsString("Utwórz kolekcję")))
+            .andExpect(content().string(containsString("Tutaj pojawią się zapisane kolekcje notatek. Wyczyść filtry lub utwórz nową kolekcję, aby zacząć.")))
+            .andExpect(content().string(containsString("Nowa kolekcja")))
             .andExpect(content().string(not(containsString("My Collections"))))
             .andExpect(content().string(not(containsString("collections curated"))))
             .andExpect(content().string(not(containsString("No collections found"))))
-            .andExpect(content().string(not(containsString("Create collection"))))
+            .andExpect(content().string(not(containsString("Saved note collections will appear here."))))
     }
 
     @Test
@@ -213,7 +213,7 @@ class CustomListLocaleWebTest {
             .andExpect(content().string(containsString("title=\"Edytuj kolekcję\"")))
             .andExpect(content().string(containsString("title=\"Usuń kolekcję\"")))
             .andExpect(content().string(containsString("Usunąć kolekcję?")))
-            .andExpect(content().string(containsString("Czy na pewno chcesz usunąć „Kombinacje turniejowe”? Tej operacji nie można cofnąć, ale materiały w niej zawarte nie zostaną usunięte.")))
+            .andExpect(content().string(containsString("Czy na pewno chcesz usunąć „Kombinacje turniejowe”? Tej operacji nie można cofnąć, ale notatki w niej zawarte nie zostaną usunięte.")))
             .andExpect(content().string(containsString("Anuluj")))
             .andExpect(content().string(containsString("Usuń kolekcję")))
             .andExpect(content().string(not(containsString("Private Notes Warning"))))
@@ -233,7 +233,7 @@ class CustomListLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Nowa kolekcja")))
-            .andExpect(content().string(containsString("Utwórz przefiltrowaną kolekcję materiałów tanecznych z estetyczną okładką.")))
+            .andExpect(content().string(containsString("Utwórz przefiltrowaną kolekcję notatek tanecznych z estetyczną okładką.")))
             .andExpect(content().string(containsString("Nazwa kolekcji")))
             .andExpect(content().string(containsString("placeholder=\"np. Moja kolekcja walca\"")))
             .andExpect(content().string(containsString("Okładka kolekcji")))
@@ -243,7 +243,7 @@ class CustomListLocaleWebTest {
             .andExpect(content().string(containsString("Zmień zdjęcie")))
             .andExpect(content().string(containsString("Filtry kolekcji")))
             .andExpect(content().string(containsString("Nazwa zawiera")))
-            .andExpect(content().string(containsString("placeholder=\"Filtruj materiały według nazwy...\"")))
+            .andExpect(content().string(containsString("placeholder=\"Filtruj notatki według nazwy...\"")))
             .andExpect(content().string(containsString("Minimalna ocena")))
             .andExpect(content().string(containsString("Style tańca")))
             .andExpect(content().string(containsString("Kategorie")))
@@ -305,7 +305,7 @@ class CustomListLocaleWebTest {
             .andExpect(content().string(containsString("3+ stars")))
             .andExpect(content().string(containsString("Search: spin")))
             .andExpect(content().string(containsString("Delete Collection?")))
-            .andExpect(content().string(containsString("Are you sure you want to delete &quot;Waltz Collection&quot;? This action cannot be undone, but the materials inside will not be deleted.")))
+            .andExpect(content().string(containsString("Are you sure you want to delete &quot;Waltz Collection&quot;? This action cannot be undone, but the notes inside will not be deleted.")))
             .andExpect(content().string(containsString("Cancel")))
 
         // Form page in EN

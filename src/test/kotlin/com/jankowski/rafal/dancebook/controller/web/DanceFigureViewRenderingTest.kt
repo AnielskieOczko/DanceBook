@@ -99,7 +99,7 @@ class DanceFigureViewRenderingTest {
         mockMvc.perform(get("/dance-figures/{id}", figureId).with(csrf()))
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("card-remarks")))
-            .andExpect(content().string(containsString("No notes available for this figure.")))
+            .andExpect(content().string(containsString("No notes available for this figure yet. Click Edit Figure to add technical tips or coaching notes.")))
             .andExpect(content().string(not(containsString("rich-text text-on-surface"))))
     }
 
@@ -125,7 +125,7 @@ class DanceFigureViewRenderingTest {
             .andExpect(content().string(containsString("card-remarks")))
             .andExpect(content().string(containsString("card-remarks-title")))
             .andExpect(content().string(containsString("Key note for <strong>Leader</strong>")))
-            .andExpect(content().string(not(containsString("No notes available for this figure."))))
+            .andExpect(content().string(not(containsString("No notes available for this figure yet. Click Edit Figure to add technical tips or coaching notes."))))
     }
 
     @Test

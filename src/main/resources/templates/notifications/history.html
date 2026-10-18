@@ -77,9 +77,9 @@
                         <p class="font-body-md text-body-md text-on-surface">
                             <span class="font-medium" th:text="${event.actor.displayName}">User</span>
                             <span th:switch="${event.eventType.name()}">
-                                <span th:case="'MATERIAL_CREATED'" th:text="' ' + #{notifications.event.history.material_created} + ' '"> created material </span>
-                                <span th:case="'MATERIAL_UPDATED'" th:text="' ' + #{notifications.event.history.material_updated} + ' '"> updated material </span>
-                                <span th:case="'MATERIAL_DELETED'" th:text="' ' + #{notifications.event.history.material_deleted} + ' '"> deleted material </span>
+                                <span th:case="'MATERIAL_CREATED'" th:text="' ' + #{notifications.event.history.material_created} + ' '"> created note </span>
+                                <span th:case="'MATERIAL_UPDATED'" th:text="' ' + #{notifications.event.history.material_updated} + ' '"> updated note </span>
+                                <span th:case="'MATERIAL_DELETED'" th:text="' ' + #{notifications.event.history.material_deleted} + ' '"> deleted note </span>
                                 <span th:case="'COMMENT_ADDED'" th:text="' ' + #{notifications.event.comment_added} + ' '"> commented on </span>
                                 <span th:case="'LIST_CREATED'" th:text="' ' + #{notifications.event.history.list_created} + ' '"> created collection </span>
                                 <span th:case="'LIST_MADE_PUBLIC'" th:text="' ' + #{notifications.event.history.list_shared} + ' '"> shared collection </span>
@@ -156,7 +156,7 @@
         <div th:if="${events == null || events.isEmpty()}" class="text-center py-16">
             <span th:replace="~{fragments/icon :: icon(name='history', size='lg', cls='text-outline mb-4 block')}"></span>
             <p class="font-headline-md text-headline-md text-on-surface mb-2" th:text="#{notifications.history.empty_title}">No activity yet</p>
-            <p class="font-body-md text-body-md text-outline" th:text="#{notifications.history.empty_text}">Events will appear here as you create materials, add comments, and manage collections.</p>
+            <p class="font-body-md text-body-md text-outline" th:text="#{notifications.history.empty_text}">Events will appear here as you create notes, add comments, and manage collections.</p>
         </div>
     </div>
 
