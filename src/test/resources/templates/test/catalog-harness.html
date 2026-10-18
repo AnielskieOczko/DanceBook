@@ -146,6 +146,24 @@
     <div th:replace="~{fragments/form :: rawField(name='comment', label='Add Comment', type='text', value='Initial text', hint='Be helpful', required=true, placeholder='Comment...', disabled=false, cls='extra-cls', id='custom-raw')}"></div>
 </div>
 
+<!-- 14. FORM: searchField -->
+<div th:fragment="searchFieldRequired">
+    <div th:replace="~{fragments/form :: searchField(placeholder='Search')}"></div>
+</div>
+
+<div th:fragment="searchFieldAll">
+    <div th:replace="~{fragments/form :: searchField(id='customSearch', name='query', value='test', placeholder='Search...', ariaLabel='Search query', inputCls='custom-input', cls='custom-wrapper', hxGet='/search', hxTarget='#results', hxSwap='outerHTML', hxInclude='#form', hxTrigger='keyup')}"></div>
+</div>
+
+<!-- 15. FORM: filterSelect -->
+<div th:fragment="filterSelectRequired">
+    <div th:replace="~{fragments/form :: filterSelect(name='filter', options=${categoryOptions})}"></div>
+</div>
+
+<div th:fragment="filterSelectAll">
+    <div th:replace="~{fragments/form :: filterSelect(id='filterId', name='filter', label='Category Filter', placeholder='All Categories', options=${categoryOptions}, value='STANDARD', labelCls='custom-label', selectCls='custom-select', cls='custom-container', hxGet='/filter', hxTarget='#grid', hxSwap='outerHTML', hxInclude='#form', hxTrigger='change')}"></div>
+</div>
+
 <!-- 14. PAGE: pageHeader -->
 <div th:fragment="headerRequired">
     <div th:replace="~{fragments/page :: pageHeader(title='Dashboard')}"></div>

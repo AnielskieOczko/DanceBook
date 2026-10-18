@@ -376,8 +376,8 @@ layer(base);
 
 @utility badge {
   /* ── Badges ──────────────────────────────────── */
-  @apply inline-flex items-center px-3 py-1 rounded-sm
-           text-sm font-semibold whitespace-nowrap;
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-pill
+           text-xs font-semibold whitespace-nowrap;
 }
 
 @utility badge-primary {
@@ -515,6 +515,14 @@ layer(base);
          disabled:opacity-50 disabled:cursor-not-allowed
          transition-[color,background-color,border-color,box-shadow] duration-150;
   border-radius: var(--radius-pill);
+}
+
+@utility pill-select {
+  /* ── Borderless Filled Pill Select (Mock Figure/Notes Filters: 44px) ── */
+  @apply pill-input appearance-none bg-no-repeat pr-11 cursor-pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235b6067' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-size: 1.25rem;
+  background-position: right 1rem center;
 }
 
 @utility ed-name {
@@ -990,7 +998,7 @@ layer(base);
   /* Form controls are excluded: they draw their own border and 3px ring that follow the pill
    * (see form-input, the #214 mock), and this rule's !important would stack a second, dark 2px
    * offset ring on top. Any new text-entry utility must be added to this list. */
-  *:focus-visible:not(.form-input, .form-select, .form-textarea, .dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name, trix-editor) {
+  *:focus-visible:not(.form-input, .form-select, .form-textarea, .dense-input, .dense-select, .dense-textarea, .pill-input, .ed-name, .pill-select, trix-editor) {
     @apply outline-hidden! ring-2! ring-primary! ring-offset-2!;
   }
 }

@@ -206,7 +206,7 @@
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getLeaderSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
-                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded font-mono print-badge"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded-pill font-mono print-badge"
                                           th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getFollowerSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
-                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded font-mono print-badge"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded-pill font-mono print-badge"
                                           th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
                                 </div>
                             </div>
@@ -252,19 +252,19 @@
                                 <div class="flex items-start gap-4 flex-wrap sm:flex-nowrap">
                                     <!-- Timing & Foot (Badges) -->
                                     <div class="flex items-center gap-2 shrink-0 w-32">
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
                                             <span th:replace="~{fragments/icon :: icon(name='timer', size='sm')}"></span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border shrink-0 print-badge print:bg-primary-fixed print:text-on-primary-fixed">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm')}"></span>
                                             L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border shrink-0 print-badge print:bg-secondary-fixed print:text-on-secondary-fixed">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border shrink-0 print-badge print:bg-secondary-fixed print:text-on-secondary-fixed">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm')}"></span>
                                             R
                                         </span>
-                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border shrink-0 print-badge print:bg-surface-container print:text-black">
+                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF' && step.foot != null && step.foot != ''}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded-pill border border-border shrink-0 print-badge print:bg-surface-container print:text-black">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm')}"></span>
                                             <span th:text="${step.foot}">-</span>
                                         </span>

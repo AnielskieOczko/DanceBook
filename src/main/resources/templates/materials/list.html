@@ -12,30 +12,23 @@
         <form id="filterForm" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
-                <div class="relative flex-1 group">
-                    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
-                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
-                           placeholder="Search..."
-                           th:attr="placeholder=#{notes.filter.search_placeholder}"
-                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                </div>
+                <div th:replace="~{fragments/form :: searchField(name='nameSearch', value=${selectedNameSearch}, placeholder=#{notes.filter.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/materials}, hxTarget='#materials-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                 <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
                     <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none" th:text="#{notes.filter.filters}">Filters</span>
                 </button>
 
                 <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view"
                                th:attr="aria-label=#{notes.view.list}"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
@@ -45,7 +38,7 @@
                                th:attr="aria-label=#{notes.view.grid}"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
@@ -94,37 +87,12 @@
                     </div>
 
                     <!-- Rating -->
-                    <div class="flex flex-col gap-1">
-                        <label for="filterRating" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{notes.filter.min_rating}">Minimum Rating</label>
-                        <select name="minRating" id="filterRating" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                                th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                            <option value="" th:selected="${selectedMinRating == null}" th:text="#{notes.filter.rating.any}">Any Rating</option>
-                            <option value="5" th:selected="${selectedMinRating == 5}" th:text="#{notes.filter.rating.5}">★★★★★ (5 Stars)</option>
-                            <option value="4" th:selected="${selectedMinRating == 4}" th:text="#{notes.filter.rating.4}">★★★★☆ (4+ Stars)</option>
-                            <option value="3" th:selected="${selectedMinRating == 3}" th:text="#{notes.filter.rating.3}">★★★☆☆ (3+ Stars)</option>
-                            <option value="2" th:selected="${selectedMinRating == 2}" th:text="#{notes.filter.rating.2}">★★☆☆☆ (2+ Stars)</option>
-                            <option value="1" th:selected="${selectedMinRating == 1}" th:text="#{notes.filter.rating.1}">★☆☆☆☆ (1+ Star)</option>
-                        </select>
-                    </div>
+                    <div th:replace="~{fragments/form :: filterSelect(name='minRating', id='filterRating', label=#{notes.filter.min_rating}, optionsFragment=~{::ratingOptions}, hxGet=@{/materials}, hxTarget='#materials-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
                 </div>
 
                 <!-- Column 3: Sorting -->
-                <div class="flex flex-col gap-1 mt-4">
-                    <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{notes.filter.sort_by}">Sort By</label>
-                    <select name="sort" id="filterSortBy" 
-                            class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                            th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <option value="createdAt,desc" th:selected="${currentSort == 'createdAt,desc'}" th:text="#{notes.sort.newest}">Newest First</option>
-                        <option value="createdAt,asc" th:selected="${currentSort == 'createdAt,asc'}" th:text="#{notes.sort.oldest}">Oldest First</option>
-                        <option value="name,asc" th:selected="${currentSort == 'name,asc'}" th:text="#{notes.sort.name_asc}">Name (A-Z)</option>
-                        <option value="name,desc" th:selected="${currentSort == 'name,desc'}" th:text="#{notes.sort.name_desc}">Name (Z-A)</option>
-                        <option value="rating,desc" th:selected="${currentSort == 'rating,desc'}" th:text="#{notes.sort.rating_desc}">Rating (High to Low)</option>
-                        <option value="rating,asc" th:selected="${currentSort == 'rating,asc'}" th:text="#{notes.sort.rating_asc}">Rating (Low to High)</option>
-                        <option value="danceType.name,asc" th:selected="${currentSort == 'danceType.name,asc'}" th:text="#{notes.sort.style_asc}">Style (A-Z)</option>
-                        <option value="danceType.name,desc" th:selected="${currentSort == 'danceType.name,desc'}" th:text="#{notes.sort.style_desc}">Style (Z-A)</option>
-                        <option value="updatedAt,desc" th:selected="${currentSort == 'updatedAt,desc'}" th:text="#{notes.sort.recently_updated}">Recently Updated</option>
-                    </select>
+                <div class="flex flex-col gap-4 mt-4">
+                    <div th:replace="~{fragments/form :: filterSelect(name='sort', id='filterSortBy', label=#{notes.filter.sort_by}, optionsFragment=~{::materialSortOptions}, hxGet=@{/materials}, hxTarget='#materials-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
                 </div>
             </div>
         </form>
@@ -276,6 +244,27 @@
 </section>
 
 <!-- Extracted Components for Notes List and Related Section -->
+
+<th:block th:fragment="ratingOptions">
+    <option value="" th:selected="${selectedMinRating == null}" th:text="#{notes.filter.rating.any}">Any Rating</option>
+    <option value="5" th:selected="${selectedMinRating == 5}" th:text="#{notes.filter.rating.5}">★★★★★ (5 Stars)</option>
+    <option value="4" th:selected="${selectedMinRating == 4}" th:text="#{notes.filter.rating.4}">★★★★☆ (4+ Stars)</option>
+    <option value="3" th:selected="${selectedMinRating == 3}" th:text="#{notes.filter.rating.3}">★★★☆☆ (3+ Stars)</option>
+    <option value="2" th:selected="${selectedMinRating == 2}" th:text="#{notes.filter.rating.2}">★★☆☆☆ (2+ Stars)</option>
+    <option value="1" th:selected="${selectedMinRating == 1}" th:text="#{notes.filter.rating.1}">★☆☆☆☆ (1+ Star)</option>
+</th:block>
+
+<th:block th:fragment="materialSortOptions">
+    <option value="createdAt,desc" th:selected="${currentSort == 'createdAt,desc'}" th:text="#{notes.sort.newest}">Newest First</option>
+    <option value="createdAt,asc" th:selected="${currentSort == 'createdAt,asc'}" th:text="#{notes.sort.oldest}">Oldest First</option>
+    <option value="name,asc" th:selected="${currentSort == 'name,asc'}" th:text="#{notes.sort.name_asc}">Name (A-Z)</option>
+    <option value="name,desc" th:selected="${currentSort == 'name,desc'}" th:text="#{notes.sort.name_desc}">Name (Z-A)</option>
+    <option value="rating,desc" th:selected="${currentSort == 'rating,desc'}" th:text="#{notes.sort.rating_desc}">Rating (High to Low)</option>
+    <option value="rating,asc" th:selected="${currentSort == 'rating,asc'}" th:text="#{notes.sort.rating_asc}">Rating (Low to High)</option>
+    <option value="danceType.name,asc" th:selected="${currentSort == 'danceType.name,asc'}" th:text="#{notes.sort.style_asc}">Style (A-Z)</option>
+    <option value="danceType.name,desc" th:selected="${currentSort == 'danceType.name,desc'}" th:text="#{notes.sort.style_desc}">Style (Z-A)</option>
+    <option value="updatedAt,desc" th:selected="${currentSort == 'updatedAt,desc'}" th:text="#{notes.sort.recently_updated}">Recently Updated</option>
+</th:block>
 
 <th:block th:fragment="materialGridCard">
     <article th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},

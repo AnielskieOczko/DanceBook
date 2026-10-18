@@ -57,10 +57,10 @@
 
             <!--/* Month chips as same-page anchor links */-->
             <div class="flex flex-wrap items-center gap-2 mb-4" role="group" th:attr="aria-label=#{training.timeline.month_filter_label}">
-                <a href="#timeline-feed" class="badge b-secondary" th:text="#{training.timeline.all_months}">All</a>
+                <a href="#timeline-feed" class="badge badge-secondary" th:text="#{training.timeline.all_months}">All</a>
                 <a th:each="month : ${timeline.months}"
                    th:href="${'#month-' + #strings.toLowerCase(#strings.replace(month.label, ' ', '-'))}"
-                   class="badge b-secondary"
+                   class="badge badge-secondary"
                    th:text="${month.label}">November 2026</a>
             </div>
 

@@ -15,11 +15,15 @@
                 <h1 class="text-3xl font-headline-lg text-on-surface" th:text="${danceFigure.name}">Figure Name</h1>
                 <th:block th:if="${danceFigure.danceClass != null or danceFigure.medalLevel != null}">
                     <span class="inline-flex items-center gap-2">
-                        <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
+                        <th:block th:if="${danceFigure.danceClass != null}">
+                            <span th:replace="~{fragments/badge :: badge(label=${#messages.msg('figures.view.class_label', danceFigure.danceClass)}, variant='accent', cls='uppercase font-bold')}"></span>
+                        </th:block>
                         <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
                     </span>
                 </th:block>
-                <span th:if="${danceFigure.predefined}" class="badge bg-outline-variant/30 text-outline border border-outline-variant/50" th:text="#{figures.view.predefined}">Syllabus Predefined</span>
+                <th:block th:if="${danceFigure.predefined}">
+                    <span th:replace="~{fragments/badge :: badge(label=#{figures.view.predefined}, variant='neutral')}"></span>
+                </th:block>
             </div>
             <p class="text-on-surface-variant font-body-md" th:text="${danceFigure.danceType != null ? danceFigure.danceType.name : #messages.msg('figures.view.unknown_style')}">Dance Style</p>
         </div>
@@ -62,7 +66,9 @@
                     <div>
                         <span class="block text-xs font-bold text-outline uppercase tracking-wider mb-1" th:text="#{figures.view.field.minimum_level}">Minimum Level</span>
                         <div class="flex flex-wrap items-center gap-2">
-                            <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent uppercase font-bold" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class H</span>
+                            <th:block th:if="${danceFigure.danceClass != null}">
+                                <span th:replace="~{fragments/badge :: badge(label=${#messages.msg('figures.view.class_label', danceFigure.danceClass)}, variant='accent', cls='uppercase font-bold')}"></span>
+                            </th:block>
                             <span th:if="${danceFigure.danceClass == null}" class="text-on-surface-variant italic font-semibold" th:text="#{figures.view.class_none}">None (Social)</span>
                             <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true)}"></th:block>
                         </div>
@@ -101,10 +107,10 @@
                             <div class="flex justify-between items-center py-1">
                                 <span class="text-on-surface-variant" th:text="#{figures.view.field.starting_foot}">Starting Foot:</span>
                                 <div>
-                                    <span th:if="${danceFigure.startingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.startingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-1')}"></span> L
                                     </span>
-                                    <span th:if="${danceFigure.startingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.startingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-1')}"></span> R
                                     </span>
                                     <span th:if="${danceFigure.startingFootLeader != 'LF' && danceFigure.startingFootLeader != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootLeader ?: 'N/A'}">N/A</span>
@@ -113,10 +119,10 @@
                             <div class="flex justify-between items-center py-1">
                                 <span class="text-on-surface-variant" th:text="#{figures.view.field.ending_foot}">Ending Foot:</span>
                                 <div>
-                                    <span th:if="${danceFigure.endingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.endingFootLeader == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-1')}"></span> L
                                     </span>
-                                    <span th:if="${danceFigure.endingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.endingFootLeader == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-1')}"></span> R
                                     </span>
                                     <span th:if="${danceFigure.endingFootLeader != 'LF' && danceFigure.endingFootLeader != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootLeader ?: 'N/A'}">N/A</span>
@@ -133,10 +139,10 @@
                             <div class="flex justify-between items-center py-1">
                                 <span class="text-on-surface-variant" th:text="#{figures.view.field.starting_foot}">Starting Foot:</span>
                                 <div>
-                                    <span th:if="${danceFigure.startingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.startingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-1')}"></span> L
                                     </span>
-                                    <span th:if="${danceFigure.startingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.startingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-1')}"></span> R
                                     </span>
                                     <span th:if="${danceFigure.startingFootFollower != 'LF' && danceFigure.startingFootFollower != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.startingFootFollower ?: 'N/A'}">N/A</span>
@@ -145,10 +151,10 @@
                             <div class="flex justify-between items-center py-1">
                                 <span class="text-on-surface-variant" th:text="#{figures.view.field.ending_foot}">Ending Foot:</span>
                                 <div>
-                                    <span th:if="${danceFigure.endingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.endingFootFollower == 'LF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-1')}"></span> L
                                     </span>
-                                    <span th:if="${danceFigure.endingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                    <span th:if="${danceFigure.endingFootFollower == 'RF'}" class="inline-flex items-center gap-1 px-3 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                         <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-1')}"></span> R
                                     </span>
                                     <span th:if="${danceFigure.endingFootFollower != 'LF' && danceFigure.endingFootFollower != 'RF'}" class="font-medium text-on-surface uppercase" th:text="${danceFigure.endingFootFollower ?: 'N/A'}">N/A</span>
@@ -240,16 +246,16 @@
                                 <tr th:each="step : ${set.getLeaderSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
                                     <td class="py-4 px-3 text-center font-bold text-lg text-primary" th:text="${step.stepNumber}">1</td>
                                     <td class="py-4 px-3">
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
                                     </td>
                                     <td class="py-4 px-3">
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-0.5')}"></span> L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-0.5')}"></span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
@@ -257,7 +263,7 @@
                                     <td class="py-4 px-3 text-base text-on-surface font-medium" th:text="${step.action}">Step forward</td>
                                     <td class="py-4 px-3">
                                         <span th:if="${step.footwork != null && step.footwork != '' && step.footwork != '-'}" 
-                                              class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded text-on-surface uppercase" 
+                                              class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded-pill text-on-surface uppercase"
                                               th:text="${step.footwork}">HT</span>
                                         <span th:if="${step.footwork == null || step.footwork == '' || step.footwork == '-'}" 
                                               class="text-outline-variant font-bold text-sm">-</span>
@@ -293,18 +299,18 @@
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2.5 mb-2">
                                         <!-- Timing Badge -->
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
                                         <!-- Foot Badge -->
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-0.5')}"></span> L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-0.5')}"></span> R
                                         </span>
-                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border">
+                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm')}"></span>
                                             <span th:text="${step.foot}">-</span>
                                         </span>
@@ -365,16 +371,16 @@
                                 <tr th:each="step : ${set.getFollowerSteps()}" class="border-b border-border hover:bg-surface-container-low transition-colors">
                                     <td class="py-4 px-3 text-center font-bold text-lg text-primary" th:text="${step.stepNumber}">1</td>
                                     <td class="py-4 px-3">
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
                                     </td>
                                     <td class="py-4 px-3">
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-0.5')}"></span> L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-0.5')}"></span> R
                                         </span>
                                         <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="font-semibold text-on-surface" th:text="${step.foot ?: '-'}">-</span>
@@ -382,7 +388,7 @@
                                     <td class="py-4 px-3 text-base text-on-surface font-medium" th:text="${step.action}">Step back</td>
                                     <td class="py-4 px-3">
                                         <span th:if="${step.footwork != null && step.footwork != '' && step.footwork != '-'}" 
-                                              class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded text-on-surface uppercase" 
+                                              class="inline-flex items-center px-2.5 py-1 font-mono text-sm font-bold bg-surface-container border border-border rounded-pill text-on-surface uppercase"
                                               th:text="${step.footwork}">T</span>
                                         <span th:if="${step.footwork == null || step.footwork == '' || step.footwork == '-'}" 
                                               class="text-outline-variant font-bold text-sm">-</span>
@@ -418,18 +424,18 @@
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2.5 mb-2">
                                         <!-- Timing Badge -->
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
                                             <span th:text="${step.timing}">S</span>
                                         </span>
                                         <!-- Foot Badge -->
-                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'LF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-primary-fixed text-on-primary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='scale-x-[-1] mr-0.5')}"></span> L
                                         </span>
-                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded border border-border">
+                                        <span th:if="${step.foot == 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-secondary-fixed text-on-secondary-fixed rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm', filled=true, cls='mr-0.5')}"></span> R
                                         </span>
-                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded border border-border">
+                                        <span th:if="${step.foot != 'LF' && step.foot != 'RF'}" class="inline-flex items-center gap-1 px-2.5 py-1 text-sm font-bold bg-surface-container text-on-surface rounded-pill border border-border">
                                             <span th:replace="~{fragments/icon :: icon(name='footprint', size='sm')}"></span>
                                             <span th:text="${step.foot}">-</span>
                                         </span>

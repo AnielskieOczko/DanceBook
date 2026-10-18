@@ -25,12 +25,12 @@
     <article class="space-y-4">
         <!-- Tags: plain sentence-case chips -->
         <div class="flex flex-wrap items-center gap-2 text-xs text-on-surface-variant">
-            <span th:if="${material.danceType != null}"
-                  class="px-2 py-0.5 bg-surface-container rounded"
-                  th:text="${material.danceType.name}">Style</span>
-            <span th:if="${material.danceType != null and material.danceType.category != null}"
-                  class="px-2 py-0.5 bg-surface-container rounded"
-                  th:text="${material.danceType.category.name}">Category</span>
+            <th:block th:if="${material.danceType != null}">
+                <span th:replace="~{fragments/badge :: badge(label=${material.danceType.name}, variant='neutral')}"></span>
+            </th:block>
+            <th:block th:if="${material.danceType != null and material.danceType.category != null}">
+                <span th:replace="~{fragments/badge :: badge(label=${material.danceType.category.name}, variant='neutral')}"></span>
+            </th:block>
             <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
         </div>
 
@@ -98,19 +98,19 @@
                     <span th:if="${f.danceFigure == null}" class="font-body-md text-on-surface font-medium block line-clamp-2 break-words" th:text="${f.name}">Figure Name</span>
 
                     <!-- Metadata chips: Style, Class, Alternative Timing (only if present) -->
-                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-label-sm">
+                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
                         <!-- Dance Style -->
-                        <span th:if="${f.danceFigure?.danceType != null}"
-                              class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
-                              th:text="${f.danceFigure.danceType.name}">Style</span>
+                        <th:block th:if="${f.danceFigure?.danceType != null}">
+                            <span th:replace="~{fragments/badge :: badge(label=${f.danceFigure.danceType.name}, variant='neutral')}"></span>
+                        </th:block>
                         <!-- Dance Class -->
-                        <span th:if="${f.danceFigure?.danceClass != null}"
-                              class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-surface font-label-sm text-[11px] font-medium"
-                              th:text="#{notes.figures.class(${f.danceFigure.danceClass})}">Class H</span>
+                        <th:block th:if="${f.danceFigure?.danceClass != null}">
+                            <span th:replace="~{fragments/badge :: badge(label=#{notes.figures.class(${f.danceFigure.danceClass})}, variant='secondary')}"></span>
+                        </th:block>
                         <!-- Alternative Timing (only if present and not empty/blank) -->
-                        <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}"
-                              class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[11px]"
-                              th:text="${f.danceFigure.alternativeTiming.trim()}">12&amp;3</span>
+                        <th:block th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}">
+                            <span th:replace="~{fragments/badge :: badge(label=${f.danceFigure.alternativeTiming.trim()}, variant='neutral')}"></span>
+                        </th:block>
                     </div>
                 </div>
 

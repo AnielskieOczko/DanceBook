@@ -29,13 +29,7 @@
             <input type="hidden" name="awaitingConfirmation" th:if="${selectedAwaitingConfirmation}" value="true">
 
             <div class="flex items-center gap-2 md:flex-1">
-                <div class="relative flex-1 group">
-                    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
-                    <input type="search" name="search" th:value="${search}" placeholder="Search sessions..." th:placeholder="#{training.list.search_placeholder}"
-                           class="form-input pl-12 flex-1"
-                           th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                           hx-include="#filterForm" hx-trigger="keyup changed delay:300ms">
-                </div>
+                <div th:replace="~{fragments/form :: searchField(name='search', value=${search}, placeholder=#{training.list.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                 <button type="button" class="js-toggle btn-outline md:hidden shrink-0 relative"
                         data-toggle-target="#filterFields" aria-label="Show filters"
@@ -50,29 +44,11 @@
             </div>
 
             <div id="filterFields" class="hidden md:flex flex-col md:flex-row gap-3">
-                <select name="eventTypes" class="form-select md:w-48"
-                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                        hx-include="#filterForm">
-                    <option value="" th:text="#{training.list.all_types}">All types</option>
-                    <option th:each="type : ${eventTypeOptions}" th:value="${type}" th:text="${#messages.msg('enum.training_event_type.' + type.name())}"
-                            th:selected="${selectedEventTypes != null && selectedEventTypes.contains(type)}">TRAINING</option>
-                </select>
+                <div th:replace="~{fragments/form :: filterSelect(name='eventTypes', cls='md:w-48', placeholder=#{training.list.all_types}, options=${eventTypeOptions}, msgPrefix='enum.training_event_type.', selectedValues=${selectedEventTypes}, hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
-                <select name="attendanceStatuses" class="form-select md:w-48"
-                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                        hx-include="#filterForm">
-                    <option value="" th:text="#{training.list.all_statuses}">All statuses</option>
-                    <option th:each="status : ${attendanceStatusOptions}" th:value="${status}" th:text="${#messages.msg('enum.attendance_status.' + status.name())}"
-                            th:selected="${selectedStatuses != null && selectedStatuses.contains(status)}">PLANNED</option>
-                </select>
+                <div th:replace="~{fragments/form :: filterSelect(name='attendanceStatuses', cls='md:w-48', placeholder=#{training.list.all_statuses}, options=${attendanceStatusOptions}, msgPrefix='enum.attendance_status.', selectedValues=${selectedStatuses}, hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
-                <select name="categoryIds" class="form-select md:w-48"
-                        th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
-                        hx-include="#filterForm">
-                    <option value="" th:text="#{training.list.all_styles}">All styles</option>
-                    <option th:each="category : ${danceCategories}" th:value="${category.id}" th:text="${category.name}"
-                            th:selected="${selectedCategoryIds != null && selectedCategoryIds.contains(category.id)}">Standard</option>
-                </select>
+                <div th:replace="~{fragments/form :: filterSelect(name='categoryIds', cls='md:w-48', placeholder=#{training.list.all_styles}, options=${danceCategories}, optValue='id', optLabel='name', selectedValues=${selectedCategoryIds}, hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
             </div>
         </form>
     </div>

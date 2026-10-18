@@ -12,28 +12,22 @@
         <form id="filterForm" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
             <!-- Top Row: Search + Filter Toggle + View Toggle -->
             <div class="flex items-center gap-3">
-                <div class="relative flex-1 group">
-                    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
-                    <input type="text" name="nameSearch" th:value="${selectedNameSearch}"
-                           class="w-full bg-surface-container border border-transparent focus:ring-0 focus:border-primary-container rounded-lg py-2 pl-[38px] pr-3 text-body-md text-on-surface placeholder:text-on-surface-variant transition-colors outline-hidden"
-                           placeholder="Search by name..." th:placeholder="#{figures.list.search_placeholder}"
-                           hx-trigger="keyup changed delay:300ms" th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                </div>
+                <div th:replace="~{fragments/form :: searchField(name='nameSearch', value=${selectedNameSearch}, placeholder=#{figures.list.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                 <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors h-[42px]">
+                <button type="button" class="js-filter-toggle flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
                     <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none" th:text="#{figures.list.filters}">Filters</span>
                 </button>
 
                 <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view" th:attr="aria-label=#{figures.list.view_list}"
                                th:checked="${currentView == 'list' || currentView == null}"
                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
@@ -42,7 +36,7 @@
                                aria-label="Grid view" th:attr="aria-label=#{figures.list.view_grid}"
                                th:checked="${currentView == 'grid'}"
                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
@@ -91,61 +85,19 @@
                     </div>
 
                     <!-- Dancer Class filter -->
-                    <div class="flex flex-col gap-1">
-                        <label for="filterDanceClass" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.dancer_class}">Dancer Class</label>
-                        <select name="danceClass" id="filterDanceClass" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                            <option value="" th:text="#{figures.list.all_classes}">All Classes</option>
-                            <option th:each="dc : ${danceClasses}" th:value="${dc}" th:text="${#messages.msg('enum.dance_class.' + dc.name())}" th:selected="${dc == selectedDanceClass}">
-                                H
-                            </option>
-                        </select>
-                    </div>
+                    <div th:replace="~{fragments/form :: filterSelect(name='danceClass', id='filterDanceClass', label=#{figures.list.dancer_class}, options=${danceClasses}, msgPrefix='enum.dance_class.', placeholder=#{figures.list.all_classes}, value=${selectedDanceClass}, hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                     <!-- Medal Level filter -->
-                    <div class="flex flex-col gap-1">
-                        <label for="filterMedalLevel" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.medal_level}">Medal Level</label>
-                        <select name="medalLevel" id="filterMedalLevel" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                            <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
-                            <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}" th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}" th:selected="${ml == selectedMedalLevel}">
-                                Bronze
-                            </option>
-                        </select>
-                    </div>
+                    <div th:replace="~{fragments/form :: filterSelect(name='medalLevel', id='filterMedalLevel', label=#{figures.list.medal_level}, optionsFragment=~{::figureMedalOptions}, hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
                 </div>
 
                 <!-- Column 3: Sorting & Steps -->
                 <div class="flex flex-col gap-4 mt-4">
                     <!-- Sorting -->
-                    <div class="flex flex-col gap-1">
-                        <label for="filterSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.sort_by}">Sort By</label>
-                        <select name="sortBy" id="filterSortBy" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                            <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}" th:text="#{figures.list.sort.default}">Default (Style &amp; Name)</option>
-                            <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}" th:text="#{figures.list.sort.name_asc}">Name (A-Z)</option>
-                            <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}" th:text="#{figures.list.sort.name_desc}">Name (Z-A)</option>
-                            <option value="style_asc" th:selected="${selectedSortBy == 'style_asc'}" th:text="#{figures.list.sort.style_asc}">Style (A-Z)</option>
-                            <option value="style_desc" th:selected="${selectedSortBy == 'style_desc'}" th:text="#{figures.list.sort.style_desc}">Style (Z-A)</option>
-                            <option value="class_asc" th:selected="${selectedSortBy == 'class_asc'}" th:text="#{figures.list.sort.class_asc}">Class (H to S)</option>
-                            <option value="class_desc" th:selected="${selectedSortBy == 'class_desc'}" th:text="#{figures.list.sort.class_desc}">Class (S to H)</option>
-                        </select>
-                    </div>
+                    <div th:replace="~{fragments/form :: filterSelect(name='sortBy', id='filterSortBy', label=#{figures.list.sort_by}, optionsFragment=~{::figureSortOptions}, hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                     <!-- Steps Filter -->
-                    <div class="flex flex-col gap-1">
-                        <label for="filterHasSteps" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.steps_syllabus}">Steps Syllabus</label>
-                        <select name="hasSteps" id="filterHasSteps" 
-                                class="px-4 py-2 rounded-lg bg-surface border border-outline-variant/30 text-on-surface font-body-md focus:border-primary focus:outline-hidden w-full"
-                                th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                            <option value="" th:selected="${selectedHasSteps == null}" th:text="#{figures.list.steps.all}">All Figures</option>
-                            <option value="true" th:selected="${selectedHasSteps == true}" th:text="#{figures.list.steps.with_steps}">With Steps Only</option>
-                            <option value="false" th:selected="${selectedHasSteps == false}" th:text="#{figures.list.steps.without_steps}">Without Steps Only</option>
-                        </select>
-                    </div>
+                    <div th:replace="~{fragments/form :: filterSelect(name='hasSteps', id='filterHasSteps', label=#{figures.list.steps_syllabus}, optionsFragment=~{::figureStepsOptions}, hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
                 </div>
             </div>
         </form>
@@ -297,6 +249,29 @@
 </section>
 
 <!-- Extracted Components for Figures List and Related Section -->
+
+<th:block th:fragment="figureMedalOptions">
+    <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
+    <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}" th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}" th:selected="${ml == selectedMedalLevel}">
+        Bronze
+    </option>
+</th:block>
+
+<th:block th:fragment="figureSortOptions">
+    <option value="" th:selected="${selectedSortBy == null || selectedSortBy == ''}" th:text="#{figures.list.sort.default}">Default (Style &amp; Name)</option>
+    <option value="name_asc" th:selected="${selectedSortBy == 'name_asc'}" th:text="#{figures.list.sort.name_asc}">Name (A-Z)</option>
+    <option value="name_desc" th:selected="${selectedSortBy == 'name_desc'}" th:text="#{figures.list.sort.name_desc}">Name (Z-A)</option>
+    <option value="style_asc" th:selected="${selectedSortBy == 'style_asc'}" th:text="#{figures.list.sort.style_asc}">Style (A-Z)</option>
+    <option value="style_desc" th:selected="${selectedSortBy == 'style_desc'}" th:text="#{figures.list.sort.style_desc}">Style (Z-A)</option>
+    <option value="class_asc" th:selected="${selectedSortBy == 'class_asc'}" th:text="#{figures.list.sort.class_asc}">Class (H to S)</option>
+    <option value="class_desc" th:selected="${selectedSortBy == 'class_desc'}" th:text="#{figures.list.sort.class_desc}">Class (S to H)</option>
+</th:block>
+
+<th:block th:fragment="figureStepsOptions">
+    <option value="" th:selected="${selectedHasSteps == null}" th:text="#{figures.list.steps.all}">All Figures</option>
+    <option value="true" th:selected="${selectedHasSteps == true}" th:text="#{figures.list.steps.with_steps}">With Steps Only</option>
+    <option value="false" th:selected="${selectedHasSteps == false}" th:text="#{figures.list.steps.without_steps}">Without Steps Only</option>
+</th:block>
 
 <th:block th:fragment="figureGridCard">
     <article th:with="catName=${f.danceType != null && f.danceType.category != null ? f.danceType.category.name : 'Unknown'},
@@ -459,7 +434,6 @@
             </button>
         </th>
         <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{figures.table.steps}">Steps</th>
-        <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{figures.table.source}">Source</th>
         <th scope="col" class="table-cell text-right whitespace-nowrap" th:text="#{figures.table.actions}">Actions</th>
     </tr>
 </thead>
@@ -492,11 +466,7 @@
         </th:block>
         <span th:if="${figuresWithSteps == null or !#sets.contains(figuresWithSteps, f.id)}" class="text-on-surface-variant font-bold text-sm">-</span>
     </td>
-    <!-- 5. Source (predefined or custom) -->
-    <td class="table-cell whitespace-nowrap">
-        <span th:replace="~{fragments/badge :: badge(label=(${f.predefined} ? #{figures.source.predefined} : #{figures.source.custom}), variant=(${f.predefined} ? 'neutral' : 'primary'))}"></span>
-    </td>
-    <!-- 6. Actions -->
+    <!-- 5. Actions -->
     <td class="table-cell text-right whitespace-nowrap">
         <div class="inline-flex items-center gap-1.5 justify-end">
             <th:block th:replace="~{fragments/button :: iconButton(icon='edit', label=#{figures.action.edit}, href=@{/dance-figures/{id}/edit(id=${f.id})})}"></th:block>

@@ -17,22 +17,15 @@
             <!-- Medal filter + View Toggle -->
             <form id="viewToggleForm" class="flex items-center gap-3" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="change" hx-push-url="false">
                 <div class="flex items-center gap-2">
-                    <label for="filterMedalLevel" class="sr-only" th:text="#{figures.list.medal_level}">Medal Level</label>
-                    <select name="medalLevel" id="filterMedalLevel"
-                            class="px-3 py-2 min-h-[42px] rounded-lg bg-surface border border-outline-variant/30 text-on-surface text-label-sm font-label-sm focus:border-primary focus:outline-hidden">
-                        <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
-                        <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
-                                th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}"
-                                th:selected="${ml == selectedMedalLevel}">Bronze</option>
-                    </select>
+                    <div th:replace="~{fragments/form :: filterSelect(name='medalLevel', id='filterMedalLevel', ariaLabel=#{figures.list.medal_level}, optionsFragment=~{::choreoMedalOptions}, hxGet=@{/choreographies}, hxTarget='#choreographies-list', hxSwap='outerHTML')}"></div>
                 </div>
-                <div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant/30 h-[42px] items-center">
+                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view"
                                th:attr="aria-label=#{common.view_list}"
                                th:checked="${currentView == 'list' || currentView == null}">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
@@ -41,7 +34,7 @@
                                aria-label="Grid view"
                                th:attr="aria-label=#{common.view_grid}"
                                th:checked="${currentView == 'grid'}">
-                        <div class="px-2.5 py-1 rounded-md flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
+                        <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
@@ -194,4 +187,10 @@
     </div>
 
 </section>
+<th:block th:fragment="choreoMedalOptions">
+    <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
+    <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
+            th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}"
+            th:selected="${ml == selectedMedalLevel}">Bronze</option>
+</th:block>
 </html>

@@ -239,5 +239,47 @@
     <p th:if="${hint != null}" class="form-hint" th:text="${hint}">Hint</p>
 </div>
 
+<!-- Search Input Field (List toolbar and picker dialogs) -->
+<div th:fragment="searchField" class="relative flex-1 group" th:classappend="${cls}">
+    <span th:replace="~{fragments/icon :: icon(name='search', size='md', cls='absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors')}"></span>
+    <input th:id="${id ?: (name ?: 'search')}"
+           th:name="${name ?: 'search'}"
+           th:value="${value}"
+           th:type="${type ?: 'search'}"
+           th:placeholder="${placeholder}"
+           th:aria-label="${ariaLabel ?: placeholder}"
+           autocomplete="off"
+           class="pill-input pl-11"
+           th:classappend="${inputCls}"
+           th:attr="hx-get=${hxGet},hx-target=${hxTarget},hx-swap=${hxSwap},hx-include=${hxInclude},hx-trigger=${hxTrigger}" />
+</div>
+
+<!-- Filter Select Dropdown (List toolbar and collapsible filters) -->
+<div th:fragment="filterSelect" th:class="${label != null ? 'flex flex-col gap-1' + (cls != null ? ' ' + cls : '') : (cls ?: '')}">
+    <label th:if="${label != null}"
+           th:for="${id ?: name}"
+           class="text-label-sm font-label-sm text-outline uppercase tracking-wider"
+           th:classappend="${labelCls}"
+           th:text="${label}">Label</label>
+    <select th:id="${id ?: name}"
+            th:name="${name}"
+            th:aria-label="${label == null ? (ariaLabel ?: placeholder) : null}"
+            th:disabled="${disabled == true}"
+            class="pill-select w-full"
+            th:classappend="${selectCls}"
+            th:attr="hx-get=${hxGet},hx-target=${hxTarget},hx-swap=${hxSwap},hx-include=${hxInclude},hx-trigger=${hxTrigger}">
+        <th:block th:if="${optionsFragment != null}">
+            <th:block th:replace="${optionsFragment}"></th:block>
+        </th:block>
+        <th:block th:if="${optionsFragment == null}">
+            <option th:if="${placeholder != null}" th:value="${placeholderValue ?: ''}" th:text="${placeholder}">All...</option>
+            <option th:each="opt : ${options}"
+                    th:value="${optValue != null ? opt[optValue] : opt}"
+                    th:text="${msgPrefix != null ? #messages.msg(msgPrefix + opt.toString()) : (optLabel != null ? opt[optLabel] : opt)}"
+                    th:selected="${selectedValues != null ? #lists.contains(selectedValues, (optValue != null ? opt[optValue] : opt)) : (value != null and ((optValue != null ? opt[optValue] : opt).toString() == value.toString()))}">Option</option>
+        </th:block>
+    </select>
+</div>
+
 </body>
 </html>
