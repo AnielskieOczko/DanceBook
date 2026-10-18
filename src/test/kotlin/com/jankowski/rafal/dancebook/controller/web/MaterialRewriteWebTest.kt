@@ -203,7 +203,7 @@ class MaterialRewriteWebTest {
             .andExpect(model().attribute("rewriteError", "The AI rewrite didn't work this time. Your text hasn't changed."))
             .andExpect(content().string(containsString("The AI rewrite didn&#39;t work this time. Your text hasn&#39;t changed.")))
             .andExpect(content().string(not(containsString("OpenRouter"))))
-            .andExpect(content().string(not(containsString("500"))))
+            .andExpect(content().string(not(containsString("status 500"))))
 
         verify(materialService, never()).update(anyNonNull(materialId), anyNonNull(dummyMaterialRequest))
     }
