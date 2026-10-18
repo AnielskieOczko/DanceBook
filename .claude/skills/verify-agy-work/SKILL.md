@@ -76,6 +76,18 @@ judgement call.
 (`test -f ../DanceBook-agy-<N>/.agents/hooks.json`) — an old clone has no gate, and
 re-cloning is cheaper than diagnosing the run.
 
+**Never run two `--rerun-tasks` builds at once.** Two clones building together (or a clone beside
+the main repo) ran the Kotlin compiler out of heap in both (`OutOfMemoryError: Java heap space`
+inside `compileTestKotlin`, reported against a file neither run had touched), and both builds
+failed for a reason that has nothing to do with the code. Run them one after the other, and
+`./gradlew --stop` first if a daemon is left over from agy's run. Confirm a failure is real
+before sending it back as a fix round.
+
+Before opening the PR, drive the running app (`run-dancebook`) for any UI issue. On #39 the
+tests and a green build both missed a leftover placeholder chip that the approved mock said
+should not exist; only looking at the page found it. Check the mock's "not to build" list
+against the screenshots, not only the "to build" list.
+
 Prefer `./gradlew test --tests "*TheNewTest*" --rerun-tasks` first for a fast signal, then
 the full build before opening the PR.
 
