@@ -157,7 +157,7 @@ class MaterialLocaleWebTest {
     @Test
     fun `notes list page renders in Polish when user locale is pl`() {
         testUser.locale = "pl"
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
             .thenReturn(PageImpl(emptyList()))
 
         val result = mockMvc.perform(
@@ -211,7 +211,7 @@ class MaterialLocaleWebTest {
             danceType = this@MaterialLocaleWebTest.danceType
             rating = 4
         }
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
             .thenReturn(PageImpl(listOf(sample)))
         `when`(materialService.findFigureCounts(anyNonNull(emptyList()))).thenReturn(emptyMap())
 
@@ -234,7 +234,7 @@ class MaterialLocaleWebTest {
     @Test
     fun `notes list page renders in English when user locale is en`() {
         testUser.locale = "en"
-        `when`(materialService.findAll(any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
+        `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(org.springframework.data.domain.Pageable.unpaged())))
             .thenReturn(PageImpl(emptyList()))
 
         val result = mockMvc.perform(

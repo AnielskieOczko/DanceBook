@@ -73,7 +73,8 @@ object MaterialSpecification {
         typeIds: List<UUID>? = null,
         categoryIds: List<UUID>? = null,
         minRating: Short? = null,
-        nameSearch: String? = null
+        nameSearch: String? = null,
+        textSearch: String? = null
     ): Specification<Material> {
         return Specification { root, _, cb ->
             val predicates = mutableListOf<Predicate>()
@@ -94,7 +95,24 @@ object MaterialSpecification {
                 predicates.add(cb.like(cb.lower(root.get("name")), "%${nameSearch.lowercase()}%"))
             }
 
+            if (!textSearch.isNullOrBlank()) {
+                predicates.addAll(textSearchPredicates(cb, root, textSearch))
+            }
+
             if (predicates.isEmpty()) cb.conjunction() else cb.and(*predicates.toTypedArray())
+        }
+    }
+
+    /**
+     * Predicates matching every word of [query] across a note's title and text (up to 6 terms).
+     */
+    fun textSearchPredicates(cb: CriteriaBuilder, root: From<*, Material>, query: String?): List<Predicate> {
+        return query.orEmpty().lowercase().split(Regex("\\s+")).filter { it.isNotBlank() }.take(6).map { term ->
+            val like = "%" + term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
+            cb.or(
+                cb.like(cb.lower(root.get("name")), like, '\\'),
+                cb.like(cb.lower(cb.coalesce(root.get<String>("description"), "")), like, '\\')
+            )
         }
     }
 
@@ -106,16 +124,7 @@ object MaterialSpecification {
     fun textSearch(query: String?, figureId: UUID?, danceTypeId: UUID?): Specification<Material> {
         return Specification { root, criteria, cb ->
             val predicates = mutableListOf<Predicate>()
-
-            query.orEmpty().lowercase().split(Regex("\\s+")).filter { it.isNotBlank() }.take(6).forEach { term ->
-                val like = "%" + term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
-                predicates.add(
-                    cb.or(
-                        cb.like(cb.lower(root.get("name")), like, '\\'),
-                        cb.like(cb.lower(cb.coalesce(root.get<String>("description"), "")), like, '\\')
-                    )
-                )
-            }
+            predicates.addAll(textSearchPredicates(cb, root, query))
 
             danceTypeId?.let {
                 predicates.add(cb.equal(root.get<DanceType>("danceType").get<UUID>("id"), it))
@@ -144,8 +153,9 @@ object MaterialSpecification {
         typeIds: List<UUID>? = null,
         categoryIds: List<UUID>? = null,
         minRating: Short? = null,
-        nameSearch: String? = null
+        nameSearch: String? = null,
+        textSearch: String? = null
     ): Specification<Material> {
-        return visibleTo(user).and(filterCriteria(typeIds, categoryIds, minRating, nameSearch))
+        return visibleTo(user).and(filterCriteria(typeIds, categoryIds, minRating, nameSearch, textSearch))
     }
 }

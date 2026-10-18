@@ -190,9 +190,20 @@ class MaterialServiceImpl(
         nameSearch: String?,
         pageable: Pageable
     ): Page<Material> {
-        log.debug("Retrieving all materials with filters: typeIds={}, categoryIds={}, minRating={}, nameSearch={}", typeIds, categoryIds, minRating, nameSearch)
+        return findAll(typeIds, categoryIds, minRating, nameSearch, null, pageable)
+    }
+
+    override fun findAll(
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        nameSearch: String?,
+        textSearch: String?,
+        pageable: Pageable
+    ): Page<Material> {
+        log.debug("Retrieving all materials with filters: typeIds={}, categoryIds={}, minRating={}, nameSearch={}, textSearch={}", typeIds, categoryIds, minRating, nameSearch, textSearch)
         val currentUser = appUserService.getCurrentUserOrNull()
-        val spec = MaterialSpecification.withFilters(currentUser, typeIds, categoryIds, minRating, nameSearch)
+        val spec = MaterialSpecification.withFilters(currentUser, typeIds, categoryIds, minRating, nameSearch, textSearch)
         return materialRepository.findAll(spec, pageable)
     }
 
