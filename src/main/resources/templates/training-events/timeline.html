@@ -40,26 +40,17 @@
                 <div th:replace="~{fragments/card :: statCard(value=${stats.counts.unconfirmed}, label=#{training.timeline.stats.to_confirm}, caption=#{training.timeline.stats.upcoming_caption(${stats.counts.upcoming})})}"></div>
             </div>
 
-            <!--/* Badge slots (#35, #39) */-->
-            <th:block th:if="${showStreaksAndBadges}">
-            <div class="slots flex flex-wrap gap-2 items-center mb-4" role="group" th:attr="aria-label=#{training.timeline.badge_slot}">
-                <span class="slot tc-slot tc-slot-bronze">
-                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
-                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
-                    </i>
-                    <span th:text="#{training.timeline.slot_streak}">Badge slot · streak 10</span>
-                </span>
-                <span class="slot tc-slot tc-slot-silver">
-                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
-                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
-                    </i>
-                    <span th:text="#{training.timeline.slot_sessions}">Badge slot · 25 sessions</span>
-                </span>
-                <span class="slot tc-slot tc-slot-gold">
-                    <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
-                        <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
-                    </i>
-                    <span th:text="#{training.timeline.slot_hours}">Badge slot · 100 hours</span>
+            <!--/* Earned badges (#35, #39) */-->
+            <th:block th:if="${showStreaksAndBadges and timeline.earnedBadges != null and !timeline.earnedBadges.isEmpty()}">
+            <div class="slots flex flex-wrap gap-2 items-center mb-4" role="group" th:attr="aria-label=#{training.timeline.badges_aria}">
+                <span th:each="chip : ${timeline.earnedBadges}" class="badge-chip">
+                    <span class="medallion sm"
+                          th:classappend="${chip.badgeType.tier.cssClass + (chip.badgeType.isIconOnly ? ' icon-only' : '')}"
+                          aria-hidden="true">
+                        <span th:replace="~{fragments/icon :: icon(name=${chip.badgeType.icon}, size='sm', title=null)}"></span>
+                    </span>
+                    <span th:text="#{${chip.badgeType.nameKey}}">Streak of 10</span>
+                    <span th:if="${chip.repeatCount > 1}" class="chip-count" th:text="'×' + ${chip.repeatCount}">×2</span>
                 </span>
             </div>
             </th:block>
@@ -164,18 +155,12 @@
                                     <span th:if="${entry.todayFormatted != null}" class="font-normal normal-case text-on-surface-variant"> · <span th:text="${entry.todayFormatted}">Sun 11 Oct</span></span>
                                 </div>
 
-                                <!--/* Streak marker with badge slot */-->
+                                <!--/* Streak marker */-->
                                 <div th:if="${showStreaksAndBadges and (entry.activeStreak ?: entry.streakMilestone) != null}" class="tc-streak my-2">
                                     <span th:replace="~{fragments/icon :: icon(name='local_fire_department', cls='icon-filled text-primary shrink-0')}"></span>
                                     <div class="flex-1 min-w-0">
                                         <div th:text="#{training.timeline.streak_in_a_row(${entry.activeStreak ?: entry.streakMilestone})}">5 sessions in a row</div>
                                         <small class="block font-normal text-on-surface-variant text-xs" th:text="#{training.timeline.streak_reached(${entry.streakReachedDate})}">Streak reached on Sun 11 Oct</small>
-                                    </div>
-                                    <div class="tc-slot" th:classappend="${entry.streakTier == 'bronze' ? 'tc-slot-bronze' : (entry.streakTier == 'silver' ? 'tc-slot-silver' : (entry.streakTier == 'gold' ? 'tc-slot-gold' : ''))}">
-                                        <i class="w-5 h-5 rounded-full border-[1.5px] border-dashed border-current grid place-items-center not-italic">
-                                            <span th:replace="~{fragments/icon :: icon(name='workspace_premium', size='sm')}"></span>
-                                        </i>
-                                        <span th:text="#{training.timeline.badge_slot}">Badge slot</span>
                                     </div>
                                 </div>
 
@@ -254,6 +239,22 @@
                                             <span th:replace="~{fragments/badge :: attendanceBadge(status=${event.attendanceFor(currentUser)}, unconfirmed=${event.isAwaitingConfirmationFor(currentUser)})}"></span>
                                             <span class="badge-neutral" th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
                                         </div>
+
+                                        <!--/* Earned badges on this session (#39) */-->
+                                        <th:block th:if="${showStreaksAndBadges and entry.earnedBadges != null and !entry.earnedBadges.isEmpty()}">
+                                            <div th:each="earnedBadge : ${entry.earnedBadges}" class="session-badge-line">
+                                                <span class="medallion sm"
+                                                      th:classappend="${earnedBadge.tier.cssClass + (earnedBadge.isIconOnly ? ' icon-only' : '')}"
+                                                      aria-hidden="true">
+                                                    <span th:replace="~{fragments/icon :: icon(name=${earnedBadge.icon}, size='sm', title=null)}"></span>
+                                                </span>
+                                                <div class="min-w-0">
+                                                    <b th:text="#{training.timeline.badge_earned_on_session(#{${earnedBadge.nameKey}})}">Earned “Streak of 10”</b>
+                                                    <span class="sub"> · </span>
+                                                    <span class="sub" th:text="#{${earnedBadge.descKey}}">10 attended sessions in a row</span>
+                                                </div>
+                                            </div>
+                                        </th:block>
 
                                         <!--/* Quick Attendance confirmation actions for unconfirmed sessions */-->
                                         <div th:if="${event.isAwaitingConfirmationFor(currentUser)}" class="flex flex-wrap gap-2 pt-1">

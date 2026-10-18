@@ -77,10 +77,10 @@ class TrainingStatsServiceImpl(
 
         return TrainingStats(
             period = period,
-            totalMinutesTrained = attended.sumOf { it.durationMinutes.toLong() },
+            totalMinutesTrained = TrainingStatsService.totalAttendedMinutes(attended),
             counts = counts,
             attendanceRatePercent = attendanceRate(counts),
-            currentStreak = if (showStreaks) currentStreak(allRecords) else 0,
+            currentStreak = if (showStreaks) TrainingStatsService.currentStreak(allRecords) else 0,
             byCategory = categoryBreakdown(attended),
             byEventType = eventTypeBreakdown(attended)
         )
@@ -126,27 +126,6 @@ class TrainingStatsServiceImpl(
         val decided = counts.attended + counts.skipped
         if (decided == 0) return null
         return (counts.attended * 100.0 / decided).roundToInt()
-    }
-
-    /**
-     * Consecutive attended sessions counting back from the most recent.
-     *
-     * Records hold only confirmed outcomes, so this is now exactly what it claims to be: there
-     * is no cancelled or unconfirmed session to step over, because neither is history. Only a
-     * skip ends the run.
-     *
-     * Walks the user's whole history rather than the selected period: a streak cut off at a
-     * window boundary would report a number that is not the user's streak.
-     */
-    private fun currentStreak(allRecords: List<TrainingRecord>): Int {
-        var streak = 0
-        for (record in allRecords.sortedByDescending { it.occurredAt }) {
-            when (record.outcome) {
-                TrainingOutcome.ATTENDED -> streak++
-                TrainingOutcome.SKIPPED -> return streak
-            }
-        }
-        return streak
     }
 
     /**

@@ -1964,3 +1964,197 @@ body:has(dialog[open]) .goto {
   visibility: visible;
 }
 
+/* ── Training badges & medallions (Direction A, #39) ── */
+.medallion {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  line-height: 1;
+  gap: 1px;
+  border: 1.5px solid currentColor;
+  user-select: none;
+}
+
+.medallion .material-symbols-outlined {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.medallion.icon-only .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.medallion .num {
+  font-size: 10px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.medallion.bronze {
+  background-color: var(--color-bronze-soft);
+  color: var(--color-bronze);
+  border-color: color-mix(in srgb, var(--color-bronze) 45%, transparent);
+}
+
+.medallion.silver {
+  background-color: var(--color-silver-soft);
+  color: var(--color-silver);
+  border-color: color-mix(in srgb, var(--color-silver) 45%, transparent);
+}
+
+.medallion.gold {
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+}
+
+.medallion.ink {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+}
+
+.medallion.next {
+  background-color: var(--color-surface-container);
+  color: var(--color-outline);
+  border: 1.5px dashed var(--color-outline);
+}
+
+.medallion.sm {
+  width: 24px;
+  height: 24px;
+  flex-direction: row;
+  gap: 0;
+}
+
+.medallion.sm .material-symbols-outlined {
+  font-size: 13px;
+}
+
+.medallion.sm.icon-only .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.medallion.sm .num {
+  display: none;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 12px;
+  background-color: var(--color-surface);
+  min-width: 0;
+}
+
+.badge-card.next {
+  border-style: dashed;
+  background-color: transparent;
+}
+
+.badge-card .meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.badge-card .name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--color-on-surface);
+}
+
+.badge-card.next .name {
+  color: var(--color-on-surface-variant);
+}
+
+.badge-card .sub {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-on-surface-variant);
+}
+
+.badge-card .count-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 6px;
+  min-height: 18px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface-variant);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-prog {
+  height: 4px;
+  border-radius: 4px;
+  background-color: var(--color-surface-container-highest);
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.badge-prog i {
+  display: block;
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: 4px;
+}
+
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 3px 12px 3px 5px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-outline-variant);
+  background-color: var(--color-surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.badge-chip .chip-count {
+  color: var(--color-on-surface-variant);
+  font-weight: 600;
+}
+
+.session-badge-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background-color: var(--color-surface-container);
+  font-size: 12px;
+  color: var(--color-on-surface);
+}
+
+.session-badge-line b {
+  font-weight: 600;
+}
+
+.session-badge-line .sub {
+  color: var(--color-on-surface-variant);
+}

@@ -230,4 +230,25 @@ class NotificationLocaleWebTest {
             .andExpect(content().string(not(containsString("Oznacz wszystkie jako przeczytane"))))
             .andExpect(content().string(not(containsString("Zobacz całą aktywność"))))
     }
+
+    @Test
+    fun `badge earned notification renders medallion title description and profile link in English and Polish`() {
+        val badgeEvent = createEvent(EventType.BADGE_EARNED, TargetType.BADGE, "STREAK_10")
+        `when`(activityEventService.getUnreadEvents(currentUser.id!!)).thenReturn(listOf(badgeEvent))
+        `when`(activityEventService.getUnreadCount(currentUser.id!!)).thenReturn(1L)
+
+        mockMvc.perform(get("/notifications").header("HX-Request", "true").with(csrf()).locale(english))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("You earned “Streak of 10”")))
+            .andExpect(content().string(containsString("10 attended sessions in a row")))
+            .andExpect(content().string(containsString("View on profile →")))
+            .andExpect(content().string(containsString("/profile#badges-section")))
+
+        mockMvc.perform(get("/notifications").header("HX-Request", "true").with(csrf()).locale(polish))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("Zdobyto „Seria 10 treningów”")))
+            .andExpect(content().string(containsString("10 odbytych treningów z rzędu")))
+            .andExpect(content().string(containsString("Zobacz w profilu →")))
+            .andExpect(content().string(containsString("/profile#badges-section")))
+    }
 }

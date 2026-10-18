@@ -18,14 +18,16 @@ object ActivityEventSpecification {
 
     fun visibleTo(user: AppUser?): Specification<ActivityEvent> {
         return Specification { root, query, cb ->
+            val isActor = if (user != null) cb.equal(root.get<AppUser>("actor").get<UUID>("id"), user.id) else cb.disjunction()
             if (user?.role == Role.ADMIN) {
-                return@Specification cb.conjunction()
+                return@Specification cb.or(
+                    cb.notEqual(root.get<TargetType>("targetType"), TargetType.BADGE),
+                    isActor
+                )
             }
             if (query == null) {
                 return@Specification cb.conjunction()
             }
-
-            val isActor = if (user != null) cb.equal(root.get<AppUser>("actor").get<UUID>("id"), user.id) else cb.disjunction()
 
             // Subqueries for live Material
             val liveMaterialSubquery = query.subquery(Long::class.java)

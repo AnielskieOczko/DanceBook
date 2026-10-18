@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.service
 
 import com.jankowski.rafal.dancebook.model.ActivityEvent
+import com.jankowski.rafal.dancebook.model.BadgeEarnedEvent
 import com.jankowski.rafal.dancebook.model.CommentAddedEvent
 import com.jankowski.rafal.dancebook.model.EventType
 import com.jankowski.rafal.dancebook.model.ListCreatedEvent
@@ -332,6 +333,24 @@ class ActivityEventListener(
             targetId = null,
             targetName = "${event.count} sessions",
             metadata = event.updateType
+        )
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun onBadgeEarned(event: BadgeEarnedEvent) {
+        log.info(
+            "Recording BADGE_EARNED event for user '{}' badge '{}'",
+            event.actor.username, event.userBadge.badgeType
+        )
+        save(
+            eventType = EventType.BADGE_EARNED,
+            actor = event.actor,
+            targetType = TargetType.BADGE,
+            targetId = event.userBadge.id,
+            targetName = event.userBadge.badgeType.name,
+            metadata = event.userBadge.monthKey.ifBlank { null },
+            targetVisibility = "PRIVATE"
         )
     }
 

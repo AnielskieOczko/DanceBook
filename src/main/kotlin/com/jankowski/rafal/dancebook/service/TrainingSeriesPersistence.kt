@@ -25,7 +25,8 @@ class TrainingSeriesPersistence(
     private val trainingSeriesRepository: TrainingSeriesRepository,
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingRecordWriter: TrainingRecordWriter,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val badgeService: BadgeService
 ) {
 
     /**
@@ -74,6 +75,7 @@ class TrainingSeriesPersistence(
         trainingSeriesRepository.save(series)
         val saved = trainingEventRepository.saveAll(occurrences)
         saved.forEach { trainingRecordWriter.syncEventDetails(it) }
+        badgeService.evaluateForUser(actor, saved.maxByOrNull { it.startTime }?.id)
         eventPublisher.publishEvent(
             TrainingBulkUpdatedEvent(
                 count = saved.size,
@@ -122,6 +124,8 @@ class TrainingSeriesPersistence(
             trainingEventRepository.saveAll(newOccurrences)
         } else emptyList()
 
+        badgeService.evaluateForUser(actor, savedSurviving.maxByOrNull { it.startTime }?.id)
+
         val totalActive = savedSurviving.size + savedNew.size
         eventPublisher.publishEvent(
             TrainingBulkUpdatedEvent(
@@ -148,6 +152,7 @@ class TrainingSeriesPersistence(
         val saved = trainingEventRepository.save(event)
         trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
         trainingRecordWriter.syncEventDetails(saved)
+        badgeService.evaluateForUser(actor, saved.id)
         val remaining = trainingEventRepository.countBySeries(series)
         if (remaining == 0L) {
             trainingSeriesRepository.delete(series)

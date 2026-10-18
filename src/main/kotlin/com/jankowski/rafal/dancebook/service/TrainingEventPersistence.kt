@@ -35,7 +35,8 @@ class TrainingEventPersistence(
     private val trainingEventRepository: TrainingEventRepository,
     private val trainingSeriesRepository: TrainingSeriesRepository,
     private val trainingRecordWriter: TrainingRecordWriter,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val badgeService: BadgeService
 ) {
 
     @Transactional
@@ -44,6 +45,7 @@ class TrainingEventPersistence(
         // In this transaction, not in an after-commit listener: statistics are read from the
         // record, and a lost record is a lost hour of training.
         trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
+        badgeService.evaluateForUser(actor, saved.id)
         eventPublisher.publishEvent(TrainingEventCreatedEvent(saved, actor))
         return saved
     }
@@ -53,6 +55,7 @@ class TrainingEventPersistence(
         val saved = trainingEventRepository.save(event)
         trainingRecordWriter.sync(saved, actor, saved.attendanceFor(actor))
         trainingRecordWriter.syncEventDetails(saved)
+        badgeService.evaluateForUser(actor, saved.id)
         eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
         return saved
     }
@@ -63,6 +66,7 @@ class TrainingEventPersistence(
         event.updatedAt = LocalDateTime.now()
         val saved = trainingEventRepository.save(event)
         trainingRecordWriter.sync(saved, actor, status)
+        badgeService.evaluateForUser(actor, saved.id)
         eventPublisher.publishEvent(TrainingEventUpdatedEvent(saved, actor))
         return saved
     }
@@ -86,6 +90,7 @@ class TrainingEventPersistence(
         }
         val saved = trainingEventRepository.saveAll(events)
         saved.forEach { trainingRecordWriter.sync(it, actor, status) }
+        badgeService.evaluateForUser(actor, saved.maxByOrNull { it.startTime }?.id)
         eventPublisher.publishEvent(TrainingBulkAttendanceUpdatedEvent(saved.size, status, actor))
         return saved
     }
@@ -107,6 +112,7 @@ class TrainingEventPersistence(
             trainingRecordWriter.sync(it, actor, it.attendanceFor(actor))
             trainingRecordWriter.syncEventDetails(it)
         }
+        badgeService.evaluateForUser(actor, saved.maxByOrNull { it.startTime }?.id)
         eventPublisher.publishEvent(TrainingBulkUpdatedEvent(saved.size, updateType, actor))
         return saved
     }
