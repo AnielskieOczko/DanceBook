@@ -177,6 +177,15 @@ tasks.register<JavaExec>("cleanDrivePermissions") {
     mainClass.set("com.jankowski.rafal.dancebook.scripts.CleanDrivePermissionsKt")
 }
 
+tasks.register<JavaExec>("evaluateSemanticSearch") {
+    group = "application"
+    description = "Evaluates semantic search embedding models and retrieval task types"
+    classpath = files(provider {
+        project.extensions.getByType(SourceSetContainer::class.java)["main"].runtimeClasspath
+    })
+    mainClass.set("com.jankowski.rafal.dancebook.scripts.SemanticSearchEvaluationKt")
+}
+
 springBoot {
     mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
 }
