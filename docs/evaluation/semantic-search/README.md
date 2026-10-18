@@ -86,3 +86,39 @@ with `--logging.level.com.jankowski.rafal.dancebook.service.HybridSearchServiceI
 and `--google.ai.semantic-search-max-distance=1.0`, then run each search and read the
 "Semantic candidates" lines. Allow about 14 seconds between searches: the search box embeds at
 most 5 queries per user per minute and silently skips semantic search beyond that.
+
+## How to run the comparison
+
+The automated evaluation tool (#347) runs the comparison across candidate embedding models and task types with a single command:
+
+```bash
+GOOGLE_AI_API_KEY=your_key ./gradlew evaluateSemanticSearch
+```
+
+Or with `GOOGLE_AI_API_KEY` exported in your environment:
+```bash
+export GOOGLE_AI_API_KEY="AIza..."
+./gradlew evaluateSemanticSearch
+```
+
+### How it works
+
+1. **Candidates evaluated:**
+   - `gemini-embedding-001` (current baseline: 768 dimensions, symmetric / no task type)
+   - `gemini-embedding-001-task-types` (`gemini-embedding-001`, 768 dimensions, with `RETRIEVAL_QUERY` and `RETRIEVAL_DOCUMENT` task types)
+   - `gemini-embedding-2-preview` (Gemini Embedding 2: 3072 dimensions, multimodal/text preview)
+   - `embedding-gemma` (EmbeddingGemma: 768 dimensions, via Ollama Cloud if configured with `OLLAMA_API_KEY`, otherwise marked "not tried")
+2. **Label file:** The search queries and good/bad labels live in `docs/evaluation/semantic-search/labels.json`. It is pre-filled from the table above and marked unconfirmed until the owner edits and confirms it.
+3. **Vector persistence:** Vectors are saved per candidate in `docs/evaluation/semantic-search/vectors-<candidate>.json`, which git ignores (they are per machine and large). Re-running the tool or editing labels makes no new embedding calls.
+4. **Rate limiting:** API calls are throttled to respect the app's rate limit of 90 requests/minute.
+5. **Read-only on database:** The tool never writes to `knowledge_chunk` or modifies the app's knowledge index. The main index remains completely untouched.
+6. **Graceful fallbacks:** The API key comes from the environment and is never printed or logged. If a key is missing or a candidate cannot be reached, it is reported as `not tried: <reason>` rather than failing the run.
+7. **Report output:** Writes a detailed Markdown report to `docs/evaluation/semantic-search/REPORT.md` with candidate comparison summaries, nearest/10th/30th distances, good/bad separation gaps, suggested cutoffs, and ranked hits for all 10 searches.
+
+### What switching models would force
+
+If the report recommends switching the embedding model (or if vector dimensions change), the following architectural changes are required:
+
+1. **Re-embedding everything:** Every note, comment, figure, and choreography in the database must be re-embedded with the new model.
+2. **Flyway database migration:** The database column `knowledge_chunk.embedding` is defined as `vector(768)` in `V36__knowledge_index.sql`. If switching to a model with different dimensions (e.g., Gemini Embedding 2 with 3072 dimensions), a new Flyway migration (`V<next>__...sql`) is required to alter or recreate the column with the new dimension size.
+3. **Model-change stale index check:** As described in `AGENTS.md`, each chunk row persists `embedding_model`. `KnowledgeIndexService.isStale` compares `chunk.embeddingModel` against `googleAi.embeddingModel`. Updating the configured model name automatically marks the index stale and triggers a full rebuild.

@@ -1,0 +1,166 @@
+{
+  "confirmed": false,
+  "status": "unconfirmed",
+  "note": "Pre-filled proposals from README.md example searches. The owner should verify or edit before trusting final tuning.",
+  "searches": [
+    {
+      "id": 1,
+      "query": "head dropping",
+      "user": "rafal",
+      "kind": "Note worded differently",
+      "expectedGood": [
+        "Dropping the head in the lowering",
+        "Waltz — keep the head weight left",
+        "Tango head snap — small and sharp",
+        "Foxtrot — head and topline"
+      ],
+      "expectedWrong": [
+        "Dance shoe care",
+        "Competition day checklist",
+        "Music tempo reference"
+      ]
+    },
+    {
+      "id": 2,
+      "query": "keep the left side long",
+      "user": "rafal",
+      "kind": "Note worded differently",
+      "expectedGood": [
+        "Left side long — lady's frame",
+        "Waltz — keep the head weight left",
+        "Quickstep — keeping speed under control"
+      ],
+      "expectedWrong": [
+        "Samba",
+        "Jive",
+        "Dance shoe care"
+      ]
+    },
+    {
+      "id": 3,
+      "query": "Natural Turn",
+      "user": "rafal",
+      "kind": "Figure name",
+      "expectedGood": [
+        "Natural Turn"
+      ],
+      "expectedWrong": [
+        "Cha Cha",
+        "Rumba",
+        "Samba",
+        "Jive",
+        "Paso Doble"
+      ]
+    },
+    {
+      "id": 4,
+      "query": "Latin",
+      "user": "rafal",
+      "kind": "Style word",
+      "expectedGood": [
+        "Cha Cha",
+        "Rumba",
+        "Samba",
+        "Jive",
+        "Paso Doble"
+      ],
+      "expectedWrong": [
+        "Waltz",
+        "Foxtrot",
+        "Tango",
+        "Quickstep",
+        "Viennese Waltz"
+      ]
+    },
+    {
+      "id": 5,
+      "query": "hips",
+      "user": "rafal",
+      "kind": "Very short query",
+      "expectedGood": [
+        "Cha Cha — Hockey Stick and Fan connection",
+        "Rumba — walks with delayed hip action",
+        "Samba — Bota Fogos travelling",
+        "Hockey Stick",
+        "Fan"
+      ],
+      "expectedWrong": [
+        "Waltz",
+        "Foxtrot",
+        "Tango"
+      ]
+    },
+    {
+      "id": 6,
+      "query": "rise",
+      "user": "rafal",
+      "kind": "Very short query",
+      "expectedGood": [
+        "Waltz rise and fall — lesson notes",
+        "Hesitation change — delayed lowering",
+        "Reverse Turn",
+        "Whisk",
+        "Natural Turn"
+      ],
+      "expectedWrong": [
+        "Tango"
+      ]
+    },
+    {
+      "id": 7,
+      "query": "swimming pool opening hours",
+      "user": "rafal",
+      "kind": "Nothing relevant",
+      "expectedGood": [],
+      "expectedWrong": [
+        "*"
+      ]
+    },
+    {
+      "id": 8,
+      "query": "nervous before a competition",
+      "user": "rafal",
+      "kind": "Note worded differently",
+      "expectedGood": [
+        "Performing under pressure",
+        "Competition day checklist"
+      ],
+      "expectedWrong": [
+        "Waltz — keep the head weight left",
+        "Dropping the head in the lowering",
+        "Left side long — lady's frame",
+        "Feather Step"
+      ]
+    },
+    {
+      "id": 9,
+      "query": "stalking cat walk",
+      "user": "rafal",
+      "kind": "Image from a Note",
+      "expectedGood": [
+        "Progressive Link",
+        "Tango head snap — small and sharp",
+        "Closed Promenade"
+      ],
+      "expectedWrong": [
+        "Waltz",
+        "Rumba"
+      ]
+    },
+    {
+      "id": 10,
+      "query": "head position",
+      "user": "test_user",
+      "kind": "Access rule",
+      "expectedGood": [
+        "Another user's private note on head position",
+        "Waltz — keep the head weight left",
+        "Head"
+      ],
+      "expectedWrong": [
+        "Private — weak points",
+        "Choreography idea: Waltz short routine"
+      ]
+    }
+  ]
+}
