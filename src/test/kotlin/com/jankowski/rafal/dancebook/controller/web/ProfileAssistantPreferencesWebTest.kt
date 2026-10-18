@@ -83,6 +83,7 @@ class ProfileAssistantPreferencesWebTest {
             .andExpect(content().string(containsString("Semantic search")))
             .andExpect(content().string(containsString("Related notes")))
             .andExpect(content().string(containsString("Suggest figures")))
+            .andExpect(content().string(containsString("Remember chat history")))
             .andExpect(content().string(containsString("Open in full window")))
             .andExpect(content().string(containsString("Assistant reply language")))
             .andExpect(content().string(containsString("Preferences configured")))
@@ -96,9 +97,36 @@ class ProfileAssistantPreferencesWebTest {
             .andExpect(content().string(containsString("Wyszukiwanie semantyczne")))
             .andExpect(content().string(containsString("Powiązane notatki")))
             .andExpect(content().string(containsString("Sugerowanie figur")))
+            .andExpect(content().string(containsString("Zapamiętuj historię rozmów")))
             .andExpect(content().string(containsString("Otwieraj w pełnym oknie")))
             .andExpect(content().string(containsString("Język odpowiedzi asystenta")))
             .andExpect(content().string(containsString("Skonfigurowano preferencje")))
+    }
+
+    @Test
+    fun `remember chat history is saved off only when the form says so and defaults on`() {
+        mockMvc.perform(
+            post("/profile/assistant-preferences").with(asUser()).with(csrf())
+                .param("rememberChatHistory", "false").param("_rememberChatHistory", "on")
+        ).andExpect(status().is3xxRedirection)
+        assertFalse(preferencesRepository.findById(testUser.id!!).get().rememberChatHistory)
+
+        mockMvc.perform(
+            post("/profile/assistant-preferences").with(asUser()).with(csrf())
+                .param("rememberChatHistory", "true").param("_rememberChatHistory", "on")
+        ).andExpect(status().is3xxRedirection)
+        assertTrue(preferencesRepository.findById(testUser.id!!).get().rememberChatHistory)
+    }
+
+    @Test
+    fun `the profile shows the remember chat history row, on by default, in both languages`() {
+        val en = mockMvc.perform(get("/profile").with(asUser())).andExpect(status().isOk).andReturn().response.contentAsString
+        val input = org.jsoup.Jsoup.parse(en).selectFirst("input[name=rememberChatHistory]")!!
+        assertTrue(input.hasAttr("checked"))
+        assertTrue(en.contains("Remember chat history"))
+
+        val pl = mockMvc.perform(get("/profile").with(asUser()).locale(Locale.forLanguageTag("pl"))).andReturn().response.contentAsString
+        assertTrue(pl.contains("Zapamiętuj historię rozmów"))
     }
 
     @Test

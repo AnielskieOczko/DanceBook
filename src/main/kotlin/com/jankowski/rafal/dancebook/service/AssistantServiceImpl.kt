@@ -86,13 +86,18 @@ class AssistantServiceImpl(
             )
         }
 
-        val conversation = if (conversationId == null) conversations.start(clean) else conversations.findOwned(conversationId)
+        val prefs = assistantPreferencesService?.forUser(user)
+        val rememberChatHistory = prefs?.rememberChatHistory ?: true
+        val conversation = if (conversationId == null) {
+            conversations.start(clean, ephemeral = !rememberChatHistory)
+        } else {
+            conversations.findOwned(conversationId)
+        }
         val id = conversation.id!!
         conversations.append(id, AssistantRole.USER, clean)
         val userView = AssistantMessageView(AssistantRole.USER, clean)
 
         val assistantView = try {
-            val prefs = assistantPreferencesService?.forUser(user)
             val targetLocale = when (prefs?.replyLanguage) {
                 AssistantReplyLanguage.PL -> AppLocales.POLISH
                 AssistantReplyLanguage.EN -> AppLocales.ENGLISH

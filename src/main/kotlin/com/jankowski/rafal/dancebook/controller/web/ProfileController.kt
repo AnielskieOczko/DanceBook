@@ -296,6 +296,7 @@ class ProfileController @Autowired constructor(
         @RequestParam(required = false) semanticSearchEnabled: Boolean?,
         @RequestParam(required = false) relatedNotesEnabled: Boolean?,
         @RequestParam(required = false) suggestFiguresEnabled: Boolean?,
+        @RequestParam(required = false) rememberChatHistory: Boolean?,
         @RequestParam(required = false) openInFullWindow: Boolean?,
         @RequestParam(required = false) includeSharedItems: Boolean?,
         @RequestParam(required = false) replyLanguage: String?,
@@ -303,6 +304,7 @@ class ProfileController @Autowired constructor(
         @RequestParam(name = "_semanticSearchEnabled", required = false) hasSemanticMarker: String?,
         @RequestParam(name = "_relatedNotesEnabled", required = false) hasRelatedNotesMarker: String?,
         @RequestParam(name = "_suggestFiguresEnabled", required = false) hasSuggestMarker: String?,
+        @RequestParam(name = "_rememberChatHistory", required = false) hasRememberChatHistoryMarker: String?,
         @RequestParam(name = "_openInFullWindow", required = false) hasFullWindowMarker: String?,
         @RequestParam(name = "_includeSharedItems", required = false) hasIncludeSharedMarker: String?,
         request: HttpServletRequest,
@@ -323,6 +325,7 @@ class ProfileController @Autowired constructor(
         val effectiveSemanticSearch = if (hasSemanticMarker != null) semanticSearchEnabled == true else semanticSearchEnabled
         val effectiveRelatedNotes = if (hasRelatedNotesMarker != null) relatedNotesEnabled == true else relatedNotesEnabled
         val effectiveSuggestFigures = if (hasSuggestMarker != null) suggestFiguresEnabled == true else suggestFiguresEnabled
+        val effectiveRememberChatHistory = if (hasRememberChatHistoryMarker != null) rememberChatHistory == true else rememberChatHistory
         val effectiveFullWindow = if (hasFullWindowMarker != null) openInFullWindow == true else openInFullWindow
         val effectiveIncludeShared = if (hasIncludeSharedMarker != null) includeSharedItems == true else includeSharedItems
 
@@ -331,6 +334,7 @@ class ProfileController @Autowired constructor(
             semanticSearchEnabled = effectiveSemanticSearch,
             relatedNotesEnabled = effectiveRelatedNotes,
             suggestFiguresEnabled = effectiveSuggestFigures,
+            rememberChatHistory = effectiveRememberChatHistory,
             openInFullWindow = effectiveFullWindow,
             includeSharedItems = effectiveIncludeShared,
             replyLanguage = parsedLang

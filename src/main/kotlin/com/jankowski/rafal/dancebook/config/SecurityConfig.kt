@@ -5,6 +5,7 @@ import jakarta.servlet.DispatcherType
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.core.Ordered
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -20,7 +21,8 @@ import org.springframework.web.filter.ForwardedHeaderFilter
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig(
-    private val customOAuth2UserService: CustomOAuth2UserService
+    private val customOAuth2UserService: CustomOAuth2UserService,
+    @Lazy private val assistantConversationCleanup: com.jankowski.rafal.dancebook.service.AssistantConversationCleanup
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -63,6 +65,7 @@ class SecurityConfig(
             }
             logout {
                 logoutSuccessUrl = "/login?logout"
+                addLogoutHandler(assistantConversationCleanup)
             }
             headers {
                 contentSecurityPolicy {

@@ -26,7 +26,7 @@ class AssistantConversationServiceImpl(
 
     @Transactional(readOnly = true)
     override fun list(): List<AssistantConversation> =
-        conversationRepository.findByOwnerIdOrderByUpdatedAtDesc(appUserService.getCurrentUser().id!!)
+        conversationRepository.findByOwnerIdAndEphemeralFalseOrderByUpdatedAtDesc(appUserService.getCurrentUser().id!!)
 
     @Transactional(readOnly = true)
     override fun findOwned(id: UUID): AssistantConversation =
@@ -34,10 +34,21 @@ class AssistantConversationServiceImpl(
             ?: throw EntityNotFoundException("Conversation not found")
 
     @Transactional
-    override fun start(firstMessage: String): AssistantConversation {
+    override fun start(firstMessage: String, ephemeral: Boolean): AssistantConversation {
+        val currentSessionId = if (ephemeral) {
+            try {
+                org.springframework.web.context.request.RequestContextHolder.getRequestAttributes()?.sessionId
+            } catch (e: Exception) {
+                null
+            }
+        } else {
+            null
+        }
         val conversation = AssistantConversation().apply {
             owner = appUserService.getCurrentUser()
             title = titleFrom(firstMessage)
+            this.ephemeral = ephemeral
+            this.sessionId = currentSessionId
         }
         return conversationRepository.save(conversation)
     }

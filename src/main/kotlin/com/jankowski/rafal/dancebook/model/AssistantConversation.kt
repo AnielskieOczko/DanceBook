@@ -27,6 +27,12 @@ class AssistantConversation {
     @Column(nullable = false, length = 80)
     var title: String = ""
 
+    @Column(nullable = false)
+    var ephemeral: Boolean = false
+
+    @Column(name = "session_id", length = 100)
+    var sessionId: String? = null
+
     @Column(name = "created_at", updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
 

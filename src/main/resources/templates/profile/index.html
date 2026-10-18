@@ -445,6 +445,23 @@
                                 </label>
                             </div>
 
+                            <!-- Row 4b: Remember chat history -->
+                            <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
+                                <div class="min-w-0">
+                                    <b class="block text-sm font-semibold text-on-surface break-words" th:text="#{profile.assistant.remember_chat_history}">Remember chat history</b>
+                                    <small class="block text-xs text-on-surface-variant break-words"
+                                           th:text="${!assistantFeatureEnabled ? #messages.msg('profile.assistant.disabled_reason') : #messages.msg('profile.assistant.remember_chat_history.desc')}">Saved per user, can be deleted any time. Off: new chats live only for the current session.</small>
+                                </div>
+                                <label class="inline-flex items-center cursor-pointer select-none shrink-0 relative" th:classappend="${!assistantFeatureEnabled} ? 'cursor-not-allowed' : ''">
+                                    <input type="hidden" name="_rememberChatHistory" value="on"/>
+                                    <input type="checkbox" name="rememberChatHistory" value="true"
+                                           th:checked="${assistantPreferences != null and assistantPreferences.rememberChatHistory}"
+                                           th:disabled="${!assistantFeatureEnabled}"
+                                           class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-container border border-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-outline after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50 relative"></div>
+                                </label>
+                            </div>
+
                             <!-- Row 5: Open in full window -->
                             <div class="flex items-center justify-between py-2 gap-3 border-b border-outline-variant">
                                 <div class="min-w-0">

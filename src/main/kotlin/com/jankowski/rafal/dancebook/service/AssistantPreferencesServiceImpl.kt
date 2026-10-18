@@ -71,6 +71,7 @@ class AssistantPreferencesServiceImpl(
         update.replyLanguage?.let { entity.replyLanguage = it }
         update.includeSharedItems?.let { entity.includeSharedItems = it }
         update.showStreaksAndBadges?.let { entity.showStreaksAndBadges = it }
+        update.rememberChatHistory?.let { entity.rememberChatHistory = it }
         entity.updatedAt = LocalDateTime.now()
 
         val saved = repository.save(entity)
@@ -86,6 +87,7 @@ class AssistantPreferencesServiceImpl(
             openInFullWindow = entity.openInFullWindow,
             replyLanguage = entity.replyLanguage,
             includeSharedItems = entity.includeSharedItems,
-            showStreaksAndBadges = entity.showStreaksAndBadges
+            showStreaksAndBadges = entity.showStreaksAndBadges,
+            rememberChatHistory = entity.rememberChatHistory
         )
 }
