@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Mobile Lists</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock: mobile Notes list and Figures list, three options, one recommended. Both lists share one pattern in every option.
+   Tokens from src/main/resources/frontend/input.css, radii from docs/mocks/rounded-forms, medal colours from docs/mocks/figures.
+   Respects: pill controls (#214), pill badges (#358), no Source column (#359), paged list (#357), actions placement still open (#361). */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --bronze:#8a5a2e; --silver:#66717e; --gold:#8a6a0c; --danger:#b3261e;
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 96px;background:var(--surface);color:var(--on);font:14px/1.5 var(--font)}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+p{margin:0}
+.lede{max-width:70ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:76ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.pros{display:grid;gap:8px 32px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));font-size:13px;color:var(--on-var);max-width:900px}
+.pros b{color:var(--on)}
+.phones{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}
+
+/* phone frame */
+.phone{width:375px;height:760px;border:1px solid var(--hair);border-radius:28px;overflow:hidden;position:relative;background:var(--surface);display:flex;flex-direction:column}
+.topbar{height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--hair);font-weight:600}
+.topbar .brand{font-size:17px}
+.scroll{flex:1;overflow:hidden;position:relative}
+.pghead{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 4px}
+.pghead h4{margin:0;font-size:24px;line-height:30px;font-weight:600;letter-spacing:-.01em}
+.pghead .sub{font-size:13px;color:var(--on-var)}
+.addbtn{width:44px;height:44px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center}
+
+/* controls (pill language, 44px) */
+.bar{display:flex;gap:8px;padding:8px 16px 4px;align-items:center}
+.search{flex:1;min-width:0;height:44px;border-radius:var(--r-pill);background:var(--container);border:1px solid transparent;display:flex;align-items:center;gap:8px;padding:0 16px;color:var(--on-var);font-size:15px}
+.search.focus{background:var(--surface);border-color:var(--primary);box-shadow:0 0 0 3px rgba(31,75,74,.22)}
+.fbtn{height:44px;border-radius:var(--r-pill);border:1px solid var(--hair);background:var(--surface);display:flex;align-items:center;gap:6px;padding:0 14px;font-weight:600;font-size:14px;position:relative}
+.fbtn .dot{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.chips{display:flex;gap:8px;padding:6px 16px 8px;overflow:hidden;white-space:nowrap}
+.chip{height:34px;border-radius:var(--r-pill);background:var(--container);padding:0 14px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;flex:none}
+.chip.on{background:var(--primary);color:var(--on-primary)}
+.chip.rm{background:var(--primary-soft);color:var(--primary);font-weight:600}
+.count{padding:4px 16px 8px;font-size:13px;color:var(--on-var)}
+
+/* pill badges */
+.b{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--container);color:var(--on-var);white-space:nowrap}
+.b.p{background:var(--primary-soft);color:var(--primary)}
+.b.cls{background:var(--primary);color:var(--on-primary)}
+.med{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600}
+.med.bronze{color:var(--bronze)}.med.silver{color:var(--silver)}.med.gold{color:var(--gold)}
+.star{color:#b7791f;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:2px}
+
+/* A: compact rows */
+.rowA{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--hair);min-height:64px}
+.rowA .main{flex:1;min-width:0}
+.rowA .t{font-weight:600;font-size:16px;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowA .m{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:nowrap;overflow:hidden}
+.rowA .m .txt{font-size:13px;color:var(--on-var);white-space:nowrap}
+.rowA .end{color:var(--outline)}
+.more{padding:14px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:var(--on-var)}
+.morebtn{height:44px;padding:0 22px;border-radius:var(--r-pill);border:1px solid var(--hair);font-weight:600;color:var(--on);display:inline-flex;align-items:center}
+
+/* B: cards */
+.cardsB{padding:4px 16px;display:flex;flex-direction:column;gap:10px}
+.cardB{border:1px solid var(--hair);border-radius:var(--r-card);padding:14px;display:flex;flex-direction:column;gap:10px}
+.cardB .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.cardB .t{font-weight:600;font-size:16px;line-height:22px}
+.cardB .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cardB .foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--on-var);border-top:1px solid var(--hair);padding-top:8px}
+.kebab{width:36px;height:36px;margin:-6px -8px 0 0;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;color:var(--on-var)}
+
+/* C: grouped by style */
+.stickyC{background:var(--container);padding:6px 16px;font-size:13px;font-weight:600;color:var(--on-var);display:flex;justify-content:space-between;border-bottom:1px solid var(--hair)}
+.rowC{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--hair);min-height:52px}
+.rowC .t{flex:1;min-width:0;font-weight:500;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowC .tail{display:flex;gap:8px;align-items:center;flex:none}
+.rail{position:absolute;right:2px;top:150px;display:flex;flex-direction:column;gap:6px;font-size:10px;font-weight:600;color:var(--primary);align-items:center}
+
+/* bottom sheet (floats, so it keeps its shadow) */
+.dim{position:absolute;inset:0;background:rgba(22,24,26,.4)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;box-shadow:0 -8px 28px rgba(22,24,26,.18);padding:10px 16px 16px;display:flex;flex-direction:column;gap:14px;max-height:88%}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--highest);margin:0 auto}
+.sheet h5{margin:0;font-size:18px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.sheet h5 a{font-size:14px;color:var(--primary);font-weight:600}
+.lab{font-size:13px;font-weight:600;color:var(--on-var);margin-bottom:6px}
+.pillwrap{display:flex;flex-wrap:wrap;gap:8px}
+.sel{height:44px;border-radius:var(--r-pill);background:var(--container);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:15px}
+.apply{height:48px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Mobile Notes and Figures lists</h1>
+    <p class="lede">Three directions for the phone layout of the two list pages (375 px wide). Each option uses the same pattern on <b>both</b> lists, so Notes and Figures read as one product. Every option keeps the domain detail from the desktop table: figure style, class letter, medal and syllabus-steps flag; note style, category, rating, privacy and date.</p>
+    <p class="note" style="margin-top:10px">Shared across all three: pill search and filter controls (#356), pill badges (#358), no Source column (#359), a "show more" footer that stands for the pagination of #357, and the sticky toolbar. Where row actions (edit, delete) live is decided by the actions mock (#361); each option shows a placeholder for it.</p>
+  </header>
+
+  <section class="opt">
+    <h2>A · Compact rows with a filter sheet <span class="rec"><span class="ms sm">star</span> Recommended</span></h2>
+    <div class="pros">
+      <p><b>Density.</b> Four to five rows above the fold per screen. Hairline dividers, no cards, in line with the reference-manual direction.</p>
+      <p><b>Scales.</b> Row height is fixed, so paging, "show more" and long catalogs stay predictable.</p>
+      <p><b>Filters.</b> One search pill plus one Filters button. The full filter set opens in a bottom sheet; active filters stay visible as removable chips.</p>
+      <p><b>Cost.</b> Less visual weight per item, so Notes lose some of the "card" feel they have today.</p>
+    </div>
+    <div class="phones" id="A"></div>
+  </section>
+
+  <section class="opt">
+    <h2>B · Cards with a quick-filter chip row</h2>
+    <div class="pros">
+      <p><b>Scannable.</b> Each item is a rounded card with its detail as chips; closest to today's Notes mobile card.</p>
+      <p><b>Filters.</b> A scrolling row of style chips under the search gives one-tap filtering; the rest sits in a sheet.</p>
+      <p><b>Cost.</b> Roughly 2.5 cards per screen, and repeated bordered cards are the pattern the project moved away from. Long lists get tiring to scroll.</p>
+    </div>
+    <div class="phones" id="B"></div>
+  </section>
+
+  <section class="opt">
+    <h2>C · Rows grouped under sticky style headers</h2>
+    <div class="pros">
+      <p><b>Fits the syllabus.</b> The catalog is naturally organised by dance style, so headers double as navigation, with a jump rail on the right.</p>
+      <p><b>Densest.</b> Single-line rows, so many figures fit on screen.</p>
+      <p><b>Cost.</b> Works for Figures (default sort is style then name) but Notes are sorted by date, so grouping breaks as soon as the sort changes. It also limits the detail per row to one line.</p>
+    </div>
+    <div class="phones" id="C"></div>
+  </section>
+</div>
+
+<script>
+const ico=(n,c='')=>`<span class="ms ${c}">${n}</span>`;
+const medal=l=>l?`<span class="med ${l[0]}">${ico('workspace_premium','sm')}${l[1]}</span>`:'';
+const notes=[
+ {t:'Rise and fall — heel turn timing',style:'Walc angielski',cat:'Standard',r:5,d:'14 paź',priv:true,fig:3},
+ {t:'Cha cha — hip twist drill from Monday',style:'Cha Cha',cat:'Latin',r:4,d:'12 paź',fig:5},
+ {t:'Tango promenade link: corte exit',style:'Tango',cat:'Standard',r:4,d:'9 paź',fig:2},
+ {t:'Viennese turns with a partner switch',style:'Walc wiedeński',cat:'Standard',r:3,d:'7 paź',priv:true,fig:1},
+ {t:'Rumba walks and the fan position',style:'Rumba',cat:'Latin',r:5,d:'2 paź',fig:4},
+ {t:'Quickstep chassé checks',style:'Quickstep',cat:'Standard',r:4,d:'28 wrz',fig:6}];
+const figs=[
+ {t:'Advanced Hip Twist',style:'Cha Cha',cls:'F',med:['bronze','Brąz'],steps:true},
+ {t:'Natural Spin Turn',style:'Walc angielski',cls:'H',med:['bronze','Brąz'],steps:true},
+ {t:'Reverse Turn',style:'Walc angielski',cls:'H',med:['bronze','Brąz'],steps:true},
+ {t:'Closed Promenade',style:'Tango',cls:'H',med:['bronze','Brąz'],steps:false},
+ {t:'Fallaway Reverse and Slip Pivot',style:'Walc angielski',cls:'F',med:['silver','Srebro'],steps:true},
+ {t:'Hockey Stick',style:'Cha Cha',cls:'F',med:['silver','Srebro'],steps:false}];
+
+const topbar=`<div class="topbar"><span class="brand">DanceBook</span>${ico('menu')}</div>`;
+const searchbar=(ph,filters=0,focus=false,val)=>`<div class="bar"><div class="search ${focus?'focus':''}">${ico('search')}<span ${val?'style="color:var(--on)"':''}>${val||ph}</span></div><div class="fbtn">${ico('tune')}Filtry${filters?'<span class="dot"></span>':''}</div></div>`;
+const head=kind=>`<div class="pghead"><div><h4>${kind=='n'?'Notatki':'Figury'}</h4><div class="sub">${kind=='n'?'128 notatek':'412 figur'}</div></div><div class="addbtn">${ico('add')}</div></div>`;
+const moreFoot=kind=>`<div class="more"><span>Pokazano 6 z ${kind=='n'?128:412}</span><span class="morebtn">Pokaż więcej</span></div>`;
+const phone=(inner,cap)=>`<div><p class="cap">${cap}</p><div class="phone">${topbar}<div class="scroll">${inner}</div></div></div>`;
+
+function sheet(kind){
+ const styles=['Walc angielski','Tango','Walc wiedeński','Foxtrot','Quickstep','Cha Cha','Samba','Rumba'];
+ const f=kind=='f';
+ return `<div class="dim"></div><div class="sheet"><div class="grab"></div>
+ <h5>Filtry<a>Wyczyść</a></h5>
+ <div><div class="lab">Kategoria</div><div class="pillwrap"><span class="chip on">${ico('check','sm')}Standard</span><span class="chip">Latin</span><span class="chip">Social</span></div></div>
+ <div><div class="lab">Style tańca</div><div class="pillwrap">${styles.map((s,i)=>`<span class="chip ${i==0?'on':''}">${i==0?ico('check','sm'):''}${s}</span>`).join('')}</div></div>
+ ${f?`<div><div class="lab">Klasa taneczna</div><div class="sel">Wszystkie klasy${ico('expand_more')}</div></div><div><div class="lab">Syllabus kroków</div><div class="sel">Wszystkie figury${ico('expand_more')}</div></div>`
+    :`<div><div class="lab">Minimalna ocena</div><div class="sel">Dowolna${ico('expand_more')}</div></div>`}
+ <div><div class="lab">Sortuj według</div><div class="sel">${f?'Domyślnie (styl i nazwa)':'Najnowsze'}${ico('expand_more')}</div></div>
+ <div class="apply">Pokaż ${f?'38 figur':'14 notatek'}</div></div>`;
+}
+const activeChips=`<div class="chips"><span class="chip rm">Standard ${ico('close','sm')}</span><span class="chip rm">Walc angielski ${ico('close','sm')}</span></div>`;
+const styleChips=`<div class="chips"><span class="chip on">Wszystkie</span><span class="chip">Walc angielski</span><span class="chip">Tango</span><span class="chip">Walc wiedeński</span><span class="chip">Foxtrot</span></div>`;
+
+/* A */
+const rowANote=n=>`<div class="rowA"><div class="main"><div class="t">${n.t}</div><div class="m"><span class="b p">${n.style}</span><span class="b">${n.cat}</span>${n.priv?`<span class="b">${ico('lock','sm')}Prywatna</span>`:''}</div><div class="m"><span class="star">${ico('star','sm')}${n.r}</span><span class="txt">${n.fig} figur</span><span class="txt">${n.d}</span></div></div><span class="end">${ico('chevron_right')}</span></div>`;
+const rowAFig=f=>`<div class="rowA"><div class="main"><div class="t">${f.t}</div><div class="m"><span class="b p">${f.style}</span><span class="b cls">Klasa ${f.cls}</span>${medal(f.med)}${f.steps?`<span class="b">${ico('format_list_numbered','sm')}Kroki</span>`:''}</div></div><span class="end">${ico('chevron_right')}</span></div>`;
+document.getElementById('A').innerHTML=
+ phone(head('n')+searchbar('Szukaj po nazwie…')+`<div>${notes.slice(0,5).map(rowANote).join('')}</div>`,'Notatki · lista')+
+ phone(head('f')+searchbar('Szukaj po nazwie…',1)+activeChips+`<div class="count">38 wyników</div><div>${figs.slice(0,5).map(rowAFig).join('')}</div>`,'Figury · aktywne filtry')+
+ phone(head('f')+searchbar('Szukaj po nazwie…',1)+`<div>${figs.slice(0,3).map(rowAFig).join('')}</div>`+sheet('f'),'Figury · arkusz filtrów')+
+ phone(searchbar('Szukaj po nazwie…',0,true,'rise')+`<div class="count">2 wyniki · 3 powiązane</div><div>${notes.slice(0,2).map(rowANote).join('')}</div>${moreFoot('n')}`,'Notatki · wyszukiwanie i „Pokaż więcej"');
+
+/* B */
+const cardBNote=n=>`<div class="cardB"><div class="top"><div class="t">${n.t}</div><span class="kebab">${ico('more_vert')}</span></div><div class="row"><span class="b p">${n.style}</span><span class="b">${n.cat}</span>${n.priv?`<span class="b">${ico('lock','sm')}Prywatna</span>`:''}</div><div class="foot"><span class="star">${ico('star','sm')}${n.r}</span><span>${n.fig} figur</span><span>${n.d}</span></div></div>`;
+const cardBFig=f=>`<div class="cardB"><div class="top"><div class="t">${f.t}</div><span class="kebab">${ico('more_vert')}</span></div><div class="row"><span class="b p">${f.style}</span><span class="b cls">Klasa ${f.cls}</span>${medal(f.med)}</div><div class="foot"><span>${f.steps?'Kroki w syllabusie':'Bez kroków'}</span>${ico('chevron_right')}</div></div>`;
+document.getElementById('B').innerHTML=
+ phone(head('n')+searchbar('Szukaj po nazwie…')+styleChips+`<div class="cardsB">${notes.slice(0,3).map(cardBNote).join('')}</div>`,'Notatki · lista')+
+ phone(head('f')+searchbar('Szukaj po nazwie…',1)+styleChips+`<div class="cardsB">${figs.slice(0,3).map(cardBFig).join('')}</div>`,'Figury · lista')+
+ phone(head('f')+searchbar('Szukaj po nazwie…',1)+styleChips+sheet('f'),'Figury · arkusz filtrów (wspólny z A)');
+
+/* C */
+const grp=(name,n,rows)=>`<div class="stickyC"><span>${name}</span><span>${n}</span></div>${rows}`;
+const rowCFig=f=>`<div class="rowC"><div class="t">${f.t}</div><div class="tail"><span class="b cls">${f.cls}</span>${medal(f.med)}${f.steps?ico('format_list_numbered','sm'):''}</div></div>`;
+const rowCNote=n=>`<div class="rowC"><div class="t">${n.t}</div><div class="tail"><span class="star">${ico('star','sm')}${n.r}</span>${n.priv?ico('lock','sm'):''}</div></div>`;
+const rail=`<div class="rail"><span>W</span><span>T</span><span>V</span><span>F</span><span>Q</span><span>C</span><span>S</span><span>R</span></div>`;
+document.getElementById('C').innerHTML=
+ phone(head('n')+searchbar('Szukaj po nazwie…')+grp('Walc angielski','1',rowCNote(notes[0]))+grp('Cha Cha','1',rowCNote(notes[1]))+grp('Tango','1',rowCNote(notes[2]))+grp('Walc wiedeński','1',rowCNote(notes[3]))+grp('Rumba','1',rowCNote(notes[4])),'Notatki · po stylu (tylko przy sortowaniu po stylu)')+
+ phone(head('f')+searchbar('Szukaj po nazwie…')+grp('Walc angielski','48',[figs[1],figs[2],figs[4]].map(rowCFig).join(''))+grp('Tango','52',rowCFig(figs[3]))+grp('Cha Cha','44',rowCFig(figs[0])+rowCFig(figs[5]))+rail,'Figury · pogrupowane po stylu')+
+ phone(head('f')+searchbar('Szukaj po nazwie…',1)+grp('Walc angielski','48',figs.slice(1,3).map(rowCFig).join(''))+sheet('f'),'Figury · arkusz filtrów (wspólny z A)');
+</script>
+</body>
+</html>
