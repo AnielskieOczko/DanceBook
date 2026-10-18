@@ -696,6 +696,174 @@ object SemanticSearchEvaluation {
 
         return sb.toString()
     }
+
+    data class CandidateDefinition(
+        val name: String,
+        val description: String,
+        val buildEmbedder: () -> CandidateEmbedder?,
+        val fallbackReason: String? = null
+    )
+
+    fun cleanErrorMessage(e: Throwable): String {
+        var curr: Throwable? = e
+        var msg = curr?.message
+        while (curr != null && (msg == null || msg.isBlank())) {
+            curr = curr.cause
+            if (curr?.message?.isNotBlank() == true) {
+                msg = curr.message
+            }
+        }
+        val raw = msg ?: e.javaClass.simpleName
+        return raw
+            .replace(Regex("""(?i)(?:key|api_?key|token|bearer)[=:\s]+[A-Za-z0-9_\-\.]+"""), "[REDACTED]")
+            .replace(Regex("""AIza[0-9A-Za-z\-_]{35}"""), "[REDACTED]")
+            .trim()
+    }
+
+    fun evaluateCandidate(
+        cDef: CandidateDefinition,
+        cacheFile: File,
+        documents: List<EvaluationDocument>,
+        labels: LabelsFile
+    ): CandidateSummaryMetrics {
+        val cachedVectors = loadVectors(cacheFile)
+
+        if (cachedVectors == null && cDef.fallbackReason != null) {
+            println("Skipping candidate '${cDef.name}': not tried (${cDef.fallbackReason})")
+            return CandidateSummaryMetrics(
+                candidateName = cDef.name,
+                candidateDescription = cDef.description,
+                status = "not tried: ${cDef.fallbackReason}",
+                notTriedReason = cDef.fallbackReason
+            )
+        }
+
+        val embedder = try {
+            cDef.buildEmbedder()
+        } catch (e: Throwable) {
+            val reason = cleanErrorMessage(e)
+            println("Failed to initialize candidate '${cDef.name}': $reason")
+            return CandidateSummaryMetrics(
+                candidateName = cDef.name,
+                candidateDescription = cDef.description,
+                status = "not tried: $reason",
+                notTriedReason = reason
+            )
+        }
+
+        if (cachedVectors == null && embedder == null) {
+            val reason = cDef.fallbackReason ?: "provider unavailable"
+            println("Skipping candidate '${cDef.name}': not tried ($reason)")
+            return CandidateSummaryMetrics(
+                candidateName = cDef.name,
+                candidateDescription = cDef.description,
+                status = "not tried: $reason",
+                notTriedReason = reason
+            )
+        }
+
+        val vectorsObj = cachedVectors ?: SavedVectors(
+            candidateName = cDef.name,
+            dimensions = embedder?.dimensions ?: 0
+        )
+
+        // Check missing documents
+        val missingDocs = documents.filter { it.id !in vectorsObj.documents }
+        val missingQueries = labels.searches.filter { it.query !in vectorsObj.queries }
+
+        if (missingDocs.isNotEmpty() || missingQueries.isNotEmpty()) {
+            if (embedder == null) {
+                val reason = "incomplete cache and missing API key"
+                println("Cannot evaluate candidate '${cDef.name}': $reason")
+                return CandidateSummaryMetrics(
+                    candidateName = cDef.name,
+                    candidateDescription = cDef.description,
+                    status = "not tried: $reason",
+                    notTriedReason = reason
+                )
+            }
+
+            var failureReason: String? = null
+            try {
+                if (missingDocs.isNotEmpty()) {
+                    println("Embedding ${missingDocs.size} documents for candidate '${cDef.name}'...")
+                    for ((idx, doc) in missingDocs.withIndex()) {
+                        print("\rEmbedding documents: ${idx + 1}/${missingDocs.size}")
+                        try {
+                            val vec = embedder.embedDocument(doc.content)
+                            vectorsObj.documents[doc.id] = vec.toList()
+                        } catch (t: Throwable) {
+                            failureReason = cleanErrorMessage(t)
+                            println("\nError embedding document '${doc.title}': $failureReason")
+                            break
+                        }
+                    }
+                    println()
+                }
+
+                if (failureReason == null && missingQueries.isNotEmpty()) {
+                    println("Embedding ${missingQueries.size} queries for candidate '${cDef.name}'...")
+                    for ((idx, s) in missingQueries.withIndex()) {
+                        print("\rEmbedding queries: ${idx + 1}/${missingQueries.size}")
+                        try {
+                            val vec = embedder.embedQuery(s.query)
+                            vectorsObj.queries[s.query] = vec.toList()
+                        } catch (t: Throwable) {
+                            failureReason = cleanErrorMessage(t)
+                            println("\nError embedding query '${s.query}': $failureReason")
+                            break
+                        }
+                    }
+                    println()
+                }
+            } finally {
+                // Vectors embedded before the failure are saved to that candidate's cache file, so a re-run resumes from where it stopped.
+                if (vectorsObj.documents.isNotEmpty() || vectorsObj.queries.isNotEmpty()) {
+                    try {
+                        saveVectors(cacheFile, vectorsObj)
+                        println("Saved ${vectorsObj.documents.size} document vectors and ${vectorsObj.queries.size} query vectors to ${cacheFile.name}")
+                    } catch (e: Exception) {
+                        println("Failed to save partial vectors cache: ${cleanErrorMessage(e)}")
+                    }
+                }
+            }
+
+            if (failureReason != null) {
+                println("Candidate '${cDef.name}' marked not tried due to embedding failure: $failureReason")
+                return CandidateSummaryMetrics(
+                    candidateName = cDef.name,
+                    candidateDescription = cDef.description,
+                    status = "not tried: $failureReason",
+                    notTriedReason = failureReason
+                )
+            }
+        } else {
+            println("Using cached vectors for candidate '${cDef.name}' (${vectorsObj.documents.size} docs, ${vectorsObj.queries.size} queries)")
+        }
+
+        // Run evaluation
+        val docVectors = vectorsObj.documents.mapValues { it.value.toFloatArray() }
+        val queryVectors = vectorsObj.queries.mapValues { it.value.toFloatArray() }
+
+        val searchMetrics = labels.searches.mapNotNull { search ->
+            val qVec = queryVectors[search.query] ?: return@mapNotNull null
+            evaluateSearch(search, qVec, documents, docVectors)
+        }
+
+        return summarizeCandidate(cDef.name, cDef.description, searchMetrics)
+    }
+
+    fun runEvaluation(
+        candidates: List<CandidateDefinition>,
+        evalDir: File,
+        documents: List<EvaluationDocument>,
+        labels: LabelsFile
+    ): List<CandidateSummaryMetrics> {
+        return candidates.map { cDef ->
+            val cacheFile = vectorCacheFile(evalDir, cDef.name)
+            evaluateCandidate(cDef, cacheFile, documents, labels)
+        }
+    }
 }
 
 fun main(args: Array<String>) {
@@ -750,15 +918,8 @@ fun main(args: Array<String>) {
     // 2. gemini-embedding-001 with task types (RETRIEVAL_QUERY / RETRIEVAL_DOCUMENT)
     // 3. gemini-embedding-2-preview (3072 dims)
     // 4. embeddinggemma via Ollama Cloud (marked not tried if unconfigured)
-    data class CandidateDef(
-        val name: String,
-        val description: String,
-        val buildEmbedder: () -> SemanticSearchEvaluation.CandidateEmbedder?,
-        val fallbackReason: String? = null
-    )
-
     val candidateDefs = listOf(
-        CandidateDef(
+        SemanticSearchEvaluation.CandidateDefinition(
             name = "gemini-embedding-001",
             description = "Current setup: gemini-embedding-001 (768 dimensions, no task type)",
             buildEmbedder = {
@@ -774,7 +935,7 @@ fun main(args: Array<String>) {
             },
             fallbackReason = if (googleApiKey.isBlank()) "no GOOGLE_AI_API_KEY configured" else null
         ),
-        CandidateDef(
+        SemanticSearchEvaluation.CandidateDefinition(
             name = "gemini-embedding-001-task-types",
             description = "gemini-embedding-001 with RETRIEVAL_QUERY and RETRIEVAL_DOCUMENT task types (768 dimensions)",
             buildEmbedder = {
@@ -792,7 +953,7 @@ fun main(args: Array<String>) {
             },
             fallbackReason = if (googleApiKey.isBlank()) "no GOOGLE_AI_API_KEY configured" else null
         ),
-        CandidateDef(
+        SemanticSearchEvaluation.CandidateDefinition(
             name = "gemini-embedding-2-preview",
             description = "Gemini Embedding 2: gemini-embedding-2-preview (3072 dimensions)",
             buildEmbedder = {
@@ -810,7 +971,7 @@ fun main(args: Array<String>) {
             },
             fallbackReason = if (googleApiKey.isBlank()) "no GOOGLE_AI_API_KEY configured" else null
         ),
-        CandidateDef(
+        SemanticSearchEvaluation.CandidateDefinition(
             name = "embedding-gemma",
             description = "EmbeddingGemma via Ollama Cloud (768 dimensions)",
             buildEmbedder = {
@@ -834,112 +995,7 @@ fun main(args: Array<String>) {
         candidateDefs
     }
 
-    val results = mutableListOf<SemanticSearchEvaluation.CandidateSummaryMetrics>()
-
-    for (cDef in activeCandidateDefs) {
-        val cacheFile = SemanticSearchEvaluation.vectorCacheFile(evalDir, cDef.name)
-        var cachedVectors = SemanticSearchEvaluation.loadVectors(cacheFile)
-
-        if (cachedVectors == null && cDef.fallbackReason != null) {
-            println("Skipping candidate '${cDef.name}': not tried (${cDef.fallbackReason})")
-            results.add(
-                SemanticSearchEvaluation.CandidateSummaryMetrics(
-                    candidateName = cDef.name,
-                    candidateDescription = cDef.description,
-                    status = "not tried: ${cDef.fallbackReason}",
-                    notTriedReason = cDef.fallbackReason
-                )
-            )
-            continue
-        }
-
-        val embedder = try {
-            cDef.buildEmbedder()
-        } catch (e: Exception) {
-            println("Failed to initialize candidate '${cDef.name}': ${e.message}")
-            results.add(
-                SemanticSearchEvaluation.CandidateSummaryMetrics(
-                    candidateName = cDef.name,
-                    candidateDescription = cDef.description,
-                    status = "not tried: ${e.message}",
-                    notTriedReason = e.message
-                )
-            )
-            continue
-        }
-
-        if (cachedVectors == null && embedder == null) {
-            val reason = cDef.fallbackReason ?: "provider unavailable"
-            println("Skipping candidate '${cDef.name}': not tried ($reason)")
-            results.add(
-                SemanticSearchEvaluation.CandidateSummaryMetrics(
-                    candidateName = cDef.name,
-                    candidateDescription = cDef.description,
-                    status = "not tried: $reason",
-                    notTriedReason = reason
-                )
-            )
-            continue
-        }
-
-        val vectorsObj = cachedVectors ?: SemanticSearchEvaluation.SavedVectors(
-            candidateName = cDef.name,
-            dimensions = embedder!!.dimensions
-        )
-
-        // Check missing documents
-        val missingDocs = documents.filter { it.id !in vectorsObj.documents }
-        val missingQueries = labels.searches.filter { it.query !in vectorsObj.queries }
-
-        if (missingDocs.isNotEmpty() || missingQueries.isNotEmpty()) {
-            if (embedder == null) {
-                val reason = "incomplete cache and missing API key"
-                println("Cannot evaluate candidate '${cDef.name}': $reason")
-                results.add(
-                    SemanticSearchEvaluation.CandidateSummaryMetrics(
-                        candidateName = cDef.name,
-                        candidateDescription = cDef.description,
-                        status = "not tried: $reason",
-                        notTriedReason = reason
-                    )
-                )
-                continue
-            }
-
-            println("Embedding ${missingDocs.size} documents for candidate '${cDef.name}'...")
-            for ((idx, doc) in missingDocs.withIndex()) {
-                print("\rEmbedding documents: ${idx + 1}/${missingDocs.size}")
-                val vec = embedder.embedDocument(doc.content)
-                vectorsObj.documents[doc.id] = vec.toList()
-            }
-            println()
-
-            println("Embedding ${missingQueries.size} queries for candidate '${cDef.name}'...")
-            for ((idx, s) in missingQueries.withIndex()) {
-                print("\rEmbedding queries: ${idx + 1}/${missingQueries.size}")
-                val vec = embedder.embedQuery(s.query)
-                vectorsObj.queries[s.query] = vec.toList()
-            }
-            println()
-
-            SemanticSearchEvaluation.saveVectors(cacheFile, vectorsObj)
-            println("Saved vectors to ${cacheFile.name}")
-        } else {
-            println("Using cached vectors for candidate '${cDef.name}' (${vectorsObj.documents.size} docs, ${vectorsObj.queries.size} queries)")
-        }
-
-        // Run evaluation
-        val docVectors = vectorsObj.documents.mapValues { it.value.toFloatArray() }
-        val queryVectors = vectorsObj.queries.mapValues { it.value.toFloatArray() }
-
-        val searchMetrics = labels.searches.mapNotNull { search ->
-            val qVec = queryVectors[search.query] ?: return@mapNotNull null
-            SemanticSearchEvaluation.evaluateSearch(search, qVec, documents, docVectors)
-        }
-
-        val summary = SemanticSearchEvaluation.summarizeCandidate(cDef.name, cDef.description, searchMetrics)
-        results.add(summary)
-    }
+    val results = SemanticSearchEvaluation.runEvaluation(activeCandidateDefs, evalDir, documents, labels)
 
     val reportMarkdown = SemanticSearchEvaluation.generateMarkdownReport(labels, results)
     reportFile.writeText(reportMarkdown)

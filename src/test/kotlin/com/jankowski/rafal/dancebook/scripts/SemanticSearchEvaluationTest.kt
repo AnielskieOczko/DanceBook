@@ -321,4 +321,136 @@ class SemanticSearchEvaluationTest {
         assertTrue(report.contains("`head dropping`"))
         assertTrue(report.contains("**GOOD**"))
     }
+
+    @Test
+    fun `should handle embedder failure partway through by persisting partial cache, continuing run, and producing report`(@TempDir tempDir: File) {
+        val documents = listOf(
+            EvaluationDocument("doc1", "Doc 1", "NOTE", "Waltz", "rafal", "PUBLIC", "Content 1"),
+            EvaluationDocument("doc2", "Doc 2", "NOTE", "Waltz", "rafal", "PUBLIC", "Content 2"),
+            EvaluationDocument("doc3", "Doc 3", "NOTE", "Waltz", "rafal", "PUBLIC", "Content 3")
+        )
+        val labels = LabelsFile(
+            confirmed = true,
+            searches = listOf(
+                SearchLabel(1, "query 1", "rafal", "Note", listOf("Doc 1"), listOf("Doc 3"))
+            )
+        )
+
+        // Candidate 1: Works completely
+        val candidate1 = SemanticSearchEvaluation.CandidateDefinition(
+            name = "working-candidate",
+            description = "Working embedder",
+            buildEmbedder = {
+                object : SemanticSearchEvaluation.CandidateEmbedder {
+                    override val name = "working"
+                    override val description = "working"
+                    override val dimensions = 2
+                    override fun embedDocument(text: String) = floatArrayOf(1f, 0f)
+                    override fun embedQuery(text: String) = floatArrayOf(1f, 0f)
+                }
+            }
+        )
+
+        // Candidate 2: Throws on 3rd document
+        var embedCount = 0
+        val candidate2 = SemanticSearchEvaluation.CandidateDefinition(
+            name = "failing-candidate",
+            description = "Failing embedder",
+            buildEmbedder = {
+                object : SemanticSearchEvaluation.CandidateEmbedder {
+                    override val name = "failing"
+                    override val description = "failing"
+                    override val dimensions = 2
+                    override fun embedDocument(text: String): FloatArray {
+                        embedCount++
+                        if (embedCount > 2) {
+                            throw RuntimeException("ResourceExhausted: 429 quota exceeded for key=secret123")
+                        }
+                        return floatArrayOf(0f, 1f)
+                    }
+                    override fun embedQuery(text: String) = floatArrayOf(0f, 1f)
+                }
+            }
+        )
+
+        // Candidate 3: Works completely
+        val candidate3 = SemanticSearchEvaluation.CandidateDefinition(
+            name = "after-failing-candidate",
+            description = "Runs after failure",
+            buildEmbedder = {
+                object : SemanticSearchEvaluation.CandidateEmbedder {
+                    override val name = "working-after"
+                    override val description = "working-after"
+                    override val dimensions = 2
+                    override fun embedDocument(text: String) = floatArrayOf(1f, 1f)
+                    override fun embedQuery(text: String) = floatArrayOf(1f, 1f)
+                }
+            }
+        )
+
+        val results = SemanticSearchEvaluation.runEvaluation(
+            listOf(candidate1, candidate2, candidate3),
+            tempDir,
+            documents,
+            labels
+        )
+
+        // 1. All three candidates must be in results
+        assertEquals(3, results.size)
+
+        // 2. Candidate 1 evaluated
+        assertEquals("Evaluated", results[0].status)
+        assertEquals(1, results[0].searchMetrics.size)
+
+        // 3. Candidate 2 marked not tried with sanitized error (no key leaked)
+        assertTrue(results[1].status.startsWith("not tried:"))
+        assertTrue(results[1].status.contains("ResourceExhausted: 429 quota exceeded"))
+        assertFalse(results[1].status.contains("secret123"))
+        assertEquals(results[1].notTriedReason, results[1].status.removePrefix("not tried: "))
+
+        // 4. Candidate 3 evaluated (run continued!)
+        assertEquals("Evaluated", results[2].status)
+        assertEquals(1, results[2].searchMetrics.size)
+
+        // 5. Partial cache for Candidate 2 holds the 2 vectors embedded before failure
+        val partialCacheFile = SemanticSearchEvaluation.vectorCacheFile(tempDir, candidate2.name)
+        assertTrue(partialCacheFile.exists())
+        val cached = SemanticSearchEvaluation.loadVectors(partialCacheFile)
+        assertNotNull(cached)
+        assertEquals(2, cached!!.documents.size)
+        assertTrue(cached.documents.containsKey("doc1"))
+        assertTrue(cached.documents.containsKey("doc2"))
+        assertFalse(cached.documents.containsKey("doc3"))
+
+        // 6. Report is produced and contains all candidates
+        val report = SemanticSearchEvaluation.generateMarkdownReport(labels, results)
+        assertTrue(report.contains("working-candidate"))
+        assertTrue(report.contains("failing-candidate"))
+        assertTrue(report.contains("after-failing-candidate"))
+        assertTrue(report.contains("ResourceExhausted: 429 quota exceeded"))
+        assertFalse(report.contains("secret123"))
+
+        // 7. Re-running candidate 2 with a fixed embedder resumes from where it stopped (embeds only doc3)
+        var resumeEmbedCount = 0
+        val candidate2Fixed = SemanticSearchEvaluation.CandidateDefinition(
+            name = "failing-candidate",
+            description = "Fixed embedder resuming",
+            buildEmbedder = {
+                object : SemanticSearchEvaluation.CandidateEmbedder {
+                    override val name = "fixed"
+                    override val description = "fixed"
+                    override val dimensions = 2
+                    override fun embedDocument(text: String): FloatArray {
+                        resumeEmbedCount++
+                        return floatArrayOf(0f, 1f)
+                    }
+                    override fun embedQuery(text: String) = floatArrayOf(0f, 1f)
+                }
+            }
+        )
+
+        val resumeResult = SemanticSearchEvaluation.evaluateCandidate(candidate2Fixed, partialCacheFile, documents, labels)
+        assertEquals("Evaluated", resumeResult.status)
+        assertEquals(1, resumeEmbedCount) // only the 1 missing doc was embedded!
+    }
 }
