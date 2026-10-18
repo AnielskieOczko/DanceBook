@@ -152,7 +152,7 @@ class DanceFigureLocaleWebTest {
         )
             .andExpect(status().isOk)
             .andExpect(content().string(containsString("Główne szczegóły")))
-            .andExpect(content().string(containsString("Powrót do bazy")))
+            .andExpect(content().string(containsString("Figury")))
             .andExpect(content().string(containsString("Kroki ze syllabusa")))
             .andExpect(content().string(containsString("Pozycje i ustawienie")))
             .andExpect(content().string(containsString("Połączenia")))

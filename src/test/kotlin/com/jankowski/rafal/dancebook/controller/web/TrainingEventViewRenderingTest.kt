@@ -887,7 +887,7 @@ class TrainingEventViewRenderingTest {
     }
 
     @Test
-    fun `view page renders edit and delete actions as icon-only with accessible names`() {
+    fun `view page renders edit and delete actions`() {
         val series = com.jankowski.rafal.dancebook.model.TrainingSeries().apply {
             id = UUID.randomUUID()
             title = "Monday practice"
@@ -903,25 +903,19 @@ class TrainingEventViewRenderingTest {
         val doc = Jsoup.parse(html)
         val editLink = doc.selectFirst("a[href='/training-events/${event.id}/edit']")
         assertNotNull(editLink, "Edit link should be present")
-        assertTrue(editLink!!.hasClass("btn-icon"), "Edit link should have btn-icon class")
-        assertEquals("Edit", editLink.attr("aria-label"), "Edit link should have aria-label='Edit'")
-        assertEquals("Edit", editLink.attr("title"), "Edit link should have title='Edit'")
-        assertTrue(editLink.ownText().trim().isEmpty(), "Edit link should have no text outside icon")
-        assertTrue(editLink.select("span:not(.material-symbols-outlined)").isEmpty(), "Edit link should have no text label elements")
+        assertTrue(editLink!!.hasClass("btn-primary"), "Edit link should have btn-primary class")
+        assertTrue(editLink.text().contains("Edit"), "Edit link should contain text 'Edit'")
 
         val deleteBtn = doc.selectFirst("button[hx-get='/training-events/${event.id}/delete-dialog']")
-        assertNotNull(deleteBtn, "Delete button should be present")
-        assertTrue(deleteBtn!!.hasClass("btn-icon"), "Delete button should have btn-icon class")
-        assertTrue(deleteBtn.hasClass("text-danger"), "Delete button should have text-danger class")
+        assertNotNull(deleteBtn, "Delete button should be present in menu")
+        assertTrue(deleteBtn!!.hasClass("text-danger"), "Delete button should have text-danger class")
         assertTrue(deleteBtn.hasClass("hover:bg-danger-soft"), "Delete button should have hover:bg-danger-soft class")
         assertEquals("Delete", deleteBtn.attr("aria-label"), "Delete button should have aria-label='Delete'")
-        assertEquals("Delete", deleteBtn.attr("title"), "Delete button should have title='Delete'")
-        assertTrue(deleteBtn.ownText().trim().isEmpty(), "Delete button should have no text outside icon")
-        assertTrue(deleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Delete button should have no text label elements")
+        assertTrue(deleteBtn.text().contains("Delete"), "Delete button should contain text 'Delete'")
     }
 
     @Test
-    fun `view page standalone delete button renders as icon-only with accessible names`() {
+    fun `view page standalone delete button renders in overflow menu`() {
         val event = attendedSession()
         `when`(trainingEventService.findById(event.id!!)).thenReturn(event)
 
@@ -932,14 +926,10 @@ class TrainingEventViewRenderingTest {
 
         val doc = Jsoup.parse(html)
         val deleteBtn = doc.selectFirst("form[action='/training-events/${event.id}/delete'] button[type='submit']")
-        assertNotNull(deleteBtn, "Standalone delete submit button should be present")
-        assertTrue(deleteBtn!!.hasClass("btn-icon"), "Standalone delete button should have btn-icon class")
-        assertTrue(deleteBtn.hasClass("text-danger"), "Standalone delete button should have text-danger class")
+        assertNotNull(deleteBtn, "Standalone delete submit button should be present in menu")
+        assertTrue(deleteBtn!!.hasClass("text-danger"), "Standalone delete button should have text-danger class")
         assertTrue(deleteBtn.hasClass("hover:bg-danger-soft"), "Standalone delete button should have hover:bg-danger-soft class")
-        assertEquals("Delete", deleteBtn.attr("aria-label"), "Standalone delete button should have aria-label='Delete'")
-        assertEquals("Delete", deleteBtn.attr("title"), "Standalone delete button should have title='Delete'")
-        assertTrue(deleteBtn.ownText().trim().isEmpty(), "Standalone delete button should have no text outside icon")
-        assertTrue(deleteBtn.select("span:not(.material-symbols-outlined)").isEmpty(), "Standalone delete button should have no text label elements")
+        assertTrue(deleteBtn.text().contains("Delete"), "Standalone delete button should contain text 'Delete'")
     }
 
     @Test

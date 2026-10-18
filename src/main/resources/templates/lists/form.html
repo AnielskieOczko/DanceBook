@@ -4,7 +4,11 @@
 
 <section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=(${listId == null ? #messages.msg('collections.new') : #messages.msg('collections.edit')}), subtitle=#{collections.form.subtitle})}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref=${listId == null ? '/lists' : '/lists/' + listId},
+        backLabel=${listId == null ? #messages.msg('collections.back_to_list') : ((listRequest.name != null and !listRequest.name.isEmpty()) ? listRequest.name : #messages.msg('collections.back_to_list'))},
+        title=(${listId == null ? #messages.msg('collections.new') : #messages.msg('collections.edit')}),
+        subtitle=#{collections.form.subtitle})}"></div>
 
     <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
           th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">

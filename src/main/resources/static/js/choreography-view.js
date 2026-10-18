@@ -1,10 +1,9 @@
 (function() {
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', function() {
+    document.querySelectorAll('#printBtn, .js-print-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
             window.print();
         });
-    }
+    });
 
     // Close the LOD Color Guide legend when clicking anywhere outside of it
     const colorGuide = document.getElementById('lod-color-guide');

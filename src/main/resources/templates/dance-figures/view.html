@@ -8,42 +8,44 @@
         <div th:replace="~{fragments/alert :: alert(variant='error', text=${deleteError})}"></div>
     </div>
 
-    <!-- Header Section with Title and Actions -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 pb-6 border-b border-outline-variant/30 gap-4">
-        <div>
-            <div class="flex flex-wrap items-center gap-3 mb-2">
-                <h1 class="text-3xl font-headline-lg text-on-surface" th:text="${danceFigure.name}">Figure Name</h1>
-                <th:block th:if="${danceFigure.danceClass != null or danceFigure.medalLevel != null}">
-                    <span class="inline-flex items-center gap-2">
-                        <th:block th:if="${danceFigure.danceClass != null}">
-                            <span th:replace="~{fragments/badge :: badge(label=${#messages.msg('figures.view.class_label', danceFigure.danceClass)}, variant='accent', cls='uppercase font-bold')}"></span>
-                        </th:block>
+    <!-- Header Section with Back Row, Title, Badges, and Actions -->
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref='/dance-figures',
+        backLabel=#{figures.back_to_list},
+        title=${danceFigure.name},
+        subtitle=${danceFigure.danceType != null ? danceFigure.danceType.name : #messages.msg('figures.view.unknown_style')},
+        metaSlot=~{::figureMeta},
+        primaryUrl=@{/dance-figures/{id}/edit(id=${danceFigure.id})},
+        primaryText=#{figures.view.edit},
+        primaryIcon='edit',
+        menuSlot=~{::figureMenu},
+        hasMenu=${danceFigure.isDeletableBy(currentUser)})}">
+
+        <th:block th:fragment="figureMeta">
+            <th:block th:if="${danceFigure.danceClass != null or danceFigure.medalLevel != null}">
+                <span class="inline-flex items-center gap-2">
+                    <th:block th:if="${danceFigure.danceClass != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=${#messages.msg('figures.view.class_label', danceFigure.danceClass)}, variant='accent', cls='uppercase font-bold')}"></span>
+                    </th:block>
+                    <th:block th:if="${danceFigure.medalLevel != null}">
                         <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
-                    </span>
-                </th:block>
-                <th:block th:if="${danceFigure.predefined}">
-                    <span th:replace="~{fragments/badge :: badge(label=#{figures.view.predefined}, variant='neutral')}"></span>
-                </th:block>
-            </div>
-            <p class="text-on-surface-variant font-body-md" th:text="${danceFigure.danceType != null ? danceFigure.danceType.name : #messages.msg('figures.view.unknown_style')}">Dance Style</p>
-        </div>
-        
-        <div class="flex items-center gap-3 flex-wrap">
-            <!-- Edit Button -->
-            <a th:href="@{/dance-figures/{id}/edit(id=${danceFigure.id})}" class="btn-primary flex items-center gap-1.5">
-                <span th:replace="~{fragments/icon :: icon(name='edit', size='md')}"></span> <span th:text="#{figures.view.edit}">Edit Figure</span>
-            </a>
-            
-            <!-- Delete: creator or admin; syllabus figures admin only -->
-            <form th:if="${danceFigure.isDeletableBy(currentUser)}" th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
+                    </th:block>
+                </span>
+            </th:block>
+            <th:block th:if="${danceFigure.predefined}">
+                <span th:replace="~{fragments/badge :: badge(label=#{figures.view.predefined}, variant='neutral')}"></span>
+            </th:block>
+        </th:block>
+
+        <th:block th:fragment="figureMenu">
+            <form th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
                   th:attr="data-confirm=#{figures.delete_confirm}" data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
-                <button type="submit" class="btn-danger flex items-center gap-1.5">
-                    <span th:replace="~{fragments/icon :: icon(name='delete', size='md')}"></span> <span th:text="#{figures.view.delete}">Delete Figure</span>
+                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                    <span th:text="#{figures.view.delete}">Delete Figure</span>
                 </button>
             </form>
-            
-            <a href="/dance-figures" class="btn-outline" th:text="#{figures.view.back_to_database}">Back to Database</a>
-        </div>
+        </th:block>
     </div>
 
     <!-- TOP SECTION: Metadata Grid (3 Columns on Desktop) -->

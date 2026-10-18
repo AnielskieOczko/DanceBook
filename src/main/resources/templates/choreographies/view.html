@@ -49,57 +49,54 @@
         }
     </style>
 
-    <!-- Top Action Bar (no-print) -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 no-print">
-        <div>
-            <div class="flex items-center gap-2 mb-2">
-                <a href="/choreographies" class="text-xs text-on-surface-variant hover:text-primary flex items-center gap-1">
-                    <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm')}"></span>
-                    <span th:text="#{choreographies.view.back_to_list}">Back to List</span>
-                </a>
-            </div>
-            <div class="flex items-center gap-3">
-                <h1 class="text-3xl font-heading font-bold text-on-surface" th:text="${choreography.name}">Competition Waltz</h1>
-                <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
-                      th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
-                <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreography.medalLevel}, word=true, size='lg')}"></th:block>
-            </div>
-        </div>
-        
-        <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-between sm:justify-start">
-            <!-- Print button -->
-            <button id="printBtn" class="btn-outline btn-sm flex-1 sm:flex-initial justify-center">
+    <!-- Header Section with Back Row, Title, Badges, and Actions (no-print) -->
+    <div th:replace="~{fragments/page :: pageHeader(
+        cls='no-print',
+        backHref='/choreographies',
+        backLabel=#{choreographies.back_to_list},
+        title=${choreography.name},
+        metaSlot=~{::choreoMeta},
+        secondarySlot=~{::choreoSecondary},
+        primaryUrl=@{/choreographies/{id}/edit(id=${choreography.id})},
+        primaryText=#{choreographies.view.build_sequence},
+        primaryIcon='edit',
+        menuSlot=~{::choreoMenu})}">
+
+        <th:block th:fragment="choreoMeta">
+            <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-xs font-label-sm uppercase tracking-wider border border-primary-container/30"
+                  th:text="${choreography.danceType != null ? choreography.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
+            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreography.medalLevel}, word=true, size='lg')}"></th:block>
+        </th:block>
+
+        <button th:fragment="choreoSecondary" id="printBtn" type="button" class="btn-outline btn-sm min-h-[44px] flex items-center gap-1.5 cursor-pointer">
+            <span th:replace="~{fragments/icon :: icon(name='print', size='sm')}"></span>
+            <span th:text="#{choreographies.view.print_pdf}">Print / PDF</span>
+        </button>
+
+        <th:block th:fragment="choreoMenu">
+            <button type="button" class="js-print-btn sm:hidden flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors cursor-pointer select-none">
                 <span th:replace="~{fragments/icon :: icon(name='print', size='sm')}"></span>
-                <span class="text-xs sm:text-sm" th:text="#{choreographies.view.print_pdf}">Print / PDF</span>
+                <span th:text="#{choreographies.view.print_pdf}">Print / PDF</span>
             </button>
-            <a th:href="@{/choreographies/{id}/edit(id=${choreography.id})}" class="btn-primary btn-sm flex-1 sm:flex-initial justify-center">
-                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                <span class="text-xs sm:text-sm" th:text="#{choreographies.view.build_sequence}">Build Sequence</span>
+            <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
+                <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span>
+                <span th:text="#{choreographies.action.edit_details}">Edit Details</span>
             </a>
-            <!-- Duplicate & Delete actions -->
-            <div class="relative inline-block text-left">
-                <button type="button" class="js-menu-btn btn-outline btn-sm min-w-[44px] min-h-[44px] flex items-center justify-center p-0" aria-label="More actions" th:attr="aria-label=#{choreographies.more_actions}">
-                    <span th:replace="~{fragments/icon :: icon(name='more_horiz', size='md')}"></span>
+            <form th:action="@{/choreographies/{id}/duplicate(id=${choreography.id})}" method="post">
+                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span>
+                    <span th:text="#{choreographies.action.clone_routine}">Duplicate</span>
                 </button>
-                <div class="js-menu-dropdown absolute right-0 mt-2 w-44 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
-                    <a th:href="@{/choreographies/{id}/metadata(id=${choreography.id})}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                        <span th:replace="~{fragments/icon :: icon(name='settings', size='sm')}"></span> <span th:text="#{choreographies.action.edit_details}">Edit Details</span>
-                    </a>
-                    <form th:action="@{/choreographies/{id}/duplicate(id=${choreography.id})}" method="post">
-                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-on-surface hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.clone_routine}">Duplicate</span>
-                        </button>
-                    </form>
-                    <hr class="border-border my-1">
-                    <form th:action="@{/choreographies/{id}/delete(id=${choreography.id})}" method="post"
-                          th:data-confirm="#{choreographies.delete_confirm}">
-                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-surface-warm transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{choreographies.action.delete_routine}">Delete</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+            </form>
+            <hr class="border-border my-1">
+            <form th:action="@{/choreographies/{id}/delete(id=${choreography.id})}" method="post"
+                  th:data-confirm="#{choreographies.delete_confirm}">
+                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                    <span th:text="#{choreographies.action.delete_routine}">Delete</span>
+                </button>
+            </form>
+        </th:block>
     </div>
 
     <!-- Main Routine Card -->

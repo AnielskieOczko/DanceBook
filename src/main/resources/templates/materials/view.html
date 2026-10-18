@@ -3,52 +3,47 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='materials'" class="max-w-[760px] mx-auto space-y-8 -mt-4 md:-mt-8">
-
-    <!-- Contextual Sub-Header -->
-    <header class="flex items-center justify-between pb-4 border-b border-outline-variant">
-        <a href="/materials" class="min-h-[44px] flex items-center gap-1.5 text-sm md:text-base font-medium text-on-surface-variant hover:text-on-surface transition-colors group">
-            <span th:replace="~{fragments/icon :: icon(name='arrow_back', size='sm', cls='group-hover:-translate-x-0.5 transition-transform')}"></span>
-            <span th:text="#{notes.title}">Notes</span>
-        </a>
-        <div class="flex items-center gap-2">
-            <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)}">
-                <a th:href="@{/materials/{id}/edit(id=${material.id})}" class="btn-primary btn-sm flex items-center gap-1.5">
-                    <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                    <span th:text="#{notes.action.edit_note}">Edit note</span>
-                </a>
-            </th:block>
-        </div>
-    </header>
+<section th:with="activeNav='materials'" class="max-w-[760px] mx-auto space-y-8">
 
     <!-- Article Content -->
     <article class="space-y-4">
-        <!-- Tags: plain sentence-case chips -->
-        <div class="flex flex-wrap items-center gap-2 text-xs text-on-surface-variant">
-            <th:block th:if="${material.danceType != null}">
-                <span th:replace="~{fragments/badge :: badge(label=${material.danceType.name}, variant='neutral')}"></span>
-            </th:block>
-            <th:block th:if="${material.danceType != null and material.danceType.category != null}">
-                <span th:replace="~{fragments/badge :: badge(label=${material.danceType.category.name}, variant='neutral')}"></span>
-            </th:block>
-            <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
-        </div>
+        <header>
+            <div th:replace="~{fragments/page :: pageHeader(
+                backHref='/materials',
+                backLabel=#{notes.back_to_list},
+                title=${material.name},
+                titleCls='font-serif text-[30px] md:text-[42px] leading-[1.2] md:leading-[1.15] font-semibold tracking-[-0.01em] md:tracking-[-0.015em]',
+                metaSlot=~{::noteMeta},
+                subtitleSlot=~{::noteSubtitle},
+                primaryUrl=@{/materials/{id}/edit(id=${material.id})},
+                primaryText=#{notes.action.edit_note},
+                primaryIcon='edit',
+                hasPrimary=${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)})}">
 
-        <!-- Title in Source Serif 4 -->
-        <h1 class="font-serif text-[30px] md:text-[42px] leading-[1.2] md:leading-[1.15] font-semibold tracking-[-0.01em] md:tracking-[-0.015em] text-on-surface m-0"
-            th:text="${material.name}">Note Title</h1>
+                <th:block th:fragment="noteMeta">
+                    <th:block th:if="${material.danceType != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=${material.danceType.name}, variant='neutral')}"></span>
+                    </th:block>
+                    <th:block th:if="${material.danceType != null and material.danceType.category != null}">
+                        <span th:replace="~{fragments/badge :: badge(label=${material.danceType.category.name}, variant='neutral')}"></span>
+                    </th:block>
+                    <span th:replace="~{fragments/badge :: badge(label=${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}, variant=${material.isPublic ? 'success' : 'neutral'})}"></span>
+                </th:block>
 
-        <!-- Meta items -->
-        <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-on-surface-variant">
-            <span th:if="${material.rating != null}" class="flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-on-surface')}"></span>
-                <span><span class="font-semibold text-on-surface" th:text="${material.rating}">4</span>/5</span>
-            </span>
-            <span th:if="${material.createdAt != null}"
-                  th:text="#{notes.meta.created(${#temporals.format(material.createdAt, 'd MMM yyyy')})}">Created 16 Sep 2026</span>
-            <span th:if="${material.updatedAt != null}"
-                  th:text="#{notes.meta.updated(${#temporals.format(material.updatedAt, 'd MMM yyyy')})}">Updated 22 Sep 2026</span>
-        </div>
+                <th:block th:fragment="noteSubtitle">
+                    <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-on-surface-variant">
+                        <span th:if="${material.rating != null}" class="flex items-center gap-1">
+                            <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-on-surface')}"></span>
+                            <span><span class="font-semibold text-on-surface" th:text="${material.rating}">4</span>/5</span>
+                        </span>
+                        <span th:if="${material.createdAt != null}"
+                              th:text="#{notes.meta.created(${#temporals.format(material.createdAt, 'd MMM yyyy')})}">Created 16 Sep 2026</span>
+                        <span th:if="${material.updatedAt != null}"
+                              th:text="#{notes.meta.updated(${#temporals.format(material.updatedAt, 'd MMM yyyy')})}">Updated 22 Sep 2026</span>
+                    </div>
+                </th:block>
+            </div>
+        </header>
 
         <!-- Note text in reading style (Direction C) -->
         <th:block th:if="${material.description != null}">

@@ -4,7 +4,11 @@
 
 <section th:with="activeNav='dance-categories'" class="max-w-2xl mx-auto py-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=${danceTypeId == null ? 'Add Style' : 'Edit Style'}, subtitle='Define a specific dance style and assign it to a category.')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref='/dance-categories',
+        backLabel=#{collections.filter.categories},
+        title=${danceTypeId == null ? 'Add Style' : 'Edit Style'},
+        subtitle='Define a specific dance style and assign it to a category.')}"></div>
 
     <form th:action="${danceTypeId == null ? '/dance-types' : '/dance-types/' + danceTypeId}"
           th:object="${danceType}" method="post" class="card p-8">

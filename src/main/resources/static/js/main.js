@@ -192,6 +192,7 @@ function closeAllMenus(exceptElement) {
             : dropdown.parentElement?.querySelector('.js-menu-btn');
         if (!exceptElement || (dropdown !== exceptElement && !dropdown.contains(exceptElement) && btn !== exceptElement && !btn?.contains(exceptElement))) {
             dropdown.classList.add('hidden');
+            btn?.setAttribute('aria-expanded', 'false');
         }
     });
 
@@ -360,7 +361,9 @@ document.addEventListener('click', function(event) {
     if (menuBtn) {
         event.preventDefault();
         
-        const dropdown = menuBtn.nextElementSibling;
+        const dropdown = menuBtn.nextElementSibling?.classList.contains('js-menu-dropdown')
+            ? menuBtn.nextElementSibling
+            : menuBtn.parentElement?.querySelector('.js-menu-dropdown');
         if (!dropdown) return;
         
         const isHidden = dropdown.classList.contains('hidden');
@@ -371,8 +374,10 @@ document.addEventListener('click', function(event) {
         // Toggle current menu
         if (isHidden) {
             dropdown.classList.remove('hidden');
+            menuBtn.setAttribute('aria-expanded', 'true');
         } else {
             dropdown.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
         }
         return;
     }
@@ -558,6 +563,46 @@ document.addEventListener('keydown', function(event) {
             }
             return;
         }
+
+        // Arrow key navigation in 3-dot action menus (.js-menu-dropdown and .js-menu-btn)
+        const menuBtn = event.target.closest('.js-menu-btn');
+        if (menuBtn && event.key === 'ArrowDown') {
+            event.preventDefault();
+            const dropdown = menuBtn.nextElementSibling?.classList.contains('js-menu-dropdown')
+                ? menuBtn.nextElementSibling
+                : menuBtn.parentElement?.querySelector('.js-menu-dropdown');
+            if (dropdown) {
+                closeAllMenus(menuBtn);
+                dropdown.classList.remove('hidden');
+                menuBtn.setAttribute('aria-expanded', 'true');
+                const items = Array.from(dropdown.querySelectorAll('a, button, [role="menuitem"]'))
+                    .filter(el => el.offsetParent !== null && !el.disabled);
+                if (items.length > 0) {
+                    items[0].focus();
+                }
+            }
+            return;
+        }
+
+        const menuDropdown = event.target.closest('.js-menu-dropdown');
+        if (menuDropdown && !menuDropdown.classList.contains('hidden')) {
+            event.preventDefault();
+            const items = Array.from(menuDropdown.querySelectorAll('a, button, [role="menuitem"]'))
+                .filter(el => el.offsetParent !== null && !el.disabled);
+            if (items.length > 0) {
+                const currentIndex = items.indexOf(document.activeElement);
+                let nextIndex = 0;
+                if (currentIndex === -1) {
+                    nextIndex = event.key === 'ArrowDown' ? 0 : items.length - 1;
+                } else if (event.key === 'ArrowDown') {
+                    nextIndex = (currentIndex + 1) % items.length;
+                } else {
+                    nextIndex = (currentIndex - 1 + items.length) % items.length;
+                }
+                items[nextIndex].focus();
+            }
+            return;
+        }
     }
 
     if (event.key !== 'Escape' && event.key !== 'Esc') return;
@@ -587,6 +632,7 @@ document.addEventListener('keydown', function(event) {
         const btn = dropdown.previousElementSibling?.classList.contains('js-menu-btn')
             ? dropdown.previousElementSibling
             : dropdown.parentElement?.querySelector('.js-menu-btn');
+        btn?.setAttribute('aria-expanded', 'false');
         if (!triggerToFocus || dropdown.contains(document.activeElement)) {
             triggerToFocus = btn;
         }

@@ -177,6 +177,53 @@
     </div>
 </div>
 
+<div th:fragment="headerDetailAll">
+    <div th:replace="~{fragments/page :: pageHeader(
+        title='Advanced Hip Twist',
+        titleCls='extra-title-cls',
+        subtitle='Cha Cha',
+        icon='accessibility_new',
+        backHref='/dance-figures',
+        backLabel='Figures',
+        primaryUrl='/dance-figures/1/edit',
+        primaryText='Edit Figure',
+        primaryIcon='edit',
+        secondaryUrl='/dance-figures/1/print',
+        secondaryText='Print',
+        secondaryIcon='print',
+        menuSlot=~{::sampleHeaderMenu},
+        metaSlot=~{::sampleHeaderMeta},
+        cls='extra-cls')}">
+        <div th:fragment="sampleHeaderMenu">
+            <th:block th:replace="~{fragments/page :: menuItem(text='Delete', icon='delete', variant='danger')}"></th:block>
+        </div>
+        <div th:fragment="sampleHeaderMeta">
+            <span class="badge-primary">Class F</span>
+        </div>
+    </div>
+</div>
+
+<!-- 14b. PAGE: overflowMenu & menuItem -->
+<div th:fragment="overflowMenuRequired">
+    <div th:replace="~{fragments/page :: overflowMenu}"></div>
+</div>
+
+<div th:fragment="overflowMenuAll">
+    <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::sampleMenuSlot}, cls='extra-menu-cls')}">
+        <div th:fragment="sampleMenuSlot">
+            <th:block th:replace="~{fragments/page :: menuItem(href='/edit', text='Edit Details', icon='edit')}"></th:block>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="menuItemRequired">
+    <th:block th:replace="~{fragments/page :: menuItem(text='Action')}"></th:block>
+</div>
+
+<div th:fragment="menuItemAll">
+    <th:block th:replace="~{fragments/page :: menuItem(href='/edit', text='Edit item', icon='edit', variant='danger', cls='custom-menu-item')}"></th:block>
+</div>
+
 <!-- 15. PAGE: sectionTitle -->
 <div th:fragment="sectionTitleRequired">
     <div th:replace="~{fragments/page :: sectionTitle(title='Recent Items')}"></div>
