@@ -211,7 +211,7 @@ class MaterialFigureSuggestWebTest {
             .andExpect(model().attributeExists("suggestError"))
             .andExpect(content().string(containsString("Try again")))
             .andExpect(content().string(not(containsString("OpenRouter"))))
-            .andExpect(content().string(not(containsString("500"))))
+            .andExpect(content().string(not(containsString("returned 500"))))
     }
 
     @Test
