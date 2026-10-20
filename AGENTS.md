@@ -111,10 +111,41 @@ change is invisible in the activity feed.
 `templates/fragments/` is the component vocabulary, and since #98 there is **one source per
 component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `submitRow`),
 `form` (`field`, `selectField`, `textareaField`, `checkbox`, `toggle`, `richText`,
-`errorSummary`, `rawField`), `page` (`pageHeader`, `sectionTitle`, `viewSwitcher`), `card`, `table`
+`errorSummary`, `rawField`, `searchField`, `filterSelect`), `page` (`pageHeader`, `overflowMenu`,
+`menuItem`, `sectionTitle`, `viewSwitcher`), `card`, `table`
 (`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal` and `rich-text`. Do not
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
+
+**List toolbars use `form :: searchField` and `form :: filterSelect` (#367).** Figures, Notes,
+Lists, Choreographies and Training all take their search box and filter selects from these two,
+which render `pill-input` and `pill-select` (44px borderless filled pills, one focus frame). No
+list template carries its own field classes any more, so a new list filter is a `filterSelect`
+call, never a styled `<select>`. Both pass `hx-*` through as parameters. `pill-select` is on the
+global `*:focus-visible` `:not(...)` list with the other text-entry classes (see *The edit-figure
+page and field focus*). Every tag is a pill too: the `badge` utility is `rounded-pill` and, since
+#367, a size smaller (`text-xs px-2.5 py-0.5`), so it fits in table cells. Tags that used to be
+built by hand on the Note, Figure and Choreography pages, the figure picker and the step tables now
+use the `badge` fragment. The Figures table has no Source column; the "Predefined" lock in the row
+menu is what marks a syllabus figure.
+
+**Detail and edit pages share one header (#365, option A of `docs/mocks/detail-headers`).**
+`pageHeader` takes:
+- a **back row**, `backHref` plus `backLabel`: a 44px arrow link above the title, named after the
+  list ("Figures", "Notes") or, on an edit page, after the item;
+- a `metaSlot` for badges under the title;
+- at most one **primary** action (`primaryUrl`/`primarySlot`), at most one outline **secondary**
+  (`secondaryUrl`/`secondarySlot`), and a `menuSlot` that `overflowMenu` turns into the ⋯ menu.
+  The menu holds everything else, Delete included, and its rows are `menuItem`s.
+
+Below `sm` the actions drop under the title, the primary fills the width and the secondary is
+hidden, so the page repeats it as an `sm:hidden` menu item (`choreographies/view.html` does this for Print). Delete stays a `POST` form with
+`data-confirm`. The menu runs on the existing `js-menu-btn` / `js-menu-dropdown` code in `main.js`,
+which handles ArrowUp/ArrowDown, `aria-expanded`, Escape (focus goes back to the button) and closing
+on a click outside. A new ⋯ menu anywhere, a list row's included, reuses `overflowMenu` and that
+code rather than adding a second dropdown. The old "Back to Database", "Back to List" and "Back"
+buttons are gone. A new detail page passes `backHref` instead of drawing a back button of its own.
+List pages still use `toolbar`, or the older single `actionUrl`.
 
 **A catalog fragment nothing calls is not a component, it is a second copy waiting to drift.**
 `attendanceBadge` (in `badge.html`) and `statCard` (in `card.html`) both existed before #129 and
@@ -1096,7 +1127,7 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
   (`AssistantRateLimiter`, in memory).
 - **Per-user assistant preferences (#309).** `AssistantPreferencesService` is the one place every
   feature asks for a user's preferences; nothing else reads `user_assistant_preferences` (V44).
-  Seven assistant switches, edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
+  Seven assistant switches (plus Remember chat history, #310, below), edited in the Assistant row of the profile page (`POST /profile/assistant-preferences`):
   assistant on, semantic search in standard search, related notes, suggest figures, open in full
   window (default off), include shared items (#311, V45), and the reply language (follow the app,
   Polish or English). Defaults leave
@@ -1125,6 +1156,17 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     `AssistantPreferencesService.forUser(...).showStreaksAndBadges`. **#39 honours it:**
     `BadgeServiceImpl.evaluateForUser` returns at once when it is off, so nothing is evaluated,
     awarded or notified, and the badge views are not rendered.
+  - **Remember chat history (#310, V48)** is the ninth column, default on, with its own row in the
+    profile's Assistant section. Off, a new conversation is stored with `ephemeral = true` plus the
+    login session's id. It works normally while the user is signed in (follow-ups keep context,
+    drafts and cards still Save) but is left out of the history rail. `AssistantConversationCleanup`
+    deletes ephemeral conversations on logout (a `LogoutHandler` in `SecurityConfig`), on session
+    expiry (`HttpSessionListener`) and at start-up. Their messages and drafts go too, through
+    `ON DELETE CASCADE`. **Every cleanup query includes `ephemeral = true`, and a saved conversation
+    never carries a session id.** The first version of #310 set the session id on every conversation
+    and deleted by session id alone, which would have wiped saved chats at logout. A conversation is
+    marked ephemeral when it starts, so changing the switch never saves or deletes one that is
+    already open.
   - **Include shared items (#311) only narrows.** Off, the assistant read tools, the semantic leg of
     standard search and related notes use only items the user owns; the normal access rule is applied
     first and ownership is ANDed on, so it never shows more than the rule allows (an admin is narrowed
@@ -1230,9 +1272,32 @@ Specs and plans are in `docs/superpowers/specs/2026-09-25-ai-assistant-design.md
     matches still overlap between about 0.39 and 0.42, and a short vague query (one word) can lose
     its real answers, so don't read the number as exact. The evaluation set and the data that
     produced it are in `docs/evaluation/semantic-search/`; re-run it before changing the model or the cutoff. Don't
-    paper over relevance in the templates. Known gap (#346): a note that holds every typed word is
-    marked as a keyword hit by the service but is missing from the Notes page's own list, so it can
-    appear nowhere; #347 covers trying query and document task types and newer embedding models.
+    paper over relevance in the templates.
+  - **The page and the service use one definition of a keyword match (#346).**
+    `MaterialSpecification.textSearchPredicates` matches every word (up to 6) anywhere in the title
+    or text, with LIKE escaping. The service's `textSearch` and the Notes page (through the
+    `textSearch` filter on `MaterialService.findAll`) both call it. Before #346 the page matched the
+    exact phrase in the title only. That meant a `BOTH` hit could be missing from the keyword list
+    and also left out of the related group, which takes `SEMANTIC`-only hits, so it appeared nowhere.
+    Never write a second keyword predicate for a list page. **`nameSearch` is a different filter
+    and stays title-only:** saved lists ("Name Contains"), the REST API and
+    `hasPrivateNotesMatchingFilter` use it. The first version of #346 widened those too and was sent
+    back. Results are sorted by date, not by relevance, so an exact title match can come below other
+    notes that contain the same words. Figures needed no change: the page and the search service
+    both call `danceFigureService.findAll`.
+  - **Comparing embedding models (#347).** `./gradlew evaluateSemanticSearch`
+    (`scripts/SemanticSearchEvaluation.kt`, a JavaExec task outside `build`) embeds the dev
+    database's evaluation notes and the example searches once per candidate. The candidates are
+    today's `gemini-embedding-001`, the same with `RETRIEVAL_QUERY`/`RETRIEVAL_DOCUMENT` task
+    types, `gemini-embedding-2-preview` (3072 dimensions) and `embeddinggemma` on Ollama Cloud. It
+    writes `docs/evaluation/semantic-search/REPORT.md` and makes no database writes. Vectors are
+    cached, git-ignored, in `vectors-<candidate>.json`, so a re-run makes no new calls. A missing
+    key or a failed call marks that candidate "not tried" and the run goes on to the next one. Keys
+    are read from the environment and never printed. An agent session has no key, so the owner runs
+    it. Don't commit a `REPORT.md` where every candidate says "not tried". `labels.json` is
+    pre-filled from the README and marked **unconfirmed** until the owner edits it. Switching models
+    is a separate decision. It means re-embedding, a migration if the vector size changes, and the
+    stale-index check (see the README).
 - **Without a key, embeddings are zero vectors** (`fallbackEmbeddingModel`), so vector
   similarity is meaningless then and only full-text matching is real. Don't test relevance
   against it.
@@ -1572,6 +1637,8 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
+| `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
+| `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer is #357 at every width; rows and sheet are #366 below tablet width |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
@@ -1633,6 +1700,10 @@ the part that exists, and leave the rest out.
   `controller/web/TrainingCalendarWebController.kt` plus `templates/training-calendars/`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
   slot, `form.html` for a bound field, `table.html` for a dense table)
+- Detail page header with back row, primary action and ⋯ menu →
+  `templates/dance-figures/view.html` (`pageHeader` with `backHref`, `metaSlot`, `menuSlot`)
+- List toolbar search and filters → `form.html :: searchField` / `filterSelect` as called in
+  `templates/dance-figures/list.html`
 - Several views of one section under one nav item → `fragments/page.html :: viewSwitcher`
   on the five `templates/training-events/*` views, plus `TrainingNavAndSwitcherTest`
 - Bound form that re-renders its own validation errors →
