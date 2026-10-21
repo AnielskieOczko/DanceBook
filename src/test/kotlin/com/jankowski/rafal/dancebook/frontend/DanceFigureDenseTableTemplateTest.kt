@@ -33,6 +33,8 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -119,7 +121,8 @@ class DanceFigureDenseTableTemplateTest {
     @Test
     fun `rendered table has exact 5 columns in order`() {
         val figures = listOf(createSampleFigure(predefined = true))
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(figures)
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(figures))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
@@ -149,7 +152,8 @@ class DanceFigureDenseTableTemplateTest {
     @Test
     fun `name column is pinned with table-header-pinned and table-cell-pinned`() {
         val figure = createSampleFigure(predefined = true)
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(listOf(figure))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(figure)))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
 
         val result = mockMvc.perform(get("/dance-figures").with(csrf()))
@@ -185,7 +189,8 @@ class DanceFigureDenseTableTemplateTest {
     @Test
     fun `header sort state reflects selectedSortBy and sets correct aria-sort`() {
         val figure = createSampleFigure(predefined = true)
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(listOf(figure))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(figure)))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
 
         // 1. Unsorted / default: all sortable headers aria-sort="none"
@@ -268,8 +273,8 @@ class DanceFigureDenseTableTemplateTest {
             endFootF = null
         ).apply { createdBy = viewer }
 
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(predefinedFigure, customFigure))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(predefinedFigure, customFigure)))
         // predefinedFigure has steps syllabus, customFigure does not
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList())))
             .thenReturn(setOf(predefinedFigId))

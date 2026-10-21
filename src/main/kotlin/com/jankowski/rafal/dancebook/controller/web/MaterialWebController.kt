@@ -14,6 +14,7 @@ import com.jankowski.rafal.dancebook.service.DanceFigureService
 import com.jankowski.rafal.dancebook.service.FigureSuggestionService
 import com.jankowski.rafal.dancebook.service.NoteRewriteService
 import jakarta.validation.Valid
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -64,6 +65,7 @@ class MaterialWebController(
 
     companion object {
         private val log = LoggerFactory.getLogger(MaterialWebController::class.java)
+        const val PAGE_SIZE = 24
 
         /** "Standard group class — 23 Sep 2026", the title a note written from a session starts with. */
         private val SESSION_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)
@@ -78,17 +80,26 @@ class MaterialWebController(
         @RequestParam(required = false, defaultValue = "list") view: String,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
         model: Model, 
-        @PageableDefault(size = 100, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
+        @PageableDefault(size = PAGE_SIZE, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
     ): String {
+        val stableSort = if (pageable.sort.isSorted) {
+            if (pageable.sort.any { it.property == "id" }) pageable.sort
+            else pageable.sort.and(Sort.by(Sort.Direction.ASC, "id"))
+        } else {
+            Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.ASC, "id"))
+        }
+        val stablePageable = PageRequest.of(pageable.pageNumber, pageable.pageSize, stableSort)
+
         val materialsPage = materialService.findAll(
             typeIds = typeIds,
             categoryIds = categoryIds,
             minRating = minRating,
             textSearch = nameSearch,
-            pageable = pageable
+            pageable = stablePageable
         )
 
-        val candidateNotes = if (!nameSearch.isNullOrBlank() && hybridSearchService != null) {
+        val pageNumber = pageable.pageNumber
+        val candidateNotes = if (pageNumber == 0 && !nameSearch.isNullOrBlank() && hybridSearchService != null) {
             try {
                 val singleDanceTypeId = if (typeIds?.size == 1) typeIds.first() else null
                 hybridSearchService.search(nameSearch, singleDanceTypeId)
@@ -104,7 +115,7 @@ class MaterialWebController(
 
         val currentSort = pageable.sort.map { "${it.property},${it.direction.name.lowercase()}" }.firstOrNull() ?: "createdAt,desc"
 
-        val relatedMaterials = if (candidateNotes.isNotEmpty() && semanticSearchFilterHelper != null) {
+        val relatedMaterials = if (pageNumber == 0 && candidateNotes.isNotEmpty() && semanticSearchFilterHelper != null) {
             semanticSearchFilterHelper.filterAndSortNotes(
                 notes = candidateNotes,
                 typeIds = typeIds,
@@ -120,7 +131,17 @@ class MaterialWebController(
         val allMaterialIds = (materialsPage.content.mapNotNull { it.id } + relatedMaterials.mapNotNull { it.id }).distinct()
         val figureCounts = if (allMaterialIds.isEmpty()) emptyMap() else materialService.findFigureCounts(allMaterialIds)
 
+        val totalCount = materialsPage.totalElements
+        val shownCount = minOf((materialsPage.number + 1).toLong() * materialsPage.size, totalCount)
+        val hasMore = materialsPage.hasNext()
+        val nextPage = materialsPage.number + 1
+
         model.addAttribute("materials", materialsPage.content)
+        model.addAttribute("materialsPage", materialsPage)
+        model.addAttribute("totalCount", totalCount)
+        model.addAttribute("shownCount", shownCount)
+        model.addAttribute("hasMore", hasMore)
+        model.addAttribute("nextPage", nextPage)
         model.addAttribute("relatedMaterials", relatedMaterials)
         model.addAttribute("figureCounts", figureCounts)
         // Optimisation: We only need to fetch dropdown choices if we are rendering the full page.
@@ -138,7 +159,11 @@ class MaterialWebController(
         model.addAttribute("currentSort", currentSort)
 
         return if (isHtmxRequest == true) {
-            "materials/list :: materialsTable"
+            if (pageNumber > 0) {
+                "materials/list :: materialsMore"
+            } else {
+                "materials/list :: materialsTable"
+            }
         } else {
             "materials/list"
         }

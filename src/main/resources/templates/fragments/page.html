@@ -198,5 +198,25 @@
     </a>
 </nav>
 
+<!-- Pagination Footer -->
+<div th:fragment="paginationFooter"
+     th:id="${id ?: 'pagination-footer'}"
+     class="py-3.5 px-4 flex flex-col items-center gap-2 text-[13px] text-on-surface-variant"
+     th:classappend="${cls}">
+    <span th:if="${totalCount != null and shownCount != null}"
+          th:text="#{list.pagination.showing(${shownCount}, ${totalCount})}">Showing 24 of 412</span>
+    <th:block th:if="${hasMore == true and nextUrl != null}">
+        <button th:replace="~{fragments/button :: actionButton(
+            label=#{list.pagination.show_more},
+            variant='outline',
+            size='sm',
+            hxGet=${nextUrl},
+            hxTarget=${'#' + (id ?: 'pagination-footer')},
+            hxSwap='outerHTML',
+            hxInclude=${filterFormId}
+        )}"></button>
+    </th:block>
+</div>
+
 </body>
 </html>

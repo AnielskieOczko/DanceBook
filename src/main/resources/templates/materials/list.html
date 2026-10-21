@@ -5,7 +5,7 @@
 <section th:with="activeNav='materials'" class="space-y-12 relative">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: pageHeader(title=#{notes.title}, subtitle=${#lists.size(materials) == 1 ? #messages.msg('notes.subtitle.single') : #messages.msg('notes.subtitle.multiple', #lists.size(materials))}, actionUrl='/materials/new', actionText=#{notes.action.new}, actionIcon='add', actionVariant='primary')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=#{notes.title}, subtitle=${(totalCount ?: #lists.size(materials)) == 1 ? #messages.msg('notes.subtitle.single') : #messages.msg('notes.subtitle.multiple', (totalCount ?: #lists.size(materials)))}, actionUrl='/materials/new', actionText=#{notes.action.new}, actionIcon='add', actionVariant='primary')}"></div>
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
@@ -152,7 +152,7 @@
         <!-- 1. Grid View -->
         <div th:if="${currentView == 'grid'}">
             <!-- Keyword items grid -->
-            <div th:if="${!#lists.isEmpty(materials)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+            <div th:if="${!#lists.isEmpty(materials)}" id="materials-grid-items" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                 <th:block th:each="m : ${materials}">
                     <th:block th:replace="~{materials/list :: materialGridCard(m=${m}, isRelated=false)}"></th:block>
                 </th:block>
@@ -181,9 +181,11 @@
             <!-- Mobile Cards (< 1024px) -->
             <div th:if="${!#lists.isEmpty(materials) or (relatedMaterials != null and !#lists.isEmpty(relatedMaterials))}" class="flex flex-col gap-3 lg:hidden">
                 <!-- Keyword mobile cards -->
-                <th:block th:each="m : ${materials}">
-                    <th:block th:replace="~{materials/list :: materialMobileCard(m=${m}, isRelated=false)}"></th:block>
-                </th:block>
+                <div id="materials-mobile-cards" class="flex flex-col gap-3">
+                    <th:block th:each="m : ${materials}">
+                        <th:block th:replace="~{materials/list :: materialMobileCard(m=${m}, isRelated=false)}"></th:block>
+                    </th:block>
+                </div>
 
                 <!-- Also related section for mobile -->
                 <th:block th:if="${relatedMaterials != null and !#lists.isEmpty(relatedMaterials)}">
@@ -208,7 +210,7 @@
                  tabindex="0" role="region" aria-label="Notes" th:attr="aria-label=#{notes.title}">
                 <table class="min-w-full text-left border-collapse">
                     <thead th:replace="~{materials/list :: materialTableHeader}"></thead>
-                    <tbody>
+                    <tbody id="materials-table-body">
                         <th:block th:each="m : ${materials}">
                             <tr th:replace="~{materials/list :: materialTableRow(m=${m}, isRelated=false)}"></tr>
                         </th:block>
@@ -239,9 +241,61 @@
                 </div>
             </th:block>
         </div>
+
+        <!-- Pagination Footer -->
+        <th:block th:if="${totalCount != null and totalCount > 0}">
+            <div id="materials-footer"
+                 th:replace="~{fragments/page :: paginationFooter(
+                     id='materials-footer',
+                     shownCount=${shownCount},
+                     totalCount=${totalCount},
+                     hasMore=${hasMore},
+                     nextUrl=@{/materials(page=${nextPage})},
+                     filterFormId='#filterForm'
+                 )}"></div>
+        </th:block>
     </div>
 
 </section>
+
+<!-- Materials More chunk for HTMX Show more requests -->
+<th:block th:fragment="materialsMore">
+    <!-- Replaces #materials-footer with updated count and next button (or no button if end) -->
+    <div id="materials-footer"
+         th:replace="~{fragments/page :: paginationFooter(
+             id='materials-footer',
+             shownCount=${shownCount},
+             totalCount=${totalCount},
+             hasMore=${hasMore},
+             nextUrl=@{/materials(page=${nextPage})},
+             filterFormId='#filterForm'
+         )}"></div>
+
+    <!-- Grid view: append to #materials-grid-items -->
+    <th:block th:if="${currentView == 'grid'}">
+        <div id="materials-grid-items" hx-swap-oob="beforeend:#materials-grid-items">
+            <th:block th:each="m : ${materials}">
+                <th:block th:replace="~{materials/list :: materialGridCard(m=${m}, isRelated=false)}"></th:block>
+            </th:block>
+        </div>
+    </th:block>
+
+    <!-- List view: append to mobile cards and table body -->
+    <th:block th:if="${currentView == 'list' || currentView == null}">
+        <div id="materials-mobile-cards" hx-swap-oob="beforeend:#materials-mobile-cards">
+            <th:block th:each="m : ${materials}">
+                <th:block th:replace="~{materials/list :: materialMobileCard(m=${m}, isRelated=false)}"></th:block>
+            </th:block>
+        </div>
+        <table class="hidden">
+            <tbody id="materials-table-body" hx-swap-oob="beforeend:#materials-table-body">
+                <th:block th:each="m : ${materials}">
+                    <tr th:replace="~{materials/list :: materialTableRow(m=${m}, isRelated=false)}"></tr>
+                </th:block>
+            </tbody>
+        </table>
+    </th:block>
+</th:block>
 
 <!-- Extracted Components for Notes List and Related Section -->
 

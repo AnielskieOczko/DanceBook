@@ -518,5 +518,24 @@ class DanceFigureServiceTest {
         verify(danceFigureRepository).countByCreatedBy(user)
     }
 
+    @Test
+    fun `should find figures with pagination and stable sort`() {
+        val pageable = org.springframework.data.domain.PageRequest.of(0, 24)
+        val figure = DanceFigure().apply { id = UUID.randomUUID(); name = "Natural Spin Turn" }
+        val page = org.springframework.data.domain.PageImpl(listOf(figure), pageable, 1)
+
+        val specCaptor = ArgumentCaptor.forClass(org.springframework.data.jpa.domain.Specification::class.java) as ArgumentCaptor<org.springframework.data.jpa.domain.Specification<DanceFigure>>
+        val pageableCaptor = ArgumentCaptor.forClass(org.springframework.data.domain.Pageable::class.java)
+        `when`(danceFigureRepository.findAll(specCaptor.capture(), pageableCaptor.capture()))
+            .thenReturn(page)
+
+        val result = danceFigureService.findAll(sortBy = "name_asc", pageable = pageable)
+
+        assertEquals(1, result.totalElements)
+        assertEquals("Natural Spin Turn", result.content.first().name)
+        val capturedSort = pageableCaptor.value.sort
+        assertEquals(listOf("name", "id"), capturedSort.map { it.property }.toList())
+    }
+
     private fun <T> any(type: Class<T>): T = org.mockito.Mockito.any(type)
 }

@@ -27,6 +27,7 @@ import jakarta.persistence.OptimisticLockException
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
@@ -204,7 +205,18 @@ class MaterialServiceImpl(
         log.debug("Retrieving all materials with filters: typeIds={}, categoryIds={}, minRating={}, nameSearch={}, textSearch={}", typeIds, categoryIds, minRating, nameSearch, textSearch)
         val currentUser = appUserService.getCurrentUserOrNull()
         val spec = MaterialSpecification.withFilters(currentUser, typeIds, categoryIds, minRating, nameSearch, textSearch)
-        return materialRepository.findAll(spec, pageable)
+        val stablePageable = if (pageable.isPaged) {
+            val sort = if (pageable.sort.isSorted) {
+                if (pageable.sort.any { it.property == "id" }) pageable.sort
+                else pageable.sort.and(Sort.by(Sort.Direction.ASC, "id"))
+            } else {
+                Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.ASC, "id"))
+            }
+            PageRequest.of(pageable.pageNumber, pageable.pageSize, sort)
+        } else {
+            pageable
+        }
+        return materialRepository.findAll(spec, stablePageable)
     }
 
     override fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int, ownedOnly: Boolean): List<Material> {

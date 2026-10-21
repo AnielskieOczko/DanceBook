@@ -4,6 +4,8 @@ import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.model.DanceClass
 import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.model.MedalLevel
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.UUID
 
 interface DanceFigureService {
@@ -22,6 +24,17 @@ interface DanceFigureService {
         hasSteps: Boolean? = null,
         medalLevel: MedalLevel? = null
     ): List<DanceFigure>
+
+    fun findAll(
+        typeIds: List<UUID>? = null,
+        categoryIds: List<UUID>? = null,
+        danceClass: DanceClass? = null,
+        nameSearch: String? = null,
+        sortBy: String? = null,
+        hasSteps: Boolean? = null,
+        medalLevel: MedalLevel? = null,
+        pageable: Pageable
+    ): Page<DanceFigure>
     fun findById(id: UUID): DanceFigure
     fun findByDanceType(danceTypeId: UUID): List<DanceFigure>
     fun findFigureIdsWithSteps(figureIds: Collection<UUID>): Set<UUID>

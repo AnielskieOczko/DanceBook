@@ -19,6 +19,9 @@ import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
@@ -57,17 +60,46 @@ class DanceFigureServiceImpl(
             medalLevel = medalLevel
         )
 
-        val sort = when (sortBy) {
+        val sort = resolveSort(sortBy)
+        return danceFigureRepository.findAll(spec, sort)
+    }
+
+    override fun findAll(
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        danceClass: DanceClass?,
+        nameSearch: String?,
+        sortBy: String?,
+        hasSteps: Boolean?,
+        medalLevel: MedalLevel?,
+        pageable: Pageable
+    ): Page<DanceFigure> {
+        log.debug("Retrieving dance figures page with filters: typeIds={}, categoryIds={}, danceClass={}, nameSearch={}, sortBy={}, hasSteps={}, medalLevel={}, pageable={}", typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps, medalLevel, pageable)
+        val spec = DanceFigureSpecification.withFilters(
+            typeIds = typeIds,
+            categoryIds = categoryIds,
+            danceClass = danceClass,
+            nameSearch = nameSearch,
+            hasSteps = hasSteps,
+            medalLevel = medalLevel
+        )
+
+        val sort = resolveSort(sortBy)
+        val pageableWithSort = PageRequest.of(pageable.pageNumber, pageable.pageSize, sort)
+        return danceFigureRepository.findAll(spec, pageableWithSort)
+    }
+
+    private fun resolveSort(sortBy: String?): Sort {
+        val baseSort = when (sortBy) {
             "name_asc" -> Sort.by(Sort.Direction.ASC, "name")
             "name_desc" -> Sort.by(Sort.Direction.DESC, "name")
-            "style_asc" -> Sort.by(Sort.Direction.ASC, "danceType.name")
-            "style_desc" -> Sort.by(Sort.Direction.DESC, "danceType.name")
-            "class_asc" -> Sort.by(Sort.Direction.ASC, "danceClass")
-            "class_desc" -> Sort.by(Sort.Direction.DESC, "danceClass")
+            "style_asc" -> Sort.by(Sort.Direction.ASC, "danceType.name").and(Sort.by(Sort.Direction.ASC, "name"))
+            "style_desc" -> Sort.by(Sort.Direction.DESC, "danceType.name").and(Sort.by(Sort.Direction.ASC, "name"))
+            "class_asc" -> Sort.by(Sort.Direction.ASC, "danceClass").and(Sort.by(Sort.Direction.ASC, "name"))
+            "class_desc" -> Sort.by(Sort.Direction.DESC, "danceClass").and(Sort.by(Sort.Direction.ASC, "name"))
             else -> Sort.by(Sort.Direction.ASC, "danceType.name").and(Sort.by(Sort.Direction.ASC, "name"))
         }
-
-        return danceFigureRepository.findAll(spec, sort)
+        return baseSort.and(Sort.by(Sort.Direction.ASC, "id"))
     }
 
 

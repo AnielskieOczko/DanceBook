@@ -10,6 +10,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.FigureInUseException
@@ -44,6 +45,7 @@ class DanceFigureWebController(
 
     companion object {
         private val log = org.slf4j.LoggerFactory.getLogger(DanceFigureWebController::class.java)
+        const val PAGE_SIZE = 24
     }
 
     /** Present only when the assistant is (#149). The form reads an "Edit in form" draft through it. */
@@ -61,20 +63,26 @@ class DanceFigureWebController(
         @RequestParam(required = false) hasSteps: Boolean? = null,
         @RequestParam(required = false) medalLevel: MedalLevel? = null,
         @RequestParam(required = false, defaultValue = "list") view: String = "list",
+        @RequestParam(required = false, defaultValue = "0") page: Int = 0,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
         model: Model
     ): String {
-        val figures = danceFigureService.findAll(
+        val pageNumber = page.coerceAtLeast(0)
+        val pageable = PageRequest.of(pageNumber, PAGE_SIZE)
+        val figuresPage = danceFigureService.findAll(
             typeIds = typeIds,
             categoryIds = categoryIds,
             danceClass = danceClass,
             nameSearch = nameSearch,
             sortBy = sortBy,
             hasSteps = hasSteps,
-            medalLevel = medalLevel
+            medalLevel = medalLevel,
+            pageable = pageable
         )
 
-        val candidateFigures = if (!nameSearch.isNullOrBlank() && hybridSearchService != null) {
+        val figures = figuresPage.content
+
+        val candidateFigures = if (pageNumber == 0 && !nameSearch.isNullOrBlank() && hybridSearchService != null) {
             try {
                 val singleDanceTypeId = if (typeIds?.size == 1) typeIds.first() else null
                 hybridSearchService.search(nameSearch, singleDanceTypeId)
@@ -91,7 +99,7 @@ class DanceFigureWebController(
         val candidateFigureIds = candidateFigures.mapNotNull { it.id }
         val candidateSteps = if (candidateFigureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(candidateFigureIds)
 
-        val relatedFigures = if (candidateFigures.isNotEmpty() && semanticSearchFilterHelper != null) {
+        val relatedFigures = if (pageNumber == 0 && candidateFigures.isNotEmpty() && semanticSearchFilterHelper != null) {
             semanticSearchFilterHelper.filterAndSortFigures(
                 figures = candidateFigures,
                 typeIds = typeIds,
@@ -110,7 +118,17 @@ class DanceFigureWebController(
         val allFigureIds = (figures.mapNotNull { it.id } + relatedFigures.mapNotNull { it.id }).distinct()
         val figuresWithSteps = if (allFigureIds.isEmpty()) emptySet() else danceFigureService.findFigureIdsWithSteps(allFigureIds)
 
+        val totalCount = figuresPage.totalElements
+        val shownCount = minOf((figuresPage.number + 1).toLong() * figuresPage.size, totalCount)
+        val hasMore = figuresPage.hasNext()
+        val nextPage = figuresPage.number + 1
+
         model.addAttribute("figures", figures)
+        model.addAttribute("figuresPage", figuresPage)
+        model.addAttribute("totalCount", totalCount)
+        model.addAttribute("shownCount", shownCount)
+        model.addAttribute("hasMore", hasMore)
+        model.addAttribute("nextPage", nextPage)
         model.addAttribute("relatedFigures", relatedFigures)
         model.addAttribute("figuresWithSteps", figuresWithSteps)
         if (isHtmxRequest != true) {
@@ -129,7 +147,11 @@ class DanceFigureWebController(
         model.addAttribute("currentView", view)
 
         return if (isHtmxRequest == true) {
-            "dance-figures/list :: figuresTable"
+            if (pageNumber > 0) {
+                "dance-figures/list :: figuresMore"
+            } else {
+                "dance-figures/list :: figuresTable"
+            }
         } else {
             "dance-figures/list"
         }

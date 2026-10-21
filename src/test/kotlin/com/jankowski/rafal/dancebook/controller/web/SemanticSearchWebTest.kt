@@ -52,6 +52,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -434,8 +435,8 @@ class SemanticSearchWebTest {
         val semFig2 = createFigure("Closed Telemark")
         val semFig3 = createFigure("Hover Corte")
 
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(kwFig))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(kwFig)))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
 
         `when`(hybridSearchService.search("turn", null)).thenReturn(
@@ -482,8 +483,8 @@ class SemanticSearchWebTest {
         val kwFig = createFigure("Natural Spin Turn")
         val semFig = createFigure("Reverse Turn")
 
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(kwFig))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(kwFig)))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
 
         `when`(hybridSearchService.search("turn", null)).thenReturn(
@@ -520,8 +521,8 @@ class SemanticSearchWebTest {
     fun `figures search empty states and fallback`() {
         // 1. Keyword empty, semantic exists
         val semFig = createFigure("Reverse Turn")
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceFigureService.findFigureIdsWithSteps(anyNonNull(emptyList()))).thenReturn(emptySet())
         `when`(hybridSearchService.search("spin", null)).thenReturn(
             listOf(SearchHit(type = SearchHitType.FIGURE, id = semFig.id!!, match = SearchMatch.SEMANTIC, figure = semFig))
@@ -545,8 +546,8 @@ class SemanticSearchWebTest {
 
         // 3. Exception fallback
         val kwFig = createFigure("Natural Spin Turn")
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(kwFig))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(kwFig)))
         `when`(hybridSearchService.search("turn", null)).thenThrow(RuntimeException("AI service unavailable"))
         result = mockMvc.perform(get("/dance-figures").param("nameSearch", "turn").with(csrf()))
             .andExpect(status().isOk).andReturn()

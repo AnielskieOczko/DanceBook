@@ -38,6 +38,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -91,6 +93,11 @@ class DanceFigureMedalWebTest {
 
     private fun <T> capture(captor: ArgumentCaptor<T>, dummy: T): T {
         captor.capture()
+        return dummy
+    }
+
+    private fun <T> anyNonNull(dummy: T): T {
+        org.mockito.Mockito.any<T>()
         return dummy
     }
 
@@ -242,7 +249,8 @@ class DanceFigureMedalWebTest {
 
     @Test
     fun `catalog list renders medal filter and passes selected medalLevel to service`() {
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, MedalLevel.SILVER)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, MedalLevel.SILVER, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -252,7 +260,7 @@ class DanceFigureMedalWebTest {
             .response
             .contentAsString
 
-        verify(danceFigureService).findAll(null, null, null, null, null, null, MedalLevel.SILVER)
+        verify(danceFigureService).findAll(null, null, null, null, null, null, MedalLevel.SILVER, PageRequest.of(0, 24))
 
         val doc = Jsoup.parse(html)
         val select = doc.selectFirst("select[name=medalLevel]")
@@ -284,8 +292,8 @@ class DanceFigureMedalWebTest {
             medalLevel = null
         }
 
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null))
-            .thenReturn(listOf(goldFigure, plainFigure))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(listOf(goldFigure, plainFigure)))
         `when`(danceFigureService.findFigureIdsWithSteps(listOf(goldFigure.id!!, plainFigure.id!!)))
             .thenReturn(emptySet())
         `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
@@ -376,7 +384,8 @@ class DanceFigureMedalWebTest {
 
     @Test
     fun `figures catalog list renders localized medal filter in Polish`() {
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -423,8 +432,8 @@ class DanceFigureMedalWebTest {
         }
 
         `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_shapes")
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null))
-            .thenReturn(listOf(goldFigure, silverFigure, bronzeFigure))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(listOf(goldFigure, silverFigure, bronzeFigure)))
         `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -462,7 +471,8 @@ class DanceFigureMedalWebTest {
         }
 
         `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("ring_and_word")
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(listOf(goldFigure)))
         `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -493,7 +503,8 @@ class DanceFigureMedalWebTest {
         }
 
         `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_icon")
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(listOf(goldFigure)))
         `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -525,7 +536,8 @@ class DanceFigureMedalWebTest {
         }
 
         `when`(systemSettingService.getSetting("medal_badge_style", "rank_bars")).thenReturn("medal_no_numerals")
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, null)).thenReturn(listOf(goldFigure))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(listOf(goldFigure)))
         `when`(danceTypeService.findAll()).thenReturn(listOf(danceType))
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
