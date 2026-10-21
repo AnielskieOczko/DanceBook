@@ -112,7 +112,7 @@ change is invisible in the activity feed.
 component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `submitRow`),
 `form` (`field`, `selectField`, `textareaField`, `checkbox`, `toggle`, `richText`,
 `errorSummary`, `rawField`, `searchField`, `filterSelect`), `page` (`pageHeader`, `overflowMenu`,
-`menuItem`, `sectionTitle`, `viewSwitcher`), `card`, `table`
+`menuItem`, `sectionTitle`, `viewSwitcher`, `paginationFooter`), `card`, `table`
 (`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal` and `rich-text`. Do not
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
@@ -649,6 +649,41 @@ When refactoring a template that contains one, migrate its *contents* and leave 
 and `id`. `HtmxFragmentRenderingTest` (#98) turns this into a build failure: it requests
 seven htmx endpoints with `HX-Request: true` and asserts each still returns its expected
 root id.
+
+### List paging and Show more (#357)
+
+The Figures and Notes lists load **24 items per request** (`PAGE_SIZE` in each controller) in
+list and grid view. `fragments/page :: paginationFooter` is the one footer: "Showing N of M" and a
+**Show more** button that appends the next page in place. It is used at every width and disappears
+once everything is shown. A third paged list reuses the footer and this shape:
+
+- **Page in the query, never in memory.** `DanceFigureService.findAll(..., pageable)` and
+  `MaterialService.findAll(..., pageable)` return a `Page`. The unpaged figure overload still
+  exists for the assistant tools, the figure picker and choreographies, which need the whole
+  catalog. Don't use it from a list page. The first version of #357 caught any exception from
+  the paged call, loaded everything and cut out a page. That code existed only because the old
+  controller tests mocked the unpaged method. A test that mocks the wrong overload gets fixed;
+  production code doesn't route around it.
+- **Every paged sort ends with `id`** so ties can't repeat or skip items across pages: figures
+  through `resolveSort` (style and class sorts break ties on name first), notes in
+  `MaterialServiceImpl.findAll`. `ListPaginationIntegrationTest` pages through tied rows against
+  Postgres and asserts each id is seen once. Names sort by the database collation, which ignores
+  spaces and punctuation, so don't compare page order with a JavaScript `localeCompare`.
+- **The button carries the query.** It does `hx-get` with `page=N` and `hx-include="#filterForm"`,
+  so search, filters, sort and view travel with it. The footer sits inside the `figuresTable` /
+  `materialsTable` fragment, so any filter change re-renders it from page 0. A `page > 0` request
+  returns `figuresMore` / `materialsMore`. That response replaces the footer and appends rows out of band
+  (`hx-swap-oob="beforeend:#…"`) to `#figures-grid-items`, `#figures-mobile-cards` and
+  `#figures-table-body` (and the `materials-` equivalents).
+- **Out-of-band table rows must be wrapped in a `<table>`.** The HTML parser drops a bare `<tbody>`
+  or `<tr>` that is not inside a table, so the first version updated the footer count and added no
+  rows to the desktop table. The mocked web tests could not see this. The `*More` fragments put
+  the rows in a hidden `<table>`, and `ListPaginationWebTest` parses the response with jsoup (which
+  parses like a browser) and counts them. Each click leaves one empty hidden table behind, which is
+  harmless.
+- **Counts are totals.** The header subtitle and the footer use `totalElements`, never the page
+  size. The "related" results found by meaning are computed and shown only on page 0.
+- Coming back from a detail page starts again at page 0 (the spec allows it).
 
 ### Global template model
 
@@ -1638,7 +1673,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
-| `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer is #357 at every width; rows and sheet are #366 below tablet width |
+| `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet are #366 below tablet width |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
@@ -1692,6 +1727,8 @@ the part that exists, and leave the rest out.
 - CRUD service with domain events → `service/TrainingEventServiceImpl.kt`
 - HTMX list/filter page → `controller/web/DanceFigureWebController.kt` plus
   `templates/dance-figures/list.html`
+- Paged list with a Show more footer → `listDanceFigures` in the same controller, plus
+  `figuresMore` in `templates/dance-figures/list.html` and `fragments/page.html :: paginationFooter`
 - Dense table with sortable headers and a card form below 1024px →
   `templates/dance-figures/list.html` (`figuresTable`) plus the `js-sort-header` handler in
   `static/js/main.js`
