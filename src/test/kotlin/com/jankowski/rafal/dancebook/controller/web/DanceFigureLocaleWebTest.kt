@@ -35,6 +35,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor
 import org.springframework.test.web.servlet.MockMvc
@@ -84,6 +86,11 @@ class DanceFigureLocaleWebTest {
     private val polishLocale = Locale.forLanguageTag("pl")
     private lateinit var testUser: AppUser
 
+    private fun <T> anyNonNull(dummy: T): T {
+        org.mockito.Mockito.any<T>()
+        return dummy
+    }
+
     @BeforeEach
     fun setUp() {
         testUser = AppUser().apply {
@@ -109,8 +116,8 @@ class DanceFigureLocaleWebTest {
             danceType = waltz
         }
         `when`(danceTypeService.findAll()).thenReturn(listOf(waltz))
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(figure))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(figure)))
 
         mockMvc.perform(
             get("/dance-figures")
@@ -191,8 +198,8 @@ class DanceFigureLocaleWebTest {
             danceType = waltz
         }
         `when`(danceTypeService.findAll()).thenReturn(listOf(waltz))
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(listOf(figure))
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(listOf(figure)))
 
         mockMvc.perform(
             get("/dance-figures")

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -66,7 +68,8 @@ class ErrorPageIntegrationTest {
     @BeforeEach
     fun setUp() {
         `when`(googleDriveService.listFilesInFolder()).thenReturn(emptyList())
-        `when`(danceFigureService.findAll(null, null, null, null, null, null)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
 
         if (appUserRepository.findByUsername(testUsername) == null) {
             appUserRepository.save(AppUser().apply {
@@ -152,7 +155,7 @@ class ErrorPageIntegrationTest {
         val client = createClient(cookieManager)
         login(client)
 
-        `when`(danceFigureService.findAll(null, null, null, null, null, null))
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
             .thenThrow(RuntimeException("Simulated unexpected server error"))
 
         val request = HttpRequest.newBuilder()

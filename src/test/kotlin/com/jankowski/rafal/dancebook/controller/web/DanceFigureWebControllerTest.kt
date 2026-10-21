@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.ui.ConcurrentModel
 import java.util.UUID
 
@@ -38,7 +40,8 @@ class DanceFigureWebControllerTest {
     @Test
     fun `should list all figures when no dance type is specified`() {
         val model = ConcurrentModel()
-        `when`(danceFigureService.findAll(null, null, null, null, null)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -55,7 +58,8 @@ class DanceFigureWebControllerTest {
         val model = ConcurrentModel()
         val danceTypeId = UUID.randomUUID()
         val typeIds = listOf(danceTypeId)
-        `when`(danceFigureService.findAll(typeIds, null, null, null, null)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(typeIds, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -65,13 +69,14 @@ class DanceFigureWebControllerTest {
         assertEquals(emptyList<DanceFigure>(), model["figures"])
         assertEquals(emptyList<DanceType>(), model["danceTypes"])
         assertEquals(typeIds, model["selectedTypeIds"])
-        verify(danceFigureService).findAll(typeIds, null, null, null, null)
+        verify(danceFigureService).findAll(typeIds, null, null, null, null, null, null, PageRequest.of(0, 24))
     }
 
     @Test
     fun `should list figures with hasSteps filter when specified`() {
         val model = ConcurrentModel()
-        `when`(danceFigureService.findAll(null, null, null, null, null, true)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, true, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
@@ -80,7 +85,7 @@ class DanceFigureWebControllerTest {
         assertEquals("dance-figures/list", viewName)
         assertEquals(emptyList<DanceFigure>(), model["figures"])
         assertEquals(true, model["selectedHasSteps"])
-        verify(danceFigureService).findAll(null, null, null, null, null, true)
+        verify(danceFigureService).findAll(null, null, null, null, null, true, null, PageRequest.of(0, 24))
     }
 
     @Test
@@ -92,7 +97,8 @@ class DanceFigureWebControllerTest {
         val figure2 = DanceFigure().apply { id = figureId2; name = "Figure 2" }
         val figureList = listOf(figure1, figure2)
 
-        `when`(danceFigureService.findAll(null, null, null, null, null, null)).thenReturn(figureList)
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, null, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(figureList))
         `when`(danceFigureService.findFigureIdsWithSteps(listOf(figureId1, figureId2))).thenReturn(setOf(figureId1))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
@@ -109,13 +115,14 @@ class DanceFigureWebControllerTest {
     @Test
     fun `should pass the medal level filter to the catalog query`() {
         val model = ConcurrentModel()
-        `when`(danceFigureService.findAll(null, null, null, null, null, null, MedalLevel.GOLD)).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(null, null, null, null, null, null, MedalLevel.GOLD, PageRequest.of(0, 24)))
+            .thenReturn(PageImpl(emptyList()))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
 
         controller.listDanceFigures(medalLevel = MedalLevel.GOLD, model = model)
 
-        verify(danceFigureService).findAll(null, null, null, null, null, null, MedalLevel.GOLD)
+        verify(danceFigureService).findAll(null, null, null, null, null, null, MedalLevel.GOLD, PageRequest.of(0, 24))
         assertEquals(MedalLevel.GOLD, model["selectedMedalLevel"])
     }
 

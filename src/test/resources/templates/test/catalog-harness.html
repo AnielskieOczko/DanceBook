@@ -41,7 +41,7 @@
 </div>
 
 <div th:fragment="buttonAll">
-    <button th:replace="~{fragments/button :: actionButton(label='Delete', type='submit', variant='danger', size='sm', icon='delete', iconPos='left', name='action', value='del', cls='extra-cls', disabled=true)}"></button>
+    <button th:replace="~{fragments/button :: actionButton(id='test-action-btn', label='Delete', type='submit', variant='danger', size='sm', icon='delete', iconPos='left', name='action', value='del', cls='extra-cls', disabled=true, hxGet='/action', hxTarget='#target', hxSwap='outerHTML', hxInclude='#form', hxTrigger='click')}"></button>
 </div>
 
 <!-- 4. BUTTON: iconButton -->
@@ -240,6 +240,15 @@
 
 <div th:fragment="viewSwitcherAll">
     <nav th:replace="~{fragments/page :: viewSwitcher(currentView='calendar', cls='extra-cls')}"></nav>
+</div>
+
+<!-- 15c. PAGE: paginationFooter -->
+<div th:fragment="paginationFooterRequired">
+    <div th:replace="~{fragments/page :: paginationFooter(shownCount=24, totalCount=100)}"></div>
+</div>
+
+<div th:fragment="paginationFooterAll">
+    <div th:replace="~{fragments/page :: paginationFooter(id='test-footer', shownCount=24, totalCount=100, hasMore=true, nextUrl='/dance-figures?page=1', filterFormId='#filterForm', cls='extra-cls')}"></div>
 </div>
 
 <!-- 16. CARD: statCard -->

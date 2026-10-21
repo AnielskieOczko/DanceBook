@@ -5,7 +5,7 @@
 <section th:with="activeNav='dance-figures'" class="space-y-12 relative">
 
     <!-- Page Header -->
-    <div th:replace="~{fragments/page :: pageHeader(title=#{figures.list.title}, subtitle=#{figures.list.subtitle(${#lists.size(figures)})}, actionUrl='/dance-figures/new', actionText=#{figures.list.add_figure}, actionIcon='add', actionVariant='primary')}"></div>
+    <div th:replace="~{fragments/page :: pageHeader(title=#{figures.list.title}, subtitle=#{figures.list.subtitle(${totalCount ?: #lists.size(figures)})}, actionUrl='/dance-figures/new', actionText=#{figures.list.add_figure}, actionIcon='add', actionVariant='primary')}"></div>
 
     <!-- Sticky Search & Filter Section -->
     <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
@@ -157,7 +157,7 @@
         <!-- 1. Grid (Cards) View -->
         <div th:if="${currentView == 'grid'}">
             <!-- Keyword items grid -->
-            <div th:if="${!#lists.isEmpty(figures)}" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+            <div th:if="${!#lists.isEmpty(figures)}" id="figures-grid-items" class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                 <th:block th:each="f : ${figures}">
                     <th:block th:replace="~{dance-figures/list :: figureGridCard(f=${f}, isRelated=false)}"></th:block>
                 </th:block>
@@ -186,9 +186,11 @@
             <!-- Mobile Cards (< 1024px) -->
             <div th:if="${!#lists.isEmpty(figures) or (relatedFigures != null and !#lists.isEmpty(relatedFigures))}" class="flex flex-col gap-3 lg:hidden">
                 <!-- Keyword mobile cards -->
-                <th:block th:each="f : ${figures}">
-                    <th:block th:replace="~{dance-figures/list :: figureMobileCard(f=${f}, isRelated=false)}"></th:block>
-                </th:block>
+                <div id="figures-mobile-cards" class="flex flex-col gap-3">
+                    <th:block th:each="f : ${figures}">
+                        <th:block th:replace="~{dance-figures/list :: figureMobileCard(f=${f}, isRelated=false)}"></th:block>
+                    </th:block>
+                </div>
 
                 <!-- Also related section for mobile -->
                 <th:block th:if="${relatedFigures != null and !#lists.isEmpty(relatedFigures)}">
@@ -213,7 +215,7 @@
                  tabindex="0" role="region" aria-label="Figures" th:attr="aria-label=#{figures.table.aria_label}">
                 <table class="min-w-full text-left border-collapse">
                     <thead th:replace="~{dance-figures/list :: figureTableHeader}"></thead>
-                    <tbody>
+                    <tbody id="figures-table-body">
                         <th:block th:each="f : ${figures}">
                             <tr th:replace="~{dance-figures/list :: figureTableRow(f=${f}, isRelated=false)}"></tr>
                         </th:block>
@@ -244,9 +246,61 @@
                 </div>
             </th:block>
         </div>
+
+        <!-- Pagination Footer -->
+        <th:block th:if="${totalCount != null and totalCount > 0}">
+            <div id="figures-footer"
+                 th:replace="~{fragments/page :: paginationFooter(
+                     id='figures-footer',
+                     shownCount=${shownCount},
+                     totalCount=${totalCount},
+                     hasMore=${hasMore},
+                     nextUrl=@{/dance-figures(page=${nextPage})},
+                     filterFormId='#filterForm'
+                 )}"></div>
+        </th:block>
     </div>
 
 </section>
+
+<!-- Figures More chunk for HTMX Show more requests -->
+<th:block th:fragment="figuresMore">
+    <!-- Replaces #figures-footer with updated count and next button (or no button if end) -->
+    <div id="figures-footer"
+         th:replace="~{fragments/page :: paginationFooter(
+             id='figures-footer',
+             shownCount=${shownCount},
+             totalCount=${totalCount},
+             hasMore=${hasMore},
+             nextUrl=@{/dance-figures(page=${nextPage})},
+             filterFormId='#filterForm'
+         )}"></div>
+
+    <!-- Grid view: append to #figures-grid-items -->
+    <th:block th:if="${currentView == 'grid'}">
+        <div id="figures-grid-items" hx-swap-oob="beforeend:#figures-grid-items">
+            <th:block th:each="f : ${figures}">
+                <th:block th:replace="~{dance-figures/list :: figureGridCard(f=${f}, isRelated=false)}"></th:block>
+            </th:block>
+        </div>
+    </th:block>
+
+    <!-- List view: append to mobile cards and table body -->
+    <th:block th:if="${currentView == 'list' || currentView == null}">
+        <div id="figures-mobile-cards" hx-swap-oob="beforeend:#figures-mobile-cards">
+            <th:block th:each="f : ${figures}">
+                <th:block th:replace="~{dance-figures/list :: figureMobileCard(f=${f}, isRelated=false)}"></th:block>
+            </th:block>
+        </div>
+        <table class="hidden">
+            <tbody id="figures-table-body" hx-swap-oob="beforeend:#figures-table-body">
+                <th:block th:each="f : ${figures}">
+                    <tr th:replace="~{dance-figures/list :: figureTableRow(f=${f}, isRelated=false)}"></tr>
+                </th:block>
+            </tbody>
+        </table>
+    </th:block>
+</th:block>
 
 <!-- Extracted Components for Figures List and Related Section -->
 

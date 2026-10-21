@@ -40,6 +40,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import org.springframework.test.web.servlet.MockMvc
@@ -130,7 +131,8 @@ class HtmxFragmentRenderingTest {
 
     @Test
     fun `dance-figures list htmx returns figuresTable fragment with id figures-grid`() {
-        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
+            .thenReturn(PageImpl(emptyList()))
 
         mockMvc.perform(get("/dance-figures").header("HX-Request", "true").with(csrf()))
             .andExpect(status().isOk)
