@@ -113,7 +113,8 @@ component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `subm
 `form` (`field`, `selectField`, `textareaField`, `checkbox`, `toggle`, `richText`,
 `errorSummary`, `rawField`, `searchField`, `filterSelect`), `page` (`pageHeader`, `overflowMenu`,
 `menuItem`, `sectionTitle`, `viewSwitcher`, `paginationFooter`), `card`, `table`
-(`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal` and `rich-text`. Do not
+(`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal`, `rich-text`, `list-row`
+(`compactRow`) and `filter-sheet` (`filterSheet`). Do not
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
 
@@ -684,6 +685,67 @@ once everything is shown. A third paged list reuses the footer and this shape:
 - **Counts are totals.** The header subtitle and the footer use `totalElements`, never the page
   size. The "related" results found by meaning are computed and shown only on page 0.
 - Coming back from a detail page starts again at page 0 (the spec allows it).
+
+### Mobile lists: compact rows, filter sheet and chips (#366, #379)
+
+Below **`lg` (1024px)**, Notes and Figures share one mobile layout. `lg` is where the Figures table
+and the Notes desktop view start, so it is the single breakpoint for every mobile piece: rows,
+toolbar, chips and sheet. The first version of #366 switched the toolbar at `md` and the rows at
+`lg`, so a 768–1023px screen mixed the two layouts. Choreographies and Collections are to follow the
+same shape (#383).
+
+- **`fragments/list-row :: compactRow`** is the one row: a fixed 76px height, a full-strength
+  hairline divider (`border-outline-variant`, not `/30`), and a stretched link, so tapping the row
+  opens the item. Its parameters:
+  - `title`, plus `titleMarkerSlot` for a small marker after it (the private lock);
+  - `asideText` for the date at the top right;
+  - `tagsSlot` for one line of badges;
+  - `menuSlot` for the ⋯ menu, which is `page :: overflowMenu` with `quiet=true`;
+  - `isRelated`.
+
+  Pass `menuSlot=null` when the viewer has nothing to do on the item, rather than an empty menu.
+  Both lists offer Edit and Delete. A note with a video also has Watch. There is no Open item,
+  because the row itself opens the item.
+- **Badge line rules (owner's review, #379).** Style and category are neutral pills
+  (`badge bg-surface-container text-on-surface-variant`). A Figure's class is just its letter, with
+  the full "Class F" as `aria-label`. The medal is icon-only through `medalBadge(iconOnly=true)`,
+  which overrides even the "medal, no numerals" style, where the word is otherwise forced on. The
+  steps flag is an icon-only pill labelled "Steps". Notes show no rating and no figure count in the
+  row. When the badges don't fit, `updateRowTagOverflow` in `main.js` hides them from the end and
+  adds a `+N` marker, rerunning after htmx swaps and on resize.
+- **Toolbar, sheet and chips.** Below `lg` the toolbar is the search field plus a **Filters** button
+  with the active count. The button opens `fragments/filter-sheet :: filterSheet`, a native
+  `<dialog>` holding the list's existing filters. The server builds the active filters as
+  `ActiveFilterChip`s (labels from message keys, never English text in Kotlin) and swaps the chips
+  and the count in out of band on every list update, so they cannot drift. **The sheet sits outside
+  the swapped fragment**, so nothing in it may depend on a server condition rendered once. Its Clear
+  button is always rendered: the first version rendered it only when filters were active at page
+  load, so it never appeared after filters were picked in the sheet. Clear resets the filters only,
+  never sort, search or view. Click-outside closing is scoped to `#filterSheet`. The first version
+  closed every `<dialog>` in the app.
+
+**Rules learned here, each of which cost a review round:**
+- **A row with a dropdown must not clip it.** `overflow-hidden` on the row cut off its own ⋯ menu, and
+  the next row painted over it. The row now has no overflow clipping, and the row with an open menu
+  is raised with `has-[.js-menu-dropdown:not(.hidden)]:z-30`.
+- **The `hidden` class loses to a display class on the same element.** A badge with `inline-flex`,
+  or any Material Symbols icon (Google's `.material-symbols-outlined` stylesheet loads after ours and
+  sets `display`), stays visible with `hidden` on it. That is why the filter pills showed a check
+  mark that was meant to appear only when selected (the check marks are now gone), and why the tag
+  trimming hid everything at first. In JavaScript hide with `style.display = 'none'`. In a template,
+  put `hidden` on a wrapper rather than on the icon.
+- **Pass `title=null` to every icon inside a row.** `compactRow` has a `title` parameter. An `icon`
+  call inside it that omits `title` inherits the row's title (the inherited-parameter trap above), so
+  the ⋯, the menu items and the lock all showed the item's name as a hover tooltip.
+  `MobileListsWebTest` asserts no element in a row carries the row title.
+- **A test that takes "the first badge on the page" now gets the mobile row's.** Both layouts render
+  in the same HTML. Scope such selectors to the layout under test, for example
+  `#figures-table-body .medal-badge-gold`.
+
+**Figures have a creation date since V49.** `dance_figure.created_at` was backfilled from the earliest
+`DANCE_FIGURE_CREATED` activity event, and is otherwise NULL. Syllabus figures and older custom ones
+show no date. `DanceFigure.stampCreatedAt` (`@PrePersist`) dates new figures, except syllabus imports
+(`predefined`), whose import time says nothing about the figure.
 
 ### Global template model
 
@@ -1674,7 +1736,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `admin-dashboard` | #387 | Direction A: the profile page's shape, a summary panel with counts and a "Needs attention" line, then grouped rows that show their current value and open in place; Users and Google Drive show their first rows and link to a full page. B and C were not chosen |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
-| `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet are #366 below tablet width |
+| `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet shipped in #378 (#366) below `lg`, revised in #379 |
 | `collection-form` | #388 | Direction B: the rules as pills and a segmented rating, with a live preview of the matching notes beside them (compact note rows), folding into a Preview section on a phone; zero-match state explained. A and C were not chosen |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
@@ -1731,6 +1793,9 @@ the part that exists, and leave the rest out.
   `templates/dance-figures/list.html`
 - Paged list with a Show more footer → `listDanceFigures` in the same controller, plus
   `figuresMore` in `templates/dance-figures/list.html` and `fragments/page.html :: paginationFooter`
+- Mobile list below 1024px (compact rows, Filters sheet, active-filter chips) →
+  `figureMobileCard` and `figureSheetFilters` in `templates/dance-figures/list.html`, the chips in
+  `DanceFigureWebController.listDanceFigures`, and `fragments/list-row.html` / `fragments/filter-sheet.html`
 - Dense table with sortable headers and a card form below 1024px →
   `templates/dance-figures/list.html` (`figuresTable`) plus the `js-sort-header` handler in
   `static/js/main.js`
