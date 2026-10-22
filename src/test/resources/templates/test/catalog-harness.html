@@ -209,7 +209,7 @@
 </div>
 
 <div th:fragment="overflowMenuAll">
-    <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::sampleMenuSlot}, cls='extra-menu-cls')}">
+    <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::sampleMenuSlot}, cls='extra-menu-cls', quiet=true)}">
         <div th:fragment="sampleMenuSlot">
             <th:block th:replace="~{fragments/page :: menuItem(href='/edit', text='Edit Details', icon='edit')}"></th:block>
         </div>
@@ -344,6 +344,10 @@
     <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='medal_no_numerals', word=false)}"></span>
 </div>
 
+<div th:fragment="medalBadgeIconOnly">
+    <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='medal_no_numerals', iconOnly=true)}"></span>
+</div>
+
 
 <!-- 21. EMPTY: emptyState -->
 <div th:fragment="emptyStateRequired">
@@ -442,9 +446,9 @@
 </div>
 
 <div th:fragment="compactRowAll">
-    <article th:replace="~{fragments/list-row :: compactRow(href='/materials/1', title='Waltz Heel Turn', tagsSlot=~{::sampleRowTags}, statsSlot=~{::sampleRowStats}, menuSlot=~{::sampleRowMenu}, isRelated=true, cls='extra-cls')}">
+    <article th:replace="~{fragments/list-row :: compactRow(href='/materials/1', title='Waltz Heel Turn', tagsSlot=~{::sampleRowTags}, titleMarkerSlot=~{::sampleRowMarker}, asideText='14 Oct', menuSlot=~{::sampleRowMenu}, isRelated=true, cls='extra-cls')}">
         <span th:fragment="sampleRowTags" class="badge">Standard</span>
-        <span th:fragment="sampleRowStats">5 stars</span>
+        <span th:fragment="sampleRowMarker">lock</span>
         <div th:fragment="sampleRowMenu">Menu</div>
     </article>
 </div>

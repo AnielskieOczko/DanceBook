@@ -42,7 +42,7 @@
                    isStyleC=${styleKey == 'ring_and_word' or styleKey == 'c'},
                    isStyleD=${styleKey == 'medal_icon' or styleKey == 'd'},
                    isStyleD2=${styleKey == 'medal_no_numerals' or styleKey == 'd2'},
-                   showWord=${isStyleD2 ? true : (isStyleC ? (word == null ? true : word) : (word != null and word))},
+                   showWord=${iconOnly == true ? false : (isStyleD2 ? true : (isStyleC ? (word == null ? true : word) : (word != null and word)))},
                    isSm=${size == 'sm' or size == 12 or size == '12'},
                    isLg=${size == 'lg' or size == 18 or size == '18'},
                    isXl=${size == 'xl' or size == 24 or size == '24'},

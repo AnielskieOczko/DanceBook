@@ -32,6 +32,7 @@ import org.jsoup.Jsoup
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.any
@@ -127,6 +128,7 @@ class MobileListsWebTest {
             danceType = typeWaltz
             danceClass = DanceClass.A
             medalLevel = MedalLevel.BRONZE
+            createdAt = java.time.LocalDateTime.of(2026, 10, 14, 9, 30)
         }
 
         `when`(danceFigureService.findAll(any(), any(), any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
@@ -165,13 +167,16 @@ class MobileListsWebTest {
         val row = doc.selectFirst("#figures-mobile-cards article")
         assertNotNull(row, "Compact row article must be present in #figures-mobile-cards")
         assertTrue(row!!.hasClass("border-b"), "Row must have hairline divider (border-b)")
-        assertTrue(row.hasClass("h-[72px]"), "Row must have fixed height 72px")
+        assertTrue(row.hasClass("h-[76px]"), "Row must have fixed height 76px")
         val link = row.selectFirst("a[href='/dance-figures/${figure.id}']")
         assertNotNull(link, "Full-row tap link must point to figure view")
         assertTrue(row.text().contains("Natural Spin Turn"), "Row must display figure name")
         assertTrue(row.text().contains("English Waltz"), "Row must display style badge")
-        assertTrue(row.text().contains("Class A"), "Row must display class badge")
-        assertTrue(row.text().contains("Steps"), "Row must display steps flag badge")
+        assertNotNull(row.select(".badge").firstOrNull { it.text() == "A" && it.attr("aria-label") == "Class A" }, "The class badge shows only the letter, labelled with the full class")
+        assertNotNull(row.selectFirst("[role=img][aria-label=Steps]"), "The steps flag is an icon labelled Steps")
+        assertFalse(row.text().contains("Steps"), "The steps flag has no visible word")
+        assertTrue(row.text().contains("14 Oct"), "A dated figure shows its creation date")
+        assertTrue(row.select("[title]").none { it.attr("title") == "Natural Spin Turn" }, "No icon in the row inherits the row title as a tooltip")
         assertNotNull(row.selectFirst(".js-menu-btn"), "Row must have ⋯ overflow menu button")
 
         // 4. Native <dialog id='filterSheet'> is present with closedby='any'
@@ -313,6 +318,8 @@ class MobileListsWebTest {
             visibility = Visibility.PRIVATE
             createdAt = LocalDateTime.of(2026, 10, 14, 12, 0)
             owner = user
+            // No one is signed in here, so a video link is what gives the row a ⋯ menu (Watch)
+            sourceLink = "https://example.com/video"
         }
 
         `when`(materialService.findAll(any(), any(), any(), any(), any(), anyNonNull(PageRequest.of(0, 24))))
@@ -344,19 +351,21 @@ class MobileListsWebTest {
         val ratingChip = doc.selectFirst("#mobile-filter-chips [data-filter-name='minRating'][data-filter-value='4']")
         assertNotNull(ratingChip, "Rating chip must be present")
 
-        // 3. Compact row rendered for note with tags, stats line, and ⋯ menu
+        // 3. Compact row: title with lock and date, then rating and badges, and the ⋯ menu
         val row = doc.selectFirst("#materials-mobile-cards article")
         assertNotNull(row, "Compact row must be present in #materials-mobile-cards")
         assertTrue(row!!.hasClass("border-b"), "Row must have hairline divider")
-        assertTrue(row.hasClass("h-[88px]"), "Row must have fixed height 88px")
+        assertTrue(row.hasClass("h-[76px]"), "Note rows share the figure row height")
         val link = row.selectFirst("a[href='/materials/${note.id}']")
         assertNotNull(link, "Full-row tap link must point to note view")
         assertTrue(row.text().contains("Rise and Fall Practice"), "Row must display note title")
         assertTrue(row.text().contains("English Waltz"), "Row must display style badge")
-        assertTrue(row.text().contains("Private"), "Row must display private badge")
-        assertTrue(row.text().contains("5"), "Row must display rating 5")
-        assertTrue(row.text().contains("3 figures"), "Row must display figure count")
+        assertNotNull(row.selectFirst("[role=img][aria-label=Private]"), "A private note shows a lock icon labelled Private")
+        assertFalse(row.select(".badge").any { it.text().contains("Private") }, "Private is an icon, not a badge")
+        assertFalse(row.text().contains("star"), "The row no longer shows the rating")
+        assertFalse(row.text().contains("figures"), "The row no longer shows a figure count")
         assertTrue(row.text().contains("14 Oct"), "Row must display formatted date")
+        assertTrue(row.select(".js-menu-dropdown a, .js-menu-dropdown button").none { it.text().trim() == "Open" }, "The note menu matches the figure menu: no Open item, the row itself opens the note")
         assertNotNull(row.selectFirst(".js-menu-btn"), "Row must have ⋯ overflow menu button")
 
         // 4. Notes filter bottom sheet dialog

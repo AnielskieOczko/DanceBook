@@ -87,7 +87,6 @@
                                        th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
                                        th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                                     <span th:text="${c.name}">Category</span>
                                 </span>
                             </label>
@@ -108,7 +107,6 @@
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>
                             </label>
@@ -322,7 +320,6 @@
                         <input type="checkbox" data-sheet-filter="categoryIds" th:value="${c.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}">
                         <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                             <span th:text="${c.name}">Category</span>
                         </span>
                     </label>
@@ -339,7 +336,6 @@
                         <input type="checkbox" data-sheet-filter="typeIds" th:value="${t.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}">
                         <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                             <span th:text="${t.name}">Style</span>
                         </span>
                     </label>
@@ -518,43 +514,32 @@
     <article th:replace="~{fragments/list-row :: compactRow(
         href=@{/materials/{id}(id=${m.id})},
         title=${m.name},
+        titleMarkerSlot=${!m.isPublic} ? ~{::materialRowPrivate} : null,
+        asideText=${#temporals.format(m.createdAt, 'd MMM')},
         tagsSlot=~{::materialRowTags},
-        statsSlot=~{::materialRowStats},
-        menuSlot=~{::materialRowMenu},
+        menuSlot=${currentUser != null and (currentUser.role.name() == 'ADMIN' or m.owner?.id == currentUser.id) or (m.sourceLink != null and !m.sourceLink.isEmpty())} ? ~{::materialRowMenu} : null,
         isRelated=${isRelated}
     )}">
-        <th:block th:fragment="materialRowTags">
-            <span th:text="${m.danceType != null ? m.danceType.name : #messages.msg('notes.uncategorized')}" class="badge badge-accent">Style</span>
-            <span th:if="${m.danceType != null and m.danceType.category != null}" th:text="${m.danceType.category.name}" class="badge badge-neutral">Category</span>
-            <th:block th:if="${!m.isPublic}">
-                <span th:replace="~{fragments/badge :: badge(label=#{notes.badge.private}, variant='neutral', icon='lock')}"></span>
-            </th:block>
+        <th:block th:fragment="materialRowPrivate">
+            <span class="shrink-0 inline-flex text-on-surface-variant"
+                  role="img" th:attr="aria-label=#{notes.badge.private},title=#{notes.badge.private}">
+                <span th:replace="~{fragments/icon :: icon(name='lock', size='sm', title=null)}"></span>
+            </span>
         </th:block>
 
-        <th:block th:fragment="materialRowStats">
-            <span th:if="${m.rating != null}" class="inline-flex items-center gap-0.5 font-semibold text-amber-500">
-                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true)}"></span>
-                <span th:text="${m.rating}">5</span>
-            </span>
-            <span class="inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='schema', size='sm')}"></span>
-                <span th:text="${#messages.msg('notes.row.figures_count', (figureCounts != null ? (figureCounts[m.id] ?: 0) : #lists.size(m.figures)))}">3 figures</span>
-            </span>
-            <span class="inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='calendar_today', size='sm')}"></span>
-                <span th:text="${#temporals.format(m.createdAt, 'dd MMM')}">14 paź</span>
-            </span>
+        <th:block th:fragment="materialRowTags">
+            <span th:text="${m.danceType != null ? m.danceType.name : #messages.msg('notes.uncategorized')}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <span th:if="${m.danceType != null and m.danceType.category != null}" th:text="${m.danceType.category.name}" class="badge bg-surface-container text-on-surface-variant">Category</span>
         </th:block>
 
         <th:block th:fragment="materialRowMenu">
-            <div th:replace="~{fragments/page :: menuItem(href=@{/materials/{id}(id=${m.id})}, icon='open_in_new', text=#{common.open})}"></div>
             <th:block th:if="${currentUser != null and (currentUser.role.name() == 'ADMIN' or m.owner?.id == currentUser.id)}">
                 <div th:replace="~{fragments/page :: menuItem(href=@{/materials/{id}/edit(id=${m.id})}, icon='edit', text=#{common.edit})}"></div>
                 <form th:action="@{/materials/{id}/delete(id=${m.id})}" method="post"
                       data-confirm="Are you sure you want to delete this note?"
                       th:attr="data-confirm=#{notes.delete_confirm}" class="m-0">
                     <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
-                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger', title=null)}"></span>
                         <span th:text="#{common.delete}">Delete</span>
                     </button>
                 </form>

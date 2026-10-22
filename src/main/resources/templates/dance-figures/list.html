@@ -85,7 +85,6 @@
                                        th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
                                        th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                                     <span th:text="${c.name}">Category</span>
                                 </span>
                             </label>
@@ -106,7 +105,6 @@
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/dance-figures}" hx-target="#figures-grid" hx-swap="outerHTML" hx-include="#filterForm">
                                 <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                                    <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>
                             </label>
@@ -327,7 +325,6 @@
                         <input type="checkbox" data-sheet-filter="categoryIds" th:value="${c.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}">
                         <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                             <span th:text="${c.name}">Category</span>
                         </span>
                     </label>
@@ -344,7 +341,6 @@
                         <input type="checkbox" data-sheet-filter="typeIds" th:value="${t.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}">
                         <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
-                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
                             <span th:text="${t.name}">Style</span>
                         </span>
                     </label>
@@ -516,17 +512,21 @@
     <article th:replace="~{fragments/list-row :: compactRow(
         href=@{/dance-figures/{id}(id=${f.id})},
         title=${f.name},
+        asideText=${f.createdAt != null ? #temporals.format(f.createdAt, 'd MMM') : null},
         tagsSlot=~{::figureRowTags},
         menuSlot=~{::figureRowMenu},
         isRelated=${isRelated}
     )}">
         <th:block th:fragment="figureRowTags">
-            <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="badge badge-accent">Style</span>
-            <span th:if="${f.danceClass != null}" th:text="${#messages.msg('figures.list.class_badge', f.danceClass)}" class="badge badge-neutral">Class</span>
-            <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel})}"></th:block>
-            <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}" class="badge badge-neutral inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm')}"></span>
-                <span th:text="#{filters.steps.flag}">Steps</span>
+            <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <span th:if="${f.danceClass != null}" th:text="${f.danceClass.name()}"
+                  th:attr="aria-label=${#messages.msg('figures.list.class_badge', f.danceClass)},title=${#messages.msg('figures.list.class_badge', f.danceClass)}"
+                  class="badge bg-surface-container text-on-surface-variant">F</span>
+            <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel}, iconOnly=true)}"></th:block>
+            <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}"
+                  role="img" th:attr="aria-label=#{filters.steps.flag},title=#{filters.steps.flag}"
+                  class="badge bg-surface-container text-on-surface-variant inline-flex items-center !py-0 h-5">
+                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[14px] leading-none', title=null)}"></span>
             </span>
         </th:block>
 
@@ -537,14 +537,14 @@
                       data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it."
                       th:attr="data-confirm=#{figures.delete_confirm}" class="m-0">
                     <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
-                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger', title=null)}"></span>
                         <span th:text="#{figures.action.delete}">Delete</span>
                     </button>
                 </form>
             </th:block>
             <th:block th:if="${f.predefined and !f.isDeletableBy(currentUser)}">
                 <div class="flex items-center gap-2.5 px-3.5 py-2.5 min-h-[44px] text-sm text-on-surface-variant/40 cursor-not-allowed">
-                    <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
+                    <span th:replace="~{fragments/icon :: icon(name='lock', size='sm', title=null)}"></span>
                     <span th:text="#{figures.source.predefined}">Predefined</span>
                 </div>
             </th:block>
