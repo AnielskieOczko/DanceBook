@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.ActiveFilterChip
 import com.jankowski.rafal.dancebook.dto.FigureRequest
 import com.jankowski.rafal.dancebook.dto.MaterialRequest
 import com.jankowski.rafal.dancebook.model.AttendanceStatus
@@ -157,6 +158,31 @@ class MaterialWebController(
         model.addAttribute("selectedNameSearch", nameSearch)
         model.addAttribute("currentView", view)
         model.addAttribute("currentSort", currentSort)
+
+        val activeFilterChips = mutableListOf<ActiveFilterChip>()
+        if (!categoryIds.isNullOrEmpty()) {
+            val allCategories = danceCategoryService.findAll()
+            categoryIds.forEach { catId ->
+                allCategories.find { it.id == catId }?.let {
+                    activeFilterChips.add(ActiveFilterChip("categoryIds", catId.toString(), it.name))
+                }
+            }
+        }
+        if (!typeIds.isNullOrEmpty()) {
+            val allTypes = danceTypeService.findAll()
+            typeIds.forEach { typeId ->
+                allTypes.find { it.id == typeId }?.let {
+                    activeFilterChips.add(ActiveFilterChip("typeIds", typeId.toString(), it.name))
+                }
+            }
+        }
+        if (minRating != null) {
+            activeFilterChips.add(ActiveFilterChip("minRating", minRating.toString(), "${minRating}★+"))
+        }
+
+        model.addAttribute("activeFilterChips", activeFilterChips)
+        model.addAttribute("activeFilterCount", activeFilterChips.size)
+        model.addAttribute("isHtmxRequest", isHtmxRequest == true)
 
         return if (isHtmxRequest == true) {
             if (pageNumber > 0) {

@@ -436,5 +436,29 @@
     <div th:replace="~{fragments/assistant :: assistantDraft(draft=${sampleDraftDiscarded})}"></div>
 </div>
 
+<!-- LIST-ROW: compactRow -->
+<div th:fragment="compactRowRequired">
+    <article th:replace="~{fragments/list-row :: compactRow(href='/dance-figures/1', title='Natural Spin Turn')}"></article>
+</div>
+
+<div th:fragment="compactRowAll">
+    <article th:replace="~{fragments/list-row :: compactRow(href='/materials/1', title='Waltz Heel Turn', tagsSlot=~{::sampleRowTags}, statsSlot=~{::sampleRowStats}, menuSlot=~{::sampleRowMenu}, isRelated=true, cls='extra-cls')}">
+        <span th:fragment="sampleRowTags" class="badge">Standard</span>
+        <span th:fragment="sampleRowStats">5 stars</span>
+        <div th:fragment="sampleRowMenu">Menu</div>
+    </article>
+</div>
+
+<!-- FILTER SHEET: filterSheet -->
+<div th:fragment="filterSheetRequired">
+    <dialog th:replace="~{fragments/filter-sheet :: filterSheet(id='testFilterSheet')}"></dialog>
+</div>
+
+<div th:fragment="filterSheetAll">
+    <dialog th:replace="~{fragments/filter-sheet :: filterSheet(id='testFilterSheetAll', title='Filter Notes', bodySlot=~{::sheetBody}, applyText='Show 12 notes', cls='extra-cls')}">
+        <div th:fragment="sheetBody">Filter controls</div>
+    </dialog>
+</div>
+
 </body>
 </html>

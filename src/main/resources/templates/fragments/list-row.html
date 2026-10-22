@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--
+  Compact Row Component for mobile list items (Issue #366, Mock Option A).
+  Fixed-height row with hairline divider, full-row tap target, single-line trimmed metadata,
+  tag overflow marker, and trailing ⋯ overflow menu.
+-->
+<article th:fragment="compactRow"
+         th:with="effectiveHeight=${rowHeight != null ? rowHeight : (statsSlot != null ? 'h-[88px]' : 'h-[72px]')}"
+         class="js-compact-row group relative flex items-center justify-between gap-3 px-4 shrink-0 overflow-hidden border-b border-outline-variant/30 hover:bg-surface-container-low transition-colors"
+         th:classappend="${effectiveHeight + (isRelated == true ? ' bg-primary-container/5' : '') + (cls != null ? ' ' + cls : '')}">
+
+    <!-- Stretched link for full-row tap target -->
+    <a th:href="${href}" class="absolute inset-0 z-0 rounded-none focus:outline-hidden">
+        <span class="sr-only" th:text="${title}">View item</span>
+    </a>
+
+    <!-- Main content: Title + single-line metadata -->
+    <div class="flex-1 min-w-0 pointer-events-none relative z-10">
+        <!-- Title row -->
+        <div class="flex items-center gap-2 min-w-0">
+            <h3 class="text-body-md font-semibold text-on-surface truncate min-w-0 group-hover:text-primary transition-colors" th:text="${title}">Title</h3>
+            <th:block th:if="${isRelated == true}">
+                <span th:replace="~{fragments/badge :: badge(label=#{search.chip.related}, variant='related')}"></span>
+            </th:block>
+        </div>
+
+        <!-- Meta Line 1: Tags/Badges (constrained to single row, overflow trimmed with marker) -->
+        <div th:if="${tagsSlot != null}" class="js-row-tags flex items-center gap-1.5 mt-1 flex-nowrap overflow-hidden">
+            <th:block th:replace="${tagsSlot}"></th:block>
+        </div>
+
+        <!-- Meta Line 2: Optional secondary stats (e.g. rating, count, date) -->
+        <div th:if="${statsSlot != null}" class="flex items-center gap-3 mt-1 text-label-sm text-on-surface-variant flex-nowrap overflow-hidden">
+            <th:block th:replace="${statsSlot}"></th:block>
+        </div>
+    </div>
+
+    <!-- Trailing Action Slot: ⋯ overflow menu -->
+    <div class="relative z-20 pointer-events-auto shrink-0 flex items-center">
+        <th:block th:if="${menuSlot != null}">
+            <div th:replace="~{fragments/page :: overflowMenu(menuSlot=${menuSlot})}"></div>
+        </th:block>
+    </div>
+</article>
+
+</body>
+</html>

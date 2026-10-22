@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.ActiveFilterChip
 import com.jankowski.rafal.dancebook.dto.DanceFigureRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepSetRequest
 import com.jankowski.rafal.dancebook.dto.DanceFigureStepRequest
@@ -10,6 +11,7 @@ import com.jankowski.rafal.dancebook.model.DanceFigure
 import com.jankowski.rafal.dancebook.service.AssistantDraftService
 import com.jankowski.rafal.dancebook.service.DanceFigureService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.data.domain.PageRequest
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
@@ -40,7 +42,8 @@ class DanceFigureWebController(
     private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService? = null,
     private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
     private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
-    private val semanticSearchFilterHelper: com.jankowski.rafal.dancebook.service.SemanticSearchFilterHelper? = null
+    private val semanticSearchFilterHelper: com.jankowski.rafal.dancebook.service.SemanticSearchFilterHelper? = null,
+    private val messageSource: MessageSource? = null
 ) {
 
     companion object {
@@ -65,6 +68,7 @@ class DanceFigureWebController(
         @RequestParam(required = false, defaultValue = "list") view: String = "list",
         @RequestParam(required = false, defaultValue = "0") page: Int = 0,
         @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        locale: java.util.Locale = java.util.Locale.getDefault(),
         model: Model
     ): String {
         val pageNumber = page.coerceAtLeast(0)
@@ -145,6 +149,44 @@ class DanceFigureWebController(
         model.addAttribute("selectedSortBy", sortBy)
         model.addAttribute("selectedHasSteps", hasSteps)
         model.addAttribute("currentView", view)
+
+        val activeFilterChips = mutableListOf<ActiveFilterChip>()
+        if (!categoryIds.isNullOrEmpty()) {
+            val allCategories = danceCategoryService.findAll()
+            categoryIds.forEach { catId ->
+                allCategories.find { it.id == catId }?.let {
+                    activeFilterChips.add(ActiveFilterChip("categoryIds", catId.toString(), it.name))
+                }
+            }
+        }
+        if (!typeIds.isNullOrEmpty()) {
+            val allTypes = danceTypeService.findAll()
+            typeIds.forEach { typeId ->
+                allTypes.find { it.id == typeId }?.let {
+                    activeFilterChips.add(ActiveFilterChip("typeIds", typeId.toString(), it.name))
+                }
+            }
+        }
+        if (danceClass != null) {
+            val label = messageSource?.getMessage("enum.dance_class.${danceClass.name}", null, "Class ${danceClass.name}", locale)
+                ?: "Class ${danceClass.name}"
+            activeFilterChips.add(ActiveFilterChip("danceClass", danceClass.name, label))
+        }
+        if (medalLevel != null) {
+            val label = messageSource?.getMessage("figures.medal.${medalLevel.name.lowercase()}", null, medalLevel.displayName, locale)
+                ?: medalLevel.displayName
+            activeFilterChips.add(ActiveFilterChip("medalLevel", medalLevel.name, label))
+        }
+        if (hasSteps != null) {
+            val key = if (hasSteps) "figures.list.steps.with_steps" else "figures.list.steps.without_steps"
+            val fallback = if (hasSteps) "With Steps Only" else "Without Steps Only"
+            val label = messageSource?.getMessage(key, null, fallback, locale) ?: fallback
+            activeFilterChips.add(ActiveFilterChip("hasSteps", hasSteps.toString(), label))
+        }
+
+        model.addAttribute("activeFilterChips", activeFilterChips)
+        model.addAttribute("activeFilterCount", activeFilterChips.size)
+        model.addAttribute("isHtmxRequest", isHtmxRequest == true)
 
         return if (isHtmxRequest == true) {
             if (pageNumber > 0) {

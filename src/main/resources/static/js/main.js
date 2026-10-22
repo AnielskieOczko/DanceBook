@@ -815,6 +815,193 @@ document.addEventListener('close', function(event) {
     }
 }, true);
 
+// ── Mobile Filter Sheet & Active Chips (Issue #366) ──────────────────────────
+
+// Open mobile filter sheet
+document.addEventListener('click', function(event) {
+    const openBtn = event.target.closest('.js-mobile-filter-open');
+    if (openBtn) {
+        const sheet = document.getElementById('filterSheet');
+        if (sheet && typeof sheet.showModal === 'function') {
+            sheet.showModal();
+        }
+    }
+});
+
+// Light-dismiss backdrop fallback for filterSheet dialog
+document.addEventListener('click', function(event) {
+    const sheet = event.target;
+    if (sheet && sheet.id === 'filterSheet' && sheet.tagName === 'DIALOG' && sheet.open) {
+        const rect = sheet.getBoundingClientRect();
+        const isInside = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+        );
+        if (!isInside) {
+            sheet.close();
+        }
+    }
+});
+
+// Close filter sheet on apply
+document.addEventListener('click', function(event) {
+    const applyBtn = event.target.closest('.js-filter-sheet-apply');
+    if (applyBtn) {
+        const dialog = applyBtn.closest('dialog');
+        if (dialog) dialog.close();
+    }
+});
+
+// Sync changes inside mobile filter sheet to #filterForm
+document.addEventListener('change', function(event) {
+    const sheetFilter = event.target.closest('.js-sheet-filter');
+    if (!sheetFilter) return;
+
+    const filterName = sheetFilter.getAttribute('data-sheet-filter');
+    if (!filterName) return;
+
+    const form = document.getElementById('filterForm');
+    if (!form) return;
+
+    if (sheetFilter.type === 'checkbox') {
+        const formCheckbox = form.querySelector(`input[name="${filterName}"][value="${sheetFilter.value}"]`);
+        if (formCheckbox) {
+            formCheckbox.checked = sheetFilter.checked;
+            formCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    } else if (sheetFilter.tagName === 'SELECT') {
+        const formSelect = form.querySelector(`select[name="${filterName}"]`);
+        if (formSelect) {
+            formSelect.value = sheetFilter.value;
+            formSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+});
+
+// Clear all active filters from sheet (preserves sort, search and view)
+document.addEventListener('click', function(event) {
+    const clearBtn = event.target.closest('.js-filter-sheet-clear');
+    if (!clearBtn) return;
+
+    const form = document.getElementById('filterForm');
+    if (!form) return;
+
+    const activeFilterNames = ['categoryIds', 'typeIds', 'danceClass', 'medalLevel', 'hasSteps', 'minRating'];
+
+    activeFilterNames.forEach(function(name) {
+        form.querySelectorAll(`input[type="checkbox"][name="${name}"]`).forEach(function(cb) {
+            cb.checked = false;
+        });
+        const sel = form.querySelector(`select[name="${name}"]`);
+        if (sel) sel.value = '';
+    });
+
+    const sheet = document.getElementById('filterSheet');
+    if (sheet) {
+        activeFilterNames.forEach(function(name) {
+            sheet.querySelectorAll(`input[type="checkbox"][data-sheet-filter="${name}"]`).forEach(function(cb) {
+                cb.checked = false;
+            });
+            const sel = sheet.querySelector(`select[data-sheet-filter="${name}"]`);
+            if (sel) sel.value = '';
+        });
+    }
+
+    if (window.htmx) {
+        htmx.trigger(form, 'submit');
+    } else {
+        form.dispatchEvent(new Event('submit', { bubbles: true }));
+    }
+});
+
+// Remove active filter chip
+document.addEventListener('click', function(event) {
+    const removeBtn = event.target.closest('.js-remove-chip');
+    if (!removeBtn) return;
+
+    const filterName = removeBtn.getAttribute('data-filter-name');
+    const filterValue = removeBtn.getAttribute('data-filter-value');
+    if (!filterName) return;
+
+    const form = document.getElementById('filterForm');
+    if (!form) return;
+
+    if (filterName === 'categoryIds' || filterName === 'typeIds') {
+        const cb = form.querySelector(`input[name="${filterName}"][value="${filterValue}"]`);
+        if (cb) {
+            cb.checked = false;
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        const sheetCb = document.querySelector(`#filterSheet input[data-sheet-filter="${filterName}"][value="${filterValue}"]`);
+        if (sheetCb) {
+            sheetCb.checked = false;
+        }
+    } else {
+        const sel = form.querySelector(`select[name="${filterName}"]`);
+        if (sel) {
+            sel.value = '';
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        const sheetSel = document.querySelector(`#filterSheet select[data-sheet-filter="${filterName}"]`);
+        if (sheetSel) {
+            sheetSel.value = '';
+        }
+    }
+});
+
+// Trim tags in compact list rows that exceed available width and display +N marker
+function updateRowTagOverflow() {
+    const rows = document.querySelectorAll('.js-compact-row');
+    rows.forEach(function(row) {
+        const container = row.querySelector('.js-row-tags');
+        if (!container) return;
+
+        const existingMarker = container.querySelector('.js-tag-overflow');
+        if (existingMarker) existingMarker.remove();
+
+        const tags = Array.from(container.children);
+        tags.forEach(function(tag) { tag.classList.remove('hidden'); });
+
+        if (tags.length <= 1) return;
+
+        const containerWidth = container.clientWidth;
+        if (!containerWidth) return;
+
+        if (container.scrollWidth > containerWidth) {
+            const marker = document.createElement('span');
+            marker.className = 'badge badge-neutral js-tag-overflow text-xs shrink-0';
+
+            let hiddenCount = 0;
+            for (let i = tags.length - 1; i >= 1; i--) {
+                tags[i].classList.add('hidden');
+                hiddenCount++;
+                marker.textContent = '+' + hiddenCount;
+                if (!marker.parentNode) {
+                    container.appendChild(marker);
+                }
+                if (container.scrollWidth <= containerWidth) {
+                    break;
+                }
+            }
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateRowTagOverflow);
+} else {
+    updateRowTagOverflow();
+}
+document.addEventListener('htmx:afterSwap', updateRowTagOverflow);
+
+let resizeTagTimeout;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTagTimeout);
+    resizeTagTimeout = setTimeout(updateRowTagOverflow, 100);
+});
+
 /**
  * Renders an icon span matching the Thymeleaf fragments/icon contract.
  * @param {string} name - Material Symbol glyph name
