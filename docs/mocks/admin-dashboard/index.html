@@ -1,0 +1,349 @@
+<title>Admin Dashboard Designs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for #387: the admin dashboard, reworked to match the profile page (#229, direction C:
+   a summary panel, then settings rows that show their current value). Three directions, one recommended.
+   Every area of today's admin/dashboard.html is kept: application settings, syllabus import, knowledge index,
+   default images, Google Drive cleanup and files, cleanup history, training calendars, users;
+   plus dance styles and categories (#386). Tokens from src/main/resources/frontend/input.css, light mode only.
+   Counts and names below are examples, not real data. */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --warning:#8a5a00; --warning-soft:#f6efd8; --danger:#b3261e; --danger-soft:#f7e9e8;
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--on);font:14px/1.5 var(--font);
+  padding-block:32px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1.pt{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600;text-wrap:balance}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600;text-wrap:balance}
+p{margin:0}
+.lede{max-width:72ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:80ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.pros{display:grid;gap:8px 32px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));font-size:13px;color:var(--on-var);max-width:980px}
+.pros b{color:var(--on)}
+.rules{font-size:13px;color:var(--on-var);max-width:82ch;padding-left:18px;margin:0}
+.rules li{margin:3px 0}.rules b{color:var(--on)}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.scrollx{overflow-x:auto;padding-bottom:10px}
+.cols{display:flex;gap:28px;align-items:flex-start;width:max-content}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}
+
+/* frames */
+.page{width:900px;border:1px solid var(--hair);border-radius:var(--r-card);padding:24px 28px 28px;background:var(--surface)}
+.page.m{width:375px;padding:16px 16px 20px;border-radius:28px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--on-var);font-weight:500;font-size:14px;margin-left:-6px;padding:0 6px}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hdr h3{margin:0;font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.02em}
+.hdr .sub{color:var(--on-var);margin-top:2px}
+.m .hdr h3{font-size:24px;line-height:30px}
+.btn{height:40px;border-radius:var(--r-pill);padding:0 16px;display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;border:1px solid transparent;white-space:nowrap}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.o{background:var(--surface);border-color:var(--hair);color:var(--on)}
+.btn.d{background:var(--surface);border-color:#e4b9b6;color:var(--danger)}
+
+/* summary panel (profile hero) */
+.hero{background:var(--container);border-radius:var(--r-card);padding:20px 22px;display:flex;flex-direction:column;gap:16px;margin-top:20px}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.m .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stat{background:var(--surface);border-radius:var(--r-inset);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-size:26px;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;font-weight:600}
+.stat span{font-size:12px;color:var(--on-var)}
+.att{display:flex;flex-direction:column;gap:8px}
+.att .lab{font-size:12px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 12px;border-radius:var(--r-pill);font-size:13px;font-weight:600;background:var(--surface);color:var(--on)}
+.chip.w{background:var(--warning-soft);color:var(--warning)}
+.chip.ok{color:var(--on-var);font-weight:500}
+
+/* settings rows (profile accordion) */
+.grp-t{font-size:12px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin:24px 0 8px 4px}
+.rows{border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden}
+.r{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 18px}
+.r + .r,.r + .body + .r,.body + .r{border-top:1px solid var(--hair)}
+.r .ico{color:var(--primary)}
+.r .t{flex:1;min-width:0}
+.r .t b{display:block;font-size:15px;font-weight:600}
+.r .t small{display:block;color:var(--on-var);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r .flag{flex:none;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:var(--r-pill);background:var(--warning-soft);color:var(--warning);font-size:12px;font-weight:600}
+.r .chev{color:var(--outline);flex:none}
+.r.open{background:var(--surface)}
+.body{padding:4px 18px 20px 52px;display:flex;flex-direction:column;gap:14px}
+.m .body{padding:4px 16px 18px}
+.m .r{padding:10px 14px}
+
+/* inside rows */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-size:12px;font-weight:600;color:var(--on-var);padding:8px 10px;border-bottom:1px solid var(--hair)}
+.tbl td{padding:10px;border-bottom:1px solid var(--hair);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{font-variant-numeric:tabular-nums;text-align:right}
+.who b{display:block;font-weight:600}.who small{color:var(--on-var)}
+.b{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--container);color:var(--on-var);white-space:nowrap}
+.b.p{background:var(--primary);color:var(--on-primary)}
+.b.w{background:var(--warning-soft);color:var(--warning)}
+.kebab{color:var(--on-var)}
+.alert{display:flex;gap:10px;align-items:flex-start;background:var(--warning-soft);color:var(--warning);border-radius:var(--r-inset);padding:12px 14px;font-size:13px}
+.alert b{display:block;font-size:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
+.kv dt{color:var(--on-var)}.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.lrow{display:flex;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid var(--hair)}
+.lrow:last-child{border-bottom:0}
+.lrow .n{flex:1;min-width:0;font-weight:600}
+.lrow .n small{display:block;font-weight:400;color:var(--on-var);font-size:13px}
+
+/* option C two-pane */
+.pane{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;margin-top:20px}
+.side{display:flex;flex-direction:column;gap:2px}
+.side .sh{font-size:12px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 4px 12px}
+.side .sh:first-child{margin-top:0}
+.side a{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:var(--r-pill);color:var(--on);font-weight:500;font-size:14px;text-decoration:none}
+.side a .ms{color:var(--on-var)}
+.side a.on{background:var(--primary-soft);color:var(--primary);font-weight:600}
+.side a.on .ms{color:var(--primary)}
+.side a .dot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--warning)}
+.ctitle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ctitle h4{margin:0;font-size:20px;font-weight:600}
+
+@media (max-width:640px){ h1.pt{font-size:26px;line-height:32px} }
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:12px">
+  <h1 class="pt">Admin dashboard: three directions</h1>
+  <p class="lede">Today the admin page is one long column of cards: application settings, syllabus import, the knowledge index, default images, Google Drive cleanup, Drive files, training calendars, users and the cleanup history. Nothing says what needs attention, and the dance styles and categories pages are not linked at all.</p>
+  <p class="note">All three directions follow the profile page (#229): a summary panel with counts, then settings rows that show their current value. All three add a "Needs attention" line and rows for dance styles and categories (#386). Every area of today's page is kept. Each direction is shown at desktop width and at 375 px. Counts, names and file sizes are examples.</p>
+</header>
+
+<!-- ───────────────────────── OPTION A ───────────────────────── -->
+<section class="opt">
+  <h2>A. Summary and rows that open in place<span class="rec"><span class="ms sm">thumb_up</span>Recommended</span></h2>
+  <p class="note">The profile page's pattern as it is: a summary panel, then rows grouped by area. A row opens in place to its controls. The two long lists, all users and all Drive files, show their first rows and link to a full page with the #365 header.</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · Users row open</p>
+      <div class="page">
+        <div class="hdr"><div><h3>Admin</h3><p class="sub">Run DanceBook: people, content, search and storage.</p></div></div>
+        <div class="hero">
+          <div class="stats">
+            <div class="stat"><b>12</b><span>users</span></div>
+            <div class="stat"><b>374</b><span>figures</span></div>
+            <div class="stat"><b>43</b><span>notes</span></div>
+            <div class="stat"><b>2</b><span>training calendars</span></div>
+          </div>
+          <div class="att"><span class="lab">Needs attention</span>
+            <div class="chips"><span class="chip w"><span class="ms sm">manage_search</span>Knowledge index out of date</span><span class="chip w"><span class="ms sm">person_alert</span>2 users not verified</span><span class="chip w"><span class="ms sm">cloud_off</span>14 orphaned Drive files</span></div>
+          </div>
+        </div>
+
+        <p class="grp-t">People</p>
+        <div class="rows">
+          <div class="r open"><span class="ms ico">group</span><div class="t"><b>Users</b><small>12 accounts · 1 admin · 2 not verified</small></div><span class="flag">2 to verify</span><span class="ms chev">expand_less</span></div>
+          <div class="body">
+            <table class="tbl">
+              <thead><tr><th>User</th><th>Role</th><th>Joined</th><th></th></tr></thead>
+              <tbody>
+                <tr><td class="who"><b>Rafał</b><small>rafal@example.com</small></td><td><span class="b p">Admin</span></td><td>14 Sep 2026</td><td class="num"><span class="ms kebab">more_horiz</span></td></tr>
+                <tr><td class="who"><b>Anna K.</b><small>anna@example.com</small></td><td><span class="b">User</span></td><td>2 Oct 2026</td><td class="num"><span class="ms kebab">more_horiz</span></td></tr>
+                <tr><td class="who"><b>Marek W.</b><small>marek@example.com</small></td><td><span class="b">User</span> <span class="b w">Not verified</span></td><td>19 Oct 2026</td><td class="num"><span class="btn o" style="height:34px">Verify</span></td></tr>
+              </tbody>
+            </table>
+            <div class="acts"><span class="btn o"><span class="ms sm">person_add</span>Create account</span><span class="btn o">All 12 users<span class="ms sm">arrow_forward</span></span></div>
+          </div>
+        </div>
+
+        <p class="grp-t">Content</p>
+        <div class="rows">
+          <div class="r"><span class="ms ico">music_note</span><div class="t"><b>Dance styles</b><small>11 styles in 3 categories</small></div><span class="ms chev">chevron_right</span></div>
+          <div class="r"><span class="ms ico">category</span><div class="t"><b>Categories</b><small>Standard, Latin, Social</small></div><span class="ms chev">chevron_right</span></div>
+          <div class="r"><span class="ms ico">library_books</span><div class="t"><b>Syllabus import</b><small>Last import 18 Oct 2026 · 352 figures</small></div><span class="ms chev">expand_more</span></div>
+          <div class="r"><span class="ms ico">image</span><div class="t"><b>Default images</b><small>Collections and categories</small></div><span class="ms chev">expand_more</span></div>
+        </div>
+
+        <p class="grp-t">Training</p>
+        <div class="rows">
+          <div class="r"><span class="ms ico">calendar_month</span><div class="t"><b>Training calendars</b><small>2 calendars · default: Primary Calendar</small></div><span class="ms chev">expand_more</span></div>
+        </div>
+
+        <p class="grp-t">Search and storage</p>
+        <div class="rows">
+          <div class="r"><span class="ms ico">manage_search</span><div class="t"><b>Knowledge index</b><small>Out of date · last rebuilt 3 Oct 2026</small></div><span class="flag">Rebuild</span><span class="ms chev">expand_more</span></div>
+          <div class="r"><span class="ms ico">cloud</span><div class="t"><b>Google Drive</b><small>2.4 GB used · 14 orphaned files · last cleanup 20 Oct</small></div><span class="flag">14 orphaned</span><span class="ms chev">expand_more</span></div>
+        </div>
+
+        <p class="grp-t">System</p>
+        <div class="rows">
+          <div class="r"><span class="ms ico">tune</span><div class="t"><b>Application settings</b><small>Notifications every 2 min · auto-logout after 30 min</small></div><span class="ms chev">expand_more</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · Knowledge index row open</p>
+      <div class="page m">
+        <div class="hdr"><div><h3>Admin</h3></div></div>
+        <div class="hero" style="padding:16px">
+          <div class="stats"><div class="stat"><b>12</b><span>users</span></div><div class="stat"><b>374</b><span>figures</span></div><div class="stat"><b>43</b><span>notes</span></div><div class="stat"><b>2</b><span>calendars</span></div></div>
+          <div class="att"><span class="lab">Needs attention</span><div class="chips"><span class="chip w"><span class="ms sm">manage_search</span>Index out of date</span><span class="chip w"><span class="ms sm">person_alert</span>2 to verify</span><span class="chip w"><span class="ms sm">cloud_off</span>14 orphaned files</span></div></div>
+        </div>
+        <p class="grp-t">Search and storage</p>
+        <div class="rows">
+          <div class="r open"><span class="ms ico">manage_search</span><div class="t"><b>Knowledge index</b><small>Out of date</small></div><span class="ms chev">expand_less</span></div>
+          <div class="body">
+            <div class="alert"><span class="ms">warning</span><div><b>Search results may be missing recent notes</b>Some notes and figures changed after the last rebuild. Rebuild the index to include them.</div></div>
+            <dl class="kv"><dt>Indexed</dt><dd>412 of 455 items</dd><dt>Last rebuilt</dt><dd>3 Oct 2026, 21:40</dd></dl>
+            <div class="acts"><span class="btn p"><span class="ms sm">refresh</span>Rebuild index</span></div>
+          </div>
+          <div class="r"><span class="ms ico">cloud</span><div class="t"><b>Google Drive</b><small>14 orphaned files</small></div><span class="ms chev">expand_more</span></div>
+        </div>
+        <p class="grp-t">People</p>
+        <div class="rows"><div class="r"><span class="ms ico">group</span><div class="t"><b>Users</b><small>12 accounts · 2 not verified</small></div><span class="ms chev">expand_more</span></div></div>
+        <p class="grp-t">Content</p>
+        <div class="rows">
+          <div class="r"><span class="ms ico">music_note</span><div class="t"><b>Dance styles</b><small>11 styles</small></div><span class="ms chev">chevron_right</span></div>
+          <div class="r"><span class="ms ico">category</span><div class="t"><b>Categories</b><small>3 categories</small></div><span class="ms chev">chevron_right</span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> The same page shape as the profile, so it reads as one product. The summary says what needs doing first. Each row's current value makes most visits a glance, and the existing htmx actions (rebuild, import, simulate cleanup) move into the rows unchanged.</div>
+    <div><b>Costs.</b> The users and Drive file lists need their own full pages once they grow. Grouping changes where things are for the admin who knows today's order.</div>
+  </div>
+</section>
+
+<!-- ───────────────────────── OPTION B ───────────────────────── -->
+<section class="opt">
+  <h2>B. A hub of rows, each opening its own page</h2>
+  <p class="note">The same summary and grouped rows as A, but every row is a link (chevron right) to a page of its own with the #365 header and a back row to Admin. Nothing expands on the dashboard.</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · the hub</p>
+      <div class="page">
+        <div class="hdr"><div><h3>Admin</h3><p class="sub">Run DanceBook: people, content, search and storage.</p></div></div>
+        <div class="hero">
+          <div class="stats"><div class="stat"><b>12</b><span>users</span></div><div class="stat"><b>374</b><span>figures</span></div><div class="stat"><b>43</b><span>notes</span></div><div class="stat"><b>2</b><span>training calendars</span></div></div>
+          <div class="att"><span class="lab">Needs attention</span><div class="chips"><span class="chip w">Knowledge index out of date</span><span class="chip w">2 users not verified</span><span class="chip w">14 orphaned Drive files</span></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">
+          <div>
+            <p class="grp-t">People and training</p>
+            <div class="rows">
+              <div class="r"><span class="ms ico">group</span><div class="t"><b>Users</b><small>12 accounts · 2 not verified</small></div><span class="flag">2</span><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">calendar_month</span><div class="t"><b>Training calendars</b><small>2 calendars</small></div><span class="ms chev">chevron_right</span></div>
+            </div>
+            <p class="grp-t">Content</p>
+            <div class="rows">
+              <div class="r"><span class="ms ico">music_note</span><div class="t"><b>Dance styles</b><small>11 styles</small></div><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">category</span><div class="t"><b>Categories</b><small>3 categories</small></div><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">library_books</span><div class="t"><b>Syllabus import</b><small>Last import 18 Oct</small></div><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">image</span><div class="t"><b>Default images</b><small>Collections, categories</small></div><span class="ms chev">chevron_right</span></div>
+            </div>
+          </div>
+          <div>
+            <p class="grp-t">Search and storage</p>
+            <div class="rows">
+              <div class="r"><span class="ms ico">manage_search</span><div class="t"><b>Knowledge index</b><small>Out of date</small></div><span class="flag">!</span><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">cloud</span><div class="t"><b>Google Drive</b><small>2.4 GB · 14 orphaned</small></div><span class="flag">14</span><span class="ms chev">chevron_right</span></div>
+              <div class="r"><span class="ms ico">history</span><div class="t"><b>Cleanup history</b><small>Last run 20 Oct</small></div><span class="ms chev">chevron_right</span></div>
+            </div>
+            <p class="grp-t">System</p>
+            <div class="rows">
+              <div class="r"><span class="ms ico">tune</span><div class="t"><b>Application settings</b><small>Polling 2 min · logout 30 min</small></div><span class="ms chev">chevron_right</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · the Users page</p>
+      <div class="page m">
+        <span class="back"><span class="ms">arrow_back</span>Admin</span>
+        <div class="hdr"><div><h3>Users</h3><p class="sub">12 accounts</p></div><span class="btn p" style="width:100%;justify-content:center"><span class="ms sm">person_add</span>Create account</span></div>
+        <div style="margin-top:16px">
+          <div class="lrow"><div class="n">Rafał<small>rafal@example.com · joined 14 Sep</small></div><span class="b p">Admin</span><span class="ms kebab">more_horiz</span></div>
+          <div class="lrow"><div class="n">Marek W.<small>marek@example.com · joined 19 Oct</small></div><span class="b w">Not verified</span><span class="ms kebab">more_horiz</span></div>
+          <div class="lrow"><div class="n">Anna K.<small>anna@example.com · joined 2 Oct</small></div><span class="b">User</span><span class="ms kebab">more_horiz</span></div>
+          <div class="lrow"><div class="n">Ola P.<small>ola@example.com · joined 28 Sep</small></div><span class="b">User</span><span class="ms kebab">more_horiz</span></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> The dashboard stays short and scannable at any size. Each area gets room for long lists, and its own URL to bookmark or link from a notification.</div>
+    <div><b>Costs.</b> Every change is one extra page away, even a single setting. Nine new pages and routes to build, where A needs two.</div>
+  </div>
+</section>
+
+<!-- ───────────────────────── OPTION C ───────────────────────── -->
+<section class="opt">
+  <h2>C. Side navigation with a content pane</h2>
+  <p class="note">A classic admin console: the areas in a left column, the selected one on the right. On a phone the column becomes the hub list from B. This one breaks most from the profile page.</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · Google Drive selected</p>
+      <div class="page" style="width:980px">
+        <div class="hdr"><div><h3>Admin</h3></div></div>
+        <div class="pane">
+          <nav class="side" aria-label="Admin areas">
+            <span class="sh">Overview</span>
+            <a><span class="ms">dashboard</span>Summary</a>
+            <span class="sh">People</span>
+            <a><span class="ms">group</span>Users<span class="dot"></span></a>
+            <a><span class="ms">calendar_month</span>Training calendars</a>
+            <span class="sh">Content</span>
+            <a><span class="ms">music_note</span>Dance styles</a>
+            <a><span class="ms">category</span>Categories</a>
+            <a><span class="ms">library_books</span>Syllabus import</a>
+            <a><span class="ms">image</span>Default images</a>
+            <span class="sh">Search and storage</span>
+            <a><span class="ms">manage_search</span>Knowledge index<span class="dot"></span></a>
+            <a class="on"><span class="ms">cloud</span>Google Drive<span class="dot"></span></a>
+            <span class="sh">System</span>
+            <a><span class="ms">tune</span>Application settings</a>
+          </nav>
+          <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+            <div class="ctitle"><h4>Google Drive</h4><div class="acts"><span class="btn o">Simulate cleanup</span><span class="btn d">Delete 14 files</span></div></div>
+            <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="stat" style="background:var(--container)"><b>2.4 GB</b><span>used of 15 GB</span></div><div class="stat" style="background:var(--container)"><b>186</b><span>files</span></div><div class="stat" style="background:var(--container)"><b>14</b><span>orphaned, older than 24 h</span></div></div>
+            <table class="tbl">
+              <thead><tr><th>File</th><th class="num">Size</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>waltz-heel-turn-take2.mp4</td><td class="num">84 MB</td><td><span class="b w">Orphaned</span></td></tr>
+                <tr><td>cha-cha-hockey-stick.mp4</td><td class="num">61 MB</td><td><span class="b w">Orphaned</span></td></tr>
+                <tr><td>rumba-walks-lesson.mp4</td><td class="num">120 MB</td><td><span class="b">In a note</span></td></tr>
+              </tbody>
+            </table>
+            <div class="acts"><span class="btn o">Remove public sharing</span><span class="btn o">Cleanup history<span class="ms sm">arrow_forward</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> Familiar from other admin consoles. Everything is one click from anywhere, and a big area such as Drive has full width.</div>
+    <div><b>Costs.</b> A different shape from the profile page, which the issue asked to match. Two layouts to keep in step, one for desktop and one for phones.</div>
+  </div>
+</section>
+
+<section class="opt">
+  <h2>Applies to whichever direction is chosen</h2>
+  <ul class="rules">
+    <li><b>Needs attention</b> lists only real conditions: a stale or incomplete knowledge index, unverified users, orphaned Drive files. When nothing needs doing it reads "Nothing needs attention", in a neutral chip.</li>
+    <li><b>Every action of today's page stays</b> and keeps its current behaviour: save application settings, run the syllabus import, rebuild the index, upload default images, simulate cleanup, run deletion, remove public permissions, add and edit calendars, create, edit, enable and verify users. Destructive actions keep their confirmation.</li>
+    <li><b>Dance styles and categories</b> (#386) appear as rows that open the existing <code>/dance-types</code> and <code>/dance-categories</code> pages.</li>
+    <li><b>Admins only.</b> The page and every row stay behind the admin role. Counts come from the services, never from repositories in the controller.</li>
+    <li><b>Copy:</b> "Knowledge Index (RAG)" becomes "Knowledge index", "Google Drive Maintenance" becomes "Google Drive", and "Application Configuration" becomes "Application settings". All labels go into both message files.</li>
+  </ul>
+</section>
+
+</div>
