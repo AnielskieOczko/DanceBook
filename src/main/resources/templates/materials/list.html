@@ -518,32 +518,26 @@
     <article th:replace="~{fragments/list-row :: compactRow(
         href=@{/materials/{id}(id=${m.id})},
         title=${m.name},
+        titleMarkerSlot=${!m.isPublic} ? ~{::materialRowPrivate} : null,
+        asideText=${#temporals.format(m.createdAt, 'd MMM')},
         tagsSlot=~{::materialRowTags},
-        statsSlot=~{::materialRowStats},
         menuSlot=~{::materialRowMenu},
         isRelated=${isRelated}
     )}">
-        <th:block th:fragment="materialRowTags">
-            <span th:text="${m.danceType != null ? m.danceType.name : #messages.msg('notes.uncategorized')}" class="badge badge-accent">Style</span>
-            <span th:if="${m.danceType != null and m.danceType.category != null}" th:text="${m.danceType.category.name}" class="badge badge-neutral">Category</span>
-            <th:block th:if="${!m.isPublic}">
-                <span th:replace="~{fragments/badge :: badge(label=#{notes.badge.private}, variant='neutral', icon='lock')}"></span>
-            </th:block>
+        <th:block th:fragment="materialRowPrivate">
+            <span class="shrink-0 inline-flex text-on-surface-variant"
+                  role="img" th:attr="aria-label=#{notes.badge.private},title=#{notes.badge.private}">
+                <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
+            </span>
         </th:block>
 
-        <th:block th:fragment="materialRowStats">
-            <span th:if="${m.rating != null}" class="inline-flex items-center gap-0.5 font-semibold text-amber-500">
-                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true)}"></span>
+        <th:block th:fragment="materialRowTags">
+            <span th:if="${m.rating != null}" class="inline-flex items-center gap-0.5 shrink-0 text-[13px] font-semibold text-gold">
+                <span th:replace="~{fragments/icon :: icon(name='star', size='sm')}"></span>
                 <span th:text="${m.rating}">5</span>
             </span>
-            <span class="inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='schema', size='sm')}"></span>
-                <span th:text="${#messages.msg('notes.row.figures_count', (figureCounts != null ? (figureCounts[m.id] ?: 0) : #lists.size(m.figures)))}">3 figures</span>
-            </span>
-            <span class="inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='calendar_today', size='sm')}"></span>
-                <span th:text="${#temporals.format(m.createdAt, 'dd MMM')}">14 paź</span>
-            </span>
+            <span th:text="${m.danceType != null ? m.danceType.name : #messages.msg('notes.uncategorized')}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <span th:if="${m.danceType != null and m.danceType.category != null}" th:text="${m.danceType.category.name}" class="badge bg-surface-container text-on-surface-variant">Category</span>
         </th:block>
 
         <th:block th:fragment="materialRowMenu">

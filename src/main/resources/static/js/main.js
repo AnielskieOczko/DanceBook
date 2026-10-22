@@ -962,7 +962,8 @@ function updateRowTagOverflow() {
         if (existingMarker) existingMarker.remove();
 
         const tags = Array.from(container.children);
-        tags.forEach(function(tag) { tag.classList.remove('hidden'); });
+        // Inline display, not the 'hidden' class: a badge carrying 'inline-flex' would win over it
+        tags.forEach(function(tag) { tag.style.display = ''; });
 
         if (tags.length <= 1) return;
 
@@ -971,11 +972,11 @@ function updateRowTagOverflow() {
 
         if (container.scrollWidth > containerWidth) {
             const marker = document.createElement('span');
-            marker.className = 'badge badge-neutral js-tag-overflow text-xs shrink-0';
+            marker.className = 'badge bg-surface-container text-on-surface-variant js-tag-overflow shrink-0';
 
             let hiddenCount = 0;
             for (let i = tags.length - 1; i >= 1; i--) {
-                tags[i].classList.add('hidden');
+                tags[i].style.display = 'none';
                 hiddenCount++;
                 marker.textContent = '+' + hiddenCount;
                 if (!marker.parentNode) {

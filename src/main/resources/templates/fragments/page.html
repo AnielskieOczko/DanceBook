@@ -109,7 +109,8 @@
      class="relative inline-block text-left"
      th:classappend="${cls}">
     <button type="button"
-            class="js-menu-btn btn-outline btn-sm min-w-[44px] min-h-[44px] !p-0 rounded-pill flex items-center justify-center cursor-pointer select-none"
+            class="js-menu-btn min-w-[44px] min-h-[44px] !p-0 rounded-pill flex items-center justify-center cursor-pointer select-none"
+            th:classappend="${quiet == true ? 'text-on-surface-variant hover:bg-surface-container' : 'btn-outline btn-sm'}"
             aria-label="More actions"
             th:attr="aria-label=#{common.more_actions}"
             aria-haspopup="true"

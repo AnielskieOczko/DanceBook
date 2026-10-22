@@ -521,10 +521,10 @@
         isRelated=${isRelated}
     )}">
         <th:block th:fragment="figureRowTags">
-            <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="badge badge-accent">Style</span>
-            <span th:if="${f.danceClass != null}" th:text="${#messages.msg('figures.list.class_badge', f.danceClass)}" class="badge badge-neutral">Class</span>
+            <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <span th:if="${f.danceClass != null}" th:text="${#messages.msg('figures.list.class_badge', f.danceClass)}" class="badge badge-accent">Class</span>
             <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel})}"></th:block>
-            <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}" class="badge badge-neutral inline-flex items-center gap-1">
+            <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}" class="badge bg-surface-container text-on-surface-variant inline-flex items-center gap-1">
                 <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm')}"></span>
                 <span th:text="#{filters.steps.flag}">Steps</span>
             </span>
