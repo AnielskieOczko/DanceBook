@@ -1,0 +1,405 @@
+<title>Collection Form Designs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for #388: the New / Edit Collection form, three directions, one recommended.
+   A collection is a saved filter over notes: name, cover image, rules (name contains, minimum rating,
+   dance styles, categories) and public or private. Every field of today's lists/form.html is kept.
+   Tokens from src/main/resources/frontend/input.css (light mode only, by design). Patterns reused:
+   page header with back row and actions on the right (#365, docs/mocks/detail-headers), pill fields and
+   segmented control (#214, docs/mocks/rounded-forms), filter pills (Notes and Figures filter panel),
+   compact rows (#366/#379, docs/mocks/mobile-lists), settings rows (#217, docs/mocks/profile). */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --gold:#8a6a0c; --danger:#b3261e; --danger-soft:#f7e9e8; --ring:rgba(31,75,74,.22); --scrim:rgba(22,24,26,.4);
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--on);font:14px/1.5 var(--font);
+  padding-block:32px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1.pt{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600;text-wrap:balance}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600;text-wrap:balance}
+p{margin:0}
+.lede{max-width:72ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:80ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.pros{display:grid;gap:8px 32px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));font-size:13px;color:var(--on-var);max-width:980px}
+.pros b{color:var(--on)}
+.rules{font-size:13px;color:var(--on-var);max-width:82ch;padding-left:18px;margin:0}
+.rules li{margin:3px 0}.rules b{color:var(--on)}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.scrollx{overflow-x:auto;padding-bottom:10px}
+.cols{display:flex;gap:28px;align-items:flex-start;width:max-content}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}.ms.fill{font-variation-settings:'FILL' 1}
+
+/* frames */
+.page{width:880px;border:1px solid var(--hair);border-radius:var(--r-card);padding:20px 28px 28px;background:var(--surface);position:relative}
+.page.m{width:375px;padding:14px 16px 20px;border-radius:28px;overflow:hidden}
+
+/* header (#365) */
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--on-var);font-weight:500;font-size:14px;margin-left:-6px;padding:0 6px}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hdr .tt{min-width:0}
+.hdr h3{margin:0;font-size:30px;line-height:36px;font-weight:600;letter-spacing:-.02em}
+.hdr .sub{color:var(--on-var);font-size:14px;margin-top:4px}
+.m .hdr h3{font-size:24px;line-height:30px}
+.act{display:flex;gap:8px;align-items:center;flex:none}
+.m .act{width:100%}
+.m .act .btn.p{flex:1;justify-content:center}
+.btn{height:44px;border-radius:var(--r-pill);padding:0 20px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;border:1px solid transparent;white-space:nowrap;font-family:inherit;color:inherit;background:none}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.o{background:var(--surface);border-color:var(--hair);color:var(--on)}
+.btn.sm{height:38px;padding:0 14px;font-size:13px}
+.btn.q{height:38px;padding:0 10px;color:var(--primary)}
+
+/* form parts */
+.form{display:flex;flex-direction:column;gap:28px;margin-top:24px}
+.grp{display:flex;flex-direction:column;gap:16px}
+.grp + .grp{border-top:1px solid var(--hair);padding-top:24px}
+.gt{font-size:16px;font-weight:600;line-height:22px}
+.gh{font-size:13px;color:var(--on-var);margin-top:2px}
+.lab{font-size:12px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lab .req{color:var(--danger);margin-left:2px}
+.field{height:44px;border-radius:var(--r-pill);background:var(--container);border:1px solid transparent;display:flex;align-items:center;gap:10px;padding:0 18px;font-size:15px;color:var(--on);width:100%}
+.field.ph{color:var(--on-var)}
+.field.focus{background:var(--surface);border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+.field.err{background:var(--surface);border-color:var(--danger)}
+.errtx{display:flex;align-items:center;gap:6px;color:var(--danger);font-size:13px;margin-top:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{height:34px;border-radius:var(--r-pill);background:var(--container);padding:0 14px;display:inline-flex;align-items:center;font-size:13px;font-weight:600;color:var(--on)}
+.pill.on{background:var(--primary);color:var(--on-primary)}
+.pgroup{display:flex;flex-direction:column;gap:8px}
+.pgroup .cat{font-size:12px;color:var(--on-var);font-weight:500}
+.seg{display:inline-flex;gap:4px;padding:4px;background:var(--container);border-radius:var(--r-pill)}
+.seg span{min-height:36px;padding:0 14px;border-radius:var(--r-pill);display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:600;color:var(--on-var);white-space:nowrap}
+.seg span.on{background:var(--surface);color:var(--on);box-shadow:0 0 0 1px var(--hair)}
+.seg .st{color:var(--gold)}
+.m .seg{display:flex;width:100%}.m .seg span{flex:1;justify-content:center;padding:0 6px}
+.cover{display:flex;align-items:center;gap:14px}
+.thumb{width:96px;height:64px;border-radius:var(--r-inset);flex:none;display:flex;align-items:center;justify-content:center;color:var(--on-var);
+  background:repeating-linear-gradient(135deg,var(--container) 0 8px,var(--surface) 8px 16px);border:1px solid var(--hair)}
+.thumb.img{background:linear-gradient(160deg,#2c5d5b,#1f4b4a 55%,#16302f);color:#fff;border:0;font-size:11px;font-weight:600;letter-spacing:.04em}
+.cover .meta{font-size:13px;color:var(--on-var)}
+.cover .meta b{display:block;color:var(--on);font-weight:600;font-size:14px}
+.tgl{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tgl b{font-weight:600;font-size:15px;display:block}
+.tgl small{font-size:13px;color:var(--on-var)}
+.sw{width:46px;height:28px;border-radius:var(--r-pill);background:var(--highest);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(22,24,26,.25)}
+.sw.on{background:var(--primary)}.sw.on::after{left:21px}
+.match{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--on-var)}
+.match b{color:var(--on)}
+.foot{display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--hair);padding-top:20px}
+
+/* compact rows (#366/#379) */
+.rows{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:10px;height:72px;border-bottom:1px solid var(--hair);padding:0 2px}
+.row:last-child{border-bottom:0}
+.row .mn{flex:1;min-width:0}
+.row .t{display:flex;align-items:center;gap:8px}
+.row .t span.n{font-weight:600;font-size:15px;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.row .t .d{margin-left:auto;font-size:13px;font-weight:500;color:var(--on-var);flex:none}
+.row .t .ms{color:var(--on-var)}
+.row .bd{display:flex;gap:6px;margin-top:6px;flex-wrap:nowrap;overflow:hidden}
+.b{display:inline-flex;align-items:center;height:20px;padding:0 9px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--container);color:var(--on-var);white-space:nowrap}
+.b .st{color:var(--gold)}
+
+/* option B preview */
+.split{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start;margin-top:24px}
+.split .form{margin-top:0}
+.pv{border:1px solid var(--hair);border-radius:var(--r-card);padding:16px 18px 6px;position:sticky;top:16px}
+.pv .ph{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.pv .cnt{font-size:28px;line-height:32px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.pv .cnt small{font-size:14px;font-weight:500;color:var(--on-var);letter-spacing:0;margin-left:6px}
+.pv .live{font-size:12px;color:var(--on-var);display:inline-flex;align-items:center;gap:4px}
+.pv .more{font-size:13px;color:var(--on-var);padding:10px 2px 12px;border-top:1px solid var(--hair)}
+.disc{border:1px solid var(--hair);border-radius:var(--r-card);overflow:hidden}
+.disc .dh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;font-weight:600}
+.disc .dh small{color:var(--on-var);font-weight:500;margin-left:6px}
+.disc .rows{padding:0 14px}
+.zero{display:flex;gap:10px;align-items:flex-start;background:var(--container);border-radius:var(--r-inset);padding:12px 14px;font-size:13px;color:var(--on-var)}
+.zero b{color:var(--on);display:block;font-size:14px}
+
+/* option C settings rows (#217) */
+.sum{display:flex;align-items:center;gap:16px;border:1px solid var(--hair);border-radius:var(--r-card);padding:16px;margin-top:20px}
+.sum .ttl{font-size:18px;font-weight:600}
+.sum .sm2{font-size:13px;color:var(--on-var)}
+.srows{border:1px solid var(--hair);border-radius:var(--r-card);margin-top:16px;overflow:hidden}
+.srow{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 16px;border-bottom:1px solid var(--hair)}
+.srow:last-child{border-bottom:0}
+.srow .ic{color:var(--on-var)}
+.srow .k{font-weight:600;font-size:14px;flex:none}
+.srow .v{margin-left:auto;color:var(--on-var);font-size:14px;text-align:right;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .v.on{color:var(--on)}
+.srow .ch{color:var(--outline);flex:none}
+.srow.open{flex-wrap:wrap;background:var(--surface)}
+.srow.open .ins{flex-basis:100%;padding:6px 0 10px 32px}
+.shead{font-size:12px;font-weight:600;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin:22px 0 0 4px}
+.dim{position:absolute;inset:0;background:var(--scrim)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;box-shadow:0 -8px 28px rgba(22,24,26,.18);padding:10px 16px 16px;display:flex;flex-direction:column;gap:14px}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--highest);margin:0 auto}
+.sheet h5{margin:0;font-size:18px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.sheet h5 a{font-size:14px;color:var(--primary);font-weight:600}
+.apply{height:48px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;font-weight:600}
+
+@media (max-width:640px){ h1.pt{font-size:26px;line-height:32px} }
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:12px">
+  <h1 class="pt">New Collection form: three directions</h1>
+  <p class="lede">A collection is a saved filter over notes. You name it, give it a cover, set the rules (name contains, minimum rating, dance styles, categories) and choose who can see it. Today's form asks for styles and categories through native multi-select boxes (Ctrl+click), takes the rating as a bare number, and never shows which notes the rules will catch.</p>
+  <p class="note">All three keep every field of today's form and use only patterns the app already has: the page header with a back row and actions on the right (#365), pill fields and a segmented control (#214), the Notes filter pills, compact note rows (#366), and settings rows from the profile page (#217). Each is shown at desktop width and at 375 px. The examples use the dev data's styles and notes.</p>
+</header>
+
+<!-- ───────────────────────── OPTION A ───────────────────────── -->
+<section class="opt">
+  <h2>A. One calm form</h2>
+  <p class="note">The Note and Figure editors' language applied to the collection: one column, three groups (About, Which notes, Sharing), filter pills instead of multi-selects, and a one-line count of matching notes above the save row.</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · new collection, filled in</p>
+      <div class="page">
+        <span class="back"><span class="ms">arrow_back</span>Collections</span>
+        <div class="hdr">
+          <div class="tt"><h3>New collection</h3><p class="sub">Pick which of your notes belong here. The collection updates itself as you add notes.</p></div>
+          <div class="act"><span class="btn o">Cancel</span><span class="btn p"><span class="ms sm">check</span>Save collection</span></div>
+        </div>
+        <div class="form" style="max-width:640px">
+          <div class="grp">
+            <div class="gt">About</div>
+            <div><div class="lab">Name<span class="req">*</span></div><div class="field">Waltz heel turns</div></div>
+            <div><div class="lab">Cover image</div>
+              <div class="cover"><div class="thumb img">WALTZ</div><div class="meta"><b>waltz-cover.jpg</b>PNG, JPG or GIF, up to 10 MB</div><span class="btn o sm" style="margin-left:auto">Change</span><span class="btn q">Remove</span></div>
+            </div>
+          </div>
+          <div class="grp">
+            <div><div class="gt">Which notes</div><p class="gh">A note is included when it matches every rule you set. Leave a rule empty to ignore it.</p></div>
+            <div class="two">
+              <div><div class="lab">Name contains</div><div class="field"><span class="ms sm" style="color:var(--on-var)">search</span>heel</div></div>
+              <div><div class="lab">Minimum rating</div><div class="seg"><span>Any</span><span><span class="ms sm fill st">star</span>2+</span><span class="on"><span class="ms sm fill st">star</span>3+</span><span><span class="ms sm fill st">star</span>4+</span><span><span class="ms sm fill st">star</span>5</span></div></div>
+            </div>
+            <div><div class="lab">Categories</div><div class="pills"><span class="pill on">Standard</span><span class="pill">Latin</span><span class="pill">Social</span></div></div>
+            <div><div class="lab">Dance styles</div><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span><span class="pill">Cha Cha</span><span class="pill">Samba</span><span class="pill">Rumba</span><span class="pill">Paso Doble</span><span class="pill">Jive</span><span class="pill">Modern Jive</span></div></div>
+            <div class="match"><span class="ms sm">filter_list</span><span><b>6 notes</b> match these rules right now.</span></div>
+          </div>
+          <div class="grp">
+            <div class="gt">Sharing</div>
+            <div class="tgl"><div><b>Public collection</b><small>Every DanceBook user can open it.</small></div><span class="sw"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · saved without a name</p>
+      <div class="page m">
+        <span class="back"><span class="ms">arrow_back</span>Collections</span>
+        <div class="hdr"><div class="tt"><h3>New collection</h3></div><div class="act"><span class="btn p"><span class="ms sm">check</span>Save collection</span></div></div>
+        <div class="form">
+          <div class="grp">
+            <div class="gt">About</div>
+            <div><div class="lab">Name<span class="req">*</span></div><div class="field err ph">e.g. Waltz heel turns</div><p class="errtx"><span class="ms sm">error</span>Give the collection a name.</p></div>
+            <div><div class="lab">Cover image</div><div class="cover"><div class="thumb"><span class="ms">add_photo_alternate</span></div><div class="meta"><b>No cover yet</b>Optional</div><span class="btn o sm" style="margin-left:auto">Choose</span></div></div>
+          </div>
+          <div class="grp">
+            <div><div class="gt">Which notes</div></div>
+            <div><div class="lab">Name contains</div><div class="field"><span class="ms sm" style="color:var(--on-var)">search</span>heel</div></div>
+            <div><div class="lab">Minimum rating</div><div class="seg"><span>Any</span><span>2+</span><span class="on"><span class="ms sm fill st">star</span>3+</span><span>4+</span><span>5</span></div></div>
+            <div><div class="lab">Categories</div><div class="pills"><span class="pill on">Standard</span><span class="pill">Latin</span><span class="pill">Social</span></div></div>
+            <div><div class="lab">Dance styles</div><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span></div><p class="note" style="margin-top:8px">Only Standard styles are shown while Standard is the category.</p></div>
+            <div class="match"><span class="ms sm">filter_list</span><span><b>6 notes</b> match.</span></div>
+          </div>
+          <div class="grp"><div class="tgl"><div><b>Public collection</b><small>Every user can open it.</small></div><span class="sw"></span></div></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> Closest to the Note and Figure editors, so nothing new to learn. One screen, one Save. Cheapest to build: the pills, segmented control and toggle already exist.</div>
+    <div><b>Costs.</b> The count says how many notes match, not which ones. You find out what the collection holds only after saving.</div>
+  </div>
+</section>
+
+<!-- ───────────────────────── OPTION B ───────────────────────── -->
+<section class="opt">
+  <h2>B. Rules with a live preview<span class="rec"><span class="ms sm">thumb_up</span>Recommended</span></h2>
+  <p class="note">The form from A on the left, and beside it the notes the rules catch right now, drawn as the same compact rows as the Notes list. The preview updates as you tap a pill. On a phone it folds into a section under the rules that opens to the same rows.</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · editing an existing collection</p>
+      <div class="page" style="width:1040px">
+        <span class="back"><span class="ms">arrow_back</span>Waltz heel turns</span>
+        <div class="hdr">
+          <div class="tt"><h3>Edit collection</h3></div>
+          <div class="act"><span class="btn o">Cancel</span><span class="btn p"><span class="ms sm">check</span>Save changes</span></div>
+        </div>
+        <div class="split">
+          <div class="form">
+            <div class="grp">
+              <div class="two">
+                <div><div class="lab">Name<span class="req">*</span></div><div class="field focus">Waltz heel turns</div></div>
+                <div><div class="lab">Cover image</div><div class="cover"><div class="thumb img" style="width:72px;height:44px">WALTZ</div><span class="btn o sm">Change</span><span class="btn q">Remove</span></div></div>
+              </div>
+            </div>
+            <div class="grp">
+              <div><div class="gt">Which notes</div><p class="gh">A note is included when it matches every rule. Empty rules are ignored.</p></div>
+              <div class="two">
+                <div><div class="lab">Name contains</div><div class="field"><span class="ms sm" style="color:var(--on-var)">search</span>heel</div></div>
+                <div><div class="lab">Minimum rating</div><div class="seg"><span>Any</span><span>2+</span><span class="on"><span class="ms sm fill st">star</span>3+</span><span>4+</span><span>5</span></div></div>
+              </div>
+              <div><div class="lab">Categories</div><div class="pills"><span class="pill on">Standard</span><span class="pill">Latin</span><span class="pill">Social</span></div></div>
+              <div><div class="lab">Dance styles</div><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span></div></div>
+            </div>
+            <div class="grp">
+              <div class="tgl"><div><b>Public collection</b><small>Every DanceBook user can open it.</small></div><span class="sw on"></span></div>
+            </div>
+          </div>
+          <aside class="pv" aria-label="Preview of matching notes">
+            <div class="ph"><span class="cnt">6<small>notes match</small></span><span class="live"><span class="ms sm">sync</span>Live</span></div>
+            <div class="rows" style="margin-top:6px">
+              <div class="row"><div class="mn"><div class="t"><span class="n">Waltz rise and fall — heel turn timing</span><span class="d">14 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;5</span><span class="b">Waltz</span><span class="b">Standard</span></div></div></div>
+              <div class="row"><div class="mn"><div class="t"><span class="n">Heel turn — closing the feet</span><span class="ms sm">lock</span><span class="d">12 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;4</span><span class="b">Waltz</span><span class="b">Standard</span></div></div></div>
+              <div class="row"><div class="mn"><div class="t"><span class="n">Viennese reverse turn: lady's heel turn</span><span class="d">9 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;4</span><span class="b">Viennese Waltz</span><span class="b">Standard</span></div></div></div>
+              <div class="row"><div class="mn"><div class="t"><span class="n">Double reverse spin and heel pivot</span><span class="d">2 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;3</span><span class="b">Waltz</span><span class="b">Standard</span></div></div></div>
+            </div>
+            <div class="more">and 2 more. The full list opens with the collection.</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · preview open</p>
+      <div class="page m">
+        <span class="back"><span class="ms">arrow_back</span>Collections</span>
+        <div class="hdr"><div class="tt"><h3>New collection</h3></div><div class="act"><span class="btn p"><span class="ms sm">check</span>Save collection</span></div></div>
+        <div class="form">
+          <div class="grp">
+            <div><div class="lab">Name<span class="req">*</span></div><div class="field">Waltz heel turns</div></div>
+            <div class="cover"><div class="thumb"><span class="ms">add_photo_alternate</span></div><div class="meta"><b>Cover image</b>Optional</div><span class="btn o sm" style="margin-left:auto">Choose</span></div>
+          </div>
+          <div class="grp">
+            <div class="gt">Which notes</div>
+            <div><div class="lab">Name contains</div><div class="field"><span class="ms sm" style="color:var(--on-var)">search</span>heel</div></div>
+            <div><div class="lab">Minimum rating</div><div class="seg"><span>Any</span><span>2+</span><span class="on"><span class="ms sm fill st">star</span>3+</span><span>4+</span><span>5</span></div></div>
+            <div><div class="lab">Categories</div><div class="pills"><span class="pill on">Standard</span><span class="pill">Latin</span><span class="pill">Social</span></div></div>
+            <div><div class="lab">Dance styles</div><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span></div></div>
+            <div class="disc">
+              <div class="dh"><span>Preview<small>6 notes match</small></span><span class="ms">expand_less</span></div>
+              <div class="rows">
+                <div class="row"><div class="mn"><div class="t"><span class="n">Waltz rise and fall — heel turn…</span><span class="d">14 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;5</span><span class="b">Waltz</span><span class="b">Standard</span></div></div></div>
+                <div class="row"><div class="mn"><div class="t"><span class="n">Heel turn — closing the feet</span><span class="ms sm">lock</span><span class="d">12 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;4</span><span class="b">Waltz</span><span class="b">Standard</span></div></div></div>
+                <div class="row"><div class="mn"><div class="t"><span class="n">Viennese reverse turn: lady's…</span><span class="d">9 Oct</span></div><div class="bd"><span class="b"><span class="ms sm fill st">star</span>&nbsp;4</span><span class="b">Viennese Waltz</span></div></div></div>
+              </div>
+              <div class="more" style="font-size:13px;color:var(--on-var);padding:10px 14px 12px;border-top:1px solid var(--hair)">and 3 more</div>
+            </div>
+          </div>
+          <div class="grp"><div class="tgl"><div><b>Public collection</b><small>Every user can open it.</small></div><span class="sw"></span></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · rules that catch nothing</p>
+      <div class="page m">
+        <div class="form" style="margin-top:4px">
+          <div class="grp">
+            <div class="gt">Which notes</div>
+            <div><div class="lab">Name contains</div><div class="field"><span class="ms sm" style="color:var(--on-var)">search</span>bolero</div></div>
+            <div><div class="lab">Minimum rating</div><div class="seg"><span>Any</span><span>2+</span><span>3+</span><span>4+</span><span class="on"><span class="ms sm fill st">star</span>5</span></div></div>
+            <div><div class="lab">Categories</div><div class="pills"><span class="pill">Standard</span><span class="pill on">Latin</span><span class="pill">Social</span></div></div>
+            <div class="zero"><span class="ms">filter_alt_off</span><div><b>No notes match yet</b>You can still save it. Notes you add later that match these rules will appear here. Try a lower minimum rating or fewer words.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> Shows what a collection is: a live view of your notes. You see the effect of every rule before saving, and the zero-match case explains itself. The preview reuses the compact note row, so it looks like the Notes list.</div>
+    <div><b>Costs.</b> Needs one small htmx endpoint that returns the matching rows for the current rules (the Notes list query already does the filtering). The desktop page is wider than A's.</div>
+  </div>
+</section>
+
+<!-- ───────────────────────── OPTION C ───────────────────────── -->
+<section class="opt">
+  <h2>C. Settings rows, like the profile page</h2>
+  <p class="note">The collection as a summary card and a list of rows, each with its current value. A row opens in place on desktop and as a bottom sheet on a phone, the same sheet the Notes filters use. It matches the profile page and the planned admin dashboard (#387).</p>
+  <div class="scrollx"><div class="cols">
+    <div>
+      <p class="cap">Desktop · Dance styles row open</p>
+      <div class="page">
+        <span class="back"><span class="ms">arrow_back</span>Collections</span>
+        <div class="hdr"><div class="tt"><h3>New collection</h3></div><div class="act"><span class="btn o">Cancel</span><span class="btn p"><span class="ms sm">check</span>Save collection</span></div></div>
+        <div style="max-width:640px">
+          <div class="sum"><div class="thumb img" style="width:88px;height:58px">WALTZ</div><div><div class="ttl">Waltz heel turns</div><div class="sm2">6 notes match · Private</div></div></div>
+          <p class="shead">About</p>
+          <div class="srows">
+            <div class="srow"><span class="ms ic">title</span><span class="k">Name</span><span class="v on">Waltz heel turns</span><span class="ms ch">chevron_right</span></div>
+            <div class="srow"><span class="ms ic">image</span><span class="k">Cover image</span><span class="v on">waltz-cover.jpg</span><span class="ms ch">chevron_right</span></div>
+          </div>
+          <p class="shead">Which notes</p>
+          <div class="srows">
+            <div class="srow"><span class="ms ic">search</span><span class="k">Name contains</span><span class="v on">“heel”</span><span class="ms ch">chevron_right</span></div>
+            <div class="srow"><span class="ms ic">star</span><span class="k">Minimum rating</span><span class="v on">3 stars or more</span><span class="ms ch">chevron_right</span></div>
+            <div class="srow"><span class="ms ic">category</span><span class="k">Categories</span><span class="v on">Standard</span><span class="ms ch">chevron_right</span></div>
+            <div class="srow open"><span class="ms ic">music_note</span><span class="k">Dance styles</span><span class="v on">Waltz, Viennese Waltz</span><span class="ms ch">expand_less</span>
+              <div class="ins"><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span></div></div>
+            </div>
+          </div>
+          <p class="shead">Sharing</p>
+          <div class="srows">
+            <div class="srow"><span class="ms ic">public</span><span class="k">Public collection</span><span class="v">Only you</span><span class="sw" style="margin-left:8px"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375 px · Dance styles sheet</p>
+      <div class="page m" style="height:760px">
+        <span class="back"><span class="ms">arrow_back</span>Collections</span>
+        <div class="hdr"><div class="tt"><h3>New collection</h3></div><div class="act"><span class="btn p"><span class="ms sm">check</span>Save collection</span></div></div>
+        <div class="sum" style="padding:12px"><div class="thumb img" style="width:64px;height:44px">WALTZ</div><div><div class="ttl" style="font-size:16px">Waltz heel turns</div><div class="sm2">6 notes match</div></div></div>
+        <p class="shead">Which notes</p>
+        <div class="srows">
+          <div class="srow"><span class="k">Name contains</span><span class="v on">“heel”</span><span class="ms ch">chevron_right</span></div>
+          <div class="srow"><span class="k">Minimum rating</span><span class="v on">3+</span><span class="ms ch">chevron_right</span></div>
+          <div class="srow"><span class="k">Categories</span><span class="v on">Standard</span><span class="ms ch">chevron_right</span></div>
+          <div class="srow"><span class="k">Dance styles</span><span class="v on">Waltz, Viennese…</span><span class="ms ch">chevron_right</span></div>
+        </div>
+        <div class="dim"></div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <h5>Dance styles<a>Clear</a></h5>
+          <div class="pgroup"><span class="cat">Standard</span><div class="pills"><span class="pill on">Waltz</span><span class="pill">Tango</span><span class="pill on">Viennese Waltz</span><span class="pill">Foxtrot</span><span class="pill">Quickstep</span></div></div>
+          <div class="pgroup"><span class="cat">Latin</span><div class="pills"><span class="pill">Cha Cha</span><span class="pill">Samba</span><span class="pill">Rumba</span><span class="pill">Paso Doble</span><span class="pill">Jive</span></div></div>
+          <div class="apply">Done · 6 notes match</div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="pros">
+    <div><b>Strengths.</b> Reads like the profile page and the coming admin dashboard. Each row shows its value at a glance, which suits editing a collection you already have.</div>
+    <div><b>Costs.</b> Creating one takes more taps: every rule is a row to open. A new pattern for forms (no other form in the app works this way), and the most to build.</div>
+  </div>
+</section>
+
+<section class="opt">
+  <h2>Applies to whichever direction is chosen</h2>
+  <ul class="rules">
+    <li><b>Header from #365:</b> a back row to Collections, or to the collection's name when editing; Save as the primary action on the right; Cancel as the one outline secondary. On a phone Save fills the width and Cancel goes, since the back row does the same job.</li>
+    <li><b>Pills replace the multi-selects</b> for styles and categories, styled like the Notes filter pills. A selected pill keeps readable text on hover (#382). Choosing a category narrows the style pills to that category's styles.</li>
+    <li><b>Minimum rating</b> becomes a segmented control: Any, 2+, 3+, 4+, 5. No more typing a number.</li>
+    <li><b>Cover image</b> is a small thumbnail with Choose, Change and Remove, instead of the large dashed drop zone. It's optional. Formats and size limit are unchanged.</li>
+    <li><b>Copy:</b> "Collection Name" becomes "Name", "Collection Filters" becomes "Which notes", and the public toggle says what others will see. All labels go into both message files.</li>
+    <li><b>Out of scope:</b> the Collections list page (#383) and what a collection can filter on.</li>
+  </ul>
+</section>
+
+</div>
