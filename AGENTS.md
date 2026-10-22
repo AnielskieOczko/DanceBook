@@ -1671,6 +1671,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `training-timeline` | #216 | Direction 2, the vertical journey feed |
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
+| `admin-dashboard` | #387 | Direction A: the profile page's shape, a summary panel with counts and a "Needs attention" line, then grouped rows that show their current value and open in place; Users and Google Drive show their first rows and link to a full page. B and C were not chosen |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
 | `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet are #366 below tablet width |
