@@ -1674,6 +1674,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
 | `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet are #366 below tablet width |
+| `collection-form` | #388 | Direction B: the rules as pills and a segmented rating, with a live preview of the matching notes beside them (compact note rows), folding into a Preview section on a phone; zero-match state explained. A and C were not chosen |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
