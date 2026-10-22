@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--
+  Filter Bottom Sheet Component for mobile devices below the tablet breakpoint (Issue #366).
+  Uses a native HTML5 <dialog> with closedby="any", focus trapping via showModal(),
+  grab handle, clear/close controls, and sticky apply button.
+-->
+<dialog th:fragment="filterSheet"
+        th:id="${id ?: 'filterSheet'}"
+        closedby="any"
+        class="fixed inset-x-0 bottom-0 m-0 mt-auto w-full max-w-full max-h-[85vh] rounded-t-2xl border-t border-outline-variant/30 bg-surface p-0 shadow-ambient backdrop:bg-black/50 z-50 overflow-hidden md:hidden"
+        th:classappend="${cls}"
+        th:attr="aria-labelledby=${(id ?: 'filterSheet') + '-title'}">
+
+    <!-- Grab handle -->
+    <div class="mx-auto mt-2.5 mb-2 h-1 w-10 rounded-full bg-outline-variant/60 pointer-events-none"></div>
+
+    <!-- Header: Title, Clear button, Close button -->
+    <div class="flex items-center justify-between px-5 pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-3">
+            <h3 th:id="${(id ?: 'filterSheet') + '-title'}"
+                class="text-title-md font-semibold text-on-surface"
+                th:text="${title ?: #messages.msg('figures.list.filters')}">Filters</h3>
+            <!--/* Always rendered: the sheet sits outside the swapped list, so a condition here would go stale */-->
+            <button type="button"
+                    class="js-filter-sheet-clear text-label-md font-semibold text-primary hover:underline cursor-pointer"
+                    th:text="#{filters.sheet.clear}">Clear</button>
+        </div>
+        <form method="dialog" class="m-0">
+            <button type="submit"
+                    class="btn-icon p-1 min-h-0 min-w-0 text-on-surface-variant hover:text-on-surface cursor-pointer"
+                    aria-label="Close"
+                    th:attr="aria-label=#{common.close}">
+                <span th:replace="~{fragments/icon :: icon(name='close', size='md')}"></span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Scrollable Body for List-Specific Filter Controls -->
+    <div class="px-5 py-4 overflow-y-auto max-h-[calc(85vh-130px)] space-y-5 scrollbar-thin">
+        <th:block th:if="${bodySlot != null}">
+            <th:block th:replace="${bodySlot}"></th:block>
+        </th:block>
+    </div>
+
+    <!-- Footer: Sticky Apply / Result Count button -->
+    <div class="p-4 border-t border-outline-variant/20 bg-surface">
+        <button type="button"
+                class="js-filter-sheet-apply w-full h-12 rounded-pill bg-primary text-on-primary font-semibold text-body-md flex items-center justify-center shadow-xs hover:bg-primary-hover transition-colors cursor-pointer"
+                th:text="${applyText ?: #messages.msg('filters.sheet.apply', (totalCount ?: 0))}">
+            Show results
+        </button>
+    </div>
+</dialog>
+
+</body>
+</html>

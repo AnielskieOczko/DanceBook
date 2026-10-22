@@ -246,6 +246,8 @@ class FragmentCatalogRenderingTest {
             "assistantCardRequired",
             "assistantMessageRequired",
             "assistantDraftRequired",
+            "compactRowRequired",
+            "filterSheetRequired",
 
             // All parameters populated
             "iconAll",
@@ -294,6 +296,8 @@ class FragmentCatalogRenderingTest {
             "assistantDraftAll",
             "assistantDraftSaved",
             "assistantDraftDiscarded",
+            "compactRowAll",
+            "filterSheetAll",
 
             // Standalone field without backing form object
             "fieldStandalone",

@@ -14,14 +14,28 @@
             <div class="flex items-center gap-3">
                 <div th:replace="~{fragments/form :: searchField(name='nameSearch', value=${selectedNameSearch}, placeholder=#{figures.list.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/dance-figures}, hxTarget='#figures-grid', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
-                <!-- Filter Toggle -->
-                <button type="button" class="js-filter-toggle flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]">
+                <!-- Mobile Filters Button (< lg) -->
+                <button type="button"
+                        class="js-mobile-filter-open lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface hover:bg-surface-variant transition-colors min-h-[44px] shrink-0 cursor-pointer"
+                        aria-haspopup="dialog"
+                        aria-controls="filterSheet">
                     <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
-                    <span class="hidden sm:inline text-label-sm font-label-sm pointer-events-none" th:text="#{figures.list.filters}">Filters</span>
+                    <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{figures.list.filters}">Filters</span>
+                    <span id="mobile-filter-badge" class="pointer-events-none">
+                        <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
+                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                              th:text="${activeFilterCount}">1</span>
+                    </span>
                 </button>
 
-                <!-- View Toggle -->
-                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
+                <!-- Desktop Filter Toggle (>= lg) -->
+                <button type="button" class="js-filter-toggle hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]">
+                    <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
+                    <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{figures.list.filters}">Filters</span>
+                </button>
+
+                <!-- Desktop View Toggle (>= lg) -->
+                <div class="hidden lg:flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
                                aria-label="List view" th:attr="aria-label=#{figures.list.view_list}"
@@ -43,8 +57,23 @@
                 </div>
             </div>
 
+            <!-- Active Filter Chips (< lg) -->
+            <div id="mobile-filter-chips" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
+                <th:block th:if="${activeFilterChips != null and !#lists.isEmpty(activeFilterChips)}">
+                    <div th:each="chip : ${activeFilterChips}"
+                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 text-on-surface text-label-sm font-label-sm shrink-0 border border-primary-container/30">
+                        <span th:text="${chip.label}">Filter</span>
+                        <button type="button"
+                                class="js-remove-chip hover:text-primary transition-colors cursor-pointer p-0.5 -mr-1"
+                                th:attr="data-filter-name=${chip.filterName}, data-filter-value=${chip.filterValue}, aria-label=#{filters.chip.remove_aria(${chip.label})}">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+
             <!-- Bottom Row: Collapsible Filters Container -->
-            <div id="categoryFiltersContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
+            <div id="categoryFiltersContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
                 <!-- Column 1: Categories -->
                 <div class="flex flex-col gap-4 mt-4">
                     <!-- Categories -->
@@ -65,7 +94,7 @@
                 </div>
 
                 <!-- Column 2: Styles (Dance Types) & Class -->
-                <div class="flex flex-col gap-4 mt-4 md:col-span-1">
+                <div class="flex flex-col gap-4 mt-4 lg:col-span-1">
                     <!-- Dance Styles -->
                     <div class="flex flex-col gap-2">
                         <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.dance_styles}">Dance Styles</span>
@@ -105,6 +134,27 @@
 
     <!-- Figures Grid/List (HTMX swappable) -->
     <div th:fragment="figuresTable" id="figures-grid" class="space-y-8">
+        <!-- OOB updates for mobile active filter chips & count badge -->
+        <th:block th:if="${isHtmxRequest == true}">
+            <div id="mobile-filter-chips" hx-swap-oob="true" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
+                <th:block th:if="${activeFilterChips != null and !#lists.isEmpty(activeFilterChips)}">
+                    <div th:each="chip : ${activeFilterChips}"
+                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 text-on-surface text-label-sm font-label-sm shrink-0 border border-primary-container/30">
+                        <span th:text="${chip.label}">Filter</span>
+                        <button type="button"
+                                class="js-remove-chip hover:text-primary transition-colors cursor-pointer p-0.5 -mr-1"
+                                th:attr="data-filter-name=${chip.filterName}, data-filter-value=${chip.filterValue}, aria-label=#{filters.chip.remove_aria(${chip.label})}">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+            <span id="mobile-filter-badge" hx-swap-oob="true" class="pointer-events-none">
+                <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
+                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                      th:text="${activeFilterCount}">1</span>
+            </span>
+        </th:block>
         <!-- Search Result Count -->
         <p th:if="${selectedNameSearch != null and !#strings.isEmpty(selectedNameSearch) and !#lists.isEmpty(figures)}"
            class="text-sm text-on-surface-variant">
@@ -186,7 +236,7 @@
             <!-- Mobile Cards (< 1024px) -->
             <div th:if="${!#lists.isEmpty(figures) or (relatedFigures != null and !#lists.isEmpty(relatedFigures))}" class="flex flex-col gap-3 lg:hidden">
                 <!-- Keyword mobile cards -->
-                <div id="figures-mobile-cards" class="flex flex-col gap-3">
+                <div id="figures-mobile-cards" class="flex flex-col">
                     <th:block th:each="f : ${figures}">
                         <th:block th:replace="~{dance-figures/list :: figureMobileCard(f=${f}, isRelated=false)}"></th:block>
                     </th:block>
@@ -258,6 +308,81 @@
                      nextUrl=@{/dance-figures(page=${nextPage})},
                      filterFormId='#filterForm'
                  )}"></div>
+        </th:block>
+    </div>
+
+    <!-- Mobile Filter Sheet (< lg) -->
+    <div th:replace="~{fragments/filter-sheet :: filterSheet(
+        id='filterSheet',
+        title=#{figures.list.filters},
+        applyText=#{filters.sheet.apply},
+        bodySlot=~{::figureSheetFilters}
+    )}">
+        <th:block th:fragment="figureSheetFilters">
+            <!-- Categories -->
+            <div class="flex flex-col gap-2">
+                <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.categories}">Categories</span>
+                <div class="flex flex-wrap gap-2">
+                    <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                        <input type="checkbox" data-sheet-filter="categoryIds" th:value="${c.id}" class="js-sheet-filter hidden peer"
+                               th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}">
+                        <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
+                            <span th:text="${c.name}">Category</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Styles -->
+            <div class="flex flex-col gap-2">
+                <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.dance_styles}">Dance Styles</span>
+                <div class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin">
+                    <label th:each="t : ${danceTypes}"
+                           th:data-category-id="${t.category != null ? t.category.id : ''}"
+                           class="js-style-pill cursor-pointer transition-all duration-300">
+                        <input type="checkbox" data-sheet-filter="typeIds" th:value="${t.id}" class="js-sheet-filter hidden peer"
+                               th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}">
+                        <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                            <span th:replace="~{fragments/icon :: icon(name='check', size='sm', cls='hidden peer-checked:inline')}"></span>
+                            <span th:text="${t.name}">Style</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dancer Class -->
+            <div class="flex flex-col gap-1.5">
+                <label for="sheetDanceClass" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.dancer_class}">Dancer Class</label>
+                <select id="sheetDanceClass" data-sheet-filter="danceClass" class="js-sheet-filter pill-select w-full">
+                    <option value="" th:text="#{figures.list.all_classes}">All Classes</option>
+                    <option th:each="dc : ${danceClasses}" th:value="${dc.name()}" th:text="${#messages.msg('enum.dance_class.' + dc.name())}" th:selected="${dc == selectedDanceClass}"></option>
+                </select>
+            </div>
+
+            <!-- Medal Level -->
+            <div class="flex flex-col gap-1.5">
+                <label for="sheetMedalLevel" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.medal_level}">Medal Level</label>
+                <select id="sheetMedalLevel" data-sheet-filter="medalLevel" class="js-sheet-filter pill-select w-full">
+                    <th:block th:replace="~{dance-figures/list :: figureMedalOptions}"></th:block>
+                </select>
+            </div>
+
+            <!-- Steps Syllabus -->
+            <div class="flex flex-col gap-1.5">
+                <label for="sheetHasSteps" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.steps_syllabus}">Steps Syllabus</label>
+                <select id="sheetHasSteps" data-sheet-filter="hasSteps" class="js-sheet-filter pill-select w-full">
+                    <th:block th:replace="~{dance-figures/list :: figureStepsOptions}"></th:block>
+                </select>
+            </div>
+
+            <!-- Sort By -->
+            <div class="flex flex-col gap-1.5">
+                <label for="sheetSortBy" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.sort_by}">Sort By</label>
+                <select id="sheetSortBy" data-sheet-filter="sortBy" class="js-sheet-filter pill-select w-full">
+                    <th:block th:replace="~{dance-figures/list :: figureSortOptions}"></th:block>
+                </select>
+            </div>
         </th:block>
     </div>
 
@@ -388,49 +513,42 @@
 </th:block>
 
 <th:block th:fragment="figureMobileCard">
-    <article class="card relative group flex items-center justify-between p-3 hover:z-30 focus-within:z-30"
-             th:classappend="${isRelated == true ? 'card-related' : ''}">
-        <a th:href="@{/dance-figures/{id}(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{figures.list.view_figure(${f.name})}">View Figure</span></a>
-        
-        <div class="flex flex-col gap-1.5 pointer-events-none relative z-10 w-full pr-12 overflow-hidden">
-            <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="text-body-md font-semibold text-on-surface flex-1" th:text="${f.name}">Figure Name</h3>
-                <th:block th:if="${isRelated == true}">
-                    <span th:replace="~{fragments/badge :: badge(label=#{search.chip.related}, variant='related')}"></span>
-                </th:block>
-            </div>
-            <div class="flex items-center gap-3 text-on-surface-variant">
-                <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                <span th:if="${f.danceClass != null}" th:text="${#messages.msg('enum.dance_class.' + f.danceClass.name())}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
-                <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel})}"></th:block>
-                <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm"><span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span> <span th:text="${f.alternativeTiming}">Timing</span></span>
-            </div>
-        </div>
+    <article th:replace="~{fragments/list-row :: compactRow(
+        href=@{/dance-figures/{id}(id=${f.id})},
+        title=${f.name},
+        tagsSlot=~{::figureRowTags},
+        menuSlot=~{::figureRowMenu},
+        isRelated=${isRelated}
+    )}">
+        <th:block th:fragment="figureRowTags">
+            <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="badge badge-accent">Style</span>
+            <span th:if="${f.danceClass != null}" th:text="${#messages.msg('figures.list.class_badge', f.danceClass)}" class="badge badge-neutral">Class</span>
+            <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel})}"></th:block>
+            <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}" class="badge badge-neutral inline-flex items-center gap-1">
+                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm')}"></span>
+                <span th:text="#{filters.steps.flag}">Steps</span>
+            </span>
+        </th:block>
 
-        <div class="flex items-center gap-2 relative z-20 pointer-events-auto">
-            <div class="group/menu">
-                <button type="button" class="js-menu-btn w-11 h-11 rounded-full hover:bg-surface-variant flex items-center justify-center text-on-surface-variant transition-colors" aria-label="More actions" th:attr="aria-label=#{figures.list.more_actions}">
-                    <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md', cls='pointer-events-none')}"></span>
-                </button>
-                <div class="js-menu-dropdown absolute right-0 top-full w-36 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
-                    <a th:href="@{/dance-figures/{id}/edit(id=${f.id})}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface hover:bg-surface-variant transition-colors">
-                        <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> <span th:text="#{figures.action.edit}">Edit</span>
-                    </a>
-                    <!-- Delete: creator or admin; syllabus figures admin only -->
-                    <form th:if="${f.isDeletableBy(currentUser)}" th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
-                          data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it."
-                          th:data-confirm="#{figures.delete_confirm}">
-                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-body-md text-error hover:bg-surface-variant transition-colors text-left">
-                            <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{figures.action.delete}">Delete</span>
-                        </button>
-                    </form>
-                    <!-- Locked action for predefined figure -->
-                    <div th:if="${f.predefined and !f.isDeletableBy(currentUser)}" class="flex items-center gap-2 px-4 py-2 text-body-md text-on-surface-variant/30 cursor-not-allowed">
-                        <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span> <span th:text="#{figures.source.predefined}">Predefined</span>
-                    </div>
+        <th:block th:fragment="figureRowMenu">
+            <div th:replace="~{fragments/page :: menuItem(href=@{/dance-figures/{id}/edit(id=${f.id})}, icon='edit', text=#{figures.action.edit})}"></div>
+            <th:block th:if="${f.isDeletableBy(currentUser)}">
+                <form th:action="@{/dance-figures/{id}/delete(id=${f.id})}" method="post"
+                      data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it."
+                      th:attr="data-confirm=#{figures.delete_confirm}" class="m-0">
+                    <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                        <span th:text="#{figures.action.delete}">Delete</span>
+                    </button>
+                </form>
+            </th:block>
+            <th:block th:if="${f.predefined and !f.isDeletableBy(currentUser)}">
+                <div class="flex items-center gap-2.5 px-3.5 py-2.5 min-h-[44px] text-sm text-on-surface-variant/40 cursor-not-allowed">
+                    <span th:replace="~{fragments/icon :: icon(name='lock', size='sm')}"></span>
+                    <span th:text="#{figures.source.predefined}">Predefined</span>
                 </div>
-            </div>
-        </div>
+            </th:block>
+        </th:block>
     </article>
 </th:block>
 
