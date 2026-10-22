@@ -115,7 +115,7 @@
             th:attr="aria-label=#{common.more_actions}"
             aria-haspopup="true"
             aria-expanded="false">
-        <span th:replace="~{fragments/icon :: icon(name='more_horiz', size='md')}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='more_horiz', size='md', title=null)}"></span>
     </button>
     <div class="js-menu-dropdown absolute right-0 top-full mt-2 w-56 bg-surface rounded-xl shadow-ambient border border-border p-1.5 hidden z-50 space-y-0.5">
         <th:block th:if="${menuSlot != null}">
@@ -131,7 +131,7 @@
        class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-colors"
        th:classappend="${(variant == 'danger' ? 'text-danger hover:bg-danger-soft' : 'text-on-surface hover:bg-surface-container') + (cls != null ? ' ' + cls : '')}">
         <th:block th:if="${icon != null}">
-            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null})}"></span>
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null}, title=null)}"></span>
         </th:block>
         <span th:text="${text}">Action</span>
     </a>
@@ -140,7 +140,7 @@
             class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium transition-colors cursor-pointer select-none"
             th:classappend="${(variant == 'danger' ? 'text-danger hover:bg-danger-soft' : 'text-on-surface hover:bg-surface-container') + (cls != null ? ' ' + cls : '')}">
         <th:block th:if="${icon != null}">
-            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null})}"></span>
+            <span th:replace="~{fragments/icon :: icon(name=${icon}, size='sm', cls=${variant == 'danger' ? 'text-danger' : null}, title=null)}"></span>
         </th:block>
         <span th:text="${text}">Action</span>
     </button>

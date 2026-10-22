@@ -10,8 +10,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.PrePersist
 import jakarta.persistence.Table
 import jakarta.persistence.Version
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -46,6 +48,13 @@ class DanceFigure {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id")
     var createdBy: AppUser? = null
+
+    /**
+     * When the figure was added. Null for syllabus imports and for figures created before V49
+     * that had no "figure created" activity event to backfill from.
+     */
+    @Column(name = "created_at", updatable = false)
+    var createdAt: LocalDateTime? = null
 
     @Version
     var version: Long = 0
@@ -107,6 +116,10 @@ class DanceFigure {
 
     fun getFollowerSteps(): List<DanceFigureStep> =
         steps.filter { it.role == "FOLLOWER" }.sortedBy { it.stepNumber }
+
+    /** Syllabus figures are left undated: their import time says nothing about the figure. */
+    @PrePersist
+    fun stampCreatedAt() {
+        if (createdAt == null && !predefined) createdAt = LocalDateTime.now()
+    }
 }
-
-

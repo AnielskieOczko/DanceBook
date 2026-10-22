@@ -285,6 +285,7 @@ class FragmentCatalogRenderingTest {
             "medalBadgeRingWord",
             "medalBadgeIcon",
             "medalBadgeNoNumerals",
+            "medalBadgeIconOnly",
             "emptyStateAll",
             "alertAll",
             "modalAll",
@@ -660,6 +661,13 @@ class FragmentCatalogRenderingTest {
         assertTrue(allHtml.contains("extra-cls"), "Expected 'extra-cls' in medalBadgeAll:\n$allHtml")
         assertTrue(org.jsoup.Jsoup.parse(allHtml).text().contains("Gold"), "Expected 'Gold' word in medalBadgeAll:\n$allHtml")
         assertTrue(allHtml.contains("w-[18px]"), "Expected lg size 'w-[18px]' in medalBadgeAll:\n$allHtml")
+
+        val iconOnlyHtml = mockMvc.perform(get("/test/catalog/medalBadgeIconOnly").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        val iconOnlyBadge = org.jsoup.Jsoup.parse(iconOnlyHtml).selectFirst("[role=img]")
+        assertTrue(iconOnlyBadge != null && iconOnlyBadge.text().isBlank(), "iconOnly hides the word even in the no-numerals style:\n$iconOnlyHtml")
+        assertTrue(iconOnlyBadge!!.attr("aria-label").isNotBlank(), "iconOnly keeps the accessible medal name:\n$iconOnlyHtml")
 
         val resultNone = mockMvc.perform(get("/test/catalog/medalBadgeNone").with(csrf()))
             .andExpect(status().isOk)

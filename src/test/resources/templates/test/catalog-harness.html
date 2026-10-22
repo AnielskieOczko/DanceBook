@@ -344,6 +344,10 @@
     <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='medal_no_numerals', word=false)}"></span>
 </div>
 
+<div th:fragment="medalBadgeIconOnly">
+    <span th:replace="~{fragments/badge :: medalBadge(level='GOLD', style='medal_no_numerals', iconOnly=true)}"></span>
+</div>
+
 
 <!-- 21. EMPTY: emptyState -->
 <div th:fragment="emptyStateRequired">

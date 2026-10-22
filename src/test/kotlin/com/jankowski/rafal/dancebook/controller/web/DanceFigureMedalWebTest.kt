@@ -483,7 +483,7 @@ class DanceFigureMedalWebTest {
             .contentAsString
 
         val doc = Jsoup.parse(html)
-        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        val goldBadge = doc.selectFirst("#figures-table-body .medal-badge-gold")  // the mobile row shows the icon only
         assertNotNull(goldBadge, "Gold badge must be rendered")
         assertTrue(goldBadge!!.select("path").isNotEmpty(), "Ring and word must render svg path")
         assertTrue(goldBadge.text().contains("Gold"), "Ring and word must show the medal word by default")
@@ -548,7 +548,7 @@ class DanceFigureMedalWebTest {
             .contentAsString
 
         val doc = Jsoup.parse(html)
-        val goldBadge = doc.selectFirst(".medal-badge-gold")
+        val goldBadge = doc.selectFirst("#figures-table-body .medal-badge-gold")  // the mobile row shows the icon only
         assertNotNull(goldBadge, "Gold badge must be rendered")
         val textNum = goldBadge!!.select("text")
         assertTrue(textNum.isEmpty(), "Medal icon without numerals must not contain numeral text element")
