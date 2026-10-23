@@ -1291,3 +1291,13 @@ if (document.readyState === 'loading') {
 } else {
     initScrollToControls();
 }
+
+// A link that points at a settings row (the admin "Needs attention" chips) opens that row as well as scrolling to it.
+document.addEventListener('click', function(event) {
+    const link = event.target.closest('a[data-opens-row]');
+    if (!link) return;
+    const row = document.getElementById(link.getAttribute('data-opens-row'));
+    if (row && row.tagName === 'DETAILS') {
+        row.open = true;
+    }
+});

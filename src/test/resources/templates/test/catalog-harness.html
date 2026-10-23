@@ -464,5 +464,30 @@
     </dialog>
 </div>
 
+<!-- SETTINGS ROW: settingsRow, settingsLinkRow -->
+<div th:fragment="settingsRowRequired">
+    <details th:replace="~{fragments/settings-row :: settingsRow(rowId='row-required', rowIcon='tune', rowTitle='Application settings')}"></details>
+</div>
+
+<div th:fragment="settingsRowAll">
+    <details th:replace="~{fragments/settings-row :: settingsRow(rowId='row-all', rowIcon='cloud', rowTitle='Google Drive', valueSlot=~{::sampleRowValue}, flagSlot=~{::sampleRowFlag}, bodySlot=~{::sampleRowBody}, open=true, rowCls='extra-cls')}">
+        <small th:fragment="sampleRowValue">2.4 GB used</small>
+        <span th:fragment="sampleRowFlag">14 orphaned</span>
+        <div th:fragment="sampleRowBody">Row body</div>
+    </details>
+</div>
+
+<div th:fragment="settingsRowValueText">
+    <details th:replace="~{fragments/settings-row :: settingsRow(rowId='row-text', rowIcon='group', rowTitle='Users', valueText='12 accounts')}"></details>
+</div>
+
+<div th:fragment="settingsLinkRowRequired">
+    <a th:replace="~{fragments/settings-row :: settingsLinkRow(rowHref='/dance-types', rowIcon='music_note', rowTitle='Dance styles')}"></a>
+</div>
+
+<div th:fragment="settingsLinkRowAll">
+    <a th:replace="~{fragments/settings-row :: settingsLinkRow(rowHref='/dance-categories', rowIcon='category', rowTitle='Categories', valueText='Standard, Latin', rowCls='extra-cls')}"></a>
+</div>
+
 </body>
 </html>

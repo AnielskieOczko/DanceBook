@@ -118,4 +118,56 @@ class AdminBadgeStyleWebTest {
         )
             .andExpect(status().isForbidden)
     }
+
+    @Test
+    fun `non-admin gets 403 on every page and endpoint the admin dashboard opened up (#395)`() {
+        for (uri in listOf("/admin/users", "/admin/storage", "/admin/storage/summary", "/admin/storage/files", "/admin/storage/files?preview=true")) {
+            mockMvc.perform(get(uri).with(user(regularUser.username).roles("USER")))
+                .andExpect(status().isForbidden)
+        }
+        mockMvc.perform(
+            post("/admin/users")
+                .with(user(regularUser.username).roles("USER"))
+                .with(csrf())
+                .param("username", "intruder").param("email", "i@example.com")
+                .param("displayName", "Intruder").param("password", "secret123").param("role", "ADMIN")
+        )
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    fun `admin can open the full users page and the full storage page`() {
+        mockMvc.perform(get("/admin/users").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("usersSection")))
+        mockMvc.perform(get("/admin/storage").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("/admin/storage/simulate")))
+    }
+
+    @Test
+    fun `the dashboard lists only the first few users and the users page lists all of them`() {
+        for (i in 1..7) {
+            if (appUserRepository.findByUsername("preview_user_$i") == null) {
+                appUserRepository.save(AppUser().apply {
+                    username = "preview_user_$i"
+                    displayName = "Preview User $i"
+                    role = Role.USER
+                })
+            }
+        }
+        val total = appUserRepository.count()
+
+        val dashboard = mockMvc.perform(get("/admin").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("All $total users")))
+            .andReturn().response.contentAsString
+        val shown = Regex("""id="user-row-""").findAll(dashboard).count()
+        assertEquals(5, shown)
+
+        val page = mockMvc.perform(get("/admin/users").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andReturn().response.contentAsString
+        assertEquals(total.toInt(), Regex("""id="user-row-""").findAll(page).count())
+    }
 }

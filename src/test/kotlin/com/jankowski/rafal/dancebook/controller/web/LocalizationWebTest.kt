@@ -6,9 +6,9 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
 import com.jankowski.rafal.dancebook.model.TrainingEvent
 import com.jankowski.rafal.dancebook.model.TrainingEventType
-import com.jankowski.rafal.dancebook.repository.AppUserRepository
-import com.jankowski.rafal.dancebook.repository.MaterialRepository
-import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
+import com.jankowski.rafal.dancebook.dto.AdminDriveFileDto
+import com.jankowski.rafal.dancebook.dto.AdminUsersView
+import com.jankowski.rafal.dancebook.dto.DriveInspection
 import com.jankowski.rafal.dancebook.service.*
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
@@ -72,10 +72,9 @@ class LocalizationWebTest {
     @Autowired private lateinit var mockMvc: MockMvc
 
     // AdminController collaborators
-    @MockitoBean private lateinit var appUserRepository: AppUserRepository
     @MockitoBean private lateinit var appUserService: AppUserService
-    @MockitoBean private lateinit var materialRepository: MaterialRepository
-    @MockitoBean private lateinit var storageCleanupLogRepository: StorageCleanupLogRepository
+    @MockitoBean private lateinit var adminOverviewService: AdminOverviewService
+    @MockitoBean private lateinit var adminStorageService: AdminStorageService
     @MockitoBean private lateinit var storageCleanupJob: StorageCleanupJob
     @MockitoBean private lateinit var googleDriveService: GoogleDriveService
     @MockitoBean private lateinit var fileStorageService: FileStorageService
@@ -122,6 +121,7 @@ class LocalizationWebTest {
 
         `when`(appUserService.getCurrentUser()).thenReturn(adminUser)
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(adminUser)
+        `when`(adminOverviewService.users(false, 5)).thenReturn(AdminUsersView(listOf(adminUser), 1L, 1L, false))
         `when`(danceTypeService.findAll()).thenReturn(emptyList())
         `when`(danceCategoryService.findAll()).thenReturn(emptyList())
         `when`(activeCalendarService.selectable()).thenReturn(emptyList())
@@ -210,8 +210,15 @@ class LocalizationWebTest {
             size = 2621440L, // 2.5 MB
             createdTime = 0L
         )
-        `when`(googleDriveService.listFilesInFolder()).thenReturn(listOf(dummyFile))
-        `when`(materialRepository.findAllDriveFileIds()).thenReturn(setOf("file-123"))
+        `when`(adminStorageService.inspectDrive()).thenReturn(
+            DriveInspection(
+                files = listOf(AdminDriveFileDto(dummyFile.id, dummyFile.name, dummyFile.size, dummyFile.createdTime, false)),
+                orphanedSize = 0L,
+                linkedSize = 2621440L,
+                orphanedCount = 0,
+                linkedCount = 1
+            )
+        )
 
         // English: 2.50 MB
         mockMvc.perform(get("/admin/storage/files").with(csrf()).locale(englishLocale))

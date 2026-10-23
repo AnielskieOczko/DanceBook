@@ -4,9 +4,10 @@ import com.jankowski.rafal.dancebook.config.SecurityConfig
 import com.jankowski.rafal.dancebook.model.AppUser
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.TrainingCalendar
-import com.jankowski.rafal.dancebook.repository.AppUserRepository
-import com.jankowski.rafal.dancebook.repository.MaterialRepository
-import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
+import com.jankowski.rafal.dancebook.dto.AdminDriveFileDto
+import com.jankowski.rafal.dancebook.dto.AdminOverview
+import com.jankowski.rafal.dancebook.dto.AdminUsersView
+import com.jankowski.rafal.dancebook.dto.DriveInspection
 import com.jankowski.rafal.dancebook.service.*
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
@@ -63,10 +64,9 @@ class AdminLocaleWebTest {
 
     @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockitoBean private lateinit var appUserRepository: AppUserRepository
     @MockitoBean private lateinit var appUserService: AppUserService
-    @MockitoBean private lateinit var materialRepository: MaterialRepository
-    @MockitoBean private lateinit var storageCleanupLogRepository: StorageCleanupLogRepository
+    @MockitoBean private lateinit var adminOverviewService: AdminOverviewService
+    @MockitoBean private lateinit var adminStorageService: AdminStorageService
     @MockitoBean private lateinit var storageCleanupJob: StorageCleanupJob
     @MockitoBean private lateinit var googleDriveService: GoogleDriveService
     @MockitoBean private lateinit var fileStorageService: FileStorageService
@@ -103,12 +103,27 @@ class AdminLocaleWebTest {
 
         `when`(appUserService.getCurrentUser()).thenReturn(adminUser)
         `when`(appUserService.getCurrentUserOrNull()).thenReturn(adminUser)
-        `when`(appUserRepository.count()).thenReturn(10L)
-        `when`(materialRepository.count()).thenReturn(25L)
         `when`(systemSettingService.getIntSetting("polling_interval_minutes", 5)).thenReturn(5)
         `when`(systemSettingService.getIntSetting("auto_logout_minutes", 10)).thenReturn(15)
-        `when`(appUserRepository.findAll()).thenReturn(listOf(adminUser))
-        `when`(storageCleanupLogRepository.findAllByOrderByExecutedAtDesc()).thenReturn(emptyList())
+        `when`(adminOverviewService.overview(adminUser)).thenReturn(
+            AdminOverview(
+                userCount = 10L,
+                figureCount = 374L,
+                noteCount = 25L,
+                calendarCount = 0,
+                defaultCalendarName = null,
+                danceTypeCount = 11,
+                categoryCount = 3,
+                categoryNames = listOf("Standard", "Latin", "Social"),
+                pollInterval = 5,
+                autoLogout = 15,
+                knowledgeStatus = null,
+                knowledgeIndexStale = false,
+                lastCleanupAt = null
+            )
+        )
+        `when`(adminOverviewService.users(false, 5)).thenReturn(AdminUsersView(listOf(adminUser), 1L, 1L, false))
+        `when`(adminOverviewService.users(true, 5)).thenReturn(AdminUsersView(listOf(adminUser), 1L, 1L, true))
         `when`(trainingCalendarService.findAll()).thenReturn(emptyList())
     }
 
@@ -116,24 +131,23 @@ class AdminLocaleWebTest {
     fun `admin dashboard renders in Polish when locale is Polish`() {
         mockMvc.perform(get("/admin").with(csrf()).locale(polishLocale))
             .andExpect(status().isOk)
-            // Page Header
-            .andExpect(content().string(containsString("Panel administratora")))
-            .andExpect(content().string(containsString("Przegląd systemu i konserwacja magazynu")))
-            .andExpect(content().string(not(containsString("Admin Dashboard"))))
-            // Stats cards
-            .andExpect(content().string(containsString("Użytkownicy")))
-            .andExpect(content().string(containsString("Notatki")))
-            // Section headings
-            .andExpect(content().string(containsString("Konfiguracja aplikacji")))
-            .andExpect(content().string(containsString("Import figur z programu (syllabus)")))
-            .andExpect(content().string(containsString("Indeks wiedzy (RAG)")))
-            .andExpect(content().string(containsString("Ustawienia systemowe i domyślne")))
-            .andExpect(content().string(containsString("Konserwacja Dysku Google")))
-            .andExpect(content().string(containsString("Pliki na Dysku Google")))
-            .andExpect(content().string(containsString("Kalendarze treningowe")))
-            .andExpect(content().string(containsString("Zarejestrowani użytkownicy")))
+            // Page header and summary panel
+            .andExpect(content().string(containsString("Administracja")))
+            .andExpect(content().string(containsString("Zarządzaj DanceBook: ludzie, treści, wyszukiwanie i magazyn.")))
+            .andExpect(content().string(containsString("kalendarze treningowe")))
+            .andExpect(content().string(containsString("Wymaga uwagi")))
+            .andExpect(content().string(containsString("Nic nie wymaga uwagi")))
+            // Groups and row titles
+            .andExpect(content().string(containsString("Wyszukiwanie i magazyn")))
+            .andExpect(content().string(containsString("Style taneczne")))
+            .andExpect(content().string(containsString("Import sylabusa")))
+            .andExpect(content().string(containsString("Domyślne obrazy")))
+            .andExpect(content().string(containsString("Indeks wiedzy")))
+            .andExpect(content().string(containsString("Dysk Google")))
+            .andExpect(content().string(containsString("Ustawienia aplikacji")))
+            .andExpect(content().string(containsString("Powiadomienia co 5 min")))
             .andExpect(content().string(containsString("Historia zadań czyszczenia")))
-            // Buttons and labels
+            // Buttons and labels inside the rows
             .andExpect(content().string(containsString("Zapisz konfigurację")))
             .andExpect(content().string(containsString("Importuj figury i kroki")))
             .andExpect(content().string(containsString("Odbuduj indeks wiedzy")))
@@ -147,13 +161,10 @@ class AdminLocaleWebTest {
             .andExpect(content().string(containsString("Dołączył(a)")))
             .andExpect(content().string(containsString("Akcje")))
             // Absence of English equivalents
-            .andExpect(content().string(not(containsString(">Admin Dashboard<"))))
-            .andExpect(content().string(not(containsString(">Application Configuration<"))))
-            .andExpect(content().string(not(containsString(">Syllabus Figures Import<"))))
-            .andExpect(content().string(not(containsString(">System Settings &amp; Defaults<"))))
-            .andExpect(content().string(not(containsString(">Google Drive Maintenance<"))))
-            .andExpect(content().string(not(containsString(">Registered Users<"))))
-            .andExpect(content().string(not(containsString(">Cleanup Job History<"))))
+            .andExpect(content().string(not(containsString(">Admin<"))))
+            .andExpect(content().string(not(containsString("Needs attention"))))
+            .andExpect(content().string(not(containsString(">Knowledge index<"))))
+            .andExpect(content().string(not(containsString(">Application settings<"))))
             .andExpect(content().string(not(containsString("Save Configuration"))))
             .andExpect(content().string(not(containsString("Import Figures &amp; Steps"))))
             .andExpect(content().string(not(containsString("Rebuild Knowledge Index"))))
@@ -167,15 +178,18 @@ class AdminLocaleWebTest {
     fun `admin dashboard renders in English when locale is English`() {
         mockMvc.perform(get("/admin").with(csrf()).locale(englishLocale))
             .andExpect(status().isOk)
-            .andExpect(content().string(containsString("Admin Dashboard")))
-            .andExpect(content().string(containsString("System overview and storage maintenance")))
-            .andExpect(content().string(containsString("Users")))
-            .andExpect(content().string(containsString("Notes")))
-            .andExpect(content().string(containsString("Application Configuration")))
-            .andExpect(content().string(containsString("Syllabus Figures Import")))
-            .andExpect(content().string(containsString("Knowledge Index (RAG)")))
-            .andExpect(content().string(containsString("System Settings &amp; Defaults")))
-            .andExpect(content().string(containsString("Google Drive Maintenance")))
+            .andExpect(content().string(containsString("Run DanceBook: people, content, search and storage.")))
+            .andExpect(content().string(containsString("training calendars")))
+            .andExpect(content().string(containsString("Needs attention")))
+            .andExpect(content().string(containsString("Nothing needs attention")))
+            .andExpect(content().string(containsString("Search and storage")))
+            .andExpect(content().string(containsString("Dance styles")))
+            .andExpect(content().string(containsString("Syllabus import")))
+            .andExpect(content().string(containsString("Default images")))
+            .andExpect(content().string(containsString("Knowledge index")))
+            .andExpect(content().string(containsString("Google Drive")))
+            .andExpect(content().string(containsString("Application settings")))
+            .andExpect(content().string(containsString("Notifications every 5 min")))
             .andExpect(content().string(containsString("Save Configuration")))
             .andExpect(content().string(containsString("Import Figures &amp; Steps")))
             .andExpect(content().string(containsString("Rebuild Knowledge Index")))
@@ -255,8 +269,15 @@ class AdminLocaleWebTest {
             size = 10485760L,
             createdTime = 1600000000000L
         )
-        `when`(googleDriveService.listFilesInFolder()).thenReturn(listOf(testFile))
-        `when`(materialRepository.findAllDriveFileIds()).thenReturn(emptySet())
+        `when`(adminStorageService.inspectDrive()).thenReturn(
+            DriveInspection(
+                files = listOf(AdminDriveFileDto(testFile.id, testFile.name, testFile.size, testFile.createdTime, true)),
+                orphanedSize = 10485760L,
+                linkedSize = 0L,
+                orphanedCount = 1,
+                linkedCount = 0
+            )
+        )
 
         mockMvc.perform(get("/admin/storage/files").with(csrf()).locale(polishLocale))
             .andExpect(status().isOk)

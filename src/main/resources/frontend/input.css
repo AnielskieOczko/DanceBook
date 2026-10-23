@@ -94,6 +94,7 @@ layer(base);
   --color-danger-soft: #f7e9e8;
 
   --color-warning: #8a5a00;
+  --color-warning-soft: #f6efd8;
   --color-on-warning: #ffffff;
 
   --color-success: #1f4b4a;
@@ -378,6 +379,17 @@ layer(base);
   /* ── Badges ──────────────────────────────────── */
   @apply inline-flex items-center px-2.5 py-0.5 rounded-pill
            text-xs font-semibold whitespace-nowrap;
+}
+
+/* Admin summary panel (#395): a condition that needs the admin, and its "nothing to do" counterpart. */
+@utility attention-chip {
+  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[13px] font-semibold
+           bg-warning-soft text-warning no-underline hover:brightness-95 transition;
+}
+
+@utility attention-chip-ok {
+  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[13px] font-medium
+           bg-surface text-on-surface-variant;
 }
 
 @utility badge-primary {
