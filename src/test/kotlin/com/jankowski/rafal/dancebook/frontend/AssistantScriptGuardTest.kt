@@ -159,5 +159,51 @@ class AssistantScriptGuardTest {
         assertTrue(surfaceTag.contains("data-full-window"), "surface dialog must carry data-full-window")
         assertFalse(surfaceTag.contains("is-expanded"), "surface dialog must not have server-rendered is-expanded class")
     }
+
+    @Test
+    fun `the composer is a textarea starting at about 3 lines tall with 24px radius`() {
+        assertTrue(widget.contains("<textarea id=\"assistantComposerInput\""))
+        val textareaTag = widget.substringAfter("<textarea id=\"assistantComposerInput\"").substringBefore(">")
+        assertTrue(textareaTag.contains("rows=\"3\""), "textarea must specify rows=3")
+        assertTrue(textareaTag.contains("rounded-[24px]"), "textarea must use 24px multi-line surface token")
+    }
+
+    @Test
+    fun `enter key sends without shift on desktop, while shift-enter and phone enter add newlines`() {
+        assertTrue(script.contains("event.key === 'Enter'"))
+        val enterBranch = script.substringAfter("composerInput.addEventListener('keydown'").substringBefore("composer.addEventListener('submit'")
+        assertTrue(enterBranch.contains("if (event.isComposing || event.keyCode === 229) return;"), "IME composition must not trigger send")
+        assertTrue(enterBranch.contains("if (!wide.matches) return;"), "phone return key must not trigger send")
+        assertTrue(enterBranch.contains("if (event.shiftKey) return;"), "shift-enter must not trigger send")
+        assertTrue(enterBranch.contains("event.preventDefault()"), "enter on desktop must prevent default newline")
+        assertTrue(enterBranch.contains("composer.requestSubmit()"), "enter on desktop must submit the composer")
+    }
+
+    @Test
+    fun `empty or whitespace-only messages are not sent`() {
+        val submitBranch = script.substringAfter("composer.addEventListener('submit'").substringBefore("surface.addEventListener('close'")
+        assertTrue(submitBranch.contains("!composerInput.value.trim()"), "submit must check for trimmed text")
+        assertTrue(submitBranch.contains("event.preventDefault()"), "whitespace message submit must be prevented")
+    }
+
+    @Test
+    fun `composer auto-resizes with text and resets on assistant-sent`() {
+        assertTrue(script.contains("function resizeComposer()"))
+        assertTrue(script.contains("composerInput.addEventListener('input', resizeComposer)"))
+        val sentBranch = script.substringAfter("document.addEventListener('assistant-sent'").substringBefore("document.addEventListener('htmx:afterSwap'")
+        assertTrue(sentBranch.contains("resizeComposer()"), "clearing composer must reset its height")
+    }
+
+    @Test
+    fun `input css defines assistant composer sizing and multi-line styling`() {
+        val css = Files.readString(Path.of("src/main/resources/frontend/input.css"))
+        assertTrue(css.contains("#assistantComposerInput"))
+        val cssRule = css.substringAfter("#assistantComposerInput").substringBefore("}")
+        assertTrue(cssRule.contains("field-sizing: content"))
+        assertTrue(cssRule.contains("border-radius: var(--radius-field)"))
+        assertTrue(cssRule.contains("min-height"))
+        assertTrue(cssRule.contains("max-height"))
+        assertTrue(cssRule.contains("overflow-y: auto"))
+    }
 }
 

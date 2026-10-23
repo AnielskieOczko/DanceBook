@@ -1958,6 +1958,15 @@ body:has(dialog[open]) .goto {
   font-weight: 600;
 }
 
+#assistantComposerInput {
+  border-radius: var(--radius-field);
+  min-height: 5.75rem;
+  max-height: 13rem;
+  field-sizing: content;
+  resize: none;
+  overflow-y: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   #assistantSurface {
     transition: none !important;

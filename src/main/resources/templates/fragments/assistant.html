@@ -28,7 +28,7 @@
 <!-- One bubble. role is USER or ASSISTANT. An assistant bubble may carry cards (ResultCard list) and drafts (DraftView list); error swaps in the alert. -->
 <div th:fragment="assistantMessage" class="flex" th:classappend="${(role == 'USER' ? 'justify-end' : '') + (cls != null ? ' ' + cls : '')}">
     <div th:if="${role == 'USER'}"
-         class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap"
+         class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap break-words"
          th:text="${text}">Hello</div>
     <div th:if="${role != 'USER'}" class="flex w-full min-w-0 flex-col gap-2.5">
         <th:block th:if="${error == true}">

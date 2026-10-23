@@ -81,21 +81,21 @@
                       class="border-t border-outline-variant px-3 py-3 pb-safe"
                       hx-post="/assistant/messages" hx-target="#assistantThread" hx-swap="beforeend"
                       hx-indicator="#assistantTyping" hx-disabled-elt="find button[type=submit]">
-                    <div class="flex items-center gap-2 max-w-[700px] mx-auto w-full">
+                    <div class="flex items-end gap-2 max-w-[700px] mx-auto w-full">
                         <input type="hidden" id="assistantConversationId" name="conversationId" value="">
                         <input type="hidden" name="pageType" th:value="${assistantNav.page.type.name()}">
                         <input type="hidden" name="pageId" th:value="${assistantNav.page.id}">
-                        <input id="assistantComposerInput" type="text" name="text" required maxlength="2000"
-                               class="form-input min-w-0 flex-1 rounded-pill text-[15px]"
-                               placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
-                               th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}">
+                        <textarea id="assistantComposerInput" name="text" required maxlength="2000" rows="3"
+                                  class="form-input min-w-0 flex-1 rounded-[24px] text-[15px] py-3 px-4.5"
+                                  placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
+                                  th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}"></textarea>
                         <button type="button" data-assistant-mic hidden aria-label="Dictate"
-                                class="flex h-11 w-11 items-center justify-center rounded-pill text-primary"
+                                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-primary mb-0.5"
                                 th:attr="aria-label=#{assistant.dictate}">
                             <span th:replace="~{fragments/icon :: icon(name='mic', size='md')}"></span>
                         </button>
                         <button type="submit" aria-label="Send"
-                                class="flex h-11 w-11 items-center justify-center rounded-pill bg-primary text-on-primary"
+                                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-primary text-on-primary mb-0.5"
                                 th:attr="aria-label=#{assistant.send}">
                             <span th:replace="~{fragments/icon :: icon(name='arrow_upward', size='md')}"></span>
                         </button>

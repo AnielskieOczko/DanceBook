@@ -22,6 +22,41 @@
     const wide = window.matchMedia('(min-width: 768px)');
     let firstOpen = true;
 
+    function resizeComposer() {
+        composerInput.style.height = 'auto';
+        if (composerInput.scrollHeight > composerInput.clientHeight) {
+            composerInput.style.height = composerInput.scrollHeight + 'px';
+        }
+    }
+
+    composerInput.addEventListener('input', resizeComposer);
+
+    composerInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            if (event.isComposing || event.keyCode === 229) return;
+            if (!wide.matches) return;
+            if (event.shiftKey) return;
+            event.preventDefault();
+            const text = composerInput.value.trim();
+            if (!text) return;
+            if (composer.classList.contains('htmx-request')) return;
+            composer.requestSubmit();
+        }
+    });
+
+    composer.addEventListener('submit', function (event) {
+        if (!composerInput.value.trim()) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+        if (composer.classList.contains('htmx-request')) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+    });
+
     surface.addEventListener('close', function () {
         if (surface.classList.contains('is-expanded')) {
             surface.classList.remove('is-expanded');
@@ -116,6 +151,7 @@
         if (composer.classList.contains('htmx-request')) return; // one send at a time
         openSurface();
         composerInput.value = message;
+        resizeComposer();
         composer.requestSubmit();
     }
 
@@ -130,6 +166,7 @@
             // Wrapping up needs the user's words (what was covered), so this only starts the sentence.
             openSurface();
             composerInput.value = prefill.getAttribute('data-assistant-prefill');
+            resizeComposer();
             composerInput.focus();
             composerInput.setSelectionRange(composerInput.value.length, composerInput.value.length);
             return;
@@ -286,7 +323,10 @@
 
     // The server stored the user's message: clear the box, drop the greeting, follow the thread.
     document.addEventListener('assistant-sent', function () {
-        if (composerInput.value === sentText) composerInput.value = '';
+        if (composerInput.value === sentText) {
+            composerInput.value = '';
+            resizeComposer();
+        }
         const greeting = thread.querySelector('[data-assistant-empty]');
         if (greeting) greeting.remove();
         thread.scrollTop = thread.scrollHeight;
@@ -339,7 +379,7 @@
     if (Recognition) {
         document.querySelectorAll('[data-assistant-mic]').forEach(function (button) {
             button.hidden = false;
-            const input = button.closest('form').querySelector('input[name="text"]');
+            const input = button.closest('form').querySelector('textarea[name="text"], input[name="text"]');
             let recognition = null;
 
             function setIdle() {
@@ -358,8 +398,11 @@
                 recognition.interimResults = false;
                 recognition.onresult = function (result) {
                     const spoken = result.results[0][0].transcript;
-                    input.value = (input.value ? input.value + ' ' : '') + spoken;
-                    input.focus();
+                    if (input) {
+                        input.value = (input.value ? input.value + ' ' : '') + spoken;
+                        resizeComposer();
+                        input.focus();
+                    }
                 };
                 recognition.onend = setIdle;
                 recognition.onerror = setIdle;
