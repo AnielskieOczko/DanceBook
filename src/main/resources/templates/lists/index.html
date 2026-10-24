@@ -54,7 +54,7 @@
                                 <input type="checkbox" name="categoryIds" th:value="${c.id}" class="js-category-checkbox hidden peer"
                                        th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
                                        th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="filter-pill">
                                     <span class="hidden peer-checked:inline"><span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span></span>
                                     <span th:text="${c.name}">Category</span>
                                 </span>
@@ -74,7 +74,7 @@
                                 <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/lists}" hx-target="#collections-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="filter-pill">
                                     <span class="hidden peer-checked:inline"><span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span></span>
                                     <span th:text="${t.name}">Style</span>
                                 </span>

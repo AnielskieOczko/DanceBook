@@ -537,6 +537,14 @@ layer(base);
   background-position: right 1rem center;
 }
 
+@utility filter-pill {
+  /* ── Filter Pills (Notes, Figures, Collections category & style pills) ── */
+  @apply px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all
+         bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30
+         peer-checked:bg-primary-container peer-checked:text-on-primary-container
+         peer-checked:hover:bg-primary-hover;
+}
+
 @utility ed-name {
   @apply min-w-0 text-[22px] font-semibold leading-tight tracking-tight min-h-[52px] px-5.5
          bg-surface-container border border-transparent
