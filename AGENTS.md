@@ -114,7 +114,8 @@ component**: `icon`, `button` (`linkButton`, `actionButton`, `iconButton`, `subm
 `errorSummary`, `rawField`, `searchField`, `filterSelect`), `page` (`pageHeader`, `overflowMenu`,
 `menuItem`, `sectionTitle`, `viewSwitcher`, `paginationFooter`), `card`, `table`
 (`dataTable`, `stepTable`), `badge`, `empty`, `alert`, `modal`, `rich-text`, `list-row`
-(`compactRow`) and `filter-sheet` (`filterSheet`). Do not
+(`compactRow`), `filter-sheet` (`filterSheet`) and `settings-row` (`settingsRow`,
+`settingsLinkRow`; see *The admin dashboard*). Do not
 hand-roll a page header, a badge or an empty state in a template — the fragment exists, and
 the reason #98 was worth doing is that six training pages had each copied the header instead.
 
@@ -747,6 +748,51 @@ same shape (#383).
 show no date. `DanceFigure.stampCreatedAt` (`@PrePersist`) dates new figures, except syllabus imports
 (`predefined`), whose import time says nothing about the figure.
 
+### The admin dashboard (#395, direction A of `docs/mocks/admin-dashboard`)
+
+`/admin` takes the profile page's shape: a summary panel (`#adminSummary`) with counts and a
+"Needs attention" line (`#attentionChips`), then grouped `fragments/settings-row` rows that show
+their current value and open in place. `settingsRow` is a `<details>` (`rowId`, `rowIcon`,
+`rowTitle`, `valueText` or `valueSlot`, `flagSlot`, `bodySlot`, `open`, `rowCls`);
+`settingsLinkRow` is an `<a>` to another page (`rowHref`). The parameters are `row*` on purpose, so
+they do not collide with the inherited-parameter trap: pass `title=null` on any icon in a slot.
+Row ids are `admin-row-users`, `-syllabus`, `-images`, `-calendars`, `-knowledge`, `-drive` and
+`-settings`. A link with `data-opens-row` opens that row (a click handler in `main.js`).
+
+- **Chips.** Each attention chip carries `data-attention`, the neutral "Nothing needs attention"
+  chip carries `data-attention-none`, and `#driveAttention` is filled out of band. The styles are
+  `attention-chip` and `attention-chip-ok` in `input.css`, on a new `--color-warning-soft` token.
+- **Users and Google Drive show a preview and link to a full page.** `GET /admin/users` and
+  `GET /admin/storage` render `admin/users.html` and `admin/storage.html`, each with the #365
+  header and a back row to Admin. The row's footer link is `data-all-files-link`.
+  `GET /admin/users/form?all=` and `GET /admin/storage/files?preview=` return the row body.
+- **Drive loads after the page.** Asking Drive is slow and can fail, so the page renders without
+  it and a `hx-trigger="load"` call to `GET /admin/storage/summary` (`admin/dashboard :: driveSummary`)
+  fills the row and `#driveAttention`. It catches Drive exceptions and shows "could not be
+  reached", so the dashboard still works with no credentials. The file preview loads when the row
+  opens (`hx-trigger="toggle from:#admin-row-drive once"`). Until it answers, the attention line
+  reads "Nothing needs attention".
+- **Rows refresh in place by out-of-band swaps.** `POST /admin/users` sets `usersOob`, and
+  `updateSystemSettings` sets `systemSettingsOob`, so the row's value line updates after a save.
+  The calendars row does not, and shows the new count after a reload.
+- **Controllers read no repositories.** `AdminController` uses `AdminOverviewService`
+  (`overview`, `lastCleanupAt`, which ignores dry runs, and `users`), `AdminStorageService`
+  (`inspectDrive`, `cleanupHistory`; the preview is `PREVIEW_ROWS` = 5) and `AppUserService`. The
+  view data is in `dto/AdminDtos.kt` (`AdminOverview`, `AdminUsersView`, `DriveInspection`,
+  `AdminDriveFileDto`, `LogPresentation`). A dashboard figure goes in `AdminOverview`, not in a
+  controller that reads a repository.
+- **Not shown, because the app does not hold the data:** an unverified-users chip (users have no
+  verified state, so there is no verify or enable action), and "last import" or "last rebuilt"
+  dates (nothing stores them). Add the data first if the mock's chip is wanted.
+- **Guards.** `AdminDenseTableTemplateTest` expects exactly four `div.overflow-x-auto[role=region]`
+  in `dashboard.html`; keep the English text beside the `th:text` bindings (see
+  *Internationalisation*). Every new `admin.*` key is in both bundles. `admin.row.categories.empty`
+  is a full sentence because `CopyPassGuardTest` wants empty-state strings of 15 characters or more.
+  Tests: `AdminDashboardWebTest`, `AdminOverviewServiceTest`, `AdminStorageServiceTest`; new
+  fragments are in `FragmentCatalogRenderingTest` and `catalog-harness.html`.
+- **Not checked against real Google.** The Drive actions and calendar sync need real credentials,
+  so they were verified by test and by degrading cleanly without them, not against Drive.
+
 ### Global template model
 
 `controller/web/NavbarAdvice.kt` is a `@ControllerAdvice` supplying `currentUser`,
@@ -785,6 +831,13 @@ every corner by 2px. There is no assistant text bar fixed to the bottom of the p
 a sheet on a phone, and `assistant/widget.html` renders only when `assistantNav` is set, which
 needs the assistant feature enabled, so it is absent when it is off. `/` opens the panel if it is
 closed and focuses its own composer (`assistantComposerInput`); dictation lives in that composer.
+The composer is a `<textarea>` (#384): three lines tall, growing with its content up to about
+eight (`field-sizing: content` plus min and max height in `input.css`, with `resizeComposer` in
+`assistant.js` as the fallback), then scrolling. On a wide screen (`min-width: 768px`) Enter sends
+and Shift+Enter adds a line; on a phone Enter adds a line and only the send button sends. Enter
+during IME composition (`isComposing`, keyCode 229) never sends, and a whitespace-only message
+neither sends nor clears the box. The user bubble carries `break-words`, so a long unbroken word
+cannot widen the thread. This was checked by test only, not in a browser.
 Nothing reserves space at the bottom of a page for the assistant, so do not add padding for it.
 The assistant has no scope dropdown; its scope travels in hidden inputs.
 
@@ -1065,6 +1118,14 @@ Since #154 a `TrainingCalendar` has an `owner`, a `visibility` (`PRIVATE` by def
 and `byId`, `TrainingCalendarService.findByIdVisibleTo`, and `checkOwnership` on every change.
 Owners manage their calendars on `/training-calendars` (`TrainingCalendarWebController`);
 `/admin/calendars` remains the admin view.
+
+Two traps on those pages were fixed in #381. The visibility badges read `enum.visibility.PUBLIC`
+and `enum.visibility.PRIVATE`: enum message keys are **uppercase** in both bundles, and #244 had
+switched the templates to lowercase `enum.*` keys that neither bundle defines, so the badges
+showed `??…??`. A missing key is a visible `??…??`, not an error, so check the key case against
+the bundle rather than adding lowercase duplicates. And the edit form carries `googleCalendarId`
+as a hidden input; without it, editing a calendar did not work. `TrainingCalendarWebTest` covers
+both.
 
 - **A calendar gathers Google calendars as `CalendarSource` rows**, one to many, replacing the
   old one-to-one `google_calendar_id`. **Exactly one source is the write target**
@@ -1417,7 +1478,7 @@ locales are listed in `config/AppLocales.kt`.
   seeing both is correct. Do not change fragment names, element ids or form field names
   while translating.
 - **Keep the English beside the binding when a guard test parses the raw template.**
-  `admin/dashboard.html` (the only admin template, translated in #242) is read as plain HTML by
+  `admin/dashboard.html` (translated in #242, rewritten in #395) is read as plain HTML by
   `AdminDenseTableTemplateTest` and similar guards, so the static English text and the
   `aria-label` stay in the markup next to `th:text` / `th:attr`. Removing them to "tidy up"
   breaks those guards, not the rendering.
@@ -1733,7 +1794,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `training-timeline` | #216 | Direction 2, the vertical journey feed |
 | `figures` | #218 | Edit-figure rework; medal levels as rank bars (direction A) |
 | `rag-search` | #219 | Direction 1, an "Also related" group below keyword results |
-| `admin-dashboard` | #387 | Direction A: the profile page's shape, a summary panel with counts and a "Needs attention" line, then grouped rows that show their current value and open in place; Users and Google Drive show their first rows and link to a full page. B and C were not chosen |
+| `admin-dashboard` | #387 | Direction A: the profile page's shape, a summary panel with counts and a "Needs attention" line, then grouped rows that show their current value and open in place; Users and Google Drive show their first rows and link to a full page. B and C were not chosen. Shipped in #399 (#395) |
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
 | `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet shipped in #378 (#366) below `lg`, revised in #379 |
@@ -1799,7 +1860,9 @@ the part that exists, and leave the rest out.
 - Dense table with sortable headers and a card form below 1024px →
   `templates/dance-figures/list.html` (`figuresTable`) plus the `js-sort-header` handler in
   `static/js/main.js`
-- Admin screen and its fragments → `controller/web/AdminCalendarController.kt`
+- Admin screen and its fragments → `controller/web/AdminCalendarController.kt`; the admin
+  landing page and its settings rows → `controller/web/AdminController.kt` plus
+  `templates/admin/dashboard.html` and `fragments/settings-row.html`
 - User-owned settings page with an htmx confirmation dialog →
   `controller/web/TrainingCalendarWebController.kt` plus `templates/training-calendars/`
 - Shared UI component → `templates/fragments/` (`page.html` for the header-with-toolbar
