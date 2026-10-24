@@ -177,6 +177,19 @@
     </div>
 </div>
 
+<div th:fragment="headerActionAll">
+    <div th:replace="~{fragments/page :: pageHeader(
+        title='Dashboard',
+        subtitle='Welcome back',
+        actionUrl='/new',
+        actionText='New Action',
+        actionIcon='add',
+        actionVariant='primary',
+        actionWrapperCls='custom-action-wrapper',
+        actionCls='custom-action-cls'
+    )}"></div>
+</div>
+
 <div th:fragment="headerDetailAll">
     <div th:replace="~{fragments/page :: pageHeader(
         title='Advanced Hip Twist',
@@ -193,7 +206,11 @@
         secondaryIcon='print',
         menuSlot=~{::sampleHeaderMenu},
         metaSlot=~{::sampleHeaderMeta},
+        subrowSlot=~{::sampleHeaderSubrow},
         cls='extra-cls')}">
+        <div th:fragment="sampleHeaderSubrow">
+            <span class="subrow-content">Subrow Content</span>
+        </div>
         <div th:fragment="sampleHeaderMenu">
             <th:block th:replace="~{fragments/page :: menuItem(text='Delete', icon='delete', variant='danger')}"></th:block>
         </div>

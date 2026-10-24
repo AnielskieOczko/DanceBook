@@ -269,6 +269,7 @@ class FragmentCatalogRenderingTest {
             "searchFieldAll",
             "filterSelectAll",
             "headerAll",
+            "headerActionAll",
             "headerDetailAll",
             "overflowMenuAll",
             "menuItemAll",
@@ -544,6 +545,27 @@ class FragmentCatalogRenderingTest {
         assertNotNull(dropdown, "Overflow dropdown must exist")
         assertTrue(dropdown!!.hasClass("hidden"))
         assertTrue(dropdown.text().contains("Delete"))
+
+        // Subrow slot
+        val subrow = doc.selectFirst(".subrow-content")
+        assertNotNull(subrow, "Subrow slot content must exist")
+        assertTrue(subrow!!.text().contains("Subrow Content"))
+    }
+
+    @Test
+    fun `page header action variant renders actionCls and actionWrapperCls`() {
+        val result = mockMvc.perform(get("/test/catalog/headerActionAll").with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+        val actionWrapper = doc.selectFirst(".custom-action-wrapper")
+        assertNotNull(actionWrapper, "Action wrapper must take custom-action-wrapper class")
+
+        val actionLink = doc.selectFirst("a.custom-action-cls")
+        assertNotNull(actionLink, "Action link must take custom-action-cls class")
+        assertTrue(actionLink!!.hasClass("btn-primary"))
+        assertEquals("/new", actionLink.attr("href"))
     }
 
     @Test

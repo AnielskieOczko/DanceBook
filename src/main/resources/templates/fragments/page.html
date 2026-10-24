@@ -49,12 +49,12 @@
 
         <!-- Legacy single actionUrl (used by list views when no detail actions are defined) -->
         <th:block th:if="${toolbar == null and primaryUrl == null and primarySlot == null and secondaryUrl == null and secondarySlot == null and menuSlot == null and actionUrl != null}">
-            <div class="shrink-0">
+            <div class="shrink-0" th:classappend="${actionWrapperCls}">
                 <a th:href="${actionUrl}"
                    class="btn"
-                   th:classappend="${actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary'}">
+                   th:classappend="${(actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary') + (actionCls != null ? ' ' + actionCls : '')}">
                     <th:block th:if="${actionIcon != null}">
-                        <span th:replace="~{fragments/icon :: icon(name=${actionIcon})}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name=${actionIcon}, title=null)}"></span>
                     </th:block>
                     <span th:text="${actionText}">Action</span>
                 </a>
@@ -102,6 +102,13 @@
             </div>
         </th:block>
     </div>
+
+    <!-- Subrow slot (secondary row e.g. view switcher, filters, controls) -->
+    <th:block th:if="${subrowSlot != null or subrow != null}">
+        <div class="mt-4">
+            <th:block th:replace="${subrowSlot ?: subrow}"></th:block>
+        </div>
+    </th:block>
 </div>
 
 <!-- Overflow Menu (3-dots) -->

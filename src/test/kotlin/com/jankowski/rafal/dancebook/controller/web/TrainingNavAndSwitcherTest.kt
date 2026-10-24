@@ -307,9 +307,15 @@ class TrainingNavAndSwitcherTest {
 
         assertSwitcherLinks(switcher!!, activeView = "calendar")
 
-        // Primary action Add Session remains
+        // Primary action Add Session remains on desktop but is hidden on phone (floating button exists there)
         val addSessionBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
         assertNotNull(addSessionBtn, "Add Session button must be preserved on calendar view")
+        assertTrue(addSessionBtn!!.hasClass("hidden") && addSessionBtn.hasClass("md:inline-flex"),
+            "Calendar view Add Session button must be hidden on mobile (< md)")
+        val addSessionWrapper = addSessionBtn.parent()
+        assertNotNull(addSessionWrapper)
+        assertTrue(addSessionWrapper!!.hasClass("hidden") && addSessionWrapper.hasClass("md:block"),
+            "Calendar view Add Session wrapper must be hidden on mobile (< md)")
     }
 
     @Test
@@ -330,6 +336,10 @@ class TrainingNavAndSwitcherTest {
         assertNotNull(switcher, "Switcher nav must be present")
 
         assertSwitcherLinks(switcher!!, activeView = "timeline")
+
+        // Primary action Add Session remains
+        val addSessionBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
+        assertNotNull(addSessionBtn, "Add Session button must be preserved on timeline view")
     }
 
     @Test
@@ -363,6 +373,10 @@ class TrainingNavAndSwitcherTest {
         val periodChips = doc.select(".chip-group a.chip")
         assertFalse(periodChips.isEmpty(), "Period selector chips must be preserved on stats page")
 
+        // Primary action Add Session remains
+        val addSessionBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
+        assertNotNull(addSessionBtn, "Add Session button must be preserved on stats view")
+
         // Switcher icons must not inherit pageHeader title="Training"
         val switcherIcons = switcher.select("span.material-symbols-outlined")
         assertEquals(5, switcherIcons.size)
@@ -392,6 +406,95 @@ class TrainingNavAndSwitcherTest {
         assertNotNull(switcher, "Switcher nav must be present")
 
         assertSwitcherLinks(switcher!!, activeView = "history")
+
+        // Primary action Add Session remains
+        val addSessionBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
+        assertNotNull(addSessionBtn, "Add Session button must be preserved on history view")
+    }
+
+    @ParameterizedTest(name = "Path {0} renders Add Session in main row and switcher in secondary row")
+    @ValueSource(
+        strings = [
+            "/training-events",
+            "/training-events/calendar",
+            "/training-events/timeline",
+            "/training-events/stats",
+            "/training-events/history"
+        ]
+    )
+    fun `all five training views render tidy header with Add Session on right and switcher in subrow`(path: String) {
+        `when`(trainingEventService.findByCurrentUser(any(), any(), any(), any(), any(), any())).thenReturn(emptyList())
+        `when`(danceCategoryService.findAll()).thenReturn(emptyList())
+        `when`(trainingTimelineService.timelineForCurrentUser(anyInt(), any())).thenReturn(
+            TrainingTimeline(months = emptyList(), hasMore = false, nextPage = 1, lastMonthLabel = null, isFirstPage = true)
+        )
+        `when`(trainingStatsService.statsForCurrentUser(StatsPeriod.ALL_TIME)).thenReturn(
+            TrainingStats(
+                period = StatsPeriod.ALL_TIME,
+                counts = com.jankowski.rafal.dancebook.dto.SessionCounts(upcoming = 0, unconfirmed = 0, attended = 0, skipped = 0, cancelled = 0),
+                totalMinutesTrained = 0,
+                attendanceRatePercent = null,
+                currentStreak = 0,
+                byCategory = emptyList(),
+                byEventType = emptyList()
+            )
+        )
+        `when`(trainingHistoryService.historyForCurrentUser(any())).thenReturn(
+            TrainingHistory(months = emptyList())
+        )
+
+        val result = mockMvc.perform(get(path).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val doc = Jsoup.parse(result.response.contentAsString)
+
+        // 1. Title on the left
+        val title = doc.selectFirst("h1.page-title span")
+        assertEquals("Training", title?.text()?.trim())
+
+        // 2. Primary action Add Session exists with btn-primary
+        val addBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
+        assertNotNull(addBtn, "Add Session button must be present on $path")
+        if (path == "/training-events/calendar") {
+            assertTrue(addBtn!!.hasClass("hidden") && addBtn.hasClass("md:inline-flex"),
+                "Calendar view Add Session must be hidden on mobile (< md)")
+            assertTrue(addBtn.parent()!!.hasClass("hidden") && addBtn.parent()!!.hasClass("md:block"),
+                "Calendar view Add Session wrapper must be hidden on mobile (< md)")
+        } else {
+            assertFalse(addBtn!!.hasClass("hidden"), "Non-calendar views must keep Add Session visible on mobile: $path")
+        }
+
+        // 3. Add Session is in the header row, outside the secondary controls row
+        val subrow = doc.selectFirst("nav[aria-label='Training views']")?.closest(".mt-4")
+        assertNotNull(subrow, "Secondary subrow must be present")
+        assertFalse(
+            subrow!!.select("a.btn-primary[href='/training-events/new']").isNotEmpty(),
+            "Add Session must not be placed inside the secondary subrow"
+        )
+
+        // 4. Controls row allows wrapping so switcher is not squeezed at 1024px
+        val controlsRow = switcherControlsRow(subrow)
+        assertTrue(controlsRow.hasClass("flex-wrap"), "Controls row must have flex-wrap to prevent clipping at 1024px")
+
+        // 5. View switcher is in the subrow, and protected against shrinking at 1024px while allowing mobile scroll
+        val switcher = subrow.selectFirst("nav[aria-label='Training views']")
+        assertNotNull(switcher, "Switcher must be inside subrow")
+        val switcherWrapper = switcher!!.parent()
+        assertNotNull(switcherWrapper)
+        assertTrue(switcherWrapper!!.hasClass("overflow-x-auto"), "Switcher wrapper must have overflow-x-auto for mobile")
+        assertTrue(switcherWrapper.hasClass("min-w-0"), "Switcher wrapper must have min-w-0 for mobile")
+        assertTrue(switcherWrapper.hasClass("sm:shrink-0"), "Switcher wrapper must have sm:shrink-0 to prevent shrinking at 1024px")
+        assertTrue(switcherWrapper.hasClass("lg:overflow-visible"), "Switcher wrapper must have lg:overflow-visible to avoid desktop clipping")
+
+        // 6. Calendar selector is also inside the subrow
+        val calManage = subrow.selectFirst("a[href='/training-calendars']")
+        assertNotNull(calManage, "Calendar manage link must be inside subrow")
+    }
+
+    private fun switcherControlsRow(subrow: org.jsoup.nodes.Element): org.jsoup.nodes.Element {
+        val directDiv = subrow.selectFirst("> div")
+        return directDiv ?: subrow
     }
 
     private fun assertSwitcherLinks(switcher: org.jsoup.nodes.Element, activeView: String) {
