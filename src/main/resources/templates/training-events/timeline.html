@@ -4,10 +4,20 @@
 
 <section th:with="activeNav='training-events'" class="space-y-12">
 
-    <div th:replace="~{fragments/page :: pageHeader(title=#{nav.training}, subtitle=#{training.timeline.subtitle}, toolbar=~{::timelineToolbar})}">
-        <div th:fragment="timelineToolbar" class="flex flex-wrap items-center gap-4 max-w-full">
+    <div th:replace="~{fragments/page :: pageHeader(
+        title=#{nav.training},
+        subtitle=#{training.timeline.subtitle},
+        actionUrl=${((selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession) ? '/training-events/new' : null},
+        actionText=#{training.add_session},
+        actionIcon='add',
+        actionVariant='primary',
+        subrowSlot=~{::trainingControls}
+    )}">
+        <div th:fragment="trainingControls" class="flex flex-wrap items-center justify-between gap-4">
+            <div class="w-full sm:w-auto min-w-0 sm:shrink-0 overflow-x-auto lg:overflow-visible">
+                <nav th:replace="~{fragments/page :: viewSwitcher(currentView='timeline')}"></nav>
+            </div>
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
-            <nav th:replace="~{fragments/page :: viewSwitcher(currentView='timeline')}"></nav>
         </div>
     </div>
 
