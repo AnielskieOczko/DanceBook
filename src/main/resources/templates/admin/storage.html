@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='admin'">
+
+    <div th:replace="~{fragments/page :: pageHeader(title=#{admin.storage.page_title}, subtitle=#{admin.storage.page_subtitle}, icon='cloud', backHref='/admin', backLabel=#{admin.back})}"></div>
+
+    <div class="space-y-6">
+        <div class="border border-outline-variant rounded-card bg-surface p-4 sm:p-5 space-y-4">
+            <p class="text-sm text-on-surface-variant" th:text="#{admin.storage.description}">
+                Finds Google Drive videos uploaded over 24 hours ago that were never saved to a note (orphaned files).
+            </p>
+            <div th:replace="~{admin/dashboard :: storageActions}"></div>
+        </div>
+
+        <div class="border border-outline-variant rounded-card bg-surface p-4 sm:p-5">
+            <h2 class="text-sm font-semibold text-on-surface mb-3" th:text="#{admin.storage.files_heading}">Google Drive Files</h2>
+            <div hx-get="/admin/storage/files" hx-trigger="load">
+                <div class="flex items-center space-x-2 text-on-surface-variant">
+                    <span th:replace="~{fragments/icon :: icon(name='progress_activity', size='md', cls='animate-spin text-primary', title=null)}"></span>
+                    <span th:text="#{admin.storage.loading}">Fetching storage data from Google...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="border border-outline-variant rounded-card bg-surface p-4 sm:p-5">
+            <h2 class="text-sm font-semibold text-on-surface mb-3" th:text="#{admin.storage.history_heading}">Cleanup Job History</h2>
+            <div th:replace="~{admin/dashboard :: cleanupHistory}"></div>
+        </div>
+    </div>
+
+</section>
+</html>

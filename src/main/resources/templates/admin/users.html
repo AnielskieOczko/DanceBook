@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<section th:with="activeNav='admin'">
+
+    <div th:replace="~{fragments/page :: pageHeader(title=#{admin.users.page_title}, subtitle=#{admin.users.page_subtitle(${usersTotal})}, icon='group', backHref='/admin', backLabel=#{admin.back})}"></div>
+
+    <div class="border border-outline-variant rounded-card bg-surface p-4 sm:p-5">
+        <div th:replace="~{admin/dashboard :: usersSection}"></div>
+    </div>
+
+</section>
+</html>

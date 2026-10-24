@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!--
+  Settings rows (profile page #229, admin dashboard #395): one line that shows its current value and opens in place.
+  Rows go inside a container with `divide-y divide-outline-variant`. The parameters are named row* on purpose:
+  a slot runs in this fragment's scope, so a plain `id`, `title` or `cls` here would be inherited by every
+  icon the caller puts in a slot (the inherited-parameter trap in AGENTS.md).
+-->
+
+<!-- settingsRow: a row that expands in place.
+     rowId, rowIcon, rowTitle; valueText or valueSlot (the line under the title); flagSlot (a small pill at the right);
+     bodySlot (what opens); open (true to start open); rowCls -->
+<details th:fragment="settingsRow" th:id="${rowId}" th:open="${open == true}" class="group scroll-mt-24" th:classappend="${rowCls}">
+    <summary class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 cursor-pointer hover:bg-surface-container list-none select-none [&::-webkit-details-marker]:hidden">
+        <span th:replace="~{fragments/icon :: icon(name=${rowIcon}, size='md', cls='text-primary shrink-0', title=null)}"></span>
+        <span class="flex-1 min-w-0">
+            <b class="block text-[15px] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
+            <th:block th:if="${valueSlot != null}">
+                <th:block th:replace="${valueSlot}"></th:block>
+            </th:block>
+            <th:block th:if="${valueSlot == null and valueText != null}">
+                <small class="block text-xs text-on-surface-variant break-words" th:text="${valueText}">Current value</small>
+            </th:block>
+        </span>
+        <th:block th:if="${flagSlot != null}">
+            <th:block th:replace="${flagSlot}"></th:block>
+        </th:block>
+        <span th:replace="~{fragments/icon :: icon(name='expand_more', size='md', cls='text-outline group-open:rotate-180 transition-transform duration-150 shrink-0', title=null)}"></span>
+    </summary>
+    <div class="px-4.5 pb-5 pt-1.5 sm:pl-13 space-y-3">
+        <th:block th:if="${bodySlot != null}">
+            <th:block th:replace="${bodySlot}"></th:block>
+        </th:block>
+    </div>
+</details>
+
+<!-- settingsLinkRow: a row that opens another page.
+     rowHref, rowIcon, rowTitle; valueText; rowCls -->
+<a th:fragment="settingsLinkRow" th:href="${rowHref}"
+   class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 hover:bg-surface-container text-inherit no-underline"
+   th:classappend="${rowCls}">
+    <span th:replace="~{fragments/icon :: icon(name=${rowIcon}, size='md', cls='text-primary shrink-0', title=null)}"></span>
+    <span class="flex-1 min-w-0">
+        <b class="block text-[15px] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
+        <small th:if="${valueText != null}" class="block text-xs text-on-surface-variant break-words" th:text="${valueText}">Current value</small>
+    </span>
+    <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='text-outline shrink-0', title=null)}"></span>
+</a>
+
+</body>
+</html>

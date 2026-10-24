@@ -1,17 +1,14 @@
 package com.jankowski.rafal.dancebook.controller.web
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.jankowski.rafal.dancebook.dto.FormSelectOption
 import com.jankowski.rafal.dancebook.dto.UserCreateRequest
 import com.jankowski.rafal.dancebook.dto.UserUpdateRequest
-import com.jankowski.rafal.dancebook.repository.AppUserRepository
-import com.jankowski.rafal.dancebook.repository.MaterialRepository
-import com.jankowski.rafal.dancebook.repository.StorageCleanupLogRepository
+import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
+import com.jankowski.rafal.dancebook.service.AdminOverviewService
+import com.jankowski.rafal.dancebook.service.AdminStorageService
 import com.jankowski.rafal.dancebook.service.GoogleDriveService
 import com.jankowski.rafal.dancebook.service.StorageCleanupJob
 import com.jankowski.rafal.dancebook.service.SyllabusImporterService
-import com.jankowski.rafal.dancebook.dto.FormSelectOption
-import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
 import com.jankowski.rafal.dancebook.service.SystemSettingService
 import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
@@ -23,35 +20,18 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.time.LocalDateTime
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
-
-data class AdminDriveFileDto(
-    val id: String,
-    val name: String,
-    val sizeBytes: Long?,
-    val createdTime: Long,
-    val isOrphaned: Boolean
-)
-
-data class LogPresentation(
-    val executedAt: LocalDateTime,
-    val filesDeletedCount: Int,
-    val isDryRun: Boolean,
-    val deletedFiles: List<GoogleDriveService.DriveFileInfo>
-)
 
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')") // Only you can enter
 class AdminController(
-    private val appUserRepository: AppUserRepository,
     private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService,
-    private val materialRepository: MaterialRepository,
-    private val storageCleanupLogRepository: StorageCleanupLogRepository,
+    private val adminOverviewService: AdminOverviewService,
+    private val adminStorageService: AdminStorageService,
     private val storageCleanupJob: StorageCleanupJob,
     private val googleDriveService: GoogleDriveService,
-    private val objectMapper: ObjectMapper,
     private val fileStorageService: com.jankowski.rafal.dancebook.service.FileStorageService,
     private val systemSettingService: SystemSettingService,
     private val syllabusImporterService: SyllabusImporterService,
@@ -60,17 +40,43 @@ class AdminController(
 ) {
     @GetMapping
     fun dashboard(model: Model): String {
-        // Provide basic stats to the template
-        model.addAttribute("totalUsers", appUserRepository.count())
-        model.addAttribute("totalMaterials", materialRepository.count())
-        model.addAttribute("isKnowledgeIndexStale", knowledgeIndexService?.isStale() ?: false)
-        model.addAttribute("knowledgeStatus", knowledgeIndexService?.getStatus())
-        
-        // System Settings
+        val overview = adminOverviewService.overview(appUserService.getCurrentUser())
+        model.addAttribute("overview", overview)
+        model.addAttribute("isKnowledgeIndexStale", overview.knowledgeIndexStale)
+        model.addAttribute("knowledgeStatus", overview.knowledgeStatus)
+        addSystemSettings(model)
+        addUsers(model, all = false)
+        model.addAttribute("cleanupLogs", adminStorageService.cleanupHistory(AdminStorageService.PREVIEW_ROWS))
+        model.addAttribute("cleanupLogsPreview", true)
+        return "admin/dashboard"
+    }
+
+    /** The full list of users, for when the dashboard row's first few are not enough. */
+    @GetMapping("/users")
+    fun usersPage(model: Model): String {
+        addUsers(model, all = true)
+        return "admin/users"
+    }
+
+    /** Every Drive file and every cleanup run, for when the dashboard row's first few are not enough. */
+    @GetMapping("/storage")
+    fun storagePage(model: Model): String {
+        model.addAttribute("cleanupLogs", adminStorageService.cleanupHistory())
+        return "admin/storage"
+    }
+
+    private fun addUsers(model: Model, all: Boolean) {
+        val view = adminOverviewService.users(all)
+        model.addAttribute("users", view.users)
+        model.addAttribute("usersTotal", view.total)
+        model.addAttribute("usersAdmins", view.adminCount)
+        model.addAttribute("usersAll", view.all)
+    }
+
+    private fun addSystemSettings(model: Model) {
         model.addAttribute("pollInterval", systemSettingService.getIntSetting("polling_interval_minutes", 5))
         model.addAttribute("autoLogout", systemSettingService.getIntSetting("auto_logout_minutes", 10))
-        val currentBadgeStyle = systemSettingService.getSetting("medal_badge_style", "rank_bars")
-        model.addAttribute("medalBadgeStyle", currentBadgeStyle)
+        model.addAttribute("medalBadgeStyle", systemSettingService.getSetting("medal_badge_style", "rank_bars"))
         val locale = org.springframework.context.i18n.LocaleContextHolder.getLocale()
         val badgeStyleOptions = MedalBadgeStyle.entries.map {
             FormSelectOption(
@@ -79,37 +85,11 @@ class AdminController(
             )
         }
         model.addAttribute("badgeStyleOptions", badgeStyleOptions)
-        
-        // Provide fast lists
-        model.addAttribute("users", appUserRepository.findAll())
-
-        // Fetch logs and parse JSON payload intelligently
-        val rawLogs = storageCleanupLogRepository.findAllByOrderByExecutedAtDesc()
-        val presentationLogs = rawLogs.map { log ->
-            val filesList = try {
-                if (!log.details.isNullOrBlank() && log.details!!.startsWith("[")) {
-                     objectMapper.readValue(log.details, object : TypeReference<List<GoogleDriveService.DriveFileInfo>>() {})
-                } else emptyList()
-            } catch (e: Exception) {
-                emptyList()
-            }
-
-            LogPresentation(
-                executedAt = log.executedAt,
-                filesDeletedCount = log.filesDeletedCount,
-                isDryRun = log.isDryRun,
-                deletedFiles = filesList
-            )
-        }
-
-        model.addAttribute("cleanupLogs", presentationLogs)
-
-        return "admin/dashboard"
     }
 
     @PostMapping("/settings/default-list-image")
     fun uploadDefaultListImage(
-        @org.springframework.web.bind.annotation.RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
+        @RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
         redirectAttributes: org.springframework.web.servlet.mvc.support.RedirectAttributes
     ): String {
         try {
@@ -125,7 +105,7 @@ class AdminController(
 
     @PostMapping("/settings/default-category-image")
     fun uploadDefaultCategoryImage(
-        @org.springframework.web.bind.annotation.RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
+        @RequestParam("image") file: org.springframework.web.multipart.MultipartFile,
         redirectAttributes: org.springframework.web.servlet.mvc.support.RedirectAttributes
     ): String {
         try {
@@ -141,9 +121,9 @@ class AdminController(
 
     @PostMapping("/settings/system")
     fun updateSystemSettings(
-        @org.springframework.web.bind.annotation.RequestParam("pollInterval") pollInterval: Int,
-        @org.springframework.web.bind.annotation.RequestParam("autoLogout") autoLogout: Int,
-        @org.springframework.web.bind.annotation.RequestParam(value = "medalBadgeStyle", required = false) medalBadgeStyle: String?,
+        @RequestParam("pollInterval") pollInterval: Int,
+        @RequestParam("autoLogout") autoLogout: Int,
+        @RequestParam(value = "medalBadgeStyle", required = false) medalBadgeStyle: String?,
         model: Model
     ): String {
         try {
@@ -159,61 +139,44 @@ class AdminController(
         } catch (e: Exception) {
             model.addAttribute("systemSettingsError", "Failed to update settings: ${e.message}")
         }
-        val currentStyle = systemSettingService.getSetting("medal_badge_style", "rank_bars")
-        model.addAttribute("pollInterval", pollInterval)
-        model.addAttribute("autoLogout", autoLogout)
-        model.addAttribute("medalBadgeStyle", currentStyle)
-        val locale = org.springframework.context.i18n.LocaleContextHolder.getLocale()
-        val badgeStyleOptions = MedalBadgeStyle.entries.map {
-            FormSelectOption(
-                value = it.code,
-                label = messageSource?.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
-            )
-        }
-        model.addAttribute("badgeStyleOptions", badgeStyleOptions)
+        addSystemSettings(model)
+        model.addAttribute("systemSettingsOob", true)
         return "admin/dashboard :: systemSettingsSection"
     }
 
-    // HTMX Endpoint for Lazy Loading Heavy Google Drive Files
+    // HTMX Endpoint for Lazy Loading Heavy Google Drive Files. preview=true is the dashboard row's first few.
     @GetMapping("/storage/files")
-    fun fetchDriveFiles(model: Model): String {
-        val driveFiles = googleDriveService.listFilesInFolder()
-        val dataBaseIds = materialRepository.findAllDriveFileIds()
+    fun fetchDriveFiles(
+        @RequestParam(value = "preview", defaultValue = "false") preview: Boolean,
+        model: Model
+    ): String {
+        val inspection = adminStorageService.inspectDrive()
 
-        var orphanedSize = 0L
-        var linkedSize = 0L
-        var orphanedCount = 0
-        var linkedCount = 0
+        model.addAttribute("driveFiles", if (preview) inspection.files.take(AdminStorageService.PREVIEW_ROWS) else inspection.files)
+        model.addAttribute("drivePreview", preview)
+        model.addAttribute("orphanedSize", inspection.orphanedSize)
+        model.addAttribute("linkedSize", inspection.linkedSize)
+        model.addAttribute("totalSize", inspection.totalSize)
 
-        val filesDto = driveFiles.map { file ->
-            val orphaned = !dataBaseIds.contains(file.id)
-            if (orphaned) {
-                orphanedSize += (file.size ?: 0L)
-                orphanedCount++
-            } else {
-                linkedSize += (file.size ?: 0L)
-                linkedCount++
-            }
+        model.addAttribute("orphanedCount", inspection.orphanedCount)
+        model.addAttribute("linkedCount", inspection.linkedCount)
+        model.addAttribute("totalCount", inspection.totalCount)
 
-            AdminDriveFileDto(
-                id = file.id,
-                name = file.name,
-                sizeBytes = file.size,
-                createdTime = file.createdTime,
-                isOrphaned = orphaned
-            )
-        }
-        
-        model.addAttribute("driveFiles", filesDto)
-        model.addAttribute("orphanedSize", orphanedSize)
-        model.addAttribute("linkedSize", linkedSize)
-        model.addAttribute("totalSize", orphanedSize + linkedSize)
-
-        model.addAttribute("orphanedCount", orphanedCount)
-        model.addAttribute("linkedCount", linkedCount)
-        model.addAttribute("totalCount", orphanedCount + linkedCount)
-        
         return "admin/dashboard :: driveSection"
+    }
+
+    // HTMX Endpoint for the Google Drive row's value and its "Needs attention" chip. Drive is slow and can be
+    // unreachable, so the dashboard asks for this after it has rendered rather than waiting on Google.
+    @GetMapping("/storage/summary")
+    fun driveSummary(model: Model): String {
+        val inspection = try {
+            adminStorageService.inspectDrive()
+        } catch (e: Exception) {
+            null
+        }
+        model.addAttribute("driveInspection", inspection)
+        model.addAttribute("lastCleanupAt", adminOverviewService.lastCleanupAt())
+        return "admin/dashboard :: driveSummary"
     }
 
     // HTMX Endpoint for Simulation
@@ -241,7 +204,8 @@ class AdminController(
     }
 
     @GetMapping("/users/form")
-    fun showCreateUserForm(model: Model): String {
+    fun showCreateUserForm(@RequestParam(value = "all", defaultValue = "false") all: Boolean, model: Model): String {
+        model.addAttribute("usersAll", all)
         return "admin/dashboard :: createUserForm"
     }
 
@@ -254,6 +218,7 @@ class AdminController(
     fun createUser(
         @Valid @ModelAttribute request: UserCreateRequest,
         bindingResult: BindingResult,
+        @RequestParam(value = "all", defaultValue = "false") all: Boolean,
         model: Model
     ): String {
         if (bindingResult.hasErrors()) {
@@ -262,7 +227,7 @@ class AdminController(
             } ?: "Validation failed"
             model.addAttribute("createUserError", errorMsg)
             model.addAttribute("showCreateForm", true)
-            model.addAttribute("users", appUserRepository.findAll())
+            addUsers(model, all)
             return "admin/dashboard :: usersSection"
         }
         try {
@@ -272,7 +237,8 @@ class AdminController(
             model.addAttribute("createUserError", e.message)
             model.addAttribute("showCreateForm", true)
         }
-        model.addAttribute("users", appUserRepository.findAll())
+        addUsers(model, all)
+        model.addAttribute("usersOob", true)
         return "admin/dashboard :: usersSection"
     }
 
