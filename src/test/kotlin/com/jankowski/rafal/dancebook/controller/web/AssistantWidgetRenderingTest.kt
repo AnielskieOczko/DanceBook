@@ -92,7 +92,7 @@ class AssistantWidgetRenderingTest {
     }
 
     @Test
-    fun `assistant bar is not rendered and composer uses rounded-pill tokens`() {
+    fun `assistant bar is not rendered and composer uses design tokens`() {
         val result = mockMvc.perform(get("/").with(asAlice()))
             .andExpect(status().isOk)
             .andReturn()
@@ -103,7 +103,9 @@ class AssistantWidgetRenderingTest {
 
         val composerInput = doc.selectFirst("#assistantComposerInput")
         org.junit.jupiter.api.Assertions.assertNotNull(composerInput, "#assistantComposerInput must be present")
-        org.junit.jupiter.api.Assertions.assertTrue(composerInput!!.hasClass("rounded-pill"), "#assistantComposerInput must use rounded-pill token")
+        org.junit.jupiter.api.Assertions.assertEquals("textarea", composerInput!!.tagName(), "#assistantComposerInput must be a textarea")
+        org.junit.jupiter.api.Assertions.assertEquals("3", composerInput.attr("rows"), "#assistantComposerInput must start at 3 rows")
+        org.junit.jupiter.api.Assertions.assertTrue(composerInput.hasClass("rounded-[24px]"), "#assistantComposerInput must use 24px multi-line surface token")
 
         val composerSendBtn = doc.selectFirst("#assistantComposer button[type=submit]")
         org.junit.jupiter.api.Assertions.assertNotNull(composerSendBtn, "composer send button must be present")

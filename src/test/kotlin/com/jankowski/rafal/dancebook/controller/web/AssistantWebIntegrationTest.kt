@@ -187,6 +187,32 @@ class AssistantWebIntegrationTest {
     }
 
     @Test
+    fun `a message with line breaks preserves them in the conversation and rendered turn`() {
+        val multiline = "First line of question\nSecond line with details\nThird line"
+        send(alice, multiline)
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("First line of question\nSecond line with details\nThird line")))
+            .andExpect(content().string(containsString("whitespace-pre-wrap")))
+
+        val convoId = conversations.findByOwnerIdOrderByUpdatedAtDesc(alice.id!!).single().id!!
+        val msgs = messages.findByConversationIdOrderByPositionAsc(convoId)
+        val userMsg = msgs.first { it.role == AssistantRole.USER }
+        assertEquals(multiline, userMsg.content)
+
+        // Also check reopening the conversation renders the multiline text with whitespace-pre-wrap
+        mockMvc.perform(get("/assistant/conversations/$convoId").with(user(alice.username).roles("USER")).header("HX-Request", "true"))
+            .andExpect(status().isOk)
+            .andExpect(content().string(containsString("First line of question\nSecond line with details\nThird line")))
+            .andExpect(content().string(containsString("whitespace-pre-wrap")))
+    }
+
+    @Test
+    fun `a whitespace-only message with newlines is a 400 and stores nothing`() {
+        send(alice, "   \n\n\t  ").andExpect(status().isBadRequest)
+        assertEquals(0, conversations.findByOwnerIdOrderByUpdatedAtDesc(alice.id!!).size)
+    }
+
+    @Test
     fun `the start fragment carries chips and clears the conversation id`() {
         mockMvc.perform(get("/assistant/start").param("pageType", "FIGURE").with(user(alice.username).roles("USER")))
             .andExpect(status().isOk)
