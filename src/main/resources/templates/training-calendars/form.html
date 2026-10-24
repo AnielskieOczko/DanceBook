@@ -45,6 +45,7 @@
             <th:block th:if="${isNew}">
                 <div th:replace="~{fragments/form :: field(path='googleCalendarId', label='Google Calendar ID', required=true, placeholder='e.g. name@gmail.com or xxx@group.calendar.google.com')}"></div>
             </th:block>
+            <input th:unless="${isNew}" type="hidden" th:field="*{googleCalendarId}">
 
             <div th:replace="~{fragments/form :: field(path='color', label='Color (Hex or name)', required=false, placeholder='e.g. #3b82f6')}"></div>
         </div>
@@ -146,18 +147,18 @@
                         </td>
                         <td class="py-3 px-4">
                             <th:block th:if="${m.role.name() == 'OWNER'}">
-                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.owner}, variant='primary')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.OWNER}, variant='primary')}"></span>
                             </th:block>
                             <th:block th:unless="${m.role.name() == 'OWNER'}">
-                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.viewer}, variant='neutral')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_role.VIEWER}, variant='neutral')}"></span>
                             </th:block>
                         </td>
                         <td class="py-3 px-4">
                             <th:block th:if="${m.state.name() == 'ACTIVE'}">
-                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.active}, variant='success')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.ACTIVE}, variant='success')}"></span>
                             </th:block>
                             <th:block th:if="${m.state.name() == 'INVITED'}">
-                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.invited}, variant='warning')}"></span>
+                                <span th:replace="~{fragments/badge :: badge(label=#{enum.calendar_member_state.INVITED}, variant='warning')}"></span>
                             </th:block>
                         </td>
                         <td class="py-3 px-4 text-right">
