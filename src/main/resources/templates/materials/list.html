@@ -86,7 +86,7 @@
                                 <input type="checkbox" name="categoryIds" th:value="${c.id}" class="js-category-checkbox hidden peer"
                                        th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}"
                                        th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="filter-pill">
                                     <span th:text="${c.name}">Category</span>
                                 </span>
                             </label>
@@ -106,7 +106,7 @@
                                 <input type="checkbox" name="typeIds" th:value="${t.id}" class="js-style-checkbox hidden peer"
                                        th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}"
                                        th:hx-get="@{/materials}" hx-target="#materials-grid" hx-swap="outerHTML" hx-include="#filterForm">
-                                <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                                <span class="filter-pill">
                                     <span th:text="${t.name}">Style</span>
                                 </span>
                             </label>
@@ -319,7 +319,7 @@
                     <label th:each="c : ${danceCategories}" class="cursor-pointer">
                         <input type="checkbox" data-sheet-filter="categoryIds" th:value="${c.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedCategoryIds != null && #lists.contains(selectedCategoryIds, c.id)}">
-                        <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                        <span class="filter-pill">
                             <span th:text="${c.name}">Category</span>
                         </span>
                     </label>
@@ -335,7 +335,7 @@
                            class="js-style-pill cursor-pointer transition-all duration-300">
                         <input type="checkbox" data-sheet-filter="typeIds" th:value="${t.id}" class="js-sheet-filter hidden peer"
                                th:checked="${selectedTypeIds != null && #lists.contains(selectedTypeIds, t.id)}">
-                        <span class="px-3 py-1.5 rounded-full inline-flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/30">
+                        <span class="filter-pill">
                             <span th:text="${t.name}">Style</span>
                         </span>
                     </label>
