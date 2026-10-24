@@ -106,6 +106,13 @@ class CustomListServiceImpl(
         list.minRating = request.minRating
         list.isPublic = request.isPublic
 
+        if (request.removeImage) {
+            list.imageFilename?.let { oldFilename ->
+                fileStorageService.deleteFile(oldFilename, "lists")
+            }
+            list.imageFilename = null
+        }
+
         request.image?.let { file ->
             if (!file.isEmpty) {
                 list.imageFilename?.let { oldFilename ->

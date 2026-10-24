@@ -2,92 +2,333 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='lists'" class="max-w-3xl mx-auto py-12">
+<section th:with="activeNav='lists'" class="max-w-[1040px] mx-auto py-8 px-4 sm:px-6">
 
+    <!-- Header (#365) -->
     <div th:replace="~{fragments/page :: pageHeader(
         backHref=${listId == null ? '/lists' : '/lists/' + listId},
         backLabel=${listId == null ? #messages.msg('collections.back_to_list') : ((listRequest.name != null and !listRequest.name.isEmpty()) ? listRequest.name : #messages.msg('collections.back_to_list'))},
         title=(${listId == null ? #messages.msg('collections.new') : #messages.msg('collections.edit')}),
-        subtitle=#{collections.form.subtitle})}"></div>
+        subtitle=(${listId == null ? #messages.msg('collections.form.new_subtitle') : null}),
+        secondaryUrl=${listId == null ? '/lists' : '/lists/' + listId},
+        secondaryText=#{common.cancel},
+        primarySlot=~{::saveButtonSlot}
+    )}">
+        <th:block th:fragment="saveButtonSlot">
+            <button type="submit" form="collectionForm" class="btn-primary btn-sm min-h-[44px] flex items-center justify-center gap-1.5 w-full sm:w-auto">
+                <span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span>
+                <span th:text="${listId == null ? #messages.msg('collections.form.save') : #messages.msg('collections.form.save_changes')}">Save collection</span>
+            </button>
+        </th:block>
+    </div>
 
-    <form th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
-          th:object="${listRequest}" method="post" enctype="multipart/form-data" class="card p-8 space-y-8">
+    <!-- Direction B: Grid of Form + Live Preview Aside -->
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-8 items-start">
 
-        <div th:replace="~{fragments/form :: errorSummary}"></div>
+        <!-- Form Column -->
+        <form id="collectionForm"
+              th:action="@{${listId == null ? '/lists' : '/lists/' + listId}(_csrf=${_csrf.token})}"
+              th:object="${listRequest}"
+              method="post"
+              enctype="multipart/form-data"
+              class="flex flex-col gap-7">
 
-        <!-- Basic Info Section -->
-        <div class="space-y-6">
-            <div th:replace="~{fragments/form :: field(path='name', label=#{collections.form.name_label}, required=true, placeholder=#{collections.form.name_placeholder}, id='listName')}"></div>
+            <div th:replace="~{fragments/form :: errorSummary}"></div>
 
-            <!-- Image Upload Section -->
-            <div>
-                <label class="form-label" th:text="#{collections.form.cover_label}">Collection Cover Image</label>
-                
-                <div th:if="${listId != null and currentImage != null}" class="mb-4">
-                    <p class="text-xs text-on-surface-variant mb-2" th:text="#{collections.form.current_image}">Current Image:</p>
-                    <div class="relative w-48 h-32 rounded-lg overflow-hidden border border-outline-variant">
-                        <img th:src="@{/uploads/lists/{filename}(filename=${currentImage})}" alt="Current Cover Image" th:attr="alt=#{collections.form.current_cover_alt}" class="w-full h-full object-cover">
+            <!-- Group 1: About -->
+            <div class="space-y-4">
+                <div class="text-base font-semibold leading-snug text-on-surface" th:text="#{collections.form.group.about}">About</div>
+
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="listName" class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2">
+                        <span th:text="#{collections.form.name_label}">Name</span>
+                        <span class="text-error font-bold" aria-hidden="true"> *</span>
+                    </label>
+                    <input type="text"
+                           id="listName"
+                           th:field="*{name}"
+                           required
+                           th:placeholder="#{collections.form.name_placeholder}"
+                           class="form-input w-full"
+                           th:classappend="${#fields.hasErrors('name')} ? 'form-input-invalid' : ''">
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="flex items-center gap-1.5 text-danger text-sm mt-1.5 font-medium">
+                        <span th:replace="~{fragments/icon :: icon(name='error', size='sm', cls='text-danger')}"></span>
+                        <span>Give the collection a name.</span>
+                    </p>
+                </div>
+
+                <!-- Cover Image Field -->
+                <div class="form-group">
+                    <label class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2" th:text="#{collections.form.cover_label}">Cover image</label>
+                    <div class="flex items-center gap-3.5 sm:gap-4 w-full">
+                        <div id="coverThumbnail" class="w-18 h-12 sm:w-20 sm:h-14 rounded-inset overflow-hidden shrink-0 flex items-center justify-center border border-border bg-surface-container text-on-surface-variant relative">
+                            <img id="coverImg"
+                                 th:src="${(listId != null and currentImage != null) ? '/uploads/lists/' + currentImage : ''}"
+                                 th:attr="alt=#{collections.form.current_cover_alt},hidden=${(listId != null and currentImage != null) ? null : 'hidden'}"
+                                 class="w-full h-full object-cover"
+                                 th:classappend="${(listId != null and currentImage != null) ? '' : 'hidden!'}"
+                                 th:style="${(listId != null and currentImage != null) ? '' : 'display: none !important;'}">
+                            <span id="coverPlaceholderIcon"
+                                  th:attr="hidden=${(listId != null and currentImage != null) ? 'hidden' : null}"
+                                  th:classappend="${(listId != null and currentImage != null) ? 'hidden!' : ''}"
+                                  th:style="${(listId != null and currentImage != null) ? 'display: none !important;' : ''}">
+                                <span th:replace="~{fragments/icon :: icon(name='add_photo_alternate', size='md')}"></span>
+                            </span>
+                        </div>
+                        <div class="flex-1 min-w-0" id="coverMeta">
+                            <b class="block text-sm font-semibold text-on-surface truncate" id="coverTitle"
+                               th:data-default-title="#{collections.form.no_cover}"
+                               th:text="${(listId != null and currentImage != null) ? currentImage : #messages.msg('collections.form.no_cover')}">No cover yet</b>
+                            <small class="block text-xs sm:text-[13px] text-on-surface-variant truncate" id="coverSubtitle"
+                                   th:data-default-subtitle="#{collections.form.cover_optional_hint}"
+                                   th:data-hint="#{collections.form.cover_hint}"
+                                   th:text="${(listId != null and currentImage != null) ? #messages.msg('collections.form.cover_hint') : #messages.msg('collections.form.cover_optional_hint')}">Optional · PNG, JPG or GIF, up to 10 MB</small>
+                        </div>
+                        <input type="file" id="coverFileInput" name="image" accept="image/png,image/jpeg,image/gif" class="sr-only">
+                        <input type="hidden" id="removeImageInput" name="removeImage" value="false">
+                        <div class="flex items-center gap-2 shrink-0 ml-auto">
+                            <label for="coverFileInput" id="coverChooseBtn" class="btn-outline btn-sm min-h-[38px] cursor-pointer inline-flex items-center"
+                                   th:classappend="${(listId != null and currentImage != null) ? 'hidden!' : ''}"
+                                   th:style="${(listId != null and currentImage != null) ? 'display: none !important;' : ''}"
+                                   th:attr="hidden=${(listId != null and currentImage != null) ? 'hidden' : null}">
+                                <span th:text="#{collections.form.cover_choose}">Choose</span>
+                            </label>
+                            <label for="coverFileInput" id="coverChangeBtn" class="btn-outline btn-sm min-h-[38px] cursor-pointer inline-flex items-center"
+                                   th:classappend="${(listId != null and currentImage != null) ? '' : 'hidden!'}"
+                                   th:style="${(listId != null and currentImage != null) ? '' : 'display: none !important;'}"
+                                   th:attr="hidden=${(listId != null and currentImage != null) ? null : 'hidden'}">
+                                <span th:text="#{collections.form.cover_change}">Change</span>
+                            </label>
+                            <button type="button" id="coverRemoveBtn" class="text-primary text-sm font-semibold hover:underline px-2 cursor-pointer inline-flex items-center min-h-[38px]"
+                                    th:classappend="${(listId != null and currentImage != null) ? '' : 'hidden!'}"
+                                    th:style="${(listId != null and currentImage != null) ? '' : 'display: none !important;'}"
+                                    th:attr="hidden=${(listId != null and currentImage != null) ? null : 'hidden'}">
+                                <span th:text="#{collections.form.cover_remove}">Remove</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p th:if="${#fields.hasErrors('image')}" th:errors="*{image}" class="flex items-center gap-1.5 text-danger text-sm mt-1.5 font-medium">
+                        <span th:replace="~{fragments/icon :: icon(name='error', size='sm', cls='text-danger')}"></span>
+                        <span>Error</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Group 2: Which notes -->
+            <div id="whichNotesGroup" class="flex flex-col gap-4 pt-6 border-t border-border"
+                 hx-get="/lists/preview"
+                 hx-trigger="change from:.js-rule-input, input delay:300ms from:#nameFilter"
+                 hx-include="#collectionForm"
+                 hx-target="#previewSink"
+                 hx-swap="none">
+
+                <div>
+                    <div class="text-base font-semibold leading-snug text-on-surface" th:text="#{collections.form.filters_heading}">Which notes</div>
+                    <p class="text-xs sm:text-[13px] text-on-surface-variant mt-0.5" th:text="#{collections.form.rules_hint}">A note is included when it matches every rule. Empty rules are ignored.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
+                    <!-- Name Filter -->
+                    <div>
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2" th:text="#{collections.form.name_filter_label}">Name contains</span>
+                        <div th:replace="~{fragments/form :: searchField(name='nameFilter', value=${listRequest.nameFilter}, placeholder=#{collections.form.name_filter_placeholder}, id='nameFilter', cls='w-full')}"></div>
+                    </div>
+
+                    <!-- Minimum Rating Segmented Control -->
+                    <div>
+                        <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2" th:text="#{collections.form.min_rating_label}">Minimum rating</span>
+                        <div class="inline-flex flex-nowrap w-full p-1 bg-surface-container border border-border rounded-full max-w-full" role="radiogroup" th:attr="aria-label=#{collections.form.min_rating_label}">
+                            <label class="cursor-pointer flex-1 min-w-0 text-center">
+                                <input type="radio" name="minRating" value="" th:checked="${listRequest.minRating == null or listRequest.minRating < 2}" class="sr-only peer js-rule-input">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs" th:text="#{collections.form.min_rating_any}">Any</span>
+                            </label>
+                            <label class="cursor-pointer flex-1 min-w-0 text-center">
+                                <input type="radio" name="minRating" value="2" th:checked="${listRequest.minRating == 2}" class="sr-only peer js-rule-input">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                    <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>2+
+                                </span>
+                            </label>
+                            <label class="cursor-pointer flex-1 min-w-0 text-center">
+                                <input type="radio" name="minRating" value="3" th:checked="${listRequest.minRating == 3}" class="sr-only peer js-rule-input">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                    <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>3+
+                                </span>
+                            </label>
+                            <label class="cursor-pointer flex-1 min-w-0 text-center">
+                                <input type="radio" name="minRating" value="4" th:checked="${listRequest.minRating == 4}" class="sr-only peer js-rule-input">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                    <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>4+
+                                </span>
+                            </label>
+                            <label class="cursor-pointer flex-1 min-w-0 text-center">
+                                <input type="radio" name="minRating" value="5" th:checked="${listRequest.minRating == 5}" class="sr-only peer js-rule-input">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                    <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>5
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <label id="uploadBox" for="imageUpload" class="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-outline-variant border-dashed rounded-lg hover:border-primary transition-all bg-surface-container-low cursor-pointer relative overflow-hidden h-40">
-                    <div id="uploadContent" class="space-y-1 text-center">
-                        <span th:replace="~{fragments/icon :: icon(name='image', size='lg', cls='text-on-surface-variant mx-auto block')}"></span>
-                        <div class="text-sm text-on-surface-variant justify-center mt-2">
-                            <span class="font-medium text-primary hover:text-primary-hover" th:text="#{common.upload.upload_file}">Upload a file</span>
-                            <span th:text="#{common.upload.or_select}">or click here to select</span>
-                            <input id="imageUpload" name="image" type="file" accept="image/*" class="sr-only">
-                        </div>
-                        <p class="text-xs text-outline mt-1" th:text="#{common.upload.hint_formats}">PNG, JPG, GIF up to 10MB</p>
+                <!-- Categories -->
+                <div>
+                    <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2" th:text="#{collections.form.categories_label}">Categories</span>
+                    <div class="flex flex-wrap gap-2">
+                        <label th:each="c : ${danceCategories}" class="cursor-pointer">
+                            <input type="checkbox" name="danceCategoryIds" th:value="${c.id}" class="js-category-checkbox js-rule-input hidden peer"
+                                   th:checked="${listRequest.danceCategoryIds != null and #lists.contains(listRequest.danceCategoryIds, c.id)}">
+                            <span class="filter-pill">
+                                <span th:text="${c.name}">Category</span>
+                            </span>
+                        </label>
                     </div>
+                </div>
 
-                    <div id="previewContainer" class="hidden absolute inset-0 w-full h-full bg-surface-container-low z-10">
-                        <img id="imagePreview" class="w-full h-full object-contain" src="#" alt="Image preview" th:attr="alt=#{common.upload.preview_alt}">
-                        <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                            <span th:replace="~{fragments/icon :: icon(name='edit', size='lg', cls='text-white mb-1')}"></span>
-                            <span id="previewFilename" class="text-white text-sm font-medium px-4 text-center truncate w-full" th:text="#{common.upload.change_image}">Change image</span>
-                        </div>
+                <!-- Dance Styles -->
+                <div>
+                    <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider block mb-2" th:text="#{collections.form.dance_styles_label}">Dance styles</span>
+                    <div class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin">
+                        <label th:each="t : ${danceTypes}"
+                               th:data-category-id="${t.category != null ? t.category.id : ''}"
+                               class="js-style-pill cursor-pointer transition-all duration-300">
+                            <input type="checkbox" name="danceTypeIds" th:value="${t.id}" class="js-style-checkbox js-rule-input hidden peer"
+                                   th:checked="${listRequest.danceTypeIds != null and #lists.contains(listRequest.danceTypeIds, t.id)}">
+                            <span class="filter-pill">
+                                <span th:text="${t.name}">Style</span>
+                            </span>
+                        </label>
                     </div>
-                </label>
+                </div>
+
+                <!-- Mobile Preview Disclosure (below lg only) -->
+                <div id="mobile-preview-container" class="block lg:hidden mt-2">
+                    <th:block th:replace="~{lists/form :: mobilePreviewBody}"></th:block>
+                </div>
             </div>
-        </div>
 
-        <hr class="border-outline-variant/30">
-
-        <!-- Filters Grid Section -->
-        <div>
-            <h3 class="font-headline-md text-on-surface mb-4" th:text="#{collections.form.filters_heading}">Collection Filters</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Name Filter -->
-                <div th:replace="~{fragments/form :: field(path='nameFilter', label=#{collections.form.name_filter_label}, placeholder=#{collections.form.name_filter_placeholder}, id='nameFilter')}"></div>
-
-                <!-- Min Rating -->
-                <div th:replace="~{fragments/form :: field(path='minRating', label=#{collections.form.min_rating_label}, type='number', min='1', max='5', placeholder=#{collections.form.min_rating_placeholder}, id='minRating')}"></div>
-
-                <!-- Dance Types -->
-                <div th:replace="~{fragments/form :: selectField(path='danceTypeIds', label=#{collections.form.dance_styles_label}, options=${danceTypes}, optValue='id', optLabel='name', multiple=true, hint=#{common.multi_select_hint}, id='danceTypeIds')}"></div>
-
-                <!-- Dance Categories -->
-                <div th:replace="~{fragments/form :: selectField(path='danceCategoryIds', label=#{collections.form.categories_label}, options=${danceCategories}, optValue='id', optLabel='name', multiple=true, hint=#{common.multi_select_hint}, id='danceCategoryIds')}"></div>
+            <!-- Group 3: Sharing -->
+            <div class="pt-6 border-t border-border">
+                <div class="text-base font-semibold leading-snug text-on-surface mb-3" th:text="#{collections.form.group.sharing}">Sharing</div>
+                <div th:replace="~{fragments/form :: toggle(path='isPublic', label=#{collections.form.is_public_label}, hint=#{collections.form.is_public_hint})}"></div>
             </div>
-        </div>
 
-        <hr class="border-outline-variant/30">
+            <!-- Dummy HTMX Sink -->
+            <div id="previewSink" class="hidden"></div>
+        </form>
 
-        <!-- Settings Section -->
-        <div>
-            <div th:replace="~{fragments/form :: toggle(path='isPublic', label=#{collections.form.is_public_label}, hint=#{collections.form.is_public_hint})}"></div>
-        </div>
+        <!-- Desktop Preview Aside (lg and up) -->
+        <aside id="desktop-preview-container" class="hidden lg:block sticky top-6" th:attr="aria-label=#{collections.preview.title}">
+            <th:block th:replace="~{lists/form :: desktopPreviewBody}"></th:block>
+        </aside>
+    </div>
 
-        <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
-            <a href="/lists" class="btn-outline" th:text="#{common.cancel}">Cancel</a>
-            <button type="submit" class="btn-primary">
-                <span th:replace="~{fragments/icon :: icon(name='save', size='md')}"></span>
-                <span th:text="#{collections.form.save}">Save Collection</span>
-            </button>
-        </div>
-    </form>
-    
-    <script th:src="@{/js/image-upload-preview.js}"></script>
+    <script th:src="@{/js/collection-form.js}"></script>
 </section>
+
+<!-- Fragments below are outside <section> so they are not rendered unconditionally on page load -->
+
+<th:block th:fragment="previewFragments">
+    <aside id="desktop-preview-container" hx-swap-oob="outerHTML" class="hidden lg:block sticky top-6" th:attr="aria-label=#{collections.preview.title}">
+        <th:block th:replace="~{lists/form :: desktopPreviewBody}"></th:block>
+    </aside>
+    <div id="mobile-preview-container" hx-swap-oob="outerHTML" class="block lg:hidden mt-2">
+        <th:block th:replace="~{lists/form :: mobilePreviewBody}"></th:block>
+    </div>
+</th:block>
+
+<div th:fragment="desktopPreviewBody" class="border border-border rounded-card p-4 sm:p-4.5 bg-surface space-y-3">
+    <div class="flex items-baseline justify-between gap-2 pb-1">
+        <span class="text-[28px] leading-8 font-semibold tabular-nums tracking-tight text-on-surface">
+            <span th:text="${previewTotalCount}">6</span>
+            <small class="text-sm font-medium text-on-surface-variant tracking-normal ml-1.5"
+                   th:text="${previewTotalCount == 1 ? #messages.msg('collections.preview.note_matches') : #messages.msg('collections.preview.notes_match')}">notes match</small>
+        </span>
+        <span class="text-xs text-on-surface-variant inline-flex items-center gap-1 font-medium">
+            <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
+            <span th:text="#{collections.preview.live}">Live</span>
+        </span>
+    </div>
+
+    <!-- Zero state -->
+    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[13px] text-on-surface-variant">
+        <span th:replace="~{fragments/icon :: icon(name='filter_alt_off', size='md', cls='text-on-surface-variant shrink-0 mt-0.5')}"></span>
+        <div>
+            <b class="text-sm font-semibold text-on-surface block mb-0.5" th:text="#{collections.preview.zero.title}">No notes match yet</b>
+            <span th:text="#{collections.preview.zero.text}">You can still save it. Notes you add later that match these rules will appear here. Try a lower minimum rating or fewer words.</span>
+        </div>
+    </div>
+
+    <!-- Matching rows -->
+    <th:block th:if="${previewTotalCount > 0}">
+        <div class="flex flex-col -mx-4 sm:-mx-4.5 border-t border-border">
+            <th:block th:each="m : ${previewNotes}">
+                <th:block th:replace="~{lists/form :: previewCompactRow(m=${m})}"></th:block>
+            </th:block>
+        </div>
+        <div th:if="${previewTotalCount > #lists.size(previewNotes)}"
+             class="text-[13px] text-on-surface-variant pt-2 border-t border-border"
+             th:text="#{collections.preview.more_desktop(${previewTotalCount - #lists.size(previewNotes)})}">
+            and 2 more. The full list opens with the collection.
+        </div>
+    </th:block>
+</div>
+
+<div th:fragment="mobilePreviewBody">
+    <!-- Zero state -->
+    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[13px] text-on-surface-variant">
+        <span th:replace="~{fragments/icon :: icon(name='filter_alt_off', size='md', cls='text-on-surface-variant shrink-0 mt-0.5')}"></span>
+        <div>
+            <b class="text-sm font-semibold text-on-surface block mb-0.5" th:text="#{collections.preview.zero.title}">No notes match yet</b>
+            <span th:text="#{collections.preview.zero.text}">You can still save it. Notes you add later that match these rules will appear here. Try a lower minimum rating or fewer words.</span>
+        </div>
+    </div>
+
+    <!-- Disclosure when matching items exist -->
+    <details th:if="${previewTotalCount > 0}" open class="group border border-border rounded-card overflow-hidden bg-surface">
+        <summary class="flex items-center justify-between p-3.5 font-semibold text-sm text-on-surface cursor-pointer select-none hover:bg-surface-container/50 list-none [&::-webkit-details-marker]:hidden">
+            <span>
+                <span th:text="#{collections.preview.title}">Preview</span>
+                <small class="text-on-surface-variant font-medium ml-1.5" th:text="#{collections.preview.matches_count(${previewTotalCount})}">6 notes match</small>
+            </span>
+            <span th:replace="~{fragments/icon :: icon(name='expand_less', size='md', cls='text-outline transition-transform group-open:rotate-180')}"></span>
+        </summary>
+        <div class="border-t border-border flex flex-col">
+            <th:block th:each="m : ${previewNotes}">
+                <th:block th:replace="~{lists/form :: previewCompactRow(m=${m})}"></th:block>
+            </th:block>
+            <div th:if="${previewTotalCount > #lists.size(previewNotes)}"
+                 class="text-[13px] text-on-surface-variant p-3 sm:px-3.5 border-t border-border"
+                 th:text="#{collections.preview.more_mobile(${previewTotalCount - #lists.size(previewNotes)})}">
+                and 3 more
+            </div>
+        </div>
+    </details>
+</div>
+
+<th:block th:fragment="previewCompactRow(m)">
+    <article th:replace="~{fragments/list-row :: compactRow(
+        href=@{/materials/{id}(id=${m.id})},
+        title=${m.name},
+        titleMarkerSlot=${!m.isPublic} ? ~{::previewRowPrivate} : null,
+        asideText=${#temporals.format(m.createdAt, 'd MMM')},
+        tagsSlot=~{::previewRowTags(m=${m})}
+    )}">
+        <th:block th:fragment="previewRowPrivate">
+            <span class="shrink-0 inline-flex text-on-surface-variant" role="img" th:attr="aria-label=#{notes.badge.private},title=#{notes.badge.private}">
+                <span th:replace="~{fragments/icon :: icon(name='lock', size='sm', title=null)}"></span>
+            </span>
+        </th:block>
+
+        <th:block th:fragment="previewRowTags(m)">
+            <span th:if="${m != null and m.rating != null and m.rating > 0}" class="badge bg-surface-container text-on-surface-variant inline-flex items-center gap-0.5">
+                <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>
+                <span th:text="${m.rating}">5</span>
+            </span>
+            <span th:if="${m != null and m.danceType != null}" th:text="${m.danceType.name}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <span th:if="${m != null and m.danceType != null and m.danceType.category != null}" th:text="${m.danceType.category.name}" class="badge bg-surface-container text-on-surface-variant">Category</span>
+        </th:block>
+    </article>
+</th:block>
+
 </html>

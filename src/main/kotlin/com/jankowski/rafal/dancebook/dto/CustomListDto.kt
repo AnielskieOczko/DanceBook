@@ -15,7 +15,8 @@ data class CustomListRequest(
     @field:Min(1) @field:Max(5)
     val minRating: Short? = null,
     val isPublic: Boolean = false,
-    val image: MultipartFile? = null
+    val image: MultipartFile? = null,
+    val removeImage: Boolean = false
 )
 
 data class CustomListResponse(
