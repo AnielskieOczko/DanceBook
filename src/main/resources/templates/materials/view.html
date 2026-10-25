@@ -18,7 +18,15 @@
                 primaryUrl=@{/materials/{id}/edit(id=${material.id})},
                 primaryText=#{notes.action.edit_note},
                 primaryIcon='edit',
-                hasPrimary=${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)})}">
+                hasPrimary=${currentUser != null and (currentUser.role.name() == 'ADMIN' or material.owner?.id == currentUser.id)},
+                menuSlot=~{::noteMenu})}">
+
+                <th:block th:fragment="noteMenu">
+                    <th:block th:replace="~{fragments/page :: menuItem(
+                        href=@{/materials/{id}/pdf(id=${material.id})},
+                        text=#{notes.action.export_pdf},
+                        icon='picture_as_pdf')}"></th:block>
+                </th:block>
 
                 <th:block th:fragment="noteMeta">
                     <th:block th:if="${material.danceType != null}">

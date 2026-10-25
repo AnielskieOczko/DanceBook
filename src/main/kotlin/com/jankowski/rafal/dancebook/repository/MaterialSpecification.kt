@@ -26,6 +26,16 @@ object MaterialSpecification {
         }
     }
 
+    /**
+     * Visible for export: applies the ordinary-user rule (own, public, shared with me) to all
+     * users, admins included, so private notes belonging to other users cannot be exported by an admin.
+     */
+    fun visibleForExport(user: AppUser?): Specification<Material> {
+        return Specification { root, query, cb ->
+            ordinaryUserVisibilityPredicate(root, query, cb, user)
+        }
+    }
+
     /** Only the user's own notes. Combine with [visibleTo]; it only ever narrows. */
     fun ownedBy(user: AppUser): Specification<Material> {
         return Specification { root, _, cb -> cb.equal(root.get<AppUser>("owner"), user) }
@@ -46,6 +56,20 @@ object MaterialSpecification {
         if (user?.role == Role.ADMIN) {
             return cb.conjunction()
         }
+        return ordinaryUserVisibilityPredicate(from, query, cb, user)
+    }
+
+    /**
+     * The ordinary-user branch of [visibilityPredicate]: own notes, public notes, and notes
+     * shared directly with [user] via a [Share] row. Used for non-admins, and for export
+     * where admins are held to the same visibility rules as normal users.
+     */
+    fun ordinaryUserVisibilityPredicate(
+        from: From<*, Material>,
+        query: CriteriaQuery<*>?,
+        cb: CriteriaBuilder,
+        user: AppUser?
+    ): Predicate {
         if (user == null) {
             return cb.equal(from.get<Visibility>("visibility"), Visibility.PUBLIC)
         }

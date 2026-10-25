@@ -18,8 +18,7 @@
         primaryUrl=@{/dance-figures/{id}/edit(id=${danceFigure.id})},
         primaryText=#{figures.view.edit},
         primaryIcon='edit',
-        menuSlot=~{::figureMenu},
-        hasMenu=${danceFigure.isDeletableBy(currentUser)})}">
+        menuSlot=~{::figureMenu})}">
 
         <th:block th:fragment="figureMeta">
             <th:block th:if="${danceFigure.danceClass != null or danceFigure.medalLevel != null}">
@@ -38,13 +37,19 @@
         </th:block>
 
         <th:block th:fragment="figureMenu">
-            <form th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
-                  th:attr="data-confirm=#{figures.delete_confirm}" data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
-                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
-                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
-                    <span th:text="#{figures.view.delete}">Delete Figure</span>
-                </button>
-            </form>
+            <th:block th:replace="~{fragments/page :: menuItem(
+                href=@{/dance-figures/{id}/pdf(id=${danceFigure.id})},
+                text=#{figures.action.export_pdf},
+                icon='picture_as_pdf')}"></th:block>
+            <th:block th:if="${danceFigure.isDeletableBy(currentUser)}">
+                <form th:action="@{/dance-figures/{id}/delete(id=${danceFigure.id})}" method="post"
+                      th:attr="data-confirm=#{figures.delete_confirm}" data-confirm="Delete this figure for every DanceBook user? It will also be removed from your own notes and choreographies that use it.">
+                    <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                        <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger')}"></span>
+                        <span th:text="#{figures.view.delete}">Delete Figure</span>
+                    </button>
+                </form>
+            </th:block>
         </th:block>
     </div>
 

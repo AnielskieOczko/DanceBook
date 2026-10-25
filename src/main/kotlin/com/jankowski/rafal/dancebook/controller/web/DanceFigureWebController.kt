@@ -18,6 +18,10 @@ import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.FigureInUseException
 import jakarta.persistence.OptimisticLockException
 import jakarta.validation.Valid
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -31,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import java.nio.charset.StandardCharsets
+import java.util.Locale
 import java.util.UUID
 
 @Controller
@@ -39,6 +45,7 @@ class DanceFigureWebController(
     private val danceFigureService: DanceFigureService,
     private val danceTypeService: DanceTypeService,
     private val danceCategoryService: DanceCategoryService,
+    private val pdfExportService: com.jankowski.rafal.dancebook.service.PdfExportService? = null,
     private val appUserService: com.jankowski.rafal.dancebook.service.AppUserService? = null,
     private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
     private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
@@ -267,6 +274,23 @@ class DanceFigureWebController(
         return "dance-figures/view"
     }
 
+    @GetMapping("/{id}/pdf")
+    fun exportPdf(@PathVariable id: UUID, locale: Locale): ResponseEntity<ByteArray> {
+        val danceFigure = danceFigureService.findById(id)
+        val service = pdfExportService ?: throw IllegalStateException("PDF export service not available")
+        val pdfBytes = service.exportDanceFigurePdf(danceFigure, locale)
+        val filename = sanitizeFilename(danceFigure.name.ifBlank { "figure" }) + ".pdf"
+
+        val contentDisposition = ContentDisposition.attachment()
+            .filename(filename, StandardCharsets.UTF_8)
+            .build()
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdfBytes)
+    }
+
     @GetMapping("/{id}/edit")
     fun showEditForm(@PathVariable id: UUID, model: Model): String {
         val danceFigure = danceFigureService.findById(id)
@@ -425,5 +449,10 @@ class DanceFigureWebController(
         return danceFigureService.findByDanceType(danceTypeId).map {
             mapOf("id" to it.id.toString(), "name" to it.name)
         }
+    }
+
+    private fun sanitizeFilename(input: String): String {
+        val sanitized = input.trim().replace(Regex("""[\\/:*?"<>|]"""), "_")
+        return sanitized.ifBlank { "export" }
     }
 }

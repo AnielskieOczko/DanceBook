@@ -63,6 +63,7 @@ class AccessControlSecondUserIntegrationTest {
     @Autowired private lateinit var danceTypeRepository: DanceTypeRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository
     @Autowired private lateinit var uploadedFileRepository: UploadedFileRepository
+    @Autowired private lateinit var shareRepository: ShareRepository
     @Autowired private lateinit var passwordEncoder: PasswordEncoder
     @Autowired private lateinit var dataSource: javax.sql.DataSource
 
@@ -798,5 +799,95 @@ class AccessControlSecondUserIntegrationTest {
             .andExpect(status().isRequestedRangeNotSatisfiable)
             .andExpect(header().string("Accept-Ranges", "bytes"))
             .andExpect(header().string("Content-Range", "bytes */100"))
+    }
+
+    @Test
+    fun `pdf export access follows ordinary user visibility for all users including admins`() {
+        // User A creates a private note
+        val privateNote = materialRepository.save(Material().apply {
+            name = "User A Private Note For Export"
+            description = "Private description"
+            owner = userA
+            visibility = Visibility.PRIVATE
+            danceType = testDanceType
+            version = 0
+            updatedAt = LocalDateTime.now()
+        })
+        val privateNoteId = privateNote.id!!
+
+        // 1. Owner (User A) can export their own private note (200)
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(userA.username).roles("USER")))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+
+        // 2. User B (not shared with) receives 404
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(userB.username).roles("USER")))
+            .andExpect(status().isNotFound)
+
+        // 3. Admin user receives 404 for another user's private note (even though admin can view it in UI)
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isNotFound)
+
+        // 4. Share note with User B: User B can now export (200)
+        shareRepository.save(Share().apply {
+            itemType = "MATERIAL"
+            itemId = privateNoteId
+            granteeUser = userB
+        })
+
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(userB.username).roles("USER")))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+
+        // 5. User C (unshared third user) still receives 404
+        val userC = appUserRepository.save(AppUser().apply {
+            username = "sec-user-c"
+            displayName = "User C"
+            email = "sec-user-c@example.com"
+            password = passwordEncoder.encode("secret")
+            role = Role.USER
+        })
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(userC.username).roles("USER")))
+            .andExpect(status().isNotFound)
+
+        // 6. Admin user still receives 404 because private note is not shared with admin
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isNotFound)
+
+        // 7. Admin user can export note when shared with admin (200)
+        shareRepository.save(Share().apply {
+            itemType = "MATERIAL"
+            itemId = privateNoteId
+            granteeUser = adminUser
+        })
+        mockMvc.perform(get("/materials/$privateNoteId/pdf").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+
+        // 8. Admin user can export their own private note (200)
+        val adminOwnNote = materialRepository.save(Material().apply {
+            name = "Admin Secret Routine"
+            owner = adminUser
+            visibility = Visibility.PRIVATE
+            danceType = testDanceType
+            version = 0
+            updatedAt = LocalDateTime.now()
+        })
+        mockMvc.perform(get("/materials/${adminOwnNote.id}/pdf").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_PDF))
+
+        // 9. Admin user can export a public note (200)
+        val publicNote = materialRepository.save(Material().apply {
+            name = "User A Public Routine"
+            owner = userA
+            visibility = Visibility.PUBLIC
+            danceType = testDanceType
+            version = 0
+            updatedAt = LocalDateTime.now()
+        })
+        mockMvc.perform(get("/materials/${publicNote.id}/pdf").with(user(adminUser.username).roles("ADMIN")))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_PDF))
     }
 }
