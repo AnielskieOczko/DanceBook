@@ -25,6 +25,8 @@ import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.model.Visibility
 import com.jankowski.rafal.dancebook.service.AppUserService
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.domain.PageRequest
+import org.springframework.web.multipart.MultipartFile
 
 @Controller
 @RequestMapping("/lists")
@@ -70,11 +72,28 @@ class CustomListWebController(
         }
     }
 
+    companion object {
+        const val PREVIEW_LIMIT = 4
+    }
+
     @GetMapping("/new")
     fun showCreateForm(model: Model): String {
         model.addAttribute("listRequest", CustomListRequest(name = ""))
         populateDropdowns(model)
+        populatePreview(null, null, null, null, model)
         return "lists/form"
+    }
+
+    @GetMapping("/preview")
+    fun previewRules(
+        @RequestParam(required = false) nameFilter: String?,
+        @RequestParam(required = false) danceTypeIds: List<UUID>?,
+        @RequestParam(required = false) danceCategoryIds: List<UUID>?,
+        @RequestParam(required = false) minRating: Short?,
+        model: Model
+    ): String {
+        populatePreview(nameFilter, danceTypeIds, danceCategoryIds, minRating, model)
+        return "lists/form :: previewFragments"
     }
 
     @PostMapping
@@ -83,8 +102,10 @@ class CustomListWebController(
         bindingResult: BindingResult,
         model: Model
     ): String {
+        validateImageFile(request.image, bindingResult)
         if (bindingResult.hasErrors()) {
             populateDropdowns(model)
+            populatePreview(request.nameFilter, request.danceTypeIds, request.danceCategoryIds, request.minRating, model)
             return "lists/form"
         }
         val created = customListService.create(request)
@@ -156,6 +177,7 @@ class CustomListWebController(
         model.addAttribute("listId", id)
         model.addAttribute("currentImage", list.imageFilename)
         populateDropdowns(model)
+        populatePreview(request.nameFilter, request.danceTypeIds, request.danceCategoryIds, request.minRating, model)
         return "lists/form"
     }
 
@@ -166,11 +188,13 @@ class CustomListWebController(
         bindingResult: BindingResult,
         model: Model
     ): String {
+        validateImageFile(request.image, bindingResult)
         if (bindingResult.hasErrors()) {
             model.addAttribute("listId", id)
             val list = customListService.findById(id)
             model.addAttribute("currentImage", list.imageFilename)
             populateDropdowns(model)
+            populatePreview(request.nameFilter, request.danceTypeIds, request.danceCategoryIds, request.minRating, model)
             return "lists/form"
         }
         customListService.update(id, request)
@@ -186,5 +210,46 @@ class CustomListWebController(
     private fun populateDropdowns(model: Model) {
         model.addAttribute("danceTypes", danceTypeService.findAll())
         model.addAttribute("danceCategories", danceCategoryService.findAll())
+    }
+
+    private fun populatePreview(
+        nameFilter: String?,
+        danceTypeIds: List<UUID>?,
+        danceCategoryIds: List<UUID>?,
+        minRating: Short?,
+        model: Model
+    ) {
+        val page = materialService.findAll(
+            typeIds = danceTypeIds?.filterNotNull()?.ifEmpty { null },
+            categoryIds = danceCategoryIds?.filterNotNull()?.ifEmpty { null },
+            minRating = minRating,
+            nameSearch = nameFilter?.trim()?.ifEmpty { null },
+            pageable = PageRequest.of(0, PREVIEW_LIMIT)
+        )
+        model.addAttribute("previewNotes", page.content)
+        model.addAttribute("previewTotalCount", page.totalElements)
+    }
+
+    private fun validateImageFile(file: MultipartFile?, bindingResult: BindingResult) {
+        if (file == null || file.isEmpty) return
+
+        if (file.size > 10 * 1024 * 1024) {
+            bindingResult.rejectValue("image", "collections.form.image_too_large", "The file is too large. Choose an image under 10 MB.")
+            return
+        }
+
+        val contentType = file.contentType?.lowercase()
+        val filename = file.originalFilename?.lowercase().orEmpty()
+        val hasValidExt = filename.endsWith(".png") || filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".gif")
+        val hasValidMime = contentType != null && (
+            contentType == "image/png" ||
+            contentType == "image/jpeg" ||
+            contentType == "image/jpg" ||
+            contentType == "image/gif"
+        )
+
+        if (!hasValidExt && !hasValidMime) {
+            bindingResult.rejectValue("image", "collections.form.image_invalid_type", "Only PNG, JPG or GIF images are supported.")
+        }
     }
 }
