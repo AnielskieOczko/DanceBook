@@ -7,7 +7,7 @@ import com.jankowski.rafal.dancebook.model.MedalLevel
 import java.util.UUID
 
 interface ChoreographyService {
-    fun findByCurrentUser(medalLevel: MedalLevel? = null): List<Choreography>
+    fun findByCurrentUser(medalLevel: MedalLevel? = null, nameSearch: String? = null): List<Choreography>
     fun findById(id: UUID): Choreography
     fun create(request: ChoreographyRequest): Choreography
     fun update(id: UUID, request: ChoreographyRequest): Choreography

@@ -82,9 +82,9 @@ class FilterPillGuardTest {
 
         // Figures: desktop cat (1), desktop style (1), sheet cat (1), sheet style (1) = 4
         // Notes: desktop cat (1), desktop style (1), sheet cat (1), sheet style (1) = 4
-        // Collections: desktop cat (1), desktop style (1) = 2
-        // Total = 10 filter pill markup instances
-        assertEquals(10, totalFilterPills, "Expected exactly 10 filter pill markup instances across Notes, Figures, and Collections")
+        // Collections: desktop cat (1), desktop style (1), sheet cat (1), sheet style (1) = 4 (#383)
+        // Total = 12 filter pill markup instances
+        assertEquals(12, totalFilterPills, "Expected exactly 12 filter pill markup instances across Notes, Figures, and Collections")
     }
 
     @Test

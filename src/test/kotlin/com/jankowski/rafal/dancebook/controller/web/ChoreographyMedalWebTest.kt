@@ -122,8 +122,9 @@ class ChoreographyMedalWebTest {
         `when`(choreographyService.findByCurrentUser(null)).thenReturn(listOf(choreo(MedalLevel.SILVER), choreo(null)))
         val doc = Jsoup.parse(mockMvc.perform(get("/choreographies").with(csrf())).andExpect(status().isOk).andReturn().response.contentAsString)
         assertNotNull(doc.selectFirst("select[name=medalLevel]"))
-        assertEquals(1, doc.select("#choreographies-list [role=img][aria-label='Silver medal']").size)
-        assertEquals(1, doc.select("#choreographies-list [role=img]").size)
+        assertEquals(1, doc.select("#choreographies-mobile-cards [role=img][aria-label='Silver medal']").size)
+        assertEquals(1, doc.select("#choreographies-table [role=img][aria-label='Silver medal']").size)
+        assertEquals(2, doc.select("#choreographies-list [role=img][aria-label$='medal']").size)
     }
 
     @Test

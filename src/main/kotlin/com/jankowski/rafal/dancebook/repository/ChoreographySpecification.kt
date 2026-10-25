@@ -23,13 +23,17 @@ object ChoreographySpecification {
 
     fun withFilters(
         user: AppUser? = null,
-        medalLevel: MedalLevel? = null
+        medalLevel: MedalLevel? = null,
+        nameSearch: String? = null
     ): Specification<Choreography> {
         return Specification { root, query, cb ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(visibilityPredicate(root, query, cb, user))
             medalLevel?.let {
                 predicates.add(cb.equal(root.get<MedalLevel>("medalLevel"), it))
+            }
+            if (!nameSearch.isNullOrBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("name")), "%${nameSearch.lowercase()}%"))
             }
             cb.and(*predicates.toTypedArray())
         }

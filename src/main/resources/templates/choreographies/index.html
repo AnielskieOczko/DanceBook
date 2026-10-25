@@ -7,45 +7,106 @@
     <!-- Page Header -->
     <div th:replace="~{fragments/page :: pageHeader(title=#{choreographies.title}, subtitle=#{choreographies.subtitle(${#lists.size(choreographies)})}, actionUrl='/choreographies/new', actionText=#{choreographies.new}, actionIcon='add', actionVariant='primary')}"></div>
 
-    <!-- View Toggles and Filter Summary -->
-    <section class="bg-background z-40 py-2 border-b border-outline-variant/30 transition-all duration-300">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{choreographies.my_routines}">
-                My Routines
-            </div>
+    <div class="sr-only" th:text="#{choreographies.my_routines}">My Routines</div>
 
-            <!-- Medal filter + View Toggle -->
-            <form id="viewToggleForm" class="flex items-center gap-3" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="change" hx-push-url="false">
-                <div class="flex items-center gap-2">
-                    <div th:replace="~{fragments/form :: filterSelect(name='medalLevel', id='filterMedalLevel', ariaLabel=#{figures.list.medal_level}, optionsFragment=~{::choreoMedalOptions}, hxGet=@{/choreographies}, hxTarget='#choreographies-list', hxSwap='outerHTML')}"></div>
-                </div>
-                <div class="flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
+    <!-- Sticky Search & Filter Section -->
+    <section class="sticky top-[72px] bg-background z-40 -mx-6 px-6 pt-4 pb-4 border-b border-outline-variant/30 transition-all duration-300">
+        <form id="filterForm" th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-trigger="submit, change from:input[type='checkbox'], change from:input[type='radio'], change from:select" hx-push-url="false">
+            <!-- Top Row: Search + Filter Toggle + View Toggle -->
+            <div class="flex items-center gap-3">
+                <div th:replace="~{fragments/form :: searchField(name='nameSearch', value=${selectedNameSearch}, placeholder=#{choreographies.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/choreographies}, hxTarget='#choreographies-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
+
+                <!-- Mobile Filters Button (< lg) -->
+                <button type="button"
+                        class="js-mobile-filter-open lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface hover:bg-surface-variant transition-colors min-h-[44px] shrink-0 cursor-pointer"
+                        aria-haspopup="dialog"
+                        aria-controls="filterSheet">
+                    <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
+                    <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{choreographies.filter.filters}">Filters</span>
+                    <span id="mobile-filter-badge" class="pointer-events-none">
+                        <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
+                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                              th:text="${activeFilterCount}">1</span>
+                    </span>
+                </button>
+
+                <!-- Desktop Filter Toggle (>= lg) -->
+                <button type="button" class="js-filter-toggle hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full border border-outline-variant/30 text-on-surface-variant hover:bg-surface-variant transition-colors min-h-[44px]">
+                    <span th:replace="~{fragments/icon :: icon(name='tune', size='md', cls='pointer-events-none')}"></span>
+                    <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{choreographies.filter.filters}">Filters</span>
+                </button>
+
+                <!-- Desktop View Toggle (>= lg) -->
+                <div class="hidden lg:flex bg-surface-container p-1 rounded-full border border-outline-variant/30 min-h-[44px] items-center">
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="list" class="hidden peer"
-                               aria-label="List view"
-                               th:attr="aria-label=#{common.view_list}"
-                               th:checked="${currentView == 'list' || currentView == null}">
+                               aria-label="List view" th:attr="aria-label=#{common.view_list}"
+                               th:checked="${currentView == 'list' || currentView == null}"
+                               th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='view_list', size='sm')}"></span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="view" value="grid" class="hidden peer"
-                               aria-label="Grid view"
-                               th:attr="aria-label=#{common.view_grid}"
-                               th:checked="${currentView == 'grid'}">
+                               aria-label="Grid view" th:attr="aria-label=#{common.view_grid}"
+                               th:checked="${currentView == 'grid'}"
+                               th:hx-get="@{/choreographies}" hx-target="#choreographies-list" hx-swap="outerHTML" hx-include="#filterForm">
                         <div class="px-2.5 py-1 rounded-full flex items-center gap-1.5 text-label-sm font-label-sm transition-all peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-xs text-on-surface-variant hover:text-on-surface">
                             <span th:replace="~{fragments/icon :: icon(name='grid_view', size='sm')}"></span>
                         </div>
                     </label>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Active Filter Chips (< lg) -->
+            <div id="mobile-filter-chips" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
+                <th:block th:if="${activeFilterChips != null and !#lists.isEmpty(activeFilterChips)}">
+                    <div th:each="chip : ${activeFilterChips}"
+                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 text-on-surface text-label-sm font-label-sm shrink-0 border border-primary-container/30">
+                        <span th:text="${chip.label}">Filter</span>
+                        <button type="button"
+                                class="js-remove-chip hover:text-primary transition-colors cursor-pointer p-0.5 -mr-1"
+                                th:attr="data-filter-name=${chip.filterName}, data-filter-value=${chip.filterValue}, aria-label=#{filters.chip.remove_aria(${chip.label})}">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+
+            <!-- Bottom Row: Collapsible Filters Container -->
+            <div id="categoryFiltersContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6 transition-all duration-300 max-h-0 opacity-0 pointer-events-none mt-0 overflow-hidden">
+                <div class="flex flex-col gap-4 mt-4">
+                    <div th:replace="~{fragments/form :: filterSelect(name='medalLevel', id='filterMedalLevel', label=#{figures.list.medal_level}, optionsFragment=~{::choreoMedalOptions}, hxGet=@{/choreographies}, hxTarget='#choreographies-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
+                </div>
+            </div>
+        </form>
     </section>
 
     <!-- Choreographies List / Grid (HTMX Swappable) -->
     <div th:fragment="choreographyList" id="choreographies-list" class="space-y-8">
-        
+        <!-- OOB updates for mobile active filter chips & count badge -->
+        <th:block th:if="${isHtmxRequest == true}">
+            <div id="mobile-filter-chips" hx-swap-oob="true" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
+                <th:block th:if="${activeFilterChips != null and !#lists.isEmpty(activeFilterChips)}">
+                    <div th:each="chip : ${activeFilterChips}"
+                         class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/20 text-on-surface text-label-sm font-label-sm shrink-0 border border-primary-container/30">
+                        <span th:text="${chip.label}">Filter</span>
+                        <button type="button"
+                                class="js-remove-chip hover:text-primary transition-colors cursor-pointer p-0.5 -mr-1"
+                                th:attr="data-filter-name=${chip.filterName}, data-filter-value=${chip.filterValue}, aria-label=#{filters.chip.remove_aria(${chip.label})}">
+                            <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
+                        </button>
+                    </div>
+                </th:block>
+            </div>
+            <span id="mobile-filter-badge" hx-swap-oob="true" class="pointer-events-none">
+                <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
+                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                      th:text="${activeFilterCount}">1</span>
+            </span>
+        </th:block>
+
         <!-- Empty State -->
         <div th:if="${#lists.isEmpty(choreographies)}" class="empty-state">
             <div class="empty-state-icon">
@@ -58,139 +119,212 @@
 
         <!-- 1. Grid (Cards) View -->
         <div th:if="${!#lists.isEmpty(choreographies) && currentView == 'grid'}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div th:each="choreo : ${choreographies}"
-                 class="card relative group flex flex-col justify-between p-5 hover:z-30 focus-within:z-30 min-h-[180px]">
-                
-                <!-- Main Link -->
-                <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{choreographies.view}">View</span></a>
+            <th:block th:each="choreo : ${choreographies}">
+                <th:block th:replace="~{choreographies/index :: choreoGridCard(choreo=${choreo})}"></th:block>
+            </th:block>
+        </div>
 
-                <div class="relative z-10 pointer-events-none w-full flex-1 flex flex-col justify-between">
-                    <div>
-                        <div class="flex flex-wrap items-center gap-2 mb-2 pr-8">
-                            <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider border border-primary-container/30"
-                                  th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_dance')}">Waltz</span>
-                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
-                            <span th:replace="~{fragments/badge :: badge(label=(${choreo.isPublic ? #messages.msg('choreographies.visibility.public') : #messages.msg('choreographies.visibility.private')}), variant=(${choreo.isPublic ? 'secondary' : 'neutral'}))}"></span>
-                        </div>
+        <!-- 2. List View (Cards on mobile < 1024px, Dense Table on desktop >= 1024px) -->
+        <div th:if="${!#lists.isEmpty(choreographies) && (currentView == 'list' || currentView == null)}">
+            <!-- Mobile Cards (< 1024px) -->
+            <div id="choreographies-mobile-cards" class="flex flex-col lg:hidden">
+                <th:block th:each="choreo : ${choreographies}">
+                    <th:block th:replace="~{choreographies/index :: choreoMobileCard(choreo=${choreo})}"></th:block>
+                </th:block>
+            </div>
 
-                        <h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1 mb-1 pr-8" th:text="${choreo.name}">Competition Waltz</h3>
-                        <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=160, fallback=#{choreographies.no_description_provided}, cls='text-sm text-on-surface-variant line-clamp-2')}"></p>
-                    </div>
-
-                    <!-- Footer / Info -->
-                    <div class="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-on-surface-variant">
-                        <span class="flex items-center gap-1">
-                            <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm')}"></span>
-                            <span th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</span>
-                        </span>
-                        <span class="flex items-center gap-1">
-                            <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
-                            <span th:text="${#temporals.format(choreo.updatedAt, 'dd MMM yyyy')}">Date</span>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Action Dropdown (Stacking fixes) -->
-                <div class="absolute top-4 right-4 z-20 pointer-events-auto">
-                    <div class="relative inline-block text-left">
-                        <button type="button" class="js-menu-btn w-11 h-11 rounded-full hover:bg-surface-warm text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center" aria-label="More actions" th:attr="aria-label=#{choreographies.more_actions}">
-                            <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md')}"></span>
-                        </button>
-                        <!-- Menu Panel -->
-                        <div class="js-menu-dropdown absolute right-0 mt-1 w-40 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
-                            <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='visibility', size='sm')}"></span> <span th:text="#{common.open}">Open</span>
-                            </a>
-                            <a th:href="@{/choreographies/{id}/edit(id=${choreo.id})}" class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> <span th:text="#{choreographies.action.build}">Build</span>
-                            </a>
-                            <form th:action="@{/choreographies/{id}/duplicate(id=${choreo.id})}" method="post">
-                                <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors text-left">
-                                    <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.duplicate}">Duplicate</span>
-                                </button>
-                            </form>
-                            <hr class="border-border my-1">
-                            <form th:action="@{/choreographies/{id}/delete(id=${choreo.id})}" method="post"
-                                  th:data-confirm="#{choreographies.delete_confirm}">
-                                <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-error hover:bg-surface-warm transition-colors text-left">
-                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{common.delete}">Delete</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Desktop Dense Table (>= 1024px) -->
+            <div id="choreographies-table" class="hidden lg:block overflow-x-auto rounded-lg border border-outline-variant/30"
+                 tabindex="0" role="region" aria-label="Choreographies" th:attr="aria-label=#{choreographies.table.aria_label}">
+                <table class="min-w-full text-left border-collapse">
+                    <thead th:replace="~{choreographies/index :: choreoTableHeader}"></thead>
+                    <tbody id="choreographies-table-body">
+                        <th:block th:each="choreo : ${choreographies}">
+                            <tr th:replace="~{choreographies/index :: choreoTableRow(choreo=${choreo})}"></tr>
+                        </th:block>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- 2. Compact List View -->
-        <div th:if="${!#lists.isEmpty(choreographies) && (currentView == 'list' || currentView == null)}" class="flex flex-col gap-3">
-            <div th:each="choreo : ${choreographies}"
-                 class="card relative group flex items-center justify-between p-4 hover:z-30 focus-within:z-30">
-                
-                <!-- Main Link -->
-                <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{choreographies.view}">View</span></a>
-
-                <div class="relative z-10 pointer-events-none flex items-center gap-4 flex-1 pr-16 overflow-hidden">
-                    <div class="w-10 h-10 rounded-lg bg-surface-warm shrink-0 flex items-center justify-center text-on-surface-variant">
-                        <span th:replace="~{fragments/icon :: icon(name=${choreo.isPublic ? 'public' : 'lock'}, size='md')}"></span>
-                    </div>
-                    <div class="flex flex-col overflow-hidden">
-                        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
-                            <h3 class="text-body-md font-bold text-on-surface whitespace-nowrap overflow-hidden text-ellipsis max-w-full" th:text="${choreo.name}">Competition Waltz</h3>
-                            <span class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[9px] font-label-sm uppercase tracking-wider border border-primary-container/30 shrink-0"
-                                  th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_style')}">Waltz</span>
-                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
-                        </div>
-                        <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=80, fallback=#{choreographies.no_description}, cls='text-xs text-on-surface-variant line-clamp-1')}"></p>
-                    </div>
-                </div>
-
-                <div class="relative z-10 flex items-center gap-4 shrink-0">
-                    <div class="hidden sm:flex flex-col items-end text-right text-xs text-on-surface-variant">
-                        <span class="font-medium" th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</span>
-                        <span th:text="${#temporals.format(choreo.updatedAt, 'dd MMM yyyy')}">Date</span>
-                    </div>
-
-                    <!-- Action Dropdown -->
-                    <div class="relative inline-block text-left">
-                        <button type="button" class="js-menu-btn w-11 h-11 rounded-full hover:bg-surface-warm text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center" aria-label="More actions" th:attr="aria-label=#{choreographies.more_actions}">
-                            <span th:replace="~{fragments/icon :: icon(name='more_vert', size='md')}"></span>
-                        </button>
-                        <!-- Menu Panel -->
-                        <div class="js-menu-dropdown absolute right-0 mt-1 w-40 bg-surface rounded-lg shadow-lg border border-outline-variant py-1 hidden z-50">
-                            <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='visibility', size='sm')}"></span> <span th:text="#{common.open}">Open</span>
-                            </a>
-                            <a th:href="@{/choreographies/{id}/edit(id=${choreo.id})}" class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors">
-                                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span> <span th:text="#{choreographies.action.build}">Build</span>
-                            </a>
-                            <form th:action="@{/choreographies/{id}/duplicate(id=${choreo.id})}" method="post">
-                                <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-on-surface hover:bg-surface-warm transition-colors text-left">
-                                    <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm')}"></span> <span th:text="#{choreographies.action.duplicate}">Duplicate</span>
-                                </button>
-                            </form>
-                            <hr class="border-border my-1">
-                            <form th:action="@{/choreographies/{id}/delete(id=${choreo.id})}" method="post"
-                                  th:data-confirm="#{choreographies.delete_confirm}">
-                                <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-error hover:bg-surface-warm transition-colors text-left">
-                                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span> <span th:text="#{common.delete}">Delete</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+        <!-- Pagination Footer -->
+        <th:block th:if="${totalCount != null and totalCount > 0}">
+            <div id="choreographies-footer"
+                 th:replace="~{fragments/page :: paginationFooter(
+                     id='choreographies-footer',
+                     shownCount=${shownCount},
+                     totalCount=${totalCount},
+                     hasMore=${hasMore},
+                     nextUrl=@{/choreographies(page=${nextPage})},
+                     filterFormId='#filterForm'
+                 )}"></div>
+        </th:block>
 
     </div>
 
+    <!-- Mobile Filter Sheet (< lg) -->
+    <div th:replace="~{fragments/filter-sheet :: filterSheet(
+        id='filterSheet',
+        title=#{choreographies.filter.filters},
+        applyText=#{filters.sheet.apply},
+        bodySlot=~{::choreoSheetFilters}
+    )}">
+        <th:block th:fragment="choreoSheetFilters">
+            <div class="flex flex-col gap-1.5">
+                <label for="sheetMedalLevel" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{figures.list.medal_level}">Medal Level</label>
+                <select id="sheetMedalLevel" data-sheet-filter="medalLevel" class="js-sheet-filter pill-select w-full">
+                    <th:block th:replace="~{choreographies/index :: choreoMedalOptions}"></th:block>
+                </select>
+            </div>
+        </th:block>
+    </div>
+
 </section>
+
+<!-- Extracted Components for Choreographies List -->
+
 <th:block th:fragment="choreoMedalOptions">
     <option value="" th:text="#{figures.list.all_medals}">All Medals</option>
     <option th:each="ml : ${medalLevels ?: T(com.jankowski.rafal.dancebook.model.MedalLevel).values()}"
             th:value="${ml}" th:text="${#messages.msg('figures.medal.' + #strings.toLowerCase(ml))}"
             th:selected="${ml == selectedMedalLevel}">Bronze</option>
 </th:block>
+
+<th:block th:fragment="choreoGridCard">
+    <div class="card relative group flex flex-col justify-between p-5 hover:z-30 focus-within:z-30 min-h-[180px]">
+        <!-- Main Link -->
+        <a th:href="@{/choreographies/{id}(id=${choreo.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{choreographies.view}">View</span></a>
+
+        <div class="relative z-10 pointer-events-none w-full flex-1 flex flex-col justify-between">
+            <div>
+                <div class="flex flex-wrap items-center gap-2 mb-2 pr-8">
+                    <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider border border-primary-container/30"
+                          th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_dance')}">Waltz</span>
+                    <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
+                    <span th:replace="~{fragments/badge :: badge(label=(${choreo.isPublic ? #messages.msg('choreographies.visibility.public') : #messages.msg('choreographies.visibility.private')}), variant=(${choreo.isPublic ? 'secondary' : 'neutral'}))}"></span>
+                </div>
+
+                <h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1 mb-1 pr-8" th:text="${choreo.name}">Competition Waltz</h3>
+                <p th:replace="~{fragments/rich-text :: excerpt(value=${choreo.description}, max=160, fallback=#{choreographies.no_description_provided}, cls='text-sm text-on-surface-variant line-clamp-2')}"></p>
+            </div>
+
+            <!-- Footer / Info -->
+            <div class="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-on-surface-variant">
+                <span class="flex items-center gap-1">
+                    <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm')}"></span>
+                    <span th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</span>
+                </span>
+                <span class="flex items-center gap-1">
+                    <span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span>
+                    <span th:text="${#temporals.format(choreo.updatedAt, 'dd MMM yyyy')}">Date</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Action Dropdown -->
+        <div class="absolute top-4 right-4 z-20 pointer-events-auto">
+            <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::choreoRowMenu}, quiet=true)}"></div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="choreoMobileCard">
+    <article th:replace="~{fragments/list-row :: compactRow(
+        href=@{/choreographies/{id}(id=${choreo.id})},
+        title=${choreo.name},
+        titleMarkerSlot=${!choreo.isPublic} ? ~{::choreoRowPrivate} : null,
+        asideText=${choreo.updatedAt != null ? #temporals.format(choreo.updatedAt, 'd MMM') : null},
+        tagsSlot=~{::choreoRowTags},
+        menuSlot=~{::choreoRowMenu}
+    )}">
+        <th:block th:fragment="choreoRowPrivate">
+            <span class="shrink-0 inline-flex text-on-surface-variant"
+                  role="img" th:attr="aria-label=#{choreographies.badge.private},title=#{choreographies.badge.private}">
+                <span th:replace="~{fragments/icon :: icon(name='lock', size='sm', title=null)}"></span>
+            </span>
+        </th:block>
+
+        <th:block th:fragment="choreoRowTags">
+            <span th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_style')}" class="badge bg-surface-container text-on-surface-variant">Style</span>
+            <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel}, iconOnly=true)}"></th:block>
+            <span class="badge bg-surface-container text-on-surface-variant inline-flex items-center gap-1">
+                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[14px] leading-none', title=null)}"></span>
+                <span th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</span>
+            </span>
+        </th:block>
+
+        <th:block th:fragment="choreoRowMenu">
+            <div th:replace="~{fragments/page :: menuItem(href=@{/choreographies/{id}(id=${choreo.id})}, icon='visibility', text=#{common.open})}"></div>
+            <div th:replace="~{fragments/page :: menuItem(href=@{/choreographies/{id}/edit(id=${choreo.id})}, icon='edit', text=#{choreographies.action.build})}"></div>
+            <form th:action="@{/choreographies/{id}/duplicate(id=${choreo.id})}" method="post" class="m-0">
+                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-on-surface hover:bg-surface-variant transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='content_copy', size='sm', title=null)}"></span>
+                    <span th:text="#{choreographies.action.duplicate}">Duplicate</span>
+                </button>
+            </form>
+            <hr class="border-outline-variant/30 my-1">
+            <form th:action="@{/choreographies/{id}/delete(id=${choreo.id})}" method="post"
+                  data-confirm="Are you sure you want to delete this choreography?"
+                  th:attr="data-confirm=#{choreographies.delete_confirm}" class="m-0">
+                <button type="submit" class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 min-h-[44px] rounded-lg text-sm font-medium text-danger hover:bg-danger-soft transition-colors cursor-pointer select-none">
+                    <span th:replace="~{fragments/icon :: icon(name='delete', size='sm', cls='text-danger', title=null)}"></span>
+                    <span th:text="#{common.delete}">Delete</span>
+                </button>
+            </form>
+        </th:block>
+    </article>
+</th:block>
+
+<thead th:fragment="choreoTableHeader" class="table-header">
+    <tr>
+        <!-- 1. Title (pinned) -->
+        <th scope="col" class="table-cell table-header-pinned text-left min-w-[200px] max-w-[20rem]">
+            <span th:text="#{choreographies.table.name}">Name</span>
+        </th>
+        <!-- 2. Style -->
+        <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{choreographies.table.style}">Style</th>
+        <!-- 3. Medal Level -->
+        <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{choreographies.table.medal}">Medal Level</th>
+        <!-- 4. Entries -->
+        <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{choreographies.table.entries}">Entries</th>
+        <!-- 5. Updated -->
+        <th scope="col" class="table-cell text-left whitespace-nowrap" th:text="#{choreographies.table.updated}">Updated</th>
+        <!-- 6. Actions -->
+        <th scope="col" class="table-cell text-right whitespace-nowrap" th:text="#{choreographies.table.actions}">Actions</th>
+    </tr>
+</thead>
+
+<tr th:fragment="choreoTableRow" class="table-row">
+    <!-- 1. Title (pinned) -->
+    <td class="table-cell table-cell-pinned min-w-[200px] max-w-[20rem]">
+        <div class="flex items-center gap-2 flex-wrap">
+            <a th:href="@{/choreographies/{id}(id=${choreo.id})}"
+               class="font-semibold text-on-surface hover:text-primary transition-colors"
+               th:text="${choreo.name}">Competition Waltz</a>
+            <th:block th:if="${!choreo.isPublic}">
+                <span th:replace="~{fragments/badge :: badge(label=#{choreographies.badge.private}, variant='neutral')}"></span>
+            </th:block>
+            <th:block th:if="${choreo.isPublic}">
+                <span th:replace="~{fragments/badge :: badge(label=#{choreographies.visibility.public}, variant='secondary')}"></span>
+            </th:block>
+        </div>
+    </td>
+    <!-- 2. Style -->
+    <td class="table-cell whitespace-nowrap" th:text="${choreo.danceType != null ? choreo.danceType.name : '-'}">Waltz</td>
+    <!-- 3. Medal Level -->
+    <td class="table-cell whitespace-nowrap">
+        <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
+    </td>
+    <!-- 4. Entries -->
+    <td class="table-cell whitespace-nowrap" th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</td>
+    <!-- 5. Updated -->
+    <td class="table-cell whitespace-nowrap" th:text="${choreo.updatedAt != null ? #temporals.format(choreo.updatedAt, 'dd MMM yyyy') : '-'}">01 Jan 2026</td>
+    <!-- 6. Actions -->
+    <td class="table-cell text-right whitespace-nowrap">
+        <div class="inline-flex items-center gap-1.5 justify-end">
+            <div th:replace="~{fragments/page :: overflowMenu(menuSlot=~{::choreoRowMenu}, quiet=true)}"></div>
+        </div>
+    </td>
+</tr>
+
 </html>

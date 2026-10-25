@@ -1,5 +1,6 @@
 package com.jankowski.rafal.dancebook.controller.web
 
+import com.jankowski.rafal.dancebook.dto.ActiveFilterChip
 import com.jankowski.rafal.dancebook.dto.ChoreographyEntryRequest
 import com.jankowski.rafal.dancebook.dto.ChoreographyRequest
 import com.jankowski.rafal.dancebook.service.ChoreographyService
@@ -11,10 +12,12 @@ import com.jankowski.rafal.dancebook.service.AppUserService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import java.util.Locale
 import java.util.UUID
 
 @Controller
@@ -23,7 +26,8 @@ class ChoreographyWebController(
     private val choreographyService: ChoreographyService,
     private val danceTypeService: DanceTypeService,
     private val danceFigureService: DanceFigureService,
-    private val appUserService: AppUserService
+    private val appUserService: AppUserService,
+    private val messageSource: MessageSource? = null
 ) {
 
     companion object {
@@ -32,17 +36,36 @@ class ChoreographyWebController(
 
     @GetMapping
     fun listAll(
-        @RequestParam(required = false, defaultValue = "list") view: String,
+        @RequestParam(required = false, defaultValue = "list") view: String = "list",
         @RequestParam(required = false) medalLevel: MedalLevel? = null,
-        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean?,
+        @RequestParam(required = false) nameSearch: String? = null,
+        @RequestHeader("HX-Request", required = false) isHtmxRequest: Boolean? = null,
+        locale: Locale = Locale.getDefault(),
         model: Model
     ): String {
-        log.debug("Listing choreographies in view mode: {}, medalLevel: {}", view, medalLevel)
-        val choreographies = choreographyService.findByCurrentUser(medalLevel = medalLevel)
+        log.debug("Listing choreographies in view mode: {}, medalLevel: {}, nameSearch: {}", view, medalLevel, nameSearch)
+        val choreographies = choreographyService.findByCurrentUser(medalLevel = medalLevel, nameSearch = nameSearch)
         model.addAttribute("choreographies", choreographies)
         model.addAttribute("currentView", view)
         model.addAttribute("selectedMedalLevel", medalLevel)
+        model.addAttribute("selectedNameSearch", nameSearch)
         model.addAttribute("activeNav", "choreographies")
+
+        val activeFilterChips = mutableListOf<ActiveFilterChip>()
+        if (medalLevel != null) {
+            val label = messageSource?.getMessage("figures.medal.${medalLevel.name.lowercase()}", null, medalLevel.displayName, locale)
+                ?: medalLevel.displayName
+            activeFilterChips.add(ActiveFilterChip("medalLevel", medalLevel.name, label))
+        }
+
+        val totalCount = choreographies.size.toLong()
+        model.addAttribute("activeFilterChips", activeFilterChips)
+        model.addAttribute("activeFilterCount", activeFilterChips.size)
+        model.addAttribute("isHtmxRequest", isHtmxRequest == true)
+        model.addAttribute("totalCount", totalCount)
+        model.addAttribute("shownCount", totalCount)
+        model.addAttribute("hasMore", false)
+        model.addAttribute("nextPage", 1)
 
         return if (isHtmxRequest == true) {
             "choreographies/index :: choreographyList"
