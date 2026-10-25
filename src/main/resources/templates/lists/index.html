@@ -119,7 +119,7 @@
     </section>
 
     <!-- Collections Grid/List (HTMX swappable) -->
-    <div th:fragment="collectionsTable" id="collections-grid" class="space-y-8">
+    <div th:fragment="collectionsTable" id="collections-grid" class="space-y-8 list-fade-in">
         <!-- OOB updates for mobile active filter chips & count badge -->
         <th:block th:if="${isHtmxRequest == true}">
             <div id="mobile-filter-chips" hx-swap-oob="true" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">

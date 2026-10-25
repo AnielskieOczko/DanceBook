@@ -11,7 +11,7 @@
   tag overflow marker, and trailing ⋯ overflow menu.
 -->
 <article th:fragment="compactRow"
-         class="js-compact-row group relative flex items-center justify-between gap-3 px-4 h-[76px] shrink-0 border-b border-outline-variant hover:bg-surface-container-low transition-colors has-[.js-menu-dropdown:not(.hidden)]:z-30"
+         class="js-compact-row group relative flex items-center justify-between gap-3 px-4 h-[76px] shrink-0 border-b border-outline-variant hover:bg-surface-container-low transition-colors has-[.js-menu-dropdown:not(.hidden)]:z-30 list-fade-in"
          th:classappend="${(isRelated == true ? 'bg-primary-container/5' : '') + (cls != null ? ' ' + cls : '')}">
 
     <!-- Stretched link for full-row tap target -->

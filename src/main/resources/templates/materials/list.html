@@ -126,7 +126,7 @@
     </section>
 
     <!-- Materials Grid (HTMX swappable) -->
-    <div th:fragment="materialsTable" id="materials-grid" class="space-y-8">
+    <div th:fragment="materialsTable" id="materials-grid" class="space-y-8 list-fade-in">
         <!-- OOB updates for mobile active filter chips & count badge -->
         <th:block th:if="${isHtmxRequest == true}">
             <div id="mobile-filter-chips" hx-swap-oob="true" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
@@ -428,7 +428,7 @@
     <article th:with="catName=${m.danceType != null && m.danceType.category != null ? m.danceType.category.name : 'Unknown'},
                       catImage=${m.danceType != null && m.danceType.category != null ? m.danceType.category.imageFilename : null},
                       imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
-             class="card relative group flex flex-col hover:z-30 focus-within:z-30"
+             class="card relative group flex flex-col hover:z-30 focus-within:z-30 list-fade-in"
              th:classappend="${isRelated == true ? 'card-related' : ''}">
         
         <a th:href="@{/materials/{id}(id=${m.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{notes.view_item(${m.name})}">View Note</span></a>

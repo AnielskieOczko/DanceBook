@@ -131,7 +131,7 @@
     </section>
 
     <!-- Figures Grid/List (HTMX swappable) -->
-    <div th:fragment="figuresTable" id="figures-grid" class="space-y-8">
+    <div th:fragment="figuresTable" id="figures-grid" class="space-y-8 list-fade-in">
         <!-- OOB updates for mobile active filter chips & count badge -->
         <th:block th:if="${isHtmxRequest == true}">
             <div id="mobile-filter-chips" hx-swap-oob="true" class="flex items-center gap-2 pt-2 overflow-x-auto scrollbar-none lg:hidden">
@@ -452,7 +452,7 @@
     <article th:with="catName=${f.danceType != null && f.danceType.category != null ? f.danceType.category.name : 'Unknown'},
                       catImage=${f.danceType != null && f.danceType.category != null ? f.danceType.category.imageFilename : null},
                       imgSrc=${catImage != null ? '/uploads/categories/' + catImage : '/uploads/defaults/category-placeholder.png'}"
-             class="card relative group flex flex-row min-h-[120px] hover:z-30 focus-within:z-30"
+             class="card relative group flex flex-row min-h-[120px] hover:z-30 focus-within:z-30 list-fade-in"
              th:classappend="${isRelated == true ? 'card-related' : ''}">
         
         <a th:href="@{/dance-figures/{id}(id=${f.id})}" class="absolute inset-0 z-0 rounded-lg"><span class="sr-only" th:text="#{figures.list.view_figure(${f.name})}">View Figure</span></a>
