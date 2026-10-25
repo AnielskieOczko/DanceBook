@@ -149,6 +149,13 @@ code rather than adding a second dropdown. The old "Back to Database", "Back to 
 buttons are gone. A new detail page passes `backHref` instead of drawing a back button of its own.
 List pages still use `toolbar`, or the older single `actionUrl`.
 
+**A header with controls puts them in `subrowSlot` (#380).** `subrowSlot` is a second row under
+the title and actions (`mt-4`), for what does not belong beside the title: the Training views put
+their view switcher and calendar picker there. The legacy single action (`actionUrl`, `actionText`,
+`actionIcon`, `actionVariant`) stays on the right of the title row, and takes `actionWrapperCls` (the
+wrapper) and `actionCls` (the button) when it must hide at some widths, as the Calendar view does
+below `md`. Do not put a `toolbar` and a `subrowSlot` on one header: `toolbar` replaces the action.
+
 **A catalog fragment nothing calls is not a component, it is a second copy waiting to drift.**
 `attendanceBadge` (in `badge.html`) and `statCard` (in `card.html`) both existed before #129 and
 almost nothing called them, so the markup they were written to replace stayed spread across the
@@ -793,6 +800,43 @@ Row ids are `admin-row-users`, `-syllabus`, `-images`, `-calendars`, `-knowledge
 - **Not checked against real Google.** The Drive actions and calendar sync need real credentials,
   so they were verified by test and by degrading cleanly without them, not against Drive.
 
+### Filter pills and the collection form (#382, #393, direction B of `docs/mocks/collection-form`)
+
+**A category or style pill is `filter-pill`, one utility in `input.css` (#382).** It is a `<span>`
+after a `peer` checkbox inside a `<label>`, and carries the unselected, hover, selected and
+selected-hover states: selected hover is `peer-checked:hover:bg-primary-hover`. The hand-copied class
+string it replaced let `hover:bg-surface-container-high` win over the selected background, so a
+selected pill went white-on-light on hover and its label vanished. It is used for the Notes,
+Figures and Collections filters (desktop panel and mobile sheet) and for the collection form's
+rules. Do not write the class string out again. `FilterPillGuardTest` fails on the old combination
+anywhere in `templates/`, and checks the selected-hover contrast. Choreographies and Training
+filter with dropdowns, so they have no pills.
+
+**The New and Edit Collection form is one page with a live preview (#393).**
+`templates/lists/form.html` carries the header (back row "Collections", or the collection's name
+when editing; Save on the right, Save fills the width on a phone and Cancel is dropped), About
+(name; the cover as a thumbnail), Which notes, and Sharing. `static/js/collection-form.js` drives
+the cover and `main.js` the pill filtering.
+- **Cover.** **Choose** shows when there is no cover; **Change** and **Remove** when there is one.
+  Remove sets the hidden `removeImage` (a field on `CustomListRequest`), and
+  `CustomListServiceImpl.update` deletes the stored file for it. The type and the 10 MB limit are
+  checked in `CustomListWebController.validateImageFile`, and the error shows next to the field.
+- **Rules.** Name contains, a one-row segmented minimum rating (Any, 2+, 3+, 4+, 5), category pills
+  and style pills. Choosing a category narrows the style pills to its styles; a selected style that
+  falls outside is hidden, disabled and unchecked, so it leaves the rules and the preview.
+- **The preview is `GET /lists/preview`**, read-only htmx, which returns the
+  `lists/form :: previewFragments` out-of-band swaps for both `#desktop-preview-container` (a panel
+  beside the rules at `lg`) and `#mobile-preview-container` (a Preview section below `lg`). It shows
+  `CustomListWebController.PREVIEW_LIMIT` = 4 compact rows, then "and N more", and an explained empty
+  state when nothing matches (saving is still fine). **It calls `materialService.findAll` with the same
+  filters as the collection's own page**, so the visibility rules are the same and another user's
+  private note never appears. Do not add a second filter implementation for it. The one difference is
+  that the preview trims the name filter and the collection page uses the saved text as is.
+- **Tests:** `CustomListFormIntegrationTest` (preview equals the collection view for the same rules,
+  zero match, privacy, saving New and Edit with every field, image validation, cover buttons) and
+  `CustomListLocaleWebTest`. Labels are in both message bundles.
+- **Not checked in a browser:** Change and Remove on an existing cover. The tests cover them.
+
 ### Global template model
 
 `controller/web/NavbarAdvice.kt` is a `@ControllerAdvice` supplying `currentUser`,
@@ -812,9 +856,13 @@ has no room for one.
 **Training is one section with five views, not five routes.** List, Calendar, Timeline,
 Stats and History each have their own URL, but `activeNav()` maps all of
 `/training-events/**` to `training-events`. Every one of them is titled "Training" and
-renders `fragments/page :: viewSwitcher(currentView=…)` in its header toolbar, where the
-switcher names the view and marks it with `aria-current="page"`. A new training view is a
-switcher entry, not a nav item or an `activeNav()` branch. Before #137 the views
+renders `fragments/page :: viewSwitcher(currentView=…)` in its header's `subrowSlot`, where the
+switcher names the view and marks it with `aria-current="page"`. The header is the shared
+`pageHeader` (#380): title and count on the left, **Add Session on the right**, and the switcher
+with the calendar picker, settings and Sync now on a row of their own below. A new training view is a
+switcher entry, not a nav item or an `activeNav()` branch. **The Calendar view hides its header Add
+Session below `md`**, because the floating + already creates on the selected day and a second
+button beside it is noise; the other four views show it at every width. Before #137 the views
 cross-linked through hand-copied button rows that had drifted apart (History had no
 Calendar link, and Calendar had no History link), and Timeline held a nav slot of its own.
 The switcher is neutral by design. Its `view-switcher*` utilities use surface tokens, not
@@ -823,7 +871,11 @@ the accent, so it never competes with the page's one primary action.
 **The Training controls use the pill radius (#223), and the switcher must not wrap.** The
 switcher and its items are `rounded-pill`, so a row that wraps to a second line turns into one
 large rounded blob on a phone. It is therefore a single row that scrolls horizontally
-(`max-w-full overflow-x-auto`, items `shrink-0 whitespace-nowrap`), never `flex-wrap`. FullCalendar's
+(`max-w-full overflow-x-auto`, items `shrink-0 whitespace-nowrap`), never `flex-wrap`. Its wrapper in
+the subrow is `w-full sm:w-auto min-w-0 sm:shrink-0 overflow-x-auto lg:overflow-visible`, and the
+subrow itself is `flex flex-wrap`: it is the **controls** that wrap onto another line, never the
+switcher. The first version of #380 let the switcher shrink beside the calendar picker, which cut
+"History" off at 1024px; `shrink-0` above `sm` is what stops that. FullCalendar's
 buttons and button groups are restyled in the unlayered FullCalendar block of `input.css` with
 `--radius-pill`, including the outer ends of a group, because the library's own rule rounds
 every corner by 2px. There is no assistant text bar fixed to the bottom of the page any more
@@ -1523,6 +1575,12 @@ locales are listed in `config/AppLocales.kt`.
 
 ## Constraints and gotchas
 
+- **`truncate` does nothing useful on an inline element.** It sets `white-space: nowrap`, but
+  `overflow: hidden` and the ellipsis only apply to a block or an inline-block, so an inline link
+  or `<span>` with `truncate` never clips: it refuses to wrap and pushes its container wider. That
+  made the notifications window scroll sideways (#385): the list was 461px inside a 382px panel.
+  Wrap long text with `break-words`, and limit it with `line-clamp-2` on the block that holds it
+  (`notifications/dropdown.html`; `NotificationDropdownLayoutTest` guards it).
 - **Schema changes require a Flyway migration.** `spring.jpa.hibernate.ddl-auto=validate`,
   so an entity field with no matching column fails at startup. Add
   `src/main/resources/db/migration/V<next>__description.sql` — check that directory for the
@@ -1798,7 +1856,7 @@ delegating. Several mocks show directions that were **not** chosen; the issue na
 | `badges` | #39 | Direction A, the round medallion; bronze, silver and gold tiers, teal one-offs; Perfect month as one counting row; no next-target chip on the timeline. Shipped in #353 |
 | `detail-headers` | #360, #361 | Option A: a back row above the title, actions on the right as one primary, at most one secondary, and a ⋯ menu. Shipped in #373 (#365) |
 | `mobile-lists` | #362 | Option A only (not B's row of style chips): compact fixed-height rows, search plus a Filters button opening a bottom sheet, active-filter chips, and a "Showing N of M" footer with Show more. The footer shipped in #376 (#357) at every width; rows and sheet shipped in #378 (#366) below `lg`, revised in #379 |
-| `collection-form` | #388 | Direction B: the rules as pills and a segmented rating, with a live preview of the matching notes beside them (compact note rows), folding into a Preview section on a phone; zero-match state explained. A and C were not chosen |
+| `collection-form` | #388 | Direction B: the rules as pills and a segmented rating, with a live preview of the matching notes beside them (compact note rows), folding into a Preview section on a phone; zero-match state explained. A and C were not chosen. Shipped in #405 (#393) |
 | `readable-text` | #301 | A mix by content: outlined card for short text, card-less sharp sans for long text, compact comments. Notes and figures shipped in #327; comments and choreography descriptions shipped in #328 |
 
 ## Agent delegation contract
