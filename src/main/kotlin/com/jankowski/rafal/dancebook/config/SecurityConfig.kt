@@ -1,7 +1,9 @@
 package com.jankowski.rafal.dancebook.config
 
 import com.jankowski.rafal.dancebook.security.CustomOAuth2UserService
+import com.jankowski.rafal.dancebook.security.DurableRememberMeServices
 import com.jankowski.rafal.dancebook.security.HtmxAuthenticationEntryPoint
+import com.jankowski.rafal.dancebook.security.OAuth2RememberMeSuccessHandler
 import jakarta.servlet.DispatcherType
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -23,7 +25,8 @@ import org.springframework.web.filter.ForwardedHeaderFilter
 @EnableMethodSecurity
 class SecurityConfig(
     private val customOAuth2UserService: CustomOAuth2UserService,
-    @Lazy private val assistantConversationCleanup: com.jankowski.rafal.dancebook.service.AssistantConversationCleanup
+    @Lazy private val assistantConversationCleanup: com.jankowski.rafal.dancebook.service.AssistantConversationCleanup,
+    private val durableRememberMeServices: DurableRememberMeServices
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -65,11 +68,16 @@ class SecurityConfig(
                 userInfoEndpoint {
                     userService = customOAuth2UserService
                 }
-                defaultSuccessUrl("/", true)
+                authenticationSuccessHandler = OAuth2RememberMeSuccessHandler(durableRememberMeServices, "/")
+            }
+            rememberMe {
+                key = durableRememberMeServices.key
+                rememberMeServices = durableRememberMeServices
             }
             logout {
                 logoutSuccessUrl = "/login?logout"
                 addLogoutHandler(assistantConversationCleanup)
+                addLogoutHandler(durableRememberMeServices)
             }
             headers {
                 contentSecurityPolicy {
