@@ -29,11 +29,11 @@ class ChoreographyServiceImpl(
         private val log = LoggerFactory.getLogger(ChoreographyServiceImpl::class.java)
     }
 
-    override fun findByCurrentUser(medalLevel: MedalLevel?): List<Choreography> {
+    override fun findByCurrentUser(medalLevel: MedalLevel?, nameSearch: String?): List<Choreography> {
         val currentUser = appUserService.getCurrentUserOrNull()
-        log.debug("Retrieving choreographies for user '{}', medalLevel: {}", currentUser?.username, medalLevel)
+        log.debug("Retrieving choreographies for user '{}', medalLevel: {}, nameSearch: {}", currentUser?.username, medalLevel, nameSearch)
         return choreographyRepository.findAll(
-            ChoreographySpecification.withFilters(user = currentUser, medalLevel = medalLevel),
+            ChoreographySpecification.withFilters(user = currentUser, medalLevel = medalLevel, nameSearch = nameSearch),
             Sort.by(Sort.Direction.DESC, "updatedAt")
         )
     }

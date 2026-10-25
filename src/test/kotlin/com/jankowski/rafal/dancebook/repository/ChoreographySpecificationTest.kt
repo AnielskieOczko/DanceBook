@@ -82,4 +82,44 @@ class ChoreographySpecificationTest {
         assertEquals(setOf(silverPublic.id), queryIds(otherUser, MedalLevel.SILVER))
         assertEquals(emptySet<UUID>(), queryIds(otherUser, MedalLevel.GOLD))
     }
+
+    @Test
+    fun `filters by nameSearch independently and combined with medalLevel`() {
+        val cat = danceCategoryRepository.save(DanceCategory().apply { name = "Category ${UUID.randomUUID()}" })
+        val type = danceTypeRepository.save(DanceType().apply { name = "Type ${UUID.randomUUID()}"; category = cat })
+        val ownerUser = appUserRepository.save(AppUser().apply {
+            username = "owner-search-${UUID.randomUUID()}"
+            displayName = "Owner"
+            password = "x"
+            role = Role.USER
+        })
+
+        fun choreo(name: String, level: MedalLevel? = null) =
+            choreographyRepository.save(Choreography().apply {
+                this.name = name
+                this.danceType = type
+                this.owner = ownerUser
+                this.medalLevel = level
+                this.visibility = Visibility.PUBLIC
+            })
+
+        val c1 = choreo("Viennese Waltz Competition Routine", MedalLevel.GOLD)
+        val c2 = choreo("Slow Waltz Practice", MedalLevel.SILVER)
+        val c3 = choreo("Cha Cha Routine", MedalLevel.BRONZE)
+
+        val waltzResults = choreographyRepository
+            .findAll(ChoreographySpecification.withFilters(user = ownerUser, nameSearch = "waltz"))
+            .mapNotNull { it.id }
+            .toSet()
+
+        assertEquals(setOf(c1.id, c2.id), waltzResults)
+        assertEquals(false, waltzResults.contains(c3.id))
+
+        val goldWaltzResults = choreographyRepository
+            .findAll(ChoreographySpecification.withFilters(user = ownerUser, medalLevel = MedalLevel.GOLD, nameSearch = "waltz"))
+            .mapNotNull { it.id }
+            .toSet()
+
+        assertEquals(setOf(c1.id), goldWaltzResults)
+    }
 }
