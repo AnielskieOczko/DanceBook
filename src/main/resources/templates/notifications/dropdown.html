@@ -19,7 +19,7 @@
     </div>
 
     <!-- Events List -->
-    <div class="max-h-80 overflow-y-auto">
+    <div class="max-h-80 overflow-y-auto overflow-x-hidden">
         <div th:if="${unreadEvents != null && !unreadEvents.isEmpty()}">
             <div th:each="event : ${unreadEvents}"
                  class="flex items-start gap-3 px-4 py-3 hover:bg-surface-container-low transition-colors border-b border-surface-variant last:border-0">
@@ -31,12 +31,12 @@
                         <span th:if="${!event.badgeType.isIconOnly}" class="num" th:text="${event.badgeType.medallionLabel}">10</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-body-md text-body-md text-on-surface leading-tight font-semibold">
+                        <p class="font-body-md text-body-md text-on-surface leading-tight font-semibold line-clamp-2 break-words">
                             <a th:href="@{/profile#badges-section}"
                                class="text-on-surface hover:underline"
                                th:text="#{notifications.event.badge_earned_title(#{${event.badgeType.nameKey}})}">You earned “Streak of 10”</a>
                         </p>
-                        <p class="font-label-sm text-label-sm text-ink-soft mt-0.5">
+                        <p class="font-label-sm text-label-sm text-ink-soft mt-0.5 line-clamp-2 break-words">
                             <span th:text="#{${event.badgeType.descKey}}">10 attended sessions in a row</span>
                             <span> · </span>
                             <a th:href="@{/profile#badges-section}"
@@ -77,7 +77,7 @@
                 </div>
                 <!-- Event Content -->
                 <div class="flex-1 min-w-0">
-                    <p class="font-body-md text-body-md text-on-surface leading-tight">
+                    <p class="font-body-md text-body-md text-on-surface leading-tight line-clamp-2 break-words">
                         <span class="font-medium" th:text="${event.actor.displayName}">User</span>
                         <span th:switch="${event.eventType.name()}">
                             <span th:case="'MATERIAL_CREATED'" th:text="' ' + #{notifications.event.dropdown.material_created} + ' '"> created </span>
@@ -107,45 +107,45 @@
                         <!-- Link for Material / CustomList -->
                         <a th:if="${event.eventType.name() != 'MATERIAL_DELETED' && !event.eventType.name().startsWith('DANCE_FIGURE_') && !event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_SERIES_CREATED' && event.eventType.name() != 'TRAINING_SERIES_DELETED' && event.eventType.name() != 'TRAINING_BULK_ATTENDANCE_UPDATED' && event.eventType.name() != 'TRAINING_BULK_DELETED' && event.eventType.name() != 'TRAINING_BULK_UPDATED'}"
                            th:href="@{${event.targetType.name() == 'MATERIAL' ? '/materials/' + event.targetId : '/lists/' + event.targetId}}"
-                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Waltz Basics</a>
+                           class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Waltz Basics</a>
                         <span th:if="${event.eventType.name() == 'MATERIAL_DELETED'}"
-                              class="font-semibold truncate" th:text="${event.targetName}">Waltz Basics</span>
+                              class="font-semibold" th:text="${event.targetName}">Waltz Basics</span>
                         <!-- Link/Text for DanceFigure -->
                         <a th:if="${event.eventType.name().startsWith('DANCE_FIGURE_') && event.eventType.name() != 'DANCE_FIGURE_DELETED'}"
                            th:href="@{/dance-figures}"
-                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Natural Turn</a>
+                           class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Natural Turn</a>
                         <span th:if="${event.eventType.name() == 'DANCE_FIGURE_DELETED'}"
-                              class="font-semibold truncate" th:text="${event.targetName}">Natural Turn</span>
+                              class="font-semibold" th:text="${event.targetName}">Natural Turn</span>
                         <!-- Link/Text for TrainingEvent -->
                         <a th:if="${event.eventType.name().startsWith('TRAINING_EVENT_') && event.eventType.name() != 'TRAINING_EVENT_DELETED' && event.targetId != null}"
                            th:href="@{/training-events/{id}(id=${event.targetId})}"
-                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
+                           class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Monday practice</a>
                         <span th:if="${event.eventType.name() == 'TRAINING_EVENT_DELETED'}"
-                              class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                              class="font-semibold" th:text="${event.targetName}">Monday practice</span>
                         <!-- Link/Text for TrainingSeries -->
                         <a th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId != null}"
                            th:href="@{/training-events/{id}(id=${event.targetId})}"
-                           class="font-semibold text-primary hover:underline truncate" th:text="${event.targetName}">Monday practice</a>
+                           class="font-semibold text-primary hover:underline" th:text="${event.targetName}">Monday practice</a>
                         <span th:if="${event.eventType.name() == 'TRAINING_SERIES_CREATED' && event.targetId == null}"
-                              class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                              class="font-semibold" th:text="${event.targetName}">Monday practice</span>
                         <span th:if="${event.eventType.name() == 'TRAINING_SERIES_DELETED'}"
-                              class="font-semibold truncate" th:text="${event.targetName}">Monday practice</span>
+                              class="font-semibold" th:text="${event.targetName}">Monday practice</span>
                         <!-- Link/Text for Bulk Attendance -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"
                            th:href="@{/training-events}"
-                           class="font-semibold text-primary hover:underline truncate"
+                           class="font-semibold text-primary hover:underline"
                            th:text="#{notifications.event.bulk_sessions(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.multiple')})}"><span th:text="${event.metadata ?: 'multiple'}"></span> sessions</a>
                         <span th:if="${event.eventType.name() == 'TRAINING_BULK_ATTENDANCE_UPDATED'}"
                               th:text="' ' + #{notifications.event.bulk_as(${event.targetName})}"> as <span th:text="${event.targetName}">attended</span></span>
                         <!-- Link/Text for Bulk Delete -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_DELETED'}"
                            th:href="@{/training-events}"
-                           class="font-semibold text-primary hover:underline truncate"
+                           class="font-semibold text-primary hover:underline"
                            th:text="#{notifications.event.bulk_training_sessions(${event.metadata != null ? event.metadata : #messages.msg('notifications.event.multiple')})}"><span th:text="${event.metadata ?: 'multiple'}"></span> training sessions</a>
                         <!-- Link/Text for Bulk Update -->
                         <a th:if="${event.eventType.name() == 'TRAINING_BULK_UPDATED'}"
                            th:href="@{/training-events}"
-                           class="font-semibold text-primary hover:underline truncate"><span th:text="${event.targetName}">multiple sessions</span></a>
+                           class="font-semibold text-primary hover:underline"><span th:text="${event.targetName}">multiple sessions</span></a>
                     </p>
                     <p class="font-label-sm text-label-sm text-outline mt-0.5"
                        th:text="${#temporals.format(event.createdAt, 'MMM d, HH:mm')}">May 13, 14:30</p>
