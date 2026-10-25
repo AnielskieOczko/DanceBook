@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DanceBook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/splash.css">
+  <link rel="stylesheet" href="splash.css">
+  <style>
+    /* Critical inline styles for zero-delay first paint */
+    :root {
+      --color-background: #ffffff;
+      --color-surface-container: #f5f5f3;
+      --color-on-surface: #16181a;
+      --color-on-surface-variant: #5b6067;
+      --color-outline-variant: #e3e3e0;
+      --color-primary: #1f4b4a;
+      --color-primary-hover: #163736;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--color-background);
+      color: var(--color-on-surface);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+    .splash-container {
+      width: 100%;
+      max-width: 24rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .brand-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .logo-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .logo-card {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      background-color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(31, 75, 74, 0.15);
+      animation: gentle-pulse 2.4s ease-in-out infinite alternate;
+    }
+    .brand-title {
+      margin: 0;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      line-height: 1.2;
+    }
+    .brand-tagline {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--color-on-surface-variant);
+    }
+    .progress-track {
+      width: 12.5rem;
+      height: 3px;
+      background-color: var(--color-outline-variant);
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+    }
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background-color: var(--color-primary);
+      border-radius: 9999px;
+      animation: progress-indeterminate 1.8s ease-in-out infinite;
+    }
+    @keyframes progress-indeterminate {
+      0% { left: -35%; width: 35%; }
+      50% { left: 30%; width: 45%; }
+      100% { left: 100%; width: 35%; }
+    }
+    @keyframes gentle-pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(31, 75, 74, 0.12);
+      }
+      100% {
+        transform: scale(1.03);
+        box-shadow: 0 6px 18px rgba(31, 75, 74, 0.22);
+      }
+    }
+    .status-section {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .status-message {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--color-on-surface-variant);
+      font-weight: 500;
+    }
+    .status-detail {
+      margin: 0;
+      font-size: 0.8125rem;
+      color: var(--color-on-surface-variant);
+      line-height: 1.45;
+      max-width: 20rem;
+    }
+    .retry-section {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.25rem;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--color-primary-hover);
+    }
+    .btn-primary:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    .link-fallback {
+      font-size: 0.8125rem;
+      color: var(--color-on-surface-variant);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.15s ease;
+    }
+    .link-fallback:hover {
+      color: var(--color-on-surface);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .logo-card { animation: none !important; }
+      .progress-bar {
+        animation: none !important;
+        left: 0 !important;
+        width: 100% !important;
+        opacity: 0.4 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="splash-container" role="main" aria-live="polite">
+    <div class="brand-section">
+      <div class="logo-header">
+        <div class="logo-card" aria-hidden="true">
+          <!-- Material Symbol 'menu_book' rendered as clean inline SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+          </svg>
+        </div>
+        <h1 class="brand-title">DanceBook</h1>
+      </div>
+      <p id="brand-tagline" class="brand-tagline">Your personal dance library</p>
+    </div>
+
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-bar"></div>
+    </div>
+
+    <section class="status-section">
+      <p id="status-message" class="status-message">Connecting to DanceBook...</p>
+      <p id="status-detail" class="status-detail" hidden></p>
+    </section>
+
+    <div id="retry-section" class="retry-section" hidden>
+      <button id="retry-btn" class="btn-primary" type="button">Try again</button>
+      <a id="direct-link" class="link-fallback" href="https://dancebook-918960884147.europe-central2.run.app">Open directly</a>
+    </div>
+  </main>
+
+  <script src="/splash.js"></script>
+  <script>
+    if (typeof initSplash === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'splash.js';
+      document.head.appendChild(script);
+    }
+  </script>
+</body>
+</html>
