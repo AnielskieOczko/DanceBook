@@ -21,9 +21,9 @@
     </th:block>
 
     <!-- Header -->
-    <div class="mb-6 relative rounded-xl overflow-hidden border border-border bg-surface-warm">
+    <div class="mb-6 relative rounded-xl border border-border bg-surface-warm">
         <!-- Cover Image Background -->
-        <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 z-0 rounded-xl overflow-hidden">
             <img th:if="${customList.imageFilename != null}" th:src="@{/uploads/lists/{filename}(filename=${customList.imageFilename})}" alt="Cover" th:attr="alt=#{collections.cover_alt}" class="w-full h-full object-cover opacity-20">
             <img th:unless="${customList.imageFilename != null}" th:src="@{/uploads/defaults/list-placeholder.png}" data-fallback="/images/categories/placeholder.png" alt="Default Cover" th:attr="alt=#{collections.default_cover_alt}" class="w-full h-full object-cover opacity-10 mix-blend-multiply">
             <div class="absolute inset-0 bg-linear-to-t from-surface-warm via-surface-warm/80 to-transparent"></div>
