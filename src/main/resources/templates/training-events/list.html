@@ -59,7 +59,7 @@
     </div>
 
     <!-- Agenda list (HTMX swap target) -->
-    <div th:fragment="eventsList" id="events-list" class="space-y-12">
+    <div th:fragment="eventsList" id="events-list" class="space-y-12 list-fade-in">
 
         <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
             <div th:replace="~{fragments/empty :: emptyState(

@@ -1301,3 +1301,118 @@ document.addEventListener('click', function(event) {
         row.open = true;
     }
 });
+
+// ════════════════════════════════════════════════
+// TOP PROGRESS BAR (Issue #390)
+// ════════════════════════════════════════════════
+(function() {
+    let progressBar = null;
+    let activeHtmxRequests = 0;
+    let finishTimer = null;
+
+    function getProgressBar() {
+        if (!progressBar) {
+            progressBar = document.getElementById('top-progress-bar');
+        }
+        return progressBar;
+    }
+
+    function showProgressBar() {
+        const bar = getProgressBar();
+        if (!bar) return;
+        if (finishTimer) {
+            clearTimeout(finishTimer);
+            finishTimer = null;
+        }
+        bar.classList.remove('is-finished');
+        bar.classList.add('is-loading');
+    }
+
+    function finishProgressBar() {
+        const bar = getProgressBar();
+        if (!bar || !bar.classList.contains('is-loading')) return;
+        bar.classList.remove('is-loading');
+        bar.classList.add('is-finished');
+        finishTimer = setTimeout(function() {
+            bar.classList.remove('is-finished');
+            finishTimer = null;
+        }, 200);
+    }
+
+    // 1. HTMX request tracking (ignoring background notification polling)
+    document.addEventListener('htmx:beforeRequest', function(event) {
+        if (event.detail && event.detail.elt && event.detail.elt.id === 'notification-badge') {
+            return;
+        }
+        activeHtmxRequests++;
+        showProgressBar();
+    });
+
+    document.addEventListener('htmx:afterRequest', function(event) {
+        if (event.detail && event.detail.elt && event.detail.elt.id === 'notification-badge') {
+            return;
+        }
+        activeHtmxRequests = Math.max(0, activeHtmxRequests - 1);
+        if (activeHtmxRequests === 0) {
+            finishProgressBar();
+        }
+    });
+
+    document.addEventListener('htmx:sendError', function(event) {
+        if (event.detail && event.detail.elt && event.detail.elt.id === 'notification-badge') {
+            return;
+        }
+        activeHtmxRequests = Math.max(0, activeHtmxRequests - 1);
+        if (activeHtmxRequests === 0) {
+            finishProgressBar();
+        }
+    });
+
+    // 2. Full-page navigation tracking
+    document.addEventListener('click', function(event) {
+        const link = event.target.closest('a[href]');
+        if (!link) return;
+        if (link.getAttribute('target') === '_blank') return;
+        if (link.hasAttribute('download')) return;
+        if (link.getAttribute('hx-get') || link.getAttribute('hx-post')) return;
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+        try {
+            const url = new URL(link.href, window.location.href);
+            if (url.origin !== window.location.origin) return;
+        } catch (e) {
+            return;
+        }
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+        }
+        showProgressBar();
+    });
+
+    document.addEventListener('submit', function(event) {
+        const form = event.target;
+        if (!form || typeof form.getAttribute !== 'function') return;
+        if (form.getAttribute('hx-post') || form.getAttribute('hx-get') || form.getAttribute('hx-put') || form.getAttribute('hx-delete')) return;
+        if (form.getAttribute('target') === '_blank') return;
+        if (event.defaultPrevented) return;
+        showProgressBar();
+    });
+
+    window.addEventListener('beforeunload', function() {
+        showProgressBar();
+    });
+
+    window.addEventListener('pageshow', function() {
+        const bar = getProgressBar();
+        if (bar) {
+            bar.classList.remove('is-loading', 'is-finished');
+        }
+        activeHtmxRequests = 0;
+    });
+
+    window.TopProgressBar = {
+        show: showProgressBar,
+        finish: finishProgressBar,
+        getElement: getProgressBar
+    };
+})();
