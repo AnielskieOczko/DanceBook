@@ -1,6 +1,7 @@
 package com.jankowski.rafal.dancebook.config
 
 import com.jankowski.rafal.dancebook.security.CustomOAuth2UserService
+import com.jankowski.rafal.dancebook.security.HtmxAuthenticationEntryPoint
 import jakarta.servlet.DispatcherType
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -51,6 +52,9 @@ class SecurityConfig(
                 authorize("/images/**", permitAll)
                 authorize("/login", permitAll)
                 authorize(anyRequest, authenticated)
+            }
+            exceptionHandling {
+                authenticationEntryPoint = HtmxAuthenticationEntryPoint()
             }
             formLogin {
                 loginPage = "/login"

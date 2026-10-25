@@ -1056,6 +1056,10 @@ window.showErrorAlert = showErrorAlert;
 // Surface background HTMX failures in the alert container
 document.addEventListener('htmx:responseError', function(event) {
     const status = event.detail.xhr ? event.detail.xhr.status : null;
+    if (status === 401) {
+        window.location.href = '/login';
+        return;
+    }
     if (status) {
         showErrorAlert('js.error.request_failed_status', status);
     } else {
