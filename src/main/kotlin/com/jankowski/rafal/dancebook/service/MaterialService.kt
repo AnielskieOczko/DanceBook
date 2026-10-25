@@ -10,6 +10,7 @@ import java.util.UUID
 
 interface MaterialService {
     fun findById(id: UUID): Material
+    fun findByIdForExport(id: UUID): Material
     fun create(request: MaterialRequest): Material
     fun update(id: UUID, request: MaterialRequest): Material
     fun delete(id: UUID)

@@ -64,6 +64,16 @@ class MaterialServiceImpl(
         }
     }
 
+    override fun findByIdForExport(id: UUID): Material {
+        log.debug("Retrieving material for export for id {}", id)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        return materialRepository.findOne(
+            MaterialSpecification.visibleForExport(currentUser).and(MaterialSpecification.byId(id))
+        ).orElseThrow {
+            EntityNotFoundException("Could not find material with id $id")
+        }
+    }
+
     override fun downloadVideo(id: UUID, rangeHeader: String?): GoogleDriveService.DriveMediaDownload {
         log.debug("Streaming video for material id {}", id)
         val material = findById(id)

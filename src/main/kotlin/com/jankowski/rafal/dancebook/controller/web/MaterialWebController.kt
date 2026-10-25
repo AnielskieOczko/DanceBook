@@ -31,12 +31,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
+import com.jankowski.rafal.dancebook.service.PdfExportService
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -53,6 +58,7 @@ class MaterialWebController(
     private val noteRewriteService: NoteRewriteService,
     private val figureSuggestionService: FigureSuggestionService,
     private val trainingEventService: TrainingEventService,
+    private val pdfExportService: PdfExportService? = null,
     private val assistantPreferencesService: com.jankowski.rafal.dancebook.service.AssistantPreferencesService? = null,
     private val knowledgeRetrievalService: com.jankowski.rafal.dancebook.service.KnowledgeRetrievalService? = null,
     private val hybridSearchService: com.jankowski.rafal.dancebook.service.HybridSearchService? = null,
@@ -230,6 +236,24 @@ class MaterialWebController(
         } catch (_: IOException) {
             // Client closed connection / paused / seeked away: harmless for video streaming
         }
+    }
+
+    @GetMapping("/{id}/pdf")
+    fun exportPdf(@PathVariable id: UUID, locale: Locale): ResponseEntity<ByteArray> {
+        val material = materialService.findByIdForExport(id)
+
+        val service = pdfExportService ?: throw IllegalStateException("PDF export service not available")
+        val pdfBytes = service.exportMaterialPdf(material, locale)
+        val filename = sanitizeFilename(material.name.ifBlank { "note" }) + ".pdf"
+
+        val contentDisposition = ContentDisposition.attachment()
+            .filename(filename, StandardCharsets.UTF_8)
+            .build()
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdfBytes)
     }
 
     @GetMapping("/{materialId}/figures/picker")
@@ -613,6 +637,11 @@ class MaterialWebController(
 
     private fun populateDropdowns(model: Model) {
         model.addAttribute("danceCategories", danceCategoryService.findAll())
+    }
+
+    private fun sanitizeFilename(input: String): String {
+        val sanitized = input.trim().replace(Regex("""[\\/:*?"<>|]"""), "_")
+        return sanitized.ifBlank { "export" }
     }
 }
 

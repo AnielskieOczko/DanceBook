@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${danceFigure.name}">Figure PDF</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 20mm 15mm 20mm 15mm;
+            @bottom-left {
+                content: "DanceBook";
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #5b6067;
+            }
+            @bottom-right {
+                content: counter(page) " / " counter(pages);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #5b6067;
+            }
+        }
+        @page :first {
+            @bottom-left { content: ""; }
+            @bottom-right { content: ""; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #16181a;
+            font-size: 10pt;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cover page */
+        .cover-page {
+            page-break-after: always;
+            padding-top: 100px;
+            box-sizing: border-box;
+        }
+        .cover-brand {
+            font-size: 14pt;
+            font-weight: 700;
+            color: #1f4b4a;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .cover-title {
+            font-size: 26pt;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #16181a;
+            margin-bottom: 14px;
+        }
+        .cover-subtitle {
+            font-size: 13pt;
+            color: #5b6067;
+            margin-bottom: 36px;
+        }
+        .cover-meta {
+            border-top: 2px solid #1f4b4a;
+            padding-top: 18px;
+            font-size: 10pt;
+            color: #5b6067;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cover-meta td {
+            padding: 5px 0;
+        }
+        .cover-meta .label {
+            font-weight: 600;
+            color: #16181a;
+            width: 140px;
+        }
+
+        /* Content section */
+        .header-box {
+            border-bottom: 1.5px solid #e3e3e0;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+        .item-title {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #16181a;
+            margin: 0 0 10px 0;
+        }
+        .badges {
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 8pt;
+            font-weight: 600;
+            border-radius: 9999px;
+            background-color: #f5f5f3;
+            color: #16181a;
+            border: 1px solid #e3e3e0;
+            margin-right: 6px;
+        }
+        .badge-accent {
+            background-color: #f5f5f3;
+            color: #1f4b4a;
+            border: 1px solid #1f4b4a;
+        }
+        .badge-primary {
+            background-color: #1f4b4a;
+            color: #ffffff;
+            border: none;
+        }
+        .section-title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1f4b4a;
+            border-bottom: 1px solid #e3e3e0;
+            padding-bottom: 4px;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        .details-grid {
+            width: 100%;
+            margin-bottom: 14px;
+            border-collapse: collapse;
+        }
+        .details-grid td {
+            padding: 4px 6px;
+            font-size: 9pt;
+            vertical-align: top;
+        }
+        .details-grid .dt-label {
+            font-weight: 600;
+            color: #5b6067;
+            width: 150px;
+        }
+
+        .rich-text {
+            font-size: 9.5pt;
+            line-height: 1.55;
+            color: #16181a;
+        }
+        .rich-text p {
+            margin: 0 0 8px 0;
+        }
+        .rich-text ul, .rich-text ol {
+            margin: 4px 0 8px 20px;
+            padding: 0;
+        }
+        .rich-text li {
+            margin-bottom: 2px;
+        }
+
+        /* Step table: prevents mid-row break across pages */
+        table.step-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            page-break-inside: auto;
+        }
+        table.step-table thead {
+            display: table-header-group;
+        }
+        table.step-table tr {
+            page-break-inside: avoid;
+        }
+        table.step-table th {
+            background-color: #f5f5f3;
+            color: #16181a;
+            font-weight: 700;
+            font-size: 8pt;
+            text-align: left;
+            padding: 5px 6px;
+            border-bottom: 2px solid #e3e3e0;
+        }
+        table.step-table td {
+            padding: 5px 6px;
+            font-size: 8pt;
+            border-bottom: 1px solid #e3e3e0;
+            vertical-align: top;
+        }
+        .step-num {
+            font-weight: 700;
+            color: #1f4b4a;
+            text-align: center;
+            width: 24px;
+        }
+        .step-timing {
+            font-weight: 600;
+            width: 45px;
+        }
+        .step-foot {
+            font-weight: 600;
+            width: 35px;
+        }
+
+        .thumb-img {
+            max-width: 120px;
+            max-height: 90px;
+            border-radius: 4px;
+            border: 1px solid #e3e3e0;
+            margin-top: 4px;
+        }
+
+        .empty-text {
+            font-style: italic;
+            color: #5b6067;
+            font-size: 9pt;
+        }
+
+        ul.compact-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+        ul.compact-list li {
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cover page -->
+<div class="cover-page">
+    <div class="cover-brand" th:text="#{pdf.cover.title}">DanceBook Export</div>
+    <div class="cover-title" th:text="${danceFigure.name}">Figure Name</div>
+    <div class="cover-subtitle">
+        <span th:if="${danceFigure.danceType != null}" th:text="${danceFigure.danceType.name}">Waltz</span>
+        <span th:if="${danceFigure.danceClass != null}" th:text="' · ' + ${#messages.msg('figures.view.class_label', danceFigure.danceClass)}"> · Class B</span>
+        <span th:if="${danceFigure.medalLevel != null}" th:text="' · ' + ${#messages.msg('figures.medal.' + danceFigure.medalLevel.name().toLowerCase())}"> · Gold</span>
+    </div>
+
+    <table class="cover-meta">
+        <tr>
+            <td class="label" th:text="#{pdf.cover.author}">Author:</td>
+            <td th:text="${creatorName ?: #messages.msg('pdf.cover.syllabus')}">DanceBook Syllabus</td>
+        </tr>
+        <tr th:if="${createdDateFormatted != null}">
+            <td class="label" th:text="#{pdf.meta.created}">Created:</td>
+            <td th:text="${createdDateFormatted}">16 Sep 2026</td>
+        </tr>
+        <tr>
+            <td class="label" th:text="#{pdf.cover.date}">Export date:</td>
+            <td th:text="${exportDateFormatted}">25 Oct 2026</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Item Details & Content -->
+<div class="content-page">
+    <div class="header-box">
+        <h1 class="item-title" th:text="${danceFigure.name}">Figure Name</h1>
+        <div class="badges">
+            <span th:if="${danceFigure.danceType != null}" class="badge" th:text="${danceFigure.danceType.name}">Waltz</span>
+            <span th:if="${danceFigure.danceClass != null}" class="badge badge-accent" th:text="${#messages.msg('figures.view.class_label', danceFigure.danceClass)}">Class B</span>
+            <span th:if="${danceFigure.medalLevel != null}" class="badge badge-primary" th:text="${#messages.msg('figures.medal.' + danceFigure.medalLevel.name().toLowerCase())}">Gold</span>
+            <span th:if="${danceFigure.predefined}" class="badge" th:text="#{figures.view.predefined}">Predefined</span>
+        </div>
+    </div>
+
+    <!-- Metadata Grid -->
+    <table class="details-grid">
+        <tr th:if="${danceFigure.danceType != null}">
+            <td class="dt-label" th:text="#{pdf.meta.style}">Style:</td>
+            <td th:text="${danceFigure.danceType.name}">Waltz</td>
+        </tr>
+        <tr th:if="${danceFigure.danceType != null and danceFigure.danceType.category != null}">
+            <td class="dt-label" th:text="#{pdf.meta.category}">Category:</td>
+            <td>
+                <span th:text="${danceFigure.danceType.category.name}">Standard</span>
+                <div th:if="${categoryImageBase64 != null}">
+                    <img th:src="${categoryImageBase64}" th:alt="${danceFigure.danceType.category.name}" alt="" class="thumb-img"/>
+                </div>
+            </td>
+        </tr>
+        <tr th:if="${danceFigure.danceClass != null}">
+            <td class="dt-label" th:text="#{pdf.meta.class}">Class:</td>
+            <td th:text="${danceFigure.danceClass}">B</td>
+        </tr>
+        <tr th:if="${danceFigure.medalLevel != null}">
+            <td class="dt-label" th:text="#{pdf.meta.medal}">Medal Level:</td>
+            <td th:text="${#messages.msg('figures.medal.' + danceFigure.medalLevel.name().toLowerCase())}">Gold</td>
+        </tr>
+        <tr th:if="${danceFigure.alternativeTiming != null and !#strings.isEmpty(#strings.trim(danceFigure.alternativeTiming))}">
+            <td class="dt-label" th:text="#{pdf.meta.timing}">Timing:</td>
+            <td th:text="${danceFigure.alternativeTiming.trim()}">123</td>
+        </tr>
+        <tr th:if="${danceFigure.startingPosition != null or danceFigure.endingPosition != null}">
+            <td class="dt-label" th:text="#{pdf.meta.positions}">Positions:</td>
+            <td>
+                <span th:if="${danceFigure.startingPosition != null}" th:text="#{pdf.meta.starting_position} + ': ' + ${danceFigure.startingPosition}">Start: Closed</span>
+                <span th:if="${danceFigure.startingPosition != null and danceFigure.endingPosition != null}"> · </span>
+                <span th:if="${danceFigure.endingPosition != null}" th:text="#{pdf.meta.ending_position} + ': ' + ${danceFigure.endingPosition}">End: Promenade</span>
+            </td>
+        </tr>
+        <tr th:if="${danceFigure.startingFootLeader != null or danceFigure.endingFootLeader != null}">
+            <td class="dt-label" th:text="#{pdf.meta.leader_feet}">Leader Footwork:</td>
+            <td>
+                <span th:text="(${danceFigure.startingFootLeader ?: '-'}) + ' -> ' + (${danceFigure.endingFootLeader ?: '-'})">LF -> RF</span>
+            </td>
+        </tr>
+        <tr th:if="${danceFigure.startingFootFollower != null or danceFigure.endingFootFollower != null}">
+            <td class="dt-label" th:text="#{pdf.meta.follower_feet}">Follower Footwork:</td>
+            <td>
+                <span th:text="(${danceFigure.startingFootFollower ?: '-'}) + ' -> ' + (${danceFigure.endingFootFollower ?: '-'})">RF -> LF</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Leader Steps Table -->
+    <div class="section-title" th:text="#{pdf.section.steps_leader}">Leader Steps</div>
+    <th:block th:if="${leaderSteps != null and !#lists.isEmpty(leaderSteps)}">
+        <table class="step-table">
+            <thead>
+                <tr>
+                    <th class="step-num">#</th>
+                    <th class="step-timing" th:text="#{figures.view.steps.th.timing}">Timing</th>
+                    <th class="step-foot" th:text="#{figures.view.steps.th.foot}">Foot</th>
+                    <th th:text="#{figures.view.steps.th.action}">Action</th>
+                    <th style="width: 60px;" th:text="#{figures.view.steps.th.footwork}">Footwork</th>
+                    <th style="width: 70px;" th:text="#{figures.view.steps.th.alignment}">Alignment</th>
+                    <th style="width: 60px;" th:text="#{figures.view.steps.th.turn}">Turn</th>
+                    <th style="min-width: 140px;" th:text="#{figures.view.steps.th.comments}">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="step : ${leaderSteps}">
+                    <td class="step-num" th:text="${step.stepNumber}">1</td>
+                    <td class="step-timing" th:text="${step.timing}">S</td>
+                    <td class="step-foot" th:text="${step.foot}">LF</td>
+                    <td th:text="${step.action}">Step forward</td>
+                    <td th:text="${step.footwork ?: '-'}">HT</td>
+                    <td th:text="${step.alignment ?: '-'}">LOD</td>
+                    <td th:text="${step.amountOfTurn ?: '-'}">1/4 to L</td>
+                    <td>
+                        <ul th:if="${!#lists.isEmpty(step.comments)}" class="compact-list">
+                            <li th:each="c : ${step.comments}" th:text="${c.commentText}">Technical comment</li>
+                        </ul>
+                        <span th:if="${#lists.isEmpty(step.comments)}">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+    <div th:if="${leaderSteps == null or #lists.isEmpty(leaderSteps)}" class="empty-text" th:text="#{pdf.empty.steps}">
+        No steps defined.
+    </div>
+
+    <!-- Follower Steps Table -->
+    <div class="section-title" th:text="#{pdf.section.steps_follower}">Follower Steps</div>
+    <th:block th:if="${followerSteps != null and !#lists.isEmpty(followerSteps)}">
+        <table class="step-table">
+            <thead>
+                <tr>
+                    <th class="step-num">#</th>
+                    <th class="step-timing" th:text="#{figures.view.steps.th.timing}">Timing</th>
+                    <th class="step-foot" th:text="#{figures.view.steps.th.foot}">Foot</th>
+                    <th th:text="#{figures.view.steps.th.action}">Action</th>
+                    <th style="width: 60px;" th:text="#{figures.view.steps.th.footwork}">Footwork</th>
+                    <th style="width: 70px;" th:text="#{figures.view.steps.th.alignment}">Alignment</th>
+                    <th style="width: 60px;" th:text="#{figures.view.steps.th.turn}">Turn</th>
+                    <th style="min-width: 140px;" th:text="#{figures.view.steps.th.comments}">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="step : ${followerSteps}">
+                    <td class="step-num" th:text="${step.stepNumber}">1</td>
+                    <td class="step-timing" th:text="${step.timing}">S</td>
+                    <td class="step-foot" th:text="${step.foot}">RF</td>
+                    <td th:text="${step.action}">Step back</td>
+                    <td th:text="${step.footwork ?: '-'}">TH</td>
+                    <td th:text="${step.alignment ?: '-'}">BLOD</td>
+                    <td th:text="${step.amountOfTurn ?: '-'}">-</td>
+                    <td>
+                        <ul th:if="${!#lists.isEmpty(step.comments)}" class="compact-list">
+                            <li th:each="c : ${step.comments}" th:text="${c.commentText}">Technical comment</li>
+                        </ul>
+                        <span th:if="${#lists.isEmpty(step.comments)}">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+    <div th:if="${followerSteps == null or #lists.isEmpty(followerSteps)}" class="empty-text" th:text="#{pdf.empty.steps}">
+        No steps defined.
+    </div>
+
+    <!-- Technical Notes -->
+    <div class="section-title" th:text="#{pdf.section.notes}">Technical Notes</div>
+    <th:block th:if="${danceFigure.notes != null and !#strings.isEmpty(#strings.trim(danceFigure.notes))}">
+        <div th:replace="~{fragments/rich-text :: content(value=${danceFigure.notes})}"></div>
+    </th:block>
+    <div th:if="${danceFigure.notes == null or #strings.isEmpty(#strings.trim(danceFigure.notes))}" class="empty-text" th:text="#{pdf.empty.notes}">
+        No technical notes.
+    </div>
+
+    <!-- Preceding and Following Figures Connections -->
+    <th:block th:if="${!#lists.isEmpty(danceFigure.precedingFigureNames) or !#lists.isEmpty(danceFigure.followingFigureNames)}">
+        <div class="section-title" th:text="#{pdf.section.connections}">Connections</div>
+        <table class="details-grid">
+            <tr th:if="${!#lists.isEmpty(danceFigure.precedingFigureNames)}">
+                <td class="dt-label" th:text="#{pdf.section.preceding}">Preceding:</td>
+                <td>
+                    <ul class="compact-list">
+                        <li th:each="name : ${danceFigure.precedingFigureNames}" th:text="${name}">Figure Name</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr th:if="${!#lists.isEmpty(danceFigure.followingFigureNames)}">
+                <td class="dt-label" th:text="#{pdf.section.following}">Following:</td>
+                <td>
+                    <ul class="compact-list">
+                        <li th:each="name : ${danceFigure.followingFigureNames}" th:text="${name}">Figure Name</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </th:block>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${material.name}">Note PDF</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 20mm 15mm 20mm 15mm;
+            @bottom-left {
+                content: "DanceBook";
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #5b6067;
+            }
+            @bottom-right {
+                content: counter(page) " / " counter(pages);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #5b6067;
+            }
+        }
+        @page :first {
+            @bottom-left { content: ""; }
+            @bottom-right { content: ""; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #16181a;
+            font-size: 10pt;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cover page */
+        .cover-page {
+            page-break-after: always;
+            padding-top: 100px;
+            box-sizing: border-box;
+        }
+        .cover-brand {
+            font-size: 14pt;
+            font-weight: 700;
+            color: #1f4b4a;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .cover-title {
+            font-size: 26pt;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #16181a;
+            margin-bottom: 14px;
+        }
+        .cover-subtitle {
+            font-size: 13pt;
+            color: #5b6067;
+            margin-bottom: 36px;
+        }
+        .cover-meta {
+            border-top: 2px solid #1f4b4a;
+            padding-top: 18px;
+            font-size: 10pt;
+            color: #5b6067;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cover-meta td {
+            padding: 5px 0;
+        }
+        .cover-meta .label {
+            font-weight: 600;
+            color: #16181a;
+            width: 140px;
+        }
+
+        /* Content section */
+        .header-box {
+            border-bottom: 1.5px solid #e3e3e0;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+        .item-title {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #16181a;
+            margin: 0 0 10px 0;
+        }
+        .badges {
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 8pt;
+            font-weight: 600;
+            border-radius: 9999px;
+            background-color: #f5f5f3;
+            color: #16181a;
+            border: 1px solid #e3e3e0;
+            margin-right: 6px;
+        }
+        .badge-accent {
+            background-color: #f5f5f3;
+            color: #1f4b4a;
+            border: 1px solid #1f4b4a;
+        }
+        .section-title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #1f4b4a;
+            border-bottom: 1px solid #e3e3e0;
+            padding-bottom: 4px;
+            margin-top: 22px;
+            margin-bottom: 10px;
+        }
+        .details-grid {
+            width: 100%;
+            margin-bottom: 14px;
+            border-collapse: collapse;
+        }
+        .details-grid td {
+            padding: 4px 6px;
+            font-size: 9pt;
+            vertical-align: top;
+        }
+        .details-grid .dt-label {
+            font-weight: 600;
+            color: #5b6067;
+            width: 120px;
+        }
+
+        .rich-text {
+            font-size: 9.5pt;
+            line-height: 1.55;
+            color: #16181a;
+        }
+        .rich-text p {
+            margin: 0 0 8px 0;
+        }
+        .rich-text ul, .rich-text ol {
+            margin: 4px 0 8px 20px;
+            padding: 0;
+        }
+        .rich-text li {
+            margin-bottom: 2px;
+        }
+
+        /* Pinned figures */
+        .figure-item {
+            border: 1px solid #e3e3e0;
+            background-color: #ffffff;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+        .figure-name {
+            font-weight: 600;
+            font-size: 10pt;
+            color: #16181a;
+        }
+        .figure-meta {
+            font-size: 8pt;
+            color: #5b6067;
+            margin-top: 4px;
+        }
+
+        /* Comments */
+        .comment-item {
+            border-left: 3px solid #1f4b4a;
+            background-color: #f5f5f3;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+        .comment-header {
+            font-size: 8.5pt;
+            color: #5b6067;
+            margin-bottom: 4px;
+        }
+        .comment-author {
+            font-weight: 700;
+            color: #16181a;
+        }
+
+        .media-link {
+            font-family: monospace;
+            font-size: 8.5pt;
+            color: #1f4b4a;
+            word-break: break-all;
+        }
+
+        .thumb-img {
+            max-width: 120px;
+            max-height: 90px;
+            border-radius: 4px;
+            border: 1px solid #e3e3e0;
+            margin-top: 4px;
+        }
+
+        .empty-text {
+            font-style: italic;
+            color: #5b6067;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cover page -->
+<div class="cover-page">
+    <div class="cover-brand" th:text="#{pdf.cover.title}">DanceBook Export</div>
+    <div class="cover-title" th:text="${material.name}">Note Title</div>
+    <div class="cover-subtitle">
+        <span th:if="${material.danceType != null}" th:text="${material.danceType.name}">Waltz</span>
+        <span th:if="${material.danceType != null and material.danceType.category != null}" th:text="' · ' + ${material.danceType.category.name}"> · Standard</span>
+    </div>
+
+    <table class="cover-meta">
+        <tr>
+            <td class="label" th:text="#{pdf.cover.owner}">Owner:</td>
+            <td th:text="${ownerName}">Owner Name</td>
+        </tr>
+        <tr>
+            <td class="label" th:text="#{pdf.meta.created}">Created:</td>
+            <td th:text="${createdDateFormatted}">16 Sep 2026</td>
+        </tr>
+        <tr th:if="${updatedDateFormatted != null}">
+            <td class="label" th:text="#{pdf.meta.updated}">Updated:</td>
+            <td th:text="${updatedDateFormatted}">22 Sep 2026</td>
+        </tr>
+        <tr>
+            <td class="label" th:text="#{pdf.cover.date}">Export date:</td>
+            <td th:text="${exportDateFormatted}">25 Oct 2026</td>
+        </tr>
+    </table>
+</div>
+
+<!-- Item Details & Content -->
+<div class="content-page">
+    <div class="header-box">
+        <h1 class="item-title" th:text="${material.name}">Note Title</h1>
+        <div class="badges">
+            <span th:if="${material.danceType != null}" class="badge" th:text="${material.danceType.name}">Waltz</span>
+            <span th:if="${material.danceType != null and material.danceType.category != null}" class="badge" th:text="${material.danceType.category.name}">Standard</span>
+            <span class="badge" th:classappend="${material.isPublic ? 'badge-accent' : ''}"
+                  th:text="${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}">Public</span>
+            <span th:if="${material.rating != null}" class="badge" th:text="${#messages.msg('pdf.meta.rating') + ': ' + material.rating + '/5'}">Rating: 4/5</span>
+        </div>
+    </div>
+
+    <!-- Metadata Grid -->
+    <table class="details-grid">
+        <tr th:if="${material.danceType != null}">
+            <td class="dt-label" th:text="#{pdf.meta.style}">Style:</td>
+            <td th:text="${material.danceType.name}">Waltz</td>
+        </tr>
+        <tr th:if="${material.danceType != null and material.danceType.category != null}">
+            <td class="dt-label" th:text="#{pdf.meta.category}">Category:</td>
+            <td>
+                <span th:text="${material.danceType.category.name}">Standard</span>
+                <div th:if="${categoryImageBase64 != null}">
+                    <img th:src="${categoryImageBase64}" th:alt="${material.danceType.category.name}" alt="" class="thumb-img"/>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="dt-label" th:text="#{pdf.meta.privacy}">Privacy:</td>
+            <td th:text="${material.isPublic ? #messages.msg('notes.badge.public') : #messages.msg('notes.badge.private')}">Private</td>
+        </tr>
+        <tr th:if="${material.rating != null}">
+            <td class="dt-label" th:text="#{pdf.meta.rating}">Rating:</td>
+            <td th:text="${material.rating + ' / 5'}">4 / 5</td>
+        </tr>
+        <tr>
+            <td class="dt-label" th:text="#{pdf.meta.created}">Created:</td>
+            <td th:text="${createdDateFormatted}">16 Sep 2026</td>
+        </tr>
+        <tr th:if="${updatedDateFormatted != null}">
+            <td class="dt-label" th:text="#{pdf.meta.updated}">Updated:</td>
+            <td th:text="${updatedDateFormatted}">22 Sep 2026</td>
+        </tr>
+    </table>
+
+    <!-- Note full text -->
+    <div class="section-title" th:text="#{pdf.section.description}">Note Content</div>
+    <th:block th:if="${material.description != null and !#strings.isEmpty(#strings.trim(material.description))}">
+        <div th:replace="~{fragments/rich-text :: content(value=${material.description})}"></div>
+    </th:block>
+    <div th:if="${material.description == null or #strings.isEmpty(#strings.trim(material.description))}" class="empty-text" th:text="#{pdf.empty.description}">
+        No text content.
+    </div>
+
+    <!-- Pinned figures -->
+    <div class="section-title" th:text="#{pdf.section.figures}">Pinned Figures</div>
+    <th:block th:if="${figures != null and !#lists.isEmpty(figures)}">
+        <div th:each="f : ${figures}" class="figure-item">
+            <div class="figure-name" th:text="${f.name}">Figure Name</div>
+            <div class="figure-meta">
+                <span th:if="${f.danceFigure?.danceType != null}" th:text="${f.danceFigure.danceType.name}">Waltz</span>
+                <span th:if="${f.danceFigure?.danceClass != null}" th:text="' · ' + ${#messages.msg('notes.figures.class', f.danceFigure.danceClass)}"> · Class B</span>
+                <span th:if="${f.danceFigure?.alternativeTiming != null and !#strings.isEmpty(#strings.trim(f.danceFigure.alternativeTiming))}" th:text="' · ' + ${f.danceFigure.alternativeTiming.trim()}"> · 123</span>
+            </div>
+        </div>
+    </th:block>
+    <div th:if="${figures == null or #lists.isEmpty(figures)}" class="empty-text" th:text="#{pdf.empty.figures}">
+        No pinned figures.
+    </div>
+
+    <!-- Video and Media Links (printed as text) -->
+    <th:block th:if="${(material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))) or (material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))) or (material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink)))}">
+        <div class="section-title" th:text="#{pdf.section.media}">Media &amp; Video Links</div>
+        <table class="details-grid">
+            <tr th:if="${material.driveFileId != null and !#strings.isEmpty(#strings.trim(material.driveFileId))}">
+                <td class="dt-label" th:text="#{notes.media.video}">Video:</td>
+                <td>
+                    <span th:text="#{pdf.video.google_drive} + ' (' + ${material.driveFileId} + ')'">Google Drive Video</span>
+                </td>
+            </tr>
+            <tr th:if="${material.videoLink != null and !#strings.isEmpty(#strings.trim(material.videoLink))}">
+                <td class="dt-label" th:text="#{notes.media.video}">Video:</td>
+                <td class="media-link" th:text="${material.videoLink}">https://youtube.com/...</td>
+            </tr>
+            <tr th:if="${material.sourceLink != null and !#strings.isEmpty(#strings.trim(material.sourceLink))}">
+                <td class="dt-label" th:text="#{notes.media.source}">Source:</td>
+                <td class="media-link" th:text="${material.sourceLink}">https://example.com</td>
+            </tr>
+        </table>
+    </th:block>
+
+    <!-- Comments -->
+    <div class="section-title" th:text="#{pdf.section.comments}">Comments</div>
+    <th:block th:if="${comments != null and !#lists.isEmpty(comments)}">
+        <div th:each="c : ${comments}" class="comment-item">
+            <div class="comment-header">
+                <span class="comment-author" th:text="${c.author}">User</span> · <span th:text="${c.date}">16 Sep 2026, 14:00</span>
+            </div>
+            <div class="rich-text">
+                <div th:replace="~{fragments/rich-text :: content(value=${c.contentHtml})}"></div>
+            </div>
+        </div>
+    </th:block>
+    <div th:if="${comments == null or #lists.isEmpty(comments)}" class="empty-text" th:text="#{pdf.empty.comments}">
+        No comments.
+    </div>
+</div>
+
+</body>
+</html>
