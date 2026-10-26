@@ -73,6 +73,14 @@ section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var
 .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;box-shadow:0 -8px 28px rgba(22,24,26,.18);padding:10px 16px 18px}
 .sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--highest);margin:0 auto 12px}
 .sheet h3{margin:0 0 4px;font-size:16px}
+
+/* desktop frame (option A only) */
+.desk{width:980px;max-width:100%;border:1px solid var(--hair);border-radius:var(--r-card);padding:20px 32px 28px;background:var(--surface)}
+.desk .head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.desk .acts{display:flex;gap:10px;padding-top:4px}
+.desk .title{font-size:32px;line-height:38px}
+.desk .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.desk .tabs{margin-top:18px;border-bottom:1px solid var(--hair);padding-bottom:12px}
 </style>
 </head>
 <body>
@@ -132,6 +140,32 @@ section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var
             <div style="margin-top:10px"><span class="btn p" style="height:40px;width:100%">Analyze with AI</span></div>
           </div></div>
         <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+    </div>
+
+    <p class="note">On desktop Cancel and Save Figure sit at the right of the title row, the same place as the detail-page actions, instead of a sticky bar. The name field and the import row share a line, so the form starts higher.</p>
+    <div class="cols">
+      <div style="margin-top:8px"><p class="cap">Desktop, Add</p>
+      <div class="desk">
+        <a class="back"><span class="ms sm">arrow_back</span>Figures</a>
+        <div class="head"><div><div class="title">New figure</div><div class="sub">Cha Cha</div></div>
+          <div class="acts"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div></div>
+        <div class="info" style="max-width:520px"><span class="ms sm">info</span>Figures are shared with every DanceBook user.</div>
+        <div class="grid"><div><label class="label">Figure name <i>*</i></label><div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div><div class="chips"><span class="b cls">Class H</span></div></div>
+        <div><label class="label">&nbsp;</label><div class="disc" style="margin-top:0"><div class="h"><span class="ms" style="color:var(--primary)">auto_awesome</span><span class="g">Import from URL or JSON</span><span class="ms">expand_more</span></div></div></div></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span><span>Videos &amp; Resources</span><span>Figure Notes</span></div>
+        <div class="grid" style="margin-top:8px"><div><label class="label">Dance Style <i>*</i></label><div class="field">Cha Cha</div></div><div><label class="label">Alternative Timing</label><div class="field ph">e.g. 12&amp;3, SQQ, Q&amp;Q…</div></div></div>
+      </div></div>
+      <div style="margin-top:8px"><p class="cap">Desktop, Edit</p>
+      <div class="desk">
+        <a class="back"><span class="ms sm">arrow_back</span>Advanced Hip Twist</a>
+        <div class="head"><div><div class="title">Edit figure</div><div class="sub">Cha Cha</div></div>
+          <div class="acts"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div></div>
+        
+        <div class="grid"><div><label class="label">Figure name <i>*</i></label><div class="field">Advanced Hip Twist</div><div class="chips"><span class="b cls">Class F</span><span class="med"><span class="ms sm">workspace_premium</span>Bronze</span></div></div>
+        <div><label class="label">&nbsp;</label><div class="disc" style="margin-top:0"><div class="h"><span class="ms" style="color:var(--primary)">auto_awesome</span><span class="g">Re-import from URL or JSON</span><span class="ms">expand_more</span></div></div></div></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span><span>Videos &amp; Resources</span><span>Figure Notes</span></div>
+        <div class="grid" style="margin-top:8px"><div><label class="label">Dance Style <i>*</i></label><div class="field">Cha Cha</div></div><div><label class="label">Alternative Timing</label><div class="field ph">e.g. 12&amp;3, SQQ, Q&amp;Q…</div></div></div>
       </div></div>
     </div>
   </section>

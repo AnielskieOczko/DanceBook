@@ -80,6 +80,21 @@ section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var
 .sheet .li small{display:block;color:var(--on-var);font-size:12px}
 .sheet .li .grow{flex:1}
 .scrim{position:absolute;inset:0;background:rgba(22,24,26,.35)}
+
+/* desktop frame (option A only) */
+.desk{width:980px;max-width:100%;border:1px solid var(--hair);border-radius:var(--r-card);padding:24px 28px 20px;background:var(--surface)}
+.desk .title{font-size:32px;line-height:38px}
+.desk .tabs{margin-top:18px}
+.desk .tabs a{flex:none;padding:10px 12px 11px;display:inline-flex;align-items:center;gap:6px;font-size:14px}
+.tabbar{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:1px solid var(--hair);margin-top:18px}
+.tabbar .tabs{border:0;margin:0}
+.tabbar .tools{display:flex;align-items:center;gap:8px;padding-bottom:6px;flex:none}
+.tabbar .tools .chip,.tabbar .tools .status{flex:none;white-space:nowrap}
+.desk .tools .btn{height:40px;padding:0 16px;font-size:13px}
+.desk .tools .chip{height:40px}
+.desk .tools .ib{width:40px;height:40px}
+.drow{display:flex;align-items:center;gap:16px;height:60px;border-bottom:1px solid var(--hair);padding:0 4px}
+.drow .d{width:120px;color:var(--on-var);font-size:13px}.drow .n{flex:1;font-weight:600}.drow .m{width:160px;color:var(--on-var);font-size:13px}
 </style>
 </head>
 <body>
@@ -114,6 +129,25 @@ section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var
         <div class="fake"><i></i><i></i><i></i></div>
       </div></div>
     </div>
+
+    <p class="note">On desktop the same four rows become two: the view tabs share a line with the calendar tools (chip, Sync now with a label, settings), and search and Filters sit on one row below. Add Session stays at the right of the title row, so its position is the same at every width.</p>
+    <div class="cols"><div><p class="cap">Desktop, List view</p>
+      <div class="desk">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="btn p"><span class="ms sm">add</span>Add Session</span>
+        </div>
+        <div class="tabbar">
+          <div class="tabs"><a class="on"><span class="ms sm">list</span>List</a><a><span class="ms sm">calendar_month</span>Calendar</a><a><span class="ms sm">show_chart</span>Timeline</a><a><span class="ms sm">bar_chart</span>Stats</a><a><span class="ms sm">history</span>History</a></div>
+          <div class="tools"><span class="chip"><span>Primary Calendar</span><span class="ms sm">expand_more</span></span><span class="btn o"><span class="ms sm">sync</span>Sync now</span><span class="status">Synced 21:00</span><span class="ib q"><span class="ms">settings</span></span></div>
+        </div>
+        <div class="search" style="margin-top:16px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="btn o"><span class="ms sm">tune</span>Filters</span></div>
+        <div style="margin-top:12px">
+          <div class="drow"><span class="d">Sat 24 Oct</span><span class="n">Test occurrence 4</span><span class="m">10:00–11:00</span></div>
+          <div class="drow"><span class="d">Thu 22 Oct</span><span class="n">Latin technique</span><span class="m">18:00–20:00</span></div>
+          <div class="drow"><span class="d">Tue 20 Oct</span><span class="n">Waltz routine</span><span class="m">19:00–20:30</span></div>
+        </div>
+      </div></div></div>
   </section>
 
   <!-- B -->
