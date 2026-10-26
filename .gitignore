@@ -72,3 +72,6 @@ uploads/
 scratch/
 # Semantic search evaluation (#347): per-machine embedding caches
 docs/evaluation/semantic-search/vectors-*.json
+
+# Firebase Hosting deploy cache (splash/)
+splash/.firebase/
