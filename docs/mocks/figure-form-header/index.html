@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Figure Form Header</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for the Add / Edit figure header on a phone (issue #428).
+   Tokens from src/main/resources/frontend/input.css, borderless filled pill fields from docs/mocks/rounded-forms,
+   back row from docs/mocks/detail-headers (option A), medal colours from docs/mocks/figures.
+   Every option shows Add and Edit and keeps: a labelled Figure name field, class chip, medal (edit only),
+   Save and Cancel (both labelled), the "shared with every user" notice, and the AI / JSON import. */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --bronze:#8a5a2e; --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 96px;background:var(--surface);color:var(--on);font:14px/1.5 var(--font)}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1.pt{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+p{margin:0}
+.lede{max-width:72ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:78ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.rules{font-size:13px;color:var(--on-var);max-width:80ch;padding-left:18px;margin:0}
+.rules li{margin:2px 0}.rules b{color:var(--on)}
+.cols{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}
+
+.phone{width:375px;max-width:100%;border:1px solid var(--hair);border-radius:28px;padding:14px 16px 16px;position:relative;background:var(--surface);overflow:hidden;min-height:600px}
+.phone.pad{padding-bottom:84px}
+.btn{height:44px;border-radius:var(--r-pill);padding:0 20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;border:1px solid transparent;white-space:nowrap;flex:none}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.o{background:var(--surface);border-color:var(--outline);color:var(--on)}
+.btn.t{color:var(--on-var);padding:0 12px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--on-var);font-weight:500;font-size:14px;margin-left:-6px;padding:0 6px}
+.title{margin:0;font-size:26px;line-height:32px;font-weight:600;letter-spacing:-.015em}
+.sub{color:var(--on-var);font-size:13px}
+.label{display:block;font-size:13px;font-weight:600;margin:16px 0 6px 4px}
+.label i{color:#b3261e;font-style:normal}
+.field{height:48px;border-radius:var(--r-pill);background:var(--container);display:flex;align-items:center;padding:0 18px;color:var(--on)}
+.field.ph{color:var(--on-var)}
+.chips{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.b{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 10px;border-radius:var(--r-pill);font-size:12px;font-weight:600;background:var(--container);color:var(--on-var)}
+.b.cls{background:var(--primary);color:var(--on-primary)}
+.med{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--bronze)}
+.info{display:flex;gap:10px;align-items:flex-start;background:var(--container);border-radius:var(--r-inset);padding:10px 12px;font-size:12.5px;color:var(--on-var);margin-top:12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tabs span{height:32px;padding:0 12px;border-radius:var(--r-pill);display:inline-flex;align-items:center;font-size:12.5px;font-weight:500;border:1px solid var(--hair)}
+.tabs span.on{border-color:var(--primary);color:var(--primary);font-weight:600}
+.fake{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.fake i{display:block;height:44px;border-radius:var(--r-pill);background:var(--container)}
+.seg{display:flex;background:var(--container);border-radius:var(--r-pill);padding:4px;margin-top:12px}
+.seg a{flex:1;height:38px;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:500;color:var(--on-var)}
+.seg a.on{background:var(--surface);color:var(--on);font-weight:600;box-shadow:0 1px 3px rgba(22,24,26,.14)}
+.disc{border:1px solid var(--hair);border-radius:var(--r-inset);margin-top:14px}
+.disc .h{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;font-weight:600;font-size:13.5px}
+.disc .h .g{flex:1}
+.disc .body{border-top:1px solid var(--hair);padding:12px 14px 14px;font-size:12.5px;color:var(--on-var)}
+.stickybar{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--hair);padding:10px 16px 14px;display:flex;gap:10px}
+.stickybar .btn{flex:1}
+.topbar{display:flex;align-items:center;justify-content:space-between;min-height:52px;margin:-14px -16px 0;padding:0 8px;border-bottom:1px solid var(--hair)}
+.topbar .t{font-weight:600;font-size:15px}
+.scrim{position:absolute;inset:0;background:rgba(22,24,26,.35)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;box-shadow:0 -8px 28px rgba(22,24,26,.18);padding:10px 16px 18px}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--highest);margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="pt">Add / Edit figure: header, name and import</h1>
+    <p class="lede">Issue <b>#428</b>. Today the top of the form stacks a "Manual Edit / Guided Edit" switch, a notice, the name field (no label), and a row where Save Figure floats between the class chip and a bare ✕. Three ways to organise it. Each is shown for <b>Add</b> and <b>Edit</b> at 375 px.</p>
+    <p class="note" style="margin-top:10px"><b>Wording, all options:</b> the field is labelled <b>Figure name</b>. "Guided Edit" is an AI / JSON <i>import</i>, so it is renamed <b>Import from URL or JSON</b> (Add) and <b>Re-import from URL or JSON</b> (Edit); "Manual Edit" is dropped as a name because filling in the form is simply the form. Cancel is a labelled action everywhere, not only an ✕. The medal appears on Edit only (a new figure has none yet). The form sections below (Core Information, Positions &amp; Footwork, Steps Breakdown, Connections, Videos &amp; Resources, Figure Notes) are unchanged.</p>
+  </header>
+
+  <!-- A -->
+  <section class="opt">
+    <h2>A · Name first, import tucked into an expandable row <span class="rec"><span class="ms sm">star</span> Recommended</span></h2>
+    <ul class="rules">
+      <li><b>Top:</b> the detail-headers back row ("‹ Figures" / "‹ Advanced Hip Twist"), then the title, then the labelled <b>Figure name</b> field and the class chip (and medal on Edit).</li>
+      <li><b>Import</b> becomes a collapsed row "✨ Import from URL or JSON" below the name. It opens in place with the existing panel; on Add it is a normal collapsed row, on Edit it reads "Re-import".</li>
+      <li><b>Save / Cancel:</b> a sticky bar at the bottom with Cancel (outline) and Save Figure (filled), always reachable on the long form. No ✕ at the top.</li>
+      <li><b>Cost:</b> import is one tap further than today's always-visible switch; the people who use it most are on Add, where the row sits right under the name.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Add</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Figures</a>
+        <div class="title">New figure</div><div class="sub">Cha Cha</div>
+        <div class="info"><span class="ms sm">info</span>Figures are shared with every DanceBook user.</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div>
+        <div class="chips"><span class="b cls">Class H</span></div>
+        <div class="disc"><div class="h"><span class="ms" style="color:var(--primary)">auto_awesome</span><span class="g">Import from URL or JSON</span><span class="ms">expand_more</span></div></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i></div>
+        <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+      <div><p class="cap">Edit</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Advanced Hip Twist</a>
+        <div class="title">Edit figure</div><div class="sub">Cha Cha</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field">Advanced Hip Twist</div>
+        <div class="chips"><span class="b cls">Class F</span><span class="med"><span class="ms sm">workspace_premium</span>Bronze</span></div>
+        <div class="disc"><div class="h"><span class="ms" style="color:var(--primary)">auto_awesome</span><span class="g">Re-import from URL or JSON</span><span class="ms">expand_more</span></div></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i></div>
+        <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+      <div><p class="cap">Add, import row opened</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Figures</a>
+        <div class="title">New figure</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div>
+        <div class="disc"><div class="h"><span class="ms" style="color:var(--primary)">auto_awesome</span><span class="g">Import from URL or JSON</span><span class="ms">expand_less</span></div>
+          <div class="body">
+            <div class="seg" style="margin-top:0"><a class="on">Parse URL</a><a>Paste JSON</a></div>
+            <label class="label" style="margin-top:12px">Dance Syllabus URL</label>
+            <div class="field ph">https://…</div>
+            <div style="margin-top:10px"><span class="btn p" style="height:40px;width:100%">Analyze with AI</span></div>
+          </div></div>
+        <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section class="opt">
+    <h2>B · App-style top bar: Cancel, title, Save</h2>
+    <ul class="rules">
+      <li><b>One slim bar</b> at the top: <b>Cancel</b> on the left, the page title centred, <b>Save</b> on the right. It stays on screen while the form scrolls. Replaces the floating Save and the bare ✕.</li>
+      <li><b>Mode switch stays visible</b> as a two-way segmented control under the bar, with honest names: <b>Fill in</b> and <b>Import</b> on Add; <b>Details</b> and <b>Re-import</b> on Edit.</li>
+      <li><b>Cost:</b> import stays one tap away and Save is always at the top, but the segmented control still takes a row, and the bar sits next to the app's own header.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Add</p>
+      <div class="phone">
+        <div class="topbar"><span class="btn t">Cancel</span><span class="t">New figure</span><span class="btn t" style="color:var(--primary);font-weight:700">Save</span></div>
+        <div class="seg"><a class="on"><span class="ms sm">edit</span>Fill in</a><a><span class="ms sm">auto_awesome</span>Import</a></div>
+        <div class="info"><span class="ms sm">info</span>Figures are shared with every DanceBook user.</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div>
+        <div class="chips"><span class="b cls">Class H</span></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i><i></i></div>
+      </div></div>
+      <div><p class="cap">Edit</p>
+      <div class="phone">
+        <div class="topbar"><span class="btn t">Cancel</span><span class="t">Edit figure</span><span class="btn t" style="color:var(--primary);font-weight:700">Save</span></div>
+        <div class="seg"><a class="on"><span class="ms sm">edit</span>Details</a><a><span class="ms sm">auto_awesome</span>Re-import</a></div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field">Advanced Hip Twist</div>
+        <div class="chips"><span class="b cls">Class F</span><span class="med"><span class="ms sm">workspace_premium</span>Bronze</span></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i><i></i></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="opt">
+    <h2>C · Form only; import as a button that opens a sheet</h2>
+    <ul class="rules">
+      <li><b>The page is just the form</b>: back row, title, labelled <b>Figure name</b>, class chip and medal. No switch and no import panel on the page.</li>
+      <li><b>Import</b> is a quiet "✨ Import" button beside the title. It opens a bottom sheet (or full-screen on small phones) holding the URL / JSON panel, so the page stays short and the import has room.</li>
+      <li><b>Save / Cancel:</b> sticky bottom bar, as in A.</li>
+      <li><b>Cost:</b> the existing import panel has to be reshaped to live in a sheet, so this is the most build work; it gives the cleanest form.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Add</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Figures</a>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="title">New figure</div><span class="btn o" style="height:40px;padding:0 14px"><span class="ms sm" style="color:var(--primary)">auto_awesome</span>Import</span></div>
+        <div class="sub">Cha Cha</div>
+        <div class="info"><span class="ms sm">info</span>Figures are shared with every DanceBook user.</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div>
+        <div class="chips"><span class="b cls">Class H</span></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i></div>
+        <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+      <div><p class="cap">Edit</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Advanced Hip Twist</a>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div class="title">Edit figure</div><span class="btn o" style="height:40px;padding:0 14px"><span class="ms sm" style="color:var(--primary)">auto_awesome</span>Re-import</span></div>
+        <div class="sub">Cha Cha</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field">Advanced Hip Twist</div>
+        <div class="chips"><span class="b cls">Class F</span><span class="med"><span class="ms sm">workspace_premium</span>Bronze</span></div>
+        <div class="tabs"><span class="on">Core Information</span><span>Positions &amp; Footwork</span><span>Steps Breakdown</span><span>Connections</span></div>
+        <div class="fake"><i></i><i></i></div>
+        <div class="stickybar"><span class="btn o">Cancel</span><span class="btn p">Save Figure</span></div>
+      </div></div>
+      <div><p class="cap">Add, import sheet opened</p>
+      <div class="phone pad">
+        <a class="back"><span class="ms sm">arrow_back</span>Figures</a>
+        <div class="title">New figure</div>
+        <label class="label">Figure name <i>*</i></label>
+        <div class="field ph">e.g. Back Whisk, Double Reverse Spin…</div>
+        <div class="scrim"></div>
+        <div class="sheet"><div class="grab"></div><h3>Import from URL or JSON</h3>
+          <div class="seg"><a class="on">Parse URL</a><a>Paste JSON</a></div>
+          <label class="label" style="margin-top:12px">Dance Syllabus URL</label>
+          <div class="field ph">https://…</div>
+          <div style="display:flex;gap:10px;margin-top:14px"><span class="btn o" style="flex:1">Close</span><span class="btn p" style="flex:1">Analyze with AI</span></div>
+        </div>
+      </div></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

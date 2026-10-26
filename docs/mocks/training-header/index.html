@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DanceBook Training Header (mobile)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0">
+<style>
+/* Mock for the Training page header on a phone (issue #427).
+   Tokens from src/main/resources/frontend/input.css, radii from docs/mocks/rounded-forms,
+   compact rows and the Filters sheet from docs/mocks/mobile-lists.
+   Every direction keeps every control the page has today: title and count, Add Session, the five views,
+   calendar selector, calendar settings, Sync now with its last-synced time, search, Filters.
+   Every direction also fixes the tab bar: no scrollbar, no tab cut off mid-label. */
+:root{
+  --surface:#fff; --container:#f5f5f3; --highest:#e3e3e0; --outline:#8e9199; --hair:#e3e3e0;
+  --on:#16181a; --on-var:#5b6067; --primary:#1f4b4a; --primary-soft:#e9eded; --on-primary:#fff;
+  --r-pill:9999px; --r-card:1rem; --r-inset:.75rem;
+  --font:'Inter',system-ui,sans-serif; color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 16px 96px;background:var(--surface);color:var(--on);font:14px/1.5 var(--font)}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1.pt{font-size:30px;line-height:36px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600}
+h2{font-size:22px;line-height:28px;margin:0;font-weight:600}
+p{margin:0}
+.lede{max-width:72ch;color:var(--on-var);font-size:16px;line-height:26px}
+.note{font-size:13px;color:var(--on-var);max-width:78ch}
+section.opt{display:flex;flex-direction:column;gap:18px;border-top:1px solid var(--hair);padding-top:24px}
+.rec{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:2px 10px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;vertical-align:middle}
+.rules{font-size:13px;color:var(--on-var);max-width:80ch;padding-left:18px;margin:0}
+.rules li{margin:2px 0}.rules b{color:var(--on)}
+.cols{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.cap{font-size:12px;font-weight:600;color:var(--on-var);margin:0 0 8px 4px}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;display:inline-block;letter-spacing:normal;text-transform:none;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased}
+.ms.sm{font-size:16px}
+
+/* phone frame */
+.phone{width:375px;max-width:100%;border:1px solid var(--hair);border-radius:28px;padding:16px;position:relative;background:var(--surface);overflow:hidden}
+.phone.tall{min-height:640px}
+.fake{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.fake i{display:block;height:56px;border-radius:12px;background:var(--container)}
+
+/* shared parts */
+.btn{height:44px;border-radius:var(--r-pill);padding:0 20px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;border:1px solid transparent;white-space:nowrap;flex:none}
+.btn.p{background:var(--primary);color:var(--on-primary)}
+.btn.o{background:var(--surface);border-color:var(--outline);color:var(--on)}
+.ib{width:44px;height:44px;border-radius:var(--r-pill);border:1px solid var(--outline);display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--surface)}
+.ib.q{border-color:transparent;color:var(--on-var)}
+.title{margin:0;font-size:26px;line-height:32px;font-weight:600;letter-spacing:-.015em}
+.sub{color:var(--on-var);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 14px;border-radius:var(--r-pill);background:var(--container);font-size:14px;font-weight:500;min-width:0}
+.chip span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status{font-size:12px;color:var(--on-var)}
+.search{display:flex;gap:8px;align-items:center}
+.search .field{flex:1;height:44px;border-radius:var(--r-pill);background:var(--container);display:flex;align-items:center;gap:8px;padding:0 14px;color:var(--on-var)}
+.row{display:flex;align-items:center;gap:8px;margin-top:12px}
+
+/* tab strips: five views fit, no scrollbar, nothing clipped */
+.tabs{display:flex;border-bottom:1px solid var(--hair);margin-top:14px}
+.tabs a{flex:1;text-align:center;padding:10px 0 11px;font-size:13px;font-weight:500;color:var(--on-var);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs a.on{color:var(--primary);border-color:var(--primary);font-weight:600}
+.tabs.icons a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;padding:8px 0}
+.seg{display:flex;background:var(--container);border-radius:var(--r-pill);padding:4px;margin-top:14px}
+.seg a{flex:1;height:36px;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:500;color:var(--on-var)}
+.seg a.on{background:var(--surface);color:var(--on);font-weight:600;box-shadow:0 1px 3px rgba(22,24,26,.14)}
+
+/* bottom bar (B) and sheet (B, C) */
+.bottom{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--hair);display:flex;padding:6px 8px 10px}
+.bottom a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:500;color:var(--on-var);min-height:48px;justify-content:center}
+.bottom a.on{color:var(--primary);font-weight:600}
+.fab{position:absolute;right:16px;bottom:84px;height:52px;border-radius:var(--r-pill);background:var(--primary);color:var(--on-primary);display:inline-flex;align-items:center;gap:8px;padding:0 20px;font-weight:600;box-shadow:0 8px 24px rgba(22,24,26,.25)}
+.fab.low{bottom:16px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;box-shadow:0 -8px 28px rgba(22,24,26,.18);padding:10px 16px 18px}
+.sheet .grab{width:36px;height:4px;border-radius:2px;background:var(--highest);margin:0 auto 12px}
+.sheet h3{margin:0 0 4px;font-size:16px}
+.sheet .li{display:flex;align-items:center;gap:12px;min-height:52px;border-top:1px solid var(--hair);font-size:14px}
+.sheet .li:first-of-type{border-top:0}
+.sheet .li small{display:block;color:var(--on-var);font-size:12px}
+.sheet .li .grow{flex:1}
+.scrim{position:absolute;inset:0;background:rgba(22,24,26,.35)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="pt">Training page header on a phone</h1>
+    <p class="lede">Issue <b>#427</b>. Today the first screen holds title, Add Session, a five-tab bar that overflows, the calendar selector with its cog, a Sync button, and search with Filters: seven stacked rows before the first session. Three ways to cut that down, each shown at 375 px with the List view and its first rows.</p>
+    <p class="note" style="margin-top:10px"><b>Kept in every option:</b> title and "11 sessions logged", Add Session, the five views (List, Calendar, Timeline, Stats, History), the calendar selector, calendar settings, Sync now with its "Synced 21:00" time, search and Filters. <b>Fixed in every option:</b> the tab bar has no scrollbar and no label is cut off; the five views always fit on one line.</p>
+  </header>
+
+  <!-- A -->
+  <section class="opt">
+    <h2>A · One tidy header, fewer rows <span class="rec"><span class="ms sm">star</span> Recommended</span></h2>
+    <ul class="rules">
+      <li><b>Title row:</b> title and count on the left, <b>Add Session</b> on the right as a compact pill (icon and "Add"). Same right-aligned action position as desktop and #424.</li>
+      <li><b>Views:</b> an underlined text tab strip, five equal columns, no icons, no scrolling.</li>
+      <li><b>Calendar line:</b> the calendar selector chip, a <b>sync</b> icon button and the settings cog share one line; "Synced 21:00" moves under the chip as a caption.</li>
+      <li><b>Search + Filters</b> stay as in the mobile-lists mock.</li>
+      <li><b>Cost:</b> four rows instead of seven. Nothing is hidden. No new component beyond a compact button.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Phone, List view</p>
+      <div class="phone">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="btn p" style="height:40px;padding:0 16px"><span class="ms sm">add</span>Add</span>
+        </div>
+        <div class="tabs"><a class="on">List</a><a>Calendar</a><a>Timeline</a><a>Stats</a><a>History</a></div>
+        <div class="row"><span class="chip" style="flex:1"><span>Primary Calendar</span><span class="ms sm">expand_more</span></span><span class="ib"><span class="ms">sync</span></span><span class="ib q"><span class="ms">settings</span></span></div>
+        <div class="status" style="margin:4px 0 0 14px">Synced 21:00</div>
+        <div class="search" style="margin-top:12px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="ib"><span class="ms">tune</span></span></div>
+        <div class="fake"><i></i><i></i><i></i></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section class="opt">
+    <h2>B · Views in a bottom bar, calendar in a sheet</h2>
+    <ul class="rules">
+      <li><b>Views move to a bottom bar</b> (List, Calendar, Timeline, Stats, History with icons), the same reach zone phones use for primary navigation. Only for the Training page; the rest of the app keeps its current navigation.</li>
+      <li><b>Header:</b> title, count, and a calendar button at the right that opens a bottom sheet with the calendar selector, calendar settings and <b>Sync now</b> with "Synced 21:00".</li>
+      <li><b>Add Session</b> becomes a floating button above the bar.</li>
+      <li><b>Cost:</b> the shortest header (title, search), but a second bottom bar next to the app's own chrome, and the sync status is one tap away.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Phone, List view</p>
+      <div class="phone tall">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="ib"><span class="ms">event_repeat</span></span>
+        </div>
+        <div class="search" style="margin-top:14px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="ib"><span class="ms">tune</span></span></div>
+        <div class="fake"><i></i><i></i><i></i><i></i></div>
+        <span class="fab"><span class="ms">add</span>Add Session</span>
+        <div class="bottom"><a class="on"><span class="ms">list</span>List</a><a><span class="ms">calendar_month</span>Calendar</a><a><span class="ms">show_chart</span>Timeline</a><a><span class="ms">bar_chart</span>Stats</a><a><span class="ms">history</span>History</a></div>
+      </div></div>
+      <div><p class="cap">Calendar button opened</p>
+      <div class="phone tall">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="ib" style="background:var(--container)"><span class="ms">event_repeat</span></span>
+        </div>
+        <div class="search" style="margin-top:14px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="ib"><span class="ms">tune</span></span></div>
+        <div class="fake"><i></i><i></i><i></i></div>
+        <div class="scrim"></div>
+        <div class="sheet"><div class="grab"></div><h3>Calendar</h3>
+          <div class="li"><span class="ms">calendar_month</span><span class="grow">Primary Calendar</span><span class="ms">expand_more</span></div>
+          <div class="li"><span class="ms">sync</span><span class="grow">Sync now<small>Synced 21:00</small></span></div>
+          <div class="li"><span class="ms">settings</span><span class="grow">Calendar settings</span><span class="ms">chevron_right</span></div>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="opt">
+    <h2>C · View picker and one status line</h2>
+    <ul class="rules">
+      <li><b>Views become a dropdown</b> pill in the title row ("List ▾"), opening a short list of the five views. The tab strip disappears, so nothing can clip or scroll.</li>
+      <li><b>Calendar and sync merge into one quiet status line</b> under the title: "Primary Calendar · Synced 21:00" with the sync icon; tapping the line opens the same sheet as B for choosing a calendar and its settings.</li>
+      <li><b>Add Session</b> is a floating button at the bottom right.</li>
+      <li><b>Cost:</b> the calmest first screen, but switching views takes two taps instead of one, and the current view is less visible than with tabs.</li>
+    </ul>
+    <div class="cols">
+      <div><p class="cap">Phone, List view</p>
+      <div class="phone tall">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="chip"><span class="ms sm">list</span><span>List</span><span class="ms sm">expand_more</span></span>
+        </div>
+        <div class="row" style="margin-top:10px"><span class="status" style="flex:1;display:flex;align-items:center;gap:6px"><span class="ms sm">calendar_month</span>Primary Calendar · Synced 21:00</span><span class="ib q"><span class="ms">sync</span></span></div>
+        <div class="search" style="margin-top:6px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="ib"><span class="ms">tune</span></span></div>
+        <div class="fake"><i></i><i></i><i></i><i></i></div>
+        <span class="fab low"><span class="ms">add</span>Add Session</span>
+      </div></div>
+      <div><p class="cap">View picker opened</p>
+      <div class="phone tall">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="title">Training</div><div class="sub">11 sessions logged</div></div>
+          <span class="chip" style="background:var(--primary-soft);color:var(--primary)"><span class="ms sm">list</span><span>List</span><span class="ms sm">expand_less</span></span>
+        </div>
+        <div style="position:absolute;right:16px;top:76px;width:200px;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-inset);box-shadow:0 8px 28px rgba(22,24,26,.16);padding:6px;z-index:2">
+          <div style="display:flex;gap:10px;align-items:center;min-height:44px;padding:0 12px;color:var(--primary);font-weight:600"><span class="ms sm">list</span>List</div>
+          <div style="display:flex;gap:10px;align-items:center;min-height:44px;padding:0 12px"><span class="ms sm">calendar_month</span>Calendar</div>
+          <div style="display:flex;gap:10px;align-items:center;min-height:44px;padding:0 12px"><span class="ms sm">show_chart</span>Timeline</div>
+          <div style="display:flex;gap:10px;align-items:center;min-height:44px;padding:0 12px"><span class="ms sm">bar_chart</span>Stats</div>
+          <div style="display:flex;gap:10px;align-items:center;min-height:44px;padding:0 12px"><span class="ms sm">history</span>History</div>
+        </div>
+        <div class="row" style="margin-top:10px"><span class="status" style="flex:1;display:flex;align-items:center;gap:6px"><span class="ms sm">calendar_month</span>Primary Calendar · Synced 21:00</span><span class="ib q"><span class="ms">sync</span></span></div>
+        <div class="search" style="margin-top:6px"><div class="field"><span class="ms">search</span>Search sessions…</div><span class="ib"><span class="ms">tune</span></span></div>
+        <div class="fake"><i></i><i></i></div>
+      </div></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
