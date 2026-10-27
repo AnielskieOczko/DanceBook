@@ -41,11 +41,12 @@
         </div>
     </div>
 
-    <!-- Trailing Action Slot: quiet ⋯ overflow menu -->
-    <div class="relative z-20 pointer-events-auto shrink-0 flex items-center">
-        <th:block th:if="${menuSlot != null}">
-            <div th:replace="~{fragments/page :: overflowMenu(menuSlot=${menuSlot}, quiet=true)}"></div>
-        </th:block>
+    <!-- Trailing Action Slot (#425): a 56px, full-row-height column flush with the right edge
+         (-mr-4 cancels the row's px-4). It sits above the stretched link, so a tap anywhere in it
+         hits the slot, never the link; the 44px ⋯ button is centred with 6px of buffer around it. -->
+    <div th:if="${menuSlot != null}"
+         class="js-row-trailing relative z-20 pointer-events-auto shrink-0 self-stretch -mr-4 w-14 flex items-center justify-center">
+        <div th:replace="~{fragments/page :: overflowMenu(menuSlot=${menuSlot}, quiet=true)}"></div>
     </div>
 </article>
 
