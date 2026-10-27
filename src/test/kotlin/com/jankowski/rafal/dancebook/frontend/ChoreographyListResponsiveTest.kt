@@ -170,6 +170,13 @@ class ChoreographyListResponsiveTest {
         assertNotNull(compactRow, "Compact row must exist")
         assertTrue(compactRow!!.hasClass("h-[76px]"), "Compact row must have standard 76px height")
         assertNotNull(compactRow.selectFirst(".js-menu-btn"), "Compact row must contain overflow menu trigger")
+        val trailing = compactRow.selectFirst(".js-row-trailing")
+        assertNotNull(trailing, "Menu button must sit in the trailing hit-area slot (#425)")
+        assertTrue(
+            trailing!!.hasClass("w-14") && trailing.hasClass("self-stretch") && trailing.hasClass("z-20"),
+            "Trailing slot must be a 56px full-height column above the stretched link"
+        )
+        assertNotNull(trailing.selectFirst(".js-menu-btn"), "Menu button must be inside the trailing slot")
 
         // Desktop dense table
         val desktopTable = doc.selectFirst("#choreographies-table")
