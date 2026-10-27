@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Elements
-    const manualEditTabBtn = document.getElementById('manual-edit-tab-btn');
-    const guidedEditTabBtn = document.getElementById('guided-edit-tab-btn');
+    const importDisclosure = document.getElementById('import-disclosure');
     const guidedEditPanel = document.getElementById('guided-edit-panel');
     const figureForm = document.getElementById('figureForm');
 
@@ -58,48 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
     let parsedResultData = null; // Stores currently loaded parsed data
     const isEditPage = checkIsEditPage();
 
-    // 2. Tab Toggling (Manual vs Guided)
-    manualEditTabBtn.addEventListener('click', () => {
-        switchMainTab('MANUAL');
-    });
-
-    guidedEditTabBtn.addEventListener('click', () => {
-        switchMainTab('GUIDED');
-    });
-
-    // The two mode buttons are seg-pill buttons: the shared .active / aria-pressed state is the
-    // whole look, so swap those and leave their classes alone.
-    function setActiveModeTab(active, inactive) {
-        active.classList.add('active');
-        active.setAttribute('aria-pressed', 'true');
-        inactive.classList.remove('active');
-        inactive.setAttribute('aria-pressed', 'false');
+    // 2. Disclosure Toggling
+    if (importDisclosure) {
+        importDisclosure.addEventListener('toggle', () => {
+            if (importDisclosure.open) {
+                // Auto-load models and history if not loaded
+                loadModels();
+                loadUrlHistory();
+            }
+        });
     }
 
-    function switchMainTab(tab) {
-        if (tab === 'MANUAL') {
-            figureForm.classList.remove('hidden');
-            guidedEditPanel.classList.add('hidden');
-            setActiveModeTab(manualEditTabBtn, guidedEditTabBtn);
-        } else {
-            figureForm.classList.add('hidden');
-            guidedEditPanel.classList.remove('hidden');
-            setActiveModeTab(guidedEditTabBtn, manualEditTabBtn);
-            
-            // Auto-load models and history if not loaded
-            loadModels();
-            loadUrlHistory();
-        }
+    if (guidedUrlInput && parseUrlBtn) {
+        guidedUrlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                parseUrlBtn.click();
+            }
+        });
     }
 
     // Keyboard shortcut (Ctrl+Shift+G)
     window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'g') {
             e.preventDefault();
-            if (guidedEditPanel.classList.contains('hidden')) {
-                switchMainTab('GUIDED');
-            } else {
-                switchMainTab('MANUAL');
+            if (importDisclosure) {
+                importDisclosure.open = !importDisclosure.open;
+                if (importDisclosure.open) {
+                    loadModels();
+                    loadUrlHistory();
+                }
             }
         }
     });
@@ -784,9 +771,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showToast(I18n.t('js.guided.success.applied'), "success");
         
-        // Discard parsed state and switch back to Manual edit view
+        // Discard parsed state and collapse disclosure
         discardImport();
-        switchMainTab('MANUAL');
+        if (importDisclosure) {
+            importDisclosure.open = false;
+        }
     });
 
     discardImportBtn.addEventListener('click', () => {

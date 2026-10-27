@@ -2,50 +2,84 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: html(content=~{::section})}">
 
-<section th:with="activeNav='dance-figures'" class="max-w-[1240px] mx-auto pt-6 pb-28 sm:pb-32 px-4 sm:px-6">
+<section th:with="activeNav='dance-figures'" class="max-w-[1240px] mx-auto pt-6 pb-48 sm:pb-32 px-4 sm:px-6">
 
-    <!-- Page Header & Mode Switcher -->
+    <!-- Page Header & Actions -->
     <div th:replace="~{fragments/page :: pageHeader(
         backHref=${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId},
         backLabel=${danceFigureId == null ? #messages.msg('figures.back_to_list') : ((danceFigure.name != null and !danceFigure.name.isEmpty()) ? danceFigure.name : #messages.msg('figures.back_to_list'))},
         title=${danceFigureId == null ? #messages.msg('figures.form.title.create') : ((danceFigure.name != null and !danceFigure.name.isEmpty()) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))},
         subtitle=${danceFigure.danceTypeId != null && !#lists.isEmpty(danceTypes.?[id == #root.danceFigure.danceTypeId]) ? danceTypes.?[id == #root.danceFigure.danceTypeId][0].name : null},
-        toolbar=~{::figureModeSwitcher})}">
+        toolbar=~{::desktopActions})}">
 
-        <div th:fragment="figureModeSwitcher" class="seg-pill max-md:flex max-md:flex-nowrap max-md:w-full" role="group" aria-label="Edit mode" th:attr="aria-label=#{figures.form.aria.edit_mode}">
-            <button type="button" id="manual-edit-tab-btn" class="seg-pill-btn active max-md:flex-1 max-md:justify-center max-md:px-3 max-md:min-w-0 max-md:whitespace-normal max-md:text-center max-md:leading-tight" aria-pressed="true">
-                <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
-                <span th:text="#{figures.form.tab.manual}">Manual Edit</span>
-            </button>
-            <button type="button" id="guided-edit-tab-btn" class="seg-pill-btn max-md:flex-1 max-md:justify-center max-md:px-3 max-md:min-w-0 max-md:whitespace-normal max-md:text-center max-md:leading-tight" aria-pressed="false">
-                <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='sm')}"></span>
-                <span th:text="#{figures.form.tab.guided}">Guided Import</span>
-            </button>
+        <div th:fragment="desktopActions" class="hidden sm:flex items-center gap-2 pt-0.5">
+            <span class="text-[13px] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
+            <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
+               class="btn-outline btn-sm min-h-[44px] inline-flex items-center justify-center"
+               th:text="#{figures.form.cancel}">Cancel</a>
+            <button type="submit" form="figureForm"
+                    class="btn-primary btn-sm min-h-[44px] inline-flex items-center justify-center font-semibold"
+                    th:text="#{figures.form.save}">Save Figure</button>
         </div>
     </div>
 
-    <!-- Main Figure Form -->
-    <!-- Guided Edit Panel (Hidden by Default) -->
-    <div id="guided-edit-panel" class="hidden space-y-6 my-6 card p-6 sm:p-8 bg-surface border border-border rounded-card">
-        <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
+          th:object="${danceFigure}" method="post" id="figureForm" class="flex flex-col ed-form">
+
+        <!-- Screen-reader accessible page heading -->
+        <h1 class="sr-only page-title"
+            th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))}">
+            Edit Figure
+        </h1>
+
+        <div th:replace="~{fragments/form :: errorSummary}"></div>
+
+        <!-- Optimistic-locking token: figures are edited by everyone -->
+        <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
+
+        <!-- Shared figures notice (Add only) -->
+        <th:block th:if="${danceFigureId == null}">
+            <div th:replace="~{fragments/alert :: alert(variant='info', text=#{figures.form.alert.shared}, cls='mb-6')}"></div>
+        </th:block>
+
+        <!-- Name field & Import disclosure row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-6 items-start">
             <div>
-                <h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
-                    <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary')}"></span>
-                    <span th:text="#{figures.guided.title}">Guided Figure Import</span>
-                </h2>
-                <p class="text-xs text-on-surface-variant mt-1" th:text="#{figures.guided.subtitle}">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
+                <div th:replace="~{fragments/form :: field(path='name', id='name', label=#{figures.form.field.name}, required=true, placeholder=#{figures.form.field.name_placeholder}, cls='mb-0 [&_input]:ed-name')}"></div>
+                <div class="flex items-center gap-2 mt-2" id="gradePreviewWrapper">
+                    <span class="cls-badge" id="gradeClassBadge" th:text="${danceFigure.danceClass != null ? #messages.msg('figures.view.class_label', danceFigure.danceClass) : #messages.msg('figures.view.class_label', 'H')}">Class H</span>
+                    <span id="gradeMedalBadge" th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
+                        <th:block th:if="${danceFigureId != null and danceFigure.medalLevel != null}">
+                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
+                        </th:block>
+                    </span>
+                </div>
             </div>
-            
-            <!-- Source tabs (JSON vs URL) -->
-            <div class="seg-pill text-xs">
-                <button type="button" id="import-json-tab-btn" class="seg-pill-btn">
-                    📋 <span th:text="#{figures.guided.tab.json}">Paste JSON</span>
-                </button>
-                <button type="button" id="import-url-tab-btn" class="seg-pill-btn active" aria-pressed="true">
-                    🔗 <span th:text="#{figures.guided.tab.url}">Parse URL</span>
-                </button>
-            </div>
-        </div>
+
+            <div class="flex flex-col">
+                <label class="form-label hidden md:block invisible select-none" aria-hidden="true">&nbsp;</label>
+                <details id="import-disclosure" class="group border border-border rounded-xl bg-surface overflow-hidden">
+                    <summary class="flex items-center gap-2.5 min-h-[48px] px-3.5 py-2.5 font-semibold text-sm cursor-pointer select-none list-none text-on-surface hover:bg-surface-container/50 transition-colors">
+                        <span th:replace="~{fragments/icon :: icon(name='auto_awesome', size='md', cls='text-primary shrink-0')}"></span>
+                        <span class="flex-1 font-semibold text-sm" th:text="${danceFigureId == null ? #messages.msg('figures.form.import.add') : #messages.msg('figures.form.import.edit')}">Import from URL or JSON</span>
+                        <span th:replace="~{fragments/icon :: icon(name='expand_more', size='md', cls='transform transition-transform group-open:rotate-180 shrink-0 text-on-surface-variant')}"></span>
+                    </summary>
+
+                    <!-- Import Panel -->
+                    <div id="guided-edit-panel" class="border-t border-border p-4 sm:p-6 space-y-6 text-xs text-on-surface-variant bg-surface">
+                        <div class="border-b border-border pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <p class="text-xs text-on-surface-variant" th:text="#{figures.guided.subtitle}">Import figure details by pasting JSON directly or providing a webpage URL to analyze with AI.</p>
+                            
+                            <!-- Source tabs (JSON vs URL) -->
+                            <div class="seg-pill text-xs shrink-0">
+                                <button type="button" id="import-json-tab-btn" class="seg-pill-btn">
+                                    📋 <span th:text="#{figures.guided.tab.json}">Paste JSON</span>
+                                </button>
+                                <button type="button" id="import-url-tab-btn" class="seg-pill-btn active" aria-pressed="true">
+                                    🔗 <span th:text="#{figures.guided.tab.url}">Parse URL</span>
+                                </button>
+                            </div>
+                        </div>
 
         <!-- Error Display Box -->
         <div id="guided-error-container" class="hidden bg-danger-soft border border-danger/30 text-danger p-4 rounded-card flex gap-3 text-xs">
@@ -304,51 +338,8 @@
                 </button>
             </div>
         </div>
-    </div>
-
-    <form th:action="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
-          th:object="${danceFigure}" method="post" id="figureForm" class="flex flex-col ed-form">
-
-        <!-- Screen-reader accessible page heading -->
-        <h1 class="sr-only page-title"
-            th:text="${danceFigureId == null ? #messages.msg('figures.form.title.create') : (danceFigure.name != null and !#strings.isEmpty(danceFigure.name) ? #messages.msg('figures.form.title.edit', danceFigure.name) : #messages.msg('figures.form.title.edit_default'))}">
-            Edit Figure
-        </h1>
-
-        <div th:replace="~{fragments/form :: errorSummary}"></div>
-
-        <!-- Optimistic-locking token: figures are edited by everyone -->
-        <input th:if="${danceFigureId != null}" type="hidden" th:field="*{version}"/>
-
-        <th:block th:if="${danceFigureId == null}">
-            <div th:replace="~{fragments/alert :: alert(variant='info', text=#{figures.form.alert.shared})}"></div>
-        </th:block>
-
-        <!-- Sticky Top Bar (Desktop & Mobile) -->
-        <div class="sticky top-0 z-30 bg-surface border-y border-border -mx-4 sm:-mx-6 px-4 sm:px-6">
-            <div class="grid grid-cols-[minmax(0,1fr)_auto] md:grid-cols-[minmax(0,1fr)_auto_auto] gap-x-4 gap-y-2 items-center py-2.5">
-                <div class="min-w-0 col-span-full md:col-span-1">
-                    <label class="sr-only" for="name" th:text="#{figures.form.field.name}">Figure Name</label>
-                    <div th:replace="~{fragments/form :: field(path='name', id='name', placeholder=#{figures.form.field.name_placeholder}, cls='mb-0 [&_input]:ed-name')}"></div>
-                </div>
-                <div class="flex items-center gap-2 min-h-[44px] md:min-h-[52px]" id="gradePreviewWrapper">
-                    <span class="cls-badge" id="gradeClassBadge" th:text="${danceFigure.danceClass != null ? #messages.msg('figures.view.class_label', danceFigure.danceClass) : #messages.msg('figures.view.class_label', 'H')}">Class H</span>
-                    <span id="gradeMedalBadge" th:data-badge-style="${badgeStyle ?: 'rank_bars'}">
-                        <th:block th:if="${danceFigure.medalLevel != null}">
-                            <th:block th:replace="~{fragments/badge :: medalBadge(level=${danceFigure.medalLevel}, word=true, size='lg')}"></th:block>
-                        </th:block>
-                    </span>
-                </div>
-                <div class="flex items-center gap-2 justify-end min-h-[44px] md:min-h-[52px]">
-                    <span class="text-[13px] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
-                    <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}" class="btn-ghost btn-sm" aria-label="Discard changes" th:attr="aria-label=#{figures.form.aria.discard_changes}">
-                        <span class="max-md:hidden" th:text="#{figures.form.discard}">Discard</span>
-                        <span th:replace="~{fragments/icon :: icon(name='close', size='sm', cls='md:hidden')}"></span>
-                    </a>
-                    <button type="submit" class="btn-primary btn-sm flex items-center gap-1.5">
-                        <span th:text="#{figures.form.save}">Save Figure</span>
-                    </button>
-                </div>
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -833,6 +824,16 @@
         </section>
 
     </form>
+
+    <!-- Phone Sticky Bottom Bar -->
+    <div class="sm:hidden sticky-bottom-bar px-4 py-3 flex gap-3">
+        <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
+           class="btn-outline min-h-[44px] flex-1 inline-flex items-center justify-center font-semibold text-sm"
+           th:text="#{figures.form.cancel}">Cancel</a>
+        <button type="submit" form="figureForm"
+                class="btn-primary min-h-[44px] flex-1 inline-flex items-center justify-center font-semibold text-sm"
+                th:text="#{figures.form.save}">Save Figure</button>
+    </div>
 
     <!-- Vanilla Javascript Form Dynamics -->
     <script src="https://unpkg.com/trix@2.1.19/dist/trix.umd.min.js"></script>

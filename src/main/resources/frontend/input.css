@@ -253,6 +253,7 @@ layer(base);
   --measure-card: 76ch;
   --space-para: 14px;
   --space-card-para: 8px;
+  --bottom-nav-height: 69px;
 }
 
 /*
@@ -718,6 +719,22 @@ layer(base);
 
 @utility bottom-nav-item-active {
   @apply text-on-surface after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-primary after:rounded-full;
+}
+
+@utility sticky-bottom-bar {
+  /* Sticky bar sitting directly above the fixed bottom navigation below xl, and at bottom of screen where nav is hidden */
+  @apply fixed left-0 right-0 z-40 bg-surface border-t border-border shadow-ambient;
+  bottom: calc(var(--bottom-nav-height, 69px) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 1280px) {
+  .sticky-bottom-bar {
+    bottom: 0;
+  }
+}
+
+@utility pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
 }
 
 @utility icon-filled {

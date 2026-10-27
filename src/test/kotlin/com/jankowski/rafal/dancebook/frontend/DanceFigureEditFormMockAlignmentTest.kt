@@ -22,7 +22,10 @@ import com.jankowski.rafal.dancebook.service.SystemSettingService
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.not
 import org.jsoup.Jsoup
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -239,13 +242,28 @@ class DanceFigureEditFormMockAlignmentTest {
     @Test
     fun `form template incorporates assistant bar clearance, feet-matrix, and set-tabs`() {
         val content = formTemplateFile.readText()
-        assertTrue(content.contains("pb-28") && content.contains("sm:pb-32"),
-            "Form container must have assistant bar bottom padding pb-28 sm:pb-32")
+        assertTrue(content.contains("pb-48") && content.contains("sm:pb-32"),
+            "Form container must have bottom padding pb-48 sm:pb-32 for phone sticky bar and bottom nav clearance")
         assertTrue(content.contains("feet-matrix"), "Positions and feet must use feet-matrix layout")
         assertTrue(content.contains("set-tabs"), "Variant switcher must use set-tabs")
         assertTrue(content.contains("set-tabs-btn"), "Variant switcher buttons must use set-tabs-btn")
         assertTrue(content.contains("ed-name"), "Figure name input must use ed-name pill styling")
         assertFalse(content.contains(">✓<"), "Variant tabs must not contain literal checkmark character")
+    }
+
+    @Test
+    fun `sticky-bottom-bar utility clears mobile bottom nav and safe area inset`() {
+        val css = inputCssFile.readText()
+        assertTrue(css.contains("@utility sticky-bottom-bar"), "input.css must declare @utility sticky-bottom-bar")
+        assertTrue(css.contains("env(safe-area-inset-bottom"), "sticky-bottom-bar must account for safe-area-inset-bottom")
+        assertTrue(
+            css.contains("--bottom-nav-height") || css.contains("69px"),
+            "sticky-bottom-bar must clear bottom nav height (69px or --bottom-nav-height)"
+        )
+        assertTrue(
+            css.contains("@media (min-width: 1280px)") || css.contains("@variant xl"),
+            "sticky-bottom-bar must clear bottom offset at xl breakpoint where bottom nav is hidden"
+        )
     }
 
     @Test
@@ -322,10 +340,100 @@ class DanceFigureEditFormMockAlignmentTest {
     }
 
     @Test
-    fun `guided import panel is not inside the figure form that guided mode hides`() {
-        val html = java.io.File("src/main/resources/templates/dance-figures/form.html").readText()
-        val panel = html.indexOf("id=\"guided-edit-panel\"")
-        val form = html.indexOf("id=\"figureForm\"")
-        assertTrue(panel in 0 until form, "Switching to guided mode hides #figureForm, so the panel must sit before it or it disappears with the form.")
+    fun `figure form header implements Direction A with labelled name, import disclosure row, Save and Cancel`() {
+        val fig = sampleFigure()
+        `when`(danceFigureService.findById(fig.id!!)).thenReturn(fig)
+        `when`(danceFigureService.findByDanceType(fig.danceType!!.id!!)).thenReturn(listOf(fig))
+
+        // 1. Edit view in English
+        val editHtml = mockMvc.perform(get("/dance-figures/{id}/edit", fig.id).locale(Locale.ENGLISH).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+        val editDoc = Jsoup.parse(editHtml)
+
+        // Mode switch retired
+        assertNull(editDoc.selectFirst("#manual-edit-tab-btn"), "Manual edit tab button must be retired")
+        assertNull(editDoc.selectFirst("#guided-edit-tab-btn"), "Guided edit tab button must be retired")
+        assertFalse(editHtml.contains("Manual Edit"), "Manual Edit text must be retired")
+        assertFalse(editHtml.contains("Guided Figure Import"), "Guided Figure Import text must be retired")
+
+        // Name field has visible label with required marker
+        val nameLabel = editDoc.selectFirst("label[for='name']")
+        assertNotNull(nameLabel, "Figure name field must have a label")
+        assertTrue(nameLabel!!.text().contains("Figure Name"), "Name label must say Figure Name")
+        assertTrue(nameLabel.select(".text-error").isNotEmpty(), "Name label must carry required asterisk")
+
+        // Import disclosure row on Edit
+        val editDisclosure = editDoc.selectFirst("#import-disclosure")
+        assertNotNull(editDisclosure, "Import disclosure row must exist")
+        val editSummary = editDisclosure!!.selectFirst("summary")
+        assertNotNull(editSummary, "Import disclosure must have summary")
+        assertTrue(editSummary!!.text().contains("Re-import from URL or JSON"), "Edit view summary must say Re-import from URL or JSON")
+        val editPanel = editDisclosure.selectFirst("#guided-edit-panel")
+        assertNotNull(editPanel, "Guided edit panel must be inside import disclosure row")
+
+        // Medal badge on Edit only
+        val editMedal = editDoc.selectFirst("#gradeMedalBadge")
+        assertNotNull(editMedal, "Medal badge container must exist on Edit")
+
+        // Desktop actions: Cancel and Save Figure
+        val desktopActions = editDoc.selectFirst("div[th\\:fragment='desktopActions'], .hidden.sm\\:flex.items-center.gap-2")
+        assertNotNull(desktopActions, "Desktop actions row must exist")
+        val desktopCancel = desktopActions!!.selectFirst("a[href*='/dance-figures']")
+        assertNotNull(desktopCancel, "Desktop Cancel button must exist")
+        assertTrue(desktopCancel!!.text().contains("Cancel"), "Desktop Cancel button must say Cancel")
+        val desktopSave = desktopActions.selectFirst("button[type='submit']")
+        assertNotNull(desktopSave, "Desktop Save Figure button must exist")
+        assertTrue(desktopSave!!.text().contains("Save Figure"), "Desktop Save button must say Save Figure")
+
+        // Phone sticky bottom bar: equal width Cancel and Save Figure, positioned above bottom nav
+        val phoneStickyBar = editDoc.selectFirst(".sticky-bottom-bar")
+        assertNotNull(phoneStickyBar, "Phone sticky bottom bar must exist and have .sticky-bottom-bar class")
+        assertTrue(phoneStickyBar!!.hasClass("sm:hidden"), "Phone bar must be hidden on desktop/tablet (sm:hidden)")
+        assertTrue(phoneStickyBar.hasClass("sticky-bottom-bar"), "Phone bar must use sticky-bottom-bar utility to sit above bottom nav")
+        val phoneButtons = phoneStickyBar.select("a, button")
+        assertEquals(2, phoneButtons.size, "Phone sticky bar must contain exactly Cancel and Save buttons")
+        assertTrue(phoneButtons[0].hasClass("flex-1"), "Cancel button must have flex-1 for equal width")
+        assertTrue(phoneButtons[1].hasClass("flex-1"), "Save button must have flex-1 for equal width")
+        assertTrue(phoneButtons[0].text().contains("Cancel"), "Phone Cancel button must say Cancel")
+        assertTrue(phoneButtons[1].text().contains("Save Figure"), "Phone Save button must say Save Figure")
+
+        // 2. Create view in English
+        val createHtml = mockMvc.perform(get("/dance-figures/new").locale(Locale.ENGLISH).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+        val createDoc = Jsoup.parse(createHtml)
+
+        // Import disclosure on Create
+        val createDisclosure = createDoc.selectFirst("#import-disclosure")
+        assertNotNull(createDisclosure, "Import disclosure row must exist on create")
+        val createSummary = createDisclosure!!.selectFirst("summary")
+        assertNotNull(createSummary, "Create disclosure must have summary")
+        assertTrue(createSummary!!.text().contains("Import from URL or JSON"), "Create view summary must say Import from URL or JSON")
+
+        // Shared figures notice on Create only
+        assertTrue(createHtml.contains("Figures are shared with every DanceBook user"), "Create view must have shared figures notice")
+        assertFalse(editHtml.contains("Figures are shared with every DanceBook user"), "Edit view must NOT have shared figures notice")
+
+        // 3. Polish locale parity
+        val plHtml = mockMvc.perform(get("/dance-figures/{id}/edit", fig.id).locale(polishLocale).with(csrf()))
+            .andExpect(status().isOk)
+            .andReturn()
+            .response
+            .contentAsString
+        val plDoc = Jsoup.parse(plHtml)
+        val plSummary = plDoc.selectFirst("#import-disclosure summary")
+        assertNotNull(plSummary, "Polish import summary must exist")
+        assertTrue(plSummary!!.text().contains("Zaimportuj ponownie z adresu URL lub JSON"), "Polish edit summary must be translated")
+        val plCancel = plDoc.selectFirst(".sticky-bottom-bar a")
+        assertNotNull(plCancel, "Polish Cancel button must exist")
+        assertTrue(plCancel!!.text().contains("Anuluj"), "Polish Cancel button must say Anuluj")
+        val plSave = plDoc.selectFirst(".sticky-bottom-bar button")
+        assertNotNull(plSave, "Polish Save button must exist")
+        assertTrue(plSave!!.text().contains("Zapisz figurę"), "Polish Save button must say Zapisz figurę")
     }
 }
