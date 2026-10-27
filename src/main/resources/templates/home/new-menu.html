@@ -12,7 +12,7 @@
             <span th:replace="~{fragments/icon :: icon(name='add', size='md')}"></span>
             <span th:text="#{dashboard.new_menu.button}">New</span>
         </summary>
-        <div class="absolute right-0 top-full mt-2 w-56 z-40 card shadow-ambient py-2">
+        <div class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-56 z-40 card shadow-ambient py-2">
             <a href="/materials/new" class="flex items-center gap-3 px-4 min-h-[44px] text-on-surface hover:bg-surface-container">
                 <span th:replace="~{fragments/icon :: icon(name='edit_note', size='md', cls='text-primary')}"></span><th:block th:text="#{dashboard.new_menu.note}">Note</th:block>
             </a>
