@@ -443,11 +443,13 @@ layer(base);
 
 @utility form-input {
   /* ── Form Elements ───────────────────────────── */
-  @apply w-full px-5 py-3 bg-surface-container border border-outline
-           text-on-surface placeholder:text-on-surface-variant text-base min-h-[48px]
-           hover:bg-surface hover:border-on-surface-variant
+  /* Borderless filled pill (#214): transparent border at rest, outline on hover, primary on
+   * focus. Every add/edit form gets this from here, so no form needs a wrapper class (#426). */
+  @apply w-full pl-4.5 pr-4.5 py-2.5 bg-surface-container border border-transparent
+           text-on-surface placeholder:text-on-surface-variant text-[15px] min-h-[44px]
+           hover:bg-surface hover:border-outline
            focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface-container disabled:hover:border-outline
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface-container disabled:hover:border-transparent
            transition-[color,background-color,border-color,box-shadow] duration-200;
   /* Raw declaration, not rounded-pill: form-textarea overrides it below, and two @apply'd
    * utilities for the same property would be ordered by Tailwind rather than by us. */
@@ -455,7 +457,7 @@ layer(base);
 }
 
 @utility form-select {
-  @apply form-input appearance-none bg-no-repeat pr-12 cursor-pointer;
+  @apply form-input appearance-none bg-no-repeat pr-11 cursor-pointer;
   /* The select chevron is an SVG data URI and cannot resolve CSS custom properties
    * (var(--color-on-surface-variant)). #5b6067 matches on-surface-variant and is the sole
    * permitted hex literal in this stylesheet. */
@@ -482,7 +484,7 @@ layer(base);
 }
 
 @utility form-label {
-  @apply block text-base font-semibold text-on-surface mb-2;
+  @apply block text-sm font-semibold text-on-surface mb-1.5 ml-1;
 }
 
 @utility form-error {
@@ -490,7 +492,7 @@ layer(base);
 }
 
 @utility form-hint {
-  @apply mt-2 text-meta text-on-surface-variant font-normal;
+  @apply mt-1.5 ml-4.5 text-[13px] text-on-surface-variant font-normal;
 }
 
 @utility dense-input {
@@ -550,37 +552,6 @@ layer(base);
          bg-surface-container border border-transparent
          hover:bg-surface hover:border-outline
          focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22;
-}
-
-@utility ed-form {
-  /* ── Editor form language (figures mock .fld / .lab / .help) ──
-   * Borderless filled pills with the outline revealed on hover and the primary border plus
-   * 3px ring on focus, the same as pill-input, applied to the shared form-input / form-select
-   * the details section is built from. Focus stays form-input's own, so there is one frame. */
-  & .form-input,
-  & .form-select {
-    @apply min-h-[44px] py-2.5 pl-4.5 text-[15px] border-transparent;
-  }
-  & .form-input {
-    @apply pr-4.5;
-  }
-  & .form-select {
-    @apply pr-11;
-  }
-  & .form-input:hover,
-  & .form-select:hover {
-    border-color: var(--color-outline);
-  }
-  & .form-input:focus,
-  & .form-select:focus {
-    border-color: var(--color-primary);
-  }
-  & .form-label {
-    @apply text-sm mb-1.5 ml-1;
-  }
-  & .form-hint {
-    @apply text-[13px] mt-1.5 ml-4.5;
-  }
 }
 
 @utility seg-pill {
@@ -1545,7 +1516,7 @@ trix-editor {
   width: 100%;
   padding: 12px 16px;
   background-color: var(--color-surface-container);
-  border: 1px solid var(--color-outline);
+  border: 1px solid transparent;
   border-radius: var(--radius-field);
   color: var(--color-on-surface);
   min-height: 96px;
@@ -1566,7 +1537,7 @@ trix-editor {
 
 trix-editor:hover {
   background-color: var(--color-surface);
-  border-color: var(--color-on-surface-variant);
+  border-color: var(--color-outline);
 }
 
 trix-editor:focus,
@@ -1587,7 +1558,7 @@ trix-editor:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--color-surface-container);
-  border-color: var(--color-outline);
+  border-color: transparent;
 }
 
 trix-editor:empty:not(:focus)::before {

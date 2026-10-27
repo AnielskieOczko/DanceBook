@@ -229,6 +229,15 @@ class TailwindOutputCssTest {
     }
 
     @Test
+    fun `form controls are borderless filled pills at rest in every form`() {
+        val base = Regex("""\.form-input\s*\{[^}]*\}""").findAll(css).joinToString("") { it.value }
+        assertTrue(base.contains("border-color:#0000"), ".form-input must have a transparent border at rest (#426).")
+        assertTrue(!base.contains("var(--color-outline)"), ".form-input must not paint an outline border at rest.")
+        val editor = Regex("""(^|\})trix-editor\s*\{[^}]*\}""").findAll(css).joinToString("") { it.value }
+        assertTrue(editor.contains("border:1px solid #0000"), "trix-editor must match the borderless field at rest.")
+    }
+
+    @Test
     fun `global keyboard focus ring leaves every text control to its own ring`() {
         val exclusion = Regex(""":focus-visible:not\(([^)]*)\)""").find(css)?.groupValues?.get(1)
             ?: error("The global *:focus-visible rule must exclude text controls, or its !important 2px ring replaces their own.")
