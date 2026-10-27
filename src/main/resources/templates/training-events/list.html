@@ -9,12 +9,13 @@
         subtitle=${(selectableCalendars == null || selectableCalendars.isEmpty()) ? #messages.msg('training.list.subtitle_no_calendar') : #messages.msg('training.list.subtitle_count', #lists.size(events))},
         actionUrl=${((selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession) ? '/training-events/new' : null},
         actionText=#{training.add_session},
+        actionTextShort=#{training.add_session_short},
         actionIcon='add',
         actionVariant='primary',
         subrowSlot=~{::trainingControls}
     )}">
-        <div th:fragment="trainingControls" class="flex flex-wrap items-center justify-between gap-4">
-            <div class="w-full sm:w-auto min-w-0 sm:shrink-0 overflow-x-auto lg:overflow-visible">
+        <div th:fragment="trainingControls" class="flex flex-col md:flex-row md:flex-wrap min-[980px]:flex-nowrap md:items-end md:justify-between gap-3 md:gap-4 md:border-b md:border-outline-variant/30">
+            <div class="w-full md:w-auto min-w-0">
                 <nav th:replace="~{fragments/page :: viewSwitcher(currentView='list')}"></nav>
             </div>
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
@@ -27,19 +28,20 @@
          class="sticky top-[72px] bg-background z-40 -mx-6 px-6 py-3 border-b border-outline-variant/30">
         <form id="filterForm" th:hx-get="@{/training-events}" hx-target="#events-list" hx-swap="outerHTML"
               hx-trigger="submit, change from:select" hx-push-url="false"
-              class="flex flex-col md:flex-row gap-3">
+              class="flex flex-col gap-3">
 
             <!-- Carries the stats-page nudge's filter through every hx-include on this form,
                  so typing in the search box or changing a select does not silently drop it. -->
             <input type="hidden" name="awaitingConfirmation" th:if="${selectedAwaitingConfirmation}" value="true">
 
-            <div class="flex items-center gap-2 md:flex-1">
-                <div th:replace="~{fragments/form :: searchField(name='search', value=${search}, placeholder=#{training.list.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
+            <div class="flex items-center gap-2">
+                <div class="flex-1 min-w-0" th:replace="~{fragments/form :: searchField(name='search', value=${search}, placeholder=#{training.list.search_placeholder}, hxTrigger='keyup changed delay:300ms', hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
-                <button type="button" class="js-toggle btn-outline md:hidden shrink-0 relative"
+                <button type="button" class="js-toggle btn-outline shrink-0 relative flex items-center gap-1.5 px-3.5 h-11 min-h-[44px]"
                         data-toggle-target="#filterFields" aria-label="Show filters"
                         th:attr="aria-label=#{training.list.show_filters}">
-                    <span th:replace="~{fragments/icon :: icon(name='tune', size='md')}"></span>
+                    <span th:replace="~{fragments/icon :: icon(name='tune', size='sm')}"></span>
+                    <span class="hidden md:inline font-semibold text-sm" th:text="#{common.filters}">Filters</span>
                     <span th:if="${activeFilterCount != null && activeFilterCount > 0}"
                           th:text="${activeFilterCount}"
                           class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full
@@ -48,7 +50,8 @@
                 </button>
             </div>
 
-            <div id="filterFields" class="hidden md:flex flex-col md:flex-row gap-3">
+            <div id="filterFields" class="flex-col md:flex-row gap-3"
+                 th:classappend="${(activeFilterCount != null && activeFilterCount > 0) ? 'flex' : 'hidden'}">
                 <div th:replace="~{fragments/form :: filterSelect(name='eventTypes', cls='md:w-48', placeholder=#{training.list.all_types}, options=${eventTypeOptions}, msgPrefix='enum.training_event_type.', selectedValues=${selectedEventTypes}, hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>
 
                 <div th:replace="~{fragments/form :: filterSelect(name='attendanceStatuses', cls='md:w-48', placeholder=#{training.list.all_statuses}, options=${attendanceStatusOptions}, msgPrefix='enum.attendance_status.', selectedValues=${selectedStatuses}, hxGet=@{/training-events}, hxTarget='#events-list', hxSwap='outerHTML', hxInclude='#filterForm')}"></div>

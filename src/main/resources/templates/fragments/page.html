@@ -21,8 +21,10 @@
     </th:block>
 
     <!-- Main Header Row: Title & Actions -->
-    <div class="flex flex-wrap sm:flex-nowrap items-start justify-between gap-y-3.5 gap-x-4">
-        <div class="page-header mb-0 min-w-0 w-full sm:w-auto sm:flex-1">
+    <div class="flex items-start justify-between gap-y-3.5 gap-x-4"
+         th:classappend="${(actionCompact == true or actionTextShort != null) ? 'flex-nowrap' : 'flex-wrap sm:flex-nowrap'}">
+        <div class="page-header mb-0 min-w-0"
+             th:classappend="${(primaryUrl != null or primarySlot != null or secondaryUrl != null or secondarySlot != null or menuSlot != null or (actionCompact != true and actionTextShort == null)) ? 'w-full sm:w-auto sm:flex-1' : 'flex-1'}">
             <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
                 <th:block th:if="${icon != null}">
                     <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
@@ -52,11 +54,15 @@
             <div class="shrink-0" th:classappend="${actionWrapperCls}">
                 <a th:href="${actionUrl}"
                    class="btn"
-                   th:classappend="${(actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary') + (actionCls != null ? ' ' + actionCls : '')}">
+                   th:classappend="${(actionVariant == 'outline' or actionVariant == 'outline-solid' ? 'btn-outline' : 'btn-primary') + (actionTextShort != null ? ' h-10 min-h-[40px] px-4 py-0 md:min-h-[48px] md:px-6 md:py-3 text-sm md:text-base' : '') + (actionCls != null ? ' ' + actionCls : '')}">
                     <th:block th:if="${actionIcon != null}">
-                        <span th:replace="~{fragments/icon :: icon(name=${actionIcon}, title=null)}"></span>
+                        <span th:replace="~{fragments/icon :: icon(name=${actionIcon}, size=${actionIconSize ?: (actionTextShort != null ? 'sm' : null)}, title=null)}"></span>
                     </th:block>
-                    <span th:text="${actionText}">Action</span>
+                    <th:block th:if="${actionTextShort != null}">
+                        <span class="md:hidden" th:text="${actionTextShort}">Add</span>
+                        <span class="hidden md:inline" th:text="${actionText}">Action</span>
+                    </th:block>
+                    <span th:if="${actionTextShort == null}" th:text="${actionText}">Action</span>
                 </a>
             </div>
         </th:block>
@@ -170,38 +176,38 @@
      aria-label="Training views"
      th:attr="aria-label=#{nav.training_views}">
     <a href="/training-events"
-       class="view-switcher-item"
+       class="view-switcher-item flex-1 min-w-0 md:flex-none"
        th:classappend="${currentView == 'list' ? 'view-switcher-item-active' : ''}"
        th:attr="aria-current=${currentView == 'list' ? 'page' : null}">
-        <span th:replace="~{fragments/icon :: icon(name='list', size='sm', title=null)}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='list', size='sm', cls='hidden md:inline-flex', title=null)}"></span>
         <span th:text="#{nav.training.list}">List</span>
     </a>
     <a href="/training-events/calendar"
-       class="view-switcher-item"
+       class="view-switcher-item flex-1 min-w-0 md:flex-none"
        th:classappend="${currentView == 'calendar' ? 'view-switcher-item-active' : ''}"
        th:attr="aria-current=${currentView == 'calendar' ? 'page' : null}">
-        <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='sm', title=null)}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='sm', cls='hidden md:inline-flex', title=null)}"></span>
         <span th:text="#{nav.training.calendar}">Calendar</span>
     </a>
     <a href="/training-events/timeline"
-       class="view-switcher-item"
+       class="view-switcher-item flex-1 min-w-0 md:flex-none"
        th:classappend="${currentView == 'timeline' ? 'view-switcher-item-active' : ''}"
        th:attr="aria-current=${currentView == 'timeline' ? 'page' : null}">
-        <span th:replace="~{fragments/icon :: icon(name='timeline', size='sm', title=null)}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='timeline', size='sm', cls='hidden md:inline-flex', title=null)}"></span>
         <span th:text="#{nav.training.timeline}">Timeline</span>
     </a>
     <a href="/training-events/stats"
-       class="view-switcher-item"
+       class="view-switcher-item flex-1 min-w-0 md:flex-none"
        th:classappend="${currentView == 'stats' ? 'view-switcher-item-active' : ''}"
        th:attr="aria-current=${currentView == 'stats' ? 'page' : null}">
-        <span th:replace="~{fragments/icon :: icon(name='monitoring', size='sm', title=null)}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='monitoring', size='sm', cls='hidden md:inline-flex', title=null)}"></span>
         <span th:text="#{nav.training.stats}">Stats</span>
     </a>
     <a href="/training-events/history"
-       class="view-switcher-item"
+       class="view-switcher-item flex-1 min-w-0 md:flex-none"
        th:classappend="${currentView == 'history' ? 'view-switcher-item-active' : ''}"
        th:attr="aria-current=${currentView == 'history' ? 'page' : null}">
-        <span th:replace="~{fragments/icon :: icon(name='history', size='sm', title=null)}"></span>
+        <span th:replace="~{fragments/icon :: icon(name='history', size='sm', cls='hidden md:inline-flex', title=null)}"></span>
         <span th:text="#{nav.training.history}">History</span>
     </a>
 </nav>

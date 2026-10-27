@@ -9,12 +9,13 @@
         subtitle=#{training.history.subtitle},
         actionUrl=${((selectableCalendars != null && !selectableCalendars.isEmpty()) && canAddSession) ? '/training-events/new' : null},
         actionText=#{training.add_session},
+        actionTextShort=#{training.add_session_short},
         actionIcon='add',
         actionVariant='primary',
         subrowSlot=~{::trainingControls}
     )}">
-        <div th:fragment="trainingControls" class="flex flex-wrap items-center justify-between gap-4">
-            <div class="w-full sm:w-auto min-w-0 sm:shrink-0 overflow-x-auto lg:overflow-visible">
+        <div th:fragment="trainingControls" class="flex flex-col md:flex-row md:flex-wrap min-[980px]:flex-nowrap md:items-end md:justify-between gap-3 md:gap-4 md:border-b md:border-outline-variant/30">
+            <div class="w-full md:w-auto min-w-0">
                 <nav th:replace="~{fragments/page :: viewSwitcher(currentView='history')}"></nav>
             </div>
             <div th:replace="~{fragments/calendar-selector :: calendarSelector}"></div>
