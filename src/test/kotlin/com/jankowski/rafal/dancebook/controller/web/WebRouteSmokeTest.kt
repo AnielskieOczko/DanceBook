@@ -310,6 +310,9 @@ class WebRouteSmokeTest {
         // Specific required query parameters
         if (uri == "/dance-figures/api") {
             uri += "?danceTypeId=${fixtures.danceType.id}"
+        } else if (uri == "/materials/export" || uri == "/dance-figures/export") {
+            // A list export with exactly one part redirects to its PDF; a search nothing matches renders the page (#416)
+            uri += "?nameSearch=nothing-matches-this-export"
         } else if (uri.endsWith("/figures-search")) {
             uri += "?query=turn"
         } else if (uri == "/training-events/quick-create") {

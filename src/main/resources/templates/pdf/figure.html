@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${danceFigure.name}">Figure PDF</title>
-    <style>
+    <style th:fragment="pdfStyles">
         @page {
             size: A4 portrait;
             margin: 20mm 15mm 20mm 15mm;
@@ -250,7 +250,7 @@
 </div>
 
 <!-- Item Details & Content -->
-<div class="content-page">
+<div class="content-page" th:fragment="figureContent">
     <div class="header-box">
         <h1 class="item-title" th:text="${danceFigure.name}">Figure Name</h1>
         <div class="badges">

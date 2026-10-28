@@ -1420,3 +1420,23 @@ document.addEventListener('click', function(event) {
         getElement: getProgressBar
     };
 })();
+
+// "Export PDF" on the Notes and Figures lists (#416): export what the filters currently show. The filter sheet
+// already syncs into #filterForm, so its values are the truth; the view switch is not a filter.
+document.addEventListener('click', function(event) {
+    const link = event.target.closest('.js-export-pdf');
+    if (!link) return;
+
+    const form = document.getElementById('filterForm');
+    const base = link.getAttribute('data-export-url');
+    if (!form || !base) return;
+
+    event.preventDefault();
+    const params = new URLSearchParams();
+    new FormData(form).forEach(function(value, name) {
+        if (name === 'view' || typeof value !== 'string' || value === '') return;
+        params.append(name, value);
+    });
+    const query = params.toString();
+    window.location.href = query ? base + '?' + query : base;
+});

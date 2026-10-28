@@ -229,6 +229,22 @@ class MaterialServiceImpl(
         return materialRepository.findAll(spec, stablePageable)
     }
 
+    override fun findForExport(
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        textSearch: String?,
+        part: Int,
+        size: Int
+    ): Page<Material> {
+        log.debug("Retrieving materials for export: typeIds={}, categoryIds={}, minRating={}, textSearch={}, part={}", typeIds, categoryIds, minRating, textSearch, part)
+        val currentUser = appUserService.getCurrentUserOrNull()
+        val spec = MaterialSpecification.visibleForExport(currentUser)
+            .and(MaterialSpecification.filterCriteria(typeIds, categoryIds, minRating, null, textSearch))
+        val sort = Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.ASC, "id"))
+        return materialRepository.findAll(spec, PageRequest.of(part, size, sort))
+    }
+
     override fun searchNotes(query: String?, figureId: UUID?, danceTypeId: UUID?, limit: Int, ownedOnly: Boolean): List<Material> {
         val currentUser = appUserService.getCurrentUserOrNull()
         var spec = MaterialSpecification.withTextSearch(currentUser, query, figureId, danceTypeId)

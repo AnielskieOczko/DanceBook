@@ -16,6 +16,10 @@ import org.springframework.data.domain.PageRequest
 import com.jankowski.rafal.dancebook.service.DanceTypeService
 import com.jankowski.rafal.dancebook.service.DanceCategoryService
 import com.jankowski.rafal.dancebook.service.FigureInUseException
+import com.jankowski.rafal.dancebook.service.PdfExportService
+import com.jankowski.rafal.dancebook.service.PdfFilterLine
+import com.jankowski.rafal.dancebook.service.PdfListCover
+import jakarta.persistence.EntityNotFoundException
 import jakarta.persistence.OptimisticLockException
 import jakarta.validation.Valid
 import org.springframework.http.ContentDisposition
@@ -289,6 +293,117 @@ class DanceFigureWebController(
             .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
             .contentType(MediaType.APPLICATION_PDF)
             .body(pdfBytes)
+    }
+
+    /**
+     * Start of "Export PDF" on the Figures list (#416): everything the current filters match. One part goes
+     * straight to the download; more than one lists the parts, each a request of its own.
+     */
+    @GetMapping("/export")
+    fun exportOverview(
+        @RequestParam(required = false) typeIds: List<UUID>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) danceClass: DanceClass? = null,
+        @RequestParam(required = false) nameSearch: String? = null,
+        @RequestParam(required = false) sortBy: String? = null,
+        @RequestParam(required = false) hasSteps: Boolean? = null,
+        @RequestParam(required = false) medalLevel: MedalLevel? = null,
+        locale: Locale = Locale.getDefault(),
+        model: Model
+    ): String {
+        val total = danceFigureService.findAll(
+            typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps, medalLevel, PageRequest.of(0, 1)
+        ).totalElements
+        val query = exportQuery(typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps, medalLevel)
+        val parts = ListExportSupport.parts("/dance-figures/export", query, total)
+        if (total > 0 && parts.size == 1) {
+            return "redirect:" + parts.first().url
+        }
+
+        model.addAttribute("exportTitleKey", "export.figures.title")
+        model.addAttribute("exportBackKey", "figures.list.title")
+        model.addAttribute("exportBackHref", "/dance-figures")
+        model.addAttribute("exportFilters", exportFilterLines(typeIds, categoryIds, danceClass, nameSearch, hasSteps, medalLevel, locale))
+        model.addAttribute("totalCount", total)
+        model.addAttribute("maxPerPdf", PdfExportService.MAX_ITEMS_PER_PDF)
+        model.addAttribute("parts", parts)
+        return "exports/parts"
+    }
+
+    /** One part (`?part=2`, 1-based) of the Figures list export, at most 100 figures in the list's own order. */
+    @GetMapping("/export/pdf")
+    fun exportListPdf(
+        @RequestParam(required = false) typeIds: List<UUID>? = null,
+        @RequestParam(required = false) categoryIds: List<UUID>? = null,
+        @RequestParam(required = false) danceClass: DanceClass? = null,
+        @RequestParam(required = false) nameSearch: String? = null,
+        @RequestParam(required = false) sortBy: String? = null,
+        @RequestParam(required = false) hasSteps: Boolean? = null,
+        @RequestParam(required = false) medalLevel: MedalLevel? = null,
+        @RequestParam(required = false, defaultValue = "1") part: Int = 1,
+        locale: Locale = Locale.getDefault()
+    ): ResponseEntity<ByteArray> {
+        if (part < 1) throw EntityNotFoundException("There is no part $part of this export")
+        val page = danceFigureService.findAll(
+            typeIds, categoryIds, danceClass, nameSearch, sortBy, hasSteps, medalLevel,
+            PageRequest.of(part - 1, PdfExportService.MAX_ITEMS_PER_PDF)
+        )
+        if (page.content.isEmpty()) throw EntityNotFoundException("There is no part $part of this export")
+
+        val totalParts = PdfExportService.partCount(page.totalElements)
+        val owner = appUserService?.getCurrentUserOrNull()
+        val cover = PdfListCover(
+            ownerName = owner?.displayName ?: owner?.username ?: "",
+            filters = exportFilterLines(typeIds, categoryIds, danceClass, nameSearch, hasSteps, medalLevel, locale),
+            part = part,
+            totalParts = totalParts,
+            totalItems = page.totalElements
+        )
+        val service = pdfExportService ?: throw IllegalStateException("PDF export service not available")
+        return ListExportSupport.download(service.exportDanceFigureListPdf(page.content, cover, locale), "dancebook-figures", part, totalParts)
+    }
+
+    private fun exportQuery(
+        typeIds: List<UUID>?, categoryIds: List<UUID>?, danceClass: DanceClass?, nameSearch: String?,
+        sortBy: String?, hasSteps: Boolean?, medalLevel: MedalLevel?
+    ): List<Pair<String, String>> = buildList {
+        typeIds?.forEach { add("typeIds" to it.toString()) }
+        categoryIds?.forEach { add("categoryIds" to it.toString()) }
+        danceClass?.let { add("danceClass" to it.name) }
+        medalLevel?.let { add("medalLevel" to it.name) }
+        hasSteps?.let { add("hasSteps" to it.toString()) }
+        if (!nameSearch.isNullOrBlank()) add("nameSearch" to nameSearch)
+        if (!sortBy.isNullOrBlank()) add("sortBy" to sortBy)
+    }
+
+    private fun exportFilterLines(
+        typeIds: List<UUID>?, categoryIds: List<UUID>?, danceClass: DanceClass?, nameSearch: String?,
+        hasSteps: Boolean?, medalLevel: MedalLevel?, locale: Locale
+    ): List<PdfFilterLine> = buildList {
+        if (!nameSearch.isNullOrBlank()) add(PdfFilterLine("pdf.list.filter.search", nameSearch.trim()))
+        if (!typeIds.isNullOrEmpty()) {
+            val names = danceTypeService.findAll().filter { it.id in typeIds }.map { it.name }
+            if (names.isNotEmpty()) add(PdfFilterLine("pdf.list.filter.style", names.joinToString(", ")))
+        }
+        if (!categoryIds.isNullOrEmpty()) {
+            val names = danceCategoryService.findAll().filter { it.id in categoryIds }.map { it.name }
+            if (names.isNotEmpty()) add(PdfFilterLine("pdf.list.filter.category", names.joinToString(", ")))
+        }
+        if (danceClass != null) {
+            val label = messageSource?.getMessage("enum.dance_class.${danceClass.name}", null, "Class ${danceClass.name}", locale)
+                ?: "Class ${danceClass.name}"
+            add(PdfFilterLine("pdf.list.filter.class", label))
+        }
+        if (medalLevel != null) {
+            val label = messageSource?.getMessage("figures.medal.${medalLevel.name.lowercase()}", null, medalLevel.displayName, locale)
+                ?: medalLevel.displayName
+            add(PdfFilterLine("pdf.list.filter.medal", label))
+        }
+        if (hasSteps != null) {
+            val key = if (hasSteps) "figures.list.steps.with_steps" else "figures.list.steps.without_steps"
+            val fallback = if (hasSteps) "With Steps Only" else "Without Steps Only"
+            add(PdfFilterLine("pdf.list.filter.steps", messageSource?.getMessage(key, null, fallback, locale) ?: fallback))
+        }
     }
 
     @GetMapping("/{id}/edit")

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{pdf.list.figures.title}">Figures PDF</title>
+    <style th:replace="~{pdf/figure :: pdfStyles}"></style>
+    <style th:replace="~{pdf/list-front :: listStyles}"></style>
+</head>
+<body>
+
+<div th:replace="~{pdf/list-front :: cover}"></div>
+
+<div th:replace="~{pdf/list-front :: toc}"></div>
+
+<!-- One section per figure: the same body the single-figure PDF of #389 prints. -->
+<div class="list-item" th:each="item, stat : ${items}"
+     th:id="'item-' + ${stat.index}"
+     th:with="danceFigure=${item.danceFigure}, leaderSteps=${item.leaderSteps}, followerSteps=${item.followerSteps},
+              renderedNotes=${item.renderedNotes}, categoryImageBase64=${item.categoryImageBase64},
+              creatorName=${item.creatorName}, createdDateFormatted=${item.createdDateFormatted}">
+    <th:block th:replace="~{pdf/figure :: figureContent}"></th:block>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+    The front matter of a list export (#416): a cover and a table of contents, shared by the notes and the figures list.
+    Callers provide `cover` (PdfListCover), `coverTitleKey` (a message key), `toc` (PdfTocEntry list), `items` and
+    `exportDateFormatted`. The one-item PDFs of #389 do not use this file.
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style th:fragment="listStyles">
+        .list-part {
+            font-size: 13pt;
+            font-weight: 600;
+            color: #1f4b4a;
+            margin-bottom: 20px;
+        }
+        .list-filters-title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #1f4b4a;
+            margin: 28px 0 6px 0;
+        }
+        .toc-title {
+            font-size: 18pt;
+            font-weight: 700;
+            color: #16181a;
+            margin: 0 0 16px 0;
+            border-bottom: 1.5px solid #e3e3e0;
+            padding-bottom: 8px;
+        }
+        .toc-entry {
+            font-size: 10pt;
+            line-height: 1.6;
+            margin-bottom: 3px;
+        }
+        .toc-link {
+            display: block;
+            color: #16181a;
+            text-decoration: none;
+        }
+        .toc-link::after {
+            content: leader('.') target-counter(attr(href), page);
+            color: #5b6067;
+        }
+        .toc-num {
+            display: inline-block;
+            width: 28px;
+            color: #5b6067;
+        }
+        .toc-detail {
+            color: #5b6067;
+            font-size: 8.5pt;
+        }
+        .list-item {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+<div class="cover-page" th:fragment="cover">
+    <div class="cover-brand" th:text="#{pdf.cover.title}">DanceBook Export</div>
+    <div class="cover-title" th:text="#{${coverTitleKey}}">Notes</div>
+    <div class="list-part" th:if="${cover.totalParts > 1}"
+         th:text="#{pdf.list.part(${cover.part}, ${cover.totalParts})}">Part 1 of 3</div>
+
+    <table class="cover-meta">
+        <tr>
+            <td class="label" th:text="#{pdf.cover.owner}">Owner:</td>
+            <td th:text="${cover.ownerName}">Owner Name</td>
+        </tr>
+        <tr>
+            <td class="label" th:text="#{pdf.cover.date}">Export date:</td>
+            <td th:text="${exportDateFormatted}">25 Oct 2026</td>
+        </tr>
+        <tr>
+            <td class="label" th:text="#{pdf.list.items}">Items:</td>
+            <td th:text="${cover.totalParts > 1} ? #{pdf.list.items.of(${#lists.size(items)}, ${cover.totalItems})} : ${#lists.size(items)}">12</td>
+        </tr>
+    </table>
+
+    <div class="list-filters-title" th:text="#{pdf.list.filters}">Filters used</div>
+    <table class="cover-meta">
+        <tr th:each="f : ${cover.filters}">
+            <td class="label" th:text="#{${f.labelKey}}">Search:</td>
+            <td th:text="${f.value}">waltz</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(cover.filters)}">
+            <td colspan="2" th:text="#{pdf.list.filters.none}">None, every item is included.</td>
+        </tr>
+    </table>
+</div>
+
+<div class="toc-page" th:fragment="toc">
+    <h1 class="toc-title" th:text="#{pdf.list.toc}">Contents</h1>
+    <div class="toc-entry" th:each="e : ${toc}">
+        <a class="toc-link" th:href="'#' + ${e.anchor}">
+            <span class="toc-num" th:text="${e.number}">1</span>
+            <span th:text="${e.title}">Title</span>
+            <span class="toc-detail" th:if="${e.detail != null}" th:text="'· ' + ${e.detail}">· Waltz</span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
