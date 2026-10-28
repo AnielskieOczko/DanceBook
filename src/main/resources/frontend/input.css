@@ -640,17 +640,30 @@ layer(base);
 }
 
 @utility view-switcher {
-  /* ── Training view switcher ───────────────────── */
-  @apply inline-flex items-center gap-1 p-1 bg-surface-container border border-outline-variant rounded-pill shrink-0 max-w-full overflow-x-auto;
+  /* ── Training view switcher (tab strip) ────────── */
+  @apply flex w-full border-b border-outline-variant/30 md:border-b-0 md:w-auto;
 }
 
 @utility view-switcher-item {
-  @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-label text-on-surface-variant
-           hover:text-on-surface hover:bg-surface/50 transition-colors min-h-[44px] shrink-0 whitespace-nowrap;
+  @apply flex-1 min-w-0 md:flex-none text-center md:inline-flex md:items-center md:gap-1.5
+         py-2.5 px-0 md:px-3 text-xs min-[390px]:text-[13px] md:text-sm font-medium text-on-surface-variant
+         border-b-2 border-transparent -mb-[1px]
+         hover:text-on-surface transition-colors min-h-[44px] flex items-center justify-center;
 }
 
 @utility view-switcher-item-active {
-  @apply bg-surface text-on-surface font-semibold border border-outline-variant/60;
+  @apply text-primary border-primary font-semibold;
+}
+
+/* Ensure switcher icons are hidden on mobile (< md) without !important,
+ * overriding Google Fonts' unlayered .material-symbols-outlined { display: inline-block } rule. */
+.view-switcher .material-symbols-outlined {
+  display: none;
+}
+@media (min-width: 48rem) {
+  .view-switcher .material-symbols-outlined {
+    display: inline-flex;
+  }
 }
 
 @utility page-header {

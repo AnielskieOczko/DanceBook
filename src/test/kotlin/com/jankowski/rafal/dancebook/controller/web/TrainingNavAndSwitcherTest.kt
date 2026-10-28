@@ -288,6 +288,38 @@ class TrainingNavAndSwitcherTest {
 
         val calSelector = doc.selectFirst(".btn-icon[href='/training-calendars']")
         assertNotNull(calSelector, "Calendar selector manage button must use btn-icon (pill)")
+
+        // Direction A: Add pill has short label on mobile and full label on desktop
+        val addBtn = doc.selectFirst("a.btn-primary[href='/training-events/new']")
+        assertNotNull(addBtn, "Add Session button must be present")
+        val shortLabel = addBtn!!.selectFirst("span.md\\:hidden")
+        assertNotNull(shortLabel, "Add button must have mobile short label")
+        assertEquals("Add", shortLabel!!.text().trim())
+        val fullLabel = addBtn.selectFirst("span.hidden.md\\:inline")
+        assertNotNull(fullLabel, "Add button must have desktop full label")
+        assertEquals("Add Session", fullLabel!!.text().trim())
+
+        // Direction A: Filters button has tune icon and desktop label
+        val filterBtn = doc.selectFirst("button.js-toggle[data-toggle-target='#filterFields']")
+        assertNotNull(filterBtn, "Filter toggle button must be present")
+        val filterIcon = filterBtn!!.selectFirst("span.material-symbols-outlined")
+        assertNotNull(filterIcon, "Filter button must have tune icon")
+        assertEquals("tune", filterIcon!!.text().trim())
+        val filterLabel = filterBtn.selectFirst("span.hidden.md\\:inline")
+        assertNotNull(filterLabel, "Filter button must have desktop label")
+        assertEquals("Filters", filterLabel!!.text().trim())
+
+        // Direction A: Sync button has responsive label, 44px touch target on mobile, 40px with 16px padding on desktop
+        val syncBtn = doc.selectFirst("button[hx-post='/training-events/sync']")
+        assertNotNull(syncBtn, "Sync button must be present")
+        assertTrue(syncBtn!!.hasClass("min-h-[44px]"), "Sync button must have 44px min height on mobile")
+        assertTrue(syncBtn.hasClass("md:min-h-[40px]"), "Sync button must have 40px min height on desktop")
+        assertTrue(syncBtn.hasClass("md:px-4"), "Sync button must have 16px horizontal padding on desktop")
+        assertTrue(syncBtn.hasClass("p-0"), "Sync button must have p-0 on mobile")
+        assertFalse(syncBtn.hasClass("!p-0"), "Sync button must not use !p-0 so desktop padding is preserved")
+        val syncLabel = syncBtn.selectFirst("span.hidden.md\\:inline")
+        assertNotNull(syncLabel, "Sync button must have desktop label")
+        assertEquals("Sync now", syncLabel!!.text().trim())
     }
 
     @Test
@@ -473,23 +505,18 @@ class TrainingNavAndSwitcherTest {
             "Add Session must not be placed inside the secondary subrow"
         )
 
-        // 4. Controls row allows wrapping so switcher is not squeezed at 1024px
-        val controlsRow = switcherControlsRow(subrow)
-        assertTrue(controlsRow.hasClass("flex-wrap"), "Controls row must have flex-wrap to prevent clipping at 1024px")
-
-        // 5. View switcher is in the subrow, and protected against shrinking at 1024px while allowing mobile scroll
+        // 4. Direction A tab strip has no horizontal scrollbar
         val switcher = subrow.selectFirst("nav[aria-label='Training views']")
         assertNotNull(switcher, "Switcher must be inside subrow")
         val switcherWrapper = switcher!!.parent()
         assertNotNull(switcherWrapper)
-        assertTrue(switcherWrapper!!.hasClass("overflow-x-auto"), "Switcher wrapper must have overflow-x-auto for mobile")
-        assertTrue(switcherWrapper.hasClass("min-w-0"), "Switcher wrapper must have min-w-0 for mobile")
-        assertTrue(switcherWrapper.hasClass("sm:shrink-0"), "Switcher wrapper must have sm:shrink-0 to prevent shrinking at 1024px")
-        assertTrue(switcherWrapper.hasClass("lg:overflow-visible"), "Switcher wrapper must have lg:overflow-visible to avoid desktop clipping")
+        assertFalse(switcherWrapper!!.hasClass("overflow-x-auto"), "Direction A tab strip must have no mobile horizontal scroll")
 
-        // 6. Calendar selector is also inside the subrow
+        // 5. Calendar selector is also inside the subrow
         val calManage = subrow.selectFirst("a[href='/training-calendars']")
         assertNotNull(calManage, "Calendar manage link must be inside subrow")
+        val syncBtn = subrow.selectFirst("button[hx-post='/training-events/sync']")
+        assertNotNull(syncBtn, "Sync button must be inside subrow")
     }
 
     private fun switcherControlsRow(subrow: org.jsoup.nodes.Element): org.jsoup.nodes.Element {
@@ -517,18 +544,23 @@ class TrainingNavAndSwitcherTest {
             assertEquals(expectedHref, link.attr("href"))
             assertEquals(expectedLabel, link.select("span").last()?.text()?.trim())
             assertTrue(link.hasClass("view-switcher-item"), "Switcher link $expectedLabel must have view-switcher-item class")
+            assertTrue(link.hasClass("flex-1"), "Switcher link $expectedLabel must have flex-1 class for equal mobile columns")
+            assertTrue(link.hasClass("min-w-0"), "Switcher link $expectedLabel must have min-w-0 to allow equal mobile distribution")
 
-            // Icon must carry no tooltip title
+            // Icon must carry no tooltip title, and is hidden on mobile (< md) per Direction A
             val icon = link.selectFirst("span.material-symbols-outlined")
             assertNotNull(icon, "Switcher link $expectedLabel must have an icon")
             assertFalse(icon!!.hasAttr("title"), "Switcher link $expectedLabel icon must carry no title attribute")
+            assertTrue(
+                icon.hasClass("hidden") && icon.hasClass("md:inline-flex"),
+                "Switcher icon for $expectedLabel must have hidden md:inline-flex classes"
+            )
 
             if (viewKey == activeView) {
                 assertEquals("page", link.attr("aria-current"), "Active view link must have aria-current='page'")
                 assertTrue(link.hasClass("view-switcher-item-active"), "Active view link must have view-switcher-item-active class")
-                // Accent discipline: must NOT use text-primary or bg-primary
+                // Active tab has no background pill
                 assertFalse(link.hasClass("bg-primary"), "Active switcher link must not use bg-primary (accent)")
-                assertFalse(link.hasClass("text-primary"), "Active switcher link must not use text-primary (accent)")
             } else {
                 assertFalse(link.hasAttr("aria-current"), "Inactive view link $expectedLabel must not have aria-current")
                 assertFalse(link.hasClass("view-switcher-item-active"), "Inactive view link must not have active class")

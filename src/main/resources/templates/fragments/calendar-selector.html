@@ -2,36 +2,61 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="calendarSelector" class="flex flex-wrap items-center gap-2 sm:gap-3">
-    <div th:if="${selectableCalendars != null && selectableCalendars.size() > 1}"
-         class="flex items-center gap-2 min-w-0">
-        <label for="activeCalendar" class="form-label mb-0 shrink-0" th:text="#{training.selector.calendar}">Calendar</label>
-        <select id="activeCalendar" name="calendarId" class="form-select max-w-[200px]"
-                hx-post="/training-events/active-calendar" hx-trigger="change">
-            <option value="ALL" th:selected="${activeCalendar == null}" th:text="#{training.selector.all_calendars}">All calendars</option>
-            <option th:each="cal : ${selectableCalendars}"
-                    th:value="${cal.id}"
-                    th:selected="${activeCalendar != null && activeCalendar.id == cal.id}"
-                    th:text="${cal.enabled} ? ${cal.displayName} : #{training.selector.disabled(${cal.displayName})}">
-                Calendar
-            </option>
-        </select>
-    </div>
-    <a href="/training-calendars" class="btn-icon shrink-0" title="Manage calendars" th:title="#{training.selector.manage}">
-        <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
-    </a>
+<div th:fragment="calendarSelector" class="flex flex-wrap md:flex-nowrap items-center gap-2 sm:gap-3 shrink-0 md:pb-1.5">
     <th:block th:if="${selectableCalendars != null && !selectableCalendars.isEmpty()}">
-        <div class="flex items-center gap-2 shrink-0">
-            <button type="button" class="btn-outline btn-sm flex items-center gap-1.5"
-                    hx-post="/training-events/sync" hx-swap="none" title="Sync with Google Calendar"
-                    th:title="#{training.selector.sync_title}">
+        <div class="flex items-center gap-2 min-w-0 flex-1 md:flex-initial order-1 md:order-none">
+            <select th:if="${selectableCalendars.size() > 1}"
+                    id="activeCalendar" name="calendarId"
+                    class="pill-select text-sm h-11 min-h-[44px] md:h-10 md:min-h-[40px] py-1.5 pl-3.5 pr-10 w-full md:w-auto max-w-[200px] md:max-w-none shrink-0 truncate cursor-pointer"
+                    hx-post="/training-events/active-calendar" hx-trigger="change"
+                    aria-label="Select active calendar" th:attr="aria-label=#{training.selector.calendar}">
+                <option value="ALL" th:selected="${activeCalendar == null}" th:text="#{training.selector.all_calendars}">All calendars</option>
+                <option th:each="cal : ${selectableCalendars}"
+                        th:value="${cal.id}"
+                        th:selected="${activeCalendar != null && activeCalendar.id == cal.id}"
+                        th:text="${cal.enabled} ? ${cal.displayName} : #{training.selector.disabled(${cal.displayName})}">
+                    Calendar
+                </option>
+            </select>
+
+            <div th:if="${selectableCalendars.size() == 1}"
+                 class="inline-flex items-center h-11 min-h-[44px] md:h-10 md:min-h-[40px] px-3.5 md:px-4 rounded-pill bg-surface-container text-on-surface text-sm font-medium w-full md:w-auto max-w-[200px] md:max-w-none shrink-0 truncate select-none"
+                 th:title="${selectableCalendars[0].displayName}">
+                <span class="truncate md:overflow-visible" th:text="${selectableCalendars[0].displayName}">Primary Calendar</span>
+            </div>
+        </div>
+
+        <!-- Sync controls group: on mobile display:contents places button on line 1 and caption on line 2; on desktop standard flex row -->
+        <div class="contents md:flex md:items-center md:gap-2 shrink-0 md:order-none">
+            <button type="button"
+                    class="btn-outline w-11 h-11 min-h-[44px] p-0 rounded-pill flex items-center justify-center shrink-0 order-2 md:order-none md:w-auto md:h-10 md:min-h-[40px] md:px-4 md:py-0 md:gap-1.5 text-xs md:text-sm font-semibold"
+                    hx-post="/training-events/sync" hx-swap="none"
+                    th:title="#{training.selector.sync_title}"
+                    aria-label="Sync now" th:attr="aria-label=#{training.selector.sync_now}">
                 <span th:replace="~{fragments/icon :: icon(name='sync', size='sm')}"></span>
-                <span th:text="#{training.selector.sync_now}">Sync now</span>
+                <span class="hidden md:inline" th:text="#{training.selector.sync_now}">Sync now</span>
             </button>
-            <span class="text-xs text-on-surface-variant whitespace-nowrap"
+            <span class="text-xs text-on-surface-variant whitespace-nowrap order-4 basis-full ml-3.5 -mt-1 md:order-none md:basis-auto md:m-0 shrink-0"
                   th:text="${lastSyncedAt != null ? #messages.msg('training.selector.synced', #temporals.format(lastSyncedAt, 'HH:mm')) : #messages.msg('training.selector.never_synced')}"
                   th:title="${lastSyncedAt != null ? #temporals.format(lastSyncedAt, 'MMM dd, yyyy HH:mm') : #messages.msg('training.selector.never_synced')}">Never synced</span>
         </div>
+
+        <!-- Settings cog -->
+        <a href="/training-calendars"
+           class="btn-icon shrink-0 text-on-surface-variant hover:text-on-surface hover:bg-surface-container w-11 h-11 min-h-[44px] min-w-[44px] md:w-10 md:h-10 md:min-h-[40px] md:min-w-[40px] p-0 md:p-0 flex items-center justify-center order-3 md:order-none"
+           th:title="#{training.selector.manage}"
+           aria-label="Manage calendars" th:attr="aria-label=#{training.selector.manage}">
+            <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
+        </a>
+    </th:block>
+
+    <th:block th:if="${selectableCalendars == null || selectableCalendars.isEmpty()}">
+        <a href="/training-calendars"
+           class="btn-icon shrink-0 text-on-surface-variant hover:text-on-surface hover:bg-surface-container w-11 h-11 min-h-[44px] min-w-[44px] md:w-10 md:h-10 md:min-h-[40px] md:min-w-[40px] p-0 md:p-0 flex items-center justify-center"
+           th:title="#{training.selector.manage}"
+           aria-label="Manage calendars" th:attr="aria-label=#{training.selector.manage}">
+            <span th:replace="~{fragments/icon :: icon(name='settings', size='md')}"></span>
+        </a>
     </th:block>
 </div>
 

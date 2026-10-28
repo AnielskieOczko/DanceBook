@@ -298,25 +298,15 @@ class TailwindOutputCssTest {
             itemTouchTargetRegex.containsMatchIn(css),
             ".view-switcher-item must define 44px min-height touch target."
         )
-        val switcherRegex = Regex("""\.view-switcher\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        val itemUnderlineRegex = Regex("""\.view-switcher-item\s*\{[^}]*border-bottom-width\s*:\s*2px[^}]*\}""")
         assertTrue(
-            switcherRegex.containsMatchIn(css),
-            ".view-switcher must use var(--radius-pill)."
+            itemUnderlineRegex.containsMatchIn(css),
+            ".view-switcher-item must define 2px border-bottom-width for active underline."
         )
-        val switcherItemRegex = Regex("""\.view-switcher-item\s*\{[^}]*border-radius\s*:\s*var\(--radius-pill\)[^}]*\}""")
+        val activeItemRegex = Regex("""\.view-switcher-item-active\s*\{[^}]*var\(--color-primary\)[^}]*\}""")
         assertTrue(
-            switcherItemRegex.containsMatchIn(css),
-            ".view-switcher-item must use var(--radius-pill)."
-        )
-        val switcherOverflowRegex = Regex("""\.view-switcher\s*\{[^}]*overflow-x\s*:\s*auto[^}]*\}""")
-        assertTrue(
-            switcherOverflowRegex.containsMatchIn(css),
-            ".view-switcher must use overflow-x: auto to remain a single scrollable row on mobile."
-        )
-        val switcherItemNoWrapRegex = Regex("""\.view-switcher-item\s*\{[^}]*white-space\s*:\s*nowrap[^}]*\}""")
-        assertTrue(
-            switcherItemNoWrapRegex.containsMatchIn(css),
-            ".view-switcher-item must prevent line breaks with white-space: nowrap."
+            activeItemRegex.containsMatchIn(css),
+            ".view-switcher-item-active must use var(--color-primary)."
         )
     }
 
