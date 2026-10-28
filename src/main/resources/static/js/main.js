@@ -174,6 +174,36 @@ document.addEventListener('htmx:afterSwap', function(event) {
  * Closes all open dropdown/popup menus (details dropdowns, 3-dot menus, notification dropdown),
  * optionally preserving the menu that contains `exceptElement`.
  */
+/**
+ * A row's ⋯ menu in a desktop list table sits inside an overflow-x-auto wrapper, which clips an absolutely
+ * positioned dropdown (the last rows showed it cut off, with a scrollbar). Inside such a wrapper the menu is
+ * pinned to the viewport instead, under its button and right-aligned, or above it when there is no room below.
+ * Scrolling or resizing closes it, since a pinned menu would no longer sit next to its button.
+ */
+function positionMenuInScrollContainer(btn, dropdown) {
+    if (!btn.closest('.overflow-x-auto')) return;
+    const rect = btn.getBoundingClientRect();
+    const gap = 8;
+    dropdown.style.position = 'fixed';
+    dropdown.style.right = 'auto';
+    dropdown.style.bottom = 'auto';
+    dropdown.style.left = Math.max(gap, rect.right - dropdown.offsetWidth) + 'px';
+    const below = rect.bottom + gap;
+    const fitsBelow = below + dropdown.offsetHeight <= window.innerHeight - gap;
+    dropdown.style.top = (fitsBelow ? below : Math.max(gap, rect.top - gap - dropdown.offsetHeight)) + 'px';
+}
+
+function closePinnedMenus() {
+    document.querySelectorAll('.js-menu-dropdown:not(.hidden)').forEach(function(dropdown) {
+        if (dropdown.style.position !== 'fixed') return;
+        dropdown.classList.add('hidden');
+        const btn = dropdown.previousElementSibling;
+        if (btn && btn.classList.contains('js-menu-btn')) btn.setAttribute('aria-expanded', 'false');
+    });
+}
+window.addEventListener('scroll', closePinnedMenus, true);
+window.addEventListener('resize', closePinnedMenus);
+
 function closeAllMenus(exceptElement) {
     // 1. Details dropdowns (home "+ New" menu, mobile profile menu, LOD color guide)
     document.querySelectorAll('details.js-dropdown[open], #home-new-menu details[open], #profile-menu[open], #lod-color-guide[open]').forEach(details => {
@@ -375,6 +405,7 @@ document.addEventListener('click', function(event) {
         if (isHidden) {
             dropdown.classList.remove('hidden');
             menuBtn.setAttribute('aria-expanded', 'true');
+            positionMenuInScrollContainer(menuBtn, dropdown);
         } else {
             dropdown.classList.add('hidden');
             menuBtn.setAttribute('aria-expanded', 'false');
@@ -1444,6 +1475,17 @@ document.addEventListener('click', function(event) {
     let progressBar = null;
     let activeHtmxRequests = 0;
     let finishTimer = null;
+    // A PDF download leaves the page in place, so no pageshow ever ends a bar started for it (#416).
+    let skipUnloadProgressUntil = 0;
+
+    function isPdfDownload(link) {
+        if (link.classList.contains('js-export-pdf')) return true;
+        try {
+            return new URL(link.href, window.location.href).pathname.endsWith('/pdf');
+        } catch (e) {
+            return false;
+        }
+    }
 
     function getProgressBar() {
         if (!progressBar) {
@@ -1509,6 +1551,10 @@ document.addEventListener('click', function(event) {
         if (!link) return;
         if (link.getAttribute('target') === '_blank') return;
         if (link.hasAttribute('download')) return;
+        if (isPdfDownload(link)) {
+            skipUnloadProgressUntil = Date.now() + 3000;
+            return;
+        }
         if (link.getAttribute('hx-get') || link.getAttribute('hx-post')) return;
         const href = link.getAttribute('href');
         if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
@@ -1534,6 +1580,7 @@ document.addEventListener('click', function(event) {
     });
 
     window.addEventListener('beforeunload', function() {
+        if (Date.now() < skipUnloadProgressUntil) return;
         showProgressBar();
     });
 
@@ -1551,3 +1598,23 @@ document.addEventListener('click', function(event) {
         getElement: getProgressBar
     };
 })();
+
+// "Export PDF" on the Notes and Figures lists (#416): export what the filters currently show. The filter sheet
+// already syncs into #filterForm, so its values are the truth; the view switch is not a filter.
+document.addEventListener('click', function(event) {
+    const link = event.target.closest('.js-export-pdf');
+    if (!link) return;
+
+    const form = document.getElementById('filterForm');
+    const base = link.getAttribute('data-export-url');
+    if (!form || !base) return;
+
+    event.preventDefault();
+    const params = new URLSearchParams();
+    new FormData(form).forEach(function(value, name) {
+        if (name === 'view' || typeof value !== 'string' || value === '') return;
+        params.append(name, value);
+    });
+    const query = params.toString();
+    window.location.href = query ? base + '?' + query : base;
+});

@@ -31,6 +31,20 @@ interface MaterialService {
         pageable: Pageable
     ): Page<Material>
 
+    /**
+     * One part (0-based [part], at most [size] notes) of what the Notes list shows for these filters, for a PDF
+     * export. Unlike [findAll] it applies the ordinary-user visibility rule to admins too, so an export never
+     * contains another user's private note. The order is fixed (newest first, then id), which keeps parts stable.
+     */
+    fun findForExport(
+        typeIds: List<UUID>?,
+        categoryIds: List<UUID>?,
+        minRating: Short?,
+        textSearch: String?,
+        part: Int,
+        size: Int
+    ): Page<Material>
+
     fun downloadVideo(id: UUID, rangeHeader: String?): GoogleDriveService.DriveMediaDownload
 
     fun addFigure(materialId: UUID, request: FigureRequest): Figure

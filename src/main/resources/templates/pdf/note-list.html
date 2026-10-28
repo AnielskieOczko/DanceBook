@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{pdf.list.notes.title}">Notes PDF</title>
+    <style th:replace="~{pdf/note :: pdfStyles}"></style>
+    <style th:replace="~{pdf/list-front :: listStyles}"></style>
+</head>
+<body>
+
+<div th:replace="~{pdf/list-front :: cover}"></div>
+
+<div th:replace="~{pdf/list-front :: toc}"></div>
+
+<!-- One section per note: the same body the single-note PDF of #389 prints. -->
+<div class="list-item" th:each="item, stat : ${items}"
+     th:id="'item-' + ${stat.index}"
+     th:with="material=${item.material}, figures=${item.figures}, comments=${item.comments},
+              categoryImageBase64=${item.categoryImageBase64}, ownerName=${item.ownerName},
+              createdDateFormatted=${item.createdDateFormatted}, updatedDateFormatted=${item.updatedDateFormatted}">
+    <th:block th:replace="~{pdf/note :: noteContent}"></th:block>
+</div>
+
+</body>
+</html>

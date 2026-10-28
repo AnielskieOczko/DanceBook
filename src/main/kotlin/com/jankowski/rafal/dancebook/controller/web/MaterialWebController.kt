@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import com.jankowski.rafal.dancebook.model.Role
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.PdfExportService
+import com.jankowski.rafal.dancebook.service.PdfFilterLine
+import com.jankowski.rafal.dancebook.service.PdfListCover
 import com.jankowski.rafal.dancebook.service.TrainingEventService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletResponse
@@ -255,6 +257,84 @@ class MaterialWebController(
             .contentType(MediaType.APPLICATION_PDF)
             .body(pdfBytes)
     }
+
+    /**
+     * Start of "Export PDF" on the Notes list (#416): everything the current filters match. One part goes straight
+     * to the download; more than one lists the parts, each a request of its own. Nothing to export says so.
+     */
+    @GetMapping("/export")
+    fun exportOverview(
+        @RequestParam(required = false) typeIds: List<UUID>?,
+        @RequestParam(required = false) categoryIds: List<UUID>?,
+        @RequestParam(required = false) minRating: Short?,
+        @RequestParam(required = false) nameSearch: String?,
+        model: Model
+    ): String {
+        val total = materialService.findForExport(typeIds, categoryIds, minRating, nameSearch, 0, 1).totalElements
+        val query = exportQuery(typeIds, categoryIds, minRating, nameSearch)
+        val parts = ListExportSupport.parts("/materials/export", query, total)
+        if (total > 0 && parts.size == 1) {
+            return "redirect:" + parts.first().url
+        }
+
+        model.addAttribute("exportTitleKey", "export.notes.title")
+        model.addAttribute("exportBackKey", "notes.title")
+        model.addAttribute("exportBackHref", "/materials")
+        model.addAttribute("exportFilters", exportFilterLines(typeIds, categoryIds, minRating, nameSearch))
+        model.addAttribute("totalCount", total)
+        model.addAttribute("maxPerPdf", PdfExportService.MAX_ITEMS_PER_PDF)
+        model.addAttribute("parts", parts)
+        return "exports/parts"
+    }
+
+    /** One part (`?part=2`, 1-based) of the Notes list export, at most 100 notes, the user's visible-for-export notes only. */
+    @GetMapping("/export/pdf")
+    fun exportListPdf(
+        @RequestParam(required = false) typeIds: List<UUID>?,
+        @RequestParam(required = false) categoryIds: List<UUID>?,
+        @RequestParam(required = false) minRating: Short?,
+        @RequestParam(required = false) nameSearch: String?,
+        @RequestParam(required = false, defaultValue = "1") part: Int,
+        locale: Locale
+    ): ResponseEntity<ByteArray> {
+        if (part < 1) throw EntityNotFoundException("There is no part $part of this export")
+        val page = materialService.findForExport(typeIds, categoryIds, minRating, nameSearch, part - 1, PdfExportService.MAX_ITEMS_PER_PDF)
+        if (page.content.isEmpty()) throw EntityNotFoundException("There is no part $part of this export")
+
+        val totalParts = PdfExportService.partCount(page.totalElements)
+        val owner = appUserService.getCurrentUserOrNull()
+        val cover = PdfListCover(
+            ownerName = owner?.displayName ?: owner?.username ?: "",
+            filters = exportFilterLines(typeIds, categoryIds, minRating, nameSearch),
+            part = part,
+            totalParts = totalParts,
+            totalItems = page.totalElements
+        )
+        val service = pdfExportService ?: throw IllegalStateException("PDF export service not available")
+        return ListExportSupport.download(service.exportMaterialListPdf(page.content, cover, locale), "dancebook-notes", part, totalParts)
+    }
+
+    private fun exportQuery(typeIds: List<UUID>?, categoryIds: List<UUID>?, minRating: Short?, nameSearch: String?): List<Pair<String, String>> =
+        buildList {
+            typeIds?.forEach { add("typeIds" to it.toString()) }
+            categoryIds?.forEach { add("categoryIds" to it.toString()) }
+            minRating?.let { add("minRating" to it.toString()) }
+            if (!nameSearch.isNullOrBlank()) add("nameSearch" to nameSearch)
+        }
+
+    private fun exportFilterLines(typeIds: List<UUID>?, categoryIds: List<UUID>?, minRating: Short?, nameSearch: String?): List<PdfFilterLine> =
+        buildList {
+            if (!nameSearch.isNullOrBlank()) add(PdfFilterLine("pdf.list.filter.search", nameSearch.trim()))
+            if (!typeIds.isNullOrEmpty()) {
+                val names = danceTypeService.findAll().filter { it.id in typeIds }.map { it.name }
+                if (names.isNotEmpty()) add(PdfFilterLine("pdf.list.filter.style", names.joinToString(", ")))
+            }
+            if (!categoryIds.isNullOrEmpty()) {
+                val names = danceCategoryService.findAll().filter { it.id in categoryIds }.map { it.name }
+                if (names.isNotEmpty()) add(PdfFilterLine("pdf.list.filter.category", names.joinToString(", ")))
+            }
+            if (minRating != null) add(PdfFilterLine("pdf.list.filter.rating", "≥ $minRating / 5"))
+        }
 
     @GetMapping("/{materialId}/figures/picker")
     fun showFigurePicker(

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(content=~{::section})}">
+
+<!--
+    The page behind "Export PDF" on the Notes and Figures lists (#416), shared by both. The controller supplies
+    exportTitleKey, exportBackKey, exportBackHref, exportFilters, totalCount, maxPerPdf and parts. It shows only when
+    there is nothing to export or the export needs more than one PDF; a single part goes straight to the download.
+-->
+<section class="space-y-8 relative">
+
+    <div th:replace="~{fragments/page :: pageHeader(
+        backHref=${exportBackHref},
+        backLabel=#{${exportBackKey}},
+        title=#{${exportTitleKey}},
+        subtitle=${totalCount > 0 ? #messages.msg('export.parts.subtitle', totalCount, maxPerPdf, #lists.size(parts)) : null})}"></div>
+
+    <th:block th:if="${totalCount == 0}">
+        <div th:replace="~{fragments/empty :: emptyState(
+            icon='search_off',
+            title=#{export.empty.title},
+            text=#{export.empty.text},
+            actionHref=${exportBackHref},
+            actionLabel=#{${exportBackKey}})}"></div>
+    </th:block>
+
+    <th:block th:if="${totalCount > 0}">
+        <section class="space-y-2" aria-labelledby="export-filters-title">
+            <h2 id="export-filters-title" class="text-label-sm font-label-sm text-outline uppercase tracking-wider" th:text="#{pdf.list.filters}">Filters used</h2>
+            <p th:if="${#lists.isEmpty(exportFilters)}" class="text-sm text-on-surface-variant" th:text="#{pdf.list.filters.none}">None</p>
+            <ul th:if="${!#lists.isEmpty(exportFilters)}" class="flex flex-wrap gap-2">
+                <li th:each="f : ${exportFilters}"
+                    class="inline-flex max-w-full items-center gap-1.5 rounded-full bg-surface-container px-3 py-1 text-sm text-on-surface">
+                    <span class="text-on-surface-variant" th:text="#{${f.labelKey}} + ':'">Search:</span>
+                    <span class="font-medium break-words min-w-0" th:text="${f.value}">waltz</span>
+                </li>
+            </ul>
+        </section>
+
+        <ol class="space-y-3" aria-label="PDF parts" th:attr="aria-label=#{export.parts.list_label}">
+            <li th:each="p : ${parts}"
+                class="flex flex-col gap-3 rounded-xl border border-outline-variant/40 bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="min-w-0">
+                    <p class="font-semibold text-on-surface" th:text="#{pdf.list.part(${p.number}, ${#lists.size(parts)})}">Part 1 of 3</p>
+                    <p class="text-sm text-on-surface-variant" th:text="#{export.parts.range(${p.from}, ${p.to})}">Items 1–100</p>
+                </div>
+                <a th:replace="~{fragments/button :: linkButton(
+                    href=${p.url},
+                    label=#{export.parts.download(${p.number})},
+                    icon='picture_as_pdf',
+                    variant='primary',
+                    cls='w-full sm:w-auto justify-center')}"></a>
+            </li>
+        </ol>
+    </th:block>
+
+</section>
+
+</html>
