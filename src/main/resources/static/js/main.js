@@ -692,6 +692,12 @@ const AppManager = (function() {
     
     // Update activity timer and sync across tabs
     function updateActivity(forceStorage) {
+        // While the warning is showing, only the explicit buttons decide: ordinary
+        // mouse/keyboard activity must not dismiss it or reset the clock.
+        const warning = document.getElementById('inactivityLogoutModal');
+        if (!forceStorage && warning && warning.open) {
+            return;
+        }
         const now = Date.now();
         lastActivityTime = now;
         if (forceStorage || now - lastStorageWriteTime >= 1000) {
@@ -700,8 +706,6 @@ const AppManager = (function() {
                 localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
             } catch (e) {}
         }
-        // Any user activity closes the warning dialog quietly
-        closeWarningModal(false);
     }
 
     function formatCountdown(seconds) {

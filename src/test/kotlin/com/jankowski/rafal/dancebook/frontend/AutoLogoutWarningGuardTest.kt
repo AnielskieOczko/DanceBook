@@ -19,7 +19,7 @@ import java.util.Properties
  * - Absent from the sign-in page (login.html).
  * - Full bilingual parity for dialog titles, buttons, and plural countdown templates.
  * - Script in main.js coordinates cross-tab activity via localStorage, uses timestamp-based math,
- *   provides a 60-second warning lead time, and supports quiet dismissal on activity.
+ *   provides a 60-second warning lead time, and keeps the dialog open on ordinary activity until the user chooses.
  */
 class AutoLogoutWarningGuardTest {
 
@@ -96,9 +96,6 @@ class AutoLogoutWarningGuardTest {
             "auth.logout_warning.stay_signed_in",
             "auth.logout_warning.sign_out_now",
             "auth.logout_warning.countdown_initial",
-            "js.auth.logout_warning_title",
-            "js.auth.stay_signed_in",
-            "js.auth.sign_out_now",
             "js.auth.logout_countdown_one",
             "js.auth.logout_countdown_few",
             "js.auth.logout_countdown_many"
@@ -152,8 +149,11 @@ class AutoLogoutWarningGuardTest {
         assertTrue(content.contains("I18n.t('js.auth.logout_countdown_few'"), "main.js must use few seconds key")
         assertTrue(content.contains("I18n.t('js.auth.logout_countdown_many'"), "main.js must use many seconds key")
 
-        // Quiet dismissal on activity
-        assertTrue(content.contains("closeWarningModal(false)"), "main.js must close warning modal quietly on activity")
+        // Ordinary activity must not dismiss the open warning; only the buttons (or another tab's activity) do
+        assertTrue(
+            content.contains("!forceStorage && warning && warning.open"),
+            "main.js must ignore ordinary activity while the warning dialog is open"
+        )
 
         // Sign-in page guard
         assertTrue(content.contains("window.location.pathname === '/login'"), "main.js must guard against running on /login")
