@@ -2362,6 +2362,15 @@ dialog#filterSheet[open]::backdrop {
     }
   }
 
+  dialog#inactivityLogoutModal,
+  dialog#inactivityLogoutModal[open],
+  dialog#inactivityLogoutModal::backdrop,
+  dialog#inactivityLogoutModal[open]::backdrop {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
   .list-fade-in,
   .js-compact-row,
   .table-row {

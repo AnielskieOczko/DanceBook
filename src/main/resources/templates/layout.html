@@ -276,6 +276,31 @@
 <!-- Shared confirm modal container for server-rendered dialogs -->
 <div id="confirmModalContainer"></div>
 
+<!-- Inactivity warning modal (#417) -->
+<dialog id="inactivityLogoutModal"
+        class="bg-surface rounded-card shadow-ambient border border-outline-variant max-w-[28rem] w-[calc(100%-2rem)] max-h-[90vh] p-6 backdrop:bg-black/40 backdrop:backdrop-blur-xs m-auto"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="inactivityDialogTitle"
+        aria-describedby="inactivityCountdown">
+    <div class="flex items-center gap-4 mb-4 text-warning">
+        <div class="w-10 h-10 rounded-full bg-warning-soft flex items-center justify-center shrink-0">
+            <span th:replace="~{fragments/icon :: icon(name='schedule', size='md')}"></span>
+        </div>
+        <h3 id="inactivityDialogTitle" class="font-headline-md text-on-surface text-xl font-semibold"
+            th:text="#{auth.logout_warning.title}">Inactivity Warning</h3>
+    </div>
+    <p id="inactivityCountdown" class="text-on-surface-variant font-body-md mb-6 leading-relaxed"
+       th:text="#{auth.logout_warning.countdown_initial}">You will be signed out in 60 seconds</p>
+    <div class="flex items-center justify-end gap-3 flex-wrap">
+        <button type="button" id="inactivitySignOutBtn"
+                class="text-sm font-medium text-on-surface-variant hover:text-on-surface underline px-3 py-2 cursor-pointer transition-colors"
+                th:text="#{auth.logout_warning.sign_out_now}">Sign out now</button>
+        <button type="button" id="inactivityStaySignedInBtn" class="btn-primary"
+                th:text="#{auth.logout_warning.stay_signed_in}">Stay signed in</button>
+    </div>
+</dialog>
+
 <!-- Go-to top / bottom floating control (#224) -->
 <nav id="scrollToControls" class="goto" hidden role="group" aria-label="Scroll the page" th:attr="aria-label=#{nav.scroll.group}">
     <button type="button" id="scrollToTopBtn" disabled

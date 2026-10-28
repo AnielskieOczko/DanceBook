@@ -656,57 +656,150 @@ document.addEventListener('keydown', function(event) {
 });
 
 /**
- * AppManager: Handles background tasks like polling and auto-logout.
+ * AppManager: Handles background tasks like polling, activity tracking, and auto-logout warning.
  */
 const AppManager = (function() {
     let lastActivityTime = Date.now();
     let lastPollTime = Date.now();
+    let lastStorageWriteTime = 0;
     
     // Constants (read from body data attributes, with fallbacks)
     let pollIntervalMs = 5 * 60 * 1000;
     let inactivityLogoutMs = 10 * 60 * 1000;
-    const CHECK_INTERVAL_MS = 60 * 1000; // 1 minute
+    const WARNING_LEAD_TIME_MS = 60 * 1000; // 60 seconds
+    const CHECK_INTERVAL_MS = 1000; // 1 second
+    const STORAGE_KEY_LAST_ACTIVITY = 'dancebook:lastActivityTime';
     
     function loadConfig() {
         if (document.body.dataset.pollInterval) {
-            pollIntervalMs = parseInt(document.body.dataset.pollInterval) * 60 * 1000;
+            pollIntervalMs = parseInt(document.body.dataset.pollInterval, 10) * 60 * 1000;
         }
         if (document.body.dataset.logoutInterval) {
-            inactivityLogoutMs = parseInt(document.body.dataset.logoutInterval) * 60 * 1000;
+            inactivityLogoutMs = parseInt(document.body.dataset.logoutInterval, 10) * 60 * 1000;
         }
     }
+
+    function getLatestActivityTime() {
+        let stored = 0;
+        try {
+            const val = localStorage.getItem(STORAGE_KEY_LAST_ACTIVITY);
+            if (val) stored = parseInt(val, 10);
+        } catch (e) {
+            // localStorage may be inaccessible in restricted contexts
+        }
+        return Math.max(lastActivityTime, isNaN(stored) ? 0 : stored);
+    }
     
-    // Update activity timer
-    function updateActivity() {
-        lastActivityTime = Date.now();
+    // Update activity timer and sync across tabs
+    function updateActivity(forceStorage) {
+        // While the warning is showing, only the explicit buttons decide: ordinary
+        // mouse/keyboard activity must not dismiss it or reset the clock.
+        const warning = document.getElementById('inactivityLogoutModal');
+        if (!forceStorage && warning && warning.open) {
+            return;
+        }
+        const now = Date.now();
+        lastActivityTime = now;
+        if (forceStorage || now - lastStorageWriteTime >= 1000) {
+            lastStorageWriteTime = now;
+            try {
+                localStorage.setItem(STORAGE_KEY_LAST_ACTIVITY, now.toString());
+            } catch (e) {}
+        }
+    }
+
+    function formatCountdown(seconds) {
+        if (seconds === 1) {
+            return I18n.t('js.auth.logout_countdown_one', seconds);
+        }
+        const mod10 = seconds % 10;
+        const mod100 = seconds % 100;
+        if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+            return I18n.t('js.auth.logout_countdown_few', seconds);
+        }
+        return I18n.t('js.auth.logout_countdown_many', seconds);
+    }
+
+    function showWarningModal(remainingSec) {
+        const modal = document.getElementById('inactivityLogoutModal');
+        if (!modal) return;
+
+        const countdownEl = document.getElementById('inactivityCountdown');
+        if (countdownEl) {
+            countdownEl.textContent = formatCountdown(remainingSec);
+        }
+
+        if (!modal.open && typeof modal.showModal === 'function') {
+            modal.showModal();
+            const stayBtn = document.getElementById('inactivityStaySignedInBtn');
+            if (stayBtn) {
+                stayBtn.focus();
+            }
+        }
+    }
+
+    function closeWarningModal(resetTimer) {
+        const modal = document.getElementById('inactivityLogoutModal');
+        if (modal && modal.open) {
+            modal.close();
+        }
+        if (resetTimer) {
+            updateActivity(true);
+        }
+    }
+
+    function triggerLogout() {
+        console.log("Inactivity limit reached. Logging out...");
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/logout';
+        
+        // Add CSRF token
+        const tokenMeta = document.querySelector('meta[name="_csrf"]');
+        if (tokenMeta) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = '_csrf';
+            input.value = tokenMeta.content;
+            form.appendChild(input);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
     }
     
     function performChecks() {
+        if (window.location.pathname === '/login' || window.location.pathname.startsWith('/login')) {
+            return;
+        }
+        if (!document.body.dataset.logoutInterval) {
+            return;
+        }
+
         const now = Date.now();
+        const effectiveActivityTime = getLatestActivityTime();
+        lastActivityTime = effectiveActivityTime;
+
+        const logoutTime = effectiveActivityTime + inactivityLogoutMs;
+        const warningWindowMs = Math.min(WARNING_LEAD_TIME_MS, inactivityLogoutMs);
+        const warningTime = logoutTime - warningWindowMs;
+        const remainingMs = logoutTime - now;
         
         // 1. Auto-Logout Check
-        if (now - lastActivityTime > inactivityLogoutMs) {
-            console.log("Inactivity limit reached. Logging out...");
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/logout';
-            
-            // Add CSRF token
-            const tokenMeta = document.querySelector('meta[name="_csrf"]');
-            if (tokenMeta) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = '_csrf';
-                input.value = tokenMeta.content;
-                form.appendChild(input);
-            }
-            
-            document.body.appendChild(form);
-            form.submit();
+        if (remainingMs <= 0) {
+            triggerLogout();
             return; // Stop checking
         }
+
+        // 2. Warning Dialog Check
+        if (now >= warningTime) {
+            const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
+            showWarningModal(remainingSec);
+        } else {
+            closeWarningModal(false);
+        }
         
-        // 2. Notification Polling Check
+        // 3. Notification Polling Check
         if (now - lastPollTime >= pollIntervalMs) {
             if (!document.hidden) {
                 lastPollTime = now;
@@ -716,20 +809,58 @@ const AppManager = (function() {
     }
     
     function init() {
+        if (window.location.pathname === '/login' || window.location.pathname.startsWith('/login')) {
+            return;
+        }
         loadConfig();
+        lastActivityTime = getLatestActivityTime();
+
+        // Wire modal action buttons
+        const stayBtn = document.getElementById('inactivityStaySignedInBtn');
+        if (stayBtn) {
+            stayBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeWarningModal(true);
+            });
+        }
+
+        const signOutBtn = document.getElementById('inactivitySignOutBtn');
+        if (signOutBtn) {
+            signOutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                triggerLogout();
+            });
+        }
+
+        const modal = document.getElementById('inactivityLogoutModal');
+        if (modal) {
+            modal.addEventListener('cancel', function(e) {
+                e.preventDefault();
+                closeWarningModal(true);
+            });
+        }
+
         // Listen for activity
         ['mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
-            document.addEventListener(evt, updateActivity, { passive: true });
+            document.addEventListener(evt, () => updateActivity(false), { passive: true });
+        });
+
+        // Listen for activity from other tabs via localStorage storage event
+        window.addEventListener('storage', function(e) {
+            if (e.key === STORAGE_KEY_LAST_ACTIVITY && e.newValue) {
+                const remoteTime = parseInt(e.newValue, 10);
+                if (!isNaN(remoteTime) && remoteTime > lastActivityTime) {
+                    lastActivityTime = remoteTime;
+                    closeWarningModal(false);
+                }
+            }
         });
         
         // Listen for tab visibility changes
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
-                // If tab becomes visible, check if we missed a poll
-                if (Date.now() - lastPollTime >= pollIntervalMs) {
-                    lastPollTime = Date.now();
-                    document.body.dispatchEvent(new Event('poll-notifications'));
-                }
+                // When tab becomes visible, re-run checks immediately from timestamps
+                performChecks();
             }
         });
         
@@ -737,7 +868,7 @@ const AppManager = (function() {
         setInterval(performChecks, CHECK_INTERVAL_MS);
     }
     
-    return { init };
+    return { init, performChecks, updateActivity, showWarningModal, closeWarningModal };
 })();
 
 /**
