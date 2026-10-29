@@ -376,9 +376,8 @@ class HomeDashboardRenderingTest {
             // The single "+ New" menu replaces them.
             .andExpect(content().string(containsString("id=\"home-new-menu\"")))
             .andExpect(content().string(containsString("/training-events/new")))
-            // #423: the panel opens from the button's left edge on a phone (where the button is
-            // left-aligned) and only right-aligns from sm up; right-0 alone clipped it off-screen.
-            .andExpect(content().string(containsString("absolute left-0 sm:left-auto sm:right-0 top-full")))
+            // #424: header actions sit on the right at every width, so the panel aligns right-0 consistently.
+            .andExpect(content().string(containsString("absolute right-0 top-full")))
     }
 
     @Test
