@@ -21,15 +21,13 @@
     </th:block>
 
     <!-- Main Header Row: Title & Actions -->
-    <div class="flex items-start justify-between gap-y-3.5 gap-x-4"
-         th:classappend="${(actionCompact == true or actionTextShort != null) ? 'flex-nowrap' : 'flex-wrap sm:flex-nowrap'}">
-        <div class="page-header mb-0 min-w-0"
-             th:classappend="${(primaryUrl != null or primarySlot != null or secondaryUrl != null or secondarySlot != null or menuSlot != null or (actionCompact != true and actionTextShort == null)) ? 'w-full sm:w-auto sm:flex-1' : 'flex-1'}">
+    <div class="flex items-start justify-between gap-y-3.5 gap-x-4">
+        <div class="page-header mb-0 min-w-0 flex-1">
             <h1 class="page-title text-3xl flex items-center gap-2" th:classappend="${titleCls}">
                 <th:block th:if="${icon != null}">
-                    <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary')}"></span>
+                    <span th:replace="~{fragments/icon :: icon(name=${icon}, size='lg', cls='text-primary shrink-0')}"></span>
                 </th:block>
-                <span th:text="${title}">Page Title</span>
+                <span class="break-words min-w-0" th:text="${title}">Page Title</span>
             </h1>
             <th:block th:if="${metaSlot != null}">
                 <div class="flex flex-wrap items-center gap-2 mt-2">
@@ -46,7 +44,7 @@
 
         <!-- Toolbar slot -->
         <th:block th:if="${toolbar != null}">
-            <div class="shrink-0 w-full sm:w-auto" th:replace="${toolbar}"></div>
+            <div class="shrink-0" th:replace="${toolbar}"></div>
         </th:block>
 
         <!-- Legacy single actionUrl (used by list views when no detail actions are defined) -->
@@ -67,19 +65,19 @@
             </div>
         </th:block>
 
-        <!-- Detail Actions: Responsive row (on desktop: right of title; on phone: full width row below title) -->
+        <!-- Detail Actions: Right-aligned row in title row on all widths -->
         <th:block th:if="${toolbar == null and ((primaryUrl != null and (hasPrimary == null or hasPrimary)) or primarySlot != null or secondaryUrl != null or secondarySlot != null or (menuSlot != null and (hasMenu == null or hasMenu)))}">
-            <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 pt-0.5">
+            <div class="flex items-center gap-2 shrink-0 pt-0.5">
                 <!-- Secondary action (at most one, outline, hidden on mobile) -->
                 <th:block th:if="${secondarySlot != null}">
-                    <div class="hidden sm:inline-flex">
+                    <div class="hidden sm:inline-flex shrink-0">
                         <th:block th:replace="${secondarySlot}"></th:block>
                     </div>
                 </th:block>
                 <th:block th:if="${secondarySlot == null and secondaryUrl != null}">
                     <a th:href="${secondaryUrl}"
                        th:id="${secondaryId}"
-                       class="hidden sm:inline-flex btn-outline btn-sm min-h-[44px] items-center gap-1.5">
+                       class="hidden sm:inline-flex btn-outline btn-sm min-h-[44px] shrink-0 items-center gap-1.5">
                         <th:block th:if="${secondaryIcon != null}">
                             <span th:replace="~{fragments/icon :: icon(name=${secondaryIcon}, size='sm')}"></span>
                         </th:block>
@@ -87,13 +85,13 @@
                     </a>
                 </th:block>
 
-                <!-- Primary action (at most one, filled, fills width on mobile) -->
+                <!-- Primary action (at most one, filled) -->
                 <th:block th:if="${primarySlot != null}">
-                    <div class="flex-1 sm:flex-initial min-w-0" th:replace="${primarySlot}"></div>
+                    <div class="shrink-0" th:replace="${primarySlot}"></div>
                 </th:block>
                 <th:block th:if="${primarySlot == null and primaryUrl != null and (hasPrimary == null or hasPrimary)}">
                     <a th:href="${primaryUrl}"
-                       class="btn-primary btn-sm min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-1.5 min-w-0">
+                       class="btn-primary btn-sm min-h-[44px] shrink-0 flex items-center justify-center gap-1.5">
                         <th:block th:if="${primaryIcon != null}">
                             <span th:replace="~{fragments/icon :: icon(name=${primaryIcon}, size='sm')}"></span>
                         </th:block>
