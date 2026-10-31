@@ -62,4 +62,12 @@ class HeaderActionsAlignmentTest {
 
         assertFalse(content.contains("w-full sm:w-auto"), "saveButtonSlot button must not take w-full on mobile")
     }
+
+    @Test
+    fun `lists form save button shows a short label on phones so the title is not squeezed`() {
+        val content = listsFormFile.readText()
+
+        assertTrue(content.contains("class=\"sm:hidden\" th:text=\"#{common.save}\""), "phones must show the short Save label")
+        assertTrue(content.contains("class=\"hidden sm:inline\""), "the long label must be hidden below sm")
+    }
 }
