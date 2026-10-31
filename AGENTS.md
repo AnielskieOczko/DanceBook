@@ -140,8 +140,14 @@ menu is what marks a syllabus figure.
   (`secondaryUrl`/`secondarySlot`), and a `menuSlot` that `overflowMenu` turns into the ⋯ menu.
   The menu holds everything else, Delete included, and its rows are `menuItem`s.
 
-Below `sm` the actions drop under the title, the primary fills the width and the secondary is
-hidden, so the page repeats it as an `sm:hidden` menu item (`choreographies/view.html` does this for Print). Delete stays a `POST` form with
+**Header actions follow one placement rule across all breakpoints (#424).** Header action
+buttons (primary action, ⋯ overflow menu, toolbar, list "Add" buttons) sit on the right in
+the title row at every width (including mobile at 390px), matching desktop. Long titles wrap
+within `flex-1 min-w-0` with `break-words` so actions never push the title off-screen. Full-width
+primary buttons are allowed only on forms (save/submit bars), consistently there and nowhere
+else. Secondary header actions stay hidden on mobile (`hidden sm:inline-flex`), repeated as
+`sm:hidden` menu items when needed (`choreographies/view.html` does this for Print). Delete
+stays a `POST` form with
 `data-confirm`. The menu runs on the existing `js-menu-btn` / `js-menu-dropdown` code in `main.js`,
 which handles ArrowUp/ArrowDown, `aria-expanded`, Escape (focus goes back to the button) and closing
 on a click outside. A new ⋯ menu anywhere, a list row's included, reuses `overflowMenu` and that

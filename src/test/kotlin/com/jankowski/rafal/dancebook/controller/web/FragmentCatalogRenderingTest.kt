@@ -522,6 +522,14 @@ class FragmentCatalogRenderingTest {
         assertNotNull(title)
         assertTrue(title!!.text().contains("Advanced Hip Twist"))
         assertTrue(title.hasClass("extra-title-cls"))
+        val titleSpan = title.selectFirst("span.break-words")
+        assertNotNull(titleSpan, "Title text span must have break-words class")
+
+        val titleContainer = doc.selectFirst(".page-header")
+        assertNotNull(titleContainer)
+        assertTrue(titleContainer!!.hasClass("flex-1"))
+        assertTrue(titleContainer.hasClass("min-w-0"))
+        assertFalse(titleContainer.hasClass("w-full"))
 
         // Secondary outline button
         val secondary = doc.selectFirst("a[href='/dance-figures/1/print']")
@@ -533,6 +541,8 @@ class FragmentCatalogRenderingTest {
         val primary = doc.selectFirst("a[href='/dance-figures/1/edit']")
         assertNotNull(primary, "Primary action button must exist")
         assertTrue(primary!!.hasClass("btn-primary"))
+        assertTrue(primary.hasClass("shrink-0"))
+        assertFalse(primary.hasClass("flex-1"))
         assertTrue(primary.text().contains("Edit Figure"))
 
         // ⋯ Overflow menu trigger and dropdown
