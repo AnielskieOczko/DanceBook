@@ -145,4 +145,83 @@ class ChoreographyServiceTest {
         assertEquals(4L, count)
         verify(choreographyRepository).countByOwner(currentUser)
     }
+
+    @Test
+    fun `should remove entry from middle and renumber remaining entries`() {
+        val choreoId = UUID.randomUUID()
+        val entry1 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 0; entryType = EntryType.FIGURE }
+        val entry2 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 1; entryType = EntryType.FIGURE }
+        val entry3 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 2; entryType = EntryType.FIGURE }
+
+        val choreography = Choreography().apply {
+            id = choreoId
+            name = "Test Choreo"
+            owner = currentUser
+            entries = mutableListOf(entry1, entry2, entry3)
+        }
+
+        `when`(choreographyRepository.findOne(any<Specification<Choreography>>())).thenReturn(Optional.of(choreography))
+        `when`(choreographyRepository.saveAndFlush(any(Choreography::class.java))).thenAnswer { it.arguments[0] as Choreography }
+
+        val result = choreographyService.removeEntry(choreoId, entry2.id!!)
+
+        assertEquals(2, result.entries.size)
+        assertEquals(entry1.id, result.entries[0].id)
+        assertEquals(0, result.entries[0].sortOrder)
+        assertEquals(entry3.id, result.entries[1].id)
+        assertEquals(1, result.entries[1].sortOrder)
+        verify(eventPublisher).publishEvent(any(ChoreographyUpdatedEvent::class.java))
+    }
+
+    @Test
+    fun `should remove entry from start and renumber remaining entries`() {
+        val choreoId = UUID.randomUUID()
+        val entry1 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 0; entryType = EntryType.FIGURE }
+        val entry2 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 1; entryType = EntryType.FIGURE }
+        val entry3 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 2; entryType = EntryType.FIGURE }
+
+        val choreography = Choreography().apply {
+            id = choreoId
+            name = "Test Choreo"
+            owner = currentUser
+            entries = mutableListOf(entry1, entry2, entry3)
+        }
+
+        `when`(choreographyRepository.findOne(any<Specification<Choreography>>())).thenReturn(Optional.of(choreography))
+        `when`(choreographyRepository.saveAndFlush(any(Choreography::class.java))).thenAnswer { it.arguments[0] as Choreography }
+
+        val result = choreographyService.removeEntry(choreoId, entry1.id!!)
+
+        assertEquals(2, result.entries.size)
+        assertEquals(entry2.id, result.entries[0].id)
+        assertEquals(0, result.entries[0].sortOrder)
+        assertEquals(entry3.id, result.entries[1].id)
+        assertEquals(1, result.entries[1].sortOrder)
+    }
+
+    @Test
+    fun `should remove entry from end leaving earlier entries unchanged`() {
+        val choreoId = UUID.randomUUID()
+        val entry1 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 0; entryType = EntryType.FIGURE }
+        val entry2 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 1; entryType = EntryType.FIGURE }
+        val entry3 = ChoreographyEntry().apply { id = UUID.randomUUID(); sortOrder = 2; entryType = EntryType.FIGURE }
+
+        val choreography = Choreography().apply {
+            id = choreoId
+            name = "Test Choreo"
+            owner = currentUser
+            entries = mutableListOf(entry1, entry2, entry3)
+        }
+
+        `when`(choreographyRepository.findOne(any<Specification<Choreography>>())).thenReturn(Optional.of(choreography))
+        `when`(choreographyRepository.saveAndFlush(any(Choreography::class.java))).thenAnswer { it.arguments[0] as Choreography }
+
+        val result = choreographyService.removeEntry(choreoId, entry3.id!!)
+
+        assertEquals(2, result.entries.size)
+        assertEquals(entry1.id, result.entries[0].id)
+        assertEquals(0, result.entries[0].sortOrder)
+        assertEquals(entry2.id, result.entries[1].id)
+        assertEquals(1, result.entries[1].sortOrder)
+    }
 }
