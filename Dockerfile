@@ -25,4 +25,5 @@ RUN DATABASE_URL=jdbc:postgresql://localhost:5432/none DATABASE_USERNAME=none DA
     && test -s app.jsa
 
 EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["java", "-XX:SharedArchiveFile=app.jsa", "-jar", "app.jar"]
