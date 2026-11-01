@@ -23,15 +23,21 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.data.domain.PageRequest
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @SpringBootTest
@@ -39,7 +45,24 @@ import java.util.UUID
 @TestPropertySource(properties = ["google.calendar.calendar-id=integration-test-calendar"])
 class BadgeIntegrationTest {
 
+    /**
+     * Pins "today" to the 20th of a month. PERFECT_MONTH is awarded for a finished month, so with
+     * the real date these fixtures (sessions up to 10 days back) land in the previous month on the
+     * 1st to 10th of every month and earn badges the tests do not expect.
+     */
+    @TestConfiguration
+    class PinnedClockConfig {
+        @Bean
+        @Primary
+        fun pinnedClock(): Clock = FIXED_CLOCK
+    }
+
     companion object {
+        private val FIXED_CLOCK: Clock =
+            Clock.fixed(LocalDateTime.of(2026, 3, 20, 12, 0).toInstant(ZoneOffset.UTC), ZoneOffset.UTC)
+
+        private fun today(): LocalDate = LocalDate.now(FIXED_CLOCK)
+
         @Container
         @ServiceConnection
         val postgres = PostgreSQLContainer(
@@ -119,7 +142,7 @@ class BadgeIntegrationTest {
             val created = trainingEventService.create(
                 TrainingEventRequest(
                     title = "Session $daysAgo",
-                    date = LocalDate.now().minusDays(daysAgo),
+                    date = today().minusDays(daysAgo),
                     startTime = LocalTime.of(18, 0),
                     endTime = LocalTime.of(19, 0),
                     eventType = "TRAINING"
@@ -135,7 +158,7 @@ class BadgeIntegrationTest {
             val bEvent = trainingEventRepository.save(
                 com.jankowski.rafal.dancebook.model.TrainingEvent().apply {
                     title = "B Session $daysAgo"
-                    startTime = LocalDate.now().minusDays(daysAgo).atTime(18, 0)
+                    startTime = today().minusDays(daysAgo).atTime(18, 0)
                     endTime = startTime.plusMinutes(60)
                     createdBy = userB
                     setAttendance(userB, AttendanceStatus.ATTENDED)
@@ -195,7 +218,7 @@ class BadgeIntegrationTest {
         val laterSession = trainingEventService.create(
             TrainingEventRequest(
                 title = "Skipped session",
-                date = LocalDate.now(),
+                date = today(),
                 startTime = LocalTime.of(10, 0),
                 endTime = LocalTime.of(11, 0),
                 eventType = "TRAINING",
@@ -226,7 +249,7 @@ class BadgeIntegrationTest {
             trainingEventService.create(
                 TrainingEventRequest(
                     title = "Long camp $daysAgo",
-                    date = LocalDate.now().minusDays(daysAgo),
+                    date = today().minusDays(daysAgo),
                     startTime = LocalTime.of(8, 0),
                     endTime = LocalTime.of(20, 0),
                     eventType = "CAMP",

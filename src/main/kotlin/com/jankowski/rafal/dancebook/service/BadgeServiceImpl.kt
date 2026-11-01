@@ -7,7 +7,6 @@ import com.jankowski.rafal.dancebook.model.TrainingOutcome
 import com.jankowski.rafal.dancebook.model.UserBadge
 import com.jankowski.rafal.dancebook.repository.TrainingRecordRepository
 import com.jankowski.rafal.dancebook.repository.UserBadgeRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,24 +19,13 @@ import java.util.Locale
 import java.util.UUID
 
 @Service
-class BadgeServiceImpl @Autowired constructor(
+class BadgeServiceImpl(
     private val userBadgeRepository: UserBadgeRepository,
     private val trainingRecordRepository: TrainingRecordRepository,
     private val assistantPreferencesService: AssistantPreferencesService,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val clock: Clock
 ) : BadgeService {
-
-    private var clock: Clock = Clock.systemDefaultZone()
-
-    constructor(
-        userBadgeRepository: UserBadgeRepository,
-        trainingRecordRepository: TrainingRecordRepository,
-        assistantPreferencesService: AssistantPreferencesService,
-        eventPublisher: ApplicationEventPublisher,
-        clock: Clock
-    ) : this(userBadgeRepository, trainingRecordRepository, assistantPreferencesService, eventPublisher) {
-        this.clock = clock
-    }
 
     companion object {
         private val STREAK_THRESHOLDS = listOf(
