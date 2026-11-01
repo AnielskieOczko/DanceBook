@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           uploadBtn.textContent = I18n.t('notes.form.drive.upload');
           saveBtn.disabled = false;
+          updateMediaHint();
         },
         // onError
         function(error) {
@@ -108,12 +109,54 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('progressBar').style.width = '0%';
         document.getElementById('progressBar').classList.add('bg-primary');
         document.getElementById('progressBar').classList.remove('bg-success');
+
+        updateMediaHint();
       }
     });
 
     // Manual Drive ID input handler
-    document.getElementById('manualDriveId').addEventListener('input', function() {
-      document.getElementById('driveFileId').value = this.value;
-    });
+    const manualDriveId = document.getElementById('manualDriveId');
+    if (manualDriveId) {
+      manualDriveId.addEventListener('input', function() {
+        document.getElementById('driveFileId').value = this.value;
+        updateMediaHint();
+      });
+    }
+
+    // Dynamic media disclosure hint updater
+    function updateMediaHint() {
+      const hintEl = document.getElementById('mediaHint');
+      if (!hintEl) return;
+      const videoInput = document.getElementById('videoLink');
+      const sourceInput = document.getElementById('sourceLink');
+      const driveInput = document.getElementById('driveFileId');
+
+      const hasVideo = !!(videoInput && videoInput.value && videoInput.value.trim().length > 0);
+      const hasSource = !!(sourceInput && sourceInput.value && sourceInput.value.trim().length > 0);
+      const hasDrive = !!(driveInput && driveInput.value && driveInput.value.trim().length > 0);
+
+      const count = (hasVideo ? 1 : 0) + (hasSource ? 1 : 0) + (hasDrive ? 1 : 0);
+
+      if (count === 0) {
+        hintEl.textContent = hintEl.getAttribute('data-hint-empty') || '';
+      } else if (count === 1) {
+        if (hasVideo) hintEl.textContent = hintEl.getAttribute('data-hint-video') || '';
+        else if (hasSource) hintEl.textContent = hintEl.getAttribute('data-hint-source') || '';
+        else hintEl.textContent = hintEl.getAttribute('data-hint-drive') || '';
+      } else {
+        hintEl.textContent = hintEl.getAttribute('data-hint-multiple') || '';
+      }
+    }
+
+    const videoLink = document.getElementById('videoLink');
+    if (videoLink) {
+      videoLink.addEventListener('input', updateMediaHint);
+    }
+    const sourceLink = document.getElementById('sourceLink');
+    if (sourceLink) {
+      sourceLink.addEventListener('input', updateMediaHint);
+    }
+
+    updateMediaHint();
 
 });

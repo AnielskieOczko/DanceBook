@@ -381,6 +381,10 @@ class MaterialLocaleWebTest {
         assertTrue(html.contains("Notatka publiczna"))
         assertTrue(html.contains("Udostępnij tę notatkę wszystkim użytkownikom platformy"))
 
+        // Media section
+        assertTrue(html.contains("Wideo i źródło"))
+        assertTrue(html.contains("Link do wideo, link do źródła, plik z Dysku Google"))
+
         // Cancel and Save buttons
         val cancelBtn = doc.selectFirst("a[href='/materials'].btn-outline")
         assertNotNull(cancelBtn)
@@ -393,6 +397,7 @@ class MaterialLocaleWebTest {
         // Verify English text is absent
         assertFalse(html.contains("New note"))
         assertFalse(html.contains("Save note"))
+        assertFalse(html.contains("Video and source"))
         assertFalse(html.contains("Upload Video to Google Drive"))
         assertFalse(html.contains("Click to select a video file..."))
         assertFalse(html.contains("Public Note"))
