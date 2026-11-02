@@ -7,14 +7,14 @@
 
 <!-- Empty conversation: greeting and suggestion chips. Also resets the composer's conversation id (out of band). -->
 <div th:fragment="start" id="assistantStart" data-assistant-empty data-conversation-id="" class="flex flex-col gap-4 py-2">
-    <p class="text-[15px] leading-relaxed text-on-surface-variant">
+    <p class="text-[0.9375rem] leading-relaxed text-on-surface-variant">
         Ask about your notes, the figure catalog or your training sessions.
         I can search them, and draft new notes, sessions and figures for you to confirm before anything is saved.
     </p>
     <div class="flex flex-wrap gap-2">
         <th:block th:each="chip : ${chips}">
             <button type="button" data-assistant-prompt th:attr="data-assistant-prompt=${chip}"
-                    class="min-h-[36px] rounded-full border border-outline-variant bg-surface px-3 text-[13px] text-on-surface hover:border-outline transition-colors"
+                    class="min-h-[36px] rounded-full border border-outline-variant bg-surface px-3 text-[0.8125rem] text-on-surface hover:border-outline transition-colors"
                     th:text="${chip}">Find a figure</button>
         </th:block>
     </div>
@@ -60,7 +60,7 @@
                         class="flex flex-1 min-w-0 flex-col gap-1 text-left p-1 rounded-[12px] hover:bg-surface-container/60 transition-colors"
                         th:attr="hx-get=@{/assistant/conversations/{id}(id=${c.id})}"
                         hx-target="#assistantThread" hx-swap="innerHTML">
-                    <span class="line-clamp-2 text-[15px] font-medium leading-[1.35] text-on-surface break-words" th:text="${c.title}">Title</span>
+                    <span class="line-clamp-2 text-[0.9375rem] font-medium leading-[1.35] text-on-surface break-words" th:text="${c.title}">Title</span>
                     <span class="text-xs text-on-surface-variant tabular-nums" th:text="${#temporals.format(c.updatedAt, 'd MMM yyyy, HH:mm')}">Date</span>
                 </button>
                 <div class="relative shrink-0 pt-0.5">
@@ -92,7 +92,7 @@
                   hx-target="closest #assistantHistory" hx-swap="outerHTML">
                 <input type="hidden" name="pageType" th:value="${pageType}">
                 <input type="text" name="title" maxlength="80" required
-                       class="form-input w-full min-h-[44px] rounded-pill border border-outline bg-surface-container px-4 text-[15px] text-on-surface placeholder:text-on-surface-variant hover:bg-surface focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22 outline-none"
+                       class="form-input w-full min-h-[44px] rounded-pill border border-outline bg-surface-container px-4 text-[0.9375rem] text-on-surface placeholder:text-on-surface-variant hover:bg-surface focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22 outline-none"
                        aria-label="Conversation title"
                        th:value="${c.title}"
                        th:attr="data-original=${c.title}">

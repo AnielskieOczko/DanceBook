@@ -379,7 +379,7 @@ function renderMedalBadgeHtml(lvl, customStyle) {
         `;
     }
 
-    return `<span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[13px] leading-none whitespace-nowrap ${textClass}" role="img" aria-label="${ariaLabel}" title="${ariaLabel}">
+    return `<span class="inline-flex items-center gap-1.5 align-middle font-semibold text-[0.8125rem] leading-none whitespace-nowrap ${textClass}" role="img" aria-label="${ariaLabel}" title="${ariaLabel}">
         <svg class="block shrink-0 ${sizeCls}" viewBox="${viewBox}" fill="none" aria-hidden="true">${svgContent}</svg>
         <span>${name}</span>
     </span>`;
@@ -642,7 +642,7 @@ function addStepSet() {
                 <input type="radio" id="set-default-radio-${setIdx}" name="default-set-radio"
                        value="${setIdx}" class="sr-only js-set-default-radio" />
                 <input type="hidden" class="js-set-default-hidden" name="stepSets[${setIdx}].isDefault" value="false" />
-                <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[13px] hidden">
+                <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[0.8125rem] hidden">
                     ${renderIcon('check', { size: 'sm' })}
                     <span>${I18n.t('figures.form.steps.mark_default')}</span>
                 </span>
@@ -676,7 +676,7 @@ function addStepSet() {
                     <span>${I18n.t('figures.form.steps.side_by_side')}</span>
                 </button>
             </div>
-            <span class="text-[13px] text-on-surface-variant">${I18n.t('figures.form.steps.required_note')}</span>
+            <span class="text-[0.8125rem] text-on-surface-variant">${I18n.t('figures.form.steps.required_note')}</span>
         </div>
         <div class="js-steps-empty-box p-8 text-center border border-dashed border-outline rounded-card flex flex-col gap-3 items-center">
             <h3 class="text-base font-semibold text-on-surface">${I18n.t('figures.form.steps.empty_title')}</h3>
@@ -771,8 +771,8 @@ function addStepRow(panel, role) {
 
     const roleName = isLeader ? I18n.t('figures.role.leader') : I18n.t('figures.role.follower');
     const roleChipHtml = isLeader
-        ? `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-on-surface text-surface">L</i>${roleName}</span>`
-        : `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-surface text-on-surface ring-1 ring-inset ring-on-surface">F</i>${roleName}</span>`;
+        ? `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[0.6875rem] bg-on-surface text-surface">L</i>${roleName}</span>`
+        : `<span class="role-chip"><i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[0.6875rem] bg-surface text-on-surface ring-1 ring-inset ring-on-surface">F</i>${roleName}</span>`;
 
     tr.innerHTML = `
         <input type="hidden" class="step-id" name="stepSets[0].steps[0].id" value="" />
@@ -780,7 +780,7 @@ function addStepRow(panel, role) {
         <input type="hidden" class="step-number" name="stepSets[0].steps[0].stepNumber" value="1" />
 
         <div class="c-head flex lg:contents items-center gap-2.5 w-full">
-            <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[15px] lg:text-[13px] text-on-surface">
+            <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[0.9375rem] lg:text-[0.8125rem] text-on-surface">
                 <span class="max-lg:hidden step-number-display">1</span>
                 <span class="lg:hidden step-number-display-full">${I18n.t('figures.form.steps.step_number', 1)}</span>
             </div>
@@ -868,7 +868,7 @@ function addFlowFigure(flowType, name) {
 
     // Create chip element
     const chip = document.createElement('span');
-    chip.className = 'inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[13px] js-flow-chip';
+    chip.className = 'inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[0.8125rem] js-flow-chip';
     chip.setAttribute('data-fig', name);
     chip.innerHTML = `
         <span>${name}</span>

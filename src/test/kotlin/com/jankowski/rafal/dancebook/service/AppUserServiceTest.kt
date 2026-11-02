@@ -270,4 +270,25 @@ class AppUserServiceTest {
             appUserService.updateMedalBadgeStyle(userId, com.jankowski.rafal.dancebook.model.MedalBadgeStyle.RANK_BARS)
         }
     }
+
+    @Test
+    fun `updateTextSize saves chosen size and null clears it`() {
+        val userId = UUID.randomUUID()
+        val user = AppUser().apply { id = userId; username = "testuser" }
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.of(user))
+        `when`(appUserRepository.save(user)).thenReturn(user)
+
+        assertEquals(com.jankowski.rafal.dancebook.model.TextSize.LARGE, appUserService.updateTextSize(userId, com.jankowski.rafal.dancebook.model.TextSize.LARGE).textSize)
+        org.junit.jupiter.api.Assertions.assertNull(appUserService.updateTextSize(userId, null).textSize)
+    }
+
+    @Test
+    fun `updateTextSize throws when user does not exist`() {
+        val userId = UUID.randomUUID()
+        `when`(appUserRepository.findById(userId)).thenReturn(Optional.empty())
+
+        assertThrows(EntityNotFoundException::class.java) {
+            appUserService.updateTextSize(userId, com.jankowski.rafal.dancebook.model.TextSize.NORMAL)
+        }
+    }
 }

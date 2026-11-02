@@ -23,7 +23,7 @@
                     <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{figures.list.filters}">Filters</span>
                     <span id="mobile-filter-badge" class="pointer-events-none">
                         <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                               th:text="${activeFilterCount}">1</span>
                     </span>
                 </button>
@@ -158,7 +158,7 @@
             </div>
             <span id="mobile-filter-badge" hx-swap-oob="true" class="pointer-events-none">
                 <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                       th:text="${activeFilterCount}">1</span>
             </span>
         </th:block>
@@ -506,8 +506,8 @@
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 relative z-20 pointer-events-auto">
-                        <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
-                        <span th:if="${f.danceClass != null}" th:text="${#messages.msg('enum.dance_class.' + f.danceClass.name())}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
+                        <span th:text="${f.danceType != null ? f.danceType.name : 'Unknown'}" class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[0.625rem] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Style</span>
+                        <span th:if="${f.danceClass != null}" th:text="${#messages.msg('enum.dance_class.' + f.danceClass.name())}" class="bg-primary-container/20 text-on-surface px-2 py-0.5 rounded-full text-[0.625rem] font-label-sm uppercase tracking-wider whitespace-nowrap shrink-0 border border-primary-container/30">Class</span>
                         <th:block th:replace="~{fragments/badge :: medalBadge(level=${f.medalLevel})}"></th:block>
                         <span th:if="${f.alternativeTiming != null}" class="flex items-center gap-1 text-label-sm text-on-surface-variant whitespace-nowrap shrink-0"><span th:replace="~{fragments/icon :: icon(name='schedule', size='sm')}"></span> <span th:text="${f.alternativeTiming}">Timing</span></span>
                     </div>
@@ -535,7 +535,7 @@
             <span th:if="${figuresWithSteps != null and #sets.contains(figuresWithSteps, f.id)}"
                   role="img" th:attr="aria-label=#{filters.steps.flag},title=#{filters.steps.flag}"
                   class="badge bg-surface-container text-on-surface-variant inline-flex items-center !py-0 h-5">
-                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[14px] leading-none', title=null)}"></span>
+                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[0.875rem] leading-none', title=null)}"></span>
             </span>
         </th:block>
 

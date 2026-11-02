@@ -1173,7 +1173,7 @@ window.addEventListener('resize', function() {
  */
 function renderIcon(name, options = {}) {
     const size = options.size || 'md';
-    const sizeClass = size === 'sm' ? 'text-[16px]' : (size === 'lg' ? 'text-[24px]' : 'text-[20px]');
+    const sizeClass = size === 'sm' ? 'text-[1rem]' : (size === 'lg' ? 'text-[1.5rem]' : 'text-[1.25rem]');
     const filledClass = options.filled ? ' icon-filled' : '';
     const cls = options.cls ? ' ' + options.cls : '';
     const idAttr = options.id ? ` id="${options.id}"` : '';

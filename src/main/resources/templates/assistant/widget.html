@@ -86,7 +86,7 @@
                         <input type="hidden" name="pageType" th:value="${assistantNav.page.type.name()}">
                         <input type="hidden" name="pageId" th:value="${assistantNav.page.id}">
                         <textarea id="assistantComposerInput" name="text" required maxlength="2000" rows="3"
-                                  class="form-input min-w-0 flex-1 rounded-[24px] text-[15px] py-3 px-4.5"
+                                  class="form-input min-w-0 flex-1 rounded-[24px] text-[0.9375rem] py-3 px-4.5"
                                   placeholder="Ask or tell DanceBook…" aria-label="Message the assistant"
                                   th:attr="placeholder=#{assistant.input.placeholder}, aria-label=#{assistant.input.aria_label}"></textarea>
                         <button type="button" data-assistant-mic hidden aria-label="Dictate"

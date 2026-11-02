@@ -45,7 +45,7 @@
                     <span th:if="${activeFilterCount != null && activeFilterCount > 0}"
                           th:text="${activeFilterCount}"
                           class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full
-                                 bg-primary-container text-on-primary-container text-[11px] font-bold
+                                 bg-primary-container text-on-primary-container text-[0.6875rem] font-bold
                                  flex items-center justify-center">1</span>
                 </button>
             </div>
@@ -167,7 +167,7 @@
 
             <div class="tc-month-heading">
                 <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${group.label}">September 2026</h2>
-                <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                <p class="font-body-md text-[0.875rem] text-on-surface-variant tabular-nums">
                     <span th:text="#{training.list.count(${group.sessionCount})}">6 sessions</span>
                     <span class="text-outline"> · </span>
                     <span th:text="${group.totalLabel}">9h 30m</span>
@@ -194,7 +194,7 @@
                               hover:text-primary transition-colors"
                        th:text="${event.title}">Monday practice</a>
 
-                    <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
+                    <p class="font-body-md text-[0.875rem] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
                         <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
                         <span class="text-outline"> · </span>
                         <span th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
@@ -256,13 +256,13 @@
                     <div class="js-menu-dropdown hidden absolute right-0 top-full mt-1 w-44 z-30 py-1
                                 rounded-card border border-outline-variant bg-surface-container-lowest shadow-ambient">
                         <a th:href="@{/training-events/{id}/edit(id=${event.id})}"
-                           class="flex items-center gap-2 px-3 py-2 font-body-md text-[15px] text-on-surface hover:bg-surface-container">
+                           class="flex items-center gap-2 px-3 py-2 font-body-md text-[0.9375rem] text-on-surface hover:bg-surface-container">
                             <span th:replace="~{fragments/icon :: icon(name='edit', size='sm')}"></span>
                             <span th:text="#{common.edit}">Edit</span>
                         </a>
                         <button th:if="${event.series != null}"
                                 type="button"
-                                class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container"
+                                class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[0.9375rem] text-error hover:bg-surface-container"
                                 th:hx-get="@{/training-events/{id}/delete-dialog(id=${event.id})}"
                                 hx-target="#confirmModalContainer"
                                 hx-swap="innerHTML">
@@ -274,7 +274,7 @@
                               data-confirm="Delete this training session? It will also be removed from your Google Calendar."
                               th:attr="data-confirm=#{training.delete_confirm}">
                             <button type="submit"
-                                    class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[15px] text-error hover:bg-surface-container">
+                                    class="flex w-full items-center gap-2 px-3 py-2 font-body-md text-[0.9375rem] text-error hover:bg-surface-container">
                                 <span th:replace="~{fragments/icon :: icon(name='delete', size='sm')}"></span>
                                 <span th:text="#{common.delete}">Delete</span>
                             </button>

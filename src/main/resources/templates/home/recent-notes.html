@@ -9,8 +9,8 @@
      phone and sits in a grid from 1024px. A figure with no timing is listed without a value. -->
 <section th:fragment="homeRecentNotes" id="home-recent-notes" aria-labelledby="home-recent-notes-title" class="flex flex-col gap-3">
     <div class="flex items-baseline justify-between">
-        <h2 id="home-recent-notes-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0" th:text="#{dashboard.recent_notes.title}">Recent notes</h2>
-        <a href="/materials" class="text-[13px] font-semibold text-primary hover:underline" th:text="#{dashboard.recent_notes.all_notes}">All notes</a>
+        <h2 id="home-recent-notes-title" class="font-serif text-[1.375rem] leading-tight font-semibold text-on-surface m-0" th:text="#{dashboard.recent_notes.title}">Recent notes</h2>
+        <a href="/materials" class="text-[0.8125rem] font-semibold text-primary hover:underline" th:text="#{dashboard.recent_notes.all_notes}">All notes</a>
     </div>
 
     <div th:if="${!dashboard.recentNotes.isEmpty()}"
@@ -22,11 +22,11 @@
                 <a th:href="@{/materials/{id}(id=${note.id})}" class="text-on-surface hover:underline" th:text="${note.title}">Feather Step</a>
             </h3>
             <p th:if="${!note.excerpt.isEmpty()}"
-               class="text-[13px] leading-snug text-on-surface-variant m-0 line-clamp-2"
+               class="text-[0.8125rem] leading-snug text-on-surface-variant m-0 line-clamp-2"
                th:text="${note.excerpt}">Head drops on step 2.</p>
             <ul th:if="${!note.figures.isEmpty()}"
                 class="flex flex-col gap-1.5 border-t border-outline-variant pt-2.5 mt-auto list-none m-0 p-0">
-                <li th:each="figure : ${note.figures}" class="flex justify-between gap-3 text-[13px]">
+                <li th:each="figure : ${note.figures}" class="flex justify-between gap-3 text-[0.8125rem]">
                     <span class="font-medium" th:text="${figure.name}">Feather Step</span>
                     <span th:if="${figure.timing != null}" class="font-semibold text-primary whitespace-nowrap" th:text="${figure.timing}">S Q Q</span>
                 </li>

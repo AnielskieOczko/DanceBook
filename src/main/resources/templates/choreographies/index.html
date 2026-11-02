@@ -25,7 +25,7 @@
                     <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{choreographies.filter.filters}">Filters</span>
                     <span id="mobile-filter-badge" class="pointer-events-none">
                         <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                               th:text="${activeFilterCount}">1</span>
                     </span>
                 </button>
@@ -102,7 +102,7 @@
             </div>
             <span id="mobile-filter-badge" hx-swap-oob="true" class="pointer-events-none">
                 <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                       th:text="${activeFilterCount}">1</span>
             </span>
         </th:block>
@@ -198,7 +198,7 @@
         <div class="relative z-10 pointer-events-none w-full flex-1 flex flex-col justify-between">
             <div>
                 <div class="flex flex-wrap items-center gap-2 mb-2 pr-8">
-                    <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[10px] font-label-sm uppercase tracking-wider border border-primary-container/30"
+                    <span class="bg-primary-container/20 text-on-surface px-2.5 py-0.5 rounded-full text-[0.625rem] font-label-sm uppercase tracking-wider border border-primary-container/30"
                           th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_dance')}">Waltz</span>
                     <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel})}"></th:block>
                     <span th:replace="~{fragments/badge :: badge(label=(${choreo.isPublic ? #messages.msg('choreographies.visibility.public') : #messages.msg('choreographies.visibility.private')}), variant=(${choreo.isPublic ? 'secondary' : 'neutral'}))}"></span>
@@ -248,7 +248,7 @@
             <span th:text="${choreo.danceType != null ? choreo.danceType.name : #messages.msg('choreographies.unknown_style')}" class="badge bg-surface-container text-on-surface-variant">Style</span>
             <th:block th:replace="~{fragments/badge :: medalBadge(level=${choreo.medalLevel}, iconOnly=true)}"></th:block>
             <span class="badge bg-surface-container text-on-surface-variant inline-flex items-center gap-1">
-                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[14px] leading-none', title=null)}"></span>
+                <span th:replace="~{fragments/icon :: icon(name='format_list_numbered', size='sm', cls='!text-[0.875rem] leading-none', title=null)}"></span>
                 <span th:text="${#messages.msg('choreographies.entries_count', choreo.entries.size())}">8 entries</span>
             </span>
         </th:block>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       th:lang="${#locale.language}"
+      th:data-text-size="${textSize ?: 'normal'}"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="html(content)">
@@ -40,7 +41,7 @@
     <div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
         <!-- Brand -->
         <a href="/" class="flex items-center">
-            <h1 class="text-on-surface font-display-lg text-[20px] tracking-[0.2em] font-semibold uppercase" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
+            <h1 class="text-on-surface font-display-lg text-[1.25rem] tracking-[0.2em] font-semibold uppercase" th:text="${brandName ?: 'DanceBook'}">DanceBook</h1>
         </a>
 
         <!-- Desktop Navigation -->
@@ -97,7 +98,7 @@
                           hx-trigger="load, poll-notifications from:body"
                           hx-swap="innerHTML">
                         <span th:if="${unreadNotificationCount != null && unreadNotificationCount > 0}"
-                              class="absolute top-1 right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-error text-on-error text-[10px] font-bold rounded-full px-1"
+                              class="absolute top-1 right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-error text-on-error text-[0.625rem] font-bold rounded-full px-1"
                               th:text="${unreadNotificationCount}">3</span>
                     </span>
                 </button>
@@ -124,7 +125,7 @@
                             <span th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName.substring(0,1) : 'U'}">U</span>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <b class="block text-[15px] font-semibold leading-tight text-on-surface truncate"
+                            <b class="block text-[0.9375rem] font-semibold leading-tight text-on-surface truncate"
                                th:text="${currentUser != null && currentUser.displayName != null && !currentUser.displayName.isEmpty() ? currentUser.displayName : (currentUser != null ? currentUser.username : '')}">User</b>
                             <small class="block text-xs text-on-surface-variant truncate"
                                    th:text="${currentUser != null && currentUser.role != null && currentUser.role.name() == 'ADMIN' ? #messages.msg('profile.role.admin') : #messages.msg('profile.role.user')}">Role</small>
@@ -164,7 +165,7 @@
                             class="flex items-center gap-3 w-full min-h-[44px] px-3 py-2 rounded-[12px] text-sm font-medium text-on-surface hover:bg-surface-container transition-colors cursor-pointer text-left">
                         <span th:replace="~{fragments/icon :: icon(name='language', size='md', cls='text-outline')}"></span>
                         <span th:text="#{profile.language}">Language</span>
-                        <span class="ml-auto flex items-center gap-1 text-on-surface-variant text-[13px] font-normal">
+                        <span class="ml-auto flex items-center gap-1 text-on-surface-variant text-[0.8125rem] font-normal">
                             <span data-langval th:text="${currentUser != null && currentUser.locale == 'pl' ? #messages.msg('language.pl') : (currentUser != null && currentUser.locale == 'en' ? #messages.msg('language.en') : #messages.msg('language.browser_default'))}">English</span>
                             <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', cls='text-outline transition-transform duration-200 js-lang-chev')}"></span>
                         </span>
@@ -243,28 +244,28 @@
        th:classappend="${activeNav == 'home' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'home' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='home', size='md', filled=${activeNav == 'home'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.home}">Home</span>
+        <span class="font-label-sm text-[0.6875rem] font-medium mt-1" th:text="#{nav.home}">Home</span>
     </a>
     <!-- Training -->
     <a href="/training-events" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'training-events' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'training-events' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='calendar_month', size='md', filled=${activeNav == 'training-events'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.training}">Training</span>
+        <span class="font-label-sm text-[0.6875rem] font-medium mt-1" th:text="#{nav.training}">Training</span>
     </a>
     <!-- Notes -->
     <a href="/materials" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'materials' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'materials' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='description', size='md', filled=${activeNav == 'materials'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.notes}">Notes</span>
+        <span class="font-label-sm text-[0.6875rem] font-medium mt-1" th:text="#{nav.notes}">Notes</span>
     </a>
     <!-- Figures -->
     <a href="/dance-figures" class="flex flex-col items-center justify-center transition-all duration-150 min-h-[44px] min-w-0 flex-1 px-0.5"
        th:classappend="${activeNav == 'dance-figures' ? 'text-on-surface bottom-nav-item-active' : 'text-outline'}"
        th:attr="aria-current=${activeNav == 'dance-figures' ? 'page' : null}">
         <span th:replace="~{fragments/icon :: icon(name='accessibility_new', size='md', filled=${activeNav == 'dance-figures'})}"></span>
-        <span class="font-label-sm text-[11px] font-medium mt-1" th:text="#{nav.figures}">Figures</span>
+        <span class="font-label-sm text-[0.6875rem] font-medium mt-1" th:text="#{nav.figures}">Figures</span>
     </a>
 </nav>
 

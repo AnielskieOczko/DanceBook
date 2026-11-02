@@ -38,7 +38,7 @@
     <!-- Shown only when there is something to explain: an orphaned row is the one row on this
          page that cannot be corrected from the calendar, so it needs a sentence. -->
     <div th:if="${history.orphanedCount > 0}"
-         class="card p-4 flex items-start gap-3 font-body-md text-[14px] text-on-surface-variant">
+         class="card p-4 flex items-start gap-3 font-body-md text-[0.875rem] text-on-surface-variant">
         <span th:replace="~{fragments/icon :: icon(name='info', size='md', cls='text-secondary shrink-0')}"></span>
         <p>
             <span th:text="${history.orphanedExplanation}">This session has been deleted from your calendar.</span>
@@ -51,7 +51,7 @@
 
         <div class="tc-month-heading">
             <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
-            <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+            <p class="font-body-md text-[0.875rem] text-on-surface-variant tabular-nums">
                 <span th:text="#{training.list.count(${month.sessionCount})}">6 sessions</span>
                 <span class="text-outline"> · </span>
                 <span th:text="${month.totalLabel}">9h 30m</span> <span th:text="#{dashboard.month.trained}">trained</span>
@@ -81,7 +81,7 @@
                        class="block truncate font-headline-lg text-base sm:text-lg font-semibold text-on-surface"
                        th:text="${record.title}">Monday practice</p>
 
-                    <p class="font-body-md text-[14px] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
+                    <p class="font-body-md text-[0.875rem] sm:text-body-md text-on-surface-variant mt-0.5 tabular-nums">
                         <span th:text="${#temporals.format(record.occurredAt, 'HH:mm')}">18:00</span>
                         <span class="text-outline"> · </span>
                         <span th:text="#{training.minutes(${record.durationMinutes})}">120 min</span>

@@ -26,12 +26,12 @@ class HeaderActionsAlignmentTest {
         assertTrue(pageFragmentFile.isFile, "page.html must exist")
         val content = pageFragmentFile.readText()
 
-        // Main header row must not wrap actions below title on mobile
+        // The row may wrap (#454): at Extra large the actions drop below the title instead of squeezing it to a column
         assertFalse(content.contains("flex-wrap sm:flex-nowrap"), "Main header row must not use flex-wrap sm:flex-nowrap")
 
         // Title div must not take w-full on mobile
         assertFalse(content.contains("w-full sm:w-auto sm:flex-1"), "Title container must not take w-full on mobile")
-        assertTrue(content.contains("page-header mb-0 min-w-0 flex-1"), "Title container must always be flex-1 min-w-0")
+        assertTrue(content.contains("page-header mb-0 min-w-[min(100%,12rem)] flex-1"), "Title container must be flex-1 with a min width so actions wrap below it at large text sizes (#454)")
 
         // Title span must allow wrapping
         assertTrue(content.contains("class=\"break-words min-w-0\""), "Title span must have break-words min-w-0 for long titles")

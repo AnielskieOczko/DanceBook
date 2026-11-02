@@ -932,7 +932,7 @@ pass claimed a fit that the browser showed was false.
   a hero (name, role, member since, real training streak and this year's hours, sessions and
   attendance, and counts of Notes, choreographies and figures created) and settings as an
   accordion where each row shows its current value and expands in place: Badges (earned
-  badges first, then locked ones with their progress; #39), Calendars (default calendar), Language, Medal badge style, Streaks and
+  badges first, then locked ones with their progress; #39), Calendars (default calendar), Language, Text size (#454), Medal badge style, Streaks and
   badges (#317), Assistant (live since #309) and Password. Log out is not on this page. Recent activity shows only
   the signed-in user's own events, through the activity service and the normal visibility
   rule. A new setting is a new row, not a new card. The mock's 14-day streak bar and best
@@ -954,6 +954,22 @@ pass claimed a fit that the browser showed was false.
   (`training.status.unconfirmed`, `training.view.notes`) existed in neither file and
   rendered as `??key??` in review. `TrainingTimelineViewRenderingTest` now checks that every
   key in the template resolves in both languages.
+
+### Text size (#454)
+
+Type is sized in **rem**, so the browser's default font size and zoom reach it. The `--text-*`
+tokens and their line heights in `input.css` `@theme`, every `font-size`/`line-height` in that
+file and every arbitrary `text-[…]` utility are rem; `TextSizeGuardTest` fails on a new px font
+size. Do not write `text-[13px]`: write `text-[0.8125rem]` (px ÷ 16), or use a token.
+
+The per-user setting is `AppUser.textSize` (`TextSize`: NORMAL / LARGE / EXTRA_LARGE, nullable
+means NORMAL; migration V51), changed from the Profile settings list through `POST /profile/text-size`.
+`NavbarAdvice` exposes `textSize` and `layout.html` renders `data-text-size` on `<html>`;
+`input.css` then sets the root `font-size` (112% / 125%), which every rem follows. It is rendered
+server-side, so there is no flash and no inline script (CSP). Pages that do not use `layout.html`
+(login, error) follow only the browser setting. Fixed px **heights** are still fine for
+decoration, but anything that holds text needs `min-h` and rem, or it clips at Extra large.
+When adding UI, check it at Extra large at 375px wide: no clipped text and no horizontal scroll.
 
 ### Who the current user is
 

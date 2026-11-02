@@ -126,7 +126,7 @@
         time.textContent = arg.timeText || (arg.event.start ? hhmm(arg.event.start) : '');
         if (props.repeating) {
             const repeat = document.createElement('span');
-            repeat.className = 'material-symbols-outlined shrink-0 select-none align-middle text-[16px] ml-1';
+            repeat.className = 'material-symbols-outlined shrink-0 select-none align-middle text-[1rem] ml-1';
             repeat.setAttribute('aria-hidden', 'true');
             repeat.textContent = 'repeat';
             time.appendChild(repeat);

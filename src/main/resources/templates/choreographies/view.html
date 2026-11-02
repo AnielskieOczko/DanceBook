@@ -199,21 +199,21 @@
                         <div class="col-start-1 row-start-2 md:col-start-2 md:row-start-1 print:col-start-2 print:row-start-1 flex flex-col gap-1.5 min-w-0 overflow-hidden">
                             <!-- Man Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getLeaderSteps())}">
-                                <span class="text-[10px] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.man}">Man:</span>
+                                <span class="text-[0.625rem] font-bold text-primary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.man}">Man:</span>
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getLeaderSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
-                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded-pill font-mono print-badge"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[0.625rem] font-bold rounded-pill font-mono print-badge"
                                           th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
                                 </div>
                             </div>
                             <!-- Lady Steps -->
                             <div class="flex items-center" th:if="${entry.danceFigure != null && !#lists.isEmpty(entry.danceFigure.getFollowerSteps())}">
-                                <span class="text-[10px] font-bold text-secondary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.lady}">Lady:</span>
+                                <span class="text-[0.625rem] font-bold text-secondary print:text-black w-10 shrink-0 uppercase tracking-wider text-right pr-2" th:text="#{choreographies.view.lady}">Lady:</span>
                                 <div class="flex flex-wrap items-center gap-1">
                                     <span th:each="step : ${entry.danceFigure.getFollowerSteps()}"
                                           th:classappend="${#strings.equals(step.foot, 'LF') ? 'bg-primary-fixed text-on-primary-fixed border-primary-fixed/30' : (#strings.equals(step.foot, 'RF') ? 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/30' : 'bg-surface-container text-on-surface border-outline-variant/30')}"
-                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[10px] font-bold rounded-pill font-mono print-badge"
+                                          class="inline-flex items-center justify-center px-1.5 py-0.5 border text-[0.625rem] font-bold rounded-pill font-mono print-badge"
                                           th:text="${step.timing + (#strings.equals(step.foot, 'LF') ? 'L' : (#strings.equals(step.foot, 'RF') ? 'R' : step.foot))}">1R</span>
                                 </div>
                             </div>

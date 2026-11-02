@@ -23,7 +23,7 @@
                     <span class="text-label-sm font-label-sm pointer-events-none" th:text="#{collections.filter.filters}">Filters</span>
                     <span id="mobile-filter-badge" class="pointer-events-none">
                         <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                              class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                               th:text="${activeFilterCount}">1</span>
                     </span>
                 </button>
@@ -137,7 +137,7 @@
             </div>
             <span id="mobile-filter-badge" hx-swap-oob="true" class="pointer-events-none">
                 <span th:if="${activeFilterCount != null and activeFilterCount > 0}"
-                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
+                      class="inline-flex items-center justify-center px-1.5 py-0.5 text-[0.6875rem] font-bold rounded-full bg-primary text-on-primary min-w-[18px] h-[18px]"
                       th:text="${activeFilterCount}">1</span>
             </span>
         </th:block>

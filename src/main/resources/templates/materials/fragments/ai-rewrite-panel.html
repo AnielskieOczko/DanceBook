@@ -18,8 +18,8 @@
                 <span th:replace="~{fragments/icon :: icon(name='auto_fix_high', size='md', cls='text-primary flex-shrink-0')}"></span>
             </th:block>
             <div class="flex flex-col gap-0.5">
-                <h2 id="rw-title" class="m-0 text-[15px] font-semibold text-on-surface" th:text="#{notes.rewrite.title}">Proposed rewrite of the note text</h2>
-                <span class="text-[13px] text-on-surface-variant" th:text="#{notes.rewrite.subtitle}">Same facts, counts and figure names, rewritten for clarity. Nothing is saved until you save the note.</span>
+                <h2 id="rw-title" class="m-0 text-[0.9375rem] font-semibold text-on-surface" th:text="#{notes.rewrite.title}">Proposed rewrite of the note text</h2>
+                <span class="text-[0.8125rem] text-on-surface-variant" th:text="#{notes.rewrite.subtitle}">Same facts, counts and figure names, rewritten for clarity. Nothing is saved until you save the note.</span>
             </div>
         </div>
         <div class="flex gap-2 shrink-0">
@@ -43,13 +43,13 @@
     <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- Your text -->
         <div class="p-5 md:border-r border-border flex flex-col gap-3">
-            <h3 class="m-0 text-[13px] font-medium text-on-surface-variant" th:text="#{notes.rewrite.your_text}">Your text</h3>
-            <div th:replace="~{fragments/rich-text :: content(value=${originalHtml}, cls='text-on-surface-variant text-[15px] leading-relaxed')}"></div>
+            <h3 class="m-0 text-[0.8125rem] font-medium text-on-surface-variant" th:text="#{notes.rewrite.your_text}">Your text</h3>
+            <div th:replace="~{fragments/rich-text :: content(value=${originalHtml}, cls='text-on-surface-variant text-[0.9375rem] leading-relaxed')}"></div>
         </div>
         <!-- Proposed -->
         <div class="p-5 flex flex-col gap-3">
-            <h3 class="m-0 text-[13px] font-medium text-primary" th:text="#{notes.rewrite.proposed}">Proposed</h3>
-            <div th:replace="~{fragments/rich-text :: content(value=${proposalHtml}, cls='font-serif text-[17px] leading-relaxed')}"></div>
+            <h3 class="m-0 text-[0.8125rem] font-medium text-primary" th:text="#{notes.rewrite.proposed}">Proposed</h3>
+            <div th:replace="~{fragments/rich-text :: content(value=${proposalHtml}, cls='font-serif text-[1.0625rem] leading-relaxed')}"></div>
         </div>
     </div>
 </section>
