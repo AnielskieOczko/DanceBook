@@ -44,6 +44,17 @@ class SecurityConfig(
         return registration
     }
 
+    /**
+     * Extracts Cloud Run trace context or request ID into MDC so logs can be correlated.
+     * Registered right after ForwardedHeaderFilter before security filters.
+     */
+    @Bean
+    fun traceContextFilter(): FilterRegistrationBean<com.jankowski.rafal.dancebook.logging.TraceContextFilter> {
+        val registration = FilterRegistrationBean(com.jankowski.rafal.dancebook.logging.TraceContextFilter())
+        registration.order = Ordered.HIGHEST_PRECEDENCE + 1
+        return registration
+    }
+
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
@@ -54,6 +65,10 @@ class SecurityConfig(
                 authorize("/js/**", permitAll)
                 authorize("/images/**", permitAll)
                 authorize("/login", permitAll)
+                authorize("/actuator/health", permitAll)
+                authorize("/actuator/health/**", permitAll)
+                authorize("/actuator/**", hasRole("ADMIN"))
+                authorize("/admin/**", hasRole("ADMIN"))
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {

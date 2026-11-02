@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -54,7 +55,7 @@ class WebRouteSmokeTest {
     }
 
     @Autowired private lateinit var mockMvc: MockMvc
-    @Autowired private lateinit var handlerMapping: RequestMappingHandlerMapping
+    @Autowired @Qualifier("requestMappingHandlerMapping") private lateinit var handlerMapping: RequestMappingHandlerMapping
 
     @Autowired private lateinit var appUserRepository: AppUserRepository
     @Autowired private lateinit var danceCategoryRepository: DanceCategoryRepository

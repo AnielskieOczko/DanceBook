@@ -209,6 +209,7 @@
     <p class="text-xs font-semibold text-outline uppercase tracking-[.06em] mt-6 mb-2 ml-1" th:text="#{admin.group.system}">System</p>
     <div class="border border-outline-variant rounded-card bg-surface overflow-hidden divide-y divide-outline-variant">
         <details th:replace="~{fragments/settings-row :: settingsRow(rowId='admin-row-settings', rowIcon='tune', rowTitle=#{admin.row.settings}, valueSlot=~{admin/dashboard :: settingsRowValue}, bodySlot=~{admin/dashboard :: systemSettingsSection})}"></details>
+        <a th:replace="~{fragments/settings-row :: settingsLinkRow(rowHref='/admin/metrics', rowIcon='monitoring', rowTitle=#{admin.row.metrics}, valueText=#{admin.row.metrics.value})}"></a>
     </div>
 
     <!-- Fragments: the htmx endpoints return these, and the rows above include them. -->
