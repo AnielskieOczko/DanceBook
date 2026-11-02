@@ -188,10 +188,19 @@ class ChoreographyServiceImpl(
 
         choreography.entries.remove(entry)
 
-        // Re-index remaining entries
-        choreography.entries.sortedBy { it.sortOrder }.forEachIndexed { index, e ->
+        val remainingEntries = choreography.entries.sortedBy { it.sortOrder }
+
+        // Phase 1: Set temporary out-of-bounds sortOrder to avoid unique constraint violations
+        remainingEntries.forEachIndexed { index, e ->
+            e.sortOrder = index + 10000
+        }
+        choreographyRepository.saveAndFlush(choreography)
+
+        // Phase 2: Set final sortOrder
+        remainingEntries.forEachIndexed { index, e ->
             e.sortOrder = index
         }
+        choreography.entries.sortBy { it.sortOrder }
         choreography.updatedAt = LocalDateTime.now()
 
         val saved = choreographyRepository.saveAndFlush(choreography)
