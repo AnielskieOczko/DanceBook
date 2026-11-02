@@ -42,6 +42,9 @@ class AppUser {
     @Enumerated(EnumType.STRING)
     var medalBadgeStyle: MedalBadgeStyle? = null
 
+    @Enumerated(EnumType.STRING)
+    var textSize: TextSize? = null
+
     @Column(updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
 }

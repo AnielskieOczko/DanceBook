@@ -13,7 +13,7 @@
         toolbar=~{::desktopActions})}">
 
         <div th:fragment="desktopActions" class="hidden sm:flex items-center gap-2 pt-0.5">
-            <span class="text-[13px] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
+            <span class="text-[0.8125rem] text-on-surface-variant hidden lg:inline-flex items-center gap-1.5 min-w-[124px]" id="edStateIndicator"></span>
             <a th:href="${danceFigureId == null ? '/dance-figures' : '/dance-figures/' + danceFigureId}"
                class="btn-outline btn-sm min-h-[44px] inline-flex items-center justify-center"
                th:text="#{figures.form.cancel}">Cancel</a>
@@ -111,7 +111,7 @@
             <!-- Collapsible Expected JSON Schema -->
             <div id="expected-schema-box" class="hidden bg-surface-container p-4 rounded-card border border-border mt-3">
                 <h4 class="text-xs font-semibold text-on-surface mb-2" th:text="#{figures.guided.json.expected_schema}">Expected JSON Schema:</h4>
-                <pre id="schema-display-pre" class="text-[10px] font-mono overflow-x-auto text-on-surface-variant max-h-60 p-2 bg-surface rounded border border-border"></pre>
+                <pre id="schema-display-pre" class="text-[0.625rem] font-mono overflow-x-auto text-on-surface-variant max-h-60 p-2 bg-surface rounded border border-border"></pre>
             </div>
         </div>
 
@@ -149,12 +149,12 @@
                         <div>
                             <label for="guided-max-tokens" class="form-label text-xs" th:text="#{figures.guided.advanced.max_tokens}">Max Output Tokens</label>
                             <input id="guided-max-tokens" type="number" min="1024" max="100000" step="1024" value="16384" class="form-input text-xs py-1.5" placeholder="e.g. 16384"/>
-                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.max_tokens_hint}">Caps output size (typically 4096 - 16384).</p>
+                            <p class="text-[0.625rem] text-outline mt-1" th:text="#{figures.guided.advanced.max_tokens_hint}">Caps output size (typically 4096 - 16384).</p>
                         </div>
                         <div>
                             <label for="guided-temperature" class="form-label text-xs" th:text="#{figures.guided.advanced.temperature}">Temperature (0.0 to 2.0)</label>
                             <input id="guided-temperature" type="number" min="0.0" max="2.0" step="0.1" value="1.0" class="form-input text-xs py-1.5" placeholder="e.g. 1.0"/>
-                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.temperature_hint}">Higher is more variety; lower is focused/deterministic.</p>
+                            <p class="text-[0.625rem] text-outline mt-1" th:text="#{figures.guided.advanced.temperature_hint}">Higher is more variety; lower is focused/deterministic.</p>
                         </div>
                         <div id="reasoning-effort-container">
                             <label for="guided-reasoning-effort" class="form-label text-xs" th:text="#{figures.guided.advanced.reasoning_effort}">Reasoning / Thinking Effort</label>
@@ -165,12 +165,12 @@
                                 <option value="medium" th:text="#{figures.guided.advanced.reasoning.medium}">Medium</option>
                                 <option value="high" th:text="#{figures.guided.advanced.reasoning.high}">High</option>
                             </select>
-                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.reasoning_hint}">Controls internal thinking effort for reasoning-enabled models.</p>
+                            <p class="text-[0.625rem] text-outline mt-1" th:text="#{figures.guided.advanced.reasoning_hint}">Controls internal thinking effort for reasoning-enabled models.</p>
                         </div>
                         <div id="thinking-budget-container" class="hidden">
                             <label for="guided-thinking-budget" class="form-label text-xs" th:text="#{figures.guided.advanced.thinking_budget}">Thinking Budget (tokens)</label>
                             <input id="guided-thinking-budget" type="number" min="0" max="32768" step="1024" value="2048" class="form-input text-xs py-1.5" placeholder="e.g. 2048"/>
-                            <p class="text-[10px] text-outline mt-1" th:text="#{figures.guided.advanced.thinking_budget_hint}">Set to 0 to disable thinking. Max 32768. Default 2048.</p>
+                            <p class="text-[0.625rem] text-outline mt-1" th:text="#{figures.guided.advanced.thinking_budget_hint}">Set to 0 to disable thinking. Max 32768. Default 2048.</p>
                         </div>
                     </div>
                 </details>
@@ -204,19 +204,19 @@
                     </summary>
                     <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-border/50 pt-3">
                         <div class="bg-surface p-2.5 rounded-sm border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.prompt}">Prompt (Input)</span>
+                            <span class="block text-outline text-[0.625rem] uppercase font-bold" th:text="#{figures.guided.token_stats.prompt}">Prompt (Input)</span>
                             <span id="stat-prompt-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-surface p-2.5 rounded-sm border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.completion}">Completion (Output)</span>
+                            <span class="block text-outline text-[0.625rem] uppercase font-bold" th:text="#{figures.guided.token_stats.completion}">Completion (Output)</span>
                             <span id="stat-completion-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-surface p-2.5 rounded-sm border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.reasoning}">Reasoning (Thinking)</span>
+                            <span class="block text-outline text-[0.625rem] uppercase font-bold" th:text="#{figures.guided.token_stats.reasoning}">Reasoning (Thinking)</span>
                             <span id="stat-reasoning-tokens" class="text-sm font-semibold text-on-surface">0</span>
                         </div>
                         <div class="bg-surface p-2.5 rounded-sm border border-border/50">
-                            <span class="block text-outline text-[10px] uppercase font-bold" th:text="#{figures.guided.token_stats.total}">Total Tokens</span>
+                            <span class="block text-outline text-[0.625rem] uppercase font-bold" th:text="#{figures.guided.token_stats.total}">Total Tokens</span>
                             <span id="stat-total-tokens" class="text-sm font-semibold text-primary font-bold">0</span>
                         </div>
                     </div>
@@ -295,9 +295,9 @@
                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-steps-arrow', cls='transform transition-transform')}"></span>
                 </button>
                 <div id="diff-steps-preview-content" class="hidden mt-3 overflow-x-auto">
-                    <table class="w-full text-left text-[11px] border-collapse">
+                    <table class="w-full text-left text-[0.6875rem] border-collapse">
                         <thead>
-                            <tr class="border-b border-border text-[10px] font-semibold uppercase text-outline">
+                            <tr class="border-b border-border text-[0.625rem] font-semibold uppercase text-outline">
                                 <th class="py-1.5 pr-2 w-16" th:text="#{figures.view.steps.th.role}">Role</th>
                                 <th class="py-1.5 pr-2 w-8">#</th>
                                 <th class="py-1.5 pr-2 w-16" th:text="#{figures.view.steps.th.timing}">Timing</th>
@@ -324,7 +324,7 @@
                     <span th:replace="~{fragments/icon :: icon(name='expand_more', size='sm', id='diff-links-arrow', cls='transform transition-transform')}"></span>
                 </button>
                 <div id="diff-links-preview-content" class="hidden mt-3">
-                    <ul id="diff-links-preview-list" class="space-y-1.5 list-disc list-inside text-[11px] text-on-surface-variant">
+                    <ul id="diff-links-preview-list" class="space-y-1.5 list-disc list-inside text-[0.6875rem] text-on-surface-variant">
                     </ul>
                 </div>
             </div>
@@ -391,13 +391,13 @@
         <section class="sec-hairline" id="sec-feet" data-sec="sec-feet">
             <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1.5 justify-between">
                 <h2 class="text-xl font-semibold text-on-surface" th:text="#{figures.form.section.positions}">Positions and feet</h2>
-                <p class="text-[13px] text-on-surface-variant" th:text="#{figures.form.feet.subtitle}">Feet are the free foot at the start and end of the figure.</p>
+                <p class="text-[0.8125rem] text-on-surface-variant" th:text="#{figures.form.feet.subtitle}">Feet are the free foot at the start and end of the figure.</p>
             </div>
             <div class="feet-matrix">
                 <span class="max-lg:hidden"></span>
-                <span class="text-[13px] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.position}">Position</span>
-                <span class="text-[13px] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.leader_foot}">Leader foot</span>
-                <span class="text-[13px] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.follower_foot}">Follower foot</span>
+                <span class="text-[0.8125rem] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.position}">Position</span>
+                <span class="text-[0.8125rem] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.leader_foot}">Leader foot</span>
+                <span class="text-[0.8125rem] font-semibold text-on-surface-variant max-lg:hidden pl-1" th:text="#{figures.form.feet.col.follower_foot}">Follower foot</span>
 
                 <!-- Start Row -->
                 <div class="font-semibold min-h-[44px] flex items-center max-lg:col-span-full" th:text="#{figures.form.feet.row.start}">Start</div>
@@ -435,7 +435,7 @@
         <section class="sec-hairline" id="sec-steps" data-sec="sec-steps">
             <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1.5 justify-between">
                 <h2 class="text-xl font-semibold text-on-surface" th:text="#{figures.form.section.steps_breakdown}">Steps</h2>
-                <p class="text-[13px] text-on-surface-variant" id="variantsCountNote" th:text="${#messages.msg('figures.form.steps.variants_count', #lists.size(danceFigure.stepSets))}">1 variants. Each has its own leader and follower steps.</p>
+                <p class="text-[0.8125rem] text-on-surface-variant" id="variantsCountNote" th:text="${#messages.msg('figures.form.steps.variants_count', #lists.size(danceFigure.stepSets))}">1 variants. Each has its own leader and follower steps.</p>
             </div>
 
             <!-- Variant Switcher & New Variant Row -->
@@ -493,7 +493,7 @@
                                    th:value="${setStat.index}" th:checked="${set.isDefault}" class="sr-only js-set-default-radio" />
                             <input type="hidden" class="js-set-default-hidden" th:name="'stepSets[' + ${setStat.index} + '].isDefault'" th:value="${set.isDefault}" />
 
-                            <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[13px]" th:classappend="${set.isDefault ? '' : 'hidden'}">
+                            <span class="js-default-badge text-primary inline-flex items-center gap-1.5 font-semibold text-[0.8125rem]" th:classappend="${set.isDefault ? '' : 'hidden'}">
                                 <span th:replace="~{fragments/icon :: icon(name='check', size='sm')}"></span>
                                 <span th:text="#{figures.form.steps.mark_default}">Default variant</span>
                             </span>
@@ -531,7 +531,7 @@
                                 <span th:text="#{figures.form.steps.side_by_side}">Side by side</span>
                             </button>
                         </div>
-                        <span class="text-[13px] text-on-surface-variant" th:text="#{figures.form.steps.required_note}">Timing, foot and action are required on every step.</span>
+                        <span class="text-[0.8125rem] text-on-surface-variant" th:text="#{figures.form.steps.required_note}">Timing, foot and action are required on every step.</span>
                     </div>
 
                     <!-- Empty State (Shown when set has no steps) -->
@@ -582,14 +582,14 @@
 
                                     <!-- Step No & Mobile Header / Desktop Columns -->
                                     <div class="c-head flex lg:contents items-center gap-2.5 w-full">
-                                        <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[15px] lg:text-[13px] text-on-surface">
+                                        <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[0.9375rem] lg:text-[0.8125rem] text-on-surface">
                                             <span class="max-lg:hidden step-number-display" th:text="${step.stepNumber}">1</span>
                                             <span class="lg:hidden step-number-display-full" th:text="${#messages.msg('figures.form.steps.step_number', step.stepNumber)}">Step 1</span>
                                         </div>
 
                                         <div class="c-role js-col-role hidden pt-0 lg:pt-1">
                                             <span class="role-chip">
-                                                <i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-on-surface text-surface">L</i>
+                                                <i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[0.6875rem] bg-on-surface text-surface">L</i>
                                                 <span th:text="#{figures.role.leader}">Leader</span>
                                             </span>
                                         </div>
@@ -646,14 +646,14 @@
 
                                     <!-- Step No & Mobile Header / Desktop Columns -->
                                     <div class="c-head flex lg:contents items-center gap-2.5 w-full">
-                                        <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[15px] lg:text-[13px] text-on-surface">
+                                        <div class="c-n pt-0 lg:pt-2 text-left lg:text-center font-semibold text-[0.9375rem] lg:text-[0.8125rem] text-on-surface">
                                             <span class="max-lg:hidden step-number-display" th:text="${step.stepNumber}">1</span>
                                             <span class="lg:hidden step-number-display-full" th:text="${#messages.msg('figures.form.steps.step_number', step.stepNumber)}">Step 1</span>
                                         </div>
 
                                         <div class="c-role js-col-role hidden pt-0 lg:pt-1">
                                             <span class="role-chip">
-                                                <i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[11px] bg-surface text-on-surface ring-1 ring-inset ring-on-surface">F</i>
+                                                <i class="w-[18px] h-[18px] rounded-full flex items-center justify-center not-italic text-[0.6875rem] bg-surface text-on-surface ring-1 ring-inset ring-on-surface">F</i>
                                                 <span th:text="#{figures.role.follower}">Follower</span>
                                             </span>
                                         </div>
@@ -719,20 +719,20 @@
         <section class="sec-hairline" id="sec-flow" data-sec="sec-flow">
             <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1.5 justify-between">
                 <h2 class="text-xl font-semibold text-on-surface" th:text="#{figures.form.section.connections}">Flow</h2>
-                <p class="text-[13px] text-on-surface-variant" th:text="#{figures.form.flow.subtitle}">Figures that usually come before and after this one.</p>
+                <p class="text-[0.8125rem] text-on-surface-variant" th:text="#{figures.form.flow.subtitle}">Figures that usually come before and after this one.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Preceding Figures -->
                 <div class="cell" id="precedingFiguresCell">
                     <span class="block text-sm font-semibold text-on-surface mb-1.5" th:text="#{figures.form.field.preceding_figures}">Preceding Figures</span>
                     <div class="flex flex-wrap gap-2 mb-2.5 min-h-[36px] js-chips-list" data-flow="preceding">
-                        <span th:each="figName : *{precedingFigureNames}" class="inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[13px] js-flow-chip" th:data-fig="${figName}">
+                        <span th:each="figName : *{precedingFigureNames}" class="inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[0.8125rem] js-flow-chip" th:data-fig="${figName}">
                             <span th:text="${figName}">Figure Name</span>
                             <button type="button" class="w-6 h-6 rounded-full hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant js-remove-flow-chip" aria-label="Remove figure" th:attr="aria-label=#{figures.form.flow.remove_figure}">
                                 <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
                             </button>
                         </span>
-                        <span th:if="${#lists.isEmpty(danceFigure.precedingFigureNames)}" class="inline-flex items-center min-h-[36px] px-3.5 rounded-full border border-dashed border-border text-on-surface-variant text-[13px] js-flow-none" th:text="#{figures.form.flow.none_yet}">None yet</span>
+                        <span th:if="${#lists.isEmpty(danceFigure.precedingFigureNames)}" class="inline-flex items-center min-h-[36px] px-3.5 rounded-full border border-dashed border-border text-on-surface-variant text-[0.8125rem] js-flow-none" th:text="#{figures.form.flow.none_yet}">None yet</span>
                     </div>
                     <select class="dense-select js-flow-add-select" data-flow="preceding">
                         <option value="" th:text="#{figures.form.flow.add_placeholder}">Add a figure</option>
@@ -748,13 +748,13 @@
                 <div class="cell" id="followingFiguresCell">
                     <span class="block text-sm font-semibold text-on-surface mb-1.5" th:text="#{figures.form.field.following_figures}">Following Figures</span>
                     <div class="flex flex-wrap gap-2 mb-2.5 min-h-[36px] js-chips-list" data-flow="following">
-                        <span th:each="figName : *{followingFigureNames}" class="inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[13px] js-flow-chip" th:data-fig="${figName}">
+                        <span th:each="figName : *{followingFigureNames}" class="inline-flex items-center gap-1.5 min-h-[36px] pl-3.5 pr-1.5 rounded-full bg-surface-container border border-border font-semibold text-[0.8125rem] js-flow-chip" th:data-fig="${figName}">
                             <span th:text="${figName}">Figure Name</span>
                             <button type="button" class="w-6 h-6 rounded-full hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant js-remove-flow-chip" aria-label="Remove figure" th:attr="aria-label=#{figures.form.flow.remove_figure}">
                                 <span th:replace="~{fragments/icon :: icon(name='close', size='sm')}"></span>
                             </button>
                         </span>
-                        <span th:if="${#lists.isEmpty(danceFigure.followingFigureNames)}" class="inline-flex items-center min-h-[36px] px-3.5 rounded-full border border-dashed border-border text-on-surface-variant text-[13px] js-flow-none" th:text="#{figures.form.flow.none_yet}">None yet</span>
+                        <span th:if="${#lists.isEmpty(danceFigure.followingFigureNames)}" class="inline-flex items-center min-h-[36px] px-3.5 rounded-full border border-dashed border-border text-on-surface-variant text-[0.8125rem] js-flow-none" th:text="#{figures.form.flow.none_yet}">None yet</span>
                     </div>
                     <select class="dense-select js-flow-add-select" data-flow="following">
                         <option value="" th:text="#{figures.form.flow.add_placeholder}">Add a figure</option>

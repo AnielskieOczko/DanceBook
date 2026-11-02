@@ -545,7 +545,7 @@ class TrainingNavAndSwitcherTest {
             assertEquals(expectedLabel, link.select("span").last()?.text()?.trim())
             assertTrue(link.hasClass("view-switcher-item"), "Switcher link $expectedLabel must have view-switcher-item class")
             assertTrue(link.hasClass("flex-1"), "Switcher link $expectedLabel must have flex-1 class for equal mobile columns")
-            assertTrue(link.hasClass("min-w-0"), "Switcher link $expectedLabel must have min-w-0 to allow equal mobile distribution")
+            assertTrue(link.hasClass("min-w-max"), "Switcher link $expectedLabel must have min-w-max so labels never clip at large text sizes")
 
             // Icon must carry no tooltip title, and is hidden on mobile (< md) per Direction A
             val icon = link.selectFirst("span.material-symbols-outlined")

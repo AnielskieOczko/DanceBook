@@ -299,7 +299,7 @@
                     <div class="block md:hidden mt-4 relative border-l-2 border-primary/20 ml-3 pl-6 space-y-6">
                         <div th:each="step : ${set.getLeaderSteps()}" class="relative step-timeline-item">
                             <!-- Dot Indicator -->
-                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
+                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[0.625rem] font-bold" th:text="${step.stepNumber}">1</div>
                             
                             <!-- Timeline Header -->
                             <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-hidden js-timeline-toggle">
@@ -331,15 +331,15 @@
                             <div class="hidden mt-3 space-y-3 bg-surface-container-low p-3 rounded-lg border border-border/40 text-xs js-timeline-details">
                                 <div class="grid grid-cols-3 gap-2 text-center">
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.footwork}">Footwork</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.footwork}">Footwork</span>
                                         <span class="font-medium uppercase text-on-surface" th:text="${step.footwork ?: '-'}">HT</span>
                                     </div>
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.alignment}">Alignment</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.alignment}">Alignment</span>
                                         <span class="font-medium text-on-surface" th:text="${step.alignment ?: '-'}">LOD</span>
                                     </div>
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.turn}">Turn</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.turn}">Turn</span>
                                         <span th:if="${step.amountOfTurn == null || step.amountOfTurn == '' || step.amountOfTurn == '-' || step.amountOfTurn == 'None' || step.amountOfTurn == '0'}" 
                                               class="text-outline-variant font-bold text-sm">-</span>
                                         <span th:if="${step.amountOfTurn != null && step.amountOfTurn != '' && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0'}" 
@@ -347,7 +347,7 @@
                                     </div>
                                 </div>
                                 <div class="border-t border-border/30 pt-2" th:if="${!#lists.isEmpty(step.comments)}">
-                                    <span class="block text-[9px] font-semibold text-outline uppercase mb-1" th:text="#{figures.view.steps.th.comments}">Technical Comments</span>
+                                    <span class="block text-[0.5625rem] font-semibold text-outline uppercase mb-1" th:text="#{figures.view.steps.th.comments}">Technical Comments</span>
                                     <ul class="list-disc list-inside space-y-1 text-on-surface-variant leading-relaxed">
                                         <li th:each="c : ${step.comments}" th:text="${c.commentText}">Comment text</li>
                                     </ul>
@@ -424,7 +424,7 @@
                     <div class="block md:hidden mt-4 relative border-l-2 border-primary/20 ml-3 pl-6 space-y-6">
                         <div th:each="step : ${set.getFollowerSteps()}" class="relative step-timeline-item">
                             <!-- Dot Indicator -->
-                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-bold" th:text="${step.stepNumber}">1</div>
+                            <div class="absolute left-[-36px] top-0.5 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-[0.625rem] font-bold" th:text="${step.stepNumber}">1</div>
                             
                             <!-- Timeline Header -->
                             <button type="button" class="w-full text-left flex items-start justify-between gap-3 focus:outline-hidden js-timeline-toggle">
@@ -456,15 +456,15 @@
                             <div class="hidden mt-3 space-y-3 bg-surface-container-low p-3 rounded-lg border border-border/40 text-xs js-timeline-details">
                                 <div class="grid grid-cols-3 gap-2 text-center">
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.footwork}">Footwork</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.footwork}">Footwork</span>
                                         <span class="font-medium uppercase text-on-surface" th:text="${step.footwork ?: '-'}">T</span>
                                     </div>
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.alignment}">Alignment</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.alignment}">Alignment</span>
                                         <span class="font-medium text-on-surface" th:text="${step.alignment ?: '-'}">LOD</span>
                                     </div>
                                     <div class="bg-white p-2 rounded border border-border/30">
-                                        <span class="block text-[9px] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.turn}">Turn</span>
+                                        <span class="block text-[0.5625rem] font-semibold text-outline uppercase" th:text="#{figures.view.steps.th.turn}">Turn</span>
                                         <span th:if="${step.amountOfTurn == null || step.amountOfTurn == '' || step.amountOfTurn == '-' || step.amountOfTurn == 'None' || step.amountOfTurn == '0'}" 
                                               class="text-outline-variant font-bold text-sm">-</span>
                                         <span th:if="${step.amountOfTurn != null && step.amountOfTurn != '' && step.amountOfTurn != '-' && step.amountOfTurn != 'None' && step.amountOfTurn != '0'}" 
@@ -472,7 +472,7 @@
                                     </div>
                                 </div>
                                 <div class="border-t border-border/30 pt-2" th:if="${!#lists.isEmpty(step.comments)}">
-                                    <span class="block text-[9px] font-semibold text-outline uppercase mb-1" th:text="#{figures.view.steps.th.comments}">Technical Comments</span>
+                                    <span class="block text-[0.5625rem] font-semibold text-outline uppercase mb-1" th:text="#{figures.view.steps.th.comments}">Technical Comments</span>
                                     <ul class="list-disc list-inside space-y-1 text-on-surface-variant leading-relaxed">
                                         <li th:each="c : ${step.comments}" th:text="${c.commentText}">Comment text</li>
                                     </ul>

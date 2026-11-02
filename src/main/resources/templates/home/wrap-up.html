@@ -14,7 +14,7 @@
          th:with="wrapUp=${dashboard.wrapUp}"
          class="flex flex-col gap-3">
 
-    <h2 id="home-wrap-up-title" class="font-serif text-[22px] leading-tight font-semibold text-on-surface m-0"
+    <h2 id="home-wrap-up-title" class="font-serif text-[1.375rem] leading-tight font-semibold text-on-surface m-0"
         th:text="${wrapUp.hero != null ? #messages.msg('dashboard.wrap_up.to_wrap_up') : #messages.msg('dashboard.wrap_up.next_session')}">To wrap up</h2>
 
     <th:block th:if="${wrapUpError != null}">
@@ -26,7 +26,7 @@
              class="bg-primary text-on-primary rounded-2xl p-5 lg:p-6 flex flex-col gap-3.5">
         <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
             <div class="flex flex-col gap-1">
-                <p class="text-[13px] opacity-80 m-0" th:text="${wrapUp.hero.dateLabel + ' · ' + wrapUp.hero.timeLabel}">Tuesday 23 Sep · 19:00–20:30</p>
+                <p class="text-[0.8125rem] opacity-80 m-0" th:text="${wrapUp.hero.dateLabel + ' · ' + wrapUp.hero.timeLabel}">Tuesday 23 Sep · 19:00–20:30</p>
                 <h3 class="font-serif text-2xl leading-tight font-normal m-0">
                     <a th:href="@{/training-events/{id}(id=${wrapUp.hero.id})}" class="text-on-primary hover:underline"
                        th:text="${wrapUp.hero.title}">Standard group class</a>
@@ -83,9 +83,9 @@
              class="card rounded-2xl px-4 py-3 flex items-center gap-3">
         <div class="flex-1 min-w-0">
             <a th:href="@{/training-events/{id}(id=${waiting.id})}"
-               class="block text-[15px] font-semibold text-on-surface hover:underline truncate"
+               class="block text-[0.9375rem] font-semibold text-on-surface hover:underline truncate"
                th:text="${waiting.title}">Private lesson</a>
-            <p class="text-[13px] text-on-surface-variant m-0" th:text="${waiting.dateLabel + ' · ' + waiting.timeLabel}">Wed 24 Sep · 18:00–19:00</p>
+            <p class="text-[0.8125rem] text-on-surface-variant m-0" th:text="${waiting.dateLabel + ' · ' + waiting.timeLabel}">Wed 24 Sep · 18:00–19:00</p>
         </div>
         <a th:if="${waiting.noteId != null}" th:href="@{/materials/{id}(id=${waiting.noteId})}"
            class="btn-icon" aria-label="Open note" title="Open note"
@@ -123,7 +123,7 @@
     <article th:if="${wrapUp.hero == null and wrapUp.next != null}"
              class="card rounded-2xl p-5 flex flex-col gap-3">
         <div class="flex flex-col gap-1">
-            <p class="text-[13px] text-on-surface-variant m-0" th:text="${wrapUp.next.dateLabel + ' · ' + wrapUp.next.timeLabel}">Saturday 27 Sep · 10:00–11:00</p>
+            <p class="text-[0.8125rem] text-on-surface-variant m-0" th:text="${wrapUp.next.dateLabel + ' · ' + wrapUp.next.timeLabel}">Saturday 27 Sep · 10:00–11:00</p>
             <h3 class="font-serif text-2xl leading-tight font-normal m-0">
                 <a th:href="@{/training-events/{id}(id=${wrapUp.next.id})}" class="text-on-surface hover:underline"
                    th:text="${wrapUp.next.title}">Practice</a>

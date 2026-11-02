@@ -14,7 +14,7 @@
          class="card rounded-2xl px-2 py-3 lg:px-4 flex flex-col gap-3">
     <ol class="grid grid-cols-7 gap-1 list-none m-0 p-0">
         <li th:each="day : ${dashboard.week.days}" class="flex flex-col lg:flex-row items-center lg:justify-center gap-1.5 lg:gap-2">
-            <span class="text-[11px] lg:text-xs text-on-surface-variant"
+            <span class="text-[0.6875rem] lg:text-xs text-on-surface-variant"
                   th:classappend="${day.today ? 'font-bold text-on-surface' : ''}"
                   th:text="${day.weekdayLabel}">Mon</span>
             <span class="flex items-center justify-center w-8 h-8 rounded-full text-xs font-semibold"

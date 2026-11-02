@@ -19,7 +19,7 @@
     <summary class="flex items-center gap-3.5 min-h-[60px] px-4.5 py-2.5 cursor-pointer hover:bg-surface-container list-none select-none [&::-webkit-details-marker]:hidden">
         <span th:replace="~{fragments/icon :: icon(name=${rowIcon}, size='md', cls='text-primary shrink-0', title=null)}"></span>
         <span class="flex-1 min-w-0">
-            <b class="block text-[15px] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
+            <b class="block text-[0.9375rem] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
             <th:block th:if="${valueSlot != null}">
                 <th:block th:replace="${valueSlot}"></th:block>
             </th:block>
@@ -46,7 +46,7 @@
    th:classappend="${rowCls}">
     <span th:replace="~{fragments/icon :: icon(name=${rowIcon}, size='md', cls='text-primary shrink-0', title=null)}"></span>
     <span class="flex-1 min-w-0">
-        <b class="block text-[15px] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
+        <b class="block text-[0.9375rem] font-semibold text-on-surface" th:text="${rowTitle}">Row title</b>
         <small th:if="${valueText != null}" class="block text-xs text-on-surface-variant break-words" th:text="${valueText}">Current value</small>
     </span>
     <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='text-outline shrink-0', title=null)}"></span>

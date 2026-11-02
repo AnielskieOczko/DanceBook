@@ -109,7 +109,7 @@
                      class="tc-month-heading"
                      th:id="${'month-' + #strings.toLowerCase(#strings.replace(month.label, ' ', '-'))}">
                     <h2 class="font-headline-md text-xl font-semibold text-on-surface" th:text="${month.label}">September 2026</h2>
-                    <p class="font-body-md text-[14px] text-on-surface-variant tabular-nums">
+                    <p class="font-body-md text-[0.875rem] text-on-surface-variant tabular-nums">
                         <span th:text="#{training.list.count(${month.sessionCount})}">6 sessions</span>
                         <span class="text-outline"> · </span>
                         <span th:text="${month.totalLabel}">9h 30m</span>
@@ -122,14 +122,14 @@
                         <!--/* Weekly rollup aside: sticky on desktop, stacked on mobile */-->
                         <div>
                             <aside class="tc-roll">
-                                <div class="font-semibold text-[15px] text-on-surface">
+                                <div class="font-semibold text-[0.9375rem] text-on-surface">
                                     <span th:text="#{training.timeline.week_label(${week.weekNumber})}">Week 41</span>
                                     <span th:if="${week.isCurrentWeek}" class="text-on-surface-variant font-normal text-xs sm:text-sm">
                                         · <span th:text="#{training.timeline.this_week}">this week</span>
                                     </span>
                                 </div>
                                 <div class="text-xs text-on-surface-variant mb-2 tabular-nums" th:text="${week.dateRangeLabel}">Oct 5 – Oct 11</div>
-                                <dl class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[13px]">
+                                <dl class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[0.8125rem]">
                                     <div class="flex flex-col md:contents">
                                         <dt class="text-on-surface-variant" th:text="#{training.timeline.sessions}">Sessions</dt>
                                         <dd class="font-semibold text-on-surface md:text-right tabular-nums" th:text="${week.sessionCount}">3</dd>
@@ -195,7 +195,7 @@
                                             <div class="font-headline-lg text-base sm:text-lg font-semibold text-on-surface truncate group-hover:text-primary transition-colors"
                                                  th:text="${event.title}">Monday practice</div>
 
-                                            <p class="font-body-md text-[13px] sm:text-sm text-on-surface-variant mt-0.5 mb-1.5 tabular-nums">
+                                            <p class="font-body-md text-[0.8125rem] sm:text-sm text-on-surface-variant mt-0.5 mb-1.5 tabular-nums">
                                                 <span th:text="${#temporals.format(event.startTime, 'HH:mm')} + '–' + ${#temporals.format(event.endTime, 'HH:mm')}">18:00–20:00</span>
                                                 <span class="text-outline"> · </span>
                                                 <span th:text="#{training.minutes(${event.durationMinutes})}">120 min</span>
@@ -229,7 +229,7 @@
                                         <!--/* Heading & When */-->
                                         <div class="border-b border-border pb-3">
                                             <h5 class="text-base sm:text-lg font-semibold text-on-surface" th:text="${event.title}">Monday practice</h5>
-                                            <div class="text-xs sm:text-[13px] text-on-surface-variant mt-0.5 tabular-nums">
+                                            <div class="text-xs sm:text-[0.8125rem] text-on-surface-variant mt-0.5 tabular-nums">
                                                 <span th:text="${#temporals.format(event.startTime, #messages.msg('training.timeline.session_date_format')) + ' · ' + #temporals.format(event.startTime, 'HH:mm') + '–' + #temporals.format(event.endTime, 'HH:mm')}">Sunday, October 11 2026 · 18:00–20:00</span>
                                                 <span th:if="${event.calendar != null}">
                                                     <span> · </span>

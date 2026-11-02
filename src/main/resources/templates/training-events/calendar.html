@@ -64,7 +64,7 @@
         <div id="dayAgenda" class="md:hidden space-y-3">
             <div class="tc-agenda-heading">
                 <h2 id="dayAgendaTitle" class="font-headline-md text-lg font-semibold text-on-surface" th:text="#{training.today}">Today</h2>
-                <span id="dayAgendaTotal" class="text-[13px] tabular-nums text-on-surface-variant"></span>
+                <span id="dayAgendaTotal" class="text-[0.8125rem] tabular-nums text-on-surface-variant"></span>
             </div>
             <div id="dayAgendaList" class="space-y-2"></div>
         </div>
@@ -77,10 +77,10 @@
                     <span class="block text-on-surface-variant/70" data-agenda-end>20:00</span>
                 </span>
                 <span class="min-w-0 flex-1">
-                    <span class="block truncate font-headline-md text-[15px] font-semibold text-on-surface"
+                    <span class="block truncate font-headline-md text-[0.9375rem] font-semibold text-on-surface"
                           data-agenda-title>Session</span>
-                    <span class="mt-0.5 block text-[13px] text-on-surface-variant" data-agenda-meta></span>
-                    <span class="mt-1 block text-[12px] text-on-surface-variant" data-agenda-styles></span>
+                    <span class="mt-0.5 block text-[0.8125rem] text-on-surface-variant" data-agenda-meta></span>
+                    <span class="mt-1 block text-[0.75rem] text-on-surface-variant" data-agenda-styles></span>
                 </span>
                 <span th:replace="~{fragments/icon :: icon(name='chevron_right', size='md', cls='shrink-0 text-outline')}"></span>
             </a>

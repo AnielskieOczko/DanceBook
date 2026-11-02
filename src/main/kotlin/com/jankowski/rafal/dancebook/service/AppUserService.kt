@@ -17,5 +17,6 @@ interface AppUserService {
     fun changePassword(userId: UUID, request: PasswordChangeRequest)
     fun updateUser(id: UUID, request: UserUpdateRequest): AppUser
     fun updateLocale(userId: UUID, locale: String?): AppUser
+    fun updateTextSize(userId: UUID, size: com.jankowski.rafal.dancebook.model.TextSize?): AppUser
     fun updateMedalBadgeStyle(userId: UUID, style: com.jankowski.rafal.dancebook.model.MedalBadgeStyle?): AppUser
 }

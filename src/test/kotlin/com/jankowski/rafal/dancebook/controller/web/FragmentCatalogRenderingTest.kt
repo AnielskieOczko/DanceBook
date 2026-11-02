@@ -435,7 +435,7 @@ class FragmentCatalogRenderingTest {
 
         val html = result.response.contentAsString
         assertTrue(html.contains("material-symbols-outlined"))
-        assertTrue(html.contains("text-[20px]"))
+        assertTrue(html.contains("text-[1.25rem]"))
         assertTrue(html.contains("aria-hidden=\"true\""))
         assertFalse(html.contains("aria-label"))
         assertFalse(html.contains("icon-filled"))
@@ -443,13 +443,13 @@ class FragmentCatalogRenderingTest {
     }
 
     @Test
-    fun `icon fragment renders size sm text-16px`() {
+    fun `icon fragment renders size sm text-1rem`() {
         val result = mockMvc.perform(get("/test/catalog/iconSm").with(csrf()))
             .andExpect(status().isOk)
             .andReturn()
 
         val html = result.response.contentAsString
-        assertTrue(html.contains("text-[16px]"))
+        assertTrue(html.contains("text-[1rem]"))
     }
 
     @Test
@@ -459,7 +459,7 @@ class FragmentCatalogRenderingTest {
             .andReturn()
 
         val html = result.response.contentAsString
-        assertTrue(html.contains("text-[24px]"))
+        assertTrue(html.contains("text-[1.5rem]"))
         assertTrue(html.contains("icon-filled"))
         assertTrue(html.contains("id=\"test-icon-id\""))
         assertTrue(html.contains("title=\"Favorite icon\""))
@@ -528,7 +528,7 @@ class FragmentCatalogRenderingTest {
         val titleContainer = doc.selectFirst(".page-header")
         assertNotNull(titleContainer)
         assertTrue(titleContainer!!.hasClass("flex-1"))
-        assertTrue(titleContainer.hasClass("min-w-0"))
+        assertTrue(titleContainer.hasClass("min-w-[min(100%,12rem)]"))
         assertFalse(titleContainer.hasClass("w-full"))
 
         // Secondary outline button

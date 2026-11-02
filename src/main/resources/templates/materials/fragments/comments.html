@@ -45,7 +45,7 @@
     <div class="flex items-baseline justify-between gap-2 flex-wrap min-w-0">
         <div class="flex items-center gap-2 min-w-0">
             <span class="font-semibold text-sm text-on-surface truncate" th:text="${c.author != null ? c.author.displayName : ''}">Marcus T.</span>
-            <span th:if="${c.updatedAt != null}" class="text-[10px] text-outline uppercase font-medium" th:text="#{notes.comments.edited}">Edited</span>
+            <span th:if="${c.updatedAt != null}" class="text-[0.625rem] text-outline uppercase font-medium" th:text="#{notes.comments.edited}">Edited</span>
         </div>
         <span class="text-xs text-on-surface-variant shrink-0"
               th:text="${#temporals.format(c.updatedAt ?: c.createdAt, 'dd MMM')}">2 days ago</span>

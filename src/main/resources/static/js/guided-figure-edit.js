@@ -496,12 +496,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const labelText = I18n.t(field.labelKey, field.defaultLabel);
             tdLabel.innerHTML = `
                 <span>${labelText}</span>
-                ${isDifferent && !isProtected ? '<span class="badge badge-accent text-[9px] py-0.5 px-1.5 md:hidden">' + I18n.t('js.guided.diff.changed') + '</span>' : ''}
+                ${isDifferent && !isProtected ? '<span class="badge badge-accent text-[0.5625rem] py-0.5 px-1.5 md:hidden">' + I18n.t('js.guided.diff.changed') + '</span>' : ''}
             `;
 
             // Col 3: Current Form Value
             const tdCurrent = document.createElement('td');
-            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[11px] whitespace-pre-line js-col-current md:table-cell';
+            tdCurrent.className = 'p-3 text-on-surface-variant font-mono text-[0.6875rem] whitespace-pre-line js-col-current md:table-cell';
             tdCurrent.textContent = currentDisplay || I18n.t('js.guided.diff.empty');
 
             // Col 4: Imported Value (Editable Input)

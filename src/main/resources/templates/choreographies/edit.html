@@ -139,10 +139,10 @@
                                                  <span class="figure-number font-bold text-on-surface text-base"></span>
                                                  <span class="font-bold text-on-surface text-base" th:text="${entry.danceFigure?.name}">Natural Turn</span>
                                                  <span th:if="${entry.danceFigure?.danceClass != null}"
-                                                       class="badge bg-secondary-container text-on-surface text-[9px] font-semibold border border-outline-variant/30"
+                                                       class="badge bg-secondary-container text-on-surface text-[0.5625rem] font-semibold border border-outline-variant/30"
                                                        th:text="${entry.danceFigure.danceClass.name()}">F</span>
                                                  <span th:if="${entry.danceFigure?.alternativeTiming != null}"
-                                                       class="badge bg-surface-warm text-on-surface-variant text-[9px]"
+                                                       class="badge bg-surface-warm text-on-surface-variant text-[0.5625rem]"
                                                        th:text="${entry.danceFigure.alternativeTiming}">123</span>
                                              </div>
                                              <!-- Inline note input -->
@@ -248,10 +248,10 @@
                                 <span class="font-semibold text-sm text-on-surface line-clamp-1 group-hover:text-primary transition-colors" th:text="${fig.name}">Natural Turn</span>
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <span th:if="${fig.danceClass != null}"
-                                          class="badge bg-secondary-container text-on-surface text-[9px] border border-outline-variant/30 font-semibold"
+                                          class="badge bg-secondary-container text-on-surface text-[0.5625rem] border border-outline-variant/30 font-semibold"
                                           th:text="${fig.danceClass.name()}">F</span>
                                     <span th:if="${fig.alternativeTiming != null}"
-                                          class="text-[10px] text-on-surface-variant"
+                                          class="text-[0.625rem] text-on-surface-variant"
                                           th:text="${#messages.msg('choreographies.builder.timing', fig.alternativeTiming)}">123</span>
                                 </div>
                             </div>

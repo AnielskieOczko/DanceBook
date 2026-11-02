@@ -77,6 +77,17 @@ class NavbarAdvice(
         return systemSettingService.getIntSetting("auto_logout_minutes", 10)
     }
 
+    @ModelAttribute("textSize")
+    fun textSize(): String {
+        val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication
+        if (auth != null && auth.isAuthenticated && auth.principal != "anonymousUser") {
+            try {
+                appUserService.getCurrentUser().textSize?.let { return it.code }
+            } catch (_: Exception) {}
+        }
+        return com.jankowski.rafal.dancebook.model.TextSize.DEFAULT.code
+    }
+
     @ModelAttribute("badgeStyle")
     fun badgeStyle(): String {
         val auth = org.springframework.security.core.context.SecurityContextHolder.getContext().authentication

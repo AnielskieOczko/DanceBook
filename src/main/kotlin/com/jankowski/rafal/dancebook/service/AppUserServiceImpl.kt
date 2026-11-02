@@ -193,6 +193,13 @@ class AppUserServiceImpl(
         return appUserRepository.save(user)
     }
 
+    override fun updateTextSize(userId: UUID, size: com.jankowski.rafal.dancebook.model.TextSize?): AppUser {
+        log.debug("Updating text size for user id {} to {}", userId, size)
+        val user = findById(userId)
+        user.textSize = size
+        return appUserRepository.save(user)
+    }
+
     override fun updateMedalBadgeStyle(userId: UUID, style: com.jankowski.rafal.dancebook.model.MedalBadgeStyle?): AppUser {
         log.debug("Updating medal badge style for user id {} to {}", userId, style)
         val user = findById(userId)

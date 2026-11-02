@@ -281,7 +281,7 @@ class ProfileWebTest {
 
         val enDoc = org.jsoup.Jsoup.parse(enHtml)
         val enRowTitles = enDoc.select("main details.group > summary b").map { it.text().trim() }
-        assertEquals(listOf("Badges", "Calendars", "Language", "Medal badge style", "Streaks and badges", "Assistant", "Password"), enRowTitles)
+        assertEquals(listOf("Badges", "Calendars", "Language", "Text size", "Medal badge style", "Streaks and badges", "Assistant", "Password"), enRowTitles)
 
         // 2. Polish
         testUser.locale = "pl"
@@ -308,9 +308,9 @@ class ProfileWebTest {
 
         // Direction C row order verification in Polish:
         // 1. Badges (Odznaki), 2. Calendars (Kalendarze), 3. Language (Język),
-        // 4. Medal badge style (Styl odznaki medalu), 5. Streaks and badges (Seria i odznaki), 6. Assistant (Asystent), 7. Password (Hasło)
+        // 4. Text size (Rozmiar tekstu), 5. Medal badge style (Styl odznaki medalu), 6. Streaks and badges (Seria i odznaki), 6. Assistant (Asystent), 7. Password (Hasło)
         val plDoc = org.jsoup.Jsoup.parse(plHtml)
         val plRowTitles = plDoc.select("main details.group > summary b").map { it.text().trim() }
-        assertEquals(listOf("Odznaki", "Kalendarze", "Język", "Styl odznaki medalu", "Serie i odznaki", "Asystent", "Hasło"), plRowTitles)
+        assertEquals(listOf("Odznaki", "Kalendarze", "Język", "Rozmiar tekstu", "Styl odznaki medalu", "Serie i odznaki", "Asystent", "Hasło"), plRowTitles)
     }
 }

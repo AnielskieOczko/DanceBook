@@ -146,85 +146,85 @@ layer(base);
   --font-body: 'Inter', sans-serif;
   --font-prose: 'Source Serif 4', serif;
 
-  --text-display: 30px;
-  --text-display--line-height: 36px;
+  --text-display: 1.875rem;
+  --text-display--line-height: 2.25rem;
   --text-display--letter-spacing: -0.02em;
   --text-display--font-weight: 600;
 
-  --text-display-lg: 30px;
-  --text-display-lg--line-height: 36px;
+  --text-display-lg: 1.875rem;
+  --text-display-lg--line-height: 2.25rem;
   --text-display-lg--letter-spacing: -0.02em;
   --text-display-lg--font-weight: 600;
 
-  --text-title: 24px;
-  --text-title--line-height: 32px;
+  --text-title: 1.5rem;
+  --text-title--line-height: 2rem;
   --text-title--font-weight: 600;
 
-  --text-headline-lg: 24px;
-  --text-headline-lg--line-height: 32px;
+  --text-headline-lg: 1.5rem;
+  --text-headline-lg--line-height: 2rem;
   --text-headline-lg--font-weight: 600;
 
-  --text-section: 18px;
-  --text-section--line-height: 28px;
+  --text-section: 1.125rem;
+  --text-section--line-height: 1.75rem;
   --text-section--font-weight: 600;
 
-  --text-headline-md: 18px;
-  --text-headline-md--line-height: 28px;
+  --text-headline-md: 1.125rem;
+  --text-headline-md--line-height: 1.75rem;
   --text-headline-md--font-weight: 600;
 
-  --text-body: 16px;
-  --text-body--line-height: 26px;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
   --text-body--font-weight: 400;
 
-  --text-body-lg: 16px;
-  --text-body-lg--line-height: 26px;
+  --text-body-lg: 1rem;
+  --text-body-lg--line-height: 1.625rem;
   --text-body-lg--font-weight: 400;
 
-  --text-body-md: 16px;
-  --text-body-md--line-height: 26px;
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.625rem;
   --text-body-md--font-weight: 400;
 
-  --text-prose: 17px;
-  --text-prose--line-height: 28px;
+  --text-prose: 1.0625rem;
+  --text-prose--line-height: 1.75rem;
   --text-prose--font-weight: 400;
 
-  --text-label: 13px;
-  --text-label--line-height: 16px;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1rem;
   --text-label--font-weight: 600;
 
-  --text-label-md: 13px;
-  --text-label-md--line-height: 16px;
+  --text-label-md: 0.8125rem;
+  --text-label-md--line-height: 1rem;
   --text-label-md--font-weight: 600;
 
-  --text-label-sm: 13px;
-  --text-label-sm--line-height: 16px;
+  --text-label-sm: 0.8125rem;
+  --text-label-sm--line-height: 1rem;
   --text-label-sm--font-weight: 600;
 
-  --text-meta: 13px;
-  --text-meta--line-height: 18px;
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.125rem;
   --text-meta--font-weight: 400;
 
-  --text-tabular: 14px;
-  --text-tabular--line-height: 20px;
+  --text-tabular: 0.875rem;
+  --text-tabular--line-height: 1.25rem;
   --text-tabular--font-weight: 500;
 
-  --text-read: 16px;
-  --text-read--line-height: 26px;
+  --text-read: 1rem;
+  --text-read--line-height: 1.625rem;
   --text-read--letter-spacing: -0.005em;
   --text-read--font-weight: 400;
 
-  --text-read-lead: 18px;
-  --text-read-lead--line-height: 26px;
+  --text-read-lead: 1.125rem;
+  --text-read-lead--line-height: 1.625rem;
   --text-read-lead--letter-spacing: -0.015em;
   --text-read-lead--font-weight: 700;
 
-  --text-read-title: 22px;
-  --text-read-title--line-height: 28px;
+  --text-read-title: 1.375rem;
+  --text-read-title--line-height: 1.75rem;
   --text-read-title--letter-spacing: -0.02em;
   --text-read-title--font-weight: 700;
 
-  --text-card: 14px;
-  --text-card--line-height: 21px;
+  --text-card: 0.875rem;
+  --text-card--line-height: 1.3125rem;
   --text-card--font-weight: 400;
 
   --shadow-level-0: none;
@@ -251,9 +251,9 @@ layer(base);
   --radius-inset: 12px;
   --measure-read: 66ch;
   --measure-card: 76ch;
-  --space-para: 14px;
-  --space-card-para: 8px;
-  --bottom-nav-height: 69px;
+  --space-para: 0.875rem;
+  --space-card-para: 0.5rem;
+  --bottom-nav-height: 4.3125rem;
 }
 
 /*
@@ -360,7 +360,7 @@ layer(base);
   display: grid;
   place-items: center;
   grid-row: span 2;
-  font-size: 14px;
+  font-size: 0.875rem;
   user-select: none;
   flex-shrink: 0;
 }
@@ -384,12 +384,12 @@ layer(base);
 
 /* Admin summary panel (#395): a condition that needs the admin, and its "nothing to do" counterpart. */
 @utility attention-chip {
-  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[13px] font-semibold
+  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[0.8125rem] font-semibold
            bg-warning-soft text-warning no-underline hover:brightness-95 transition;
 }
 
 @utility attention-chip-ok {
-  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[13px] font-medium
+  @apply inline-flex items-center gap-1.5 min-h-[34px] px-3 rounded-pill text-[0.8125rem] font-medium
            bg-surface text-on-surface-variant;
 }
 
@@ -447,7 +447,7 @@ layer(base);
   /* Borderless filled pill (#214): transparent border at rest, outline on hover, primary on
    * focus. Every add/edit form gets this from here, so no form needs a wrapper class (#426). */
   @apply w-full pl-4.5 pr-4.5 py-2.5 bg-surface-container border border-transparent
-           text-on-surface placeholder:text-on-surface-variant text-[15px] min-h-[44px]
+           text-on-surface placeholder:text-on-surface-variant text-[0.9375rem] min-h-[44px]
            hover:bg-surface hover:border-outline
            focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
            disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface-container disabled:hover:border-transparent
@@ -493,14 +493,14 @@ layer(base);
 }
 
 @utility form-hint {
-  @apply mt-1.5 ml-4.5 text-[13px] text-on-surface-variant font-normal;
+  @apply mt-1.5 ml-4.5 text-[0.8125rem] text-on-surface-variant font-normal;
 }
 
 @utility dense-input {
   /* ── Dense Form Inputs (Figure Steps: 36px desktop / 44px mobile) ── */
   @apply min-w-0 w-full px-3 py-1.5 bg-surface-container border border-transparent
-           text-on-surface placeholder:text-on-surface-variant text-[13px] min-h-[36px]
-           max-lg:min-h-[44px] max-lg:text-[15px] max-lg:px-4
+           text-on-surface placeholder:text-on-surface-variant text-[0.8125rem] min-h-[36px]
+           max-lg:min-h-[44px] max-lg:text-[0.9375rem] max-lg:px-4
            hover:bg-surface hover:border-outline
            focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
            disabled:opacity-50 disabled:cursor-not-allowed
@@ -524,7 +524,7 @@ layer(base);
 @utility pill-input {
   /* ── Borderless Filled Pill Input (Mock Figure Positions/Details: 44px) ── */
   @apply min-w-0 w-full px-4.5 py-2.5 bg-surface-container border border-transparent
-         text-on-surface placeholder:text-on-surface-variant text-[15px] min-h-[44px]
+         text-on-surface placeholder:text-on-surface-variant text-[0.9375rem] min-h-[44px]
          hover:bg-surface hover:border-outline
          focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22
          disabled:opacity-50 disabled:cursor-not-allowed
@@ -549,7 +549,7 @@ layer(base);
 }
 
 @utility ed-name {
-  @apply min-w-0 text-[22px] font-semibold leading-tight tracking-tight min-h-[52px] px-5.5
+  @apply min-w-0 text-[1.375rem] font-semibold leading-tight tracking-tight min-h-[52px] px-5.5
          bg-surface-container border border-transparent
          hover:bg-surface hover:border-outline
          focus:outline-hidden focus:bg-surface focus:border-primary focus:ring-3 focus:ring-primary/22;
@@ -561,7 +561,7 @@ layer(base);
 
 @utility seg-pill-btn {
   @apply min-h-[36px] px-4 py-1.5 rounded-full border border-transparent bg-transparent
-         font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer
+         font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer
          whitespace-nowrap inline-flex items-center gap-2 transition-colors select-none;
   &[aria-pressed="true"], &[aria-selected="true"], &.active {
     @apply bg-surface text-primary border-primary shadow-xs;
@@ -574,7 +574,7 @@ layer(base);
 
 @utility set-tabs-btn {
   @apply min-h-[40px] px-4 py-1.5 rounded-full border border-transparent bg-transparent
-         font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer
+         font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer
          whitespace-nowrap inline-flex items-center gap-2 transition-colors select-none;
   &[aria-selected="true"], &.active {
     @apply bg-surface text-primary border-primary shadow-xs;
@@ -583,11 +583,11 @@ layer(base);
 
 @utility cls-badge {
   @apply inline-flex items-center min-h-[24px] px-2.5 border border-outline rounded-full
-         font-semibold text-[13px] leading-none text-on-surface bg-surface whitespace-nowrap;
+         font-semibold text-[0.8125rem] leading-none text-on-surface bg-surface whitespace-nowrap;
 }
 
 @utility jump-nav-link {
-  @apply px-3.5 py-1.5 rounded-full text-[13px] font-semibold text-on-surface-variant
+  @apply px-3.5 py-1.5 rounded-full text-[0.8125rem] font-semibold text-on-surface-variant
          hover:bg-surface-container hover:text-on-surface transition-colors whitespace-nowrap select-none;
   &.on {
     @apply text-primary ring-1 ring-inset ring-primary;
@@ -641,12 +641,12 @@ layer(base);
 
 @utility view-switcher {
   /* ── Training view switcher (tab strip) ────────── */
-  @apply flex w-full border-b border-outline-variant/30 md:border-b-0 md:w-auto;
+  @apply flex w-full overflow-x-auto border-b border-outline-variant/30 md:border-b-0 md:w-auto;
 }
 
 @utility view-switcher-item {
-  @apply flex-1 min-w-0 md:flex-none text-center md:inline-flex md:items-center md:gap-1.5
-         py-2.5 px-0 md:px-3 text-xs min-[390px]:text-[13px] md:text-sm font-medium text-on-surface-variant
+  @apply flex-1 min-w-max md:flex-none text-center md:inline-flex md:items-center md:gap-1.5
+         py-2.5 px-2 md:px-3 text-xs min-[390px]:text-[0.8125rem] md:text-sm font-medium text-on-surface-variant
          border-b-2 border-transparent -mb-[1px]
          hover:text-on-surface transition-colors min-h-[44px] flex items-center justify-center;
 }
@@ -769,14 +769,14 @@ layer(base);
 }
 
 @utility tc-chip-title {
-  @apply block truncate text-[13px] font-semibold text-on-surface;
+  @apply block truncate text-[0.8125rem] font-semibold text-on-surface;
   .tc-chip-struck & {
     @apply line-through opacity-70;
   }
 }
 
 @utility tc-chip-styles {
-  @apply block truncate text-[11px] text-on-surface-variant;
+  @apply block truncate text-[0.6875rem] text-on-surface-variant;
 }
 
 @utility tc-chip-struck {
@@ -842,7 +842,7 @@ layer(base);
      so they tighten on a phone rather than taking a line each. */
   @apply flex flex-wrap items-center gap-1.5;
   & > span {
-    @apply px-2 py-0.5 text-[12px] sm:px-3 sm:py-1 sm:text-sm;
+    @apply px-2 py-0.5 text-[0.75rem] sm:px-3 sm:py-1 sm:text-sm;
   }
 }
 
@@ -859,7 +859,7 @@ layer(base);
 }
 
 @utility tc-rail-weekday {
-  @apply mt-0.5 text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider;
+  @apply mt-0.5 text-[0.6875rem] font-semibold text-on-surface-variant uppercase tracking-wider;
 }
 
 @utility tc-feed {
@@ -992,8 +992,8 @@ layer(base);
 @media (min-width: 768px) {
   .text-display,
   .text-display-lg {
-    font-size: 36px;
-    line-height: 40px;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 /* ────────────────────────────────────────────────
@@ -1002,6 +1002,13 @@ layer(base);
 @layer base {
   html {
     @apply scroll-smooth;
+  }
+  /* Text size setting (#454): every rem on the page scales from this root. */
+  html[data-text-size='large'] {
+    font-size: 112%;
+  }
+  html[data-text-size='extra_large'] {
+    font-size: 125%;
   }
   body {
     @apply bg-surface font-sans text-on-surface antialiased;
@@ -1073,7 +1080,7 @@ layer(base);
   border-radius: var(--radius-pill);
   color: var(--color-on-surface-variant);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;
@@ -1132,7 +1139,7 @@ layer(base);
 .fc .fc-prev-button::before,
 .fc .fc-next-button::before {
   font-family: 'Material Symbols Outlined';
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: normal;
   line-height: 1;
   content: 'chevron_left';
@@ -1149,7 +1156,7 @@ layer(base);
 .fc .fc-col-header-cell {
   background-color: var(--color-surface-container);
   padding: 0.5rem 0;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--color-on-surface-variant);
@@ -1163,7 +1170,7 @@ layer(base);
 }
 .fc .fc-daygrid-day-number {
   padding: 6px 8px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--color-on-surface-variant);
@@ -1224,7 +1231,7 @@ layer(base);
 }
 .fc .fc-daygrid-more-link {
   padding: 0 4px;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: var(--color-on-surface-variant);
 }
@@ -1235,7 +1242,7 @@ layer(base);
 }
 .fc .fc-timegrid-slot-label-cushion,
 .fc .fc-timegrid-axis-cushion {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-variant-numeric: tabular-nums;
   color: var(--color-on-surface-variant);
 }
@@ -1251,12 +1258,12 @@ layer(base);
 .fc .fc-list-day-cushion {
   background-color: var(--color-surface-container-low);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--color-on-surface);
 }
 .fc .fc-list-event-time {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--color-on-surface-variant);
@@ -1283,11 +1290,11 @@ layer(base);
   .fc .fc-button-primary {
     min-height: 36px;
     padding: 0.4rem 0.6rem;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .fc .fc-col-header-cell {
     padding: 0.375rem 0;
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   /* Dots, not chips: the row only has to hold a date and its load. */
   .fc .fc-daygrid-day-frame {
@@ -1295,7 +1302,7 @@ layer(base);
   }
   .fc .fc-daygrid-day-number {
     padding: 4px;
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   .fc .fc-daygrid-day-events {
     min-height: 0;
@@ -1362,7 +1369,7 @@ trix-toolbar .trix-button {
   border-radius: var(--radius-pill);
   color: var(--color-on-surface);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
@@ -1487,7 +1494,7 @@ trix-toolbar .trix-input--dialog {
   border-radius: var(--radius-pill);
   color: var(--color-on-surface);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
@@ -1507,7 +1514,7 @@ trix-toolbar .trix-button--dialog {
   min-height: 44px;
   padding: 8px 16px;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
@@ -1552,16 +1559,16 @@ trix-editor {
   min-height: 96px;
   outline: none;
   font-family: var(--font-prose);
-  font-size: 16px;
-  line-height: 26px;
+  font-size: 1rem;
+  line-height: 1.625rem;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
 @media (min-width: 640px) {
   trix-editor {
     padding: 14px 20px;
-    font-size: 17px;
-    line-height: 28px;
+    font-size: 1.0625rem;
+    line-height: 1.75rem;
   }
 }
 
@@ -1594,7 +1601,7 @@ trix-editor:disabled {
 trix-editor:empty:not(:focus)::before {
   color: var(--color-on-surface-variant);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 /* Editor embedded inside an inline comment editing card */
@@ -1697,8 +1704,8 @@ trix-editor a {
   border-radius: var(--radius-inset);
   background-color: var(--color-primary-soft);
   font-weight: 500;
-  font-size: 17px;
-  line-height: 26px;
+  font-size: 1.0625rem;
+  line-height: 1.625rem;
   color: var(--color-on-surface);
 }
 
@@ -1729,8 +1736,8 @@ trix-editor a {
   border-radius: var(--radius-pill);
   background-color: var(--color-primary-soft);
   color: var(--color-primary);
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
   text-align: center;
   font-weight: 600;
 }
@@ -1786,8 +1793,8 @@ trix-editor a {
 }
 
 @utility card-remarks-title {
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 0.9375rem;
+  line-height: 1.3125rem;
   font-weight: 600;
   color: var(--color-primary);
   margin: 0;
@@ -1796,8 +1803,8 @@ trix-editor a {
 .card-remarks .lead {
   font-weight: 600;
   color: var(--color-primary);
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
 }
 
 .card-remarks ul {
@@ -1829,7 +1836,7 @@ trix-editor a {
 .card-remarks .facts dt,
 .card-remarks dl dt {
   color: var(--color-on-surface-variant);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .card-remarks .facts dd,
@@ -1839,8 +1846,8 @@ trix-editor a {
 }
 
 .card-remarks .rich-text {
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
   max-width: 100%;
 }
 
@@ -2020,16 +2027,16 @@ body:has(dialog[open]) .goto {
 }
 
 .medallion .material-symbols-outlined {
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1;
 }
 
 .medallion.icon-only .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .medallion .num {
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -2072,11 +2079,11 @@ body:has(dialog[open]) .goto {
 }
 
 .medallion.sm .material-symbols-outlined {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .medallion.sm.icon-only .material-symbols-outlined {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .medallion.sm .num {
@@ -2114,9 +2121,9 @@ body:has(dialog[open]) .goto {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 1.125rem;
   color: var(--color-on-surface);
 }
 
@@ -2126,8 +2133,8 @@ body:has(dialog[open]) .goto {
 
 .badge-card .sub {
   display: block;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   color: var(--color-on-surface-variant);
 }
 
@@ -2139,7 +2146,7 @@ body:has(dialog[open]) .goto {
   border-radius: var(--radius-pill);
   background-color: var(--color-surface-container);
   color: var(--color-on-surface-variant);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
 }
 
@@ -2167,7 +2174,7 @@ body:has(dialog[open]) .goto {
   border-radius: var(--radius-pill);
   border: 1px solid var(--color-outline-variant);
   background-color: var(--color-surface);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-on-surface);
 }
@@ -2185,7 +2192,7 @@ body:has(dialog[open]) .goto {
   padding: 6px 10px;
   border-radius: 10px;
   background-color: var(--color-surface-container);
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--color-on-surface);
 }
 

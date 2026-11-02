@@ -14,10 +14,10 @@
    th:classappend="${cls}">
     <div class="flex items-center gap-2">
         <span th:replace="~{fragments/icon :: icon(name=${kind == 'note' ? 'description' : (kind == 'figure' ? 'accessibility_new' : 'calendar_month')}, size='md', cls='text-primary')}"></span>
-        <span class="flex-1 min-w-0 truncate text-[15px] font-semibold" th:text="${heading}">Heading</span>
+        <span class="flex-1 min-w-0 truncate text-[0.9375rem] font-semibold" th:text="${heading}">Heading</span>
     </div>
     <div th:if="${subtitle != null}" class="text-xs text-on-surface-variant" th:text="${subtitle}">Subtitle</div>
-    <div th:if="${snippet != null}" class="text-[13px] leading-relaxed text-on-surface-variant" th:text="${snippet}">Snippet</div>
+    <div th:if="${snippet != null}" class="text-[0.8125rem] leading-relaxed text-on-surface-variant" th:text="${snippet}">Snippet</div>
     <div th:if="${chips != null and !#lists.isEmpty(chips)}" class="flex flex-wrap gap-1.5">
         <th:block th:each="chip : ${chips}">
             <span th:replace="~{fragments/badge :: badge(label=${chip}, variant='primary')}"></span>
@@ -28,14 +28,14 @@
 <!-- One bubble. role is USER or ASSISTANT. An assistant bubble may carry cards (ResultCard list) and drafts (DraftView list); error swaps in the alert. -->
 <div th:fragment="assistantMessage" class="flex" th:classappend="${(role == 'USER' ? 'justify-end' : '') + (cls != null ? ' ' + cls : '')}">
     <div th:if="${role == 'USER'}"
-         class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap break-words"
+         class="max-w-[85%] rounded-2xl rounded-br-sm bg-surface-container px-4 py-3 text-[0.9375rem] leading-relaxed whitespace-pre-wrap break-words"
          th:text="${text}">Hello</div>
     <div th:if="${role != 'USER'}" class="flex w-full min-w-0 flex-col gap-2.5">
         <th:block th:if="${error == true}">
             <div th:replace="~{fragments/alert :: alert(variant='error', text=${text})}"></div>
         </th:block>
         <th:block th:if="${error != true}">
-            <div th:replace="~{fragments/rich-text :: content(value=${text}, cls='text-[15px] leading-relaxed whitespace-pre-wrap')}"></div>
+            <div th:replace="~{fragments/rich-text :: content(value=${text}, cls='text-[0.9375rem] leading-relaxed whitespace-pre-wrap')}"></div>
         </th:block>
         <th:block th:if="${cards != null}" th:each="c : ${cards}">
             <a th:replace="~{fragments/assistant :: assistantCard(kind=${c.kind}, heading=${c.title}, subtitle=${c.subtitle}, snippet=${c.snippet}, url=${c.url}, chips=${c.chips})}"></a>
@@ -57,13 +57,13 @@
          th:classappend="${(draft.status.name() == 'DISCARDED' ? 'opacity-60' : '') + (cls != null ? ' ' + cls : '')}">
     <div class="flex items-center gap-2">
         <span th:replace="~{fragments/icon :: icon(name=${draft.kind.name() == 'NOTE' ? 'description' : (draft.kind.name() == 'FIGURE' ? 'accessibility_new' : 'calendar_month')}, size='md', cls='text-primary', title=null)}"></span>
-        <h3 class="flex-1 min-w-0 truncate text-[15px] font-semibold m-0" th:text="${draft.heading}">Heading</h3>
+        <h3 class="flex-1 min-w-0 truncate text-[0.9375rem] font-semibold m-0" th:text="${draft.heading}">Heading</h3>
         <th:block th:if="${draft.status.name() == 'PENDING'}"><span th:replace="~{fragments/badge :: badge(label='Draft', variant='primary')}"></span></th:block>
         <th:block th:if="${draft.status.name() == 'SAVED'}"><span th:replace="~{fragments/badge :: badge(label='Saved', variant='success')}"></span></th:block>
         <th:block th:if="${draft.status.name() == 'DISCARDED'}"><span th:replace="~{fragments/badge :: badge(label='Opened in the form', variant='secondary')}"></span></th:block>
     </div>
 
-    <dl th:if="${!#lists.isEmpty(draft.fields)}" class="m-0 flex flex-col gap-1.5 text-[13px]">
+    <dl th:if="${!#lists.isEmpty(draft.fields)}" class="m-0 flex flex-col gap-1.5 text-[0.8125rem]">
         <div th:each="f : ${draft.fields}" class="flex gap-2">
             <dt class="w-24 shrink-0 text-on-surface-variant" th:text="${f.label}">Label</dt>
             <dd class="m-0 min-w-0 flex-1 whitespace-pre-wrap" th:text="${f.value}">Value</dd>
@@ -71,9 +71,9 @@
     </dl>
 
     <div th:if="${!#lists.isEmpty(draft.figures)}" class="flex flex-col gap-1.5">
-        <span class="text-[13px] text-on-surface-variant">Figures</span>
+        <span class="text-[0.8125rem] text-on-surface-variant">Figures</span>
         <ul class="m-0 flex list-none flex-col gap-1 p-0">
-            <li th:each="fig : ${draft.figures}" class="flex items-center gap-2 text-[13px]">
+            <li th:each="fig : ${draft.figures}" class="flex items-center gap-2 text-[0.8125rem]">
                 <a th:href="${fig.url}" class="min-w-0 flex-1 truncate text-on-surface hover:underline" th:text="${fig.name}">Figure</a>
                 <span th:if="${fig.timing != null}" class="font-semibold text-primary whitespace-nowrap" th:text="${fig.timing}">S Q Q</span>
             </li>

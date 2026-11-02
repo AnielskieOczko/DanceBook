@@ -1,0 +1,1 @@
+ALTER TABLE app_user ADD COLUMN text_size VARCHAR(16);

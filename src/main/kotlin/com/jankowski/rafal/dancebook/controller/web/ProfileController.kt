@@ -8,6 +8,7 @@ import com.jankowski.rafal.dancebook.dto.StatsPeriod
 import com.jankowski.rafal.dancebook.model.ActivityEvent
 import com.jankowski.rafal.dancebook.model.EventType
 import com.jankowski.rafal.dancebook.model.MedalBadgeStyle
+import com.jankowski.rafal.dancebook.model.TextSize
 import com.jankowski.rafal.dancebook.service.ActivityEventService
 import com.jankowski.rafal.dancebook.service.AppUserService
 import com.jankowski.rafal.dancebook.service.ChoreographyService
@@ -73,6 +74,12 @@ class ProfileController @Autowired constructor(
                 label = messageSource.getMessage("figures.medal.style.${it.code}", null, it.displayName, locale) ?: it.displayName
             )
         }
+        val textSizeOptions = TextSize.entries.map {
+            FormSelectOption(
+                value = it.name,
+                label = messageSource.getMessage("profile.text_size.${it.code}", null, it.name, locale) ?: it.name
+            )
+        }
         val trainingStats = trainingStatsService.statsForCurrentUser(StatsPeriod.THIS_YEAR)
         val notesCount = materialService.countByOwner(user)
         val choreographiesCount = choreographyService.countByOwner(user)
@@ -86,6 +93,7 @@ class ProfileController @Autowired constructor(
         model.addAttribute("passwordChangeRequest", PasswordChangeRequest())
         model.addAttribute("languageOptions", AppLocales.options())
         model.addAttribute("badgeStyleOptions", badgeStyleOptions)
+        model.addAttribute("textSizeOptions", textSizeOptions)
         model.addAttribute("trainingStats", trainingStats)
         model.addAttribute("notesCount", notesCount)
         model.addAttribute("choreographiesCount", choreographiesCount)
@@ -217,6 +225,33 @@ class ProfileController @Autowired constructor(
             redirectAttributes.addFlashAttribute("badgeStyleSuccessMsg", true)
         } catch (e: Exception) {
             redirectAttributes.addFlashAttribute("badgeStyleErrorMsg", true)
+        }
+
+        if (request.getHeader("HX-Request") != null) {
+            response.setHeader("HX-Redirect", "/profile")
+        }
+        return "redirect:/profile"
+    }
+
+    @PostMapping("/text-size")
+    fun updateTextSize(
+        @RequestParam(required = false) textSize: String?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        redirectAttributes: RedirectAttributes
+    ): String {
+        val user = appUserService.getCurrentUser()
+        val trimmed = textSize?.trim()
+
+        if (!trimmed.isNullOrEmpty() && TextSize.fromStringOrNull(trimmed) == null) {
+            redirectAttributes.addFlashAttribute("textSizeErrorMsg", true)
+        } else {
+            try {
+                appUserService.updateTextSize(user.id!!, TextSize.fromStringOrNull(trimmed))
+                redirectAttributes.addFlashAttribute("textSizeSuccessMsg", true)
+            } catch (e: Exception) {
+                redirectAttributes.addFlashAttribute("textSizeErrorMsg", true)
+            }
         }
 
         if (request.getHeader("HX-Request") != null) {

@@ -81,7 +81,7 @@
                             <b class="block text-sm font-semibold text-on-surface truncate" id="coverTitle"
                                th:data-default-title="#{collections.form.no_cover}"
                                th:text="${(listId != null and currentImage != null) ? currentImage : #messages.msg('collections.form.no_cover')}">No cover yet</b>
-                            <small class="block text-xs sm:text-[13px] text-on-surface-variant truncate" id="coverSubtitle"
+                            <small class="block text-xs sm:text-[0.8125rem] text-on-surface-variant truncate" id="coverSubtitle"
                                    th:data-default-subtitle="#{collections.form.cover_optional_hint}"
                                    th:data-hint="#{collections.form.cover_hint}"
                                    th:text="${(listId != null and currentImage != null) ? #messages.msg('collections.form.cover_hint') : #messages.msg('collections.form.cover_optional_hint')}">Optional · PNG, JPG or GIF, up to 10 MB</small>
@@ -126,7 +126,7 @@
 
                 <div>
                     <div class="text-base font-semibold leading-snug text-on-surface" th:text="#{collections.form.filters_heading}">Which notes</div>
-                    <p class="text-xs sm:text-[13px] text-on-surface-variant mt-0.5" th:text="#{collections.form.rules_hint}">A note is included when it matches every rule. Empty rules are ignored.</p>
+                    <p class="text-xs sm:text-[0.8125rem] text-on-surface-variant mt-0.5" th:text="#{collections.form.rules_hint}">A note is included when it matches every rule. Empty rules are ignored.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
@@ -142,29 +142,29 @@
                         <div class="inline-flex flex-nowrap w-full p-1 bg-surface-container border border-border rounded-full max-w-full" role="radiogroup" th:attr="aria-label=#{collections.form.min_rating_label}">
                             <label class="cursor-pointer flex-1 min-w-0 text-center">
                                 <input type="radio" name="minRating" value="" th:checked="${listRequest.minRating == null or listRequest.minRating < 2}" class="sr-only peer js-rule-input">
-                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs" th:text="#{collections.form.min_rating_any}">Any</span>
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs" th:text="#{collections.form.min_rating_any}">Any</span>
                             </label>
                             <label class="cursor-pointer flex-1 min-w-0 text-center">
                                 <input type="radio" name="minRating" value="2" th:checked="${listRequest.minRating == 2}" class="sr-only peer js-rule-input">
-                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
                                     <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>2+
                                 </span>
                             </label>
                             <label class="cursor-pointer flex-1 min-w-0 text-center">
                                 <input type="radio" name="minRating" value="3" th:checked="${listRequest.minRating == 3}" class="sr-only peer js-rule-input">
-                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
                                     <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>3+
                                 </span>
                             </label>
                             <label class="cursor-pointer flex-1 min-w-0 text-center">
                                 <input type="radio" name="minRating" value="4" th:checked="${listRequest.minRating == 4}" class="sr-only peer js-rule-input">
-                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
                                     <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>4+
                                 </span>
                             </label>
                             <label class="cursor-pointer flex-1 min-w-0 text-center">
                                 <input type="radio" name="minRating" value="5" th:checked="${listRequest.minRating == 5}" class="sr-only peer js-rule-input">
-                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[13px] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
+                                <span class="w-full min-h-[36px] px-1 sm:px-2 py-1 rounded-full border border-transparent font-semibold text-[0.8125rem] text-on-surface-variant hover:text-on-surface cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-0.5 sm:gap-1 transition-colors select-none peer-checked:bg-surface peer-checked:text-on-surface peer-checked:border-border peer-checked:shadow-xs">
                                     <span th:replace="~{fragments/icon :: icon(name='star', size='sm', filled=true, cls='text-gold')}"></span>5
                                 </span>
                             </label>
@@ -240,7 +240,7 @@
 
 <div th:fragment="desktopPreviewBody" class="border border-border rounded-card p-4 sm:p-4.5 bg-surface space-y-3">
     <div class="flex items-baseline justify-between gap-2 pb-1">
-        <span class="text-[28px] leading-8 font-semibold tabular-nums tracking-tight text-on-surface">
+        <span class="text-[1.75rem] leading-8 font-semibold tabular-nums tracking-tight text-on-surface">
             <span th:text="${previewTotalCount}">6</span>
             <small class="text-sm font-medium text-on-surface-variant tracking-normal ml-1.5"
                    th:text="${previewTotalCount == 1 ? #messages.msg('collections.preview.note_matches') : #messages.msg('collections.preview.notes_match')}">notes match</small>
@@ -252,7 +252,7 @@
     </div>
 
     <!-- Zero state -->
-    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[13px] text-on-surface-variant">
+    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[0.8125rem] text-on-surface-variant">
         <span th:replace="~{fragments/icon :: icon(name='filter_alt_off', size='md', cls='text-on-surface-variant shrink-0 mt-0.5')}"></span>
         <div>
             <b class="text-sm font-semibold text-on-surface block mb-0.5" th:text="#{collections.preview.zero.title}">No notes match yet</b>
@@ -268,7 +268,7 @@
             </th:block>
         </div>
         <div th:if="${previewTotalCount > #lists.size(previewNotes)}"
-             class="text-[13px] text-on-surface-variant pt-2 border-t border-border"
+             class="text-[0.8125rem] text-on-surface-variant pt-2 border-t border-border"
              th:text="#{collections.preview.more_desktop(${previewTotalCount - #lists.size(previewNotes)})}">
             and 2 more. The full list opens with the collection.
         </div>
@@ -277,7 +277,7 @@
 
 <div th:fragment="mobilePreviewBody">
     <!-- Zero state -->
-    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[13px] text-on-surface-variant">
+    <div th:if="${previewTotalCount == 0}" class="flex gap-2.5 items-start p-3.5 rounded-inset bg-surface-container text-[0.8125rem] text-on-surface-variant">
         <span th:replace="~{fragments/icon :: icon(name='filter_alt_off', size='md', cls='text-on-surface-variant shrink-0 mt-0.5')}"></span>
         <div>
             <b class="text-sm font-semibold text-on-surface block mb-0.5" th:text="#{collections.preview.zero.title}">No notes match yet</b>
@@ -299,7 +299,7 @@
                 <th:block th:replace="~{lists/form :: previewCompactRow(m=${m})}"></th:block>
             </th:block>
             <div th:if="${previewTotalCount > #lists.size(previewNotes)}"
-                 class="text-[13px] text-on-surface-variant p-3 sm:px-3.5 border-t border-border"
+                 class="text-[0.8125rem] text-on-surface-variant p-3 sm:px-3.5 border-t border-border"
                  th:text="#{collections.preview.more_mobile(${previewTotalCount - #lists.size(previewNotes)})}">
                 and 3 more
             </div>
