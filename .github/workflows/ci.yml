@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # A normal run takes 7-9 minutes; a hung test once held the runner for 6 hours.
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4

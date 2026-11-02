@@ -148,4 +148,22 @@ class ChoreographyWebControllerTest {
         assertEquals("redirect:/choreographies/$choreoId", result)
         verify(choreographyService).update(choreoId, request)
     }
+
+    @Test
+    fun `should remove entry and return sequence timeline fragment`() {
+        val choreoId = UUID.randomUUID()
+        val entryId = UUID.randomUUID()
+        val model = ConcurrentModel()
+        val updated = Choreography().apply {
+            id = choreoId
+            name = "Test Choreo"
+        }
+        `when`(choreographyService.removeEntry(choreoId, entryId)).thenReturn(updated)
+
+        val result = controller.removeEntry(choreoId, entryId, model)
+
+        assertEquals("choreographies/edit :: sequenceTimeline", result)
+        assertEquals(updated, model["choreography"])
+        verify(choreographyService).removeEntry(choreoId, entryId)
+    }
 }
