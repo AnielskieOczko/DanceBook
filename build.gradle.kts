@@ -6,7 +6,6 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
     id("com.github.node-gradle.node") version "7.1.0"
-    id("org.sonarqube") version "5.1.0.4882"
 }
 
 node {
@@ -189,11 +188,4 @@ tasks.register<JavaExec>("evaluateSemanticSearch") {
 
 springBoot {
     mainClass.set("com.jankowski.rafal.dancebook.DanceBookApplicationKt")
-}
-
-sonar {
-    properties {
-        property("sonar.projectKey", "dancebook")
-        property("sonar.projectName", "DanceBook")
-    }
 }

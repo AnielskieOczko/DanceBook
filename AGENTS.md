@@ -18,12 +18,15 @@ Keep responses concise and focused on the task at hand.
 ./gradlew buildTailwind         # regenerate static/css/output.css only
 ./gradlew watchTailwind         # rebuild output.css on every source change, until interrupted
 docker compose up -d postgres   # local Postgres (dancebook/dancebook @ :5432)
-docker compose up -d sonarqube  # local SonarQube on :9000, for ./gradlew sonar
 ```
 
 The app reads all config from env vars with no defaults — it will not boot without
 `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_DRIVE_FOLDER_ID`.
+
+Code quality is checked by the online SonarCloud (Automatic analysis, which runs on pushes to `main`
+and on pull requests), not a local container. There is no local SonarQube and no `sonar` Gradle task.
+Owner setup, once: import the repo at sonarcloud.io and choose Automatic analysis.
 LLM keys (`OPENROUTER_API_KEY`, `GOOGLE_AI_API_KEY`, `OLLAMA_API_KEY`) default to empty.
 
 One-off data pipeline tasks (see `scripts/`): `./gradlew processFigures`,
